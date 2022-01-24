@@ -1095,6 +1095,11 @@
   resolved "https://registry.npmmirror.com/@types/node/download/@types/node-17.0.10.tgz#616f16e9d3a2a3d618136b1be244315d95bd7cab"
   integrity sha512-S/3xB4KzyFxYGCppyDt68yzBU9ysL88lSdIah4D6cptdcltc4NCPCAMc0+PCpg/lLIyC7IPvj2Z52OJWeIUkog==
 
+"@types/node@11.11.6":
+  version "11.11.6"
+  resolved "https://registry.npmmirror.com/@types/node/download/@types/node-11.11.6.tgz#df929d1bb2eee5afdda598a41930fe50b43eaa6a"
+  integrity sha512-Exw4yUWMBXM3X+8oqzJNRqZSwUAaS4+7NdvHqQuFi/d+synz++xmX3QIf+BFqneW8N31R8Ky+sikfZUXq07ggQ==
+
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
   resolved "https://registry.npmmirror.com/@types/normalize-package-data/download/@types/normalize-package-data-2.4.1.tgz?cache=0&sync_timestamp=1637268963320&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40types%2Fnormalize-package-data%2Fdownload%2F%40types%2Fnormalize-package-data-2.4.1.tgz#d3357479a0fdfdd5907fe67e17e0a85c906e1301"
@@ -2163,6 +2168,16 @@ bindings@^1.5.0:
   dependencies:
     file-uri-to-path "1.0.0"
 
+bip39@^3.0.4:
+  version "3.0.4"
+  resolved "https://registry.nlark.com/bip39/download/bip39-3.0.4.tgz#5b11fed966840b5e1b8539f0f54ab6392969b2a0"
+  integrity sha1-WxH+2WaEC14bhTnw9Uq2OSlpsqA=
+  dependencies:
+    "@types/node" "11.11.6"
+    create-hash "^1.1.0"
+    pbkdf2 "^3.0.9"
+    randombytes "^2.0.1"
+
 bluebird@^3.1.1, bluebird@^3.5.5:
   version "3.7.2"
   resolved "https://registry.nlark.com/bluebird/download/bluebird-3.7.2.tgz#9f229c15be272454ffa973ace0dbee79a1b0c36f"
@@ -2319,6 +2334,13 @@ browserslist@^4.0.0, browserslist@^4.12.0, browserslist@^4.17.5, browserslist@^4
     node-releases "^2.0.1"
     picocolors "^1.0.0"
 
+buefy@^0.9.14:
+  version "0.9.14"
+  resolved "https://registry.npmmirror.com/buefy/download/buefy-0.9.14.tgz#f0441ece5255fa757bf9956761415341d18fe68b"
+  integrity sha512-4+8xLQBHm7H+XmCNXvEmFY01gYHvGIkMGBLxcCpbumrt5Eyj21JP7I6G313tLaT2XDk06IiNSnqgPxzFExHPjQ==
+  dependencies:
+    bulma "0.9.3"
+
 buffer-from@^1.0.0:
   version "1.1.2"
   resolved "https://registry.nlark.com/buffer-from/download/buffer-from-1.1.2.tgz?cache=0&sync_timestamp=1627578361955&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fbuffer-from%2Fdownload%2Fbuffer-from-1.1.2.tgz#2b146a6fd72e80b4f55d255f35ed59a3a9a41bd5"
@@ -2357,6 +2379,11 @@ builtin-status-codes@^3.0.0:
   version "3.0.0"
   resolved "https://registry.nlark.com/builtin-status-codes/download/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
   integrity sha1-hZgoeOIbmOHGZCXgPQF0eI9Wnug=
+
+bulma@0.9.3:
+  version "0.9.3"
+  resolved "https://registry.npmmirror.com/bulma/download/bulma-0.9.3.tgz#ddccb7436ebe3e21bf47afe01d3c43a296b70243"
+  integrity sha1-3cy3Q26+PiG/R6/gHTxDopa3AkM=
 
 bytes@3.0.0:
   version "3.0.0"
@@ -6596,7 +6623,7 @@ path-type@^4.0.0:
   resolved "https://registry.nlark.com/path-type/download/path-type-4.0.0.tgz#84ed01c0a7ba380afe09d90a8c180dcd9d03043b"
   integrity sha1-hO0BwKe6OAr+CdkKjBgNzZ0DBDs=
 
-pbkdf2@^3.0.3:
+pbkdf2@^3.0.3, pbkdf2@^3.0.9:
   version "3.1.2"
   resolved "https://registry.nlark.com/pbkdf2/download/pbkdf2-3.1.2.tgz#dd822aa0887580e52f1a039dc3eda108efae3075"
   integrity sha1-3YIqoIh1gOUvGgOdw+2hCO+uMHU=
