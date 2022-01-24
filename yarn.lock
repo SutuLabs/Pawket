@@ -2,6 +2,13 @@
 # yarn lockfile v1
 
 
+"@aguycalled/bls-signatures@^0.2.1-beta.3":
+  version "0.2.1-beta.3"
+  resolved "https://registry.npmmirror.com/@aguycalled/bls-signatures/download/@aguycalled/bls-signatures-0.2.1-beta.3.tgz#998a6a6d303a8d487070c374eb6846a7433bba35"
+  integrity sha1-mYpqbTA6jUhwcMN062hGp0M7ujU=
+  dependencies:
+    binascii "0.0.2"
+
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.16.7", "@babel/code-frame@^7.8.3":
   version "7.16.7"
   resolved "https://registry.npmmirror.com/@babel/code-frame/download/@babel/code-frame-7.16.7.tgz#44416b6bd7624b998f5b1af5d470856c40138789"
@@ -922,6 +929,35 @@
   dependencies:
     "@babel/helper-validator-identifier" "^7.16.7"
     to-fast-properties "^2.0.0"
+
+"@chainsafe/bls-hd-key@^0.2.0":
+  version "0.2.1"
+  resolved "https://registry.npmmirror.com/@chainsafe/bls-hd-key/download/@chainsafe/bls-hd-key-0.2.1.tgz#3387a63f36f3cac20276bef40bb16a46294e6724"
+  integrity sha1-M4emPzbzysICdr70C7FqRilOZyQ=
+  dependencies:
+    assert "^2.0.0"
+    bcrypto "^5.4.0"
+    bn.js "^5.1.1"
+    buffer "^5.4.3"
+
+"@chainsafe/bls-keygen@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.npmmirror.com/@chainsafe/bls-keygen/download/@chainsafe/bls-keygen-0.3.0.tgz#d7472a945f6f49b5cb357241bfba2f5c12a635c5"
+  integrity sha1-10cqlF9vSbXLNXJBv7ovXBKmNcU=
+  dependencies:
+    "@chainsafe/bls-hd-key" "^0.2.0"
+    bip39 "^3.0.2"
+    buffer "^5.4.3"
+    randombytes "^2.1.0"
+
+"@chainsafe/bls@^6.0.3":
+  version "6.0.3"
+  resolved "https://registry.npmmirror.com/@chainsafe/bls/download/@chainsafe/bls-6.0.3.tgz#fc9154c3192648cec8a117ae0af4dd76ed51bdcb"
+  integrity sha1-/JFUwxkmSM7IoReuCvTddu1Rvcs=
+  dependencies:
+    "@chainsafe/bls-keygen" "^0.3.0"
+    bls-eth-wasm "^0.4.8"
+    randombytes "^2.1.0"
 
 "@hapi/address@2.x.x":
   version "2.1.4"
@@ -1948,6 +1984,16 @@ assert@^1.1.1:
     object-assign "^4.1.1"
     util "0.10.3"
 
+assert@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npmmirror.com/assert/download/assert-2.0.0.tgz#95fc1c616d48713510680f2eaf2d10dd22e02d32"
+  integrity sha512-se5Cd+js9dXJnu6Ag2JFc00t+HmHOen+8Q+L7O9zI0PqQXr20uk2J0XQqMxZEeo5U50o8Nvmmx7dZrl+Ufr35A==
+  dependencies:
+    es6-object-assign "^1.1.0"
+    is-nan "^1.2.1"
+    object-is "^1.0.1"
+    util "^0.12.0"
+
 assign-symbols@^1.0.0:
   version "1.0.0"
   resolved "https://registry.nlark.com/assign-symbols/download/assign-symbols-1.0.0.tgz#59667f41fadd4f20ccbc2bb96b8d4f7f78ec0367"
@@ -2002,6 +2048,11 @@ autoprefixer@^9.8.6:
     picocolors "^0.2.1"
     postcss "^7.0.32"
     postcss-value-parser "^4.1.0"
+
+available-typed-arrays@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.nlark.com/available-typed-arrays/download/available-typed-arrays-1.0.5.tgz?cache=0&sync_timestamp=1630376708450&other_urls=https%3A%2F%2Fregistry.nlark.com%2Favailable-typed-arrays%2Fdownload%2Favailable-typed-arrays-1.0.5.tgz#92f95616501069d07d10edb2fc37d3e1c65123b7"
+  integrity sha1-kvlWFlAQadB9EO2y/DfT4cZRI7c=
 
 aws-sign2@~0.7.0:
   version "0.7.0"
@@ -2101,7 +2152,7 @@ balanced-match@^1.0.0:
   resolved "https://registry.nlark.com/balanced-match/download/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
   integrity sha1-6D46fj8wCzTLnYf2FfoMvzV2kO4=
 
-base64-js@^1.0.2:
+base64-js@^1.0.2, base64-js@^1.3.1:
   version "1.5.1"
   resolved "https://registry.nlark.com/base64-js/download/base64-js-1.5.1.tgz?cache=0&sync_timestamp=1624607950711&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fbase64-js%2Fdownload%2Fbase64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
   integrity sha1-GxtEAWClv3rUC2UPCVljSBkDkwo=
@@ -2130,6 +2181,14 @@ bcrypt-pbkdf@^1.0.0:
   integrity sha1-pDAdOJtqQ/m2f/PKEaP2Y342Dp4=
   dependencies:
     tweetnacl "^0.14.3"
+
+bcrypto@^5.4.0:
+  version "5.4.0"
+  resolved "https://registry.npmmirror.com/bcrypto/download/bcrypto-5.4.0.tgz#4046f0c44a4b301eff84de593b4f86fce8d91db2"
+  integrity sha1-QEbwxEpLMB7/hN5ZO0+G/OjZHbI=
+  dependencies:
+    bufio "~1.0.7"
+    loady "~0.0.5"
 
 bfj@^6.1.1:
   version "6.1.2"
@@ -2161,6 +2220,11 @@ binary-extensions@^2.0.0:
   resolved "https://registry.nlark.com/binary-extensions/download/binary-extensions-2.2.0.tgz#75f502eeaf9ffde42fc98829645be4ea76bd9e2d"
   integrity sha1-dfUC7q+f/eQvyYgpZFvk6na9ni0=
 
+binascii@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.nlark.com/binascii/download/binascii-0.0.2.tgz#a7f8a8801dbccf8b1756b743daa0fee9e2d9e0ee"
+  integrity sha1-p/iogB28z4sXVrdD2qD+6eLZ4O4=
+
 bindings@^1.5.0:
   version "1.5.0"
   resolved "https://registry.nlark.com/bindings/download/bindings-1.5.0.tgz?cache=0&sync_timestamp=1624608043149&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fbindings%2Fdownload%2Fbindings-1.5.0.tgz#10353c9e945334bc0511a6d90b38fbc7c9c504df"
@@ -2168,7 +2232,7 @@ bindings@^1.5.0:
   dependencies:
     file-uri-to-path "1.0.0"
 
-bip39@^3.0.4:
+bip39@^3.0.2, bip39@^3.0.4:
   version "3.0.4"
   resolved "https://registry.nlark.com/bip39/download/bip39-3.0.4.tgz#5b11fed966840b5e1b8539f0f54ab6392969b2a0"
   integrity sha1-WxH+2WaEC14bhTnw9Uq2OSlpsqA=
@@ -2177,6 +2241,11 @@ bip39@^3.0.4:
     create-hash "^1.1.0"
     pbkdf2 "^3.0.9"
     randombytes "^2.0.1"
+
+bls-eth-wasm@^0.4.8:
+  version "0.4.8"
+  resolved "https://registry.npmmirror.com/bls-eth-wasm/download/bls-eth-wasm-0.4.8.tgz#ad1818fbd1bfb64d8f3e6cd104bd28b96ebaa5f1"
+  integrity sha1-rRgY+9G/tk2PPmzRBL0ouW66pfE=
 
 bluebird@^3.1.1, bluebird@^3.5.5:
   version "3.7.2"
@@ -2369,6 +2438,19 @@ buffer@^4.3.0:
     base64-js "^1.0.2"
     ieee754 "^1.1.4"
     isarray "^1.0.0"
+
+buffer@^5.4.3:
+  version "5.7.1"
+  resolved "https://registry.npmmirror.com/buffer/download/buffer-5.7.1.tgz#ba62e7c13133053582197160851a8f648e99eed0"
+  integrity sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==
+  dependencies:
+    base64-js "^1.3.1"
+    ieee754 "^1.1.13"
+
+bufio@~1.0.7:
+  version "1.0.7"
+  resolved "https://registry.nlark.com/bufio/download/bufio-1.0.7.tgz#b7f63a1369a0829ed64cc14edf0573b3e382a33e"
+  integrity sha1-t/Y6E2mggp7WTMFO3wVzs+OCoz4=
 
 builtin-modules@^1.1.1:
   version "1.1.1"
@@ -3659,7 +3741,7 @@ error-stack-parser@^2.0.6:
   dependencies:
     stackframe "^1.1.1"
 
-es-abstract@^1.17.2, es-abstract@^1.19.1:
+es-abstract@^1.17.2, es-abstract@^1.18.5, es-abstract@^1.19.1:
   version "1.19.1"
   resolved "https://registry.npmmirror.com/es-abstract/download/es-abstract-1.19.1.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fes-abstract%2Fdownload%2Fes-abstract-1.19.1.tgz#d4885796876916959de78edaa0df456627115ec3"
   integrity sha1-1IhXlodpFpWd547aoN9FZicRXsM=
@@ -3693,6 +3775,11 @@ es-to-primitive@^1.2.1:
     is-callable "^1.1.4"
     is-date-object "^1.0.1"
     is-symbol "^1.0.2"
+
+es6-object-assign@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npm.taobao.org/es6-object-assign/download/es6-object-assign-1.1.0.tgz#c2c3582656247c39ea107cb1e6652b6f9f24523c"
+  integrity sha1-wsNYJlYkfDnqEHyx5mUrb58kUjw=
 
 escalade@^3.1.1:
   version "3.1.1"
@@ -4253,6 +4340,11 @@ for-in@^1.0.2:
   version "1.0.2"
   resolved "https://registry.nlark.com/for-in/download/for-in-1.0.2.tgz#81068d295a8142ec0ac726c6e2200c30fb6d5e80"
   integrity sha1-gQaNKVqBQuwKxybG4iAMMPttXoA=
+
+foreach@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.nlark.com/foreach/download/foreach-2.0.5.tgz#0bee005018aeb260d0a3af3ae658dd0136ec1b99"
+  integrity sha1-C+4AUBiusmDQo6865ljdATbsG5k=
 
 forever-agent@~0.6.1:
   version "0.6.1"
@@ -4885,7 +4977,7 @@ icss-utils@^4.0.0, icss-utils@^4.1.1:
   dependencies:
     postcss "^7.0.14"
 
-ieee754@^1.1.4:
+ieee754@^1.1.13, ieee754@^1.1.4:
   version "1.2.1"
   resolved "https://registry.nlark.com/ieee754/download/ieee754-1.2.1.tgz#8eb7a10a63fff25d15a57b001586d177d1b0d352"
   integrity sha1-jrehCmP/8l0VpXsAFYbRd9Gw01I=
@@ -5225,6 +5317,13 @@ is-fullwidth-code-point@^3.0.0:
   resolved "https://registry.nlark.com/is-fullwidth-code-point/download/is-fullwidth-code-point-3.0.0.tgz#f116f8064fe90b3f7844a38997c0b75051269f1d"
   integrity sha1-8Rb4Bk/pCz94RKOJl8C3UFEmnx0=
 
+is-generator-function@^1.0.7:
+  version "1.0.10"
+  resolved "https://registry.nlark.com/is-generator-function/download/is-generator-function-1.0.10.tgz?cache=0&sync_timestamp=1628227707113&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fis-generator-function%2Fdownload%2Fis-generator-function-1.0.10.tgz#f1558baf1ac17e0deea7c0415c438351ff2b3c72"
+  integrity sha1-8VWLrxrBfg3up8BBXEODUf8rPHI=
+  dependencies:
+    has-tostringtag "^1.0.0"
+
 is-glob@^3.1.0:
   version "3.1.0"
   resolved "https://registry.npmmirror.com/is-glob/download/is-glob-3.1.0.tgz?cache=0&sync_timestamp=1632934498977&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fis-glob%2Fdownload%2Fis-glob-3.1.0.tgz#7ba5ae24217804ac70707b96922567486cc3e84a"
@@ -5238,6 +5337,14 @@ is-glob@^4.0.0, is-glob@^4.0.1, is-glob@~4.0.1:
   integrity sha1-ZPYeQsu7LuwgcanawLKLoeZdUIQ=
   dependencies:
     is-extglob "^2.1.1"
+
+is-nan@^1.2.1:
+  version "1.3.2"
+  resolved "https://registry.nlark.com/is-nan/download/is-nan-1.3.2.tgz#043a54adea31748b55b6cd4e09aadafa69bd9e1d"
+  integrity sha1-BDpUreoxdItVts1OCara+mm9nh0=
+  dependencies:
+    call-bind "^1.0.0"
+    define-properties "^1.1.3"
 
 is-negative-zero@^2.0.1:
   version "2.0.2"
@@ -5355,6 +5462,17 @@ is-symbol@^1.0.2, is-symbol@^1.0.3:
   integrity sha1-ptrJO2NbBjymhyI23oiRClevE5w=
   dependencies:
     has-symbols "^1.0.2"
+
+is-typed-array@^1.1.3, is-typed-array@^1.1.7:
+  version "1.1.8"
+  resolved "https://registry.nlark.com/is-typed-array/download/is-typed-array-1.1.8.tgz?cache=0&sync_timestamp=1630390331090&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fis-typed-array%2Fdownload%2Fis-typed-array-1.1.8.tgz#cbaa6585dc7db43318bc5b89523ea384a6f65e79"
+  integrity sha1-y6plhdx9tDMYvFuJUj6jhKb2Xnk=
+  dependencies:
+    available-typed-arrays "^1.0.5"
+    call-bind "^1.0.2"
+    es-abstract "^1.18.5"
+    foreach "^2.0.5"
+    has-tostringtag "^1.0.0"
 
 is-typedarray@~1.0.0:
   version "1.0.0"
@@ -5651,6 +5769,11 @@ loader-utils@^2.0.0:
     big.js "^5.2.2"
     emojis-list "^3.0.0"
     json5 "^2.1.2"
+
+loady@~0.0.5:
+  version "0.0.5"
+  resolved "https://registry.nlark.com/loady/download/loady-0.0.5.tgz#b17adb52d2fb7e743f107b0928ba0b591da5d881"
+  integrity sha1-sXrbUtL7fnQ/EHsJKLoLWR2l2IE=
 
 locate-path@^3.0.0:
   version "3.0.0"
@@ -6622,6 +6745,11 @@ path-type@^4.0.0:
   version "4.0.0"
   resolved "https://registry.nlark.com/path-type/download/path-type-4.0.0.tgz#84ed01c0a7ba380afe09d90a8c180dcd9d03043b"
   integrity sha1-hO0BwKe6OAr+CdkKjBgNzZ0DBDs=
+
+pbkdf2-hmac@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.npmmirror.com/pbkdf2-hmac/download/pbkdf2-hmac-1.0.4.tgz#1727169e1ce64d09362e929ce3f8dbcdb05b81bc"
+  integrity sha512-ho4th0+OBJ/c228Mdk/57w3xE5pD3qpJy8iXXodSe/PbX+6riT0iRJe3OOLPe53fHDRZ1k1lPfEx+eUb4374hw==
 
 pbkdf2@^3.0.3, pbkdf2@^3.0.9:
   version "3.1.2"
@@ -8757,6 +8885,18 @@ util@^0.11.0:
   dependencies:
     inherits "2.0.3"
 
+util@^0.12.0:
+  version "0.12.4"
+  resolved "https://registry.npmmirror.com/util/download/util-0.12.4.tgz#66121a31420df8f01ca0c464be15dfa1d1850253"
+  integrity sha512-bxZ9qtSlGUWSOy9Qa9Xgk11kSslpuZwaxCg4sNIDj6FLucDab2JxnHwyNTCpHMtK1MjoQiWQ6DiUMZYbSrO+Sw==
+  dependencies:
+    inherits "^2.0.3"
+    is-arguments "^1.0.4"
+    is-generator-function "^1.0.7"
+    is-typed-array "^1.1.3"
+    safe-buffer "^5.1.2"
+    which-typed-array "^1.1.2"
+
 utila@~0.4:
   version "0.4.0"
   resolved "https://registry.nlark.com/utila/download/utila-0.4.0.tgz#8a16a05d445657a3aea5eecc5b12a4fa5379772c"
@@ -9088,6 +9228,18 @@ which-module@^2.0.0:
   version "2.0.0"
   resolved "https://registry.nlark.com/which-module/download/which-module-2.0.0.tgz#d9ef07dce77b9902b8a3a8fa4b31c3e3f7e6e87a"
   integrity sha1-2e8H3Od7mQK4o6j6SzHD4/fm6Ho=
+
+which-typed-array@^1.1.2:
+  version "1.1.7"
+  resolved "https://registry.nlark.com/which-typed-array/download/which-typed-array-1.1.7.tgz?cache=0&sync_timestamp=1630377722719&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fwhich-typed-array%2Fdownload%2Fwhich-typed-array-1.1.7.tgz#2761799b9a22d4b8660b3c1b40abaa7739691793"
+  integrity sha1-J2F5m5oi1LhmCzwbQKuqdzlpF5M=
+  dependencies:
+    available-typed-arrays "^1.0.5"
+    call-bind "^1.0.2"
+    es-abstract "^1.18.5"
+    foreach "^2.0.5"
+    has-tostringtag "^1.0.0"
+    is-typed-array "^1.1.7"
 
 which@^1.2.9:
   version "1.3.1"
