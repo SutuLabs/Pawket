@@ -10,6 +10,8 @@
   "dependencies": {
     "@aguycalled/bls-signatures": "^0.2.1-beta.3",
     "@chainsafe/bls": "^6.0.3",
+    "@metamask/detect-provider": "^1.2.0",
+    "@metamask/eth-sig-util": "^4.0.0",
     "bip39": "^3.0.4",
     "buefy": "^0.9.14",
     "core-js": "^3.6.5",

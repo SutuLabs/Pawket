@@ -9,6 +9,10 @@
     </b-field>
     <b-button @click="calculate()">calculate</b-button>
     {{chiaPasswordMnemonic}}
+    <!-- <br />
+    address: {{address}}
+    <br />
+    signature: {{msig}}-->
   </div>
 </template>
 
@@ -25,6 +29,15 @@ import bls from "@chainsafe/bls/browser";
 import loadBls from "@aguycalled/bls-signatures";
 import { PrivateKey, ModuleInstance } from "@aguycalled/bls-signatures";
 import pbkdf2Hmac from "pbkdf2-hmac";
+
+// import Web3 from "web3";
+import detectEthereumProvider from "@metamask/detect-provider";
+import {
+  encrypt,
+  recoverPersonalSignature,
+  recoverTypedSignature,
+} from "@metamask/eth-sig-util";
+import { bufferToHex } from "ethereumjs-util";
 
 @Component
 export default class HelloWorld extends Vue {
@@ -85,6 +98,67 @@ export default class HelloWorld extends Vue {
     // let ok = BLS.AugSchemeMPL.verify(pk, message, signature);
     // console.log(ok,pk.get_fingerprint()); // true
     //  });
+
+    // this.checkWeb3();
+    // this.checkAccounts();
+    // this.getSignature();
+    detectEthereumProvider().then(async (ethereum: any) => {
+      // this.web3 = ethereum;
+
+      if (ethereum.isConnected()) {
+        const accounts = await ethereum.request({
+          method: "eth_requestAccounts",
+        });
+
+        let enckey = await ethereum.request({
+          method: "eth_getEncryptionPublicKey",
+          params: [accounts[0]],
+        });
+
+        const encryptedMessage = bufferToHex(
+          Buffer.from(
+            JSON.stringify(
+              encrypt({
+                publicKey: enckey,
+                data: "hello world!",
+                version: "x25519-xsalsa20-poly1305",
+              })
+            ),
+            "utf8"
+          )
+        );
+        // let encryptedMessage="0x7b2276657273696f6e223a227832353531392d7873616c736132302d706f6c7931333035222c226e6f6e6365223a2252697264375a41675a30464a46716b385a4f5a73565465744f6e774966666541222c22657068656d5075626c69634b6579223a22655469325779346161427052356c6f4f6630574931473677544b6b3862755564756555454a6961445530773d222c2263697068657274657874223a22416361555572635976335068645837684b52746c48465570617a3465386a49444f384f5571513d3d227d";
+
+        // console.log(enckey, accounts, encryptedMessage);
+        setTimeout(async () => {
+          // const accounts = await ethereum.request({
+          //   method: "eth_requestAccounts",
+          // });
+
+          // let enckey = await ethereum.request({
+          //   method: "eth_getEncryptionPublicKey",
+          //   params: [accounts[0]],
+          // });
+
+          let decryptedMessage = await ethereum.request({
+            method: "eth_decrypt",
+            params: [encryptedMessage, accounts[0]],
+          });
+          console.log(
+            encryptedMessage,
+            "The decrypted message is:",
+            decryptedMessage
+          );
+        }, 2000);
+
+        // .then((decryptedMessage:string) =>
+        //   console.log('The decrypted message is:', decryptedMessage)
+        // )
+        // .catch((error:any) => console.log(error.message));
+      } else {
+        ethereum.request({ method: "eth_requestAccounts" });
+      }
+    });
   }
 
   generate() {
