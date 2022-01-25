@@ -38,8 +38,10 @@ export default class VerifyPassword extends Vue {
   }
 
   confirm() {
-    if (utility.hash(this.password) != store.state.passwordHash) return;
-    store.dispatch("unlock", this.password);
+    utility.hash(this.password).then((pswhash) => {
+      if (pswhash != store.state.passwordHash) return;
+      store.dispatch("unlock", this.password);
+    });
   }
 
   create() {

@@ -1,4 +1,4 @@
-import { NotificationProgrammatic as Notification } from 'buefy'
+import { NotificationProgrammatic as Notification } from "buefy"
 import {
   entropyToMnemonic,
   mnemonicToEntropy,
@@ -58,6 +58,11 @@ class Utility {
     }).join("");
   }
 
+  fromHexString(hexString: string): Uint8Array {
+    if (!hexString) return new Uint8Array();
+    return new Uint8Array((<any>hexString).match(/.{1,2}/g).map((byte: any) => parseInt(byte, 16)));
+  }
+
   derivePath(BLS: ModuleInstance, sk: PrivateKey, path: number[]): PrivateKey {
     for (let i = 0; i < path.length; i++) {
       const p = path[i];
@@ -106,16 +111,51 @@ class Utility {
     }
   }
 
-  public encrypt(data: string, key: string): string {
-    return data;
+  public async encrypt(data: string, key: string): Promise<string> {
+    const enc = new TextEncoder();
+    const impkey = await window.crypto.subtle.importKey(
+      "raw",
+      await this.purehash(key),
+      "AES-CBC",
+      false,
+      ["encrypt", "decrypt"]
+    );
+    const iv = window.crypto.getRandomValues(new Uint8Array(16));
+    const part1 = this.toHexString(iv);
+    const part2 = this.toHexString(new Uint8Array(await crypto.subtle.encrypt({
+      name: "AES-CBC",
+      iv
+    }, impkey, enc.encode(data))));
+    return part1 + part2;
   }
 
-  public decrypt(encdata: string, key: string): string {
-    return encdata;
+  public async decrypt(encdata: string, key: string): Promise<string> {
+    const enc = new TextEncoder();
+    const dec = new TextDecoder();
+    const arr = this.fromHexString(encdata);
+    if (arr.length < 16) return '';
+    const iv = arr.subarray(0, 16);
+    const impkey = await window.crypto.subtle.importKey(
+      "raw",
+      await this.purehash(key),
+      "AES-CBC",
+      false,
+      ["encrypt", "decrypt"]
+    );
+    return dec.decode(new Uint8Array(await crypto.subtle.decrypt({
+      name: "AES-CBC",
+      iv
+    }, impkey, arr.subarray(16))));
   }
 
-  public hash(data: string): string {
-    return data;
+  public async purehash(data: string): Promise<Uint8Array> {
+    const enc = new TextEncoder();
+    return new Uint8Array(await crypto.subtle.digest("SHA-256", enc.encode(data)));
+  }
+
+  public async hash(data: string): Promise<string> {
+    const enc = new TextEncoder();
+    return this.toHexString(await this.purehash(data));
   }
 }
 

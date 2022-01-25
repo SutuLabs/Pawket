@@ -54,23 +54,27 @@ export default new Vuex.Store<VuexState>({
       dispatch('createAccountBySerial', 'Default');
     },
     setPassword({ state, dispatch }, password: string) {
-      state.passwordHash = utility.hash(password);
-      dispatch('unlock', password);
+      utility.hash(password).then((pswhash) => {
+        state.passwordHash = pswhash;
+        dispatch('unlock', password);
+      });
     },
     unlock({ state, dispatch }, password) {
-      if (utility.hash(password) != state.passwordHash) return;
-      state.password = password;
-      state.accounts = JSON.parse(utility.decrypt(state.encryptedAccounts, password) || '[]');
-      state.seedMnemonic = utility.decrypt(state.encryptedSeed, password);
-      state.unlock = true;
-      dispatch('persistent');
+      utility.hash(password).then(async (pswhash) => {
+        if (pswhash != state.passwordHash) return;
+        state.password = password;
+        state.accounts = JSON.parse((await utility.decrypt(state.encryptedAccounts, password)) || '[]');
+        state.seedMnemonic = await utility.decrypt(state.encryptedSeed, password);
+        state.unlock = true;
+        dispatch('persistent');
+      });
     },
-    persistent({ state }) {
+    async persistent({ state }) {
       if (!state.unlock) return;
       localStorage.setItem("SETTINGS", JSON.stringify({
-        encryptedSeed: utility.encrypt(state.seedMnemonic, state.password),
+        encryptedSeed: await utility.encrypt(state.seedMnemonic, state.password),
         passwordHash: state.passwordHash,
-        encryptedAccounts: utility.encrypt(JSON.stringify(state.accounts), state.password),
+        encryptedAccounts: await utility.encrypt(JSON.stringify(state.accounts), state.password),
       }));
     },
     createAccountByPassword({ state, dispatch }, { password, name }: { password: string, name: string }) {
