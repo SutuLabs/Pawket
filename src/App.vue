@@ -12,10 +12,9 @@
       </template>
     </b-navbar>
     <div class="container"> -->
-      <router-view />
+    <router-view />
     <!-- </div> -->
   </div>
 </template>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

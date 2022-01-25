@@ -1,4 +1,4 @@
-import { NotificationProgrammatic as Notification } from "buefy"
+import { NotificationProgrammatic as Notification } from "buefy";
 import {
   entropyToMnemonic,
   mnemonicToEntropy,
@@ -8,7 +8,7 @@ import {
 import loadBls from "@aguycalled/bls-signatures";
 import { PrivateKey, ModuleInstance } from "@aguycalled/bls-signatures";
 import pbkdf2Hmac from "pbkdf2-hmac";
-type deriveCallback = (path: number[]) => PrivateKey;//, BLS:ModuleInstance, sk:PrivateKey);
+type deriveCallback = (path: number[]) => PrivateKey;
 
 export interface AccountKey {
   compatibleMnemonic: string;
@@ -59,7 +59,9 @@ class Utility {
 
   fromHexString(hexString: string): Uint8Array {
     if (!hexString) return new Uint8Array();
-    return new Uint8Array((<any>hexString).match(/.{1,2}/g).map((byte: any) => parseInt(byte, 16)));
+    return new Uint8Array(
+      (<any>hexString).match(/.{1,2}/g).map((byte: any) => parseInt(byte, 16))
+    );
   }
 
   derivePath(BLS: ModuleInstance, sk: PrivateKey, path: number[]): PrivateKey {
@@ -76,7 +78,9 @@ class Utility {
     return (path: number[]) => this.derivePath(BLS, sk, path);
   }
 
-  async getBLS(privateKey: Uint8Array): Promise<{ BLS: ModuleInstance, sk: PrivateKey }> {
+  async getBLS(
+    privateKey: Uint8Array
+  ): Promise<{ BLS: ModuleInstance; sk: PrivateKey }> {
     const BLS = await loadBls();
     const sk = BLS.PrivateKey.from_bytes(privateKey, false);
     return { BLS, sk };
@@ -89,7 +93,13 @@ class Utility {
     );
     // let d = mnemonicToSeedSync(compatibleMnemonic);
     const BLS = await loadBls();
-    const key = await pbkdf2Hmac(compatibleMnemonic, "mnemonic", 2048, 64, "SHA-512");
+    const key = await pbkdf2Hmac(
+      compatibleMnemonic,
+      "mnemonic",
+      2048,
+      64,
+      "SHA-512"
+    );
 
     // console.log(key);
     const sk = BLS.AugSchemeMPL.key_gen(new Uint8Array(key));
@@ -107,7 +117,7 @@ class Utility {
       compatibleMnemonic: compatibleMnemonic,
       fingerprint: pk.get_fingerprint(),
       privateKey: sk.serialize(),
-    }
+    };
   }
 
   public async encrypt(data: string, key: string): Promise<string> {
@@ -121,10 +131,18 @@ class Utility {
     );
     const iv = window.crypto.getRandomValues(new Uint8Array(16));
     const part1 = this.toHexString(iv);
-    const part2 = this.toHexString(new Uint8Array(await crypto.subtle.encrypt({
-      name: "AES-CBC",
-      iv
-    }, impkey, enc.encode(data))));
+    const part2 = this.toHexString(
+      new Uint8Array(
+        await crypto.subtle.encrypt(
+          {
+            name: "AES-CBC",
+            iv,
+          },
+          impkey,
+          enc.encode(data)
+        )
+      )
+    );
     return part1 + part2;
   }
 
@@ -132,7 +150,7 @@ class Utility {
     const enc = new TextEncoder();
     const dec = new TextDecoder();
     const arr = this.fromHexString(encdata);
-    if (arr.length < 16) return '';
+    if (arr.length < 16) return "";
     const iv = arr.subarray(0, 16);
     const impkey = await window.crypto.subtle.importKey(
       "raw",
@@ -141,15 +159,25 @@ class Utility {
       false,
       ["encrypt", "decrypt"]
     );
-    return dec.decode(new Uint8Array(await crypto.subtle.decrypt({
-      name: "AES-CBC",
-      iv
-    }, impkey, arr.subarray(16))));
+    return dec.decode(
+      new Uint8Array(
+        await crypto.subtle.decrypt(
+          {
+            name: "AES-CBC",
+            iv,
+          },
+          impkey,
+          arr.subarray(16)
+        )
+      )
+    );
   }
 
   public async purehash(data: string): Promise<Uint8Array> {
     const enc = new TextEncoder();
-    return new Uint8Array(await crypto.subtle.digest("SHA-256", enc.encode(data)));
+    return new Uint8Array(
+      await crypto.subtle.digest("SHA-256", enc.encode(data))
+    );
   }
 
   public async hash(data: string): Promise<string> {

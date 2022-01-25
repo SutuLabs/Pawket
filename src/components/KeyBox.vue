@@ -3,9 +3,11 @@
     <div class="control mr-2">
       <div class="tags has-addons">
         <span class="tag is-info is-light">
-          <a
-            @click="copy(value)"
-          >{{ display ? display : value.slice(0, Math.min(value.length, length||defaultLength)) }}</a>
+          <a @click="copy(value)">{{
+            display
+              ? display
+              : value.slice(0, Math.min(value.length, length || defaultLength))
+          }}</a>
         </span>
         <!-- <span class="tag is-info">
                       {{ machine.name }}
@@ -35,5 +37,4 @@ export default class KeyBox extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

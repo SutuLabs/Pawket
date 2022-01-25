@@ -5,9 +5,13 @@
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
-      <a class="panel-block" v-for="(account,idx) in accounts" :key="idx">
+      <a class="panel-block" v-for="(account, idx) in accounts" :key="idx">
         <span class="panel-icon">✨</span>
-        <span @click="select(idx)">{{account.name}}: {{account.key.fingerprint}} [{{account.type}}]</span>
+        <span @click="select(idx)"
+          >{{ account.name }}: {{ account.key.fingerprint }} [{{
+            account.type
+          }}]</span
+        >
         <span class="is-pulled-right" @click="remove(idx)">🗑️</span>
         <span class="is-pulled-right" @click="rename(idx)">📝️</span>
         <span class="is-pulled-right" @click="showExport(account)">🖨️️</span>
@@ -108,7 +112,7 @@ export default class AccountList extends Vue {
     });
   }
 
-  showExport(account:Account) {
+  showExport(account: Account) {
     this.$buefy.modal.open({
       parent: this,
       component: AccountExport,
@@ -120,5 +124,4 @@ export default class AccountList extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

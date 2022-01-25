@@ -36,8 +36,12 @@
         <li>
           Mnemonic seed (24 secret words):
           <br />
-          {{account.key.compatibleMnemonic}}
-          <key-box display="✂️" tooltip="Copy" :value="account.key.compatibleMnemonic"></key-box>
+          {{ account.key.compatibleMnemonic }}
+          <key-box
+            display="✂️"
+            tooltip="Copy"
+            :value="account.key.compatibleMnemonic"
+          ></key-box>
         </li>
       </ul>
     </section>
@@ -104,5 +108,4 @@ export default class AccountExport extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

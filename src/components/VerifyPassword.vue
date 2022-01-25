@@ -1,13 +1,13 @@
 <template>
   <div class="box">
-    <section v-if="mode=='Verify'">
+    <section v-if="mode == 'Verify'">
       <b-field label="Password" label-position="on-border">
         <b-input type="password" v-model="password"></b-input>
       </b-field>
       <b-button @click="confirm()">Confirm</b-button>
     </section>
 
-    <section v-if="mode=='Create'">
+    <section v-if="mode == 'Create'">
       <b-field label="Password" label-position="on-border">
         <b-input type="password" v-model="password"></b-input>
       </b-field>
@@ -51,5 +51,4 @@ export default class VerifyPassword extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>
