@@ -11,7 +11,7 @@ import { PrivateKey, ModuleInstance } from "@aguycalled/bls-signatures";
 import pbkdf2Hmac from "pbkdf2-hmac";
 type deriveCallback = (path: number[]) => PrivateKey;//, BLS:ModuleInstance, sk:PrivateKey);
 
-interface AccountKey {
+export interface AccountKey {
   compatibleMnemonic: string;
   fingerprint: number;
   privateKey: Uint8Array;

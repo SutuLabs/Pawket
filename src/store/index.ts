@@ -81,7 +81,7 @@ export default new Vuex.Store<VuexState>({
         });
     },
     createAccountBySerial({ state, dispatch }, name: string) {
-      const serial = Math.max(...state.accounts.filter(_ => _.serial).map(_ => _.serial), 0) + 1;
+      const serial = Math.max(...state.accounts.map(_ => _.serial ? _.serial : 0), 0) + 1;
       utility.getAccount(state.seedMnemonic, serial.toFixed(0))
         .then((account) => {
           console.log(state.accounts, account, serial, name);
