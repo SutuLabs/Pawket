@@ -8,14 +8,37 @@
       <ul>
         <li>Name: {{ account.name }}</li>
         <li>Type: {{ account.type }}</li>
-        <li>Fingerprint: {{account.key.fingerprint}}</li>
-        <li>Master public key (m): {{masterpubkey}}</li>
-        <li>Farmer public key (m/12381/8444/0/0): {{farmerpubkey}}</li>
-        <li>Pool public key (m/12381/8444/1/0): {{poolpubkey}}</li>
+        <li>
+          Fingerprint:
+          <key-box :value="account.key.fingerprint.toString()"></key-box>
+        </li>
+        <li>
+          Master public key (m):
+          <key-box :value="masterpubkey"></key-box>
+        </li>
+        <li>
+          Farmer public key (m/12381/8444/0/0):
+          <key-box :value="farmerpubkey"></key-box>
+        </li>
+        <li>
+          Pool public key (m/12381/8444/1/0):
+          <key-box :value="poolpubkey"></key-box>
+        </li>
         <li>First wallet address: TODO</li>
-        <li>Master private key (m): {{masterprikey}}</li>
-        <li>First wallet secret key (m/12381/8444/2/0): &lt;PrivateKey {{walletprikey}}&gt;</li>
-        <li>Mnemonic seed (24 secret words): {{account.key.compatibleMnemonic}}</li>
+        <li>
+          Master private key (m):
+          <key-box :value="masterprikey"></key-box>
+        </li>
+        <li>
+          First wallet secret key (m/12381/8444/2/0): &lt;PrivateKey
+          <key-box :value="walletprikey"></key-box>&gt;
+        </li>
+        <li>
+          Mnemonic seed (24 secret words):
+          <br />
+          {{account.key.compatibleMnemonic}}
+          <key-box display="✂️" tooltip="Copy" :value="account.key.compatibleMnemonic"></key-box>
+        </li>
       </ul>
     </section>
     <!-- <footer class="modal-card-foot">
@@ -31,10 +54,15 @@ import store from "@/store";
 import { Account } from "@/store/index";
 import utility from "../store/utility";
 import { PrivateKey } from "@aguycalled/bls-signatures";
+import KeyBox from "@/components/KeyBox.vue";
 
 type Mode = "Verify" | "Create";
 
-@Component
+@Component({
+  components: {
+    KeyBox,
+  },
+})
 export default class AccountExport extends Vue {
   @Prop() private account!: Account;
   public masterpubkey = "";

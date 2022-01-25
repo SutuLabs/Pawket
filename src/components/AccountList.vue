@@ -10,6 +10,7 @@
         <span @click="select(idx)">{{account.name}}: {{account.key.fingerprint}} [{{account.type}}]</span>
         <span class="is-pulled-right" @click="remove(idx)">🗑️</span>
         <span class="is-pulled-right" @click="rename(idx)">📝️</span>
+        <span class="is-pulled-right" @click="showExport(account)">🖨️️</span>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addByPassword()">
         <span class="panel-icon">➕</span>
@@ -29,6 +30,7 @@ import store from "@/store";
 import { Account } from "@/store/index";
 import utility from "../store/utility";
 import { PrivateKey } from "@aguycalled/bls-signatures";
+import AccountExport from "@/components/AccountExport.vue";
 
 type Mode = "Verify" | "Create";
 
@@ -103,6 +105,16 @@ export default class AccountList extends Vue {
           resolve(name);
         },
       });
+    });
+  }
+
+  showExport(account:Account) {
+    this.$buefy.modal.open({
+      parent: this,
+      component: AccountExport,
+      hasModalCard: true,
+      trapFocus: true,
+      props: { account },
     });
   }
 }

@@ -4,7 +4,7 @@
       <section>
         <b-button @click="selectAccount()">{{account.name}}: {{account.key.fingerprint}}</b-button>
         <br />
-        <span @click="copy(address)">{{address}} 📋</span>
+        <!-- <span @click="copy(address)">{{address}} 📋</span> -->
         <div>
           <h2>{{balance}}</h2>
         </div>
