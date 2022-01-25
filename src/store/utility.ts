@@ -4,7 +4,6 @@ import {
   mnemonicToEntropy,
   mnemonicToSeedSync,
 } from "bip39";
-import bls from "@chainsafe/bls/browser";
 
 import loadBls from "@aguycalled/bls-signatures";
 import { PrivateKey, ModuleInstance } from "@aguycalled/bls-signatures";
