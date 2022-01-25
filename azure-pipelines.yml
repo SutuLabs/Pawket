@@ -77,7 +77,7 @@ stages:
             inputs:
               credentialsOption: 'serviceEndpoint'
               serverEndpoint: '$(qaFtp)'
-              rootDirectory: '$(Pipeline.Workspace)/drop'
+              rootDirectory: '$(Pipeline.Workspace)/$(artifactName)'
               filePatterns: '**'
               remoteDirectory: '/'
               clean: false
