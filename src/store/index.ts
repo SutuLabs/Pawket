@@ -73,7 +73,7 @@ export default new Vuex.Store<VuexState>({
         encryptedAccounts: utility.encrypt(JSON.stringify(state.accounts), state.password),
       }));
     },
-    createAccountByPassword({ state, dispatch }, password: string, name: string) {
+    createAccountByPassword({ state, dispatch }, { password, name }: { password: string, name: string }) {
       utility.getAccount(state.seedMnemonic, password)
         .then((account) => {
           state.accounts.push({ key: account, name: name, type: 'Password' });
@@ -89,9 +89,21 @@ export default new Vuex.Store<VuexState>({
           dispatch('persistent');
         });
     },
-    removeAccount({ state }, accountName: string) {
-      state.accounts.splice(state.accounts.findIndex(_ => _.name == accountName), 1);
+    renameAccount({ state, dispatch }, { idx, name }: { idx: number, name: string }) {
+      console.log(idx, name);
+      // state.accounts[idx].name == name;
+      // state.accounts[idx] == Object.assign({}, state.accounts[idx], { name });
+      state.accounts.splice(idx, 1, Object.assign({}, state.accounts[idx], { name }));
+      console.log(idx, name, state.accounts, state.accounts[idx], Object.assign({}, state.accounts[idx], { name: name }));
+      dispatch('persistent');
     },
+    removeAccount({ state, dispatch }, idx: number) {
+      state.accounts.splice(idx, 1);
+      dispatch('persistent');
+    },
+    // removeAccount({ state }, accountName: string) {
+    //   state.accounts.splice(state.accounts.findIndex(_ => _.name == accountName), 1);
+    // },
 
   },
   modules: {},
