@@ -28,10 +28,6 @@ export default class CreateSeed extends Vue {
   public seedMnemonic = "";
   public mode: Mode = "Menu";
 
-  copy(text: string): void {
-    store.dispatch("copy", text);
-  }
-
   gotoImport() {
     this.mode = "Import";
     this.seedMnemonic = "";

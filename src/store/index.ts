@@ -1,12 +1,13 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import utility from "./utility";
+import { AccountKey } from "@/store/utility";
 
 Vue.use(Vuex);
 
 type AccountType = 'Serial' | 'Password';
 
-interface Account {
+export interface Account {
   key: AccountKey;
   name: string;
   type: AccountType;
@@ -19,6 +20,7 @@ interface VuexState {
   encryptedSeed: string;
   encryptedAccounts: string;
   metamaskAccount: string;
+  selectedAccount: number;
   password: string;
   accounts: Account[];
   unlock: boolean;
@@ -36,15 +38,20 @@ export default new Vuex.Store<VuexState>({
       metamaskAccount: "",
       password: "",
       accounts: [],
+      selectedAccount: 0,
       unlock: false,
     };
   },
   getters: {},
   mutations: {},
   actions: {
+    copy({ state }, text: string) {
+      utility.copy(text);
+    },
     importSeed({ state, dispatch }, mnemonic: string) {
       state.seedMnemonic = mnemonic;
-      dispatch('persistent')
+      dispatch('persistent');
+      dispatch('createAccountBySerial', 'Default');
     },
     setPassword({ state, dispatch }, password: string) {
       state.passwordHash = utility.hash(password);
@@ -53,10 +60,10 @@ export default new Vuex.Store<VuexState>({
     unlock({ state, dispatch }, password) {
       if (utility.hash(password) != state.passwordHash) return;
       state.password = password;
-      state.accounts = utility.decrypt(state.encryptedAccounts, password);
+      state.accounts = JSON.parse(utility.decrypt(state.encryptedAccounts, password) || '[]');
       state.seedMnemonic = utility.decrypt(state.encryptedSeed, password);
       state.unlock = true;
-      dispatch('persistent')
+      dispatch('persistent');
     },
     persistent({ state }) {
       if (!state.unlock) return;
@@ -66,17 +73,23 @@ export default new Vuex.Store<VuexState>({
         encryptedAccounts: utility.encrypt(JSON.stringify(state.accounts), state.password),
       }));
     },
-    createAccountByPassword({ state }, password: string, name: string) {
-      const account = utility.getAccount(state.seedMnemonic, password);
-      state.accounts.push({ key: account, name: name, type: 'Password' });
+    createAccountByPassword({ state, dispatch }, password: string, name: string) {
+      utility.getAccount(state.seedMnemonic, password)
+        .then((account) => {
+          state.accounts.push({ key: account, name: name, type: 'Password' });
+          dispatch('persistent');
+        });
     },
-    createAccountBySerial({ state }, name: string) {
-      serial = Math.max(...state.accounts.map(_ => _.serial), 0) + 1;
-      const account = utility.getAccount(state.seedMnemonic, serial);
-      state.accounts.push({ key: account, name: name, type: 'Serial', serial: serial });
+    createAccountBySerial({ state, dispatch }, name: string) {
+      const serial = Math.max(...state.accounts.map(_ => _.serial), 0) + 1;
+      utility.getAccount(state.seedMnemonic, serial.toFixed(0))
+        .then((account) => {
+          console.log(state.accounts, account, serial, name);
+          state.accounts.push({ key: account, name: name, type: 'Serial', serial: serial });
+          dispatch('persistent');
+        });
     },
     removeAccount({ state }, accountName: string) {
-      const account = utility.getAccount(state.seedMnemonic, password);
       state.accounts.splice(state.accounts.findIndex(_ => _.name == accountName), 1);
     },
 

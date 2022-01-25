@@ -2,7 +2,7 @@
   <div class="home">
     <verify-password v-if="!password"></verify-password>
     <create-seed v-else-if="!mnemonic"></create-seed>
-    <div v-else></div>
+    <account-detail v-else></account-detail>
   </div>
 </template>
 
@@ -11,6 +11,7 @@ import { Component, Vue } from "vue-property-decorator";
 import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
 import CreateSeed from "@/components/CreateSeed.vue";
 import VerifyPassword from "@/components/VerifyPassword.vue";
+import AccountDetail from "@/components/AccountDetail.vue";
 import store from "@/store";
 
 @Component({
@@ -18,6 +19,7 @@ import store from "@/store";
     HelloWorld,
     CreateSeed,
     VerifyPassword,
+    AccountDetail,
   },
 })
 export default class Home extends Vue {
