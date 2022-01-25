@@ -1,17 +1,31 @@
 <template>
   <div class="home">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+    <verify-password v-if="!password"></verify-password>
+    <create-seed v-else-if="!mnemonic"></create-seed>
+    <div v-else></div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
+import CreateSeed from "@/components/CreateSeed.vue";
+import VerifyPassword from "@/components/VerifyPassword.vue";
+import store from "@/store";
 
 @Component({
   components: {
     HelloWorld,
+    CreateSeed,
+    VerifyPassword,
   },
 })
-export default class Home extends Vue {}
+export default class Home extends Vue {
+  get mnemonic(): string {
+    return store.state.seedMnemonic;
+  }
+  get password(): string {
+    return store.state.password;
+  }
+}
 </script>

@@ -1,32 +1,21 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view />
+    <!-- <b-navbar type="is-light">
+      <template #brand>
+        <b-navbar-item tag="router-link" :to="{ path: '/' }" :exact="true">Wallet</b-navbar-item>
+      </template>
+      <template #start>
+        <b-navbar-item tag="router-link" :to="{ path: '/about' }">About</b-navbar-item>
+      </template>
+      <template #end>
+        <profile-corner :login-info="loginInfo"></profile-corner>
+      </template>
+    </b-navbar>
+    <div class="container"> -->
+      <router-view />
+    <!-- </div> -->
   </div>
 </template>
 
 <style lang="scss">
-// #app {
-//   font-family: Avenir, Helvetica, Arial, sans-serif;
-//   -webkit-font-smoothing: antialiased;
-//   -moz-osx-font-smoothing: grayscale;
-//   text-align: center;
-//   color: #2c3e50;
-// }
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
 </style>
