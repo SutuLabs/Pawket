@@ -17,14 +17,27 @@
     <footer class="footer">
       <div class="content has-text-centered">
         <p>
-          <strong>Chiabee Wallet</strong> by
-          <a href="https://www.chiabee.net">Chiabee</a>. The  
+          <strong>Chiabee Wallet</strong>
+          [{{version}}] by
+          <a href="https://www.chiabee.net">Chiabee</a>.
+          <br />The
           <a href="http://github.com/chiabee">source code</a> would available later.
-          This app is in Alpha stage, don't use in Production.
+          This app is in ALPHA stage, don't use in PRODUCTION.
         </p>
       </div>
     </footer>
   </div>
 </template>
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
+import store from "@/store";
+
+@Component
+export default class ProfileCorner extends Vue {
+  get version(): string {
+    return process.env.VUE_APP_VERSION || "";
+  }
+}
+</script>
 
 <style lang="scss"></style>
