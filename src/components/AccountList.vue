@@ -2,6 +2,7 @@
   <div class="modal-card">
     <header class="modal-card-head">
       <p class="modal-card-title">Account Export</p>
+      <b-button class="is-pulled-right" type="is-small" @click="showMnemonic()">Show Mnemonic</b-button>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
@@ -119,6 +120,14 @@ export default class AccountList extends Vue {
       hasModalCard: true,
       trapFocus: true,
       props: { account },
+    });
+  }
+
+  showMnemonic(): void {
+    this.$buefy.dialog.alert({
+      message: `Mnemonic:<br/>${store.state.seedMnemonic}`,
+      trapFocus: true,
+      type: "is-danger",
     });
   }
 }
