@@ -9,6 +9,8 @@ import "buefy/dist/buefy.css";
 Vue.config.productionTip = false;
 Vue.use(Buefy);
 
+document.title = "Chiabee Wallet";
+
 new Vue({
   router,
   store,

@@ -5,6 +5,7 @@
         <b-input type="password" v-model="password"></b-input>
       </b-field>
       <b-button @click="confirm()">Confirm</b-button>
+      <b-button v-if="showClear" type="is-danger" @click="clear()">Clear Data</b-button>
     </section>
 
     <section v-if="mode == 'Create'">
@@ -32,6 +33,7 @@ export default class VerifyPassword extends Vue {
   public password = "";
   public repassword = "";
   public mode: Mode = "Verify";
+  public showClear = false;
 
   mounted() {
     this.mode = store.state.passwordHash ? "Verify" : "Create";
@@ -39,7 +41,10 @@ export default class VerifyPassword extends Vue {
 
   confirm() {
     utility.hash(this.password).then((pswhash) => {
-      if (pswhash != store.state.passwordHash) return;
+      if (pswhash != store.state.passwordHash) {
+        this.showClear = true;
+        return;
+      }
       store.dispatch("unlock", this.password);
     });
   }
@@ -47,6 +52,17 @@ export default class VerifyPassword extends Vue {
   create() {
     if (this.repassword != this.password) return;
     store.dispatch("setPassword", this.password);
+  }
+
+  clear() {
+    this.$buefy.dialog.confirm({
+      message: `Clear all data? Everything would empty!!!`,
+      trapFocus: true,
+      type: "is-danger",
+      onConfirm: (name) => {
+        store.dispatch("clear");
+      },
+    });
   }
 }
 </script>

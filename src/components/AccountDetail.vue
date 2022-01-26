@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="box has-text-centered" v-if="account">
+    <div class="box has-text-centered" v-if="account && account.key">
       <section>
         <b-button @click="selectAccount()"
           >{{ account.name }}: {{ account.key.fingerprint }}</b-button
