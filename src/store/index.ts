@@ -91,6 +91,10 @@ export default new Vuex.Store<VuexState>({
         })
       );
     },
+    clear({ state }) {
+      localStorage.removeItem("SETTINGS");
+      location.reload();
+    },
     createAccountByPassword(
       { state, dispatch },
       { password, name }: { password: string; name: string }
@@ -107,7 +111,6 @@ export default new Vuex.Store<VuexState>({
       utility
         .getAccount(state.seedMnemonic, serial.toFixed(0))
         .then((account) => {
-          console.log(state.accounts, account, serial, name);
           state.accounts.push({
             key: account,
             name: name,
@@ -121,20 +124,13 @@ export default new Vuex.Store<VuexState>({
       { state, dispatch },
       { idx, name }: { idx: number; name: string }
     ) {
-      console.log(idx, name);
+      // following two assignment failed to update value;
       // state.accounts[idx].name == name;
       // state.accounts[idx] == Object.assign({}, state.accounts[idx], { name });
       state.accounts.splice(
         idx,
         1,
         Object.assign({}, state.accounts[idx], { name })
-      );
-      console.log(
-        idx,
-        name,
-        state.accounts,
-        state.accounts[idx],
-        Object.assign({}, state.accounts[idx], { name: name })
       );
       dispatch("persistent");
     },

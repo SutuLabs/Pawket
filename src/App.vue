@@ -11,9 +11,19 @@
         <profile-corner :login-info="loginInfo"></profile-corner>
       </template>
     </b-navbar>
-    <div class="container"> -->
+    <div class="container">-->
     <router-view />
     <!-- </div> -->
+    <footer class="footer">
+      <div class="content has-text-centered">
+        <p>
+          <strong>Chiabee Wallet</strong> by
+          <a href="https://www.chiabee.net">Chiabee</a>. The  
+          <a href="http://github.com/chiabee">source code</a> would available later.
+          This app is in Alpha stage, don't use in Production.
+        </p>
+      </div>
+    </footer>
   </div>
 </template>
 

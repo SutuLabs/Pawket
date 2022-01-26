@@ -34,7 +34,7 @@
           <key-box :value="walletprikey"></key-box>&gt;
         </li>
         <li>
-          First wallet public key (m/12381/8444/2/0): 
+          First wallet public key (m/12381/8444/2/0):
           <key-box :value="walletpubkey"></key-box>
         </li>
         <li>
@@ -84,7 +84,6 @@ export default class AccountExport extends Vue {
     var privkey = new Uint8Array(
       Object.assign([], this.account.key.privateKey)
     );
-    console.log(privkey, this.account.key.privateKey);
     utility.getBLS(privkey).then(({ BLS, sk }) => {
       this.masterprikey = utility.toHexString(sk.serialize());
       this.masterpubkey = utility.toHexString(sk.get_g1().serialize());
