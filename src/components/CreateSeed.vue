@@ -1,15 +1,15 @@
 <template>
   <div class="box">
-    <section v-if="mode=='Menu'">
+    <section v-if="mode == 'Menu'">
       <b-button @click="gotoImport()">Import</b-button>
       <b-button @click="gotoCreate()">Create</b-button>
     </section>
-    <section v-if="mode=='Import' || mode=='Create'">
+    <section v-if="mode == 'Import' || mode == 'Create'">
       <b-button @click="back()">Back</b-button>
       <b-field label="Mnemonic" label-position="on-border">
         <b-input type="textarea" v-model="seedMnemonic"></b-input>
       </b-field>
-      <b-button v-if="mode=='Create'" @click="refresh()">Refresh</b-button>
+      <b-button v-if="mode == 'Create'" @click="refresh()">Refresh</b-button>
       <b-button @click="confirm()">Confirm</b-button>
     </section>
   </div>
@@ -52,5 +52,4 @@ export default class CreateSeed extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

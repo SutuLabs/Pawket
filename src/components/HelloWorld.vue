@@ -6,10 +6,14 @@
       </b-field>
       <b-button @click="generate()">Generate</b-button>
       <b-field label="password">
-        <b-input type="text" v-model="password" @change="chiaPasswordMnemonic=''"></b-input>
+        <b-input
+          type="text"
+          v-model="password"
+          @change="chiaPasswordMnemonic = ''"
+        ></b-input>
       </b-field>
       <b-button @click="calculate()">calculate</b-button>
-      {{chiaPasswordMnemonic}}
+      {{ chiaPasswordMnemonic }}
       <!-- <br />
     address: {{address}}
     <br />
@@ -160,5 +164,4 @@ export default class HelloWorld extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

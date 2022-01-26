@@ -34,10 +34,18 @@
           <key-box :value="walletprikey"></key-box>&gt;
         </li>
         <li>
+          First wallet public key (m/12381/8444/2/0): 
+          <key-box :value="walletpubkey"></key-box>
+        </li>
+        <li>
           Mnemonic seed (24 secret words):
           <br />
-          {{account.key.compatibleMnemonic}}
-          <key-box display="✂️" tooltip="Copy" :value="account.key.compatibleMnemonic"></key-box>
+          {{ account.key.compatibleMnemonic }}
+          <key-box
+            display="✂️"
+            tooltip="Copy"
+            :value="account.key.compatibleMnemonic"
+          ></key-box>
         </li>
       </ul>
     </section>
@@ -70,6 +78,7 @@ export default class AccountExport extends Vue {
   public farmerpubkey = "";
   public poolpubkey = "";
   public walletprikey = "";
+  public walletpubkey = "";
 
   mounted() {
     var privkey = new Uint8Array(
@@ -90,6 +99,9 @@ export default class AccountExport extends Vue {
       this.walletprikey = utility.toHexString(
         derive([12381, 8444, 2, 0]).serialize()
       );
+      this.walletpubkey = utility.toHexString(
+        derive([12381, 8444, 2, 0]).get_g1().serialize()
+      );
     });
   }
 
@@ -104,5 +116,4 @@ export default class AccountExport extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

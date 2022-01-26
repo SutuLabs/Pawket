@@ -2,11 +2,13 @@
   <div class="container">
     <div class="box has-text-centered" v-if="account">
       <section>
-        <b-button @click="selectAccount()">{{account.name}}: {{account.key.fingerprint}}</b-button>
+        <b-button @click="selectAccount()"
+          >{{ account.name }}: {{ account.key.fingerprint }}</b-button
+        >
         <br />
         <!-- <span @click="copy(address)">{{address}} 📋</span> -->
         <div>
-          <h2>{{balance}}</h2>
+          <h2>{{ balance }}</h2>
         </div>
       </section>
       <section>
@@ -20,7 +22,7 @@
         <b-tab-item label="Asset">
           <a class="panel-block" v-for="asset in assets" :key="asset">
             <span class="panel-icon">₿</span>
-            0.0 {{asset}}
+            0.0 {{ asset }}
           </a>
         </b-tab-item>
         <b-tab-item label="Activity"></b-tab-item>
@@ -69,7 +71,7 @@ export default class AccountDetail extends Vue {
     });
   }
 
-  selectAccount(){
+  selectAccount() {
     this.$buefy.modal.open({
       parent: this,
       component: AccountList,
@@ -79,7 +81,7 @@ export default class AccountDetail extends Vue {
     });
   }
 
-  showQr(){
+  showQr() {
     this.$buefy.modal.open({
       parent: this,
       component: AccountExport,
@@ -91,5 +93,4 @@ export default class AccountDetail extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>
