@@ -15,19 +15,17 @@ export interface CoinRecordInfo {
     records: CoinRecord[];
 }
 
-
 export interface CoinRecord {
-    Coin?: CoinItem;
-    Coinbase: boolean;
-    ConfirmedBlockIndex: number;
-    Spent: boolean;
-    SpentBlockIndex: number;
-    Timestamp: number;
+    coin?: CoinItem;
+    coinbase: boolean;
+    confirmedBlockIndex: number;
+    spent: boolean;
+    spentBlockIndex: number;
+    timestamp: number;
 }
 
 export interface CoinItem {
-    Amount: number;
-    ParentCoinInfo: string;
-    PuzzleHash: string;
+    amount: number;
+    parentCoinInfo: string;
+    puzzleHash: string;
 }
-

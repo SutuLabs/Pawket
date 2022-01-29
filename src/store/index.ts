@@ -188,7 +188,7 @@ export default new Vuex.Store<VuexState>({
       const privkey = new Uint8Array(
         Object.assign([], account.key.privateKey)
       );
-      const hashes = await utility.getPuzzleHashes(privkey, state.networks[state.network].prefix);
+      const hashes = await utility.getPuzzleHashes(privkey, state.networks[state.network].prefix, 0, 1);
 
       const resp = await fetch("https://10.177.0.165:5058/Wallet/records", {
         method: "POST",
@@ -207,7 +207,7 @@ export default new Vuex.Store<VuexState>({
           acc +
           puzzle.records.reduce(
             (recacc, rec) =>
-              recacc + (!rec.Coin || rec.Spent ? 0 : rec.Coin.Amount),
+              recacc + ((!rec.coin || rec.spent) ? 0 : rec.coin.amount),
             0
           ),
         0
