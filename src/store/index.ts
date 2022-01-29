@@ -2,7 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import utility from "./utility";
 import { AccountKey } from "@/store/utility";
-import { CoinRecord } from "@/models/walletModel";
+import { CoinRecord, GetRecordsResponse } from "@/models/walletModel";
 
 Vue.use(Vuex);
 
@@ -145,7 +145,7 @@ export default new Vuex.Store<VuexState>({
         })
       );
     },
-    clear({ state }) {
+    clear() {
       localStorage.removeItem("SETTINGS");
       location.reload();
     },
@@ -198,7 +198,7 @@ export default new Vuex.Store<VuexState>({
     // removeAccount({ state }, accountName: string) {
     //   state.accounts.splice(state.accounts.findIndex(_ => _.name == accountName), 1);
     // },
-    async refreshBalance({ state, dispatch }, idx: number) {
+    async refreshBalance({ state }, idx: number) {
       if (!idx) idx = state.selectedAccount;
       const account = state.accounts[idx];
       const privkey = utility.fromHexString(account.key.privateKey);
@@ -217,17 +217,9 @@ export default new Vuex.Store<VuexState>({
       });
       const json = (await resp.json()) as GetRecordsResponse;
       const balance = json.coins.reduce(
-        (acc, puzzle) =>
-          acc +
-          puzzle.records.reduce(
-            (recacc, rec) =>
-              recacc + ((!rec.coin || rec.spent) ? 0 : rec.coin.amount),
-            0
-          ),
-        0
-      );
+        (acc, puzzle) => acc + puzzle.records.reduce((recacc, rec) => recacc + ((!rec.coin || rec.spent) ? 0 : rec.coin.amount), 0), 0);
       const activities = json.coins.reduce(
-        (acc, puzzle) => acc.concat(puzzle.records.reduce((recacc, rec) => recacc.concat(rec), [])), []);
+        (acc, puzzle) => acc.concat(puzzle.records.reduce<CoinRecord[]>((recacc, rec) => recacc.concat(rec), [])), ([] as CoinRecord[]));
 
       Vue.set(account, "activities", activities);
 
