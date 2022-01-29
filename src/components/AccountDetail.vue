@@ -2,13 +2,14 @@
   <div class="container">
     <div class="box has-text-centered" v-if="account && account.key">
       <section>
-        <b-button @click="selectAccount()"
-          >{{ account.name }}: {{ account.key.fingerprint }}</b-button
-        >
+        <b-button @click="selectAccount()">{{ account.name }}: {{ account.key.fingerprint }}</b-button>
         <br />
         <span @click="copy(account.firstAddress)">{{account.firstAddress}} 📋</span>
         <div>
-          <h2>{{ balance }}</h2>
+          <h2>
+            {{ account.balance }} mojo
+            <b-button size="is-small" @click="refreshBalance()">Refresh</b-button>
+          </h2>
         </div>
       </section>
       <section>
@@ -39,12 +40,13 @@ import utility from "../store/utility";
 import { Account } from "@/store/index";
 import AccountExport from "@/components/AccountExport.vue";
 import AccountList from "@/components/AccountList.vue";
+import { GetRecordsResponse } from "@/models/walletModel";
 
 type Mode = "Verify" | "Create";
 
 @Component
 export default class AccountDetail extends Vue {
-  public balance = "0.0 XCH";
+  public balance = -1;
   public address = "xch1sdfhsghrghuier";
   public mode: Mode = "Verify";
   public assets = ["XCH", "SBS", "CHB", "BSH"];
@@ -89,6 +91,10 @@ export default class AccountDetail extends Vue {
       trapFocus: true,
       props: { account: this.account },
     });
+  }
+
+  async refreshBalance() {
+    store.dispatch("refreshBalance");
   }
 }
 </script>

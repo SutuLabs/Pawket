@@ -188,9 +188,9 @@ class Utility {
     return this.toHexString(await this.purehash(data));
   }
 
-  public async getAddress(pubkey: string, prefix: string): Promise<string> {
+  public async getPuzzleHash(pubkey: string, prefix: string): Promise<string> {
     // console.log(pubkey,prefix);
-    if (!pubkey.startsWith("0x"))pubkey="0x"+pubkey;
+    if (!pubkey.startsWith("0x")) pubkey = "0x" + pubkey;
     await clvm_tools.initialize();
     const hidden_puzzle_hash = "0x711d6c4e32c92e53179b199484cf8c897542bc57f2b22582799f9d657eec4699";
 
@@ -212,9 +212,29 @@ class Utility {
     const puzzleHash = output[0];
     // console.log("puzzleHash", puzzleHash);
 
+    return puzzleHash;
+  }
+
+  public async getAddress(pubkey: string, prefix: string): Promise<string> {
+    const puzzleHash = await this.getPuzzleHash(pubkey, prefix);
+
     const address = bech32m.encode(prefix, bech32m.toWords(this.fromHexString(puzzleHash)));
     // console.log(address);
     return address;
+  }
+
+  public async getPuzzleHashes(privateKey: Uint8Array, prefix: string, startIndex = 0, endIndex = 10) {
+    const derive = await this.derive(privateKey);
+    const hashes = [];
+    for (let i = startIndex; i < endIndex; i++) {
+      const pubkey = this.toHexString(
+        derive([12381, 8444, 2, i]).get_g1().serialize()
+      );
+      const hash = await this.getPuzzleHash(pubkey, prefix);
+      hashes.push(hash);
+    }
+
+    return hashes;
   }
 }
 

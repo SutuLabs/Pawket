@@ -13,6 +13,7 @@ export interface Account {
   type: AccountType;
   serial?: number;
   firstAddress?: string;
+  balance: number;
 }
 
 export interface NetworkDetail {
@@ -137,7 +138,7 @@ export default new Vuex.Store<VuexState>({
       { password, name }: { password: string; name: string }
     ) {
       utility.getAccount(state.seedMnemonic, password).then((account) => {
-        state.accounts.push({ key: account, name: name, type: "Password" });
+        state.accounts.push({ key: account, name: name, type: "Password", balance: -1 });
         dispatch("initWalletAddress");
         dispatch("persistent");
       });
@@ -154,6 +155,7 @@ export default new Vuex.Store<VuexState>({
             name: name,
             type: "Serial",
             serial: serial,
+            balance: -1,
           });
           dispatch("initWalletAddress");
           dispatch("persistent");
@@ -180,6 +182,39 @@ export default new Vuex.Store<VuexState>({
     // removeAccount({ state }, accountName: string) {
     //   state.accounts.splice(state.accounts.findIndex(_ => _.name == accountName), 1);
     // },
+    async refreshBalance({ state, dispatch }, idx: number) {
+      if (!idx) idx = state.selectedAccount;
+      const account = state.accounts[idx];
+      const privkey = new Uint8Array(
+        Object.assign([], account.key.privateKey)
+      );
+      const hashes = await utility.getPuzzleHashes(privkey, state.networks[state.network].prefix);
+
+      const resp = await fetch("https://10.177.0.165:5058/Wallet/records", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          puzzleHashes: hashes,
+          includeSpentCoins: true,
+        }),
+      });
+      const json = (await resp.json()) as GetRecordsResponse;
+      const balance = json.coins.reduce(
+        (acc, puzzle) =>
+          acc +
+          puzzle.records.reduce(
+            (recacc, rec) =>
+              recacc + (!rec.Coin || rec.Spent ? 0 : rec.Coin.Amount),
+            0
+          ),
+        0
+      );
+
+      Vue.set(account, "balance", balance);
+    }
   },
   modules: {},
 });
