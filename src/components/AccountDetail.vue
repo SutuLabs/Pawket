@@ -5,6 +5,7 @@
         <b-button @click="selectAccount()">{{ account.name }}: {{ account.key.fingerprint }}</b-button>
         <br />
         <span @click="copy(account.firstAddress)">{{account.firstAddress}} 📋</span>
+        <a target="_blank" :href="'https://chia.tt/info/address/' + account.firstAddress">⚓</a>
         <div>
           <h2>
             {{ account.balance }} mojo
@@ -13,7 +14,7 @@
         </div>
       </section>
       <section>
-        <b-button @click="showQr()" disabled>Receive</b-button>
+        <b-button @click="showQr()">Receive</b-button>
         <b-button disabled>Send</b-button>
         <b-button @click="showExport()">Export</b-button>
       </section>
@@ -64,6 +65,7 @@ import AccountExport from "@/components/AccountExport.vue";
 import AccountList from "@/components/AccountList.vue";
 import { GetRecordsResponse } from "@/models/walletModel";
 import KeyBox from "@/components/KeyBox.vue";
+import Receive from "./Receive.vue";
 
 type Mode = "Verify" | "Create";
 
@@ -113,7 +115,7 @@ export default class AccountDetail extends Vue {
   showQr() {
     this.$buefy.modal.open({
       parent: this,
-      component: AccountExport,
+      component: Receive,
       hasModalCard: true,
       trapFocus: true,
       props: { account: this.account },
