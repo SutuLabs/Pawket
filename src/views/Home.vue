@@ -3,7 +3,7 @@
     <verify-password v-if="!password"></verify-password>
     <create-seed v-else-if="!mnemonic"></create-seed>
     <account-detail v-else></account-detail>
-    <self-test></self-test>
+    <self-test v-if="!unlock"></self-test>
   </div>
 </template>
 
@@ -31,6 +31,9 @@ export default class Home extends Vue {
   }
   get password(): string {
     return store.state.password;
+  }
+  get unlock(): boolean {
+    return store.state.unlock;
   }
 }
 </script>

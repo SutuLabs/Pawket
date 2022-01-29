@@ -16,7 +16,7 @@ type deriveCallback = (path: number[]) => PrivateKey;
 export interface AccountKey {
   compatibleMnemonic: string;
   fingerprint: number;
-  privateKey: Uint8Array;
+  privateKey: string;
 }
 
 class Utility {
@@ -119,7 +119,7 @@ class Utility {
     return {
       compatibleMnemonic: compatibleMnemonic,
       fingerprint: pk.get_fingerprint(),
-      privateKey: sk.serialize(),
+      privateKey: this.toHexString(sk.serialize()),
     };
   }
 

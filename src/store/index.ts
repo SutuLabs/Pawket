@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import utility from "./utility";
 import { AccountKey } from "@/store/utility";
+import { CoinRecord } from "@/models/walletModel";
 
 Vue.use(Vuex);
 
@@ -14,6 +15,14 @@ export interface Account {
   serial?: number;
   firstAddress?: string;
   balance: number;
+  activities?: CoinRecord[];
+}
+
+export interface PersistentAccount {
+  key: AccountKey;
+  name: string;
+  type: AccountType;
+  serial?: number;
 }
 
 export interface NetworkDetail {
@@ -85,9 +94,7 @@ export default new Vuex.Store<VuexState>({
     async initWalletAddress({ state }) {
       for (let i = 0; i < state.accounts.length; i++) {
         const account = state.accounts[i];
-        const privkey = new Uint8Array(
-          Object.assign([], account.key.privateKey)
-        );
+        const privkey = utility.fromHexString(account.key.privateKey);
         const derive = await utility.derive(privkey);
         const firstWalletAddressPubkey = utility.toHexString(
           derive([12381, 8444, 2, 0]).get_g1().serialize()
@@ -102,6 +109,10 @@ export default new Vuex.Store<VuexState>({
         state.accounts = JSON.parse(
           (await utility.decrypt(state.encryptedAccounts, password)) || "[]"
         );
+        state.accounts.forEach(_ => {
+          Vue.set(_, "balance", -1);
+          Vue.set(_, "activities", []);
+        });
         state.seedMnemonic = await utility.decrypt(
           state.encryptedSeed,
           password
@@ -122,7 +133,12 @@ export default new Vuex.Store<VuexState>({
           ),
           passwordHash: state.passwordHash,
           encryptedAccounts: await utility.encrypt(
-            JSON.stringify(state.accounts),
+            JSON.stringify(state.accounts.map(_ => ({
+              key: _.key,
+              name: _.name,
+              type: _.type,
+              serial: _.serial,
+            }))),
             state.password
           ),
           network: state.network,
@@ -185,9 +201,7 @@ export default new Vuex.Store<VuexState>({
     async refreshBalance({ state, dispatch }, idx: number) {
       if (!idx) idx = state.selectedAccount;
       const account = state.accounts[idx];
-      const privkey = new Uint8Array(
-        Object.assign([], account.key.privateKey)
-      );
+      const privkey = utility.fromHexString(account.key.privateKey);
       const hashes = await utility.getPuzzleHashes(privkey, state.networks[state.network].prefix, 0, 1);
 
       const resp = await fetch("https://10.177.0.165:5058/Wallet/records", {
@@ -212,12 +226,10 @@ export default new Vuex.Store<VuexState>({
           ),
         0
       );
+      const activities = json.coins.reduce(
+        (acc, puzzle) => acc.concat(puzzle.records.reduce((recacc, rec) => recacc.concat(rec), [])), []);
 
-      // json.coins.forEach(c => {
-      //   c.records.forEach(r => {
-      //     console.log("coin", r.coin.amount, r.coin.parentCoinInfo, r.coin.puzzleHash)
-      //   });
-      // });
+      Vue.set(account, "activities", activities);
 
       Vue.set(account, "balance", balance);
     }

@@ -80,9 +80,7 @@ export default class AccountExport extends Vue {
   public walletpubkey = "";
 
   mounted() {
-    var privkey = new Uint8Array(
-      Object.assign([], this.account.key.privateKey)
-    );
+    var privkey = utility.fromHexString(this.account.key.privateKey);
     utility.getBLS(privkey).then(({ BLS, sk }) => {
       this.masterprikey = utility.toHexString(sk.serialize());
       this.masterpubkey = utility.toHexString(sk.get_g1().serialize());
