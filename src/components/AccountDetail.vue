@@ -4,7 +4,7 @@
       <section>
         <b-button @click="selectAccount()">{{ account.name }}: {{ account.key.fingerprint }}</b-button>
         <br />
-        <span @click="copy(account.firstAddress)">{{account.firstAddress}} 📋</span>
+        <span @click="copy(account.firstAddress)">{{ account.firstAddress }} 📋</span>
         <a target="_blank" :href="'https://chia.tt/info/address/' + account.firstAddress">⚓</a>
         <div>
           <h2>
@@ -24,7 +24,7 @@
         <b-tab-item label="Asset">
           <a class="panel-block">
             <span class="panel-icon">₿</span>
-            {{account.balance}} mojo
+            {{ account.balance }} mojo
           </a>
           <a class="panel-block" v-for="asset in assets" :key="asset">
             <span class="panel-icon">₿</span>
@@ -33,16 +33,14 @@
           </a>
         </b-tab-item>
         <b-tab-item label="Activity">
-          <a class="panel-block" v-for="(act,i) in account.activities" :key="i">
+          <a class="panel-block" v-for="(act, i) in account.activities" :key="i">
             <span class="panel-icon">🗒️</span>
-            <span>{{act.coin.amount}} mojo</span>
-            <span class="has-text-grey-light" v-if="act.spent">☑️ Used on {{act.spentBlockIndex}}</span>
+            <span>{{ act.coin.amount }} mojo</span>
+            <span class="has-text-grey-light" v-if="act.spent">☑️ Used on {{ act.spentBlockIndex }}</span>
             <span class="has-text-grey-light" v-if="act.coinbase">🌰️ Coinbase</span>
             <br />
-            <span class="has-text-grey-light">⚡ {{act.confirmedBlockIndex}}</span>
-            <span
-              class="has-text-grey-light"
-            >⏰ {{new Date(act.timestamp*1000).toISOString().slice(0,-5)}}</span>
+            <span class="has-text-grey-light">⚡ {{ act.confirmedBlockIndex }}</span>
+            <span class="has-text-grey-light">⏰ {{ new Date(act.timestamp * 1000).toISOString().slice(0, -5) }}</span>
             <br />
             <span>
               <key-box :value="act.coin.parentCoinInfo" display="ParentCoinInfo"></key-box>
@@ -56,14 +54,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import store from "@/store";
-import { generateMnemonic } from "bip39";
-import utility from "../store/utility";
 import { Account } from "@/store/index";
 import AccountExport from "@/components/AccountExport.vue";
 import AccountList from "@/components/AccountList.vue";
-import { GetRecordsResponse } from "@/models/walletModel";
 import KeyBox from "@/components/KeyBox.vue";
 import Receive from "./Receive.vue";
 
@@ -84,7 +79,7 @@ export default class AccountDetail extends Vue {
     return store.state.accounts[store.state.selectedAccount] ?? {};
   }
 
-  mounted() {
+  mounted(): void {
     this.mode = store.state.passwordHash ? "Verify" : "Create";
   }
 
@@ -92,7 +87,7 @@ export default class AccountDetail extends Vue {
     store.dispatch("copy", text);
   }
 
-  showExport() {
+  showExport(): void {
     this.$buefy.modal.open({
       parent: this,
       component: AccountExport,
@@ -102,7 +97,7 @@ export default class AccountDetail extends Vue {
     });
   }
 
-  selectAccount() {
+  selectAccount(): void {
     this.$buefy.modal.open({
       parent: this,
       component: AccountList,
@@ -112,7 +107,7 @@ export default class AccountDetail extends Vue {
     });
   }
 
-  showQr() {
+  showQr(): void {
     this.$buefy.modal.open({
       parent: this,
       component: Receive,
@@ -122,7 +117,7 @@ export default class AccountDetail extends Vue {
     });
   }
 
-  async refreshBalance() {
+  async refreshBalance(): Promise<void> {
     store.dispatch("refreshBalance");
   }
 }

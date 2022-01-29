@@ -18,19 +18,16 @@
       <div class="content has-text-centered">
         <p>
           <strong>Chiabee Wallet</strong>
-          [{{version}}] by
-          <a href="https://www.chiabee.net">Chiabee</a>.
-          <br />The
-          <a href="http://github.com/chiabee">source code</a> would available later.
-          This app is in ALPHA stage, don't use in PRODUCTION.
+          [{{ version }}] by <a href="https://www.chiabee.net">Chiabee</a>. <br />The
+          <a href="http://github.com/chiabee">source code</a> would available later. This app is in ALPHA stage, don't use in
+          PRODUCTION.
         </p>
       </div>
     </footer>
   </div>
 </template>
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import store from "@/store";
+import { Component, Vue } from "vue-property-decorator";
 
 @Component
 export default class ProfileCorner extends Vue {

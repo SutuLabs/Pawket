@@ -41,11 +41,7 @@
           Mnemonic seed (24 secret words):
           <br />
           {{ account.key.compatibleMnemonic }}
-          <key-box
-            display="✂️"
-            tooltip="Copy"
-            :value="account.key.compatibleMnemonic"
-          ></key-box>
+          <key-box display="✂️" tooltip="Copy" :value="account.key.compatibleMnemonic"></key-box>
         </li>
       </ul>
     </section>
@@ -63,8 +59,6 @@ import { Account } from "@/store/index";
 import utility from "../store/utility";
 import KeyBox from "@/components/KeyBox.vue";
 
-type Mode = "Verify" | "Create";
-
 @Component({
   components: {
     KeyBox,
@@ -79,9 +73,9 @@ export default class AccountExport extends Vue {
   public walletprikey = "";
   public walletpubkey = "";
 
-  mounted() {
+  mounted(): void {
     var privkey = utility.fromHexString(this.account.key.privateKey);
-    utility.getBLS(privkey).then(({ BLS, sk }) => {
+    utility.getBLS(privkey).then(({ sk }) => {
       this.masterprikey = utility.toHexString(sk.serialize());
       this.masterpubkey = utility.toHexString(sk.get_g1().serialize());
     });

@@ -21,9 +21,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import store from "@/store";
-import { generateMnemonic } from "bip39";
 import utility from "../store/utility";
 
 type Mode = "Verify" | "Create";
@@ -35,11 +34,11 @@ export default class VerifyPassword extends Vue {
   public mode: Mode = "Verify";
   public showClear = false;
 
-  mounted() {
+  mounted(): void {
     this.mode = store.state.passwordHash ? "Verify" : "Create";
   }
 
-  confirm() {
+  confirm(): void {
     utility.hash(this.password).then((pswhash) => {
       if (pswhash != store.state.passwordHash) {
         this.showClear = true;
@@ -49,17 +48,17 @@ export default class VerifyPassword extends Vue {
     });
   }
 
-  create() {
+  create(): void {
     if (this.repassword != this.password) return;
     store.dispatch("setPassword", this.password);
   }
 
-  clear() {
+  clear(): void {
     this.$buefy.dialog.confirm({
       message: `Clear all data? Everything would empty!!!`,
       trapFocus: true,
       type: "is-danger",
-      onConfirm: (name) => {
+      onConfirm: () => {
         store.dispatch("clear");
       },
     });

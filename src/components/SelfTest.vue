@@ -1,24 +1,22 @@
 <template>
-  <div class="box">{{errorMessage}}</div>
+  <div class="box">{{ errorMessage }}</div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import store from "@/store";
-import { generateMnemonic } from "bip39";
+import { Component, Vue } from "vue-property-decorator";
 import utility from "../store/utility";
 
 @Component
 export default class SelfTest extends Vue {
   public errorMessage = "Checking";
 
-  mounted() {
+  mounted(): void {
     this.selfTest().then(() => {
       console.log();
     });
   }
 
-  assert(expect: any, actual: any) {
+  assert<T>(expect: T, actual: T): void {
     if (expect != actual) {
       console.log("asserting failed", expect, actual);
       throw `expect [${expect}] != actual [${actual}]`;
@@ -30,7 +28,7 @@ export default class SelfTest extends Vue {
       var privkey = utility.fromHexString(
         "67b3dcf5ba985f77b7bb78b3edfd7e501f4669a3530b74f2247256e38b0529e2"
       );
-      utility.getBLS(privkey).then(({ BLS, sk }) => {
+      utility.getBLS(privkey).then(({ sk }) => {
         const masterprikey = utility.toHexString(sk.serialize());
         const masterpubkey = utility.toHexString(sk.get_g1().serialize());
         this.assert(
@@ -41,7 +39,7 @@ export default class SelfTest extends Vue {
           "89d4ca795881dc192cf7e0bcf22528c3d7708f57aa644647ae2506cd10405dc528b36e450ab901675f7a6289a4335a22",
           masterpubkey
         );
-        this.assert("2308828858", sk.get_g1().get_fingerprint());
+        this.assert("2308828858", sk.get_g1().get_fingerprint().toString());
       });
 
       const derive = await utility.derive(privkey);

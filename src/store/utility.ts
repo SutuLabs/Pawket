@@ -1,7 +1,6 @@
 import { NotificationProgrammatic as Notification } from "buefy";
 import {
   entropyToMnemonic,
-  mnemonicToEntropy,
   mnemonicToSeedSync,
 } from "bip39";
 
@@ -150,7 +149,6 @@ class Utility {
   }
 
   public async decrypt(encdata: string, key: string): Promise<string> {
-    const enc = new TextEncoder();
     const dec = new TextDecoder();
     const arr = this.fromHexString(encdata);
     if (arr.length < 16) return "";
@@ -184,11 +182,10 @@ class Utility {
   }
 
   public async hash(data: string): Promise<string> {
-    const enc = new TextEncoder();
     return this.toHexString(await this.purehash(data));
   }
 
-  public async getPuzzleHash(pubkey: string, prefix: string): Promise<string> {
+  public async getPuzzleHash(pubkey: string): Promise<string> {
     // console.log(pubkey,prefix);
     if (!pubkey.startsWith("0x")) pubkey = "0x" + pubkey;
     await clvm_tools.initialize();
@@ -218,21 +215,21 @@ class Utility {
   }
 
   public async getAddress(pubkey: string, prefix: string): Promise<string> {
-    const puzzleHash = await this.getPuzzleHash(pubkey, prefix);
+    const puzzleHash = await this.getPuzzleHash(pubkey);
 
     const address = bech32m.encode(prefix, bech32m.toWords(this.fromHexString(puzzleHash)));
     // console.log(address);
     return address;
   }
 
-  public async getPuzzleHashes(privateKey: Uint8Array, prefix: string, startIndex = 0, endIndex = 10) {
+  public async getPuzzleHashes(privateKey: Uint8Array, startIndex = 0, endIndex = 10) {
     const derive = await this.derive(privateKey);
     const hashes = [];
     for (let i = startIndex; i < endIndex; i++) {
       const pubkey = this.toHexString(
         derive([12381, 8444, 2, i]).get_g1().serialize()
       );
-      const hash = await this.getPuzzleHash(pubkey, prefix);
+      const hash = await this.getPuzzleHash(pubkey);
       hashes.push(hash);
     }
 

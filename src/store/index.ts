@@ -202,7 +202,7 @@ export default new Vuex.Store<VuexState>({
       if (!idx) idx = state.selectedAccount;
       const account = state.accounts[idx];
       const privkey = utility.fromHexString(account.key.privateKey);
-      const hashes = await utility.getPuzzleHashes(privkey, state.networks[state.network].prefix, 0, 1);
+      const hashes = await utility.getPuzzleHashes(privkey, 0, 1);
 
       const resp = await fetch("https://10.177.0.165:5058/Wallet/records", {
         method: "POST",
