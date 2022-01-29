@@ -213,6 +213,12 @@ export default new Vuex.Store<VuexState>({
         0
       );
 
+      // json.coins.forEach(c => {
+      //   c.records.forEach(r => {
+      //     console.log("coin", r.coin.amount, r.coin.parentCoinInfo, r.coin.puzzleHash)
+      //   });
+      // });
+
       Vue.set(account, "balance", balance);
     }
   },
