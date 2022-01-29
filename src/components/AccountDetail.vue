@@ -6,7 +6,7 @@
           >{{ account.name }}: {{ account.key.fingerprint }}</b-button
         >
         <br />
-        <!-- <span @click="copy(address)">{{address}} 📋</span> -->
+        <span @click="copy(account.firstAddress)">{{account.firstAddress}} 📋</span>
         <div>
           <h2>{{ balance }}</h2>
         </div>

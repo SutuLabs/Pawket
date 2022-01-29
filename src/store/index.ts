@@ -12,9 +12,16 @@ export interface Account {
   name: string;
   type: AccountType;
   serial?: number;
+  firstAddress?: string;
 }
 
-interface VuexState {
+export interface NetworkDetail {
+  name: string;
+  rpc: string;
+  prefix: string;
+}
+
+export interface VuexState {
   seedMnemonic: string;
   passwordHash: string;
   encryptedSeed: string;
@@ -24,6 +31,8 @@ interface VuexState {
   password: string;
   accounts: Account[];
   unlock: boolean;
+  network: string;
+  networks: { [key: string]: NetworkDetail };
 }
 
 export default new Vuex.Store<VuexState>({
@@ -40,6 +49,19 @@ export default new Vuex.Store<VuexState>({
       accounts: [],
       selectedAccount: 0,
       unlock: false,
+      network: sts.network || "main",
+      networks: {
+        testnet10: {
+          name: "testnet10",
+          rpc: "",
+          prefix: "txch"
+        },
+        main: {
+          name: "Main",
+          rpc: "",
+          prefix: "xch"
+        },
+      },
     };
   },
   getters: {},
@@ -59,6 +81,19 @@ export default new Vuex.Store<VuexState>({
         dispatch("unlock", password);
       });
     },
+    async initWalletAddress({ state }) {
+      for (let i = 0; i < state.accounts.length; i++) {
+        const account = state.accounts[i];
+        const privkey = new Uint8Array(
+          Object.assign([], account.key.privateKey)
+        );
+        const derive = await utility.derive(privkey);
+        const firstWalletAddressPubkey = utility.toHexString(
+          derive([12381, 8444, 2, 0]).get_g1().serialize()
+        );
+        Vue.set(account, "firstAddress", await utility.getAddress(firstWalletAddressPubkey, state.networks[state.network].prefix));
+      }
+    },
     unlock({ state, dispatch }, password) {
       utility.hash(password).then(async (pswhash) => {
         if (pswhash != state.passwordHash) return;
@@ -71,6 +106,7 @@ export default new Vuex.Store<VuexState>({
           password
         );
         state.unlock = true;
+        dispatch("initWalletAddress");
         dispatch("persistent");
       });
     },
@@ -88,6 +124,7 @@ export default new Vuex.Store<VuexState>({
             JSON.stringify(state.accounts),
             state.password
           ),
+          network: state.network,
         })
       );
     },
@@ -101,6 +138,7 @@ export default new Vuex.Store<VuexState>({
     ) {
       utility.getAccount(state.seedMnemonic, password).then((account) => {
         state.accounts.push({ key: account, name: name, type: "Password" });
+        dispatch("initWalletAddress");
         dispatch("persistent");
       });
     },
@@ -117,6 +155,7 @@ export default new Vuex.Store<VuexState>({
             type: "Serial",
             serial: serial,
           });
+          dispatch("initWalletAddress");
           dispatch("persistent");
         });
     },

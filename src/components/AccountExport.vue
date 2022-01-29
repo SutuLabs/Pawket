@@ -24,7 +24,7 @@
           Pool public key (m/12381/8444/1/0):
           <key-box :value="poolpubkey"></key-box>
         </li>
-        <li>First wallet address: TODO</li>
+        <li>First wallet address: <key-box :value="account.firstAddress"></key-box></li>
         <li>
           Master private key (m):
           <key-box :value="masterprikey"></key-box>
@@ -61,7 +61,6 @@ import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import store from "@/store";
 import { Account } from "@/store/index";
 import utility from "../store/utility";
-import { PrivateKey } from "@aguycalled/bls-signatures";
 import KeyBox from "@/components/KeyBox.vue";
 
 type Mode = "Verify" | "Create";

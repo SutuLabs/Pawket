@@ -34,7 +34,6 @@ import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import store from "@/store";
 import { Account } from "@/store/index";
 import utility from "../store/utility";
-import { PrivateKey } from "@aguycalled/bls-signatures";
 import AccountExport from "@/components/AccountExport.vue";
 
 type Mode = "Verify" | "Create";

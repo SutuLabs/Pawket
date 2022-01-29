@@ -5,9 +5,12 @@ import {
   mnemonicToSeedSync,
 } from "bip39";
 
-import loadBls from "@aguycalled/bls-signatures";
-import { PrivateKey, ModuleInstance } from "@aguycalled/bls-signatures";
+import loadBls from "@chiamine/bls-signatures";
+import { PrivateKey, ModuleInstance } from "@chiamine/bls-signatures";
 import pbkdf2Hmac from "pbkdf2-hmac";
+import * as clvm_tools from "clvm_tools/browser";
+import { bech32m } from "@scure/base";
+
 type deriveCallback = (path: number[]) => PrivateKey;
 
 export interface AccountKey {
@@ -183,6 +186,35 @@ class Utility {
   public async hash(data: string): Promise<string> {
     const enc = new TextEncoder();
     return this.toHexString(await this.purehash(data));
+  }
+
+  public async getAddress(pubkey: string, prefix: string): Promise<string> {
+    // console.log(pubkey,prefix);
+    if (!pubkey.startsWith("0x"))pubkey="0x"+pubkey;
+    await clvm_tools.initialize();
+    const hidden_puzzle_hash = "0x711d6c4e32c92e53179b199484cf8c897542bc57f2b22582799f9d657eec4699";
+
+    let output: any = null;
+    clvm_tools.setPrintFunction((...args) => output = args)
+
+    clvm_tools.go(
+      "brun",
+      "(point_add 2 (pubkey_for_exp (sha256 2 5)))",
+      `(${pubkey} ${hidden_puzzle_hash})`
+    );
+    const synPubkey = output[0];
+    // console.log("synPubkey", synPubkey);
+    clvm_tools.go(
+      "opc",
+      "-H",
+      `(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . ${synPubkey}) 1))`
+    );
+    const puzzleHash = output[0];
+    // console.log("puzzleHash", puzzleHash);
+
+    const address = bech32m.encode(prefix, bech32m.toWords(this.fromHexString(puzzleHash)));
+    // console.log(address);
+    return address;
   }
 }
 
