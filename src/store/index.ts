@@ -204,7 +204,7 @@ export default new Vuex.Store<VuexState>({
       const privkey = utility.fromHexString(account.key.privateKey);
       const hashes = await utility.getPuzzleHashes(privkey, 0, 1);
 
-      const resp = await fetch("https://10.177.0.165:5058/Wallet/records", {
+      const resp = await fetch(process.env.VUE_APP_API_URL + "Wallet/records", {
         method: "POST",
         headers: {
           Accept: "application/json",
