@@ -2,13 +2,6 @@
 # yarn lockfile v1
 
 
-"@aguycalled/bls-signatures@^0.2.1-beta.3":
-  version "0.2.1-beta.3"
-  resolved "https://registry.npmmirror.com/@aguycalled/bls-signatures/download/@aguycalled/bls-signatures-0.2.1-beta.3.tgz#998a6a6d303a8d487070c374eb6846a7433bba35"
-  integrity sha1-mYpqbTA6jUhwcMN062hGp0M7ujU=
-  dependencies:
-    binascii "0.0.2"
-
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.16.7", "@babel/code-frame@^7.8.3":
   version "7.16.7"
   resolved "https://registry.npmmirror.com/@babel/code-frame/download/@babel/code-frame-7.16.7.tgz#44416b6bd7624b998f5b1af5d470856c40138789"
@@ -930,6 +923,13 @@
     "@babel/helper-validator-identifier" "^7.16.7"
     to-fast-properties "^2.0.0"
 
+"@chiamine/bls-signatures@^0.2.1-beta.2":
+  version "0.2.1-beta.2"
+  resolved "https://registry.npmmirror.com/@chiamine/bls-signatures/download/@chiamine/bls-signatures-0.2.1-beta.2.tgz#6ce2ef0b2ed76bf1e650bc93ba2640e69c3240b1"
+  integrity sha1-bOLvCy7Xa/HmULyTuiZA5pwyQLE=
+  dependencies:
+    binascii "0.0.2"
+
 "@hapi/address@2.x.x":
   version "2.1.4"
   resolved "https://registry.npmmirror.com/@hapi/address/download/@hapi/address-2.1.4.tgz#5d67ed43f3fd41a69d4b9ff7b56e7c0d1d0a81e5"
@@ -1020,6 +1020,11 @@
   dependencies:
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
+
+"@scure/base@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@scure/base/-/base-1.0.0.tgz#109fb595021de285f05a7db6806f2f48296fcee7"
+  integrity sha512-gIVaYhUsy+9s58m/ETjSJVKHhKTBMmcRb9cEV5/5dwvfDlfORjKrFsDeDHWRrm6RjcPvCLZFwGJjAjLj1gg4HA==
 
 "@soda/friendly-errors-webpack-plugin@^1.7.1":
   version "1.8.1"
@@ -2805,6 +2810,27 @@ clone@^1.0.2:
   version "1.0.4"
   resolved "https://registry.nlark.com/clone/download/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
   integrity sha1-2jCcwmPfFZlMaIypAheco8fNfH4=
+
+clvm@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.npmmirror.com/clvm/download/clvm-1.0.9.tgz#397b25f4eaf185debee65603651ae29a5e73024d"
+  integrity sha512-HA7ap/pdZdK4ywZptFBwOqtax6jMHBb4QfVVPFii9cXbDYIEErVbiYa584rtB5/FxtRb+OOeNdeIEnmyxFnQrQ==
+  dependencies:
+    "@chiamine/bls-signatures" "^0.2.1-beta.2"
+    jscrypto "^1.0.2"
+
+clvm_rs@^0.1.15:
+  version "0.1.17"
+  resolved "https://registry.npmmirror.com/clvm_rs/download/clvm_rs-0.1.17.tgz#68aab71cad1da4a303548e149de53d03c8f0ed17"
+  integrity sha512-GKQoDA7KmzrGqixJI5UOvJEW7RO3Yl5YcK+c7TrzEvaWE3dzDdS5KDtBzbGwW/JlZLdbakDjaenFKxMjHIVKQw==
+
+clvm_tools@^0.9.5:
+  version "0.9.5"
+  resolved "https://registry.npmmirror.com/clvm_tools/download/clvm_tools-0.9.5.tgz#00e6aa8b33986cc7fd7eef21b5ecc49a2f08578f"
+  integrity sha512-EE15IO+iSoKBTk4E2eRcGgF8906zkJ+2lfyC+jfgmCDGVhsxgwXTh2L4LVVw+wPMBDJcVyWo8fJ+xlU/495/sQ==
+  dependencies:
+    clvm "^1.0.9"
+    clvm_rs "^0.1.15"
 
 coa@^2.0.2:
   version "2.0.2"
@@ -5584,6 +5610,11 @@ jsbn@~0.1.0:
   resolved "https://registry.nlark.com/jsbn/download/jsbn-0.1.1.tgz#a5e654c2e5a2deb5f201d96cefbca80c0ef2f513"
   integrity sha1-peZUwuWi3rXyAdls77yoDA7y9RM=
 
+jscrypto@^1.0.2:
+  version "1.0.3"
+  resolved "https://registry.npmmirror.com/jscrypto/download/jscrypto-1.0.3.tgz#598febca2a939d6f679c54f56e1fe364cef30cc9"
+  integrity sha512-lryZl0flhodv4SZHOqyb1bx5sKcJxj0VBo0Kzb4QMAg3L021IC9uGpl0RCZa+9KJwlRGSK2C80ITcwbe19OKLQ==
+
 jsesc@^2.5.1:
   version "2.5.2"
   resolved "https://registry.nlark.com/jsesc/download/jsesc-2.5.2.tgz#80564d2e483dacf6e8ef209650a67df3f0c283a4"
@@ -7345,6 +7376,11 @@ q@^1.1.2:
   version "1.5.1"
   resolved "https://registry.nlark.com/q/download/q-1.5.1.tgz#7e32f75b41381291d04611f1bf14109ac00651d7"
   integrity sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc=
+
+qrcode.vue@^1.0.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/qrcode.vue/-/qrcode.vue-1.7.0.tgz#c54b2934f0650c10d92785d08aaad36c55e0fc56"
+  integrity sha512-R7t6Y3fDDtcU7L4rtqwGUDP9xD64gJhIwpfjhRCTKmBoYF6SS49PIJHRJ048cse6OI7iwTwgyy2C46N9Ygoc6g==
 
 qs@6.9.6:
   version "6.9.6"

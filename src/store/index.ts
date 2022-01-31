@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import utility from "./utility";
 import { AccountKey } from "@/store/utility";
+import { CoinRecord, GetRecordsResponse } from "@/models/walletModel";
 
 Vue.use(Vuex);
 
@@ -12,9 +13,25 @@ export interface Account {
   name: string;
   type: AccountType;
   serial?: number;
+  firstAddress?: string;
+  balance: number;
+  activities?: CoinRecord[];
 }
 
-interface VuexState {
+export interface PersistentAccount {
+  key: AccountKey;
+  name: string;
+  type: AccountType;
+  serial?: number;
+}
+
+export interface NetworkDetail {
+  name: string;
+  rpc: string;
+  prefix: string;
+}
+
+export interface VuexState {
   seedMnemonic: string;
   passwordHash: string;
   encryptedSeed: string;
@@ -24,6 +41,8 @@ interface VuexState {
   password: string;
   accounts: Account[];
   unlock: boolean;
+  network: string;
+  networks: { [key: string]: NetworkDetail };
 }
 
 export default new Vuex.Store<VuexState>({
@@ -40,6 +59,19 @@ export default new Vuex.Store<VuexState>({
       accounts: [],
       selectedAccount: 0,
       unlock: false,
+      network: sts.network || "main",
+      networks: {
+        testnet10: {
+          name: "testnet10",
+          rpc: "",
+          prefix: "txch"
+        },
+        main: {
+          name: "Main",
+          rpc: "",
+          prefix: "xch"
+        },
+      },
     };
   },
   getters: {},
@@ -59,6 +91,17 @@ export default new Vuex.Store<VuexState>({
         dispatch("unlock", password);
       });
     },
+    async initWalletAddress({ state }) {
+      for (let i = 0; i < state.accounts.length; i++) {
+        const account = state.accounts[i];
+        const privkey = utility.fromHexString(account.key.privateKey);
+        const derive = await utility.derive(privkey);
+        const firstWalletAddressPubkey = utility.toHexString(
+          derive([12381, 8444, 2, 0]).get_g1().serialize()
+        );
+        Vue.set(account, "firstAddress", await utility.getAddress(firstWalletAddressPubkey, state.networks[state.network].prefix));
+      }
+    },
     unlock({ state, dispatch }, password) {
       utility.hash(password).then(async (pswhash) => {
         if (pswhash != state.passwordHash) return;
@@ -66,11 +109,16 @@ export default new Vuex.Store<VuexState>({
         state.accounts = JSON.parse(
           (await utility.decrypt(state.encryptedAccounts, password)) || "[]"
         );
+        state.accounts.forEach(_ => {
+          Vue.set(_, "balance", -1);
+          Vue.set(_, "activities", []);
+        });
         state.seedMnemonic = await utility.decrypt(
           state.encryptedSeed,
           password
         );
         state.unlock = true;
+        dispatch("initWalletAddress");
         dispatch("persistent");
       });
     },
@@ -85,13 +133,19 @@ export default new Vuex.Store<VuexState>({
           ),
           passwordHash: state.passwordHash,
           encryptedAccounts: await utility.encrypt(
-            JSON.stringify(state.accounts),
+            JSON.stringify(state.accounts.map(_ => ({
+              key: _.key,
+              name: _.name,
+              type: _.type,
+              serial: _.serial,
+            }))),
             state.password
           ),
+          network: state.network,
         })
       );
     },
-    clear({ state }) {
+    clear() {
       localStorage.removeItem("SETTINGS");
       location.reload();
     },
@@ -100,7 +154,8 @@ export default new Vuex.Store<VuexState>({
       { password, name }: { password: string; name: string }
     ) {
       utility.getAccount(state.seedMnemonic, password).then((account) => {
-        state.accounts.push({ key: account, name: name, type: "Password" });
+        state.accounts.push({ key: account, name: name, type: "Password", balance: -1 });
+        dispatch("initWalletAddress");
         dispatch("persistent");
       });
     },
@@ -116,7 +171,9 @@ export default new Vuex.Store<VuexState>({
             name: name,
             type: "Serial",
             serial: serial,
+            balance: -1,
           });
+          dispatch("initWalletAddress");
           dispatch("persistent");
         });
     },
@@ -141,6 +198,33 @@ export default new Vuex.Store<VuexState>({
     // removeAccount({ state }, accountName: string) {
     //   state.accounts.splice(state.accounts.findIndex(_ => _.name == accountName), 1);
     // },
+    async refreshBalance({ state }, idx: number) {
+      if (!idx) idx = state.selectedAccount;
+      const account = state.accounts[idx];
+      const privkey = utility.fromHexString(account.key.privateKey);
+      const hashes = await utility.getPuzzleHashes(privkey, 0, 1);
+
+      const resp = await fetch(process.env.VUE_APP_API_URL + "Wallet/records", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          puzzleHashes: hashes,
+          includeSpentCoins: true,
+        }),
+      });
+      const json = (await resp.json()) as GetRecordsResponse;
+      const balance = json.coins.reduce(
+        (acc, puzzle) => acc + puzzle.records.reduce((recacc, rec) => recacc + ((!rec.coin || rec.spent) ? 0 : rec.coin.amount), 0), 0);
+      const activities = json.coins.reduce(
+        (acc, puzzle) => acc.concat(puzzle.records.reduce<CoinRecord[]>((recacc, rec) => recacc.concat(rec), [])), ([] as CoinRecord[]));
+
+      Vue.set(account, "activities", activities);
+
+      Vue.set(account, "balance", balance);
+    }
   },
   modules: {},
 });

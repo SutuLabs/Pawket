@@ -3,6 +3,7 @@
     <verify-password v-if="!password"></verify-password>
     <create-seed v-else-if="!mnemonic"></create-seed>
     <account-detail v-else></account-detail>
+    <self-test v-if="!unlock"></self-test>
   </div>
 </template>
 
@@ -12,6 +13,7 @@ import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
 import CreateSeed from "@/components/CreateSeed.vue";
 import VerifyPassword from "@/components/VerifyPassword.vue";
 import AccountDetail from "@/components/AccountDetail.vue";
+import SelfTest from "@/components/SelfTest.vue";
 import store from "@/store";
 
 @Component({
@@ -20,6 +22,7 @@ import store from "@/store";
     CreateSeed,
     VerifyPassword,
     AccountDetail,
+    SelfTest,
   },
 })
 export default class Home extends Vue {
@@ -28,6 +31,9 @@ export default class Home extends Vue {
   }
   get password(): string {
     return store.state.password;
+  }
+  get unlock(): boolean {
+    return store.state.unlock;
   }
 }
 </script>

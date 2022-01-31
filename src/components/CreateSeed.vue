@@ -16,9 +16,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import store from "@/store";
-import { generateMnemonic } from "bip39";
 import utility from "../store/utility";
 
 type Mode = "Menu" | "Import" | "Create";
@@ -28,25 +27,25 @@ export default class CreateSeed extends Vue {
   public seedMnemonic = "";
   public mode: Mode = "Menu";
 
-  gotoImport() {
+  gotoImport(): void {
     this.mode = "Import";
     this.seedMnemonic = "";
   }
 
-  gotoCreate() {
+  gotoCreate(): void {
     this.refresh();
     this.mode = "Create";
   }
 
-  refresh() {
+  refresh(): void {
     this.seedMnemonic = utility.generateSeed();
   }
 
-  back() {
+  back(): void {
     this.mode = "Menu";
   }
 
-  confirm() {
+  confirm(): void {
     store.dispatch("importSeed", this.seedMnemonic);
   }
 }

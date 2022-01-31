@@ -8,11 +8,7 @@
     <section class="modal-card-body">
       <a class="panel-block" v-for="(account, idx) in accounts" :key="idx">
         <span class="panel-icon">✨</span>
-        <span @click="select(idx)"
-          >{{ account.name }}: {{ account.key.fingerprint }} [{{
-            account.type
-          }}]</span
-        >
+        <span @click="select(idx)">{{ account.name }}: {{ account.key.fingerprint }} [{{ account.type }}]</span>
         <span class="is-pulled-right" @click="remove(idx)">🗑️</span>
         <span class="is-pulled-right" @click="rename(idx)">📝️</span>
         <span class="is-pulled-right" @click="showExport(account)">🖨️️</span>
@@ -33,11 +29,7 @@
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import store from "@/store";
 import { Account } from "@/store/index";
-import utility from "../store/utility";
-import { PrivateKey } from "@aguycalled/bls-signatures";
 import AccountExport from "@/components/AccountExport.vue";
-
-type Mode = "Verify" | "Create";
 
 @Component
 export default class AccountList extends Vue {
@@ -87,6 +79,7 @@ export default class AccountList extends Vue {
   }
 
   getAccountName(): Promise<string> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return new Promise((resolve, reject) => {
       this.$buefy.dialog.prompt({
         message: `Enter the new account name`,
@@ -99,6 +92,7 @@ export default class AccountList extends Vue {
   }
 
   getPassword(): Promise<string> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return new Promise((resolve, reject) => {
       this.$buefy.dialog.prompt({
         message: `Enter the password`,
@@ -113,7 +107,7 @@ export default class AccountList extends Vue {
     });
   }
 
-  showExport(account: Account) {
+  showExport(account: Account): void {
     this.$buefy.modal.open({
       parent: this,
       component: AccountExport,
