@@ -6,7 +6,7 @@
         <br />
         <div>
           <h2 class="is-size-3 py-5">
-            <span v-if="account.tokens && account.tokens.hasOwnProperty('XCH')">{{ account.tokens["XCH"] }} mojo</span>
+            <span v-if="account.tokens && account.tokens.hasOwnProperty('XCH')">{{ account.tokens["XCH"].amount | demojo }}</span>
             <span v-else>- mojo</span>
             <br />
             <b-button size="is-small" @click="refreshBalance()">Refresh</b-button>
@@ -22,22 +22,20 @@
     <div class="box">
       <b-tabs position="is-centered" class="block">
         <b-tab-item label="Asset">
-          <!-- <a class="panel-block">
-            <span class="panel-icon">₿</span>
-            {{ account.balance }} mojo
-          </a> -->
-          <a class="panel-block" v-for="(amount, symbol) in account.tokens" :key="symbol">
-            <span class="panel-icon">₿</span>
-            <span class="">{{ amount / Math.pow(10, tokenInfo[symbol].decimal) }} {{ tokenInfo[symbol].unit }}</span>
-            <span class="has-text-grey-light is-size-7 pl-3">{{ amount }} mojo</span>
+          <a class="panel-block is-justify-content-space-between" v-for="(token, symbol) in account.tokens" :key="symbol">
+            <span class="is-pulled-right">
+              <span class="panel-icon"></span>
+              <span class="">{{ token.amount | demojo(tokenInfo[symbol].unit, tokenInfo[symbol].decimal) }}</span>
+              <span class="has-text-grey-light is-size-7 pl-3">{{ token.amount }} mojo</span>
+            </span>
+            <a class="is-pulled-right" target="_blank" :href="'https://chia.tt/info/address/' + token.address">⚓</a>
           </a>
         </b-tab-item>
         <b-tab-item label="Activity">
           <a class="panel-block" v-for="(act, i) in account.activities" :key="i">
             <span class="panel-icon">🗒️</span>
-            <span class=""
-              >{{ act.coin.amount / Math.pow(10, tokenInfo[act.symbol].decimal) }} {{ tokenInfo[act.symbol].unit }}</span
-            >
+            <span class="">{{ act.coin.amount | demojo(tokenInfo[act.symbol].unit, tokenInfo[act.symbol].decimal) }}</span>
+            <span class="has-text-grey-light is-size-7 pl-3">{{ act.coin.amount }} mojo</span>
             <span class="has-text-grey-light" v-if="act.spent">☑️ Used on {{ act.spentBlockIndex }}</span>
             <span class="has-text-grey-light" v-if="act.coinbase">🌰️ Coinbase</span>
             <br />
@@ -57,44 +55,28 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import store from "@/store";
+import store, { TokenInfo } from "@/store";
 import { Account } from "@/store/index";
 import AccountExport from "@/components/AccountExport.vue";
 import AccountList from "@/components/AccountList.vue";
 import KeyBox from "@/components/KeyBox.vue";
 import Receive from "./Receive.vue";
-
+import { demojo } from "@/services/filters";
 type Mode = "Verify" | "Create";
 
 @Component({
   components: {
     KeyBox,
   },
+  filters: { demojo },
 })
 export default class AccountDetail extends Vue {
   public mode: Mode = "Verify";
   public assets = ["SBS", "CHB", "BSH"];
-  public tokenInfo = {
-    "BSH": {
-      id: "6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b",
-      decimal: 3,
-      unit: "BSH",
-    },
-    "SBX": {
-      id: "78ad32a8c9ea70f27d73e9306fc467bab2a6b15b30289791e37ab6e8612212b1",
-      decimal: 3,
-      unit: "SBX",
-    },
-    "CH21": {
-      id: "509deafe3cd8bbfbb9ccce1d930e3d7b57b40c964fa33379b18d628175eb7a8f",
-      decimal: 3,
-      unit: "CH21",
-    },
-    "XCH": {
-      decimal: 12,
-      unit: "XCH",
-    },
-  };
+
+  get tokenInfo(): TokenInfo {
+    return store.state.tokenInfo;
+  }
 
   get account(): Account {
     return store.state.accounts[store.state.selectedAccount] ?? {};

@@ -9,6 +9,10 @@ Vue.use(Vuex);
 
 type AccountType = "Serial" | "Password";
 
+export interface AccountTokens {
+  [symbol: string]: { amount: number, address: string, }
+}
+
 export interface Account {
   key: AccountKey;
   name: string;
@@ -16,7 +20,7 @@ export interface Account {
   serial?: number;
   firstAddress?: string;
   activities?: CoinRecord[];
-  tokens: { [symbol: string]: number };
+  tokens: AccountTokens;
 }
 
 export interface PersistentAccount {
@@ -31,6 +35,14 @@ export interface NetworkDetail {
   rpc: string;
   prefix: string;
 }
+export interface TokenInfo {
+  [symbol: string]: {
+    id?: string,
+    symbol: string,
+    decimal: number,
+    unit: string,
+  }
+};
 
 export interface VuexState {
   seedMnemonic: string;
@@ -45,6 +57,7 @@ export interface VuexState {
   network: string;
   networks: { [key: string]: NetworkDetail };
   clvmInitialized: boolean;
+  tokenInfo: TokenInfo;
 }
 
 export default new Vuex.Store<VuexState>({
@@ -75,6 +88,31 @@ export default new Vuex.Store<VuexState>({
         },
       },
       clvmInitialized: false,
+      tokenInfo: {
+        "XCH": {
+          symbol: "XCH",
+          decimal: 12,
+          unit: "XCH",
+        },
+        "BSH": {
+          id: "6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b",
+          symbol: "BSH",
+          decimal: 3,
+          unit: "BSH",
+        },
+        "SBX": {
+          id: "78ad32a8c9ea70f27d73e9306fc467bab2a6b15b30289791e37ab6e8612212b1",
+          symbol: "SBX",
+          decimal: 3,
+          unit: "SBX",
+        },
+        "CH21": {
+          id: "509deafe3cd8bbfbb9ccce1d930e3d7b57b40c964fa33379b18d628175eb7a8f",
+          symbol: "CH21",
+          decimal: 3,
+          unit: "CH21",
+        },
+      },
     };
   },
   getters: {},
@@ -212,14 +250,7 @@ export default new Vuex.Store<VuexState>({
       const privkey = utility.fromHexString(account.key.privateKey);
       const xchToken = { symbol: "XCH", hashes: await utility.getPuzzleHashes(privkey, 0, 1) };
       const tokens = [xchToken];
-      const sbxId = "78ad32a8c9ea70f27d73e9306fc467bab2a6b15b30289791e37ab6e8612212b1";
-      const bshId = "6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b";
-      const ch21Id = "509deafe3cd8bbfbb9ccce1d930e3d7b57b40c964fa33379b18d628175eb7a8f";
-      const assets = [
-        { symbol: "BSH", id: bshId },
-        { symbol: "SBX", id: sbxId },
-        { symbol: "CH21", id: ch21Id }
-      ];
+      const assets = Object.values(state.tokenInfo).filter(_ => _.id).map(_ => ({ symbol: _.symbol, id: _.id ?? "" }));
       const dictAssets: { [key: string]: string } = {};
       for (let i = 0; i < xchToken.hashes.length; i++) {
         const h = xchToken.hashes[i];
@@ -262,11 +293,15 @@ export default new Vuex.Store<VuexState>({
           .filter(act => act.symbol == token.symbol)
           .reduce((recacc, rec) => recacc + ((!rec.coin || rec.spent) ? 0 : rec.coin.amount), 0)
       }))
-      const tokenBalances: { [symbol: string]: number } = {};
+      const tokenBalances: AccountTokens = {};
       for (let i = 0; i < balances.length; i++) {
         const b = balances[i];
-        tokenBalances[b.symbol] = b.amount;
+        tokenBalances[b.symbol] = {
+          amount: b.amount,
+          address: await utility.getAddressFromPuzzleHash(tokens.find(_ => _.symbol == b.symbol)?.hashes[0]??"", "xch"),
+        };
       }
+      console.log(tokens, tokenBalances);
 
       Vue.set(account, "activities", activities);
 

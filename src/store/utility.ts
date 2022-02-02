@@ -264,6 +264,11 @@ class Utility {
     return address;
   }
 
+  public async getAddressFromPuzzleHash(puzzleHash: string, prefix: string): Promise<string> {
+    const address = bech32m.encode(prefix, bech32m.toWords(this.fromHexString(puzzleHash)));
+    return address;
+  }
+
   public async getPuzzleHashes(privateKey: Uint8Array, startIndex = 0, endIndex = 10) {
     const derive = await this.derive(privateKey);
     const hashes = [];
