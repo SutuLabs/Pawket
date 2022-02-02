@@ -7,7 +7,7 @@
         <div>
           <h2 class="is-size-3 py-5">
             <span v-if="account.tokens && account.tokens.hasOwnProperty('XCH')">{{ account.tokens["XCH"].amount | demojo }}</span>
-            <span v-else>- mojo</span>
+            <span v-else>- XCH</span>
             <br />
             <b-button size="is-small" @click="refreshBalance()" :disabled="refreshing">
               Refresh
@@ -29,7 +29,7 @@
             <span class="is-pulled-right">
               <span class="panel-icon"></span>
               <span class="">{{ token.amount | demojo(tokenInfo[symbol].unit, tokenInfo[symbol].decimal) }}</span>
-              <span class="has-text-grey-light is-size-7 pl-3">{{ token.amount }} mojo</span>
+              <span class="has-text-grey-light is-size-7 pl-3">{{ token.amount }} mojos</span>
             </span>
             <a class="is-pulled-right" target="_blank" :href="'https://chia.tt/info/address/' + token.address">⚓</a>
           </a>
@@ -38,7 +38,7 @@
           <a class="panel-block" v-for="(act, i) in account.activities" :key="i">
             <span class="panel-icon">🗒️</span>
             <span class="">{{ act.coin.amount | demojo(tokenInfo[act.symbol].unit, tokenInfo[act.symbol].decimal) }}</span>
-            <span class="has-text-grey-light is-size-7 pl-3">{{ act.coin.amount }} mojo</span>
+            <span class="has-text-grey-light is-size-7 pl-3">{{ act.coin.amount }} mojos</span>
             <span class="has-text-grey-light" v-if="act.spent">☑️ Used on {{ act.spentBlockIndex }}</span>
             <span class="has-text-grey-light" v-if="act.coinbase">🌰️ Coinbase</span>
             <br />
