@@ -58,6 +58,7 @@ export default class AccountList extends Vue {
 
   select(idx: number): void {
     store.state.selectedAccount = idx;
+    store.dispatch("refreshBalance");
     this.close();
   }
 

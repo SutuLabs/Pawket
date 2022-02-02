@@ -58,6 +58,7 @@ export interface VuexState {
   networks: { [key: string]: NetworkDetail };
   clvmInitialized: boolean;
   tokenInfo: TokenInfo;
+  refreshing: boolean;
 }
 
 export default new Vuex.Store<VuexState>({
@@ -113,6 +114,7 @@ export default new Vuex.Store<VuexState>({
           unit: "CH21",
         },
       },
+      refreshing: false,
     };
   },
   getters: {},
@@ -256,6 +258,9 @@ export default new Vuex.Store<VuexState>({
     //   state.accounts.splice(state.accounts.findIndex(_ => _.name == accountName), 1);
     // },
     async refreshBalance({ state }, idx: number) {
+      if (state.refreshing) return;
+      state.refreshing = true;
+      const to = setTimeout(function () { state.refreshing = false; }, 30000);
       if (!idx) idx = state.selectedAccount;
       const account = state.accounts[idx];
       const privkey = utility.fromHexString(account.key.privateKey);
@@ -315,6 +320,9 @@ export default new Vuex.Store<VuexState>({
 
       Vue.set(account, "activities", activities);
       Vue.set(account, "tokens", tokenBalances);
+
+      clearTimeout(to);
+      state.refreshing = false;
     }
   },
   modules: {},

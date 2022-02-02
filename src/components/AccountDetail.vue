@@ -9,7 +9,10 @@
             <span v-if="account.tokens && account.tokens.hasOwnProperty('XCH')">{{ account.tokens["XCH"].amount | demojo }}</span>
             <span v-else>- mojo</span>
             <br />
-            <b-button size="is-small" @click="refreshBalance()">Refresh</b-button>
+            <b-button size="is-small" @click="refreshBalance()" :disabled="refreshing">
+              Refresh
+              <b-loading :is-full-page="false" v-model="refreshing"></b-loading>
+            </b-button>
           </h2>
         </div>
       </section>
@@ -76,6 +79,10 @@ export default class AccountDetail extends Vue {
 
   get tokenInfo(): TokenInfo {
     return store.state.tokenInfo;
+  }
+
+  get refreshing(): boolean {
+    return store.state.refreshing;
   }
 
   get account(): Account {
