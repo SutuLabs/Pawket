@@ -7,7 +7,7 @@ import * as clvm_tools from "clvm_tools/browser";
 
 Vue.use(Vuex);
 
-type AccountType = "Serial" | "Password";
+type AccountType = "Serial" | "Password" | "Legacy";
 
 export interface AccountTokens {
   [symbol: string]: { amount: number, address: string, }
@@ -223,6 +223,17 @@ export default new Vuex.Store<VuexState>({
           dispatch("persistent");
         });
     },
+    async createAccountByLegacyMnemonic({ state, dispatch }, { name, legacyMnemonic }: { name: string, legacyMnemonic: string }) {
+      const account = await utility.getAccount("", null, legacyMnemonic);
+      state.accounts.push({
+        key: account,
+        name: name,
+        type: "Legacy",
+        tokens: {},
+      });
+      dispatch("initWalletAddress");
+      dispatch("persistent");
+    },
     renameAccount(
       { state, dispatch },
       { idx, name }: { idx: number; name: string }
@@ -298,13 +309,11 @@ export default new Vuex.Store<VuexState>({
         const b = balances[i];
         tokenBalances[b.symbol] = {
           amount: b.amount,
-          address: await utility.getAddressFromPuzzleHash(tokens.find(_ => _.symbol == b.symbol)?.hashes[0]??"", "xch"),
+          address: await utility.getAddressFromPuzzleHash(tokens.find(_ => _.symbol == b.symbol)?.hashes[0] ?? "", "xch"),
         };
       }
-      console.log(tokens, tokenBalances);
 
       Vue.set(account, "activities", activities);
-
       Vue.set(account, "tokens", tokenBalances);
     }
   },

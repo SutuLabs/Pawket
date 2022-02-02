@@ -21,6 +21,10 @@
         <span class="panel-icon">➕</span>
         Add By Serial
       </a>
+      <a href="javascript:void(0)" class="panel-block" @click="addByLegacy()">
+        <span class="panel-icon">➕</span>
+        Import Chia 24 Mnemonic words
+      </a>
     </section>
   </div>
 </template>
@@ -78,6 +82,12 @@ export default class AccountList extends Vue {
     });
   }
 
+  async addByLegacy(): Promise<void> {
+    const name = await this.getAccountName();
+    const legacyMnemonic = await this.getLegacyMnemonic();
+    store.dispatch("createAccountByLegacyMnemonic", { name, legacyMnemonic });
+  }
+
   getAccountName(): Promise<string> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return new Promise((resolve, reject) => {
@@ -100,6 +110,19 @@ export default class AccountList extends Vue {
         inputAttrs: {
           type: "password",
         },
+        onConfirm: (name) => {
+          resolve(name);
+        },
+      });
+    });
+  }
+
+  getLegacyMnemonic(): Promise<string> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    return new Promise((resolve, reject) => {
+      this.$buefy.dialog.prompt({
+        message: `Enter the 24 words mnemonic used by Chia Client:`,
+        trapFocus: true,
         onConfirm: (name) => {
           resolve(name);
         },

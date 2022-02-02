@@ -89,11 +89,14 @@ class Utility {
     return { BLS, sk };
   }
 
-  async getAccount(mnemonic: string, password: string): Promise<AccountKey> {
-    const seeds = mnemonicToSeedSync(mnemonic, password);
-    const compatibleMnemonic = entropyToMnemonic(
+  async getAccount(mnemonic: string, password: string | null, legacyMnemonic: string | null = null): Promise<AccountKey> {
+    if (legacyMnemonic && (mnemonic || password)) throw "legacy mnemonic cannot work with new mnemonic/password!";
+    const seeds = mnemonicToSeedSync(mnemonic, password ?? "");
+    let compatibleMnemonic = entropyToMnemonic(
       new Buffer(seeds.slice(0, 32))
     );
+    if (legacyMnemonic) compatibleMnemonic = legacyMnemonic;
+
     // let d = mnemonicToSeedSync(compatibleMnemonic);
     const BLS = await loadBls();
     const key = await pbkdf2Hmac(
