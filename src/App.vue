@@ -19,8 +19,9 @@
         <p>
           <strong>Chiabee Wallet</strong>
           [{{ version }}] by <a href="https://www.chiabee.net">Chiabee</a>. <br />The
-          <a href="http://github.com/chiabee">source code</a> would available later. This app is in ALPHA stage, don't use in
-          PRODUCTION.
+          <a href="http://github.com/chiabee">source code</a> would available later. This app is in
+          <span @click="alphaClick()">ALPHA</span> stage, don't use in PRODUCTION.
+          <span v-if="debugMode" @click="disableDebug()">[DEBUG]</span>
         </p>
       </div>
     </footer>
@@ -28,11 +29,38 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { NotificationProgrammatic as Notification } from "buefy";
+import store from './store';
 
 @Component
 export default class ProfileCorner extends Vue {
+  public debugClick = 9;
   get version(): string {
     return process.env.VUE_APP_VERSION || "";
+  }
+
+  get debugMode(): boolean {
+    return store.state.debug;
+  }
+
+  alphaClick(): void {
+    this.debugClick--;
+    if (this.debugClick == 0) {
+      store.state.debug = true;
+      Notification.open({
+        message: `Debug mode enabled`,
+        type: "is-success",
+      });
+    }
+  }
+
+  disableDebug(): void {
+    this.debugClick = 9;
+    store.state.debug = false;
+    Notification.open({
+      message: `Debug mode disabled`,
+      type: "is-success",
+    });
   }
 }
 </script>

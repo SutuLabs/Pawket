@@ -2,40 +2,43 @@
   <div class="container">
     <div class="box has-text-centered" v-if="account && account.key">
       <section>
-        <b-button @click="selectAccount()">{{ account.name }}: {{ account.key.fingerprint }}</b-button>
+        <b-button class="is-pulled-right" @click="selectAccount()">{{ account.name }}: {{ account.key.fingerprint }}</b-button>
         <br />
-        <span @click="copy(account.firstAddress)">{{ account.firstAddress }} 📋</span>
-        <a target="_blank" :href="'https://chia.tt/info/address/' + account.firstAddress">⚓</a>
         <div>
-          <h2>
-            {{ account.balance }} mojo
-            <b-button size="is-small" @click="refreshBalance()">Refresh</b-button>
+          <h2 class="is-size-3 py-5">
+            <span v-if="account.tokens && account.tokens.hasOwnProperty('XCH')">{{ account.tokens["XCH"].amount | demojo }}</span>
+            <span v-else>- XCH</span>
+            <br />
+            <b-button size="is-small" @click="refreshBalance()" :disabled="refreshing">
+              Refresh
+              <b-loading :is-full-page="false" v-model="refreshing"></b-loading>
+            </b-button>
           </h2>
         </div>
       </section>
       <section>
         <b-button @click="showQr()">Receive</b-button>
-        <b-button disabled>Send</b-button>
-        <b-button @click="showExport()">Export</b-button>
+        <b-button :disabled="!debugMode" @click="showSend()">Send</b-button>
+        <!-- <b-button @click="showExport()">Export</b-button> -->
       </section>
     </div>
     <div class="box">
       <b-tabs position="is-centered" class="block">
         <b-tab-item label="Asset">
-          <a class="panel-block">
-            <span class="panel-icon">₿</span>
-            {{ account.balance }} mojo
-          </a>
-          <a class="panel-block" v-for="asset in assets" :key="asset">
-            <span class="panel-icon">₿</span>
-            <span class="has-text-grey-light">0.0 {{ asset }}</span>
-            <span class="has-text-grey" title="Not available to detect.">❔️</span>
+          <a class="panel-block is-justify-content-space-between" v-for="(token, symbol) in account.tokens" :key="symbol">
+            <span class="is-pulled-right">
+              <span class="panel-icon"></span>
+              <span class="">{{ token.amount | demojo(tokenInfo[symbol].unit, tokenInfo[symbol].decimal) }}</span>
+              <span class="has-text-grey-light is-size-7 pl-3">{{ token.amount }} mojos</span>
+            </span>
+            <a class="is-pulled-right" target="_blank" :href="'https://chia.tt/info/address/' + token.address">⚓</a>
           </a>
         </b-tab-item>
         <b-tab-item label="Activity">
           <a class="panel-block" v-for="(act, i) in account.activities" :key="i">
             <span class="panel-icon">🗒️</span>
-            <span>{{ act.coin.amount }} mojo</span>
+            <span class="">{{ act.coin.amount | demojo(tokenInfo[act.symbol].unit, tokenInfo[act.symbol].decimal) }}</span>
+            <span class="has-text-grey-light is-size-7 pl-3">{{ act.coin.amount }} mojos</span>
             <span class="has-text-grey-light" v-if="act.spent">☑️ Used on {{ act.spentBlockIndex }}</span>
             <span class="has-text-grey-light" v-if="act.coinbase">🌰️ Coinbase</span>
             <br />
@@ -55,32 +58,46 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import store from "@/store";
+import store, { TokenInfo } from "@/store";
 import { Account } from "@/store/index";
 import AccountExport from "@/components/AccountExport.vue";
 import AccountList from "@/components/AccountList.vue";
 import KeyBox from "@/components/KeyBox.vue";
 import Receive from "./Receive.vue";
-
+import Send from "./Send.vue";
+import { demojo } from "@/services/filters";
 type Mode = "Verify" | "Create";
 
 @Component({
   components: {
     KeyBox,
+    Send,
   },
+  filters: { demojo },
 })
 export default class AccountDetail extends Vue {
-  public balance = -1;
-  public address = "xch1sdfhsghrghuier";
   public mode: Mode = "Verify";
   public assets = ["SBS", "CHB", "BSH"];
+
+  get tokenInfo(): TokenInfo {
+    return store.state.tokenInfo;
+  }
+
+  get refreshing(): boolean {
+    return store.state.refreshing;
+  }
 
   get account(): Account {
     return store.state.accounts[store.state.selectedAccount] ?? {};
   }
 
+  get debugMode(): boolean {
+    return store.state.debug;
+  }
+
   mounted(): void {
     this.mode = store.state.passwordHash ? "Verify" : "Create";
+    store.dispatch("refreshBalance");
   }
 
   copy(text: string): void {
@@ -111,6 +128,16 @@ export default class AccountDetail extends Vue {
     this.$buefy.modal.open({
       parent: this,
       component: Receive,
+      hasModalCard: true,
+      trapFocus: true,
+      props: { account: this.account },
+    });
+  }
+
+  showSend(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: Send,
       hasModalCard: true,
       trapFocus: true,
       props: { account: this.account },

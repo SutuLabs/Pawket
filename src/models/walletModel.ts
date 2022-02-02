@@ -22,6 +22,7 @@ export interface CoinRecord {
     spent: boolean;
     spentBlockIndex: number;
     timestamp: number;
+    symbol?: string;
 }
 
 export interface CoinItem {
