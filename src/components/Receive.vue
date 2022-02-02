@@ -7,6 +7,7 @@
     <section class="modal-card-body has-text-centered">
       <qrcode-vue :value="account.firstAddress" size="300"></qrcode-vue>
       <key-box :value="account.firstAddress"></key-box>
+      <a target="_blank" :href="'https://chia.tt/info/address/' + account.firstAddress">⚓</a>
     </section>
   </div>
 </template>
