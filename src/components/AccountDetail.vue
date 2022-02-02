@@ -18,7 +18,7 @@
       </section>
       <section>
         <b-button @click="showQr()">Receive</b-button>
-        <b-button disabled>Send</b-button>
+        <b-button :disabled="!debugMode">Send</b-button>
         <!-- <b-button @click="showExport()">Export</b-button> -->
       </section>
     </div>
@@ -87,6 +87,10 @@ export default class AccountDetail extends Vue {
 
   get account(): Account {
     return store.state.accounts[store.state.selectedAccount] ?? {};
+  }
+
+  get debugMode(): boolean {
+    return store.state.debug;
   }
 
   mounted(): void {

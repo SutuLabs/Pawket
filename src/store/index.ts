@@ -59,6 +59,7 @@ export interface VuexState {
   clvmInitialized: boolean;
   tokenInfo: TokenInfo;
   refreshing: boolean;
+  debug: boolean;
 }
 
 export default new Vuex.Store<VuexState>({
@@ -115,6 +116,7 @@ export default new Vuex.Store<VuexState>({
         },
       },
       refreshing: false,
+      debug: false,
     };
   },
   getters: {},
