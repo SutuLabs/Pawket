@@ -18,7 +18,7 @@
       </section>
       <section>
         <b-button @click="showQr()">Receive</b-button>
-        <b-button :disabled="!debugMode">Send</b-button>
+        <b-button :disabled="!debugMode" @click="showSend()">Send</b-button>
         <!-- <b-button @click="showExport()">Export</b-button> -->
       </section>
     </div>
@@ -64,12 +64,14 @@ import AccountExport from "@/components/AccountExport.vue";
 import AccountList from "@/components/AccountList.vue";
 import KeyBox from "@/components/KeyBox.vue";
 import Receive from "./Receive.vue";
+import Send from "./Send.vue";
 import { demojo } from "@/services/filters";
 type Mode = "Verify" | "Create";
 
 @Component({
   components: {
     KeyBox,
+    Send,
   },
   filters: { demojo },
 })
@@ -126,6 +128,16 @@ export default class AccountDetail extends Vue {
     this.$buefy.modal.open({
       parent: this,
       component: Receive,
+      hasModalCard: true,
+      trapFocus: true,
+      props: { account: this.account },
+    });
+  }
+
+  showSend(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: Send,
       hasModalCard: true,
       trapFocus: true,
       props: { account: this.account },
