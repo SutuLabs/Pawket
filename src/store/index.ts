@@ -130,10 +130,11 @@ export default new Vuex.Store<VuexState>({
     copy({ state }, text: string) {
       utility.copy(text);
     },
-    importSeed({ state, dispatch }, mnemonic: string) {
+    async importSeed({ state, dispatch }, mnemonic: string) {
       state.seedMnemonic = mnemonic;
-      dispatch("persistent");
-      dispatch("createAccountBySerial", "Default");
+      await dispatch("persistent");
+      await dispatch("createAccountBySerial", "Default");
+      await dispatch("refreshBalance");
     },
     setPassword({ state, dispatch }, password: string) {
       utility.hash(password).then((pswhash) => {
@@ -209,23 +210,18 @@ export default new Vuex.Store<VuexState>({
         dispatch("persistent");
       });
     },
-    createAccountBySerial({ state, dispatch }, name: string) {
-      const serial =
-        Math.max(...state.accounts.map((_) => (_.serial ? _.serial : 0)), 0) +
-        1;
-      utility
-        .getAccount(state.seedMnemonic, serial.toFixed(0))
-        .then((account) => {
-          state.accounts.push({
-            key: account,
-            name: name,
-            type: "Serial",
-            serial: serial,
-            tokens: {},
-          });
-          dispatch("initWalletAddress");
-          dispatch("persistent");
-        });
+    async createAccountBySerial({ state, dispatch }, name: string) {
+      const serial = Math.max(...state.accounts.map((_) => (_.serial ? _.serial : 0)), 0) + 1;
+      const account = await utility.getAccount(state.seedMnemonic, serial.toFixed(0));
+      state.accounts.push({
+        key: account,
+        name: name,
+        type: "Serial",
+        serial: serial,
+        tokens: {},
+      });
+      await dispatch("initWalletAddress");
+      await dispatch("persistent");
     },
     async createAccountByLegacyMnemonic({ state, dispatch }, { name, legacyMnemonic }: { name: string, legacyMnemonic: string }) {
       const account = await utility.getAccount("", null, legacyMnemonic);
@@ -263,8 +259,17 @@ export default new Vuex.Store<VuexState>({
       if (state.refreshing) return;
       state.refreshing = true;
       const to = setTimeout(function () { state.refreshing = false; }, 30000);
+      function resetState() {
+        clearTimeout(to);
+        state.refreshing = false;
+      }
       if (typeof idx !== 'number' || idx <= 0) idx = state.selectedAccount;
       const account = state.accounts[idx];
+      if (!account) {
+        resetState();
+        return;
+      }
+
       const privkey = utility.fromHexString(account.key.privateKey);
       const xchToken = { symbol: "XCH", hashes: await utility.getPuzzleHashes(privkey, 0, 1) };
       const tokens = [xchToken];
@@ -323,8 +328,7 @@ export default new Vuex.Store<VuexState>({
       Vue.set(account, "activities", activities);
       Vue.set(account, "tokens", tokenBalances);
 
-      clearTimeout(to);
-      state.refreshing = false;
+      resetState();
     }
   },
   modules: {},
