@@ -19,7 +19,7 @@
       <section>
         <b-button @click="showQr()">Receive</b-button>
         <b-button :disabled="!debugMode" @click="showSend()">Send</b-button>
-        <!-- <b-button @click="showExport()">Export</b-button> -->
+        <b-button v-if="debugMode" @click="showExport()">Export</b-button>
       </section>
     </div>
     <div class="box">
