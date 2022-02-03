@@ -9,7 +9,7 @@
       <a class="panel-block" v-for="(account, idx) in accounts" :key="idx">
         <span class="panel-icon">✨</span>
         <span @click="select(idx)">{{ account.name }}: {{ account.key.fingerprint }} [{{ account.type }}]</span>
-        <span class="is-pulled-right" @click="remove(idx)">🗑️</span>
+        <span class="is-pulled-right" @click="remove(idx)" v-if="idx > 0">🗑️</span>
         <span class="is-pulled-right" @click="rename(idx)">📝️</span>
         <span class="is-pulled-right" @click="showExport(account)">🖨️️</span>
       </a>
@@ -63,7 +63,14 @@ export default class AccountList extends Vue {
   }
 
   remove(idx: number): void {
-    store.dispatch("removeAccount", idx);
+    this.$buefy.dialog.confirm({
+      message: `Remove account? Operation cannot undone!!!`,
+      trapFocus: true,
+      type: "is-danger",
+      onConfirm: () => {
+        store.dispatch("removeAccount", idx);
+      },
+    });
   }
 
   async rename(idx: number): Promise<void> {

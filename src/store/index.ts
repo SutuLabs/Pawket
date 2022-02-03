@@ -263,7 +263,7 @@ export default new Vuex.Store<VuexState>({
       if (state.refreshing) return;
       state.refreshing = true;
       const to = setTimeout(function () { state.refreshing = false; }, 30000);
-      if (!idx) idx = state.selectedAccount;
+      if (typeof idx !== 'number' || idx <= 0) idx = state.selectedAccount;
       const account = state.accounts[idx];
       const privkey = utility.fromHexString(account.key.privateKey);
       const xchToken = { symbol: "XCH", hashes: await utility.getPuzzleHashes(privkey, 0, 1) };
