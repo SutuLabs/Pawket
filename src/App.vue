@@ -23,7 +23,7 @@
           <span @click="alphaClick()">ALPHA</span> stage, don't use in PRODUCTION.
           <span v-if="debugMode" @click="disableDebug()">[DEBUG]</span>
           <br />
-          <a target="_blank" href="https://github.com/Chiabee/wallet-doc/blob/main/README.md">Quick Guide</a>
+          <a target="_blank" href="https://github.com/Chiabee/wallet-doc/">Quick Guide</a>
         </p>
       </div>
     </footer>
