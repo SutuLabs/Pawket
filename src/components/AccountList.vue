@@ -34,6 +34,7 @@ import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import store from "@/store";
 import { Account } from "@/store/index";
 import AccountExport from "@/components/AccountExport.vue";
+import MnemonicExport from "@/components/MnemonicExport.vue";
 
 @Component
 export default class AccountList extends Vue {
@@ -149,10 +150,12 @@ export default class AccountList extends Vue {
   }
 
   showMnemonic(): void {
-    this.$buefy.dialog.alert({
-      message: `Mnemonic:<br/>${store.state.seedMnemonic}`,
+    this.$buefy.modal.open({
+      parent: this,
+      component: MnemonicExport,
+      hasModalCard: true,
       trapFocus: true,
-      type: "is-danger",
+      props: { mnemonic: store.state.seedMnemonic },
     });
   }
 }
