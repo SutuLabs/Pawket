@@ -267,6 +267,16 @@ class Utility {
     return address;
   }
 
+  public async getAddressesFromPuzzleHash(puzzleHashes: string[], prefix: string): Promise<string[]> {
+    const arr = [];
+    for (let i = 0; i < puzzleHashes.length; i++) {
+      const h = puzzleHashes[i];
+      arr.push(await this.getAddressFromPuzzleHash(h, prefix));
+    }
+
+    return arr;
+  }
+
   public async getAddressFromPuzzleHash(puzzleHash: string, prefix: string): Promise<string> {
     const address = bech32m.encode(prefix, bech32m.toWords(this.fromHexString(puzzleHash)));
     return address;

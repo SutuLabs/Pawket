@@ -2,7 +2,7 @@
   <div class="box">
     <section v-if="mode == 'Verify'">
       <b-field label="Password" label-position="on-border">
-        <b-input type="password" v-model="password"></b-input>
+        <b-input type="password" @keyup.native.enter="confirm()" v-model="password"></b-input>
       </b-field>
       <b-button @click="confirm()">Confirm</b-button>
       <b-button v-if="showClear" type="is-danger" @click="clear()">Clear Data</b-button>
@@ -13,7 +13,7 @@
         <b-input type="password" v-model="password"></b-input>
       </b-field>
       <b-field label="Re-enter" label-position="on-border">
-        <b-input type="password" v-model="repassword"></b-input>
+        <b-input type="password" @keyup.native.enter="create()" v-model="repassword"></b-input>
       </b-field>
       <b-button @click="create()">Create</b-button>
     </section>

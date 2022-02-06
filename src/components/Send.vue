@@ -25,8 +25,8 @@
       </b-field>
     </section>
     <footer class="modal-card-foot">
-      <b-button label="取消" @click="close()"></b-button>
-      <b-button label="提交" type="is-primary" @click="submit()" :disabled="submitting"></b-button>
+      <b-button label="Cancel" @click="close()"></b-button>
+      <b-button label="Submit" type="is-primary" @click="submit()" :disabled="submitting"></b-button>
     </footer>
     <b-loading :is-full-page="false" v-model="submitting"></b-loading>
   </div>

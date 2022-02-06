@@ -7,10 +7,15 @@ import * as clvm_tools from "clvm_tools/browser";
 
 Vue.use(Vuex);
 
+const DEFAULT_ADDRESS_RETRIEVAL_COUNT = 4;
+
 type AccountType = "Serial" | "Password" | "Legacy";
 
+export interface AccountToken {
+  amount: number; addresses: string[];
+}
 export interface AccountTokens {
-  [symbol: string]: { amount: number, address: string, }
+  [symbol: string]: AccountToken;
 }
 
 export interface Account {
@@ -21,6 +26,13 @@ export interface Account {
   firstAddress?: string;
   activities?: CoinRecord[];
   tokens: AccountTokens;
+  addressRetrievalCount: number;
+  cats: CustomCat[];
+}
+
+export interface CustomCat {
+  name: string;
+  id: string;
 }
 
 export interface PersistentAccount {
@@ -28,6 +40,8 @@ export interface PersistentAccount {
   name: string;
   type: AccountType;
   serial?: number;
+  addressRetrievalCount: number;
+  cats: CustomCat[];
 }
 
 export interface NetworkDetail {
@@ -60,6 +74,7 @@ export interface VuexState {
   tokenInfo: TokenInfo;
   refreshing: boolean;
   debug: boolean;
+  externalExplorerPrefix: string;
 }
 
 export default new Vuex.Store<VuexState>({
@@ -102,19 +117,20 @@ export default new Vuex.Store<VuexState>({
           decimal: 3,
           unit: "BSH",
         },
-        "SBX": {
-          id: "78ad32a8c9ea70f27d73e9306fc467bab2a6b15b30289791e37ab6e8612212b1",
-          symbol: "SBX",
-          decimal: 3,
-          unit: "SBX",
-        },
-        "CH21": {
-          id: "509deafe3cd8bbfbb9ccce1d930e3d7b57b40c964fa33379b18d628175eb7a8f",
-          symbol: "CH21",
-          decimal: 3,
-          unit: "CH21",
-        },
+        // "SBX": {
+        //   id: "78ad32a8c9ea70f27d73e9306fc467bab2a6b15b30289791e37ab6e8612212b1",
+        //   symbol: "SBX",
+        //   decimal: 3,
+        //   unit: "SBX",
+        // },
+        // "CH21": {
+        //   id: "509deafe3cd8bbfbb9ccce1d930e3d7b57b40c964fa33379b18d628175eb7a8f",
+        //   symbol: "CH21",
+        //   decimal: 3,
+        //   unit: "CH21",
+        // },
       },
+      externalExplorerPrefix: 'https://chia.tt/info/address/',
       refreshing: false,
       debug: false,
     };
@@ -141,6 +157,14 @@ export default new Vuex.Store<VuexState>({
         state.passwordHash = pswhash;
         dispatch("unlock", password);
       });
+    },
+    async changePassword({ state, dispatch }, { oldPassword, newPassword }: { oldPassword: string, newPassword: string }) {
+      const pswhash = await utility.hash(oldPassword);
+      if (pswhash != state.passwordHash) return;
+
+      state.passwordHash = await utility.hash(newPassword);
+      state.password = newPassword;
+      await dispatch("persistent");
     },
     async initWalletAddress({ state }) {
       for (let i = 0; i < state.accounts.length; i++) {
@@ -173,6 +197,13 @@ export default new Vuex.Store<VuexState>({
         dispatch("persistent");
       });
     },
+    async lock({ state, dispatch }) {
+      await dispatch("persistent");
+      state.accounts = [];
+      state.password = "";
+      state.seedMnemonic = "";
+      state.unlock = false;
+    },
     async persistent({ state }) {
       if (!state.unlock) return;
       localStorage.setItem(
@@ -184,11 +215,13 @@ export default new Vuex.Store<VuexState>({
           ),
           passwordHash: state.passwordHash,
           encryptedAccounts: await utility.encrypt(
-            JSON.stringify(state.accounts.map(_ => ({
+            JSON.stringify(state.accounts.map(_ => (<Account>{
               key: _.key,
               name: _.name,
               type: _.type,
               serial: _.serial,
+              addressRetrievalCount: _.addressRetrievalCount,
+              cats: _.cats,
             }))),
             state.password
           ),
@@ -205,7 +238,14 @@ export default new Vuex.Store<VuexState>({
       { password, name }: { password: string; name: string }
     ) {
       utility.getAccount(state.seedMnemonic, password).then((account) => {
-        state.accounts.push({ key: account, name: name, type: "Password", tokens: {} });
+        state.accounts.push({
+          key: account,
+          name: name,
+          type: "Password",
+          tokens: {},
+          addressRetrievalCount: DEFAULT_ADDRESS_RETRIEVAL_COUNT,
+          cats: [],
+        });
         dispatch("initWalletAddress");
         dispatch("persistent");
       });
@@ -219,6 +259,8 @@ export default new Vuex.Store<VuexState>({
         type: "Serial",
         serial: serial,
         tokens: {},
+        addressRetrievalCount: DEFAULT_ADDRESS_RETRIEVAL_COUNT,
+        cats: [],
       });
       await dispatch("initWalletAddress");
       await dispatch("persistent");
@@ -230,6 +272,8 @@ export default new Vuex.Store<VuexState>({
         name: name,
         type: "Legacy",
         tokens: {},
+        addressRetrievalCount: DEFAULT_ADDRESS_RETRIEVAL_COUNT,
+        cats: [],
       });
       dispatch("initWalletAddress");
       dispatch("persistent");
@@ -255,7 +299,7 @@ export default new Vuex.Store<VuexState>({
     // removeAccount({ state }, accountName: string) {
     //   state.accounts.splice(state.accounts.findIndex(_ => _.name == accountName), 1);
     // },
-    async refreshBalance({ state }, idx: number) {
+    async refreshBalance({ state }, parameters: { idx: number, maxId: number }) {
       if (state.refreshing) return;
       state.refreshing = true;
       const to = setTimeout(function () { state.refreshing = false; }, 30000);
@@ -263,17 +307,24 @@ export default new Vuex.Store<VuexState>({
         clearTimeout(to);
         state.refreshing = false;
       }
+      if (!parameters) parameters = { idx: state.selectedAccount, maxId: -1 };
+      let { idx, maxId } = parameters;
       if (typeof idx !== 'number' || idx <= 0) idx = state.selectedAccount;
       const account = state.accounts[idx];
       if (!account) {
         resetState();
         return;
       }
+      if (typeof maxId !== 'number' || maxId <= 0) maxId = account.addressRetrievalCount;
+      if (typeof maxId !== 'number' || maxId <= 0) DEFAULT_ADDRESS_RETRIEVAL_COUNT;
 
       const privkey = utility.fromHexString(account.key.privateKey);
-      const xchToken = { symbol: "XCH", hashes: await utility.getPuzzleHashes(privkey, 0, 1) };
+      const xchToken = { symbol: "XCH", hashes: await utility.getPuzzleHashes(privkey, 0, maxId) };
       const tokens = [xchToken];
-      const assets = Object.values(state.tokenInfo).filter(_ => _.id).map(_ => ({ symbol: _.symbol, id: _.id ?? "" }));
+      const standardAssets = Object.values(state.tokenInfo).filter(_ => _.id).map(_ => ({ symbol: _.symbol, id: _.id ?? "" }));
+      const accountAssets = (account.cats ?? []).map(_ => ({ symbol: _.name, id: _.id }))
+      const assets = standardAssets.concat(accountAssets);
+
       const dictAssets: { [key: string]: string } = {};
       for (let i = 0; i < xchToken.hashes.length; i++) {
         const h = xchToken.hashes[i];
@@ -282,7 +333,7 @@ export default new Vuex.Store<VuexState>({
       for (let i = 0; i < assets.length; i++) {
         const assetId = assets[i].id;
         const symbol = assets[i].symbol;
-        const hs = await utility.getCatPuzzleHashes(privkey, assetId, 0, 1);
+        const hs = await utility.getCatPuzzleHashes(privkey, assetId, 0, maxId);
         tokens.push(Object.assign({}, assets[i], { hashes: hs }));
         for (let j = 0; j < hs.length; j++) {
           const h = hs[j];
@@ -290,43 +341,57 @@ export default new Vuex.Store<VuexState>({
         }
       }
 
-      const hashes = tokens.reduce((acc, token) => acc.concat(token.hashes), ([] as string[]));
+      try {
+        const hashes = tokens.reduce((acc, token) => acc.concat(token.hashes), ([] as string[]));
 
-      const resp = await fetch(process.env.VUE_APP_API_URL + "Wallet/records", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          puzzleHashes: hashes,
-          includeSpentCoins: true,
-        }),
-      });
-      const json = (await resp.json()) as GetRecordsResponse;
-      const activities = json.coins.reduce(
-        (acc, puzzle) => acc.concat(puzzle.records
-          .reduce<CoinRecord[]>((recacc, rec) => recacc.concat(rec), [])
-          .map(rec => Object.assign({}, rec, { symbol: dictAssets[puzzle.puzzleHash] }))),
-        ([] as CoinRecord[]));
+        const resp = await fetch(process.env.VUE_APP_API_URL + "Wallet/records", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            puzzleHashes: hashes,
+            includeSpentCoins: true,
+          }),
+        });
+        const json = (await resp.json()) as GetRecordsResponse;
+        const activities = json.coins.reduce(
+          (acc, puzzle) => acc.concat(puzzle.records
+            .reduce<CoinRecord[]>((recacc, rec) => recacc.concat(rec), [])
+            .map(rec => Object.assign({}, rec, { symbol: dictAssets[puzzle.puzzleHash] }))),
+          ([] as CoinRecord[]));
 
-      const balances = tokens.map(token => ({
-        symbol: token.symbol,
-        amount: activities
-          .filter(act => act.symbol == token.symbol)
-          .reduce((recacc, rec) => recacc + ((!rec.coin || rec.spent) ? 0 : rec.coin.amount), 0)
-      }))
-      const tokenBalances: AccountTokens = {};
-      for (let i = 0; i < balances.length; i++) {
-        const b = balances[i];
-        tokenBalances[b.symbol] = {
-          amount: b.amount,
-          address: await utility.getAddressFromPuzzleHash(tokens.find(_ => _.symbol == b.symbol)?.hashes[0] ?? "", "xch"),
-        };
+        const balances = tokens.map(token => ({
+          symbol: token.symbol,
+          amount: activities
+            .filter(act => act.symbol == token.symbol)
+            .reduce((recacc, rec) => recacc + ((!rec.coin || rec.spent) ? 0 : rec.coin.amount), 0)
+        }))
+        const tokenBalances: AccountTokens = {};
+        for (let i = 0; i < balances.length; i++) {
+          const b = balances[i];
+          tokenBalances[b.symbol] = {
+            amount: b.amount,
+            addresses: await utility.getAddressesFromPuzzleHash(tokens.find(_ => _.symbol == b.symbol)?.hashes ?? [], "xch"),
+          };
+        }
+
+        Vue.set(account, "activities", activities);
+        Vue.set(account, "tokens", tokenBalances);
       }
-
-      Vue.set(account, "activities", activities);
-      Vue.set(account, "tokens", tokenBalances);
+      catch (error) {
+        console.warn("error get account balance", error);
+        const tokenBalances: AccountTokens = {};
+        for (let i = 0; i < tokens.length; i++) {
+          const token = tokens[i];
+          tokenBalances[token.symbol] = {
+            amount: -1,
+            addresses: await utility.getAddressesFromPuzzleHash(token.hashes, "xch"),
+          }
+        }
+        Vue.set(account, "tokens", tokenBalances);
+      }
 
       resetState();
     }

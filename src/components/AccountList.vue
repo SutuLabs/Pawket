@@ -2,7 +2,7 @@
   <div class="modal-card">
     <header class="modal-card-head">
       <p class="modal-card-title">Account Export</p>
-      <b-button class="is-pulled-right" type="is-small" @click="showMnemonic()">Show Mnemonic</b-button>
+      <b-button class="is-pulled-right mr-5" type="is-small" @click="showMnemonic()">Show Mnemonic</b-button>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
@@ -34,6 +34,7 @@ import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import store from "@/store";
 import { Account } from "@/store/index";
 import AccountExport from "@/components/AccountExport.vue";
+import MnemonicExport from "@/components/MnemonicExport.vue";
 
 @Component
 export default class AccountList extends Vue {
@@ -149,10 +150,18 @@ export default class AccountList extends Vue {
   }
 
   showMnemonic(): void {
-    this.$buefy.dialog.alert({
-      message: `Mnemonic:<br/>${store.state.seedMnemonic}`,
+    this.$buefy.dialog.confirm({
+      message: `Mnemonic is very sensitive, make sure you are safe and continue, OK?`,
       trapFocus: true,
-      type: "is-danger",
+      onConfirm: () => {
+        this.$buefy.modal.open({
+          parent: this,
+          component: MnemonicExport,
+          hasModalCard: true,
+          trapFocus: true,
+          props: { mnemonic: store.state.seedMnemonic },
+        });
+      },
     });
   }
 }

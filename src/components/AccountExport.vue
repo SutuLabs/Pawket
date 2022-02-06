@@ -39,16 +39,18 @@
         </li>
         <li>
           Mnemonic seed (24 secret words):
-          <br />
-          {{ account.key.compatibleMnemonic }}
-          <key-box display="✂️" tooltip="Copy" :value="account.key.compatibleMnemonic"></key-box>
+          <span v-if="showMnemonic">
+            <br />
+            {{ account.key.compatibleMnemonic }}
+            <key-box display="✂️" tooltip="Copy" :value="account.key.compatibleMnemonic"></key-box>
+            <qrcode-vue :value="account.key.compatibleMnemonic" size="300"></qrcode-vue>
+          </span>
+          <span v-else>
+            <b-button size="is-small" @click="showMnemonic = true">Reveal Mnemonic</b-button>
+          </span>
         </li>
       </ul>
     </section>
-    <!-- <footer class="modal-card-foot">
-      <b-button label="取消" @click="close()"></b-button>
-      <b-button label="提交" type="is-primary" @click="raiseTicket"></b-button>
-    </footer>-->
   </div>
 </template>
 
@@ -58,10 +60,12 @@ import store from "@/store";
 import { Account } from "@/store/index";
 import utility from "../store/utility";
 import KeyBox from "@/components/KeyBox.vue";
+import QrcodeVue from "qrcode.vue";
 
 @Component({
   components: {
     KeyBox,
+    QrcodeVue,
   },
 })
 export default class AccountExport extends Vue {
@@ -72,6 +76,7 @@ export default class AccountExport extends Vue {
   public poolpubkey = "";
   public walletprikey = "";
   public walletpubkey = "";
+  public showMnemonic = false;
 
   mounted(): void {
     var privkey = utility.fromHexString(this.account.key.privateKey);
