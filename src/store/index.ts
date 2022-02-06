@@ -307,11 +307,12 @@ export default new Vuex.Store<VuexState>({
         clearTimeout(to);
         state.refreshing = false;
       }
-      if (!parameters) parameters = { idx: state.selectedAccount, maxId: DEFAULT_ADDRESS_RETRIEVAL_COUNT };
+      if (!parameters) parameters = { idx: state.selectedAccount, maxId: -1 };
       let { idx, maxId } = parameters;
       if (typeof idx !== 'number' || idx <= 0) idx = state.selectedAccount;
-      if (typeof maxId !== 'number' || maxId <= 0) maxId = DEFAULT_ADDRESS_RETRIEVAL_COUNT;
       const account = state.accounts[idx];
+      if (typeof maxId !== 'number' || maxId <= 0) maxId = account.addressRetrievalCount;
+      if (typeof maxId !== 'number' || maxId <= 0) DEFAULT_ADDRESS_RETRIEVAL_COUNT;
       if (!account) {
         resetState();
         return;
