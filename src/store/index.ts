@@ -311,12 +311,12 @@ export default new Vuex.Store<VuexState>({
       let { idx, maxId } = parameters;
       if (typeof idx !== 'number' || idx <= 0) idx = state.selectedAccount;
       const account = state.accounts[idx];
-      if (typeof maxId !== 'number' || maxId <= 0) maxId = account.addressRetrievalCount;
-      if (typeof maxId !== 'number' || maxId <= 0) DEFAULT_ADDRESS_RETRIEVAL_COUNT;
       if (!account) {
         resetState();
         return;
       }
+      if (typeof maxId !== 'number' || maxId <= 0) maxId = account.addressRetrievalCount;
+      if (typeof maxId !== 'number' || maxId <= 0) DEFAULT_ADDRESS_RETRIEVAL_COUNT;
 
       const privkey = utility.fromHexString(account.key.privateKey);
       const xchToken = { symbol: "XCH", hashes: await utility.getPuzzleHashes(privkey, 0, maxId) };
