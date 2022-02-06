@@ -6,7 +6,7 @@
     </header>
     <section class="modal-card-body">
       <b-field label="Max privacy addresses to search">
-        <b-slider v-model="maxAddress" :max="20" :min="1"></b-slider>
+        <b-slider v-model="maxAddress" :max="8" :min="1"></b-slider>
       </b-field>
       <b-field label="Listing CATs">
         <b-taginput
