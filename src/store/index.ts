@@ -11,8 +11,11 @@ const DEFAULT_ADDRESS_RETRIEVAL_COUNT = 4;
 
 type AccountType = "Serial" | "Password" | "Legacy";
 
+export interface AccountToken {
+  amount: number; addresses: string[];
+}
 export interface AccountTokens {
-  [symbol: string]: { amount: number, address: string, }
+  [symbol: string]: AccountToken;
 }
 
 export interface Account {
@@ -71,6 +74,7 @@ export interface VuexState {
   tokenInfo: TokenInfo;
   refreshing: boolean;
   debug: boolean;
+  externalExplorerPrefix: string;
 }
 
 export default new Vuex.Store<VuexState>({
@@ -126,6 +130,7 @@ export default new Vuex.Store<VuexState>({
         //   unit: "CH21",
         // },
       },
+      externalExplorerPrefix: 'https://chia.tt/info/address/',
       refreshing: false,
       debug: false,
     };
@@ -312,7 +317,7 @@ export default new Vuex.Store<VuexState>({
       for (let i = 0; i < assets.length; i++) {
         const assetId = assets[i].id;
         const symbol = assets[i].symbol;
-        const hs = await utility.getCatPuzzleHashes(privkey, assetId, 0, 1);
+        const hs = await utility.getCatPuzzleHashes(privkey, assetId, 0, maxId);
         tokens.push(Object.assign({}, assets[i], { hashes: hs }));
         for (let j = 0; j < hs.length; j++) {
           const h = hs[j];
@@ -351,7 +356,7 @@ export default new Vuex.Store<VuexState>({
         const b = balances[i];
         tokenBalances[b.symbol] = {
           amount: b.amount,
-          address: await utility.getAddressFromPuzzleHash(tokens.find(_ => _.symbol == b.symbol)?.hashes[0] ?? "", "xch"),
+          addresses: await utility.getAddressesFromPuzzleHash(tokens.find(_ => _.symbol == b.symbol)?.hashes ?? [], "xch"),
         };
       }
 
