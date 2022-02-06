@@ -255,7 +255,7 @@ export default new Vuex.Store<VuexState>({
     // removeAccount({ state }, accountName: string) {
     //   state.accounts.splice(state.accounts.findIndex(_ => _.name == accountName), 1);
     // },
-    async refreshBalance({ state }, idx: number) {
+    async refreshBalance({ state }, parameters: { idx: number, maxId: number }) {
       if (state.refreshing) return;
       state.refreshing = true;
       const to = setTimeout(function () { state.refreshing = false; }, 30000);
@@ -263,7 +263,10 @@ export default new Vuex.Store<VuexState>({
         clearTimeout(to);
         state.refreshing = false;
       }
+      if (!parameters) parameters = { idx: state.selectedAccount, maxId: 4 };
+      let { idx, maxId } = parameters;
       if (typeof idx !== 'number' || idx <= 0) idx = state.selectedAccount;
+      if (typeof maxId !== 'number' || maxId <= 0) maxId = 4;
       const account = state.accounts[idx];
       if (!account) {
         resetState();
@@ -271,7 +274,7 @@ export default new Vuex.Store<VuexState>({
       }
 
       const privkey = utility.fromHexString(account.key.privateKey);
-      const xchToken = { symbol: "XCH", hashes: await utility.getPuzzleHashes(privkey, 0, 1) };
+      const xchToken = { symbol: "XCH", hashes: await utility.getPuzzleHashes(privkey, 0, maxId) };
       const tokens = [xchToken];
       const assets = Object.values(state.tokenInfo).filter(_ => _.id).map(_ => ({ symbol: _.symbol, id: _.id ?? "" }));
       const dictAssets: { [key: string]: string } = {};
