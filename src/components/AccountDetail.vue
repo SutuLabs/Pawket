@@ -22,7 +22,7 @@
         </div>
       </section>
       <section>
-        <b-button @click="showQr()">Receive</b-button>
+        <b-button @click="openLink(account.tokens['XCH'])">Receive</b-button>
         <b-button :disabled="!debugMode" @click="showSend()">Send</b-button>
         <b-button v-if="debugMode" @click="showExport()">Export</b-button>
       </section>
