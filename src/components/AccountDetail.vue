@@ -3,6 +3,7 @@
     <div class="box has-text-centered" v-if="account && account.key">
       <section>
         <b-button class="is-pulled-left" @click="configureAccount()">⚙️</b-button>
+        <b-button class="is-pulled-right" @click="lock()">🔒</b-button>
         <b-button class="is-pulled-right" @click="selectAccount()">{{ account.name }}: {{ account.key.fingerprint }}</b-button>
         <br />
         <div>
@@ -115,8 +116,14 @@ export default class AccountDetail extends Vue {
     store.dispatch("refreshBalance");
   }
 
-  copy(text: string): void {
-    store.dispatch("copy", text);
+  lock(): void {
+    this.$buefy.dialog.confirm({
+      message: `Lock?`,
+      trapFocus: true,
+      onConfirm: () => {
+        store.dispatch("lock");
+      },
+    });
   }
 
   showExport(): void {

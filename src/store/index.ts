@@ -197,6 +197,13 @@ export default new Vuex.Store<VuexState>({
         dispatch("persistent");
       });
     },
+    async lock({ state, dispatch }) {
+      await dispatch("persistent");
+      state.accounts = [];
+      state.password = "";
+      state.seedMnemonic = "";
+      state.unlock = false;
+    },
     async persistent({ state }) {
       if (!state.unlock) return;
       localStorage.setItem(
