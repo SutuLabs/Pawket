@@ -325,43 +325,57 @@ export default new Vuex.Store<VuexState>({
         }
       }
 
-      const hashes = tokens.reduce((acc, token) => acc.concat(token.hashes), ([] as string[]));
+      try {
+        const hashes = tokens.reduce((acc, token) => acc.concat(token.hashes), ([] as string[]));
 
-      const resp = await fetch(process.env.VUE_APP_API_URL + "Wallet/records", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          puzzleHashes: hashes,
-          includeSpentCoins: true,
-        }),
-      });
-      const json = (await resp.json()) as GetRecordsResponse;
-      const activities = json.coins.reduce(
-        (acc, puzzle) => acc.concat(puzzle.records
-          .reduce<CoinRecord[]>((recacc, rec) => recacc.concat(rec), [])
-          .map(rec => Object.assign({}, rec, { symbol: dictAssets[puzzle.puzzleHash] }))),
-        ([] as CoinRecord[]));
+        const resp = await fetch(process.env.VUE_APP_API_URL + "Wallet/records", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            puzzleHashes: hashes,
+            includeSpentCoins: true,
+          }),
+        });
+        const json = (await resp.json()) as GetRecordsResponse;
+        const activities = json.coins.reduce(
+          (acc, puzzle) => acc.concat(puzzle.records
+            .reduce<CoinRecord[]>((recacc, rec) => recacc.concat(rec), [])
+            .map(rec => Object.assign({}, rec, { symbol: dictAssets[puzzle.puzzleHash] }))),
+          ([] as CoinRecord[]));
 
-      const balances = tokens.map(token => ({
-        symbol: token.symbol,
-        amount: activities
-          .filter(act => act.symbol == token.symbol)
-          .reduce((recacc, rec) => recacc + ((!rec.coin || rec.spent) ? 0 : rec.coin.amount), 0)
-      }))
-      const tokenBalances: AccountTokens = {};
-      for (let i = 0; i < balances.length; i++) {
-        const b = balances[i];
-        tokenBalances[b.symbol] = {
-          amount: b.amount,
-          addresses: await utility.getAddressesFromPuzzleHash(tokens.find(_ => _.symbol == b.symbol)?.hashes ?? [], "xch"),
-        };
+        const balances = tokens.map(token => ({
+          symbol: token.symbol,
+          amount: activities
+            .filter(act => act.symbol == token.symbol)
+            .reduce((recacc, rec) => recacc + ((!rec.coin || rec.spent) ? 0 : rec.coin.amount), 0)
+        }))
+        const tokenBalances: AccountTokens = {};
+        for (let i = 0; i < balances.length; i++) {
+          const b = balances[i];
+          tokenBalances[b.symbol] = {
+            amount: b.amount,
+            addresses: await utility.getAddressesFromPuzzleHash(tokens.find(_ => _.symbol == b.symbol)?.hashes ?? [], "xch"),
+          };
+        }
+
+        Vue.set(account, "activities", activities);
+        Vue.set(account, "tokens", tokenBalances);
       }
-
-      Vue.set(account, "activities", activities);
-      Vue.set(account, "tokens", tokenBalances);
+      catch (error) {
+        console.warn("error get account balance", error);
+        const tokenBalances: AccountTokens = {};
+        for (let i = 0; i < tokens.length; i++) {
+          const token = tokens[i];
+          tokenBalances[token.symbol] = {
+            amount: -1,
+            addresses: await utility.getAddressesFromPuzzleHash(token.hashes, "xch"),
+          }
+        }
+        Vue.set(account, "tokens", tokenBalances);
+      }
 
       resetState();
     }
