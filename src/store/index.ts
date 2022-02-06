@@ -7,6 +7,8 @@ import * as clvm_tools from "clvm_tools/browser";
 
 Vue.use(Vuex);
 
+const DEFAULT_ADDRESS_RETRIEVAL_COUNT = 4;
+
 type AccountType = "Serial" | "Password" | "Legacy";
 
 export interface AccountTokens {
@@ -21,6 +23,13 @@ export interface Account {
   firstAddress?: string;
   activities?: CoinRecord[];
   tokens: AccountTokens;
+  addressRetrievalCount: number;
+  cats: CustomCat[];
+}
+
+export interface CustomCat {
+  name: string;
+  id: string;
 }
 
 export interface PersistentAccount {
@@ -28,6 +37,8 @@ export interface PersistentAccount {
   name: string;
   type: AccountType;
   serial?: number;
+  addressRetrievalCount: number;
+  cats: CustomCat[];
 }
 
 export interface NetworkDetail {
@@ -102,18 +113,18 @@ export default new Vuex.Store<VuexState>({
           decimal: 3,
           unit: "BSH",
         },
-        "SBX": {
-          id: "78ad32a8c9ea70f27d73e9306fc467bab2a6b15b30289791e37ab6e8612212b1",
-          symbol: "SBX",
-          decimal: 3,
-          unit: "SBX",
-        },
-        "CH21": {
-          id: "509deafe3cd8bbfbb9ccce1d930e3d7b57b40c964fa33379b18d628175eb7a8f",
-          symbol: "CH21",
-          decimal: 3,
-          unit: "CH21",
-        },
+        // "SBX": {
+        //   id: "78ad32a8c9ea70f27d73e9306fc467bab2a6b15b30289791e37ab6e8612212b1",
+        //   symbol: "SBX",
+        //   decimal: 3,
+        //   unit: "SBX",
+        // },
+        // "CH21": {
+        //   id: "509deafe3cd8bbfbb9ccce1d930e3d7b57b40c964fa33379b18d628175eb7a8f",
+        //   symbol: "CH21",
+        //   decimal: 3,
+        //   unit: "CH21",
+        // },
       },
       refreshing: false,
       debug: false,
@@ -184,11 +195,13 @@ export default new Vuex.Store<VuexState>({
           ),
           passwordHash: state.passwordHash,
           encryptedAccounts: await utility.encrypt(
-            JSON.stringify(state.accounts.map(_ => ({
+            JSON.stringify(state.accounts.map(_ => (<Account>{
               key: _.key,
               name: _.name,
               type: _.type,
               serial: _.serial,
+              addressRetrievalCount: _.addressRetrievalCount,
+              cats: _.cats,
             }))),
             state.password
           ),
@@ -205,7 +218,14 @@ export default new Vuex.Store<VuexState>({
       { password, name }: { password: string; name: string }
     ) {
       utility.getAccount(state.seedMnemonic, password).then((account) => {
-        state.accounts.push({ key: account, name: name, type: "Password", tokens: {} });
+        state.accounts.push({
+          key: account,
+          name: name,
+          type: "Password",
+          tokens: {},
+          addressRetrievalCount: DEFAULT_ADDRESS_RETRIEVAL_COUNT,
+          cats: [],
+        });
         dispatch("initWalletAddress");
         dispatch("persistent");
       });
@@ -219,6 +239,8 @@ export default new Vuex.Store<VuexState>({
         type: "Serial",
         serial: serial,
         tokens: {},
+        addressRetrievalCount: DEFAULT_ADDRESS_RETRIEVAL_COUNT,
+        cats: [],
       });
       await dispatch("initWalletAddress");
       await dispatch("persistent");
@@ -230,6 +252,8 @@ export default new Vuex.Store<VuexState>({
         name: name,
         type: "Legacy",
         tokens: {},
+        addressRetrievalCount: DEFAULT_ADDRESS_RETRIEVAL_COUNT,
+        cats: [],
       });
       dispatch("initWalletAddress");
       dispatch("persistent");
@@ -263,10 +287,10 @@ export default new Vuex.Store<VuexState>({
         clearTimeout(to);
         state.refreshing = false;
       }
-      if (!parameters) parameters = { idx: state.selectedAccount, maxId: 4 };
+      if (!parameters) parameters = { idx: state.selectedAccount, maxId: DEFAULT_ADDRESS_RETRIEVAL_COUNT };
       let { idx, maxId } = parameters;
       if (typeof idx !== 'number' || idx <= 0) idx = state.selectedAccount;
-      if (typeof maxId !== 'number' || maxId <= 0) maxId = 4;
+      if (typeof maxId !== 'number' || maxId <= 0) maxId = DEFAULT_ADDRESS_RETRIEVAL_COUNT;
       const account = state.accounts[idx];
       if (!account) {
         resetState();
@@ -276,7 +300,10 @@ export default new Vuex.Store<VuexState>({
       const privkey = utility.fromHexString(account.key.privateKey);
       const xchToken = { symbol: "XCH", hashes: await utility.getPuzzleHashes(privkey, 0, maxId) };
       const tokens = [xchToken];
-      const assets = Object.values(state.tokenInfo).filter(_ => _.id).map(_ => ({ symbol: _.symbol, id: _.id ?? "" }));
+      const standardAssets = Object.values(state.tokenInfo).filter(_ => _.id).map(_ => ({ symbol: _.symbol, id: _.id ?? "" }));
+      const accountAssets = (account.cats ?? []).map(_ => ({ symbol: _.name, id: _.id }))
+      const assets = standardAssets.concat(accountAssets);
+
       const dictAssets: { [key: string]: string } = {};
       for (let i = 0; i < xchToken.hashes.length; i++) {
         const h = xchToken.hashes[i];
