@@ -1,10 +1,13 @@
-/* eslint-disable */
 import Sortable from 'sortablejs'
+import { VNode } from 'vue';
+import { DirectiveBinding } from 'vue/types/options';
 
-const createSortable = (el:HTMLElement, options:Sortable.Options, vnode) => {
+const createSortable = (el: HTMLElement, options: Sortable.Options, vnode: VNode) => {
     return Sortable.create(el, {
         ...options,
         onEnd: function (evt) {
+            if (!evt || !evt.newIndex || !evt.oldIndex) return;
+            if (!vnode?.componentInstance) return;
             const data = vnode.componentInstance.$data.tags
             const item = data[evt.oldIndex]
             if (evt.newIndex > evt.oldIndex) {
@@ -18,9 +21,12 @@ const createSortable = (el:HTMLElement, options:Sortable.Options, vnode) => {
             }
             data[evt.newIndex] = item
             vnode.componentInstance.$emit('input', data)
-            // vnode.context.$buefy.toast.open(`Moved ${item} from row ${evt.oldIndex + 1} to ${evt.newIndex + 1}`)
         }
     })
+}
+
+interface SortableHTMLElement extends HTMLElement {
+    _sortable: Sortable;
 }
 
 /**
@@ -29,20 +35,24 @@ const createSortable = (el:HTMLElement, options:Sortable.Options, vnode) => {
  */
 const sortable = {
     name: 'sortable',
-    bind(el:HTMLElement, binding, vnode): void {
-        const container = el.querySelector('.taginput-container')
-        container._sortable = createSortable(container, binding.value, vnode)
+    bind(el: HTMLElement, binding: DirectiveBinding, vnode: VNode): void {
+        const container = el.querySelector('.taginput-container') as SortableHTMLElement;
+        if (!container) return;
+        container._sortable = createSortable(container, binding.value, vnode);
     },
-    update(el:HTMLElement, binding, vnode): void {
-        const container = el.querySelector('.taginput-container')
-        container._sortable.destroy()
-        container._sortable = createSortable(container, binding.value, vnode)
+    update(el: HTMLElement, binding: DirectiveBinding, vnode: VNode): void {
+        const container = el.querySelector('.taginput-container') as SortableHTMLElement;
+        const sortable = container?._sortable;
+        if (!sortable) return;
+        sortable.destroy();
+        container._sortable = createSortable(container, binding.value, vnode);
     },
-    unbind(el:HTMLElement): void {
-        const container = el.querySelector('.taginput-container')
-        container._sortable.destroy()
+    unbind(el: HTMLElement): void {
+        const container = el.querySelector('.taginput-container') as SortableHTMLElement;
+        const sortable = container?._sortable;
+        if (!sortable) return;
+        sortable.destroy();
     }
 }
 
 export { sortable };
-/* eslint-enable */
