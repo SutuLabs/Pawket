@@ -158,6 +158,14 @@ export default new Vuex.Store<VuexState>({
         dispatch("unlock", password);
       });
     },
+    async changePassword({ state, dispatch }, { oldPassword, newPassword }: { oldPassword: string, newPassword: string }) {
+      const pswhash = await utility.hash(oldPassword);
+      if (pswhash != state.passwordHash) return;
+
+      state.passwordHash = await utility.hash(newPassword);
+      state.password = newPassword;
+      await dispatch("persistent");
+    },
     async initWalletAddress({ state }) {
       for (let i = 0; i < state.accounts.length; i++) {
         const account = state.accounts[i];

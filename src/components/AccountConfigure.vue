@@ -29,9 +29,14 @@
         </template>
       </b-field>
     </section>
-    <footer class="modal-card-foot">
-      <b-button label="Cancel" @click="close()"></b-button>
-      <b-button label="Save" type="is-primary" @click="submit()"></b-button>
+    <footer class="modal-card-foot is-justify-content-space-between">
+      <div>
+        <b-button label="Cancel" @click="close()"></b-button>
+        <b-button label="Save" type="is-primary" @click="submit()"></b-button>
+      </div>
+      <div>
+        <b-button label="Change Password" type="is-warning" @click="changePassword()"></b-button>
+      </div>
     </footer>
   </div>
 </template>
@@ -125,6 +130,37 @@ export default class AccountConfigure extends Vue {
     });
 
     this.close();
+  }
+
+  async changePassword(): Promise<void> {
+    const oldPassword = await this.getPassword(`Enter the old password`);
+    const newPassword = await this.getPassword(`Enter the new password`);
+    const newPassword2 = await this.getPassword(`Reenter the new password`);
+    if (newPassword != newPassword2) {
+      this.$buefy.notification.open(
+        {
+          message: "password not match",
+        }
+      )
+      return;
+    }
+    store.dispatch("changePassword", { oldPassword, newPassword });
+  }
+
+  getPassword(text: string): Promise<string> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    return new Promise((resolve, reject) => {
+      this.$buefy.dialog.prompt({
+        message: text,
+        trapFocus: true,
+        inputAttrs: {
+          type: "password",
+        },
+        onConfirm: (name) => {
+          resolve(name);
+        },
+      });
+    });
   }
 }
 </script>
