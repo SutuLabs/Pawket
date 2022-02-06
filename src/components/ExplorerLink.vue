@@ -22,9 +22,9 @@
         </div>
 
         <div class="column has-text-centered">
-          <qrcode-vue class="is-hidden-touch" :value="address" size="300"></qrcode-vue>
-          <qrcode-vue class="is-hidden-mobile is-hidden-desktop" :value="address" size="200"></qrcode-vue>
-          <qrcode-vue class="is-hidden-tablet" :value="address" size="100"></qrcode-vue>
+          <qrcode-vue class="is-hidden-touch" :value="externalExplorerPrefix + address" size="300"></qrcode-vue>
+          <qrcode-vue class="is-hidden-mobile is-hidden-desktop" :value="externalExplorerPrefix + address" size="200"></qrcode-vue>
+          <qrcode-vue class="is-hidden-tablet" :value="externalExplorerPrefix + address" size="100"></qrcode-vue>
           <key-box :value="address"></key-box>
           <a target="_blank" :href="externalExplorerPrefix + address">⚓</a>
         </div>
