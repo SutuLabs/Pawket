@@ -47,3 +47,8 @@ export interface SpendBundle {
     aggregated_signature: string;
     coin_spends: CoinSpend[];
 }
+
+export interface PuzzleInfo {
+    puzzleHash: string;
+    puzzle: string;
+}

@@ -11,6 +11,7 @@ import * as clvm_tools from "clvm_tools/browser";
 import { bech32m } from "@scure/base";
 import store from ".";
 import { Bytes, bigint_from_bytes, bigint_to_bytes } from "clvm";
+import { PuzzleInfo } from "@/models/walletModel";
 
 type deriveCallback = (path: number[]) => PrivateKey;
 
@@ -216,6 +217,10 @@ class Utility {
   public async getPuzzleHash(pubkey: string): Promise<string> {
     const synPubkey = await this.getSyntheticKey(pubkey);
     const puzzle = this.getPuzzle(synPubkey);
+    return await this.getPuzzleHashFromPuzzle(puzzle);
+  }
+
+  public async getPuzzleHashFromPuzzle(puzzle: string): Promise<string> {
     let output: any = null;
     clvm_tools.setPrintFunction((...args) => output = args)
 
@@ -289,7 +294,7 @@ class Utility {
     return hex;
   }
 
-  public async getPuzzleHashes(privateKey: Uint8Array, startIndex = 0, endIndex = 10) {
+  public async getPuzzleHashes(privateKey: Uint8Array, startIndex = 0, endIndex = 10): Promise<string[]> {
     const derive = await this.derive(privateKey);
     const hashes = [];
     for (let i = startIndex; i < endIndex; i++) {
@@ -301,6 +306,21 @@ class Utility {
     }
 
     return hashes;
+  }
+
+  public async getPuzzles(privateKey: Uint8Array, startIndex = 0, endIndex = 10): Promise<PuzzleInfo[]> {
+    const derive = await this.derive(privateKey);
+    const puzzles: PuzzleInfo[] = [];
+    for (let i = startIndex; i < endIndex; i++) {
+      const pubkey = this.toHexString(
+        derive([12381, 8444, 2, i]).get_g1().serialize()
+      );
+      const puzzle = this.getPuzzle(pubkey);
+      const puzzleHash = await this.getPuzzleHashFromPuzzle(puzzle);
+      puzzles.push({ puzzle, puzzleHash });
+    }
+
+    return puzzles;
   }
 
   public async getCatPuzzleHashes(privateKey: Uint8Array, assetId: string, startIndex = 0, endIndex = 10) {
