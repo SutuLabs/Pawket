@@ -41,6 +41,10 @@ export default class ProfileCorner extends Vue {
     return process.env.VUE_APP_VERSION || "";
   }
 
+  mounted(): void {
+    store.dispatch("initializeBls");
+  }
+
   get debugMode(): boolean {
     return store.state.debug;
   }

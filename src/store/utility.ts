@@ -10,6 +10,7 @@ import pbkdf2Hmac from "pbkdf2-hmac";
 import * as clvm_tools from "clvm_tools/browser";
 import { bech32m } from "@scure/base";
 import store from ".";
+import { Bytes, bigint_from_bytes, bigint_to_bytes } from "clvm";
 
 type deriveCallback = (path: number[]) => PrivateKey;
 
@@ -280,6 +281,12 @@ class Utility {
   public async getAddressFromPuzzleHash(puzzleHash: string, prefix: string): Promise<string> {
     const address = bech32m.encode(prefix, bech32m.toWords(this.fromHexString(puzzleHash)));
     return address;
+  }
+
+  public getPuzzleHashFromAddress(address: string): string {
+    const hex = Bytes.from(bech32m.decodeToBytes(address).bytes).hex();
+    if (hex.length == 66 && hex[0] == "0" && hex[1] == "0") return hex.substr(2);
+    return hex;
   }
 
   public async getPuzzleHashes(privateKey: Uint8Array, startIndex = 0, endIndex = 10) {

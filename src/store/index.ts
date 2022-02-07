@@ -4,6 +4,8 @@ import utility from "./utility";
 import { AccountKey } from "@/store/utility";
 import { CoinRecord, GetRecordsResponse } from "@/models/walletModel";
 import * as clvm_tools from "clvm_tools/browser";
+import { ModuleInstance } from "@chiamine/bls-signatures";
+import loadBls from "@chiamine/bls-signatures";
 
 Vue.use(Vuex);
 
@@ -75,6 +77,7 @@ export interface VuexState {
   refreshing: boolean;
   debug: boolean;
   externalExplorerPrefix: string;
+  bls?: ModuleInstance;
 }
 
 export default new Vuex.Store<VuexState>({
@@ -133,6 +136,7 @@ export default new Vuex.Store<VuexState>({
       externalExplorerPrefix: 'https://chia.tt/info/address/',
       refreshing: false,
       debug: false,
+      bls: undefined,
     };
   },
   getters: {},
@@ -142,6 +146,11 @@ export default new Vuex.Store<VuexState>({
       if (state.clvmInitialized) return;
       await clvm_tools.initialize();
       state.clvmInitialized = true;
+    },
+    async initializeBls({ state }) {
+      if (state.bls) return;
+      const BLS = await loadBls();
+      state.bls = BLS;
     },
     copy({ state }, text: string) {
       utility.copy(text);

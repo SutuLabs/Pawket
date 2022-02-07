@@ -5,6 +5,8 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import utility from "../store/utility";
+import transfer from "../store/transfer";
+import { OriginCoin } from '../models/walletModel';
 
 @Component
 export default class SelfTest extends Vue {
@@ -77,6 +79,19 @@ export default class SelfTest extends Vue {
         "xch13akv0y3er0qvdjwzks2gm4ljj7qpynrh6rcsnwc6y0hyfgzdj89sr43zcp",
         adr
       );
+
+      const coin: OriginCoin = {
+        amount: BigInt(1750000000000),
+        parent_coin_info: '0xe3b0c44298fc1c149afbf4c8996fb92400000000000000000000000000000001',
+        puzzle_hash: '0x4f45877796d7a64e192bcc9f899afeedae391f71af3afd7e15a0792c049d23d3'
+      };
+      const sk_hex = "171b33d526ab5fade9363966c5d990bdc9f7fa158ee908afb5a4c6dca35e4d75";
+      const tgt_addr = await utility.getAddressFromPuzzleHash("0x87908e3f85bf4b55c7e7709915c2ce97a1e6ec1d227e54a04dbfee6862d546a5", "xch");
+      const change_addr = await utility.getAddressFromPuzzleHash("0x4f45877796d7a64e192bcc9f899afeedae391f71af3afd7e15a0792c049d23d3", "xch");
+      const bundle = await transfer.generateSpendBundle([coin], sk_hex, tgt_addr, 1_000_000n, 0n, change_addr);
+      this.assert(
+        '81198e68402824e0585fac43d79edf3efe19e4651747f4e9b8d28f6a8a5c319dac67d4a0c03ad957cbb7d7c3c955605d03d6c5750e0aa44baf73ddaa5fcfbe74e3cb922034b72656f0df410ff6ef8e81b56b1a6a0c9bddd9331b7a9c90f897ce', bundle?.aggregated_signature)
+
       this.errorMessage = "Passed";
     } catch (error) {
       this.errorMessage = error;
