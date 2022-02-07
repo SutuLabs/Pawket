@@ -51,4 +51,6 @@ export interface SpendBundle {
 export interface PuzzleInfo {
     puzzleHash: string;
     puzzle: string;
+    privateKey: Uint8Array;
+    index:number;
 }

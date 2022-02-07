@@ -235,6 +235,16 @@ class Utility {
     return puzzleHash;
   }
 
+  public async encodePuzzle(puzzle: string): Promise<string> {
+    let output: any = null;
+    clvm_tools.setPrintFunction((...args) => output = args)
+
+    clvm_tools.go("opc", puzzle);
+    const encodedPuzzle= output[0];
+
+    return encodedPuzzle;
+  }
+
   public getCatPuzzle(synPubkey: string, assetId: string): string {
     if (!synPubkey.startsWith("0x")) synPubkey = "0x" + synPubkey;
     if (!assetId.startsWith("0x")) assetId = "0x" + assetId;
@@ -312,12 +322,14 @@ class Utility {
     const derive = await this.derive(privateKey);
     const puzzles: PuzzleInfo[] = [];
     for (let i = startIndex; i < endIndex; i++) {
+      const privateKey = derive([12381, 8444, 2, i]);
       const pubkey = this.toHexString(
-        derive([12381, 8444, 2, i]).get_g1().serialize()
+        privateKey.get_g1().serialize()
       );
-      const puzzle = this.getPuzzle(pubkey);
+      const synPubkey = await this.getSyntheticKey(pubkey);
+      const puzzle = this.getPuzzle(synPubkey);
       const puzzleHash = await this.getPuzzleHashFromPuzzle(puzzle);
-      puzzles.push({ puzzle, puzzleHash });
+      puzzles.push({ puzzle, puzzleHash, privateKey: privateKey.serialize(), index: i });
     }
 
     return puzzles;
