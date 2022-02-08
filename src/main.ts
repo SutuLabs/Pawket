@@ -23,3 +23,5 @@ import "./store/modules/app";
 import "./store/modules/account";
 import "./store/modules/vault";
 import "./store/modules/network";
+
+(BigInt.prototype as any).toJSON = function() { return this.toString(); }
