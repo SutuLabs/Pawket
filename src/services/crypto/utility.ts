@@ -1,4 +1,4 @@
-import loadBls from "@chiamine/bls-signatures";
+import store from "@/store";
 import { PrivateKey, ModuleInstance } from "@chiamine/bls-signatures";
 
 type deriveCallback = (path: number[]) => PrivateKey;
@@ -27,17 +27,17 @@ class Utility {
   }
 
   async derive(privateKey: Uint8Array): Promise<deriveCallback> {
-    const BLS = await loadBls();
+    const BLS = store.state.app.bls;
+    if (!BLS) throw "BLS not initialized";
     const sk = BLS.PrivateKey.from_bytes(privateKey, false);
     return (path: number[]) => this.derivePath(BLS, sk, path);
   }
 
-  async getBLS(
-    privateKey: Uint8Array
-  ): Promise<{ BLS: ModuleInstance; sk: PrivateKey }> {
-    const BLS = await loadBls();
+  async getPrivateKey(privateKey: Uint8Array): Promise<PrivateKey> {
+    const BLS = store.state.app.bls;
+    if (!BLS) throw "BLS not initialized";
     const sk = BLS.PrivateKey.from_bytes(privateKey, false);
-    return { BLS, sk };
+    return sk;
   }
   public async purehash(data: string): Promise<Uint8Array> {
     const enc = new TextEncoder();

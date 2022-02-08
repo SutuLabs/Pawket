@@ -1,9 +1,9 @@
+import store from "@/store";
 import {
   entropyToMnemonic,
   mnemonicToSeedSync,
 } from "bip39";
 
-import loadBls from "@chiamine/bls-signatures";
 import pbkdf2Hmac from "pbkdf2-hmac";
 import utility from "./utility";
 
@@ -30,7 +30,8 @@ class AccountHelper {
     if (legacyMnemonic) compatibleMnemonic = legacyMnemonic;
 
     // let d = mnemonicToSeedSync(compatibleMnemonic);
-    const BLS = await loadBls();
+    const BLS = store.state.app.bls;
+    if (!BLS) throw "BLS not initialized";
     const key = await pbkdf2Hmac(
       compatibleMnemonic,
       "mnemonic",

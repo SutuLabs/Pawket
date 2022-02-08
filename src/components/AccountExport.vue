@@ -80,7 +80,7 @@ export default class AccountExport extends Vue {
 
   mounted(): void {
     var privkey = utility.fromHexString(this.account.key.privateKey);
-    utility.getBLS(privkey).then(({ sk }) => {
+    utility.getPrivateKey(privkey).then((sk) => {
       this.masterprikey = utility.toHexString(sk.serialize());
       this.masterpubkey = utility.toHexString(sk.get_g1().serialize());
     });
