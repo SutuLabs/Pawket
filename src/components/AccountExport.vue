@@ -1,7 +1,7 @@
 <template>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">Account Export</p>
+      <p class="modal-card-title">{{ $t('message.accountExport') }}</p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">

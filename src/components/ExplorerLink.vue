@@ -1,14 +1,14 @@
 <template>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">Links</p>
+      <p class="modal-card-title">{{ $t('message.link') }}</p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
       <div class="columns is-mobile">
         <div class="column is-one-third">
           <b-menu>
-            <b-menu-list label="Address">
+            <b-menu-list :label="$t('message.address')">
               <b-menu-item
                 v-for="addr in token.addresses"
                 icon="address"

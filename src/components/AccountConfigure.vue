@@ -1,14 +1,14 @@
 <template>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">Configure</p>
+      <p class="modal-card-title">{{ $t('message.configure') }}</p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
-      <b-field label="Max privacy addresses to search">
+      <b-field :label="$t('message.maxAddress')">
         <b-slider v-model="maxAddress" :max="8" :min="1"></b-slider>
       </b-field>
-      <b-field label="Listing CATs">
+      <b-field :label="$t('message.listingCATs')">
         <b-taginput
           class="taginput-sortable"
           v-sortable="sortableOptions"
@@ -16,7 +16,7 @@
           ellipsis
           icon="label"
           :before-adding="beforeAdd"
-          placeholder="Add a CAT"
+          :placeholder="$t('message.addCAT')"
         >
         </b-taginput>
         <!-- <p class="control">
@@ -31,11 +31,11 @@
     </section>
     <footer class="modal-card-foot is-justify-content-space-between">
       <div>
-        <b-button label="Cancel" @click="close()"></b-button>
-        <b-button label="Save" type="is-primary" @click="submit()"></b-button>
+        <b-button :label="$t('message.cancel')" @click="close()"></b-button>
+        <b-button :label="$t('message.submit')" type="is-primary" @click="submit()"></b-button>
       </div>
       <div>
-        <b-button label="Change Password" type="is-warning" @click="changePassword()"></b-button>
+        <b-button :label="$t('message.changePassword')" type="is-warning" @click="changePassword()"></b-button>
       </div>
     </footer>
   </div>

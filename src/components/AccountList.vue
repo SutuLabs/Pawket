@@ -1,8 +1,8 @@
 <template>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">Account Export</p>
-      <b-button class="is-pulled-right mr-5" type="is-small" @click="showMnemonic()">Show Mnemonic</b-button>
+      <p class="modal-card-title">{{ $t('message.accountExport') }}</p>
+      <b-button class="is-pulled-right mr-5" type="is-small" @click="showMnemonic($t('message.showMnemonicPrompt'))">{{ $t('message.showMnemonic') }}</b-button>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
@@ -15,15 +15,15 @@
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addByPassword()">
         <span class="panel-icon">➕</span>
-        Add By Password
+        {{ $t('message.addByPassword') }}
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addBySerial()">
         <span class="panel-icon">➕</span>
-        Add By Serial
+        {{ $t('message.addBySerial')}}
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addByLegacy()">
         <span class="panel-icon">➕</span>
-        Import Chia 24 Mnemonic words
+        {{ $t('message.addByLegacy') }}
       </a>
     </section>
   </div>
@@ -149,9 +149,9 @@ export default class AccountList extends Vue {
     });
   }
 
-  showMnemonic(): void {
+  showMnemonic(msg: string): void {
     this.$buefy.dialog.confirm({
-      message: `Mnemonic is very sensitive, make sure you are safe and continue, OK?`,
+      message: msg,
       trapFocus: true,
       onConfirm: () => {
         this.$buefy.modal.open({
