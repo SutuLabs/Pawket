@@ -1,7 +1,7 @@
 <template>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">{{ $t('message.link') }}</p>
+      <p class="modal-card-title">{{ $t("message.link") }}</p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
@@ -12,10 +12,10 @@
               <b-menu-item
                 v-for="addr in token.addresses"
                 icon="address"
-                :label="addr.slice(0, 9) + '...'"
-                :key="addr"
-                :active="address == addr"
-                @click="address = addr"
+                :label="addr.address.slice(0, 9) + '...'"
+                :key="addr.address"
+                :active="address == addr.address"
+                @click="address = addr.address"
               ></b-menu-item>
             </b-menu-list>
           </b-menu>
@@ -23,7 +23,11 @@
 
         <div class="column has-text-centered">
           <qrcode-vue class="is-hidden-touch" :value="externalExplorerPrefix + address" size="300"></qrcode-vue>
-          <qrcode-vue class="is-hidden-mobile is-hidden-desktop" :value="externalExplorerPrefix + address" size="200"></qrcode-vue>
+          <qrcode-vue
+            class="is-hidden-mobile is-hidden-desktop"
+            :value="externalExplorerPrefix + address"
+            size="200"
+          ></qrcode-vue>
           <qrcode-vue class="is-hidden-tablet" :value="externalExplorerPrefix + address" size="100"></qrcode-vue>
           <key-box :value="address"></key-box>
           <a target="_blank" :href="externalExplorerPrefix + address">⚓</a>
@@ -56,8 +60,7 @@ export default class ExplorerLink extends Vue {
   }
 
   mounted(): void {
-    // this.address = this.token.addresses[0];
-    Vue.set(this, "address", this.token.addresses[0]);
+    Vue.set(this, "address", this.token.addresses[0].address);
   }
 
   @Emit("close")

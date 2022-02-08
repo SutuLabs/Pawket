@@ -1,9 +1,16 @@
 import * as clvm_tools from "clvm_tools/browser";
 import { bech32m } from "@scure/base";
 import store from "../../store";
-import { Bytes, bigint_from_bytes, bigint_to_bytes } from "clvm";
+import { Bytes } from "clvm";
+import { PrivateKey } from "@chiamine/bls-signatures";
 import { PuzzleInfo } from "@/models/wallet";
 import utility from "./utility";
+
+export interface PuzzleDetail {
+  privateKey: PrivateKey;
+  hash: string;
+  address: string;
+}
 
 class PuzzleMaker {
 
@@ -56,7 +63,7 @@ class PuzzleMaker {
     clvm_tools.setPrintFunction((...args) => output = args)
 
     clvm_tools.go("opc", puzzle);
-    const encodedPuzzle= output[0];
+    const encodedPuzzle = output[0];
 
     return encodedPuzzle;
   }
@@ -109,7 +116,7 @@ class PuzzleMaker {
     return arr;
   }
 
-  public async getAddressFromPuzzleHash(puzzleHash: string, prefix: string): Promise<string> {
+  public getAddressFromPuzzleHash(puzzleHash: string, prefix: string): string {
     const address = bech32m.encode(prefix, bech32m.toWords(utility.fromHexString(puzzleHash)));
     return address;
   }
@@ -121,17 +128,34 @@ class PuzzleMaker {
   }
 
   public async getPuzzleHashes(privateKey: Uint8Array, startIndex = 0, endIndex = 10): Promise<string[]> {
+    return (await this.getPuzzleDetails(privateKey,  startIndex, endIndex)).map(_ => _.hash);
+  }
+
+  public async getPuzzleDetails(privateKey: Uint8Array, startIndex = 0, endIndex = 10): Promise<PuzzleDetail[]> {
+    return await this.getPuzzleDetailsInner(privateKey, async (pk) => this.getPuzzleHash(pk), startIndex, endIndex)
+  }
+
+  public async getCatPuzzleDetails(privateKey: Uint8Array, assetId: string, startIndex = 0, endIndex = 10): Promise<PuzzleDetail[]> {
+    return await this.getPuzzleDetailsInner(privateKey, (pk) => this.getCatPuzzleHash(pk, assetId), startIndex, endIndex)
+  }
+
+  private async getPuzzleDetailsInner(
+    privateKey: Uint8Array,
+    getHash: (pubkey: string) => Promise<string>,
+    startIndex: number,
+    endIndex: number,
+    prefix="xch"): Promise<PuzzleDetail[]> {
     const derive = await utility.derive(privateKey);
-    const hashes = [];
+    const details: PuzzleDetail[] = [];
     for (let i = startIndex; i < endIndex; i++) {
-      const pubkey = utility.toHexString(
-        derive([12381, 8444, 2, i]).get_g1().serialize()
-      );
-      const hash = await this.getPuzzleHash(pubkey);
-      hashes.push(hash);
+      const privkey = derive([12381, 8444, 2, i]);
+      const pubkey = utility.toHexString(privkey.get_g1().serialize());
+      const hash = await getHash(pubkey);
+      const address = this.getAddressFromPuzzleHash(hash,prefix);
+      details.push({ privateKey: privkey, hash, address });
     }
 
-    return hashes;
+    return details;
   }
 
   public async getPuzzles(privateKey: Uint8Array, startIndex = 0, endIndex = 10): Promise<PuzzleInfo[]> {
@@ -151,18 +175,8 @@ class PuzzleMaker {
     return puzzles;
   }
 
-  public async getCatPuzzleHashes(privateKey: Uint8Array, assetId: string, startIndex = 0, endIndex = 10) {
-    const derive = await utility.derive(privateKey);
-    const hashes = [];
-    for (let i = startIndex; i < endIndex; i++) {
-      const pubkey = utility.toHexString(
-        derive([12381, 8444, 2, i]).get_g1().serialize()
-      );
-      const hash = await this.getCatPuzzleHash(pubkey, assetId);
-      hashes.push(hash);
-    }
-
-    return hashes;
+  public async getCatPuzzleHashes(privateKey: Uint8Array, assetId: string, startIndex = 0, endIndex = 10): Promise<string[]> {
+    return (await this.getCatPuzzleDetails(privateKey, assetId, startIndex, endIndex)).map(_ => _.hash);
   }
 }
 

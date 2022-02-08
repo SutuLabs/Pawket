@@ -35,7 +35,9 @@ const messages = {
       addBySerial: 'Add By Serial',
       addByPassword: 'Add By Password',
       addByLegacy: 'Import Chia 24 Mnemonic words',
-      selfTestMsg: 'Passed'
+      selfTestMsg: 'Passed',
+      bundle: 'Bundle',
+      sign: 'Sign',
     }
   },
   zhcn: {
@@ -69,7 +71,9 @@ const messages = {
       addBySerial: '序列添加',
       addByPassword: '通过密码添加',
       addByLegacy: '导入Chia 24位助记词',
-      selfTestMsg: '运行环境测试通过'
+      selfTestMsg: '运行环境测试通过',
+      bundle: '数据',
+      sign: '签名',
     }
   }
 }

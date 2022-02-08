@@ -5,13 +5,11 @@
         <b-button class="is-pulled-left" @click="configureAccount()">⚙️</b-button>
         <b-button class="is-pulled-right" @click="lock($t('message.lockPrompt'))">🔒</b-button>
         <b-dropdown class="is-pulled-right" :triggers="['hover', 'click']" aria-role="list" v-model="$i18n.locale">
-            <template #trigger>
-                <b-button
-                    :label="$t('message.lang')"
-                    icon-right="menu-down" />
-            </template>
-            <b-dropdown-item aria-role="listitem" value="zhcn">中文</b-dropdown-item>
-            <b-dropdown-item aria-role="listitem" value="en">English</b-dropdown-item>
+          <template #trigger>
+            <b-button :label="$t('message.lang')" icon-right="menu-down" />
+          </template>
+          <b-dropdown-item aria-role="listitem" value="zhcn">中文</b-dropdown-item>
+          <b-dropdown-item aria-role="listitem" value="en">English</b-dropdown-item>
         </b-dropdown>
         <b-button class="is-pulled-right" @click="selectAccount()">{{ account.name }}: {{ account.key.fingerprint }}</b-button>
         <br />
@@ -24,16 +22,16 @@
             <span v-else>- XCH</span>
             <br />
             <b-button size="is-small" @click="refreshBalance()" :disabled="refreshing">
-              {{ $t('message.refresh') }}
+              {{ $t("message.refresh") }}
               <b-loading :is-full-page="false" v-model="refreshing"></b-loading>
             </b-button>
           </h2>
         </div>
       </section>
       <section>
-        <b-button @click="openLink(account.tokens['XCH'])">{{ $t('message.receive') }}</b-button>
-        <b-button :disabled="!debugMode" @click="showSend()">{{ $t('message.send') }}</b-button>
-        <b-button v-if="debugMode" @click="showExport()">{{ $t('message.export') }}</b-button>
+        <b-button @click="openLink(account.tokens['XCH'])">{{ $t("message.receive") }}</b-button>
+        <b-button :disabled="!debugMode" @click="showSend()">{{ $t("message.send") }}</b-button>
+        <b-button v-if="debugMode" @click="showExport()">{{ $t("message.export") }}</b-button>
       </section>
     </div>
     <div class="box">
@@ -42,7 +40,9 @@
           <a class="panel-block is-justify-content-space-between" v-for="(token, symbol) in account.tokens" :key="symbol">
             <span class="is-pulled-right">
               <span class="panel-icon"></span>
-              <span class="" v-if="tokenInfo[symbol]">{{ token.amount | demojo(tokenInfo[symbol].unit, tokenInfo[symbol].decimal) }}</span>
+              <span class="" v-if="tokenInfo[symbol]">{{
+                token.amount | demojo(tokenInfo[symbol].unit, tokenInfo[symbol].decimal)
+              }}</span>
               <span class="has-text-grey-light is-size-7 pl-3">{{ token.amount }} mojos</span>
             </span>
             <a class="is-pulled-right" href="javascript:void(0)" @click="openLink(token)">⚓</a>
@@ -51,7 +51,9 @@
         <b-tab-item :label="$t('message.activity')">
           <a class="panel-block" v-for="(act, i) in account.activities" :key="i">
             <span class="panel-icon">🗒️</span>
-            <span class="">{{ act.coin.amount | demojo(tokenInfo[act.symbol].unit, tokenInfo[act.symbol].decimal) }}</span>
+            <span class="" v-if="tokenInfo[act.symbol]">{{
+              act.coin.amount | demojo(tokenInfo[act.symbol].unit, tokenInfo[act.symbol].decimal)
+            }}</span>
             <span class="has-text-grey-light is-size-7 pl-3">{{ act.coin.amount }} mojos</span>
             <span class="has-text-grey-light" v-if="act.spent">☑️ Used on {{ act.spentBlockIndex }}</span>
             <span class="has-text-grey-light" v-if="act.coinbase">🌰️ Coinbase</span>
@@ -95,7 +97,6 @@ type Mode = "Verify" | "Create";
 export default class AccountDetail extends Vue {
   public mode: Mode = "Verify";
   public assets = ["SBS", "CHB", "BSH"];
-  public tokenInfo: TokenInfo = {};
 
   get refreshing(): boolean {
     return store.state.account.refreshing;
@@ -109,13 +110,12 @@ export default class AccountDetail extends Vue {
     return store.state.app.debug;
   }
 
-  mounted(): void {
-    this.mode = store.state.vault.passwordHash ? "Verify" : "Create";
-    this.tokenInfo = Object.assign({}, store.state.account.tokenInfo);
+  get tokenInfo(): TokenInfo {
+    const tokenInfo = Object.assign({}, store.state.account.tokenInfo);
     if (this.account.cats) {
       for (let i = 0; i < this.account.cats.length; i++) {
         const cat = this.account.cats[i];
-        this.tokenInfo[cat.name] = {
+        tokenInfo[cat.name] = {
           id: cat.id,
           symbol: cat.name,
           decimal: 3,
@@ -123,6 +123,12 @@ export default class AccountDetail extends Vue {
         };
       }
     }
+
+    return tokenInfo;
+  }
+
+  mounted(): void {
+    this.mode = store.state.vault.passwordHash ? "Verify" : "Create";
     store.dispatch("refreshBalance");
   }
 
