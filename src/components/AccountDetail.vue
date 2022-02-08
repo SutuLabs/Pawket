@@ -63,8 +63,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import store, { TokenInfo, AccountToken } from "@/store";
-import { Account } from "@/store/index";
+import store from "@/store";
 import AccountExport from "@/components/AccountExport.vue";
 import AccountList from "@/components/AccountList.vue";
 import AccountConfigure from "@/components/AccountConfigure.vue";
@@ -73,6 +72,8 @@ import KeyBox from "@/components/KeyBox.vue";
 import Receive from "./Receive.vue";
 import Send from "./Send.vue";
 import { demojo } from "@/services/filters";
+import { TokenInfo,Account, AccountToken } from '@/store/modules/account';
+
 type Mode = "Verify" | "Create";
 
 @Component({
@@ -88,20 +89,20 @@ export default class AccountDetail extends Vue {
   public tokenInfo: TokenInfo = {};
 
   get refreshing(): boolean {
-    return store.state.refreshing;
+    return store.state.account.refreshing;
   }
 
   get account(): Account {
-    return store.state.accounts[store.state.selectedAccount] ?? {};
+    return store.state.account.accounts[store.state.account.selectedAccount] ?? {};
   }
 
   get debugMode(): boolean {
-    return store.state.debug;
+    return store.state.app.debug;
   }
 
   mounted(): void {
-    this.mode = store.state.passwordHash ? "Verify" : "Create";
-    this.tokenInfo = Object.assign({}, store.state.tokenInfo);
+    this.mode = store.state.vault.passwordHash ? "Verify" : "Create";
+    this.tokenInfo = Object.assign({}, store.state.account.tokenInfo);
     if (this.account.cats) {
       for (let i = 0; i < this.account.cats.length; i++) {
         const cat = this.account.cats[i];

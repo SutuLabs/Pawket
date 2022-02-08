@@ -16,3 +16,8 @@ new Vue({
   store,
   render: (h) => h(App),
 }).$mount("#app");
+
+import "./store/modules/app";
+import "./store/modules/account";
+import "./store/modules/vault";
+import "./store/modules/network";

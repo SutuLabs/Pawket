@@ -57,7 +57,7 @@
 <script lang="ts">
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import store from "@/store";
-import { Account } from "@/store/index";
+import { Account } from "@/store/modules/account";
 import utility from "../store/utility";
 import KeyBox from "@/components/KeyBox.vue";
 import QrcodeVue from "qrcode.vue";

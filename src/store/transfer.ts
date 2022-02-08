@@ -36,8 +36,8 @@ class Transfer {
     // }
 
     // public async generateSignature(coins: CoinItem[], sk_hex: string, tgt_address: string, amount: number, fee: number, change_address: string) {
-    if (!store.state.bls) return null;
-    const BLS = store.state.bls;
+    if (!store.state.app.bls) return null;
+    const BLS = store.state.app.bls;
     if (coins.length < 1) return null;
     const coin = this.findPossibleSmallest(coins, amount + fee);
     if (!coin) return null;
