@@ -1,14 +1,14 @@
 <template>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">Send</p>
+      <p class="modal-card-title">{{ $t('message.send') }}</p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
-      <b-field label="Address">
+      <b-field :label="$t('message.address')">
         <b-input> </b-input>
       </b-field>
-      <b-field label="Amount" :message="amountMessage">
+      <b-field :label="$t('message.amount')" :message="amountMessage">
         <b-select :value="'XCH'">
           <option>XCH</option>
           <option>BSH</option>
@@ -20,13 +20,13 @@
           <span class="button is-static">XCH</span>
         </p>
       </b-field>
-      <b-field label="Memo">
+      <b-field :label="$t('message.memo')">
         <b-input maxlength="100" type="text"></b-input>
       </b-field>
     </section>
     <footer class="modal-card-foot">
-      <b-button label="Cancel" @click="close()"></b-button>
-      <b-button label="Submit" type="is-primary" @click="submit()" :disabled="submitting"></b-button>
+      <b-button :label="$t('message.cancel')" @click="close()"></b-button>
+      <b-button :label="$t('message.submit')" type="is-primary" @click="submit()" :disabled="submitting"></b-button>
     </footer>
     <b-loading :is-full-page="false" v-model="submitting"></b-loading>
   </div>
