@@ -33,7 +33,7 @@
           <a class="panel-block is-justify-content-space-between" v-for="(token, symbol) in account.tokens" :key="symbol">
             <span class="is-pulled-right">
               <span class="panel-icon"></span>
-              <span class="">{{ token.amount | demojo(tokenInfo[symbol].unit, tokenInfo[symbol].decimal) }}</span>
+              <span class="" v-if="tokenInfo[symbol]">{{ token.amount | demojo(tokenInfo[symbol].unit, tokenInfo[symbol].decimal) }}</span>
               <span class="has-text-grey-light is-size-7 pl-3">{{ token.amount }} mojos</span>
             </span>
             <a class="is-pulled-right" href="javascript:void(0)" @click="openLink(token)">⚓</a>
