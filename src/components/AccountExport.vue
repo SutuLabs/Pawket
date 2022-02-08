@@ -57,10 +57,10 @@
 <script lang="ts">
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import store from "@/store";
-import { Account } from "@/store/index";
-import utility from "../store/utility";
+import { Account } from "@/store/modules/account";
 import KeyBox from "@/components/KeyBox.vue";
 import QrcodeVue from "qrcode.vue";
+import utility from '@/services/crypto/utility';
 
 @Component({
   components: {
@@ -80,7 +80,7 @@ export default class AccountExport extends Vue {
 
   mounted(): void {
     var privkey = utility.fromHexString(this.account.key.privateKey);
-    utility.getBLS(privkey).then(({ sk }) => {
+    utility.getPrivateKey(privkey).then((sk) => {
       this.masterprikey = utility.toHexString(sk.serialize());
       this.masterpubkey = utility.toHexString(sk.get_g1().serialize());
     });

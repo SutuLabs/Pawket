@@ -35,7 +35,8 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
-import store, { Account, AccountToken } from "@/store/index";
+import store from "@/store/index";
+import { Account, AccountToken } from "@/store/modules/account";
 import KeyBox from "@/components/KeyBox.vue";
 import QrcodeVue from "qrcode.vue";
 
@@ -51,7 +52,7 @@ export default class ExplorerLink extends Vue {
   public address = "";
 
   get externalExplorerPrefix(): string {
-    return store.state.externalExplorerPrefix;
+    return store.state.app.externalExplorerPrefix;
   }
 
   mounted(): void {

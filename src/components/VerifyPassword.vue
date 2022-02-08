@@ -23,7 +23,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import store from "@/store";
-import utility from "../store/utility";
+import utility from '@/services/crypto/utility';
 
 type Mode = "Verify" | "Create";
 
@@ -35,17 +35,16 @@ export default class VerifyPassword extends Vue {
   public showClear = false;
 
   mounted(): void {
-    this.mode = store.state.passwordHash ? "Verify" : "Create";
+    this.mode = store.state.vault.passwordHash ? "Verify" : "Create";
   }
 
-  confirm(): void {
-    utility.hash(this.password).then((pswhash) => {
-      if (pswhash != store.state.passwordHash) {
-        this.showClear = true;
-        return;
-      }
-      store.dispatch("unlock", this.password);
-    });
+  async confirm(): Promise<void> {
+    const pswhash = await utility.hash(this.password)
+    if (pswhash != store.state.vault.passwordHash) {
+      this.showClear = true;
+      return;
+    }
+    await store.dispatch("unlock", this.password);
   }
 
   create(): void {

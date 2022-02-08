@@ -32,7 +32,7 @@
 <script lang="ts">
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import store from "@/store";
-import { Account } from "@/store/index";
+import { Account } from "@/store/modules/account";
 import AccountExport from "@/components/AccountExport.vue";
 import MnemonicExport from "@/components/MnemonicExport.vue";
 
@@ -41,11 +41,11 @@ export default class AccountList extends Vue {
   @Prop() private account!: Account;
 
   get accounts(): Account[] {
-    return store.state.accounts;
+    return store.state.account.accounts;
   }
 
   get accountIndex(): number {
-    return store.state.selectedAccount;
+    return store.state.account.selectedAccount;
   }
 
   @Emit("close")
@@ -58,7 +58,7 @@ export default class AccountList extends Vue {
   }
 
   select(idx: number): void {
-    store.state.selectedAccount = idx;
+    store.state.account.selectedAccount = idx;
     store.dispatch("refreshBalance");
     this.close();
   }
@@ -159,7 +159,7 @@ export default class AccountList extends Vue {
           component: MnemonicExport,
           hasModalCard: true,
           trapFocus: true,
-          props: { mnemonic: store.state.seedMnemonic },
+          props: { mnemonic: store.state.vault.seedMnemonic },
         });
       },
     });

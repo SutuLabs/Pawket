@@ -18,7 +18,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import store from "@/store";
-import utility from "../store/utility";
+import account from '../services/crypto/account';
 
 type Mode = "Menu" | "Import" | "Create";
 
@@ -38,7 +38,7 @@ export default class CreateSeed extends Vue {
   }
 
   refresh(): void {
-    this.seedMnemonic = utility.generateSeed();
+    this.seedMnemonic = account.generateSeed();
   }
 
   back(): void {

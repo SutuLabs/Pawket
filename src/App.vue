@@ -42,13 +42,13 @@ export default class ProfileCorner extends Vue {
   }
 
   get debugMode(): boolean {
-    return store.state.debug;
+    return store.state.app.debug;
   }
 
   alphaClick(): void {
     this.debugClick--;
     if (this.debugClick == 0) {
-      store.state.debug = true;
+      store.state.app.debug = true;
       Notification.open({
         message: `Debug mode enabled`,
         type: "is-success",
@@ -58,7 +58,7 @@ export default class ProfileCorner extends Vue {
 
   disableDebug(): void {
     this.debugClick = 9;
-    store.state.debug = false;
+    store.state.app.debug = false;
     Notification.open({
       message: `Debug mode disabled`,
       type: "is-success",
