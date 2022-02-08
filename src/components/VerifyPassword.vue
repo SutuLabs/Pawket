@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <section v-if="mode == 'Verify'">
-      <b-field v-bind:label="$t('message.password')" label-position="on-border">
+      <b-field :label="$t('message.password')" label-position="on-border">
         <b-input type="password" @keyup.native.enter="confirm()" v-model="password"></b-input>
       </b-field>
       <b-button @click="confirm()">{{ $t("message.confirm")}}</b-button>
@@ -9,7 +9,7 @@
     </section>
 
     <section v-if="mode == 'Create'">
-      <b-field v-bind:label="$t('message.password')" label-position="on-border">
+      <b-field :label="$t('message.password')" label-position="on-border">
         <b-input type="password" v-model="password"></b-input>
       </b-field>
       <b-field label="Re-enter" label-position="on-border">

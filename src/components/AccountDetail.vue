@@ -4,7 +4,7 @@
       <section>
         <b-button class="is-pulled-left" @click="configureAccount()">⚙️</b-button>
         <b-button class="is-pulled-right" @click="lock($t('message.lockPrompt'))">🔒</b-button>
-        <b-dropdown class="is-pulled-right" :triggers="['hover']" aria-role="list" v-model="$i18n.locale">
+        <b-dropdown class="is-pulled-right" :triggers="['hover', 'click']" aria-role="list" v-model="$i18n.locale">
             <template #trigger>
                 <b-button
                     :label="$t('message.lang')"
@@ -38,7 +38,7 @@
     </div>
     <div class="box">
       <b-tabs position="is-centered" class="block">
-        <b-tab-item v-bind:label="$t('message.asset')">
+        <b-tab-item :label="$t('message.asset')">
           <a class="panel-block is-justify-content-space-between" v-for="(token, symbol) in account.tokens" :key="symbol">
             <span class="is-pulled-right">
               <span class="panel-icon"></span>
@@ -48,7 +48,7 @@
             <a class="is-pulled-right" href="javascript:void(0)" @click="openLink(token)">⚓</a>
           </a>
         </b-tab-item>
-        <b-tab-item v-bind:label="$t('message.activity')">
+        <b-tab-item :label="$t('message.activity')">
           <a class="panel-block" v-for="(act, i) in account.activities" :key="i">
             <span class="panel-icon">🗒️</span>
             <span class="">{{ act.coin.amount | demojo(tokenInfo[act.symbol].unit, tokenInfo[act.symbol].decimal) }}</span>
