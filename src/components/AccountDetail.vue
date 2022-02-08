@@ -71,8 +71,8 @@ import ExplorerLink from "@/components/ExplorerLink.vue";
 import KeyBox from "@/components/KeyBox.vue";
 import Receive from "./Receive.vue";
 import Send from "./Send.vue";
-import { demojo } from "@/services/filters";
-import { TokenInfo,Account, AccountToken } from '@/store/modules/account';
+import { demojo } from "@/filters/unitConversion";
+import { TokenInfo, Account, AccountToken } from '@/store/modules/account';
 
 type Mode = "Verify" | "Create";
 

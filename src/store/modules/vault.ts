@@ -1,7 +1,9 @@
 import store from '@/store'
-import utility from '../utility';
+import utility from '../../services/crypto/utility';
 import { Account } from './account';
 import Vue from 'vue';
+import encryption from '@/services/crypto/encryption';
+import puzzle from '@/services/crypto/puzzle';
 
 export interface IVaultState {
   passwordHash: string;
@@ -54,7 +56,7 @@ store.registerModule<IVaultState>('vault', {
         const firstWalletAddressPubkey = utility.toHexString(
           derive([12381, 8444, 2, 0]).get_g1().serialize()
         );
-        Vue.set(account, "firstAddress", await utility.getAddress(firstWalletAddressPubkey, rootState.network.networks[rootState.network.network].prefix));
+        Vue.set(account, "firstAddress", await puzzle.getAddress(firstWalletAddressPubkey, rootState.network.networks[rootState.network.network].prefix));
       }
     },
     async unlock({ state, dispatch, rootState }, password) {
@@ -62,13 +64,13 @@ store.registerModule<IVaultState>('vault', {
       if (pswhash != state.passwordHash) return;
       state.password = password;
       rootState.account.accounts = JSON.parse(
-        (await utility.decrypt(state.encryptedAccounts, password)) || "[]"
+        (await encryption.decrypt(state.encryptedAccounts, password)) || "[]"
       );
       rootState.account.accounts.forEach(_ => {
         Vue.set(_, "balance", -1);
         Vue.set(_, "activities", []);
       });
-      state.seedMnemonic = await utility.decrypt(
+      state.seedMnemonic = await encryption.decrypt(
         state.encryptedSeed,
         password
       );
@@ -91,12 +93,12 @@ store.registerModule<IVaultState>('vault', {
       localStorage.setItem(
         "SETTINGS",
         JSON.stringify({
-          encryptedSeed: await utility.encrypt(
+          encryptedSeed: await encryption.encrypt(
             state.seedMnemonic,
             state.password
           ),
           passwordHash: state.passwordHash,
-          encryptedAccounts: await utility.encrypt(
+          encryptedAccounts: await encryption.encrypt(
             JSON.stringify(rootState.account.accounts.map(_ => (<Account>{
               key: _.key,
               name: _.name,

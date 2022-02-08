@@ -23,7 +23,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import store from "@/store";
-import utility from "../store/utility";
+import utility from '@/services/crypto/utility';
 
 type Mode = "Verify" | "Create";
 

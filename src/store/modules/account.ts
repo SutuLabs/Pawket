@@ -1,7 +1,9 @@
 import store from '@/store'
-import utility, { AccountKey } from "@/store/utility";
-import { CoinRecord, GetRecordsResponse } from "@/models/walletModel";
+import utility from "@/services/crypto/utility";
+import account, { AccountKey } from "@/services/crypto/account";
+import { CoinRecord, GetRecordsResponse } from "@/models/wallet";
 import Vue from 'vue';
+import puzzle from '@/services/crypto/puzzle';
 
 type AccountType = "Serial" | "Password" | "Legacy";
 
@@ -94,7 +96,7 @@ store.registerModule<IAccountState>('account', {
       { state, dispatch, rootState },
       { password, name }: { password: string; name: string }
     ) {
-      utility.getAccount(rootState.vault.seedMnemonic, password).then((account) => {
+      account.getAccount(rootState.vault.seedMnemonic, password).then((account) => {
         state.accounts.push({
           key: account,
           name: name,
@@ -109,9 +111,9 @@ store.registerModule<IAccountState>('account', {
     },
     async createAccountBySerial({ state, dispatch, rootState }, name: string) {
       const serial = Math.max(...state.accounts.map((_) => (_.serial ? _.serial : 0)), 0) + 1;
-      const account = await utility.getAccount(rootState.vault.seedMnemonic, serial.toFixed(0));
+      const acc = await account.getAccount(rootState.vault.seedMnemonic, serial.toFixed(0));
       state.accounts.push({
-        key: account,
+        key: acc,
         name: name,
         type: "Serial",
         serial: serial,
@@ -123,9 +125,9 @@ store.registerModule<IAccountState>('account', {
       await dispatch("persistent");
     },
     async createAccountByLegacyMnemonic({ state, dispatch }, { name, legacyMnemonic }: { name: string, legacyMnemonic: string }) {
-      const account = await utility.getAccount("", null, legacyMnemonic);
+      const acc = await account.getAccount("", null, legacyMnemonic);
       state.accounts.push({
-        key: account,
+        key: acc,
         name: name,
         type: "Legacy",
         tokens: {},
@@ -176,7 +178,7 @@ store.registerModule<IAccountState>('account', {
       if (typeof maxId !== 'number' || maxId <= 0) DEFAULT_ADDRESS_RETRIEVAL_COUNT;
 
       const privkey = utility.fromHexString(account.key.privateKey);
-      const xchToken = { symbol: "XCH", hashes: await utility.getPuzzleHashes(privkey, 0, maxId) };
+      const xchToken = { symbol: "XCH", hashes: await puzzle.getPuzzleHashes(privkey, 0, maxId) };
       const tokens = [xchToken];
       const standardAssets = Object.values(state.tokenInfo).filter(_ => _.id).map(_ => ({ symbol: _.symbol, id: _.id ?? "" }));
       const accountAssets = (account.cats ?? []).map(_ => ({ symbol: _.name, id: _.id }))
@@ -190,7 +192,7 @@ store.registerModule<IAccountState>('account', {
       for (let i = 0; i < assets.length; i++) {
         const assetId = assets[i].id;
         const symbol = assets[i].symbol;
-        const hs = await utility.getCatPuzzleHashes(privkey, assetId, 0, maxId);
+        const hs = await puzzle.getCatPuzzleHashes(privkey, assetId, 0, maxId);
         tokens.push(Object.assign({}, assets[i], { hashes: hs }));
         for (let j = 0; j < hs.length; j++) {
           const h = hs[j];
@@ -230,7 +232,7 @@ store.registerModule<IAccountState>('account', {
           const b = balances[i];
           tokenBalances[b.symbol] = {
             amount: b.amount,
-            addresses: await utility.getAddressesFromPuzzleHash(tokens.find(_ => _.symbol == b.symbol)?.hashes ?? [], "xch"),
+            addresses: await puzzle.getAddressesFromPuzzleHash(tokens.find(_ => _.symbol == b.symbol)?.hashes ?? [], "xch"),
           };
         }
 
@@ -244,7 +246,7 @@ store.registerModule<IAccountState>('account', {
           const token = tokens[i];
           tokenBalances[token.symbol] = {
             amount: -1,
-            addresses: await utility.getAddressesFromPuzzleHash(token.hashes, "xch"),
+            addresses: await puzzle.getAddressesFromPuzzleHash(token.hashes, "xch"),
           }
         }
         Vue.set(account, "tokens", tokenBalances);

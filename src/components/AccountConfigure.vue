@@ -47,7 +47,7 @@ import store from "@/store/index";
 import KeyBox from "@/components/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { DialogProgrammatic as Dialog } from "buefy";
-import { sortable } from "@/services/sortable";
+import { sortable } from "@/directives/sortable";
 import { Account, CustomCat } from '@/store/modules/account';
 
 @Component({
