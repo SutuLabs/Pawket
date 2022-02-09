@@ -8,6 +8,9 @@ class CoinConditions {
   public static CREATE_COIN(puzzlehash: string, amount: bigint): string[] {
     return ["51", this.prefix0x(puzzlehash), this.prefix0x(Bytes.from(bigint_to_bytes(amount, { signed: true })).hex())];
   }
+  public static CREATE_COIN_Extend(puzzlehash: string, amount: bigint, id: string, memo: string): string[] {
+    return this.CREATE_COIN(puzzlehash, amount).concat([this.prefix0x(id), `"${memo}"`]);
+  }
   public static CREATE_COIN_ANNOUNCEMENT(message: string): string[] {
     return ["60", message];
   }
@@ -32,10 +35,6 @@ class Transfer {
     amount: bigint,
     fee: bigint,
     change_address: string): Promise<SpendBundle | null> {
-    //   const sig = await this.generateSignature(coins, sk_hex,)
-    // }
-
-    // public async generateSignature(coins: CoinItem[], sk_hex: string, tgt_address: string, amount: number, fee: number, change_address: string) {
     if (!store.state.app.bls) return null;
     const BLS = store.state.app.bls;
     if (coins.length < 1) return null;
@@ -51,26 +50,14 @@ class Transfer {
     const puzzle_reveal = CoinConditions.prefix0x(await puzzle.encodePuzzle(puz.puzzle));
     const sk = BLS.PrivateKey.from_bytes(puz.privateKey, true);
 
-    const tgt_hex = puzzle.getPuzzleHashFromAddress(tgt_address);
-    const change_hex = puzzle.getPuzzleHashFromAddress(change_address);
     const coinname = this.getCoinName(coin);
-    // const hash = Bytes.SHA256(cont).hex();
-    // console.log(hash);
 
-    // const pk = Bytes.from(sk.get_g1().serialize()).hex();
-    // console.log("sk", sk, "pk", pk)
     const synthetic_sk = this.calculate_synthetic_secret_key(BLS, sk, Transfer.DEFAULT_HIDDEN_PUZZLE_HASH.raw());
-    // console.log("synthetic_sk", Bytes.from(synthetic_sk.serialize()).hex())
-
-    const delegated_puzzle_solution = this.getDelegatedPuzzle([
-      CoinConditions.CREATE_COIN(tgt_hex, amount),
-      CoinConditions.CREATE_COIN(change_hex, coin.amount - amount - fee),
-    ]);
+    const delegated_puzzle_solution= this.getDelegatedPuzzleSolution(coin,tgt_address,amount,fee,change_address);
     const delegated_puzzle_solution_treehash = await puzzle.getPuzzleHashFromPuzzle(delegated_puzzle_solution);
     const solution_reveal = "(() " + delegated_puzzle_solution + " ())";
     const solution = CoinConditions.prefix0x(await puzzle.encodePuzzle(solution_reveal));
     // console.log(delegated_puzzle_solution_treehash);
-
 
     const message = Uint8Array.from([...Bytes.from(delegated_puzzle_solution_treehash, "hex").raw(), ...coinname.raw(), ...Transfer.AGG_SIG_ME_ADDITIONAL_DATA.raw()]);
     // console.log(synthetic_sk, delegated_puzzle_solution_treehash, coinname, AGG_SIG_ME_ADDITIONAL_DATA,  message);
@@ -85,6 +72,26 @@ class Transfer {
       aggregated_signature: CoinConditions.prefix0x(sig),
       coin_spends: [{ coin, puzzle_reveal, solution }]
     }
+  }
+
+  public getDelegatedPuzzleSolution(
+    coin: OriginCoin,
+    tgt_address: string,
+    amount: bigint,
+    fee: bigint,
+    change_address: string): string {
+    const tgt_hex = puzzle.getPuzzleHashFromAddress(tgt_address);
+    const change_hex = puzzle.getPuzzleHashFromAddress(change_address);
+
+    const conditions = [];
+
+    const remainder = coin.amount - amount - fee;
+    conditions.push(CoinConditions.CREATE_COIN(tgt_hex, amount));
+    if (remainder > 0)
+      conditions.push(CoinConditions.CREATE_COIN(change_hex, remainder));
+
+    const delegated_puzzle_solution = this.getDelegatedPuzzle(conditions);
+    return delegated_puzzle_solution;
   }
 
   private findPossibleSmallest(coins: OriginCoin[], num: bigint): OriginCoin | null {
