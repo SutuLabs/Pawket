@@ -103,6 +103,7 @@ export default class SelfTest extends Vue {
       this.errorMessage = "Passed";
     } catch (error) {
       this.errorMessage = error;
+      console.warn(error);
     }
   }
 }

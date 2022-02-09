@@ -1,8 +1,8 @@
 import { PrivateKey, G1Element, ModuleInstance } from "@chiamine/bls-signatures";
 import { Bytes, bigint_from_bytes, bigint_to_bytes } from "clvm";
-import { OriginCoin, PuzzleInfo, SpendBundle } from "@/models/wallet";
+import { OriginCoin, SpendBundle } from "@/models/wallet";
 import store from "@/store";
-import puzzle from "./puzzle";
+import puzzle, { PuzzleDetail } from "./puzzle";
 
 class CoinConditions {
   public static CREATE_COIN(puzzlehash: string, amount: bigint): string[] {
@@ -43,23 +43,26 @@ class Transfer {
     if (amount + fee > coin.amount) return null;
 
     const gen_sk = BLS.PrivateKey.from_bytes(Bytes.from(sk_hex, "hex").raw(), true);
-    const puzzles = await puzzle.getPuzzles(gen_sk.serialize(), 0, 10);
-    const puzzleDict: { [key: string]: PuzzleInfo } = Object.assign({}, ...puzzles.map((x) => ({ [CoinConditions.prefix0x(x.puzzleHash)]: x })));
+    //TODO
+    const puzzles = await puzzle.getPuzzleDetails(gen_sk.serialize(), 0, 10);
+
+    const puzzleDict: { [key: string]: PuzzleDetail } = Object.assign({}, ...puzzles.map((x) => ({ [CoinConditions.prefix0x(x.hash)]: x })));
     const puz = puzzleDict[coin.puzzle_hash];
     if (!puz) return null;
     const puzzle_reveal = CoinConditions.prefix0x(await puzzle.encodePuzzle(puz.puzzle));
-    const sk = BLS.PrivateKey.from_bytes(puz.privateKey, true);
+    const sk = puz.privateKey;
 
     const coinname = this.getCoinName(coin);
 
     const synthetic_sk = this.calculate_synthetic_secret_key(BLS, sk, Transfer.DEFAULT_HIDDEN_PUZZLE_HASH.raw());
     const delegated_puzzle_solution= this.getDelegatedPuzzleSolution(coin,tgt_address,amount,fee,change_address);
-    const delegated_puzzle_solution_treehash = await puzzle.getPuzzleHashFromPuzzle(delegated_puzzle_solution);
+    const solution_executed_result = delegated_puzzle_solution;
+    const solution_executed_result_treehash = await puzzle.getPuzzleHashFromPuzzle(solution_executed_result);
     const solution_reveal = "(() " + delegated_puzzle_solution + " ())";
     const solution = CoinConditions.prefix0x(await puzzle.encodePuzzle(solution_reveal));
     // console.log(delegated_puzzle_solution_treehash);
 
-    const message = Uint8Array.from([...Bytes.from(delegated_puzzle_solution_treehash, "hex").raw(), ...coinname.raw(), ...Transfer.AGG_SIG_ME_ADDITIONAL_DATA.raw()]);
+    const message = Uint8Array.from([...Bytes.from(solution_executed_result_treehash, "hex").raw(), ...coinname.raw(), ...Transfer.AGG_SIG_ME_ADDITIONAL_DATA.raw()]);
     // console.log(synthetic_sk, delegated_puzzle_solution_treehash, coinname, AGG_SIG_ME_ADDITIONAL_DATA,  message);
     // console.log("message hex", Bytes.from(message).hex());
 
