@@ -93,6 +93,13 @@ export default class SelfTest extends Vue {
         "0xff80ffff01ffff33ffa087908e3f85bf4b55c7e7709915c2ce97a1e6ec1d227e54a04dbfee6862d546a5ff830f424080ffff33ffa04f45877796d7a64e192bcc9f899afeedae391f71af3afd7e15a0792c049d23d3ff860197741199c08080ff8080",
         bundle?.coin_spends[0].solution);
 
+      const coinname = transfer.getCoinName({
+        "amount": 1000000000n,
+        "parent_coin_info": "0xcd299604b459e5ff20da17627d684ea143fc1b5b4165166943729d2d24305de8",
+        "puzzle_hash": "0x484aaab0cda1b0149df9adeddb0a5d28976ad259ff6173f4488cbc68f095eb79"
+      });
+      this.assert("c62152493a6f3fbca7a918a8258e52f84c4e8aa286b8ebf1b0d5e5dda7fa7e6f", coinname.hex());
+
       this.errorMessage = "Passed";
     } catch (error) {
       this.errorMessage = error;

@@ -53,11 +53,7 @@ class Transfer {
 
     const tgt_hex = puzzle.getPuzzleHashFromAddress(tgt_address);
     const change_hex = puzzle.getPuzzleHashFromAddress(change_address);
-    const a = bigint_to_bytes(BigInt(coin.amount), { signed: true });
-    const pci = Bytes.from(coin.parent_coin_info, "hex");
-    const ph = Bytes.from(coin.puzzle_hash, "hex");
-    const cont = pci.concat(ph).concat(a);
-    const coinname = Bytes.SHA256(cont);
+    const coinname = this.getCoinName(coin);
     // const hash = Bytes.SHA256(cont).hex();
     // console.log(hash);
 
@@ -103,6 +99,15 @@ class Transfer {
 
   public getDelegatedPuzzle(conditions: string[][]): string {
     return "(q " + conditions.map(_ => "(" + _.join(" ") + ")").join(" ") + ")";
+  }
+
+  public getCoinName(coin: OriginCoin): Bytes {
+    const a = bigint_to_bytes(BigInt(coin.amount), { signed: true });
+    const pci = Bytes.from(coin.parent_coin_info, "hex");
+    const ph = Bytes.from(coin.puzzle_hash, "hex");
+    const cont = pci.concat(ph).concat(a);
+    const coinname = Bytes.SHA256(cont);
+    return coinname;
   }
 
   private calculate_synthetic_offset(public_key: G1Element, hidden_puzzle_hash: Uint8Array): bigint {
