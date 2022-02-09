@@ -4,6 +4,11 @@ import { OriginCoin, SpendBundle } from "@/models/wallet";
 import store from "@/store";
 import puzzle, { PuzzleDetail } from "./puzzle";
 
+interface PuzzleSolutionResult {
+  solution: string;
+  result: string;
+}
+
 class CoinConditions {
   public static CREATE_COIN(puzzlehash: string, amount: bigint): string[] {
     return ["51", this.prefix0x(puzzlehash), this.prefix0x(Bytes.from(bigint_to_bytes(amount, { signed: true })).hex())];
@@ -35,6 +40,43 @@ class Transfer {
     amount: bigint,
     fee: bigint,
     change_address: string): Promise<SpendBundle | null> {
+    return this.generateSpendBundleInternal(coins, sk_hex,
+      (sk, start, end) => puzzle.getPuzzleDetails(sk.serialize(), start, end),
+      async (coin) => {
+        const delegated_puzzle_solution = this.getDelegatedPuzzleSolution(coin, tgt_address, amount, fee, change_address);
+        const solution_executed_result = delegated_puzzle_solution;
+        const solution_reveal = "(() " + delegated_puzzle_solution + " ())";
+        return { solution: solution_reveal, result: solution_executed_result }
+      },
+      amount, fee);
+  }
+
+  public async generateCatSpendBundle(
+    coins: OriginCoin[],
+    sk_hex: string,
+    assetId: string,
+    tgt_address: string,
+    amount: bigint,
+    fee: bigint,
+    change_address: string): Promise<SpendBundle | null> {
+    return this.generateSpendBundleInternal(coins, sk_hex,
+      (sk, start, end) => puzzle.getCatPuzzleDetails(sk.serialize(), assetId, start, end),
+      async (coin) => {
+        const delegated_puzzle_solution = this.getDelegatedPuzzleSolution(coin, tgt_address, amount, fee, change_address);
+        const solution_executed_result = delegated_puzzle_solution;
+        const solution_reveal = "(() " + delegated_puzzle_solution + " ())";
+        return { solution: solution_reveal, result: solution_executed_result }
+      },
+      amount, fee);
+  }
+
+  private async generateSpendBundleInternal(
+    coins: OriginCoin[],
+    sk_hex: string,
+    getPuzzlesDetail: (privateKey: PrivateKey, startIndex: number, endIndex: number) => Promise<PuzzleDetail[]>,
+    getPuzzlesSolutionResult: (coin: OriginCoin) => Promise<PuzzleSolutionResult>,
+    amount: bigint,
+    fee: bigint): Promise<SpendBundle | null> {
     if (!store.state.app.bls) return null;
     const BLS = store.state.app.bls;
     if (coins.length < 1) return null;
@@ -43,8 +85,7 @@ class Transfer {
     if (amount + fee > coin.amount) return null;
 
     const gen_sk = BLS.PrivateKey.from_bytes(Bytes.from(sk_hex, "hex").raw(), true);
-    //TODO
-    const puzzles = await puzzle.getPuzzleDetails(gen_sk.serialize(), 0, 10);
+    const puzzles = await getPuzzlesDetail(gen_sk, 0, 10);
 
     const puzzleDict: { [key: string]: PuzzleDetail } = Object.assign({}, ...puzzles.map((x) => ({ [CoinConditions.prefix0x(x.hash)]: x })));
     const puz = puzzleDict[coin.puzzle_hash];
@@ -55,12 +96,9 @@ class Transfer {
     const coinname = this.getCoinName(coin);
 
     const synthetic_sk = this.calculate_synthetic_secret_key(BLS, sk, Transfer.DEFAULT_HIDDEN_PUZZLE_HASH.raw());
-    const delegated_puzzle_solution= this.getDelegatedPuzzleSolution(coin,tgt_address,amount,fee,change_address);
-    const solution_executed_result = delegated_puzzle_solution;
-    const solution_executed_result_treehash = await puzzle.getPuzzleHashFromPuzzle(solution_executed_result);
-    const solution_reveal = "(() " + delegated_puzzle_solution + " ())";
-    const solution = CoinConditions.prefix0x(await puzzle.encodePuzzle(solution_reveal));
-    // console.log(delegated_puzzle_solution_treehash);
+    const psr = await getPuzzlesSolutionResult(coin);
+    const solution_executed_result_treehash = await puzzle.getPuzzleHashFromPuzzle(psr.result);
+    const solution = CoinConditions.prefix0x(await puzzle.encodePuzzle(psr.solution));
 
     const message = Uint8Array.from([...Bytes.from(solution_executed_result_treehash, "hex").raw(), ...coinname.raw(), ...Transfer.AGG_SIG_ME_ADDITIONAL_DATA.raw()]);
     // console.log(synthetic_sk, delegated_puzzle_solution_treehash, coinname, AGG_SIG_ME_ADDITIONAL_DATA,  message);
