@@ -6,21 +6,25 @@
     </header>
     <section class="modal-card-body">
       <b-field :label="$t('message.address')">
-        <b-input v-model="address" @change="reset()"></b-input>
+        <b-input v-model="address" @input="reset()"></b-input>
       </b-field>
       <b-field :label="$t('message.amount')" :message="amountMessage">
-        <b-select v-model="selectedToken" @change="reset()">
+        <b-select v-model="selectedToken" @input="reset()">
           <option v-for="token in tokenNames" :key="token" :value="token">{{ token }}</option>
         </b-select>
-        <b-input v-model="amount" expanded @change="reset()"></b-input>
+        <b-input v-model="amount" expanded @input="reset()"></b-input>
         <p class="control">
           <span class="button is-static">{{ selectedToken }}</span>
         </p>
       </b-field>
       <b-field :label="$t('message.memo')">
-        <b-input maxlength="100" type="text" :disabled="selectedToken == 'XCH'"></b-input>
+        <b-input maxlength="100" v-model="memo" type="text" :disabled="selectedToken == 'XCH'"></b-input>
       </b-field>
-      <b-field v-if="bundle" :label="$t('message.bundle')">
+      <b-field v-if="bundle">
+        <template #label>
+          {{ $t("message.bundle") }}
+          <key-box display="✂️" :value="JSON.stringify(bundle)" tooltip="Copy"></key-box>
+        </template>
         <b-input type="textarea" disabled :value="bundleJson"></b-input>
       </b-field>
     </section>
@@ -35,7 +39,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
-import { Account } from "@/store/modules/account";
+import { Account, TokenInfo } from "@/store/modules/account";
 import KeyBox from "@/components/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import transfer from '../services/crypto/transfer';
@@ -43,6 +47,8 @@ import { ApiResponse } from '@/models/api';
 import receive from '../services/crypto/receive';
 import store from '@/store';
 import { CoinItem, SpendBundle } from '@/models/wallet';
+import utility from '@/services/crypto/utility';
+import puzzle from '@/services/crypto/puzzle';
 
 @Component({
   components: {
@@ -51,12 +57,20 @@ import { CoinItem, SpendBundle } from '@/models/wallet';
 })
 export default class Send extends Vue {
   @Prop() private account!: Account;
-  public amount = 0;
   public submitting = false;
-  public address = "";
-  public selectedToken = "XCH";
+  // public amount = 0;
+  // public address = "";
+  // public selectedToken = "XCH";
+  // public memo = "";
+  public amount = 10;
+  public address = "xch1qqltywgepnjekjh3u3sjjxu3sh82vttqwt7nwxq9rffslk9gyx9uqg8lqru";
+  public selectedToken = "BSH";
+  public memo = "memohello";
   public bundle: SpendBundle | null = null;
 
+  mounted() {
+    this.sign();
+  }
   @Emit("close")
   close(): void {
     return;
@@ -85,33 +99,68 @@ export default class Send extends Vue {
     this.bundle = null;
   }
 
+  get tokenInfo(): TokenInfo {
+    const tokenInfo = Object.assign({}, store.state.account.tokenInfo);
+    if (this.account.cats) {
+      for (let i = 0; i < this.account.cats.length; i++) {
+        const cat = this.account.cats[i];
+        tokenInfo[cat.name] = {
+          id: cat.id,
+          symbol: cat.name,
+          decimal: 3,
+          unit: cat.name,
+        };
+      }
+    }
+
+    return tokenInfo;
+  }
+
   async sign(): Promise<void> {
     this.submitting = true;
-    const maxId = 4;
-    const requests = await receive.getAssetsRequestDetail(this.account.key.privateKey, maxId, this.account.cats ?? []);
-    const tgtreqs = requests.filter(_ => _.symbol == this.selectedToken);
+    try {
+      const maxId = 4;
+      const sk_hex = this.account.key.privateKey;
+      const requests = await receive.getAssetsRequestDetail(sk_hex, maxId, this.account.cats ?? []);
+      const tgtreqs = requests.filter(_ => _.symbol == this.selectedToken);
 
-    const coins = await receive.getCoinRecords(tgtreqs);
-    if (!this.account.firstAddress) {
+      const coins = await receive.getCoinRecords(tgtreqs);
+      if (!this.account.firstAddress) {
+        this.submitting = false;
+        return;
+      }
+      const decimal = this.selectedToken == "XCH" ? 12 : 3;
+      const amount = BigInt(this.amount * Math.pow(10, decimal));
+
+      const filteredCoins =
+        coins.filter(_ => _.coin).map(_ => _.coin as CoinItem).map(_ => ({
+          amount: BigInt(_.amount),
+          parent_coin_info: _.parentCoinInfo,
+          puzzle_hash: _.puzzleHash,
+        }));
+
+
+      if (this.selectedToken == "XCH") {
+        const puzzles = await puzzle.getPuzzleDetails(utility.fromHexString(sk_hex), 0, 5);
+        this.bundle = await transfer.generateSpendBundle(
+          filteredCoins, sk_hex, puzzles, this.address, amount, 0n, this.account.firstAddress);
+      }
+      else {
+        const assetId = this.tokenInfo[this.selectedToken].id ?? "";
+        const puzzles = await puzzle.getCatPuzzleDetails(utility.fromHexString(sk_hex), assetId, 0, 5);
+        this.bundle = await transfer.generateCatSpendBundle(
+          filteredCoins, sk_hex, puzzles, assetId, this.address, amount, 0n, this.account.firstAddress, this.memo);
+
+      }
+
+    } catch (error) {
+      Notification.open({
+        message: `failed to sign: ${error}`,
+        type: "is-danger",
+      });
+      console.warn(error);
       this.submitting = false;
-      return;
     }
-    const decimal = this.selectedToken == "XCH" ? 12 : 3;
-    const amount = BigInt(this.amount * Math.pow(10, decimal));
-
-    this.bundle = await transfer.generateSpendBundle(
-      coins.filter(_ => _.coin).map(_ => _.coin as CoinItem).map(_ => ({
-        amount: BigInt(_.amount),
-        parent_coin_info: _.parentCoinInfo,
-        puzzle_hash: _.puzzleHash,
-      })),
-      this.account.key.privateKey,
-      this.address,
-      amount,
-      0n,
-      this.account.firstAddress,
-    );
-
     this.submitting = false;
   }
 
@@ -147,6 +196,7 @@ export default class Send extends Vue {
         message: `failed to submit: ${error}`,
         type: "is-danger",
       });
+      console.warn(error);
       this.submitting = false;
     }
   }

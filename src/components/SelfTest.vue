@@ -22,7 +22,7 @@ export default class SelfTest extends Vue {
 
   assert<T>(expect: T, actual: T): void {
     if (expect != actual) {
-      console.log("asserting failed", expect, actual);
+      console.log("asserting failed\nexpect:", expect, "\nactual:", actual);
       throw `expect [${expect}] != actual [${actual}]`;
     }
   }
@@ -46,7 +46,7 @@ export default class SelfTest extends Vue {
       );
       this.assert("2308828858", sk.get_g1().get_fingerprint().toString());
 
-      const derive = await utility.derive(privkey);
+      const derive = await utility.derive(privkey, true);
       const farmerpubkey = utility.toHexString(derive([12381, 8444, 0, 0]).get_g1().serialize());
       this.assert(
         "99f181b1b30865339eea4e61172e64282ed1793022363f6635affbfb2aa2f4384ef10df47a445f92d685c7265488777e",
@@ -74,24 +74,24 @@ export default class SelfTest extends Vue {
         adr
       );
 
-      const coin: OriginCoin = {
-        amount: BigInt(1750000000000),
-        parent_coin_info: '0xe3b0c44298fc1c149afbf4c8996fb92400000000000000000000000000000001',
-        puzzle_hash: '0x4f45877796d7a64e192bcc9f899afeedae391f71af3afd7e15a0792c049d23d3'
-      };
-      const sk_hex = "5c3b9b1062eaefd843d79d2b53856da31521ed7d1fe2a3ec48c71e654c4530e5";
-      const tgt_addr = await puzzle.getAddressFromPuzzleHash("0x87908e3f85bf4b55c7e7709915c2ce97a1e6ec1d227e54a04dbfee6862d546a5", "xch");
-      const change_addr = await puzzle.getAddressFromPuzzleHash("0x4f45877796d7a64e192bcc9f899afeedae391f71af3afd7e15a0792c049d23d3", "xch");
-      const bundle = await transfer.generateSpendBundle([coin], sk_hex, tgt_addr, 1_000_000n, 0n, change_addr);
-      this.assert(
-        "0x81198e68402824e0585fac43d79edf3efe19e4651747f4e9b8d28f6a8a5c319dac67d4a0c03ad957cbb7d7c3c955605d03d6c5750e0aa44baf73ddaa5fcfbe74e3cb922034b72656f0df410ff6ef8e81b56b1a6a0c9bddd9331b7a9c90f897ce",
-        bundle?.aggregated_signature);
-      this.assert(
-        "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a042c855d234578415254b7870b711fb25e8f85beaa4a66bd0673d394c761fa156406c2e3bb375d5b18766d2a12cc918ff018080",
-        bundle?.coin_spends[0].puzzle_reveal);
-      this.assert(
-        "0xff80ffff01ffff33ffa087908e3f85bf4b55c7e7709915c2ce97a1e6ec1d227e54a04dbfee6862d546a5ff830f424080ffff33ffa04f45877796d7a64e192bcc9f899afeedae391f71af3afd7e15a0792c049d23d3ff860197741199c08080ff8080",
-        bundle?.coin_spends[0].solution);
+      const gt1 = transfer.getDelegatedPuzzle(
+        [
+          ["a", "b", "c"],
+          ["d", "e", "f"],
+        ]
+      );
+      this.assert(`(q (a b c) (d e f))`, gt1);
+
+      const gt2 = transfer.getDelegatedPuzzle(
+        [
+          ["a", "b", "c"],
+          ["d", "e", ["f", `"g"`], []],
+        ]
+      );
+      this.assert(`(q (a b c) (d e (f "g") ()))`, gt2);
+
+      // await this.testStandardTransfer();
+      await this.testCatTransfer();
 
       const coinname = transfer.getCoinName({
         "amount": 1000000000n,
@@ -108,6 +108,59 @@ export default class SelfTest extends Vue {
       this.errorMessage = error;
       console.warn(error);
     }
+  }
+
+  async testStandardTransfer(): Promise<void> {
+    const coin: OriginCoin = {
+      amount: BigInt(1750000000000),
+      parent_coin_info: '0xe3b0c44298fc1c149afbf4c8996fb92400000000000000000000000000000001',
+      puzzle_hash: '0x4f45877796d7a64e192bcc9f899afeedae391f71af3afd7e15a0792c049d23d3'
+    };
+    const sk_hex = "5c3b9b1062eaefd843d79d2b53856da31521ed7d1fe2a3ec48c71e654c4530e5";
+    const tgt_addr = await puzzle.getAddressFromPuzzleHash("0x87908e3f85bf4b55c7e7709915c2ce97a1e6ec1d227e54a04dbfee6862d546a5", "xch");
+    const change_addr = await puzzle.getAddressFromPuzzleHash("0x4f45877796d7a64e192bcc9f899afeedae391f71af3afd7e15a0792c049d23d3", "xch");
+    const puzzles = await puzzle.getPuzzleDetails(utility.fromHexString(sk_hex), 0, 5);
+    const bundle = await transfer.generateSpendBundle([coin], sk_hex, puzzles, tgt_addr, 1_000_000n, 0n, change_addr);
+    this.assert(
+      "0x81198e68402824e0585fac43d79edf3efe19e4651747f4e9b8d28f6a8a5c319dac67d4a0c03ad957cbb7d7c3c955605d03d6c5750e0aa44baf73ddaa5fcfbe74e3cb922034b72656f0df410ff6ef8e81b56b1a6a0c9bddd9331b7a9c90f897ce",
+      bundle?.aggregated_signature);
+    this.assert(
+      "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a042c855d234578415254b7870b711fb25e8f85beaa4a66bd0673d394c761fa156406c2e3bb375d5b18766d2a12cc918ff018080",
+      bundle?.coin_spends[0].puzzle_reveal);
+    this.assert(
+      "0xff80ffff01ffff33ffa087908e3f85bf4b55c7e7709915c2ce97a1e6ec1d227e54a04dbfee6862d546a5ff830f424080ffff33ffa04f45877796d7a64e192bcc9f899afeedae391f71af3afd7e15a0792c049d23d3ff860197741199c08080ff8080",
+      bundle?.coin_spends[0].solution);
+  }
+
+  async testCatTransfer(): Promise<void> {
+    const coin: OriginCoin = {
+      amount: BigInt(10000),
+      parent_coin_info: '0xc62152493a6f3fbca7a918a8258e52f84c4e8aa286b8ebf1b0d5e5dda7fa7e6f',
+      puzzle_hash: '0x7b869ecac43297c5be091d36ee24a7b8e9cd56f5550d4dfa85650d8371481d22'
+    };
+    const sk_hex = "4c892353ff68431da87d9b370fbf3721985e7013d7b0cbcb436933fc03876d81";
+    const tgt_addr = await puzzle.getAddressFromPuzzleHash("0x11303678c4afe4267bd425faead058ed5ec52136d5bdee0c37b2b52e6109825b", "xch");
+    const change_addr = await puzzle.getAddressFromPuzzleHash("0x9bc5684f2f57af37b568faaa8a112e3450fd1d168b684b462645ca899cd5bdd4", "xch");
+    const assetId = "5ee2b9b59d594d121ff790cd1ed95ee89b36c19475b8bda3af9177f4f0a471d4";
+    const puzzles = await puzzle.getCatPuzzleDetails(utility.fromHexString(sk_hex), assetId, 35, 40);
+    const bundle = await transfer.generateCatSpendBundle([coin], sk_hex, puzzles, assetId,
+      tgt_addr, 10_000n, 0n, change_addr, "memo",
+      async () => ({
+        amount: 1000000000,
+        parentCoinId: "0xc62152493a6f3fbca7a918a8258e52f84c4e8aa286b8ebf1b0d5e5dda7fa7e6f",
+        parentParentCoinId: "0xcd299604b459e5ff20da17627d684ea143fc1b5b4165166943729d2d24305de8",
+        puzzleReveal: "0xff02ffff01ff02ffff01ff02ff5effff04ff02ffff04ffff04ff05ffff04ffff0bff2cff0580ffff04ff0bff80808080ffff04ffff02ff17ff2f80ffff04ff5fffff04ffff02ff2effff04ff02ffff04ff17ff80808080ffff04ffff0bff82027fff82057fff820b7f80ffff04ff81bfffff04ff82017fffff04ff8202ffffff04ff8205ffffff04ff820bffff80808080808080808080808080ffff04ffff01ffffffff81ca3dff46ff0233ffff3c04ff01ff0181cbffffff02ff02ffff03ff05ffff01ff02ff32ffff04ff02ffff04ff0dffff04ffff0bff22ffff0bff2cff3480ffff0bff22ffff0bff22ffff0bff2cff5c80ff0980ffff0bff22ff0bffff0bff2cff8080808080ff8080808080ffff010b80ff0180ffff02ffff03ff0bffff01ff02ffff03ffff09ffff02ff2effff04ff02ffff04ff13ff80808080ff820b9f80ffff01ff02ff26ffff04ff02ffff04ffff02ff13ffff04ff5fffff04ff17ffff04ff2fffff04ff81bfffff04ff82017fffff04ff1bff8080808080808080ffff04ff82017fff8080808080ffff01ff088080ff0180ffff01ff02ffff03ff17ffff01ff02ffff03ffff20ff81bf80ffff0182017fffff01ff088080ff0180ffff01ff088080ff018080ff0180ffff04ffff04ff05ff2780ffff04ffff10ff0bff5780ff778080ff02ffff03ff05ffff01ff02ffff03ffff09ffff02ffff03ffff09ff11ff7880ffff0159ff8080ff0180ffff01818f80ffff01ff02ff7affff04ff02ffff04ff0dffff04ff0bffff04ffff04ff81b9ff82017980ff808080808080ffff01ff02ff5affff04ff02ffff04ffff02ffff03ffff09ff11ff7880ffff01ff04ff78ffff04ffff02ff36ffff04ff02ffff04ff13ffff04ff29ffff04ffff0bff2cff5b80ffff04ff2bff80808080808080ff398080ffff01ff02ffff03ffff09ff11ff2480ffff01ff04ff24ffff04ffff0bff20ff2980ff398080ffff010980ff018080ff0180ffff04ffff02ffff03ffff09ff11ff7880ffff0159ff8080ff0180ffff04ffff02ff7affff04ff02ffff04ff0dffff04ff0bffff04ff17ff808080808080ff80808080808080ff0180ffff01ff04ff80ffff04ff80ff17808080ff0180ffffff02ffff03ff05ffff01ff04ff09ffff02ff26ffff04ff02ffff04ff0dffff04ff0bff808080808080ffff010b80ff0180ff0bff22ffff0bff2cff5880ffff0bff22ffff0bff22ffff0bff2cff5c80ff0580ffff0bff22ffff02ff32ffff04ff02ffff04ff07ffff04ffff0bff2cff2c80ff8080808080ffff0bff2cff8080808080ffff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff2effff04ff02ffff04ff09ff80808080ffff02ff2effff04ff02ffff04ff0dff8080808080ffff01ff0bff2cff058080ff0180ffff04ffff04ff28ffff04ff5fff808080ffff02ff7effff04ff02ffff04ffff04ffff04ff2fff0580ffff04ff5fff82017f8080ffff04ffff02ff7affff04ff02ffff04ff0bffff04ff05ffff01ff808080808080ffff04ff17ffff04ff81bfffff04ff82017fffff04ffff0bff8204ffffff02ff36ffff04ff02ffff04ff09ffff04ff820affffff04ffff0bff2cff2d80ffff04ff15ff80808080808080ff8216ff80ffff04ff8205ffffff04ff820bffff808080808080808080808080ff02ff2affff04ff02ffff04ff5fffff04ff3bffff04ffff02ffff03ff17ffff01ff09ff2dffff0bff27ffff02ff36ffff04ff02ffff04ff29ffff04ff57ffff04ffff0bff2cff81b980ffff04ff59ff80808080808080ff81b78080ff8080ff0180ffff04ff17ffff04ff05ffff04ff8202ffffff04ffff04ffff04ff24ffff04ffff0bff7cff2fff82017f80ff808080ffff04ffff04ff30ffff04ffff0bff81bfffff0bff7cff15ffff10ff82017fffff11ff8202dfff2b80ff8202ff808080ff808080ff138080ff80808080808080808080ff018080ffff04ffff01a072dec062874cd4d3aab892a0906688a1ae412b0109982e1797a170add88bdcdcffff04ffff01a05ee2b9b59d594d121ff790cd1ed95ee89b36c19475b8bda3af9177f4f0a471d4ffff04ffff01ff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b093b8b3bb32f2b5a8cdcf8e573cecb6baa7075fd65189425283fa94abb546432bfe05034bb380b4e569d6633c20668d70ff018080ff0180808080",
+      }),
+    );
+    this.assert(
+      "0xb6d9868be6729010f65eefceda44937ce6c400d96334cffa781d46199582643a3226030fa21094c850a8d074854d4c700a05198e9c828bbea65c84fbe527bf18d19be09a7eb18e2f0b9936f0ded75dd38cc3e2a4d671be291697a26d4816ac17",
+      bundle?.aggregated_signature);
+    // this.assert(
+    //   "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a042c855d234578415254b7870b711fb25e8f85beaa4a66bd0673d394c761fa156406c2e3bb375d5b18766d2a12cc918ff018080",
+    //   bundle?.coin_spends[0].puzzle_reveal);
+    // this.assert(
+    //   "0xff80ffff01ffff33ffa087908e3f85bf4b55c7e7709915c2ce97a1e6ec1d227e54a04dbfee6862d546a5ff830f424080ffff33ffa04f45877796d7a64e192bcc9f899afeedae391f71af3afd7e15a0792c049d23d3ff860197741199c08080ff8080",
+    //   bundle?.coin_spends[0].solution);
   }
 }
 </script>

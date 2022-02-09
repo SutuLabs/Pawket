@@ -64,6 +64,17 @@ class PuzzleMaker {
     return encodedPuzzle;
   }
 
+  public async disassemblePuzzle(puzzle_hex: string): Promise<string> {
+    puzzle_hex = puzzle_hex.startsWith("0x") ? puzzle_hex.substring(2) : puzzle_hex;
+    let output: any = null;
+    clvm_tools.setPrintFunction((...args) => output = args)
+
+    clvm_tools.go("opd", puzzle_hex);
+    const puzzle = output[0];
+
+    return puzzle;
+  }
+
   public getCatPuzzle(synPubkey: string, assetId: string): string {
     if (!synPubkey.startsWith("0x")) synPubkey = "0x" + synPubkey;
     if (!assetId.startsWith("0x")) assetId = "0x" + assetId;
@@ -119,7 +130,7 @@ class PuzzleMaker {
   }
 
   public async getCatPuzzleDetails(privateKey: Uint8Array, assetId: string, startIndex = 0, endIndex = 10): Promise<PuzzleDetail[]> {
-    return await this.getPuzzleDetailsInner(privateKey, async (spk) => this.getCatPuzzle(spk, assetId), startIndex, endIndex)
+    return await this.getPuzzleDetailsInner(privateKey, async (spk) => this.getCatPuzzle(spk, assetId), startIndex, endIndex, true)
   }
 
   private async getPuzzleDetailsInner(
@@ -127,11 +138,12 @@ class PuzzleMaker {
     getPuzzle: (pubkey: string) => Promise<string>,
     startIndex: number,
     endIndex: number,
+    includeUnhardened = false,
     prefix = "xch"): Promise<PuzzleDetail[]> {
-    const derive = await utility.derive(privateKey);
+    const derive = await utility.derive(privateKey, true);
+    const deriveUnhardened = await utility.derive(privateKey, false);
     const details: PuzzleDetail[] = [];
-    for (let i = startIndex; i < endIndex; i++) {
-      const privkey = derive([12381, 8444, 2, i]);
+    const add = async (privkey: PrivateKey) => {
       const pubkey = utility.toHexString(privkey.get_g1().serialize());
       const synpubkey = await this.getSyntheticKey(pubkey);
       const puzzle = await getPuzzle(synpubkey);
@@ -139,12 +151,30 @@ class PuzzleMaker {
       const address = this.getAddressFromPuzzleHash(hash, prefix);
       details.push({ privateKey: privkey, hash, address, puzzle });
     }
+    for (let i = startIndex; i < endIndex; i++) {
+      const privkey = derive([12381, 8444, 2, i]);
+      await add(privkey);
+      if (includeUnhardened) {
+        const privkey = deriveUnhardened([12381, 8444, 2, i]);
+        await add(privkey);
+      }
+    }
 
     return details;
   }
 
   public async getCatPuzzleHashes(privateKey: Uint8Array, assetId: string, startIndex = 0, endIndex = 10): Promise<string[]> {
     return (await this.getCatPuzzleDetails(privateKey, assetId, startIndex, endIndex)).map(_ => _.hash);
+  }
+
+  public async calcPuzzleResult(puzzle_reveal: string, solution: string): Promise<string> {
+    let output: any = null;
+    clvm_tools.setPrintFunction((...args) => output = args)
+
+    clvm_tools.go("brun", puzzle_reveal, solution);
+    const result = output[0];
+
+    return result;
   }
 }
 
