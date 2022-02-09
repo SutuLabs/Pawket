@@ -100,6 +100,9 @@ export default class SelfTest extends Vue {
       });
       this.assert("c62152493a6f3fbca7a918a8258e52f84c4e8aa286b8ebf1b0d5e5dda7fa7e6f", coinname.hex());
 
+      if (process.env.NODE_ENV !== "production") {
+        console.log("self-test passed");
+      }
       this.errorMessage = "Passed";
     } catch (error) {
       this.errorMessage = error;
