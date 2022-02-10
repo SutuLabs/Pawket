@@ -22,6 +22,7 @@
           <a href="http://github.com/chiabee">source code</a> would available later. This app is in
           <span @click="alphaClick()">ALPHA</span> stage, don't use in PRODUCTION.
           <span v-if="debugMode" @click="disableDebug()">[DEBUG]</span>
+          <span v-if="debugMode" @click="showDebugHelper()">[Helper]</span>
           <br />
           <a target="_blank" href="https://github.com/Chiabee/wallet-doc/">Quick Guide</a>
         </p>
@@ -33,6 +34,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import { NotificationProgrammatic as Notification } from "buefy";
 import store from './store';
+import ParseDebug from '@/components/ParseDebug.vue';
 
 @Component
 export default class ProfileCorner extends Vue {
@@ -62,6 +64,16 @@ export default class ProfileCorner extends Vue {
     Notification.open({
       message: `Debug mode disabled`,
       type: "is-success",
+    });
+  }
+
+  showDebugHelper(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: ParseDebug,
+      hasModalCard: true,
+      trapFocus: true,
+      props: {},
     });
   }
 }
