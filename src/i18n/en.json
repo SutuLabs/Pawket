@@ -1,0 +1,186 @@
+{
+  "verifyPassword": {
+    "ui": {
+      "button": {
+        "confirm": "Confrm",
+        "clear": "Clear Data",
+        "create": "Create"
+      },
+      "label": {
+        "password": "Password",
+        "reEnter": "Re-Enter"
+      }
+    },
+    "message": {
+      "confirmation": {
+        "clear": "Clear all data? Everything would empty!!!",
+        "confirmText": "Confirm",
+        "cancelText": "Cancel"
+      }
+    }
+  },
+  "createSeed": {
+    "ui": {
+      "button": {
+        "import": "Import",
+        "create": "Create",
+        "back": "Back",
+        "refresh": "Refresh",
+        "confirm": "Confirm"
+      },
+      "label": {
+        "mnemonic": "Mnemonic"
+      }
+    }
+  },
+  "accountDetail": {
+    "ui": {
+      "button": {
+        "refresh": "Refresh",
+        "receive": "Receive",
+        "send": "Send",
+        "export": "Export",
+        "lang": "English",
+        "confirm": "Confirm",
+        "cancel": "Cancel"
+      },
+      "tab": {
+        "asset": "Asset",
+        "activity": "Activity"
+      }
+    },
+    "message": {
+      "confirmation": {
+        "lock": "Lock?"
+      }
+    }
+  },
+  "accountConfigure": {
+    "ui": {
+      "title": {
+        "configure": "Configure"
+      },
+      "label": {
+        "maxAddress": "Max privacy addresses to search",
+        "listingCATs": "Listing CATs"
+      },
+      "button": {
+        "submit": "Submit",
+        "cancel": "Cancel",
+        "changePassword": "Change Password"
+      },
+      "placeholder": {
+        "addCAT": "Add a CAT"
+      }
+    },
+    "message": {
+      "prompt": {
+        "addAsset": "Enter the Asset ID",
+        "oldPassword": "Enter the old password",
+        "newPassword": "Enter the new password",
+        "newPassword2": "Reenter the new password",
+        "confirmText": "OK",
+        "cancelText": "Cancel"
+      },
+      "error": {
+        "passwordNotMatch": "password not match"
+      }
+    }
+  },
+  "accountExport": {
+    "ui": {
+      "title": {
+        "export": "Account Export"
+      },
+      "label": {
+        "name": "Name",
+        "type": "Type",
+        "fingerprint": "Fingerprint",
+        "masterPublicKey": "Master public key (m)",
+        "farmerPublicKey": "Farmer public key (m/12381/8444/0/0)",
+        "poolPublicKey": "Pool public key (m/12381/8444/1/0)",
+        "firstWalletAddress": "First wallet address",
+        "masterPrivateKey": "Master private key (m)",
+        "firstWalletSecretKey": "First wallet secret key (m/12381/8444/2/0)",
+        "PrivateKey": "Private key",
+        "firstWalletPublicKey": "First wallet public key (m/12381/8444/2/0)",
+        "mnemonicSeed": "Mnemonic seed (24 secret words)"
+      },
+      "button": {
+        "revealMnemonic": "Reveal Mnemonic"
+      }
+    }
+  },
+  "accountList": {
+    "ui": {
+      "title": {
+        "list": "Account List"
+      },
+      "button": {
+        "showMnemonic": "Show Mnemonic",
+        "addBySerial": "Add By Serial",
+        "addByPassword": "Add By Password",
+        "addByLegacy": "Import Chia 24 Mnemonic words"
+      }
+    },
+    "message": {
+      "confirmation": {
+        "showMnemonic": "Mnemonic is very sensitive, make sure you are safe and continue, OK?",
+        "removeAccount": "Remove account? Operation cannot undone!!!",
+        "cancelText": "Cancel",
+        "confirmText": "Ok"
+      },
+      "prompt": {
+        "setAccountName": "Enter the new account name",
+        "setPassword": "Enter the password",
+        "setLegacyMnemonic": "Enter the 24 words mnemonic used by Chia Client:",
+        "cancelText": "Cancel",
+        "confirmText": "Ok"
+      }
+    }
+  },
+  "explorerLink": {
+    "ui": {
+      "title": {
+        "link": "Links"
+      },
+      "label": {
+        "address": "Address"
+      }
+    }
+  },
+  "mnemonicExport": {
+    "ui": {
+      "title": {
+        "mnemonic": "Mnemonic"
+      },
+      "button": {
+        "close": "Close"
+      }
+    }
+  },
+  "send": {
+    "ui": {
+      "title": {
+        "send": "Send"
+      },
+      "label": {
+        "address": "Address",
+        "amount": "Amount",
+        "memo": "Memo"
+      },
+      "button": {
+        "cancel": "Cancel",
+        "submit": "submit",
+        "sign": "Sign"
+      }
+    }
+  },
+  "receive": {
+    "ui": {
+      "title": {
+        "receive": "接收"
+      }
+    }
+  }
+}

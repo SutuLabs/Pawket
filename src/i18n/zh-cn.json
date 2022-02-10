@@ -1,0 +1,186 @@
+{
+  "verifyPassword": {
+    "ui": {
+      "button": {
+        "confirm": "确认",
+        "clear": "清空数据",
+        "create": "创建"
+      },
+      "label": {
+        "password": "密码",
+        "reEnter": "重新输入"
+      }
+    },
+    "message": {
+      "confirmation": {
+        "clear": "所有数据都会被清空，确认执行？",
+        "confirmText": "确认",
+        "cancelText": "取消"
+      }
+    }
+  },
+  "createSeed": {
+    "ui": {
+      "button": {
+        "import": "导入",
+        "create": "创建",
+        "back": "后退",
+        "refresh": "刷新",
+        "confirm": "确认"
+      },
+      "label": {
+        "mnemonic": "助记词"
+      }
+    }
+  },
+  "accountDetail": {
+    "ui": {
+      "button": {
+        "refresh": "刷新",
+        "receive": "接收",
+        "send": "发送",
+        "export": "导出",
+        "lang": "简体中文",
+        "confirm": "确认",
+        "cancel": "取消"
+      },
+      "tab": {
+        "asset": "资产",
+        "activity": "活动"
+      }
+    },
+    "message": {
+      "confirmation": {
+        "lock": "锁定?"
+      }
+    }
+  },
+  "accountConfigure": {
+    "ui": {
+      "title": {
+        "configure": "参数"
+      },
+      "label": {
+        "maxAddress": "最大隐私地址搜索数量",
+        "listingCATs": "CAT列表"
+      },
+      "button": {
+        "submit": "提交",
+        "cancel": "取消",
+        "changePassword": "修改密码"
+      },
+      "placeholder": {
+        "addCAT": "添加CAT"
+      }
+    },
+    "message": {
+      "prompt": {
+        "addAsset": "输入资产ID",
+        "oldPassword": "输入旧密码",
+        "newPassword": "输入新密码",
+        "newPassword2": "确认新密码",
+        "confirmText": "确认",
+        "cancelText": "取消"
+      },
+      "error": {
+        "passwordNotMatch": "密码不匹配，请检查"
+      }
+    }
+  },
+  "accountExport": {
+    "ui": {
+      "title": {
+        "export": "账户导出"
+      },
+      "label": {
+        "name": "用户名",
+        "type": "类型",
+        "fingerprint": "指纹",
+        "masterPublicKey": "主节点公钥 (m)",
+        "farmerPublicKey": "农夫节点公钥 (m/12381/8444/0/0)",
+        "poolPublicKey": "矿池公钥 (m/12381/8444/1/0)",
+        "firstWalletAddress": "钱包首地址",
+        "masterPrivateKey": "主节点私钥 (m)",
+        "firstWalletSecretKey": "第一个钱包私钥 (m/12381/8444/2/0)",
+        "PrivateKey": "私钥",
+        "firstWalletPublicKey": "第一个钱包公钥 (m/12381/8444/2/0)",
+        "mnemonicSeed": "助记词种子(24个助记词)"
+      },
+      "button": {
+        "revealMnemonic": "显示助记词"
+      }
+    }
+  },
+  "accountList": {
+    "ui": {
+      "title": {
+        "list": "账户列表"
+      },
+      "button": {
+        "showMnemonic": "展示助记词",
+        "addBySerial": "序列添加",
+        "addByPassword": "通过密码添加",
+        "addByLegacy": "导入Chia 24位助记词"
+      }
+    },
+    "message": {
+      "confirmation": {
+        "showMnemonic": "助记词是敏感信息, 确认要展示吗?",
+        "removeAccount": "确认删除账户吗？删除操作不可恢复！",
+        "cancelText": "取消",
+        "confirmText": "确认"
+      },
+      "prompt": {
+        "setAccountName": "输入账户名",
+        "setPassword": "输入密码",
+        "setLegacyMnemonic": "输入Chia客户端24个助记词",
+        "cancelText": "取消",
+        "confirmText": "确认"
+      }
+    }
+  },
+  "explorerLink": {
+    "ui": {
+      "title": {
+        "link": "链接"
+      },
+      "label": {
+        "address": "地址"
+      }
+    }
+  },
+  "mnemonicExport": {
+    "ui": {
+      "title": {
+        "mnemonic": "助记词"
+      },
+      "button": {
+        "close": "关闭"
+      }
+    }
+  },
+  "send": {
+    "ui": {
+      "title": {
+        "send": "发送"
+      },
+      "label": {
+        "address": "地址",
+        "amount": "数量",
+        "memo": "便签"
+      },
+      "button": {
+        "cancel": "取消",
+        "submit": "提交",
+        "sign": "签名"
+      }
+    }
+  },
+  "receive": {
+    "ui": {
+      "title": {
+        "receive": "接收"
+      }
+    }
+  }
+}

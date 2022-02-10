@@ -3,12 +3,12 @@
     <div class="box has-text-centered" v-if="account && account.key">
       <section>
         <b-button class="is-pulled-left" @click="configureAccount()">⚙️</b-button>
-        <b-button class="is-pulled-right" @click="lock($t('message.lockPrompt'))">🔒</b-button>
+        <b-button class="is-pulled-right" @click="lock()">🔒</b-button>
         <b-dropdown class="is-pulled-right" :triggers="['hover', 'click']" aria-role="list" v-model="$i18n.locale">
           <template #trigger>
-            <b-button :label="$t('message.lang')" icon-right="menu-down" />
+            <b-button :label="$t('accountDetail.ui.button.lang')" icon-right="menu-down" />
           </template>
-          <b-dropdown-item aria-role="listitem" value="zhcn">中文</b-dropdown-item>
+          <b-dropdown-item aria-role="listitem" value="zhcn">简体中文</b-dropdown-item>
           <b-dropdown-item aria-role="listitem" value="en">English</b-dropdown-item>
         </b-dropdown>
         <b-button class="is-pulled-right" @click="selectAccount()">{{ account.name }}: {{ account.key.fingerprint }}</b-button>
@@ -22,21 +22,21 @@
             <span v-else>- XCH</span>
             <br />
             <b-button size="is-small" @click="refreshBalance()" :disabled="refreshing">
-              {{ $t("message.refresh") }}
+              {{ $t("accountDetail.ui.button.refresh") }}
               <b-loading :is-full-page="false" v-model="refreshing"></b-loading>
             </b-button>
           </h2>
         </div>
       </section>
       <section>
-        <b-button @click="openLink(account.tokens['XCH'])">{{ $t("message.receive") }}</b-button>
-        <b-button :disabled="!debugMode" @click="showSend()">{{ $t("message.send") }}</b-button>
-        <b-button v-if="debugMode" @click="showExport()">{{ $t("message.export") }}</b-button>
+        <b-button @click="openLink(account.tokens['XCH'])">{{ $t("accountDetail.ui.button.receive") }}</b-button>
+        <b-button :disabled="!debugMode" @click="showSend()">{{ $t("accountDetail.ui.button.send") }}</b-button>
+        <b-button v-if="debugMode" @click="showExport()">{{ $t("accountDetail.ui.button.export") }}</b-button>
       </section>
     </div>
     <div class="box">
       <b-tabs position="is-centered" class="block">
-        <b-tab-item :label="$t('message.asset')">
+        <b-tab-item :label="$t('accountDetail.ui.tab.asset')">
           <a class="panel-block is-justify-content-space-between" v-for="(token, symbol) in account.tokens" :key="symbol">
             <span class="is-pulled-right">
               <span class="panel-icon"></span>
@@ -48,7 +48,7 @@
             <a class="is-pulled-right" href="javascript:void(0)" @click="openLink(token)">⚓</a>
           </a>
         </b-tab-item>
-        <b-tab-item :label="$t('message.activity')">
+        <b-tab-item :label="$t('accountDetail.ui.tab.activity')">
           <a class="panel-block" v-for="(act, i) in account.activities" :key="i">
             <span class="panel-icon">🗒️</span>
             <span class="" v-if="tokenInfo[act.symbol]">{{
@@ -83,7 +83,8 @@ import KeyBox from "@/components/KeyBox.vue";
 import Receive from "./Receive.vue";
 import Send from "./Send.vue";
 import { demojo } from "@/filters/unitConversion";
-import { TokenInfo, Account, AccountToken } from '@/store/modules/account';
+import { TokenInfo, Account, AccountToken } from "@/store/modules/account";
+import { translate } from "@/i18n/i18n";
 
 type Mode = "Verify" | "Create";
 
@@ -132,9 +133,11 @@ export default class AccountDetail extends Vue {
     store.dispatch("refreshBalance");
   }
 
-  lock(msg: string): void {
+  lock(): void {
     this.$buefy.dialog.confirm({
-      message: msg,
+      message: translate("accountDetail.message.confirmation.lock"),
+      confirmText: translate("accountDetail.ui.button.confirm"),
+      cancelText: translate("accountDetail.ui.button.cancel"),
       trapFocus: true,
       onConfirm: () => {
         store.dispatch("lock");
