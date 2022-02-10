@@ -5,47 +5,59 @@
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
-      <b-field>
-        <template #label>
-          Bundle
-          <key-box display="✂️" :value="bundleText" tooltip="Copy"></key-box>
-        </template>
-        <b-input type="textarea" v-model="bundleText" @input="updateBundle()"></b-input>
-      </b-field>
-      <template v-if="bundle">
-        <b-field v-if="bundle.coin_spends.length > 1">
-          <b-radio-button
-            v-for="(coin, idx) in bundle.coin_spends"
-            :key="idx"
-            v-model="selectedCoin"
-            :native-value="idx"
-            type="is-info"
-            @input="changeCoin(idx)"
-          >
-            <span>{{ idx }}</span>
-          </b-radio-button>
-        </b-field>
-        <b-field label="used coin name">
-          <b-input :value="used_coin_name" type="text" disabled></b-input>
-        </b-field>
-        <b-field label="used coin address" :message="bundle.coin_spends[selectedCoin].coin.puzzle_hash">
-          <b-input :value="used_coin_tgt_address" type="text" disabled></b-input>
-        </b-field>
-        <b-field>
-          <template #label>
-            Puzzle
-            <key-box display="✂️" :value="puzzle" tooltip="Copy"></key-box>
+      <b-tabs position="is-centered" class="block">
+        <b-tab-item label="Bundle">
+          <b-field>
+            <template #label>
+              Bundle
+              <key-box display="✂️" :value="bundleText" tooltip="Copy"></key-box>
+            </template>
+            <b-input type="textarea" v-model="bundleText" @input="updateBundle()"></b-input>
+          </b-field>
+          <template v-if="bundle">
+            <b-field v-if="bundle.coin_spends.length > 1">
+              <b-radio-button
+                v-for="(coin, idx) in bundle.coin_spends"
+                :key="idx"
+                v-model="selectedCoin"
+                :native-value="idx"
+                type="is-info"
+                @input="changeCoin(idx)"
+              >
+                <span>{{ idx }}</span>
+              </b-radio-button>
+            </b-field>
+            <b-field label="used coin name">
+              <b-input :value="used_coin_name" type="text" disabled></b-input>
+            </b-field>
+            <b-field label="used coin address" :message="bundle.coin_spends[selectedCoin].coin.puzzle_hash">
+              <b-input :value="used_coin_tgt_address" type="text" disabled></b-input>
+            </b-field>
+            <b-field>
+              <template #label>
+                Puzzle
+                <key-box display="✂️" :value="puzzle" tooltip="Copy"></key-box>
+              </template>
+              <b-input type="textarea" disabled :value="puzzle"></b-input>
+            </b-field>
+            <b-field>
+              <template #label>
+                Solution
+                <key-box display="✂️" :value="solution" tooltip="Copy"></key-box>
+              </template>
+              <b-input type="textarea" disabled :value="solution"></b-input>
+            </b-field>
           </template>
-          <b-input type="textarea" disabled :value="puzzle"></b-input>
-        </b-field>
-        <b-field>
-          <template #label>
-            Solution
-            <key-box display="✂️" :value="solution" tooltip="Copy"></key-box>
-          </template>
-          <b-input type="textarea" disabled :value="solution"></b-input>
-        </b-field>
-      </template>
+        </b-tab-item>
+        <b-tab-item label="Bech32">
+          <b-field label="Address" :message="address_hash">
+            <b-input v-model="origin_address" type="text" @input="changeAddress()"></b-input>
+          </b-field>
+          <b-field label="Hash" :message="hash_address">
+            <b-input v-model="origin_hash" type="text" @input="changeHash()"></b-input>
+          </b-field>
+        </b-tab-item>
+      </b-tabs>
     </section>
     <footer class="modal-card-foot">
       <b-button label="Close" @click="close()"></b-button>
@@ -74,6 +86,18 @@ export default class ParseDebug extends Vue {
   public solution = "";
   public selectedCoin = 0;
   public bundle: SpendBundle | null = null;
+
+  public address_hash = "";
+  public origin_address = "";
+  public hash_address = "";
+  public origin_hash = "";
+
+  changeAddress(): void {
+    this.address_hash = puzzle.getPuzzleHashFromAddress(this.origin_address);
+  }
+  changeHash(): void {
+    this.hash_address = puzzle.getAddressFromPuzzleHash(this.origin_hash, "xch");
+  }
 
   updateBundle(): void {
     try {
