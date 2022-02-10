@@ -39,7 +39,8 @@ class CatBundle {
         if (!getPuzzle) getPuzzle = this.getLineageProofPuzzle;
         const proof = await this.getLineageProof(coin.parent_coin_info, getPuzzle);
         // console.log(proof);
-        const solution_reveal = this.getCatPuzzleSolution(coin, proof, memo, tgt_address, amount, fee, change_address);
+        const inner_puzzle_hash = await this.getInnerPuzzleHash(puzzles, coin.puzzle_hash);
+        const solution_reveal = this.getCatPuzzleSolution(coin, proof, memo, tgt_address, inner_puzzle_hash, amount, fee, change_address);
         const puzzle_reveal = await puzzle.disassemblePuzzle(puzzle_reveal_hex);
 
         const solution_executed_result = await puzzle.calcPuzzleResult(puzzle_reveal, solution_reveal);
@@ -54,10 +55,23 @@ class CatBundle {
       amount, fee);
   }
 
+  private async getInnerPuzzleHash(puzzles: PuzzleDetail[], puzzle_hash: string): Promise<string> {
+    const p = puzzles.find(_ => prefix0x(_.hash) == puzzle_hash);
+    if (!p) {
+      console.log(puzzles, puzzle_hash);
+      throw "cannot find corresponding puzzle";
+    }
+
+    const pk = Bytes.from(p.privateKey.get_g1().serialize()).hex();
+    const hash = await puzzle.getPuzzleHash(pk);
+    // console.log(puzzle_hash, "->", hash);
+
+    return hash;
+  }
+
   private async signCatSolution(BLS: ModuleInstance, solution_executed_result: string, synthetic_sk: PrivateKey, coinname: Bytes): Promise<G2Element> {
 
     const parseConditions = (conditonString: string): ConditionEntity[] => {
-      console.log("start")
       const conds = Array.from(assemble(conditonString).as_iter())
         .map(cond => ({
           code: cond.first().atom?.at(0) ?? 0,
@@ -135,13 +149,13 @@ class CatBundle {
     proof: LineageProof,
     memo: string | null,
     tgt_address: string,
+    inner_puzzle_hash: string,
     amount: bigint,
     fee: bigint,
     change_address: string): string {
 
     const ljoin = (...args: string[]) => "(" + args.join(" ") + ")";
 
-    const tgt_hex = puzzle.getPuzzleHashFromAddress(tgt_address);
     // inner_puzzle_solution    ;; if invalid, INNER_PUZZLE will fail
     const inner_puzzle_solution =
       "(() " + this.getCatInnerPuzzleSolution(coin, memo, tgt_address, amount, fee, change_address) + " ())";
@@ -151,8 +165,8 @@ class CatBundle {
     const prev_coin_id = prefix0x(transfer.getCoinName(coin).hex());
     // this_coin_info           ;; verified with ASSERT_MY_COIN_ID comsumed coin (parent_coin_info puzzle_hash amount)
     const this_coin_info = ljoin(coin.parent_coin_info, coin.puzzle_hash, formatAmount(coin.amount));
-    // next_coin_proof          ;; used to generate ASSERT_COIN_ANNOUNCEMENT (parent_coin_info coin_inner_puzzle_treehash(tgt_puzzle_hash) total_amount)
-    const next_coin_proof = ljoin(coin.parent_coin_info, prefix0x(tgt_hex), formatAmount(coin.amount));
+    // next_coin_proof          ;; used to generate ASSERT_COIN_ANNOUNCEMENT (parent_coin_info coin_inner_puzzle_treehash(puzzle_hash -> pk -> inner_puzzle_hash) total_amount)
+    const next_coin_proof = ljoin(coin.parent_coin_info, prefix0x(inner_puzzle_hash), formatAmount(coin.amount));
     // prev_subtotal            ;; included in announcement, prev_coin ASSERT_COIN_ANNOUNCEMENT will fail if wrong
     const prev_subtotal = "()";
     // extra_delta              ;; this is the "legal discrepancy" between your real delta and what you're announcing your delta is
