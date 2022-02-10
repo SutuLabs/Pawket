@@ -49,7 +49,6 @@ class PuzzleMaker {
 
     clvm_tools.go("opc", "-H", puzzle);
     const puzzleHash = output[0];
-    // console.log("puzzleHash", puzzleHash);
 
     return puzzleHash;
   }
@@ -172,6 +171,16 @@ class PuzzleMaker {
     clvm_tools.setPrintFunction((...args) => output = args)
 
     clvm_tools.go("brun", puzzle_reveal, solution);
+    const result = output[0];
+
+    return result;
+  }
+
+  public async compileRun(puzzle_source:string): Promise<string> {
+    let output: any = null;
+    clvm_tools.setPrintFunction((...args) => output = args)
+
+    clvm_tools.go("run", puzzle_source);
     const result = output[0];
 
     return result;
