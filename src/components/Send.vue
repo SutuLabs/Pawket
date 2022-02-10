@@ -126,7 +126,7 @@ export default class Send extends Vue {
       const requests = await receive.getAssetsRequestDetail(sk_hex, maxId, this.account.cats ?? []);
       const tgtreqs = requests.filter(_ => _.symbol == this.selectedToken);
 
-      const coins = await receive.getCoinRecords(tgtreqs);
+      const coins = await receive.getCoinRecords(tgtreqs, false);
       if (!this.account.firstAddress) {
         this.submitting = false;
         return;

@@ -31,7 +31,7 @@ class Receive {
     return tokens;
   }
 
-  async getCoinRecords(tokens: TokenPuzzleDetail[]): Promise<CoinRecord[]> {
+  async getCoinRecords(tokens: TokenPuzzleDetail[], includeSpentCoins: boolean): Promise<CoinRecord[]> {
     const dictAssets: { [key: string]: string } = {};
     for (let i = 0; i < tokens.length; i++) {
       const t = tokens[i];
@@ -51,7 +51,7 @@ class Receive {
       },
       body: JSON.stringify({
         puzzleHashes: hashes,
-        includeSpentCoins: false,
+        includeSpentCoins,
       }),
     });
     const json = (await resp.json()) as GetRecordsResponse;

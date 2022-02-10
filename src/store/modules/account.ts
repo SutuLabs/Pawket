@@ -184,7 +184,7 @@ store.registerModule<IAccountState>('account', {
       const requests = await receive.getAssetsRequestDetail(account.key.privateKey, maxId, account.cats ?? []);
 
       try {
-        const activities = await receive.getCoinRecords(requests);
+        const activities = await receive.getCoinRecords(requests, true);
 
         const balances = requests.map(token => ({
           symbol: token.symbol,
