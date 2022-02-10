@@ -17,6 +17,11 @@ interface LineageProof {
   proof: string;
 }
 
+interface ConditionEntity {
+  code: number;
+  args: (Uint8Array | undefined)[];
+}
+
 class CatBundle {
 
   public async generateCatSpendBundle(
@@ -50,8 +55,19 @@ class CatBundle {
   }
 
   private async signCatSolution(BLS: ModuleInstance, solution_executed_result: string, synthetic_sk: PrivateKey, coinname: Bytes): Promise<G2Element> {
-    const conds = Array.from(assemble(solution_executed_result).as_iter())
-      .map(cond => ({ code: cond.first().atom?.at(0), args: Array.from(cond.rest().as_iter()).map(_ => _.atom?.raw()) }));
+
+    const parseConditions = (conditonString: string): ConditionEntity[] => {
+      console.log("start")
+      const conds = Array.from(assemble(conditonString).as_iter())
+        .map(cond => ({
+          code: cond.first().atom?.at(0) ?? 0,
+          args: Array.from(cond.rest().as_iter()).map(_ => _.atom?.raw())
+        }));
+
+      return conds;
+    };
+
+    const conds = parseConditions(solution_executed_result);
     // console.log("conditions", solution_executed_result, conds);
 
     const sigs: G2Element[] = [];
@@ -135,7 +151,7 @@ class CatBundle {
     const prev_coin_id = prefix0x(transfer.getCoinName(coin).hex());
     // this_coin_info           ;; verified with ASSERT_MY_COIN_ID comsumed coin (parent_coin_info puzzle_hash amount)
     const this_coin_info = ljoin(coin.parent_coin_info, coin.puzzle_hash, formatAmount(coin.amount));
-    // next_coin_proof          ;; used to generate ASSERT_COIN_ANNOUNCEMENT (parent_coin_info target_address_puzzle_hash(one of largest or change) total_amount)
+    // next_coin_proof          ;; used to generate ASSERT_COIN_ANNOUNCEMENT (parent_coin_info coin_inner_puzzle_treehash(tgt_puzzle_hash) total_amount)
     const next_coin_proof = ljoin(coin.parent_coin_info, prefix0x(tgt_hex), formatAmount(coin.amount));
     // prev_subtotal            ;; included in announcement, prev_coin ASSERT_COIN_ANNOUNCEMENT will fail if wrong
     const prev_subtotal = "()";
@@ -177,6 +193,32 @@ class CatBundle {
     const delegated_puzzle_solution = transfer.getDelegatedPuzzle(conditions);
     // console.log(conditions, delegated_puzzle_solution);
     return delegated_puzzle_solution;
+  }
+
+  subtotals_for_deltas(deltas: number[]): number[] {
+    // Given a list of deltas corresponding to input coins, create the "subtotals" list
+    // needed in solutions spending those coins.
+    const subtotals: number[] = [];
+    let subtotal = 0
+    for (let i = 0; i < deltas.length; i++) {
+      const delta = deltas[i];
+      subtotals.push(subtotal)
+      subtotal += delta
+    }
+
+    // tweak the subtotals so the smallest value is 0
+    const subtotal_offset = Math.min(...subtotals);
+    const offset_subtotals = subtotals.map(_ => _ - subtotal_offset)
+    return offset_subtotals;
+  }
+
+  get_delta(args: number[], amount: bigint) {
+    // for _ in conditions.get(ConditionOpcode.CREATE_COIN, []):
+    let total = 0n;
+    if (args[1] != -113)
+      total += BigInt(args[1]);
+    return amount - total;
+    // deltas.append(spend_info.coin.amount - total)
   }
 }
 

@@ -24,7 +24,7 @@
         <template #label>
           {{ $t("message.bundle") }}
           <key-box display="✂️" :value="JSON.stringify(bundle)" tooltip="Copy"></key-box>
-          <a href="javascript:voin(0)" @click="debugBundle()">🐞</a>
+          <a href="javascript:void(0)" @click="debugBundle()">🐞</a>
         </template>
         <b-input type="textarea" disabled :value="bundleJson"></b-input>
       </b-field>
