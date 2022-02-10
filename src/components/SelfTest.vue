@@ -9,7 +9,7 @@ import utility from '@/services/crypto/utility';
 import puzzle from '@/services/crypto/puzzle';
 import transfer from '@/services/transfer/transfer';
 import store from '@/store';
-import ParseDebug from './ParseDebug.vue';
+import DevHelper from './DevHelper.vue';
 import catBundle from '@/services/transfer/catBundle';
 import stdBundle from '@/services/transfer/stdBundle';
 
@@ -113,11 +113,11 @@ export default class SelfTest extends Vue {
       console.warn(error);
     }
 
-    const enableParseDebug = false;
-    if (enableParseDebug) {
+    const enableDevHelper = false;
+    if (enableDevHelper) {
       this.$buefy.modal.open({
         parent: this,
-        component: ParseDebug,
+        component: DevHelper,
         hasModalCard: true,
         trapFocus: true,
         props: {},

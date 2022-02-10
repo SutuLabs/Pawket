@@ -49,7 +49,7 @@ import store from '@/store';
 import { CoinItem, SpendBundle } from '@/models/wallet';
 import utility from '@/services/crypto/utility';
 import puzzle from '@/services/crypto/puzzle';
-import ParseDebug from "@/components/ParseDebug.vue";
+import DevHelper from "@/components/DevHelper.vue";
 import catBundle from '@/services/transfer/catBundle';
 import stdBundle from '@/services/transfer/stdBundle';
 
@@ -207,7 +207,7 @@ export default class Send extends Vue {
   debugBundle(): void {
     this.$buefy.modal.open({
       parent: this,
-      component: ParseDebug,
+      component: DevHelper,
       hasModalCard: true,
       trapFocus: true,
       props: { inputBundleText: this.bundleJson },

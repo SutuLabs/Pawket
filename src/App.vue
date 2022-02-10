@@ -34,7 +34,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import { NotificationProgrammatic as Notification } from "buefy";
 import store from './store';
-import ParseDebug from '@/components/ParseDebug.vue';
+import DevHelper from '@/components/DevHelper.vue';
 
 @Component
 export default class ProfileCorner extends Vue {
@@ -70,7 +70,7 @@ export default class ProfileCorner extends Vue {
   showDebugHelper(): void {
     this.$buefy.modal.open({
       parent: this,
-      component: ParseDebug,
+      component: DevHelper,
       hasModalCard: true,
       trapFocus: true,
       props: {},

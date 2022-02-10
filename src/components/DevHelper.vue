@@ -77,7 +77,7 @@ import transfer from '@/services/transfer/transfer';
     KeyBox,
   },
 })
-export default class ParseDebug extends Vue {
+export default class DevHelper extends Vue {
   @Prop() private inputBundleText!: string;
   public bundleText = "";
   public used_coin_name = "";
