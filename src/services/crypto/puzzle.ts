@@ -3,11 +3,11 @@ import { bech32m } from "@scure/base";
 import store from "../../store";
 import { Bytes } from "clvm";
 import { PrivateKey } from "@chiamine/bls-signatures";
-import { PuzzleInfo } from "@/models/wallet";
 import utility from "./utility";
 
 export interface PuzzleDetail {
   privateKey: PrivateKey;
+  puzzle: string;
   hash: string;
   address: string;
 }
@@ -47,13 +47,8 @@ class PuzzleMaker {
     let output: any = null;
     clvm_tools.setPrintFunction((...args) => output = args)
 
-    clvm_tools.go(
-      "opc",
-      "-H",
-      puzzle
-    );
+    clvm_tools.go("opc", "-H", puzzle);
     const puzzleHash = output[0];
-    // console.log("puzzleHash", puzzleHash);
 
     return puzzleHash;
   }
@@ -68,6 +63,17 @@ class PuzzleMaker {
     return encodedPuzzle;
   }
 
+  public async disassemblePuzzle(puzzle_hex: string): Promise<string> {
+    puzzle_hex = puzzle_hex.startsWith("0x") ? puzzle_hex.substring(2) : puzzle_hex;
+    let output: any = null;
+    clvm_tools.setPrintFunction((...args) => output = args)
+
+    clvm_tools.go("opd", puzzle_hex);
+    const puzzle = output[0];
+
+    return puzzle;
+  }
+
   public getCatPuzzle(synPubkey: string, assetId: string): string {
     if (!synPubkey.startsWith("0x")) synPubkey = "0x" + synPubkey;
     if (!assetId.startsWith("0x")) assetId = "0x" + assetId;
@@ -79,23 +85,10 @@ class PuzzleMaker {
   }
 
   public async getCatPuzzleHash(pubkey: string, assetId: string): Promise<string> {
-    // console.log(pubkey, assetId);
     const synPubkey = await this.getSyntheticKey(pubkey);
     const puzzle = this.getCatPuzzle(synPubkey, assetId);
 
-    let output: any = null;
-    clvm_tools.setPrintFunction((...args) => output = args)
-
-    // console.log("cat puzzle", puzzle);
-    clvm_tools.go(
-      "opc",
-      "-H",
-      puzzle
-    );
-    const puzzleHash = output[0];
-    // console.log("cat puzzleHash", puzzleHash);
-
-    return puzzleHash;
+    return await this.getPuzzleHashFromPuzzle(puzzle);
   }
 
   public async getAddress(pubkey: string, prefix: string): Promise<string> {
@@ -128,55 +121,69 @@ class PuzzleMaker {
   }
 
   public async getPuzzleHashes(privateKey: Uint8Array, startIndex = 0, endIndex = 10): Promise<string[]> {
-    return (await this.getPuzzleDetails(privateKey,  startIndex, endIndex)).map(_ => _.hash);
+    return (await this.getPuzzleDetails(privateKey, startIndex, endIndex)).map(_ => _.hash);
   }
 
   public async getPuzzleDetails(privateKey: Uint8Array, startIndex = 0, endIndex = 10): Promise<PuzzleDetail[]> {
-    return await this.getPuzzleDetailsInner(privateKey, async (pk) => this.getPuzzleHash(pk), startIndex, endIndex)
+    return await this.getPuzzleDetailsInner(privateKey, async (spk) => this.getPuzzle(spk), startIndex, endIndex)
   }
 
   public async getCatPuzzleDetails(privateKey: Uint8Array, assetId: string, startIndex = 0, endIndex = 10): Promise<PuzzleDetail[]> {
-    return await this.getPuzzleDetailsInner(privateKey, (pk) => this.getCatPuzzleHash(pk, assetId), startIndex, endIndex)
+    return await this.getPuzzleDetailsInner(privateKey, async (spk) => this.getCatPuzzle(spk, assetId), startIndex, endIndex, true)
   }
 
   private async getPuzzleDetailsInner(
     privateKey: Uint8Array,
-    getHash: (pubkey: string) => Promise<string>,
+    getPuzzle: (pubkey: string) => Promise<string>,
     startIndex: number,
     endIndex: number,
-    prefix="xch"): Promise<PuzzleDetail[]> {
-    const derive = await utility.derive(privateKey);
+    includeUnhardened = false,
+    prefix = "xch"): Promise<PuzzleDetail[]> {
+    const derive = await utility.derive(privateKey, true);
+    const deriveUnhardened = await utility.derive(privateKey, false);
     const details: PuzzleDetail[] = [];
+    const add = async (privkey: PrivateKey) => {
+      const pubkey = utility.toHexString(privkey.get_g1().serialize());
+      const synpubkey = await this.getSyntheticKey(pubkey);
+      const puzzle = await getPuzzle(synpubkey);
+      const hash = await this.getPuzzleHashFromPuzzle(puzzle);
+      const address = this.getAddressFromPuzzleHash(hash, prefix);
+      details.push({ privateKey: privkey, hash, address, puzzle });
+    }
     for (let i = startIndex; i < endIndex; i++) {
       const privkey = derive([12381, 8444, 2, i]);
-      const pubkey = utility.toHexString(privkey.get_g1().serialize());
-      const hash = await getHash(pubkey);
-      const address = this.getAddressFromPuzzleHash(hash,prefix);
-      details.push({ privateKey: privkey, hash, address });
+      await add(privkey);
+      if (includeUnhardened) {
+        const privkey = deriveUnhardened([12381, 8444, 2, i]);
+        await add(privkey);
+      }
     }
 
     return details;
   }
 
-  public async getPuzzles(privateKey: Uint8Array, startIndex = 0, endIndex = 10): Promise<PuzzleInfo[]> {
-    const derive = await utility.derive(privateKey);
-    const puzzles: PuzzleInfo[] = [];
-    for (let i = startIndex; i < endIndex; i++) {
-      const privateKey = derive([12381, 8444, 2, i]);
-      const pubkey = utility.toHexString(
-        privateKey.get_g1().serialize()
-      );
-      const synPubkey = await this.getSyntheticKey(pubkey);
-      const puzzle = this.getPuzzle(synPubkey);
-      const puzzleHash = await this.getPuzzleHashFromPuzzle(puzzle);
-      puzzles.push({ puzzle, puzzleHash, privateKey: privateKey.serialize(), index: i });
-    }
-
-    return puzzles;
-  }
-
   public async getCatPuzzleHashes(privateKey: Uint8Array, assetId: string, startIndex = 0, endIndex = 10): Promise<string[]> {
     return (await this.getCatPuzzleDetails(privateKey, assetId, startIndex, endIndex)).map(_ => _.hash);
+  }
+
+  public async calcPuzzleResult(puzzle_reveal: string, solution: string): Promise<string> {
+    let output: any = null;
+    clvm_tools.setPrintFunction((...args) => output = args)
+
+    clvm_tools.go("brun", puzzle_reveal, solution);
+    const result = output[0];
+
+    return result;
+  }
+
+  public async compileRun(puzzle_source:string): Promise<string> {
+    let output: any = null;
+    clvm_tools.setPrintFunction((...args) => output = args)
+
+    clvm_tools.go("run", puzzle_source);
+    const result = output[0];
+
+    return result;
   }
 }
 

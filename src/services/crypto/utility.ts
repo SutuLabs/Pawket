@@ -18,19 +18,22 @@ class Utility {
     );
   }
 
-  derivePath(BLS: ModuleInstance, sk: PrivateKey, path: number[]): PrivateKey {
+  derivePath(BLS: ModuleInstance, sk: PrivateKey, path: number[], hardened: boolean): PrivateKey {
     for (let i = 0; i < path.length; i++) {
       const p = path[i];
-      sk = BLS.AugSchemeMPL.derive_child_sk(sk, p);
+      sk = hardened
+        ? BLS.AugSchemeMPL.derive_child_sk(sk, p)
+        : BLS.AugSchemeMPL.derive_child_sk_unhardened(sk, p);
+
     }
     return sk;
   }
 
-  async derive(privateKey: Uint8Array): Promise<deriveCallback> {
+  async derive(privateKey: Uint8Array, hardened = true): Promise<deriveCallback> {
     const BLS = store.state.app.bls;
     if (!BLS) throw "BLS not initialized";
     const sk = BLS.PrivateKey.from_bytes(privateKey, false);
-    return (path: number[]) => this.derivePath(BLS, sk, path);
+    return (path: number[]) => this.derivePath(BLS, sk, path, hardened);
   }
 
   async getPrivateKey(privateKey: Uint8Array): Promise<PrivateKey> {

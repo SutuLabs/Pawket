@@ -52,7 +52,7 @@ store.registerModule<IVaultState>('vault', {
       for (let i = 0; i < rootState.account.accounts.length; i++) {
         const account = rootState.account.accounts[i];
         const privkey = utility.fromHexString(account.key.privateKey);
-        const derive = await utility.derive(privkey);
+        const derive = await utility.derive(privkey, true);
         const firstWalletAddressPubkey = utility.toHexString(
           derive([12381, 8444, 2, 0]).get_g1().serialize()
         );
