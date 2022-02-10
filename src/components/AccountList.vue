@@ -1,8 +1,10 @@
 <template>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">{{ $t('message.accountExport') }}</p>
-      <b-button class="is-pulled-right mr-5" type="is-small" @click="showMnemonic($t('message.showMnemonicPrompt'))">{{ $t('message.showMnemonic') }}</b-button>
+      <p class="modal-card-title">{{ $t("accountList.ui.title.list") }}</p>
+      <b-button class="is-pulled-right mr-5" type="is-small" @click="showMnemonic()">{{
+        $t("accountList.ui.button.showMnemonic")
+      }}</b-button>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
@@ -15,15 +17,15 @@
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addByPassword()">
         <span class="panel-icon">➕</span>
-        {{ $t('message.addByPassword') }}
+        {{ $t("accountList.ui.button.addByPassword") }}
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addBySerial()">
         <span class="panel-icon">➕</span>
-        {{ $t('message.addBySerial')}}
+        {{ $t("accountList.ui.button.addBySerial") }}
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addByLegacy()">
         <span class="panel-icon">➕</span>
-        {{ $t('message.addByLegacy') }}
+        {{ $t("accountList.ui.button.addByLegacy") }}
       </a>
     </section>
   </div>
@@ -35,6 +37,7 @@ import store from "@/store";
 import { Account } from "@/store/modules/account";
 import AccountExport from "@/components/AccountExport.vue";
 import MnemonicExport from "@/components/MnemonicExport.vue";
+import { translate } from "@/i18n/i18n";
 
 @Component
 export default class AccountList extends Vue {
@@ -65,7 +68,9 @@ export default class AccountList extends Vue {
 
   remove(idx: number): void {
     this.$buefy.dialog.confirm({
-      message: `Remove account? Operation cannot undone!!!`,
+      message: translate("accountList.message.confirmation.removeAccount"),
+      confirmText: translate("accountList.message.confirmation.confirmText"),
+      cancelText: translate("accountList.message.confirmation.cancelText"),
       trapFocus: true,
       type: "is-danger",
       onConfirm: () => {
@@ -101,7 +106,9 @@ export default class AccountList extends Vue {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return new Promise((resolve, reject) => {
       this.$buefy.dialog.prompt({
-        message: `Enter the new account name`,
+        message: translate("accountList.message.prompt.setAccountName"),
+        confirmText: translate("accountList.message.prompt.confirmText"),
+        cancelText: translate("accountList.message.prompt.cancelText"),
         trapFocus: true,
         onConfirm: (name) => {
           resolve(name);
@@ -114,7 +121,9 @@ export default class AccountList extends Vue {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return new Promise((resolve, reject) => {
       this.$buefy.dialog.prompt({
-        message: `Enter the password`,
+        message: translate("accountList.message.prompt.setPassword"),
+        confirmText: translate("accountList.message.prompt.confirmText"),
+        cancelText: translate("accountList.message.prompt.cancelText"),
         trapFocus: true,
         inputAttrs: {
           type: "password",
@@ -130,7 +139,9 @@ export default class AccountList extends Vue {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return new Promise((resolve, reject) => {
       this.$buefy.dialog.prompt({
-        message: `Enter the 24 words mnemonic used by Chia Client:`,
+        message: translate("accountList.message.prompt.setLegacyMnemonic"),
+        confirmText: translate("accountList.message.prompt.confirmText"),
+        cancelText: translate("accountList.message.prompt.cancelText"),
         trapFocus: true,
         onConfirm: (name) => {
           resolve(name);
@@ -149,10 +160,12 @@ export default class AccountList extends Vue {
     });
   }
 
-  showMnemonic(msg: string): void {
+  showMnemonic(): void {
     this.$buefy.dialog.confirm({
-      message: msg,
+      message: translate("accountList.message.confirmation.showMnemonic"),
       trapFocus: true,
+      confirmText: translate("accountList.message.confirmation.confirmText"),
+      cancelText: translate("accountList.message.confirmation.cancelText"),
       onConfirm: () => {
         this.$buefy.modal.open({
           parent: this,

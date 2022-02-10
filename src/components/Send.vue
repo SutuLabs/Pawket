@@ -1,23 +1,25 @@
 <template>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">{{ $t("message.send") }}</p>
+      <p class="modal-card-title">{{ $t("send.ui.title.send") }}</p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
-      <b-field :label="$t('message.address')">
+      <b-field :label="$t('send.ui.label.address')">
         <b-input v-model="address" @change="reset()"></b-input>
       </b-field>
-      <b-field :label="$t('message.amount')" :message="amountMessage">
+      <b-field :label="$t('send.ui.label.amount')" :message="amountMessage">
         <b-select v-model="selectedToken" @change="reset()">
-          <option v-for="token in tokenNames" :key="token" :value="token">{{ token }}</option>
+          <option v-for="token in tokenNames" :key="token" :value="token">
+            {{ token }}
+          </option>
         </b-select>
         <b-input v-model="amount" expanded @change="reset()"></b-input>
         <p class="control">
           <span class="button is-static">{{ selectedToken }}</span>
         </p>
       </b-field>
-      <b-field :label="$t('message.memo')">
+      <b-field :label="$t('send.ui.label.memo')">
         <b-input maxlength="100" type="text" :disabled="selectedToken == 'XCH'"></b-input>
       </b-field>
       <b-field v-if="bundle" :label="$t('message.bundle')">
@@ -25,9 +27,21 @@
       </b-field>
     </section>
     <footer class="modal-card-foot">
-      <b-button :label="$t('message.cancel')" @click="close()"></b-button>
-      <b-button :label="$t('message.submit')" v-if="bundle" type="is-primary" @click="submit()" :disabled="submitting"></b-button>
-      <b-button :label="$t('message.sign')" v-if="!bundle" type="is-success" @click="sign()" :disabled="submitting"></b-button>
+      <b-button :label="$t('send.ui.button.cancel')" @click="close()"></b-button>
+      <b-button
+        :label="$t('send.ui.button.submit')"
+        v-if="bundle"
+        type="is-primary"
+        @click="submit()"
+        :disabled="submitting"
+      ></b-button>
+      <b-button
+        :label="$t('send.ui.button.sign')"
+        v-if="!bundle"
+        type="is-success"
+        @click="sign()"
+        :disabled="submitting"
+      ></b-button>
     </footer>
     <b-loading :is-full-page="false" v-model="submitting"></b-loading>
   </div>
@@ -38,11 +52,11 @@ import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import { Account } from "@/store/modules/account";
 import KeyBox from "@/components/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import transfer from '../services/crypto/transfer';
-import { ApiResponse } from '@/models/api';
-import receive from '../services/crypto/receive';
-import store from '@/store';
-import { CoinItem, SpendBundle } from '@/models/wallet';
+import transfer from "../services/crypto/transfer";
+import { ApiResponse } from "@/models/api";
+import receive from "../services/crypto/receive";
+import store from "@/store";
+import { CoinItem, SpendBundle } from "@/models/wallet";
 
 @Component({
   components: {
@@ -72,9 +86,7 @@ export default class Send extends Vue {
   }
 
   get tokenNames(): string[] {
-    return Object.keys(store.state.account.tokenInfo).concat(
-      this.account.cats.map(_ => _.name)
-    );
+    return Object.keys(store.state.account.tokenInfo).concat(this.account.cats.map((_) => _.name));
   }
 
   get bundleJson(): string {
@@ -89,7 +101,7 @@ export default class Send extends Vue {
     this.submitting = true;
     const maxId = 4;
     const requests = await receive.getAssetsRequestDetail(this.account.key.privateKey, maxId, this.account.cats ?? []);
-    const tgtreqs = requests.filter(_ => _.symbol == this.selectedToken);
+    const tgtreqs = requests.filter((_) => _.symbol == this.selectedToken);
 
     const coins = await receive.getCoinRecords(tgtreqs);
     if (!this.account.firstAddress) {
@@ -100,16 +112,19 @@ export default class Send extends Vue {
     const amount = BigInt(this.amount * Math.pow(10, decimal));
 
     this.bundle = await transfer.generateSpendBundle(
-      coins.filter(_ => _.coin).map(_ => _.coin as CoinItem).map(_ => ({
-        amount: BigInt(_.amount),
-        parent_coin_info: _.parentCoinInfo,
-        puzzle_hash: _.puzzleHash,
-      })),
+      coins
+        .filter((_) => _.coin)
+        .map((_) => _.coin as CoinItem)
+        .map((_) => ({
+          amount: BigInt(_.amount),
+          parent_coin_info: _.parentCoinInfo,
+          puzzle_hash: _.puzzleHash,
+        })),
       this.account.key.privateKey,
       this.address,
       amount,
       0n,
-      this.account.firstAddress,
+      this.account.firstAddress
     );
 
     this.submitting = false;
@@ -135,8 +150,7 @@ export default class Send extends Vue {
           type: "is-success",
         });
         this.close();
-      }
-      else {
+      } else {
         Notification.open({
           message: `Submit failed: ${json.error}`,
           type: "is-danger",

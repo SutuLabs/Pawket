@@ -1,7 +1,9 @@
 <template>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">{{ $t('message.mnemonic') }}</p>
+      <p class="modal-card-title">
+        {{ $t("mnemonicExport.ui.title.mnemonic") }}
+      </p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
@@ -13,7 +15,7 @@
       </div>
     </section>
     <footer class="modal-card-foot">
-      <b-button :label="$t('message.close')" @click="close()"></b-button>
+      <b-button :label="$t('mnemonicExport.ui.button.close')" @click="close()"></b-button>
     </footer>
   </div>
 </template>
