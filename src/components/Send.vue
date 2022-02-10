@@ -145,13 +145,13 @@ export default class Send extends Vue {
       if (this.selectedToken == "XCH") {
         const puzzles = await puzzle.getPuzzleDetails(utility.fromHexString(sk_hex), 0, 5);
         this.bundle = await transfer.generateSpendBundle(
-          filteredCoins, sk_hex, puzzles, this.address, amount, 0n, this.account.firstAddress);
+          filteredCoins, puzzles, this.address, amount, 0n, this.account.firstAddress);
       }
       else {
         const assetId = this.tokenInfo[this.selectedToken].id ?? "";
         const puzzles = await puzzle.getCatPuzzleDetails(utility.fromHexString(sk_hex), assetId, 0, 30);
         this.bundle = await transfer.generateCatSpendBundle(
-          filteredCoins, sk_hex, puzzles, assetId, this.address, amount, 0n, this.account.firstAddress, this.memo);
+          filteredCoins, puzzles, assetId, this.address, amount, 0n, this.account.firstAddress, this.memo);
 
       }
 
