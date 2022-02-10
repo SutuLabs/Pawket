@@ -24,6 +24,7 @@
         <template #label>
           {{ $t("message.bundle") }}
           <key-box display="✂️" :value="JSON.stringify(bundle)" tooltip="Copy"></key-box>
+          <a href="javascript:voin(0)" @click="debugBundle()">🐞</a>
         </template>
         <b-input type="textarea" disabled :value="bundleJson"></b-input>
       </b-field>
@@ -49,6 +50,7 @@ import store from '@/store';
 import { CoinItem, SpendBundle } from '@/models/wallet';
 import utility from '@/services/crypto/utility';
 import puzzle from '@/services/crypto/puzzle';
+import ParseDebug from "@/components/ParseDebug.vue";
 
 @Component({
   components: {
@@ -199,6 +201,16 @@ export default class Send extends Vue {
       console.warn(error);
       this.submitting = false;
     }
+  }
+
+  debugBundle(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: ParseDebug,
+      hasModalCard: true,
+      trapFocus: true,
+      props: { inputBundleText: this.bundleJson },
+    });
   }
 }
 </script>
