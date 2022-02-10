@@ -18,7 +18,7 @@
         </p>
       </b-field>
       <b-field :label="$t('message.memo')">
-        <b-input maxlength="100" v-model="memo" type="text" :disabled="selectedToken == 'XCH'"></b-input>
+        <b-input maxlength="100" v-model="memo" type="text" @input="reset()" :disabled="selectedToken == 'XCH'"></b-input>
       </b-field>
       <b-field v-if="bundle">
         <template #label>
@@ -149,7 +149,7 @@ export default class Send extends Vue {
       }
       else {
         const assetId = this.tokenInfo[this.selectedToken].id ?? "";
-        const puzzles = await puzzle.getCatPuzzleDetails(utility.fromHexString(sk_hex), assetId, 0, 5);
+        const puzzles = await puzzle.getCatPuzzleDetails(utility.fromHexString(sk_hex), assetId, 0, 30);
         this.bundle = await transfer.generateCatSpendBundle(
           filteredCoins, sk_hex, puzzles, assetId, this.address, amount, 0n, this.account.firstAddress, this.memo);
 

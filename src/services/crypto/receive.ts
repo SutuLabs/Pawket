@@ -51,7 +51,7 @@ class Receive {
       },
       body: JSON.stringify({
         puzzleHashes: hashes,
-        includeSpentCoins: true,
+        includeSpentCoins: false,
       }),
     });
     const json = (await resp.json()) as GetRecordsResponse;

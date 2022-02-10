@@ -11,5 +11,6 @@ export interface GetParentPuzzleResponse {
   amount: number;
   parentCoinId: string;
   parentParentCoinId: string;
+  parentParentPuzzleHash: string;
   puzzleReveal: string;
 }

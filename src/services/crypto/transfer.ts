@@ -1,4 +1,4 @@
-import { PrivateKey, G1Element, ModuleInstance } from "@chiamine/bls-signatures";
+import { PrivateKey, G1Element, G2Element, ModuleInstance } from "@chiamine/bls-signatures";
 import { Bytes, bigint_from_bytes, bigint_to_bytes } from "clvm";
 import { OriginCoin, SpendBundle } from "@/models/wallet";
 import store from "@/store";
@@ -7,6 +7,7 @@ import { GetParentPuzzleRequest, GetParentPuzzleResponse } from "@/models/api";
 import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
 import { uncurry } from "clvm_tools/browser";
 import { SExp, Tuple } from "clvm";
+import utility from "./utility";
 
 interface PuzzleSolutionResult {
   solution: string;
@@ -22,16 +23,16 @@ export type GetPuzzleApiCallback = (parentCoinId: string) => Promise<GetParentPu
 
 class CoinConditions {
   public static CREATE_COIN(puzzlehash: string, amount: bigint): string[] {
-    return ["51", this.prefix0x(puzzlehash), this.formatAmount(amount)];
+    return [ConditionOpcode.CREATE_COIN.toString(), this.prefix0x(puzzlehash), this.formatAmount(amount)];
   }
   public static CREATE_COIN_Extend(puzzlehash: string, amount: bigint, id: string, memo: string | null): (string | string[])[] {
     return [...this.CREATE_COIN(puzzlehash, amount), [this.prefix0x(id), memo ? `"${memo}"` : undefined].filter(_ => _ !== undefined) as string[]];
   }
   public static CREATE_COIN_ANNOUNCEMENT(message: string): string[] {
-    return ["60", message];
+    return [ConditionOpcode.CREATE_COIN_ANNOUNCEMENT.toString(), message];
   }
   public static ASSERT_COIN_ANNOUNCEMENT(announcementId: string): string[] {
-    return ["61", announcementId];
+    return [ConditionOpcode.ASSERT_COIN_ANNOUNCEMENT.toString(), announcementId];
   }
 
   public static prefix0x(str: string): string {
@@ -41,6 +42,45 @@ class CoinConditions {
   public static formatAmount(amount: bigint): string {
     return this.prefix0x(Bytes.from(bigint_to_bytes(amount, { signed: true })).hex());
   }
+}
+
+// chia\types\condition_opcodes.py
+class ConditionOpcode {
+  // # AGG_SIG is ascii "1"
+
+  // # the conditions below require bls12-381 signatures
+
+  public static AGG_SIG_UNSAFE = 49;
+  public static AGG_SIG_ME = 50;
+
+  // # the conditions below reserve coin amounts and have to be accounted for in output totals
+
+  public static CREATE_COIN = 51;
+  public static RESERVE_FEE = 52;
+
+  // # the conditions below deal with announcements, for inter-coin communication
+
+  public static CREATE_COIN_ANNOUNCEMENT = 60;
+  public static ASSERT_COIN_ANNOUNCEMENT = 61;
+  public static CREATE_PUZZLE_ANNOUNCEMENT = 62;
+  public static ASSERT_PUZZLE_ANNOUNCEMENT = 63;
+
+  // # the conditions below let coins inquire about themselves
+
+  public static ASSERT_MY_COIN_ID = 70;
+  public static ASSERT_MY_PARENT_ID = 71;
+  public static ASSERT_MY_PUZZLEHASH = 72;
+  public static ASSERT_MY_AMOUNT = 73;
+
+  // # the conditions below ensure that we're "far enough" in the future
+
+  // # wall-clock time
+  public static ASSERT_SECONDS_RELATIVE = 80;
+  public static ASSERT_SECONDS_ABSOLUTE = 81;
+
+  // # block index
+  public static ASSERT_HEIGHT_RELATIVE = 82;
+  public static ASSERT_HEIGHT_ABSOLUTE = 83;
 }
 
 class Transfer {
@@ -81,13 +121,19 @@ class Transfer {
     return await this.generateSpendBundleInternal(coins, sk_hex, puzzles,
       async (coin, puzzle_reveal_hex) => {
         if (!getPuzzle) getPuzzle = this.getLineageProofPuzzle;
-        const proof = await this.getLineageProof(coin.parent_coin_info, getPuzzle);
+        const proof = await this.getLineageProof(coin.parent_coin_info, getPuzzle, puzzles);
         // console.log(proof);
         const solution_reveal = this.getCatPuzzleSolution(coin, proof, memo, tgt_address, amount, fee, change_address);
         const puzzle_reveal = await puzzle.disassemblePuzzle(puzzle_reveal_hex);
-        console.log(`brun '${puzzle_reveal}' '${solution_reveal}'`);
+
         // console.log(`solution ${solution_reveal}`);
         const solution_executed_result = await puzzle.calcPuzzleResult(puzzle_reveal, solution_reveal);
+        if (solution_executed_result.startsWith("FAIL")) {
+          console.log(`brun '${puzzle_reveal}' '${solution_reveal}'`);
+          throw `Failed to execute, ${solution_executed_result}`;
+        }
+
+        // console.log(`solution ${solution_executed_result}`);
         return { solution: solution_reveal, result: solution_executed_result }
       },
       amount, fee);
@@ -107,6 +153,7 @@ class Transfer {
     if (!coin) return null;
     if (amount + fee > coin.amount) return null;
 
+    // console.log("prepare to use coin", coin)
     const gen_sk = BLS.PrivateKey.from_bytes(Bytes.from(sk_hex, "hex").raw(), true);
 
     const puzzleDict: { [key: string]: PuzzleDetail } = Object.assign({}, ...puzzles.map((x) => ({ [CoinConditions.prefix0x(x.hash)]: x })));
@@ -125,17 +172,43 @@ class Transfer {
     const solution_executed_result_treehash = await puzzle.getPuzzleHashFromPuzzle(psr.result);
     const solution = CoinConditions.prefix0x(await puzzle.encodePuzzle(psr.solution));
 
-    const message = Uint8Array.from([...Bytes.from(solution_executed_result_treehash, "hex").raw(), ...coinname.raw(), ...Transfer.AGG_SIG_ME_ADDITIONAL_DATA.raw()]);
-    // console.log(synthetic_sk, delegated_puzzle_solution_treehash, coinname, AGG_SIG_ME_ADDITIONAL_DATA,  message);
-    // console.log("message hex", Bytes.from(message).hex());
+    const conds = Array.from(assemble(psr.result).as_iter())
+      .map(cond => ({ code: cond.first().atom?.at(0), args: Array.from(cond.rest().as_iter()).map(_ => _.atom?.raw()) }));
+    console.log("conditions", psr.result, conds);
 
-    const signature = BLS.AugSchemeMPL.sign(synthetic_sk, message);
-    // console.log(Bytes.from(signature.serialize()).hex());
+    const sigs: G2Element[] = [];
+    const synthetic_pk_hex =Bytes.from( synthetic_sk.get_g1().serialize()).hex();
 
-    const sig = Bytes.from(signature.serialize()).hex();
+    for (let i = 0; i < conds.length; i++) {
+      const cond = conds[i];
+      if (cond.code == ConditionOpcode.AGG_SIG_UNSAFE) {
+        throw "not implement";
+      }
+      else if (cond.code == ConditionOpcode.AGG_SIG_ME) {
+        if (!cond.args || cond.args.length != 2) throw "wrong args"
+        const args = cond.args as Uint8Array[];
+        const msg = Uint8Array.from([...args[1], ...coinname.raw(), ...Transfer.AGG_SIG_ME_ADDITIONAL_DATA.raw()]);
+        // const pk = BLS.G1Element.from_bytes(args[0]);
+        const pk_hex= Bytes.from(args[0]).hex();
+        if (pk_hex != synthetic_pk_hex) throw "wrong args due to pk != synthetic_pk";
+        const sig = BLS.AugSchemeMPL.sign(synthetic_sk, msg);
+        sigs.push(sig);
+      }
+    }
+
+    const agg_sig = BLS.AugSchemeMPL.aggregate(sigs);
+
+    // const message = Uint8Array.from([...Bytes.from(solution_executed_result_treehash, "hex").raw(), ...coinname.raw(), ...Transfer.AGG_SIG_ME_ADDITIONAL_DATA.raw()]);
+    // // console.log(synthetic_sk, delegated_puzzle_solution_treehash, coinname, AGG_SIG_ME_ADDITIONAL_DATA,  message);
+    // // console.log("message hex", Bytes.from(message).hex());
+
+    // const signature = BLS.AugSchemeMPL.sign(synthetic_sk, message);
+    // // console.log(Bytes.from(signature.serialize()).hex());
+
+    // const sig = Bytes.from(signature.serialize()).hex();
 
     return {
-      aggregated_signature: CoinConditions.prefix0x(sig),
+      aggregated_signature: CoinConditions.prefix0x(Bytes.from(agg_sig.serialize()).hex()),
       coin_spends: [{ coin, puzzle_reveal, solution }]
     }
   }
@@ -241,19 +314,66 @@ class Transfer {
     return presp;
   }
 
-  private async getLineageProof(parentCoinId: string, api: GetPuzzleApiCallback): Promise<LineageProof> {
-    const presp = await api(parentCoinId);
-    const puzzleReveal = presp.puzzleReveal.startsWith("0x") ? presp.puzzleReveal.substring(2) : presp.puzzleReveal;
-    const curriedPuzzle = await puzzle.disassemblePuzzle(puzzleReveal);
-    const curried = assemble(curriedPuzzle);
-    const [, args] = uncurry(curried) as Tuple<SExp, SExp>;
-    const thirdarg = disassemble(args.rest().rest());
-    const trickarg = thirdarg.slice(1, -1);
-    // console.log(trickarg);
-    const hash = await puzzle.getPuzzleHashFromPuzzle(trickarg);
-    // console.log(trickarg, hash);
+  private async getLineageProof(parentCoinId: string, api: GetPuzzleApiCallback, puzzles: PuzzleDetail[]): Promise<LineageProof> {
+    // console.log("parentCoinId", parentCoinId)
+    const calcLineageProof = async (puzzleReveal: string) => {
+      puzzleReveal = puzzleReveal.startsWith("0x") ? puzzleReveal.substring(2) : puzzleReveal;
+      const curriedPuzzle = await puzzle.disassemblePuzzle(puzzleReveal);
+      const curried = assemble(curriedPuzzle);
+      const [, args] = uncurry(curried) as Tuple<SExp, SExp>;
+      const thirdarg = disassemble(args.rest().rest());
+      const trickarg = thirdarg.slice(1, -1);
+      // console.log("api puzzle", trickarg);
+      const hash = await puzzle.getPuzzleHashFromPuzzle(trickarg);
+      return hash;
+    }
 
+    const presp = await api(parentCoinId);
+    const hash = await calcLineageProof(presp.puzzleReveal);
+    // console.log("api hash", hash);
     return { coinId: presp.parentParentCoinId, amount: BigInt(presp.amount), proof: hash };
+
+    // const p = puzzles.find(_ => _.hash == presp.parentParentPuzzleHash.substring(2))
+    // if (p) {
+    //   const pubkey = utility.toHexString(p.privateKey.get_g1().serialize());
+    //   const synPubkey = await puzzle.getSyntheticKey(pubkey);
+    //   const pp = puzzle.getPuzzle(synPubkey);
+    //   const stdp = await puzzle.getPuzzleHashFromPuzzle(pp);
+    //   // const stdp = await puzzle.getPuzzleHash(utility.toHexString(p.privateKey.get_g1().serialize()));
+    //   // console.log("api coinid", presp.parentCoinId);
+    //   // console.log("proof",p, stdp, hash, pp, presp);
+    //   console.log("local puzzle", pp)
+    //   console.log("local hash", stdp)
+    //   // console.log("local coinid", );
+    //   return { coinId: presp.parentParentCoinId, amount: BigInt(presp.amount), proof: stdp };
+    // }
+    // else {
+    //   console.log(puzzles, presp, parentCoinId);
+    //   throw "dfdf";
+    // }
+
+
+    // let presp = await api(parentCoinId);
+    // let hash = await calcLineageProof(presp);
+    // console.log("lineage actual:", hash, presp.parentCoinId, presp);
+    // // console.log("lineage actual:", hash);//, presp.parentCoinId, presp);
+    // // console.log("lineage expect:", "2e04a52b8bb59373c6a9ea0d66f9fa67038044753119006b882623f6caa3c13a");
+    // // console.log(parentCoinId, presp)
+
+
+    // for (let i = 0; i < 1; i++) {
+    //   presp = await api(presp.parentParentCoinId);
+    //   hash = await calcLineageProof(presp);
+
+    //   if (hash == "2e04a52b8bb59373c6a9ea0d66f9fa67038044753119006b882623f6caa3c13a")
+    //     console.log("bingo")
+    //   console.log("lineage actual:", hash);//, presp.parentCoinId, presp);
+    //   // console.log("lineage actual:", hash, presp.parentCoinId, presp);
+    //   // console.log("lineage expect:", "2e04a52b8bb59373c6a9ea0d66f9fa67038044753119006b882623f6caa3c13a");
+    // }
+
+
+    // return { coinId: presp.parentParentCoinId, amount: BigInt(presp.amount), proof: hash };
   }
 
   private findPossibleSmallest(coins: OriginCoin[], num: bigint): OriginCoin | null {
