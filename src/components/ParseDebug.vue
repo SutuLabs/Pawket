@@ -68,9 +68,9 @@
 <script lang="ts">
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
-import transfer from '../services/crypto/transfer';
 import { SpendBundle } from '@/models/wallet';
 import puzzle from '@/services/crypto/puzzle';
+import transfer from '@/services/transfer/transfer';
 
 @Component({
   components: {

@@ -43,7 +43,6 @@ import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import { Account, TokenInfo } from "@/store/modules/account";
 import KeyBox from "@/components/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import transfer from '../services/crypto/transfer';
 import { ApiResponse } from '@/models/api';
 import receive from '../services/crypto/receive';
 import store from '@/store';
@@ -51,6 +50,8 @@ import { CoinItem, SpendBundle } from '@/models/wallet';
 import utility from '@/services/crypto/utility';
 import puzzle from '@/services/crypto/puzzle';
 import ParseDebug from "@/components/ParseDebug.vue";
+import catBundle from '@/services/transfer/catBundle';
+import stdBundle from '@/services/transfer/stdBundle';
 
 @Component({
   components: {
@@ -70,7 +71,7 @@ export default class Send extends Vue {
   public memo = "memohello";
   public bundle: SpendBundle | null = null;
 
-  mounted() {
+  mounted(): void {
     this.sign();
   }
   @Emit("close")
@@ -144,14 +145,14 @@ export default class Send extends Vue {
 
       if (this.selectedToken == "XCH") {
         const puzzles = await puzzle.getPuzzleDetails(utility.fromHexString(sk_hex), 0, 5);
-        this.bundle = await transfer.generateSpendBundle(
+        this.bundle = await stdBundle.generateSpendBundle(
           filteredCoins, puzzles, this.address, amount, 0n, this.account.firstAddress);
       }
       else {
         const assetId = this.tokenInfo[this.selectedToken].id ?? "";
         const puzzles = await puzzle.getCatPuzzleDetails(utility.fromHexString(sk_hex), assetId, 0, 30);
-        this.bundle = await transfer.generateCatSpendBundle(
-          filteredCoins, puzzles, assetId, this.address, amount, 0n, this.account.firstAddress, this.memo);
+        this.bundle = await catBundle.generateCatSpendBundle(
+          filteredCoins, puzzles, this.address, amount, 0n, this.account.firstAddress, this.memo);
 
       }
 

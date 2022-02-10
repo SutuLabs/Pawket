@@ -7,9 +7,11 @@ import { Component, Vue } from "vue-property-decorator";
 import { OriginCoin } from '../models/wallet';
 import utility from '@/services/crypto/utility';
 import puzzle from '@/services/crypto/puzzle';
-import transfer from '@/services/crypto/transfer';
+import transfer from '@/services/transfer/transfer';
 import store from '@/store';
 import ParseDebug from './ParseDebug.vue';
+import catBundle from '@/services/transfer/catBundle';
+import stdBundle from '@/services/transfer/stdBundle';
 
 @Component
 export default class SelfTest extends Vue {
@@ -133,7 +135,7 @@ export default class SelfTest extends Vue {
     const tgt_addr = await puzzle.getAddressFromPuzzleHash("0x87908e3f85bf4b55c7e7709915c2ce97a1e6ec1d227e54a04dbfee6862d546a5", "xch");
     const change_addr = await puzzle.getAddressFromPuzzleHash("0x4f45877796d7a64e192bcc9f899afeedae391f71af3afd7e15a0792c049d23d3", "xch");
     const puzzles = await puzzle.getPuzzleDetails(utility.fromHexString(sk_hex), 0, 5);
-    const bundle = await transfer.generateSpendBundle([coin], puzzles, tgt_addr, 1_000_000n, 0n, change_addr);
+    const bundle = await stdBundle.generateSpendBundle([coin], puzzles, tgt_addr, 1_000_000n, 0n, change_addr);
     this.assert(
       "0x81198e68402824e0585fac43d79edf3efe19e4651747f4e9b8d28f6a8a5c319dac67d4a0c03ad957cbb7d7c3c955605d03d6c5750e0aa44baf73ddaa5fcfbe74e3cb922034b72656f0df410ff6ef8e81b56b1a6a0c9bddd9331b7a9c90f897ce",
       bundle?.aggregated_signature);
@@ -158,7 +160,7 @@ export default class SelfTest extends Vue {
     const assetId = "78ad32a8c9ea70f27d73e9306fc467bab2a6b15b30289791e37ab6e8612212b1";
     const puzzles = await puzzle.getCatPuzzleDetails(utility.fromHexString(sk_hex), assetId, 0, 5);
 
-    const bundle = await transfer.generateCatSpendBundle([coin], puzzles, assetId, tgt_addr, 300n, 0n, change_addr, null);
+    const bundle = await catBundle.generateCatSpendBundle([coin], puzzles, tgt_addr, 300n, 0n, change_addr, null);
     this.assert(
       "0xa2b3ea73ce4c16248e6b57fb72498d95881866fce4651aeba3b98e1c287700b35aebba853f11d4c7fef14d3381c6172d1847796d44b3f4c5f9ed42315a53694b9b849f4b28690fcb553617d0b7f1b9080dc060f6ac0ad4eb34661bce37e92a40",
       bundle?.aggregated_signature);
