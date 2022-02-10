@@ -156,7 +156,7 @@ export default class SelfTest extends Vue {
     const tgt_addr = await puzzle.getAddressFromPuzzleHash("0x3eb239190ce59b4af1e461291b9185cea62d6072fd3718051a530fd8a8218bc0", "xch");
     const change_addr = await puzzle.getAddressFromPuzzleHash("0x1cf63b7cc60279a1b0745e8f426585ee81d8da0cd2d92dd9b44e6efbd88d40ce", "xch");
     const assetId = "78ad32a8c9ea70f27d73e9306fc467bab2a6b15b30289791e37ab6e8612212b1";
-    const puzzles = await puzzle.getCatPuzzleDetails(utility.fromHexString(sk_hex), assetId, 0, 40);
+    const puzzles = await puzzle.getCatPuzzleDetails(utility.fromHexString(sk_hex), assetId, 0, 5);
 
     const bundle = await transfer.generateCatSpendBundle([coin], puzzles, assetId, tgt_addr, 300n, 0n, change_addr, null);
     this.assert(
