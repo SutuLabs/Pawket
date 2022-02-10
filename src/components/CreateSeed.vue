@@ -1,16 +1,16 @@
 <template>
   <div class="box">
     <section v-if="mode == 'Menu'">
-      <b-button @click="gotoImport()">Import</b-button>
-      <b-button @click="gotoCreate()">Create</b-button>
+      <b-button @click="gotoImport()">{{ $t("createSeed.ui.button.import") }}</b-button>
+      <b-button @click="gotoCreate()">{{ $t("createSeed.ui.button.create") }}</b-button>
     </section>
     <section v-if="mode == 'Import' || mode == 'Create'">
-      <b-button @click="back()">Back</b-button>
-      <b-field label="Mnemonic" label-position="on-border">
+      <b-button @click="back()">{{ $t("createSeed.ui.button.back") }}</b-button>
+      <b-field :label="$t('createSeed.ui.label.mnemonic')" label-position="on-border">
         <b-input type="textarea" v-model="seedMnemonic"></b-input>
       </b-field>
-      <b-button v-if="mode == 'Create'" @click="refresh()">Refresh</b-button>
-      <b-button @click="confirm()">Confirm</b-button>
+      <b-button v-if="mode == 'Create'" @click="refresh()">{{ $t("createSeed.ui.button.refresh") }}</b-button>
+      <b-button @click="confirm()">{{ $t("createSeed.ui.button.confirm") }}</b-button>
     </section>
   </div>
 </template>
@@ -18,7 +18,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import store from "@/store";
-import account from '../services/crypto/account';
+import account from "../services/crypto/account";
 
 type Mode = "Menu" | "Import" | "Create";
 

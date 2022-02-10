@@ -1,14 +1,16 @@
 <template>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">{{ $t('message.configure') }}</p>
+      <p class="modal-card-title">
+        {{ $t("accountConfigure.ui.title.configure") }}
+      </p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
-      <b-field :label="$t('message.maxAddress')">
+      <b-field :label="$t('accountConfigure.ui.label.maxAddress')">
         <b-slider v-model="maxAddress" :max="8" :min="1"></b-slider>
       </b-field>
-      <b-field :label="$t('message.listingCATs')">
+      <b-field :label="$t('accountConfigure.ui.label.listingCATs')">
         <b-taginput
           class="taginput-sortable"
           v-sortable="sortableOptions"
@@ -16,7 +18,7 @@
           ellipsis
           icon="label"
           :before-adding="beforeAdd"
-          :placeholder="$t('message.addCAT')"
+          :placeholder="$t('accountConfigure.ui.placeholder.addCAT')"
         >
         </b-taginput>
         <!-- <p class="control">
@@ -31,11 +33,11 @@
     </section>
     <footer class="modal-card-foot is-justify-content-space-between">
       <div>
-        <b-button :label="$t('message.cancel')" @click="close()"></b-button>
-        <b-button :label="$t('message.submit')" type="is-primary" @click="submit()"></b-button>
+        <b-button :label="$t('accountConfigure.ui.button.cancel')" @click="close()"></b-button>
+        <b-button :label="$t('accountConfigure.ui.button.submit')" type="is-primary" @click="submit()"></b-button>
       </div>
       <div>
-        <b-button :label="$t('message.changePassword')" type="is-warning" @click="changePassword()"></b-button>
+        <b-button :label="$t('accountConfigure.ui.button.changePassword')" type="is-warning" @click="changePassword()"></b-button>
       </div>
     </footer>
   </div>
@@ -48,11 +50,12 @@ import KeyBox from "@/components/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { DialogProgrammatic as Dialog } from "buefy";
 import { sortable } from "@/directives/sortable";
-import { Account, CustomCat } from '@/store/modules/account';
+import { Account, CustomCat } from "@/store/modules/account";
+import { translate } from "@/i18n/i18n";
 
 @Component({
   directives: {
-    sortable
+    sortable,
   },
   components: {
     KeyBox,
@@ -62,11 +65,11 @@ export default class AccountConfigure extends Vue {
   @Prop() private account!: Account;
   public maxAddress: number | null = null;
   sortableOptions = {
-    chosenClass: 'is-primary',
-    draggable: '.tag'
+    chosenClass: "is-primary",
+    draggable: ".tag",
   };
   cats: string[] = [];
-  assetIds: CustomCat[] = []
+  assetIds: CustomCat[] = [];
 
   mounted(): void {
     if (!this.account) {
@@ -75,7 +78,7 @@ export default class AccountConfigure extends Vue {
     }
     this.maxAddress = this.account.addressRetrievalCount;
     this.assetIds = this.account.cats ?? [];
-    this.cats = this.assetIds.map(_ => _.name);
+    this.cats = this.assetIds.map((_) => _.name);
   }
 
   @Emit("close")
@@ -84,7 +87,9 @@ export default class AccountConfigure extends Vue {
   }
   beforeAdd(name: string): boolean {
     Dialog.prompt({
-      message: `Enter the Asset ID`,
+      message: translate("accountConfigure.message.prompt.addAsset"),
+      confirmText: translate("accountConfigure.message.prompt.confirmText"),
+      cancelText: translate("accountConfigure.message.prompt.cancelText"),
       trapFocus: true,
       type: "is-info",
       onConfirm: (assetId) => {
@@ -95,7 +100,7 @@ export default class AccountConfigure extends Vue {
   }
 
   addOrUpdateAsset(name: string, assetId: string): void {
-    const eidx = this.assetIds.findIndex(_ => _.id == assetId);
+    const eidx = this.assetIds.findIndex((_) => _.id == assetId);
     if (eidx > -1) this.assetIds.splice(eidx, 1);
     this.assetIds.push({ name: name, id: assetId });
   }
@@ -107,7 +112,9 @@ export default class AccountConfigure extends Vue {
       type: "is-info",
       onConfirm: (name: string) => {
         Dialog.prompt({
-          message: `Enter the Asset ID`,
+          message: translate("accountConfigure.message.prompt.message.addAsset"),
+          confirmText: translate("accountConfigure.message.prompt.confirmText"),
+          cancelText: translate("accountConfigure.message.prompt.cancelText"),
           trapFocus: true,
           type: "is-info",
           onConfirm: (assetId) => {
@@ -122,7 +129,7 @@ export default class AccountConfigure extends Vue {
   submit(): void {
     if (this.maxAddress) this.account.addressRetrievalCount = this.maxAddress;
     const dict = Object.assign({}, ...this.assetIds.map((x) => ({ [x.name]: x.id })));
-    this.account.cats = this.cats.map(_ => ({ name: _, id: dict[_] }))
+    this.account.cats = this.cats.map((_) => ({ name: _, id: dict[_] }));
     store.dispatch("persistent");
 
     Notification.open({
@@ -134,15 +141,13 @@ export default class AccountConfigure extends Vue {
   }
 
   async changePassword(): Promise<void> {
-    const oldPassword = await this.getPassword(`Enter the old password`);
-    const newPassword = await this.getPassword(`Enter the new password`);
-    const newPassword2 = await this.getPassword(`Reenter the new password`);
+    const oldPassword = await this.getPassword(translate("accountConfigure.message.prompt.oldPassword"));
+    const newPassword = await this.getPassword(translate("accountConfigure.message.prompt.newPassword"));
+    const newPassword2 = await this.getPassword(translate("accountConfigure.message.prompt.newPassword2"));
     if (newPassword != newPassword2) {
-      this.$buefy.notification.open(
-        {
-          message: "password not match",
-        }
-      )
+      this.$buefy.notification.open({
+        message: translate("accountConfigure.message.error.passwordNotMatch"),
+      });
       return;
     }
     store.dispatch("changePassword", { oldPassword, newPassword });
@@ -153,6 +158,8 @@ export default class AccountConfigure extends Vue {
     return new Promise((resolve, reject) => {
       this.$buefy.dialog.prompt({
         message: text,
+        confirmText: translate("accountConfigure.message.prompt.confirmText"),
+        cancelText: translate("accountConfigure.message.prompt.cancelText"),
         trapFocus: true,
         inputAttrs: {
           type: "password",

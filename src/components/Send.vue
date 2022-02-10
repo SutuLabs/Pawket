@@ -1,23 +1,25 @@
 <template>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">{{ $t("message.send") }}</p>
+      <p class="modal-card-title">{{ $t("send.ui.title.send") }}</p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
-      <b-field :label="$t('message.address')">
-        <b-input v-model="address" @input="reset()"></b-input>
+      <b-field :label="$t('send.ui.label.address')">
+        <b-input v-model="address" @change="reset()"></b-input>
       </b-field>
-      <b-field :label="$t('message.amount')" :message="amountMessage">
-        <b-select v-model="selectedToken" @input="reset()">
-          <option v-for="token in tokenNames" :key="token" :value="token">{{ token }}</option>
+      <b-field :label="$t('send.ui.label.amount')" :message="amountMessage">
+        <b-select v-model="selectedToken" @change="reset()">
+          <option v-for="token in tokenNames" :key="token" :value="token">
+            {{ token }}
+          </option>
         </b-select>
         <b-input v-model="amount" expanded @input="reset()"></b-input>
         <p class="control">
           <span class="button is-static">{{ selectedToken }}</span>
         </p>
       </b-field>
-      <b-field :label="$t('message.memo')">
+      <b-field :label="$t('send.ui.label.memo')">
         <b-input maxlength="100" v-model="memo" type="text" @input="reset()" :disabled="selectedToken == 'XCH'"></b-input>
       </b-field>
       <b-field v-if="bundle">
@@ -30,9 +32,21 @@
       </b-field>
     </section>
     <footer class="modal-card-foot">
-      <b-button :label="$t('message.cancel')" @click="close()"></b-button>
-      <b-button :label="$t('message.submit')" v-if="bundle" type="is-primary" @click="submit()" :disabled="submitting"></b-button>
-      <b-button :label="$t('message.sign')" v-if="!bundle" type="is-success" @click="sign()" :disabled="submitting"></b-button>
+      <b-button :label="$t('send.ui.button.cancel')" @click="close()"></b-button>
+      <b-button
+        :label="$t('send.ui.button.submit')"
+        v-if="bundle"
+        type="is-primary"
+        @click="submit()"
+        :disabled="submitting"
+      ></b-button>
+      <b-button
+        :label="$t('send.ui.button.sign')"
+        v-if="!bundle"
+        type="is-success"
+        @click="sign()"
+        :disabled="submitting"
+      ></b-button>
     </footer>
     <b-loading :is-full-page="false" v-model="submitting"></b-loading>
   </div>
@@ -43,15 +57,15 @@ import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import { Account, TokenInfo } from "@/store/modules/account";
 import KeyBox from "@/components/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { ApiResponse } from '@/models/api';
-import receive from '../services/crypto/receive';
-import store from '@/store';
-import { CoinItem, SpendBundle } from '@/models/wallet';
-import utility from '@/services/crypto/utility';
-import puzzle from '@/services/crypto/puzzle';
+import { ApiResponse } from "@/models/api";
+import receive from "../services/crypto/receive";
+import store from "@/store";
+import { CoinItem, SpendBundle } from "@/models/wallet";
+import utility from "@/services/crypto/utility";
+import puzzle from "@/services/crypto/puzzle";
 import DevHelper from "@/components/DevHelper.vue";
-import catBundle from '@/services/transfer/catBundle';
-import stdBundle from '@/services/transfer/stdBundle';
+import catBundle from "@/services/transfer/catBundle";
+import stdBundle from "@/services/transfer/stdBundle";
 
 @Component({
   components: {
@@ -89,9 +103,7 @@ export default class Send extends Vue {
   }
 
   get tokenNames(): string[] {
-    return Object.keys(store.state.account.tokenInfo).concat(
-      this.account.cats.map(_ => _.name)
-    );
+    return Object.keys(store.state.account.tokenInfo).concat(this.account.cats.map((_) => _.name));
   }
 
   get bundleJson(): string {
@@ -187,8 +199,7 @@ export default class Send extends Vue {
           type: "is-success",
         });
         this.close();
-      }
-      else {
+      } else {
         Notification.open({
           message: `Submit failed: ${json.error}`,
           type: "is-danger",
