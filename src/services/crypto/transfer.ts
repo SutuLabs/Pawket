@@ -75,7 +75,7 @@ class Transfer {
     amount: bigint,
     fee: bigint,
     change_address: string,
-    memo: string,
+    memo: string | null,
     getPuzzle: GetPuzzleApiCallback | null = null,
   ): Promise<SpendBundle | null> {
     return await this.generateSpendBundleInternal(coins, sk_hex, puzzles,
