@@ -11,7 +11,7 @@ interface PuzzleSolutionResult {
   solution: string;
   result: string;
 }
-export type GetPuzzleApiCallback = (parentCoinId: string) => Promise<GetParentPuzzleResponse>;
+export type GetPuzzleApiCallback = (parentCoinId: string) => Promise<GetParentPuzzleResponse | undefined>;
 
 class Transfer {
   public async generateSpendBundleInternal(
