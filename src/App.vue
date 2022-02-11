@@ -18,14 +18,22 @@
     <footer class="footer">
       <div class="content has-text-centered">
         <p>
-          <strong>Chiabee Wallet</strong>
-          [{{ version }}] by <a href="https://www.chiabee.net">Chiabee</a>. <br />The
-          <a href="http://github.com/chiabee">source code</a> would available later. This app is in
+          <strong>Pawket</strong>
+          [{{ version }}] by <a href="https://www.chiabee.net">Chiabee</a>. <br />
+          This app is in
           <span @click="alphaClick()">ALPHA</span> stage, don't use in PRODUCTION.
           <span v-if="debugMode" @click="disableDebug()">[DEBUG]</span>
-          <span v-if="debugMode" @click="showDebugHelper()">[Helper]</span>
           <br />
-          <a target="_blank" href="https://github.com/Chiabee/wallet-doc/">Quick Guide</a>
+          <a target="_blank" href="https://github.com/Chiabee/wallet-doc/">
+            <b-icon icon="file-document" size="is-small"></b-icon>
+            Quick Guide
+            <b-icon icon="open-in-new" size="is-small"></b-icon>
+          </a>
+          |
+          <a href="javascript:void(0)" size="is-small" @click="showDebugHelper()">
+            <b-icon icon="developer-board" size="is-small"></b-icon>
+            Developer
+          </a>
         </p>
       </div>
     </footer>

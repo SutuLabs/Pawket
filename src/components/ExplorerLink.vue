@@ -11,12 +11,16 @@
             <b-menu-list :label="$t('explorerLink.ui.label.address')">
               <b-menu-item
                 v-for="addr in token.addresses"
-                icon="address"
-                :label="addr.address.slice(0, 9) + '...'"
+                icon="map-marker"
                 :key="addr.address"
                 :active="address == addr.address"
                 @click="address = addr.address"
-              ></b-menu-item>
+              >
+                <template #label>
+                  {{ addr.address.slice(0, 9) + "..." }}
+                  {{ addr.coins.filter((_) => _.coin && !_.spent).length }}
+                </template>
+              </b-menu-item>
             </b-menu-list>
           </b-menu>
         </div>
@@ -40,7 +44,7 @@
 <script lang="ts">
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import store from "@/store/index";
-import { Account, AccountToken } from "@/store/modules/account";
+import { AccountEntity, AccountToken } from "@/store/modules/account";
 import KeyBox from "@/components/KeyBox.vue";
 import QrcodeVue from "qrcode.vue";
 
@@ -51,7 +55,7 @@ import QrcodeVue from "qrcode.vue";
   },
 })
 export default class ExplorerLink extends Vue {
-  @Prop() private account!: Account;
+  @Prop() private account!: AccountEntity;
   @Prop() private token!: AccountToken;
   public address = "";
 

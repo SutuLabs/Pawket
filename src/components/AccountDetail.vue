@@ -23,7 +23,7 @@
       </section>
       <section>
         <b-button @click="openLink(account.tokens['XCH'])">{{ $t("accountDetail.ui.button.receive") }}</b-button>
-        <b-button :disabled="!debugMode" @click="showSend()">{{ $t("accountDetail.ui.button.send") }}</b-button>
+        <b-button @click="showSend()">{{ $t("accountDetail.ui.button.send") }}</b-button>
         <b-button v-if="debugMode" @click="showExport()">{{ $t("accountDetail.ui.button.export") }}</b-button>
       </section>
     </div>
@@ -73,10 +73,9 @@ import AccountList from "@/components/AccountList.vue";
 import AccountConfigure from "@/components/AccountConfigure.vue";
 import ExplorerLink from "@/components/ExplorerLink.vue";
 import KeyBox from "@/components/KeyBox.vue";
-import Receive from "./Receive.vue";
 import Send from "./Send.vue";
 import { demojo } from "@/filters/unitConversion";
-import { TokenInfo, Account, AccountToken } from "@/store/modules/account";
+import { TokenInfo, AccountEntity, AccountToken } from "@/store/modules/account";
 import { translate } from "@/i18n/i18n";
 
 type Mode = "Verify" | "Create";
@@ -96,7 +95,7 @@ export default class AccountDetail extends Vue {
     return store.state.account.refreshing;
   }
 
-  get account(): Account {
+  get account(): AccountEntity {
     return store.state.account.accounts[store.state.account.selectedAccount] ?? {};
   }
 
@@ -165,16 +164,6 @@ export default class AccountDetail extends Vue {
       hasModalCard: true,
       trapFocus: true,
       props: {},
-    });
-  }
-
-  showQr(): void {
-    this.$buefy.modal.open({
-      parent: this,
-      component: Receive,
-      hasModalCard: true,
-      trapFocus: true,
-      props: { account: this.account },
     });
   }
 

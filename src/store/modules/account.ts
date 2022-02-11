@@ -1,16 +1,15 @@
 import store from '@/store'
-import utility from "@/services/crypto/utility";
 import account, { AccountKey } from "@/services/crypto/account";
-import { CoinItem, CoinRecord, GetRecordsResponse } from "@/models/wallet";
+import { CoinRecord } from "@/models/wallet";
 import Vue from 'vue';
-import puzzle from '@/services/crypto/puzzle';
 import receive from '@/services/crypto/receive';
+import { prefix0x } from '@/services/coin/condition';
 
 type AccountType = "Serial" | "Password" | "Legacy";
 
 export interface AccountTokenAddress {
   address: string;
-  coin?: CoinItem;
+  coins: CoinRecord[];
 }
 
 export interface AccountToken {
@@ -21,7 +20,7 @@ export interface AccountTokens {
   [symbol: string]: AccountToken;
 }
 
-export interface Account {
+export interface AccountEntity {
   key: AccountKey;
   name: string;
   type: AccountType;
@@ -59,7 +58,7 @@ export interface PersistentAccount {
 
 export interface IAccountState {
   selectedAccount: number;
-  accounts: Account[];
+  accounts: AccountEntity[];
   tokenInfo: TokenInfo;
   refreshing: boolean;
 }
@@ -198,9 +197,15 @@ store.registerModule<IAccountState>('account', {
         const tokenBalances: AccountTokens = {};
         for (let i = 0; i < balances.length; i++) {
           const b = balances[i];
+          const token = requests.find(_ => _.symbol == b.symbol);
+          if (!token) continue;
           tokenBalances[b.symbol] = {
             amount: b.amount,
-            addresses: b.records.map(_ => ({ address: puzzle.getAddressFromPuzzleHash(_.coin?.puzzleHash ?? "", "xch"), coin: _.coin })),
+            addresses: token.puzzles
+              .map<AccountTokenAddress>(_ => ({
+                address: _.address,
+                coins: b.records.filter(r => r.coin?.puzzleHash == prefix0x(_.hash)),
+              })),
           };
         }
 
@@ -214,7 +219,7 @@ store.registerModule<IAccountState>('account', {
           const token = requests[i];
           tokenBalances[token.symbol] = {
             amount: -1,
-            addresses: (await puzzle.getAddressesFromPuzzleHash(token.puzzles.map(_ => _.hash), "xch")).map(_ => ({ address: _ })),
+            addresses: token.puzzles.map(_ => ({ address: _.address, coins: [] })),
           }
         }
         Vue.set(account, "tokens", tokenBalances);

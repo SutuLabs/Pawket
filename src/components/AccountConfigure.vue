@@ -50,7 +50,7 @@ import KeyBox from "@/components/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { DialogProgrammatic as Dialog } from "buefy";
 import { sortable } from "@/directives/sortable";
-import { Account, CustomCat } from "@/store/modules/account";
+import { AccountEntity, CustomCat } from "@/store/modules/account";
 import { translate } from "@/i18n/i18n";
 
 @Component({
@@ -62,7 +62,7 @@ import { translate } from "@/i18n/i18n";
   },
 })
 export default class AccountConfigure extends Vue {
-  @Prop() private account!: Account;
+  @Prop() private account!: AccountEntity;
   public maxAddress: number | null = null;
   sortableOptions = {
     chosenClass: "is-primary",

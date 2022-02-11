@@ -6,10 +6,34 @@
     </header>
     <section class="modal-card-body">
       <b-field :label="$t('send.ui.label.address')">
-        <b-input v-model="address" @change="reset()"></b-input>
+        <b-input v-model="address" @change="reset()" expanded></b-input>
+        <p class="control">
+          <b-button @click="scanQrCode()">
+            <b-icon icon="qrcode"></b-icon>
+          </b-button>
+        </p>
       </b-field>
-      <b-field :label="$t('send.ui.label.amount')" :message="amountMessage">
-        <b-select v-model="selectedToken" @change="reset()">
+      <b-field :message="amountMessage">
+        <template #label>
+          {{ $t("send.ui.label.amount") }}
+          <span class="is-pulled-right is-size-6">
+            <b-button type="is-info is-light" size="is-small" @click="setMax(maxAmount)">
+              <span v-if="maxStatus == 'Loading'">Loading {{ selectedToken }}</span>
+              <span v-if="maxStatus == 'Loaded'">Max: {{ maxAmount }} / {{ totalAmount }} {{ selectedToken }}</span>
+            </b-button>
+            <b-tooltip :triggers="['click']" :auto-close="['outside', 'escape']" position="is-left" type="is-light">
+              <template v-slot:content>
+                Currently only support one code mode,
+                <a href="https://pawket.app" target="_blank">
+                  Learn more
+                  <b-icon icon="open-in-new" size="is-small"></b-icon>
+                </a>
+              </template>
+              <b-icon icon="comment-question" size="is-small" type="is-info" class="px-4"></b-icon>
+            </b-tooltip>
+          </span>
+        </template>
+        <b-select v-model="selectedToken" @input="loadCoins()">
           <option v-for="token in tokenNames" :key="token" :value="token">
             {{ token }}
           </option>
@@ -26,7 +50,7 @@
         <template #label>
           {{ $t("message.bundle") }}
           <key-box display="✂️" :value="JSON.stringify(bundle)" tooltip="Copy"></key-box>
-          <a href="javascript:void(0)" @click="debugBundle()">🐞</a>
+          <a href="javascript:void(0)" v-if="debugMode" @click="debugBundle()">🐞</a>
         </template>
         <b-input type="textarea" disabled :value="bundleJson"></b-input>
       </b-field>
@@ -54,18 +78,20 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
-import { Account, TokenInfo } from "@/store/modules/account";
+import { AccountEntity, TokenInfo } from "@/store/modules/account";
 import KeyBox from "@/components/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { ApiResponse } from "@/models/api";
 import receive from "../services/crypto/receive";
 import store from "@/store";
-import { CoinItem, SpendBundle } from "@/models/wallet";
+import { CoinItem, SpendBundle, CoinRecord } from "@/models/wallet";
 import utility from "@/services/crypto/utility";
 import puzzle from "@/services/crypto/puzzle";
 import DevHelper from "@/components/DevHelper.vue";
 import catBundle from "@/services/transfer/catBundle";
 import stdBundle from "@/services/transfer/stdBundle";
+import bigDecimal from "js-big-decimal";
+import ScanQrCode from "@/components/ScanQrCode.vue";
 
 @Component({
   components: {
@@ -73,21 +99,23 @@ import stdBundle from "@/services/transfer/stdBundle";
   },
 })
 export default class Send extends Vue {
-  @Prop() private account!: Account;
+  @Prop() private account!: AccountEntity;
   public submitting = false;
-  // public amount = 0;
-  // public address = "";
-  // public selectedToken = "XCH";
-  // public memo = "";
-  public amount = 10;
-  public address = "xch1qqltywgepnjekjh3u3sjjxu3sh82vttqwt7nwxq9rffslk9gyx9uqg8lqru";
-  public selectedToken = "BSH";
-  public memo = "memohello";
+  public amount = 0;
+  public address = "";
+  public selectedToken = "XCH";
+  public memo = "";
   public bundle: SpendBundle | null = null;
+  public coins: CoinRecord[] = [];
+  public maxAmount = "-1";
+  public totalAmount = "-1";
+  public INVALID_AMOUNT_MESSAGE = "Invalid amount";
+  public maxStatus: "Loading" | "Loaded" = "Loading";
 
   mounted(): void {
-    this.sign();
+    this.loadCoins();
   }
+
   @Emit("close")
   close(): void {
     return;
@@ -95,12 +123,18 @@ export default class Send extends Vue {
 
   get amountMessage(): string {
     if (!this.amount) return "";
-    function numberWithCommas(x: number): string {
-      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
-    const decimal = this.selectedToken == "XCH" ? 12 : 3;
-    return numberWithCommas(this.amount * Math.pow(10, decimal)) + " mojos";
+    try { new bigDecimal(this.amount); }
+    catch { return ""; }
+    if (this.amount == 0) return "";
+
+    if (bigDecimal.compareTo(this.amount, this.maxAmount) > 0) return this.INVALID_AMOUNT_MESSAGE;
+
+    const mojo = bigDecimal.multiply(this.amount, Math.pow(10, this.decimal));
+    if (Number(mojo) < 1) return this.INVALID_AMOUNT_MESSAGE;
+    return bigDecimal.getPrettyValue(mojo, 3, ",") + " mojos";
   }
+
+  get decimal(): number { return this.selectedToken == "XCH" ? 12 : 3; }
 
   get tokenNames(): string[] {
     return Object.keys(store.state.account.tokenInfo).concat(this.account.cats.map((_) => _.name));
@@ -108,6 +142,10 @@ export default class Send extends Vue {
 
   get bundleJson(): string {
     return JSON.stringify(this.bundle, null, 4);
+  }
+
+  get debugMode(): boolean {
+    return store.state.app.debug;
   }
 
   reset(): void {
@@ -131,24 +169,40 @@ export default class Send extends Vue {
     return tokenInfo;
   }
 
+  setMax(amount: number): void {
+    this.amount = amount;
+  }
+
+  async loadCoins(): Promise<void> {
+    this.bundle = null;
+    this.maxStatus = "Loading";
+
+    const maxId = this.account.addressRetrievalCount;
+    const sk_hex = this.account.key.privateKey;
+    const requests = await receive.getAssetsRequestDetail(sk_hex, maxId, this.account.cats ?? []);
+    const tgtreqs = requests.filter(_ => _.symbol == this.selectedToken);
+
+    this.coins = await receive.getCoinRecords(tgtreqs, false);
+    const availcoins = this.coins.map(_ => _.coin?.amount ?? 0);
+    this.maxAmount = bigDecimal.divide(Math.max(...availcoins, 0), Math.pow(10, this.decimal), this.decimal);
+    this.totalAmount = bigDecimal.divide(availcoins.reduce((a, b) => a + b, 0), Math.pow(10, this.decimal), this.decimal);
+    this.maxStatus = "Loaded";
+  }
+
   async sign(): Promise<void> {
     this.submitting = true;
     try {
-      const maxId = 4;
-      const sk_hex = this.account.key.privateKey;
-      const requests = await receive.getAssetsRequestDetail(sk_hex, maxId, this.account.cats ?? []);
-      const tgtreqs = requests.filter(_ => _.symbol == this.selectedToken);
-
-      const coins = await receive.getCoinRecords(tgtreqs, false);
       if (!this.account.firstAddress) {
         this.submitting = false;
         return;
       }
+
+      const sk_hex = this.account.key.privateKey;
       const decimal = this.selectedToken == "XCH" ? 12 : 3;
       const amount = BigInt(this.amount * Math.pow(10, decimal));
 
       const filteredCoins =
-        coins.filter(_ => _.coin).map(_ => _.coin as CoinItem).map(_ => ({
+        this.coins.filter(_ => _.coin).map(_ => _.coin as CoinItem).map(_ => ({
           amount: BigInt(_.amount),
           parent_coin_info: _.parentCoinInfo,
           puzzle_hash: _.puzzleHash,
@@ -222,6 +276,21 @@ export default class Send extends Vue {
       hasModalCard: true,
       trapFocus: true,
       props: { inputBundleText: this.bundleJson },
+    });
+  }
+
+  scanQrCode(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: ScanQrCode,
+      hasModalCard: true,
+      trapFocus: true,
+      props: {},
+      events: {
+        "scanned": (value: string): void => {
+          this.address = value;
+        },
+      },
     });
   }
 }
