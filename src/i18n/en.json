@@ -1,4 +1,16 @@
 {
+  "html": {
+    "document": {
+      "title": "Chiabee Wallet"
+    }
+  },
+  "app": {
+    "ui": {
+      "button": {
+        "lang": "English"
+      }
+    }
+  },
   "verifyPassword": {
     "ui": {
       "button": {
@@ -9,6 +21,13 @@
       "label": {
         "password": "Password",
         "reEnter": "Re-Enter"
+      },
+      "title": {
+        "verifyPassword": "Verify Password",
+        "createPassword": "Create Password"
+      },
+      "alt": {
+        "logoAlt": "Chiabee Wallet logo"
       }
     },
     "message": {
@@ -16,6 +35,15 @@
         "clear": "Clear all data? Everything would empty!!!",
         "confirmText": "Confirm",
         "cancelText": "Cancel"
+      },
+      "error": {
+        "passwordNotMatch": "Password does not match",
+        "incorrectPassword": "Password is incorrect"
+      },
+      "tip": {
+        "weakPassword": "Weak",
+        "mediumPassword": "Medium",
+        "strongPassword": "Strong"
       }
     }
   },
@@ -40,7 +68,6 @@
         "receive": "Receive",
         "send": "Send",
         "export": "Export",
-        "lang": "English",
         "confirm": "Confirm",
         "cancel": "Cancel"
       },

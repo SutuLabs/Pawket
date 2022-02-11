@@ -4,13 +4,6 @@
       <section>
         <b-button class="is-pulled-left" @click="configureAccount()">⚙️</b-button>
         <b-button class="is-pulled-right" @click="lock()">🔒</b-button>
-        <b-dropdown class="is-pulled-right" :triggers="['hover', 'click']" aria-role="list" v-model="$i18n.locale">
-          <template #trigger>
-            <b-button :label="$t('accountDetail.ui.button.lang')" icon-right="menu-down" />
-          </template>
-          <b-dropdown-item aria-role="listitem" value="zhcn">简体中文</b-dropdown-item>
-          <b-dropdown-item aria-role="listitem" value="en">English</b-dropdown-item>
-        </b-dropdown>
         <b-button class="is-pulled-right" @click="selectAccount()">{{ account.name }}: {{ account.key.fingerprint }}</b-button>
         <br />
         <div>

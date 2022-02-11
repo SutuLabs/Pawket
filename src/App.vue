@@ -1,19 +1,26 @@
 <template>
   <div id="app">
-    <!-- <b-navbar type="is-light">
+    <b-navbar>
       <template #brand>
-        <b-navbar-item tag="router-link" :to="{ path: '/' }" :exact="true">Wallet</b-navbar-item>
+        <b-navbar-item tag="router-link" :to="{ path: '/' }">
+          <img src="./assets/logo.svg" :alt="$t('verifyPassword.ui.alt.logoAlt')" />
+        </b-navbar-item>
       </template>
-      <template #start>
-        <b-navbar-item tag="router-link" :to="{ path: '/about' }">About</b-navbar-item>
-      </template>
+      <template #start> </template>
+
       <template #end>
-        <profile-corner :login-info="loginInfo"></profile-corner>
+        <b-navbar-item tag="div">
+          <b-dropdown class="is-pulled-right" :triggers="['hover', 'click']" aria-role="list" v-model="$i18n.locale">
+            <template #trigger>
+              <b-button :label="$t('app.ui.button.lang')" icon-right="menu-down" />
+            </template>
+            <b-dropdown-item aria-role="listitem" value="zhcn">简体中文</b-dropdown-item>
+            <b-dropdown-item aria-role="listitem" value="en">English</b-dropdown-item>
+          </b-dropdown>
+        </b-navbar-item>
       </template>
     </b-navbar>
-    <div class="container">-->
     <router-view />
-    <!-- </div> -->
     <footer class="footer">
       <div class="content has-text-centered">
         <p>
@@ -33,8 +40,8 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { NotificationProgrammatic as Notification } from "buefy";
-import store from './store';
-import DevHelper from '@/components/DevHelper.vue';
+import store from "./store";
+import DevHelper from "@/components/DevHelper.vue";
 
 @Component
 export default class ProfileCorner extends Vue {
@@ -79,4 +86,17 @@ export default class ProfileCorner extends Vue {
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+body,
+html {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+}
+</style>

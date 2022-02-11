@@ -13,7 +13,7 @@ import CreateSeed from "@/components/CreateSeed.vue";
 import VerifyPassword from "@/components/VerifyPassword.vue";
 import AccountDetail from "@/components/AccountDetail.vue";
 import SelfTest from "@/components/SelfTest.vue";
-import store from '@/store';
+import store from "@/store";
 
 @Component({
   components: {
@@ -35,3 +35,11 @@ export default class Home extends Vue {
   }
 }
 </script>
+
+<style lang="scss">
+.home {
+  width: 100%;
+  height: 70%;
+  display: table;
+}
+</style>
