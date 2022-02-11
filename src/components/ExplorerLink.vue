@@ -11,12 +11,16 @@
             <b-menu-list :label="$t('explorerLink.ui.label.address')">
               <b-menu-item
                 v-for="addr in token.addresses"
-                icon="address"
-                :label="addr.address.slice(0, 9) + '...'"
+                icon="map-marker"
                 :key="addr.address"
                 :active="address == addr.address"
                 @click="address = addr.address"
-              ></b-menu-item>
+              >
+                <template #label>
+                  {{ addr.address.slice(0, 9) + "..." }}
+                  {{ addr.coins.filter((_) => _.coin && !_.spent).length }}
+                </template>
+              </b-menu-item>
             </b-menu-list>
           </b-menu>
         </div>

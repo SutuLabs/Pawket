@@ -99,11 +99,11 @@ class PuzzleMaker {
     return address;
   }
 
-  public async getAddressesFromPuzzleHash(puzzleHashes: string[], prefix: string): Promise<string[]> {
+  public getAddressesFromPuzzleHash(puzzleHashes: string[], prefix: string): string[] {
     const arr = [];
     for (let i = 0; i < puzzleHashes.length; i++) {
       const h = puzzleHashes[i];
-      arr.push(await this.getAddressFromPuzzleHash(h, prefix));
+      arr.push(this.getAddressFromPuzzleHash(h, prefix));
     }
 
     return arr;
