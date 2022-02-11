@@ -7,17 +7,11 @@
         </b-navbar-item>
       </template>
       <template #start> </template>
-
       <template #end>
-        <b-navbar-item tag="div">
-          <b-dropdown class="is-pulled-right" :triggers="['hover', 'click']" aria-role="list" v-model="$i18n.locale">
-            <template #trigger>
-              <b-button :label="$t('app.ui.button.lang')" icon-right="menu-down" />
-            </template>
-            <b-dropdown-item aria-role="listitem" value="zhcn">简体中文</b-dropdown-item>
-            <b-dropdown-item aria-role="listitem" value="en">English</b-dropdown-item>
-          </b-dropdown>
-        </b-navbar-item>
+        <b-navbar-dropdown :label="$t('app.ui.button.lang')">
+          <b-navbar-item @click="changeLang('en')" :active="$i18n.locale === 'en'"> English </b-navbar-item>
+          <b-navbar-item @click="changeLang('zhcn')" :active="$i18n.locale === 'zhcn'"> 简体中文 </b-navbar-item>
+        </b-navbar-dropdown>
       </template>
     </b-navbar>
     <router-view />
@@ -63,6 +57,10 @@ export default class ProfileCorner extends Vue {
         type: "is-success",
       });
     }
+  }
+
+  changeLang(lang: string): void {
+    this.$i18n.locale = lang;
   }
 
   disableDebug(): void {
