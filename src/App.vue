@@ -24,8 +24,16 @@
           <span @click="alphaClick()">ALPHA</span> stage, don't use in PRODUCTION.
           <span v-if="debugMode" @click="disableDebug()">[DEBUG]</span>
           <br />
-          <a target="_blank" href="https://github.com/Chiabee/wallet-doc/">Quick Guide</a>
-          <b-button size="is-small" @click="showDebugHelper()">Developer Helper</b-button>
+          <a target="_blank" href="https://github.com/Chiabee/wallet-doc/">
+            <b-icon icon="file-document" size="is-small"></b-icon>
+            Quick Guide
+            <b-icon icon="open-in-new" size="is-small"></b-icon>
+          </a>
+          |
+          <a href="javascript:void(0)" size="is-small" @click="showDebugHelper()">
+            <b-icon icon="developer-board" size="is-small"></b-icon>
+            Developer
+          </a>
         </p>
       </div>
     </footer>
