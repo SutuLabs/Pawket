@@ -8,8 +8,27 @@
       <b-field :label="$t('send.ui.label.address')">
         <b-input v-model="address" @change="reset()"></b-input>
       </b-field>
-      <b-field :label="$t('send.ui.label.amount')" :message="amountMessage">
-        <b-select v-model="selectedToken" @change="reset()">
+      <b-field :message="amountMessage">
+        <template #label>
+          {{ $t("send.ui.label.amount") }}
+          <span class="is-pulled-right is-size-6">
+            <b-button type="is-info is-light" size="is-small" @click="setMax(maxAmount)">
+              <span v-if="maxStatus == 'Loading'">Loading {{ selectedToken }}</span>
+              <span v-if="maxStatus == 'Loaded'">Max: {{ maxAmount }} / {{ totalAmount }} {{ selectedToken }}</span>
+            </b-button>
+            <b-tooltip :triggers="['click']" :auto-close="['outside', 'escape']" position="is-left" type="is-light">
+              <template v-slot:content>
+                Currently only support one code mode,
+                <a href="https://pawket.app" target="_blank">
+                  Learn more
+                  <b-icon icon="open-in-new" size="is-small"></b-icon>
+                </a>
+              </template>
+              <b-icon icon="comment-question" size="is-small" type="is-info" class="px-4"></b-icon>
+            </b-tooltip>
+          </span>
+        </template>
+        <b-select v-model="selectedToken" @input="loadCoins()">
           <option v-for="token in tokenNames" :key="token" :value="token">
             {{ token }}
           </option>
@@ -60,12 +79,13 @@ import { NotificationProgrammatic as Notification } from "buefy";
 import { ApiResponse } from "@/models/api";
 import receive from "../services/crypto/receive";
 import store from "@/store";
-import { CoinItem, SpendBundle } from "@/models/wallet";
+import { CoinItem, SpendBundle, CoinRecord } from "@/models/wallet";
 import utility from "@/services/crypto/utility";
 import puzzle from "@/services/crypto/puzzle";
 import DevHelper from "@/components/DevHelper.vue";
 import catBundle from "@/services/transfer/catBundle";
 import stdBundle from "@/services/transfer/stdBundle";
+import bigDecimal from "js-big-decimal";
 
 @Component({
   components: {
@@ -75,18 +95,19 @@ import stdBundle from "@/services/transfer/stdBundle";
 export default class Send extends Vue {
   @Prop() private account!: AccountEntity;
   public submitting = false;
-  // public amount = 0;
-  // public address = "";
-  // public selectedToken = "XCH";
-  // public memo = "";
-  public amount = 10;
-  public address = "xch1qqltywgepnjekjh3u3sjjxu3sh82vttqwt7nwxq9rffslk9gyx9uqg8lqru";
-  public selectedToken = "BSH";
-  public memo = "memohello";
+  public amount = 0;
+  public address = "";
+  public selectedToken = "XCH";
+  public memo = "";
   public bundle: SpendBundle | null = null;
+  public coins: CoinRecord[] = [];
+  public maxAmount = -1;
+  public totalAmount = -1;
+  public INVALID_AMOUNT_MESSAGE = "Invalid amount";
+  public maxStatus: "Loading" | "Loaded" = "Loading";
 
   mounted(): void {
-    this.sign();
+    this.loadCoins();
   }
   @Emit("close")
   close(): void {
@@ -95,11 +116,16 @@ export default class Send extends Vue {
 
   get amountMessage(): string {
     if (!this.amount) return "";
-    function numberWithCommas(x: number): string {
-      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
+    try { new bigDecimal(this.amount); }
+    catch { return ""; }
+    if (this.amount == 0) return "";
+
+    if (this.amount > this.maxAmount) return this.INVALID_AMOUNT_MESSAGE;
+
     const decimal = this.selectedToken == "XCH" ? 12 : 3;
-    return numberWithCommas(this.amount * Math.pow(10, decimal)) + " mojos";
+    const mojo = bigDecimal.multiply(this.amount, Math.pow(10, decimal));
+    if (Number(mojo) < 1) return this.INVALID_AMOUNT_MESSAGE;
+    return bigDecimal.getPrettyValue(mojo, 3, ",") + " mojos";
   }
 
   get tokenNames(): string[] {
@@ -131,24 +157,40 @@ export default class Send extends Vue {
     return tokenInfo;
   }
 
+  setMax(amount: number): void {
+    this.amount = amount;
+  }
+
+  async loadCoins(): Promise<void> {
+    this.bundle = null;
+    this.maxStatus = "Loading";
+
+    const maxId = this.account.addressRetrievalCount;
+    const sk_hex = this.account.key.privateKey;
+    const requests = await receive.getAssetsRequestDetail(sk_hex, maxId, this.account.cats ?? []);
+    const tgtreqs = requests.filter(_ => _.symbol == this.selectedToken);
+
+    this.coins = await receive.getCoinRecords(tgtreqs, false);
+    const availcoins = this.coins.map(_ => _.coin?.amount ?? 0);
+    this.maxAmount = Math.max(...availcoins, 0);
+    this.totalAmount = availcoins.reduce((a, b) => a + b, 0);
+    this.maxStatus = "Loaded";
+  }
+
   async sign(): Promise<void> {
     this.submitting = true;
     try {
-      const maxId = 4;
-      const sk_hex = this.account.key.privateKey;
-      const requests = await receive.getAssetsRequestDetail(sk_hex, maxId, this.account.cats ?? []);
-      const tgtreqs = requests.filter(_ => _.symbol == this.selectedToken);
-
-      const coins = await receive.getCoinRecords(tgtreqs, false);
       if (!this.account.firstAddress) {
         this.submitting = false;
         return;
       }
+
+      const sk_hex = this.account.key.privateKey;
       const decimal = this.selectedToken == "XCH" ? 12 : 3;
       const amount = BigInt(this.amount * Math.pow(10, decimal));
 
       const filteredCoins =
-        coins.filter(_ => _.coin).map(_ => _.coin as CoinItem).map(_ => ({
+        this.coins.filter(_ => _.coin).map(_ => _.coin as CoinItem).map(_ => ({
           amount: BigInt(_.amount),
           parent_coin_info: _.parentCoinInfo,
           puzzle_hash: _.puzzleHash,

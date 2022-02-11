@@ -23,7 +23,7 @@
       </section>
       <section>
         <b-button @click="openLink(account.tokens['XCH'])">{{ $t("accountDetail.ui.button.receive") }}</b-button>
-        <b-button :disabled="!debugMode" @click="showSend()">{{ $t("accountDetail.ui.button.send") }}</b-button>
+        <b-button @click="showSend()">{{ $t("accountDetail.ui.button.send") }}</b-button>
         <b-button v-if="debugMode" @click="showExport()">{{ $t("accountDetail.ui.button.export") }}</b-button>
       </section>
     </div>
