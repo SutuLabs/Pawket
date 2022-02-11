@@ -6,7 +6,12 @@
     </header>
     <section class="modal-card-body">
       <b-field :label="$t('send.ui.label.address')">
-        <b-input v-model="address" @change="reset()"></b-input>
+        <b-input v-model="address" @change="reset()" expanded></b-input>
+        <p class="control">
+          <b-button @click="scanQrCode()">
+            <b-icon icon="qrcode"></b-icon>
+          </b-button>
+        </p>
       </b-field>
       <b-field :message="amountMessage">
         <template #label>
@@ -86,6 +91,7 @@ import DevHelper from "@/components/DevHelper.vue";
 import catBundle from "@/services/transfer/catBundle";
 import stdBundle from "@/services/transfer/stdBundle";
 import bigDecimal from "js-big-decimal";
+import ScanQrCode from "@/components/ScanQrCode.vue";
 
 @Component({
   components: {
@@ -109,6 +115,7 @@ export default class Send extends Vue {
   mounted(): void {
     this.loadCoins();
   }
+
   @Emit("close")
   close(): void {
     return;
@@ -264,6 +271,21 @@ export default class Send extends Vue {
       hasModalCard: true,
       trapFocus: true,
       props: { inputBundleText: this.bundleJson },
+    });
+  }
+
+  scanQrCode(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: ScanQrCode,
+      hasModalCard: true,
+      trapFocus: true,
+      props: {},
+      events: {
+        "scanned": (value: string): void => {
+          this.address = value;
+        },
+      },
     });
   }
 }
