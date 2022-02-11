@@ -23,9 +23,9 @@
           <a href="http://github.com/chiabee">source code</a> would available later. This app is in
           <span @click="alphaClick()">ALPHA</span> stage, don't use in PRODUCTION.
           <span v-if="debugMode" @click="disableDebug()">[DEBUG]</span>
-          <span v-if="debugMode" @click="showDebugHelper()">[Helper]</span>
           <br />
           <a target="_blank" href="https://github.com/Chiabee/wallet-doc/">Quick Guide</a>
+          <b-button size="is-small" @click="showDebugHelper()">Developer Helper</b-button>
         </p>
       </div>
     </footer>
