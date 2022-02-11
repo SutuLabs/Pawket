@@ -34,16 +34,16 @@
 <script lang="ts">
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import store from "@/store";
-import { Account } from "@/store/modules/account";
+import { AccountEntity } from "@/store/modules/account";
 import AccountExport from "@/components/AccountExport.vue";
 import MnemonicExport from "@/components/MnemonicExport.vue";
 import { translate } from "@/i18n/i18n";
 
 @Component
 export default class AccountList extends Vue {
-  @Prop() private account!: Account;
+  @Prop() private account!: AccountEntity;
 
-  get accounts(): Account[] {
+  get accounts(): AccountEntity[] {
     return store.state.account.accounts;
   }
 
@@ -150,7 +150,7 @@ export default class AccountList extends Vue {
     });
   }
 
-  showExport(account: Account): void {
+  showExport(account: AccountEntity): void {
     this.$buefy.modal.open({
       parent: this,
       component: AccountExport,

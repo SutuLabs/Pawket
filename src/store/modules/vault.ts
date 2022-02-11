@@ -1,6 +1,6 @@
 import store from '@/store'
 import utility from '../../services/crypto/utility';
-import { Account } from './account';
+import { AccountEntity } from './account';
 import Vue from 'vue';
 import encryption from '@/services/crypto/encryption';
 import puzzle from '@/services/crypto/puzzle';
@@ -99,7 +99,7 @@ store.registerModule<IVaultState>('vault', {
           ),
           passwordHash: state.passwordHash,
           encryptedAccounts: await encryption.encrypt(
-            JSON.stringify(rootState.account.accounts.map(_ => (<Account>{
+            JSON.stringify(rootState.account.accounts.map(_ => (<AccountEntity>{
               key: _.key,
               name: _.name,
               type: _.type,

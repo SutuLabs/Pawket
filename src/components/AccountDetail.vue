@@ -75,7 +75,7 @@ import ExplorerLink from "@/components/ExplorerLink.vue";
 import KeyBox from "@/components/KeyBox.vue";
 import Send from "./Send.vue";
 import { demojo } from "@/filters/unitConversion";
-import { TokenInfo, Account, AccountToken } from "@/store/modules/account";
+import { TokenInfo, AccountEntity, AccountToken } from "@/store/modules/account";
 import { translate } from "@/i18n/i18n";
 
 type Mode = "Verify" | "Create";
@@ -95,7 +95,7 @@ export default class AccountDetail extends Vue {
     return store.state.account.refreshing;
   }
 
-  get account(): Account {
+  get account(): AccountEntity {
     return store.state.account.accounts[store.state.account.selectedAccount] ?? {};
   }
 

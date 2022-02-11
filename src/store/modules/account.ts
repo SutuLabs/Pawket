@@ -20,7 +20,7 @@ export interface AccountTokens {
   [symbol: string]: AccountToken;
 }
 
-export interface Account {
+export interface AccountEntity {
   key: AccountKey;
   name: string;
   type: AccountType;
@@ -58,7 +58,7 @@ export interface PersistentAccount {
 
 export interface IAccountState {
   selectedAccount: number;
-  accounts: Account[];
+  accounts: AccountEntity[];
   tokenInfo: TokenInfo;
   refreshing: boolean;
 }

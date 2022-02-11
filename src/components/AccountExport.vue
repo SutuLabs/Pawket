@@ -60,7 +60,7 @@
 <script lang="ts">
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import store from "@/store";
-import { Account } from "@/store/modules/account";
+import { AccountEntity } from "@/store/modules/account";
 import KeyBox from "@/components/KeyBox.vue";
 import QrcodeVue from "qrcode.vue";
 import utility from "@/services/crypto/utility";
@@ -72,7 +72,7 @@ import utility from "@/services/crypto/utility";
   },
 })
 export default class AccountExport extends Vue {
-  @Prop() private account!: Account;
+  @Prop() private account!: AccountEntity;
   public masterpubkey = "";
   public masterprikey = "";
   public farmerpubkey = "";

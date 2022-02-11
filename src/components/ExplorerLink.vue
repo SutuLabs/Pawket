@@ -44,7 +44,7 @@
 <script lang="ts">
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import store from "@/store/index";
-import { Account, AccountToken } from "@/store/modules/account";
+import { AccountEntity, AccountToken } from "@/store/modules/account";
 import KeyBox from "@/components/KeyBox.vue";
 import QrcodeVue from "qrcode.vue";
 
@@ -55,7 +55,7 @@ import QrcodeVue from "qrcode.vue";
   },
 })
 export default class ExplorerLink extends Vue {
-  @Prop() private account!: Account;
+  @Prop() private account!: AccountEntity;
   @Prop() private token!: AccountToken;
   public address = "";
 

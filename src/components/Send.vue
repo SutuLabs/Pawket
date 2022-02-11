@@ -54,7 +54,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
-import { Account, TokenInfo } from "@/store/modules/account";
+import { AccountEntity, TokenInfo } from "@/store/modules/account";
 import KeyBox from "@/components/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { ApiResponse } from "@/models/api";
@@ -73,7 +73,7 @@ import stdBundle from "@/services/transfer/stdBundle";
   },
 })
 export default class Send extends Vue {
-  @Prop() private account!: Account;
+  @Prop() private account!: AccountEntity;
   public submitting = false;
   // public amount = 0;
   // public address = "";
