@@ -73,7 +73,6 @@ import AccountList from "@/components/AccountList.vue";
 import AccountConfigure from "@/components/AccountConfigure.vue";
 import ExplorerLink from "@/components/ExplorerLink.vue";
 import KeyBox from "@/components/KeyBox.vue";
-import Receive from "./Receive.vue";
 import Send from "./Send.vue";
 import { demojo } from "@/filters/unitConversion";
 import { TokenInfo, Account, AccountToken } from "@/store/modules/account";
@@ -165,16 +164,6 @@ export default class AccountDetail extends Vue {
       hasModalCard: true,
       trapFocus: true,
       props: {},
-    });
-  }
-
-  showQr(): void {
-    this.$buefy.modal.open({
-      parent: this,
-      component: Receive,
-      hasModalCard: true,
-      trapFocus: true,
-      props: { account: this.account },
     });
   }
 
