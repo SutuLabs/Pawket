@@ -50,7 +50,7 @@
         <template #label>
           {{ $t("message.bundle") }}
           <key-box display="✂️" :value="JSON.stringify(bundle)" tooltip="Copy"></key-box>
-          <a href="javascript:void(0)" @click="debugBundle()">🐞</a>
+          <a href="javascript:void(0)" v-if="debugMode" @click="debugBundle()">🐞</a>
         </template>
         <b-input type="textarea" disabled :value="bundleJson"></b-input>
       </b-field>
@@ -127,7 +127,7 @@ export default class Send extends Vue {
     catch { return ""; }
     if (this.amount == 0) return "";
 
-    if (bigDecimal.compareTo(this.amount, this.maxAmount) < 0) return this.INVALID_AMOUNT_MESSAGE;
+    if (bigDecimal.compareTo(this.amount, this.maxAmount) > 0) return this.INVALID_AMOUNT_MESSAGE;
 
     const mojo = bigDecimal.multiply(this.amount, Math.pow(10, this.decimal));
     if (Number(mojo) < 1) return this.INVALID_AMOUNT_MESSAGE;
@@ -142,6 +142,10 @@ export default class Send extends Vue {
 
   get bundleJson(): string {
     return JSON.stringify(this.bundle, null, 4);
+  }
+
+  get debugMode(): boolean {
+    return store.state.app.debug;
   }
 
   reset(): void {
