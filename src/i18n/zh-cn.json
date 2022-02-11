@@ -1,4 +1,16 @@
 {
+  "html": {
+    "document": {
+      "title": "Chiabee 钱包"
+    }
+  },
+  "app": {
+    "ui": {
+      "button": {
+        "lang": "简体中文"
+      }
+    }
+  },
   "verifyPassword": {
     "ui": {
       "button": {
@@ -9,6 +21,13 @@
       "label": {
         "password": "密码",
         "reEnter": "重新输入"
+      },
+      "title": {
+        "verifyPassword": "验证密码",
+        "createPassword": "创建密码"
+      },
+      "alt": {
+        "logoAlt": "Chiabee钱包图标"
       }
     },
     "message": {
@@ -16,6 +35,15 @@
         "clear": "所有数据都会被清空，确认执行？",
         "confirmText": "确认",
         "cancelText": "取消"
+      },
+      "error": {
+        "passwordNotMatch": "密码不匹配",
+        "incorrectPassword": "密码不正确"
+      },
+      "tip": {
+        "weakPassword": "弱",
+        "mediumPassword": "中",
+        "strongPassword": "强"
       }
     }
   },
@@ -33,14 +61,13 @@
       }
     }
   },
-  "accountDetail": {
+  "accountDetai": {
     "ui": {
       "button": {
         "refresh": "刷新",
         "receive": "接收",
         "send": "发送",
         "export": "导出",
-        "lang": "简体中文",
         "confirm": "确认",
         "cancel": "取消"
       },

@@ -1,17 +1,23 @@
 <template>
-  <div class="box">
-    <section v-if="mode == 'Menu'">
-      <b-button @click="gotoImport()">{{ $t("createSeed.ui.button.import") }}</b-button>
-      <b-button @click="gotoCreate()">{{ $t("createSeed.ui.button.create") }}</b-button>
-    </section>
-    <section v-if="mode == 'Import' || mode == 'Create'">
-      <b-button @click="back()">{{ $t("createSeed.ui.button.back") }}</b-button>
-      <b-field :label="$t('createSeed.ui.label.mnemonic')" label-position="on-border">
-        <b-input type="textarea" v-model="seedMnemonic"></b-input>
-      </b-field>
-      <b-button v-if="mode == 'Create'" @click="refresh()">{{ $t("createSeed.ui.button.refresh") }}</b-button>
-      <b-button @click="confirm()">{{ $t("createSeed.ui.button.confirm") }}</b-button>
-    </section>
+  <div class="create-seed-wrapper">
+    <div class="columns is-centered">
+      <div class="box p-6">
+        <div class="buttons">
+          <section v-if="mode == 'Menu'">
+            <b-button @click="gotoImport()" icon-left="import">{{ $t("createSeed.ui.button.import") }}</b-button>
+            <b-button @click="gotoCreate()" icon-left="file-plus">{{ $t("createSeed.ui.button.create") }}</b-button>
+          </section>
+          <section v-if="mode == 'Import' || mode == 'Create'">
+            <b-button @click="back()">{{ $t("createSeed.ui.button.back") }}</b-button>
+            <b-field :label="$t('createSeed.ui.label.mnemonic')" label-position="on-border">
+              <b-input type="textarea" v-model="seedMnemonic"></b-input>
+            </b-field>
+            <b-button v-if="mode == 'Create'" @click="refresh()">{{ $t("createSeed.ui.button.refresh") }}</b-button>
+            <b-button @click="confirm()">{{ $t("createSeed.ui.button.confirm") }}</b-button>
+          </section>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -51,4 +57,9 @@ export default class CreateSeed extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.create-seed-wrapper {
+  display: table-cell;
+  vertical-align: middle;
+}
+</style>
