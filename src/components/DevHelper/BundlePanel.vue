@@ -152,6 +152,7 @@ export default class BundlePanel extends Vue {
   }
 
   save(): void {
+    if (this.inputBundleText == this.bundleText) return;
     localStorage.setItem("BUNDLE_DEBUG", this.bundleText);
   }
 

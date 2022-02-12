@@ -1,3 +1,5 @@
+import { CoinSpend } from "./wallet";
+
 export interface ApiResponse {
   error?: string;
   success?: boolean;
@@ -12,4 +14,8 @@ export interface GetParentPuzzleResponse {
   parentCoinId: string;
   parentParentCoinId: string;
   puzzleReveal: string;
+}
+
+export interface GetCoinSolutionResponse {
+  coinSpend: CoinSpend;
 }
