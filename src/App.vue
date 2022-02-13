@@ -24,9 +24,9 @@
           <span @click="alphaClick()">ALPHA</span> stage, don't use in PRODUCTION.
           <span v-if="debugMode" @click="disableDebug()">[DEBUG]</span>
           <br />
-          <a target="_blank" href="https://github.com/Chiabee/wallet-doc/">
-            <b-icon icon="file-document" size="is-small"></b-icon>
-            Quick Guide
+          <a href="#/about" target="_blank" size="is-small">
+            <b-icon icon="rocket-launch" size="is-small"></b-icon>
+            Roadmap
             <b-icon icon="open-in-new" size="is-small"></b-icon>
           </a>
           |
