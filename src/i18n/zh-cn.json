@@ -1,7 +1,7 @@
 {
   "html": {
     "document": {
-      "title": "Chiabee 钱包"
+      "title": "Pawket"
     }
   },
   "app": {
@@ -27,7 +27,7 @@
         "createPassword": "创建密码"
       },
       "alt": {
-        "logoAlt": "Chiabee钱包图标"
+        "logoAlt": "Pawket图标"
       }
     },
     "message": {

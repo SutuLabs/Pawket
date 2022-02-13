@@ -1,7 +1,7 @@
 {
   "html": {
     "document": {
-      "title": "Chiabee Wallet"
+      "title": "Pawket"
     }
   },
   "app": {
@@ -27,7 +27,7 @@
         "createPassword": "Create Password"
       },
       "alt": {
-        "logoAlt": "Chiabee Wallet logo"
+        "logoAlt": "Pawket logo"
       }
     },
     "message": {

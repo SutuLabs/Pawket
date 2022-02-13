@@ -11,7 +11,7 @@ import "@mdi/font/css/materialdesignicons.css";
 Vue.config.productionTip = false;
 Vue.use(Buefy);
 
-document.title = "Chiabee Wallet";
+document.title = "Pawket";
 
 new Vue({
   router,

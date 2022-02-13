@@ -108,7 +108,7 @@ class CatBundle {
     return agg_sig;
   }
 
-  private async getLineageProofPuzzle(parentCoinId: string): Promise<GetParentPuzzleResponse> {
+  public async getLineageProofPuzzle(parentCoinId: string): Promise<GetParentPuzzleResponse> {
     const resp = await fetch(process.env.VUE_APP_API_URL + "Wallet/get-puzzle", {
       method: "POST",
       headers: {
