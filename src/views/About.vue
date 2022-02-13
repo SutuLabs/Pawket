@@ -16,6 +16,7 @@
             <li class="done">Shadow wallet(password protected mnemonic)</li>
             <li class="done">Address variation(derivative addresses) for XCH/CATs</li>
             <li class="done">Import and manage custom CAT</li>
+            <li class="done">Comprehensive developer tool for coins</li>
           </ul>
           <ul class="py-3">
             <li class="plan">Package as extension and provide API for dApps</li>
