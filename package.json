@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "build": "yarn check-i18n && vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "check-i18n": "vue-i18n-extract report --vueFiles './src/*.?(js|vue)' --languageFiles './src/i18n/*.?(json|yml|yaml|js)'"
   },
   "dependencies": {
     "@mdi/font": "^6.5.95",
@@ -23,6 +24,7 @@
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
     "vue-i18n": "^8.27.0",
+    "vue-i18n-extract": "^2.0.4",
     "vue-property-decorator": "^9.1.2",
     "vue-qrcode-reader": "^3.1.0",
     "vue-router": "^3.2.0",

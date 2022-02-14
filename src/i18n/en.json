@@ -194,7 +194,8 @@
       "label": {
         "address": "Address",
         "amount": "Amount",
-        "memo": "Memo"
+        "memo": "Memo",
+        "bundle": "Bundle"
       },
       "button": {
         "cancel": "Cancel",
