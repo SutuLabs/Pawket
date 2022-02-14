@@ -48,7 +48,7 @@
       </b-field>
       <b-field v-if="bundle">
         <template #label>
-          {{ $t("message.bundle") }}
+          {{ $t("send.ui.label.bundle") }}
           <key-box display="✂️" :value="JSON.stringify(bundle)" tooltip="Copy"></key-box>
           <a href="javascript:void(0)" v-if="debugMode" @click="debugBundle()">🐞</a>
         </template>

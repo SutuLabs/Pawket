@@ -61,7 +61,7 @@
       }
     }
   },
-  "accountDetai": {
+  "accountDetail": {
     "ui": {
       "button": {
         "refresh": "刷新",
@@ -194,7 +194,8 @@
       "label": {
         "address": "地址",
         "amount": "数量",
-        "memo": "便签"
+        "memo": "便签",
+        "bundle": "数据包"
       },
       "button": {
         "cancel": "取消",
