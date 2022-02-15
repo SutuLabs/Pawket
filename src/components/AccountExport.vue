@@ -46,7 +46,7 @@
             <br />
             {{ account.key.compatibleMnemonic }}
             <key-box display="✂️" tooltip="Copy" :value="account.key.compatibleMnemonic"></key-box>
-            <qrcode-vue :value="account.key.compatibleMnemonic" size="300"></qrcode-vue>
+            <qrcode-vue v-if="debugMode" :value="account.key.compatibleMnemonic" size="300"></qrcode-vue>
           </span>
           <span v-else>
             <b-button size="is-small" @click="showMnemonic = true">{{ $t("accountExport.ui.button.revealMnemonic") }}</b-button>
@@ -93,6 +93,10 @@ export default class AccountExport extends Vue {
       this.walletprikey = utility.toHexString(derive([12381, 8444, 2, 0]).serialize());
       this.walletpubkey = utility.toHexString(derive([12381, 8444, 2, 0]).get_g1().serialize());
     });
+  }
+
+  get debugMode(): boolean {
+    return store.state.app.debug;
   }
 
   @Emit("close")
