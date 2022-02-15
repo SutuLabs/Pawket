@@ -62,7 +62,6 @@ store.registerModule<IVaultState>('vault', {
     async unlock({ state, dispatch, rootState }, password) {
       const pswhash = await utility.hash(password);
       if (pswhash != state.passwordHash) return;
-      state.password = password;
       rootState.account.accounts = JSON.parse(
         (await encryption.decrypt(state.encryptedAccounts, password)) || "[]"
       );
@@ -74,6 +73,7 @@ store.registerModule<IVaultState>('vault', {
         state.encryptedSeed,
         password
       );
+      state.password = password;
       state.unlocked = true;
       await dispatch("initWalletAddress");
       await dispatch("persistent");
