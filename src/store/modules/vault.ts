@@ -17,7 +17,6 @@ export interface IVaultState {
 store.registerModule<IVaultState>('vault', {
   state() {
     const sts = JSON.parse(localStorage.getItem("SETTINGS") || "{}");
-
     return {
       seedMnemonic: "",
       passwordHash: sts.passwordHash,
@@ -89,26 +88,29 @@ store.registerModule<IVaultState>('vault', {
       if (!state.unlocked) return;
       if (!state.password || !state.seedMnemonic)
         console.warn("abnormal situration, password or seed mnemonic is empty!!!");
-
+      const encryptedSeed = await encryption.encrypt(
+        state.seedMnemonic,
+        state.password
+      )
+      const encryptedAccounts = await encryption.encrypt(
+        JSON.stringify(rootState.account.accounts.map(_ => (<AccountEntity>{
+          key: _.key,
+          name: _.name,
+          type: _.type,
+          serial: _.serial,
+          addressRetrievalCount: _.addressRetrievalCount,
+          cats: _.cats,
+        }))), state.password
+        )
+      state.encryptedAccounts = encryptedAccounts;
+      state.encryptedSeed = encryptedSeed;
+      
       localStorage.setItem(
         "SETTINGS",
         JSON.stringify({
-          encryptedSeed: await encryption.encrypt(
-            state.seedMnemonic,
-            state.password
-          ),
+          encryptedSeed: encryptedSeed,
           passwordHash: state.passwordHash,
-          encryptedAccounts: await encryption.encrypt(
-            JSON.stringify(rootState.account.accounts.map(_ => (<AccountEntity>{
-              key: _.key,
-              name: _.name,
-              type: _.type,
-              serial: _.serial,
-              addressRetrievalCount: _.addressRetrievalCount,
-              cats: _.cats,
-            }))),
-            state.password
-          ),
+          encryptedAccounts: encryptedAccounts,
           network: rootState.network.network,
         })
       );
