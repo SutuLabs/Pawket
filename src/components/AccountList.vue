@@ -87,7 +87,8 @@ export default class AccountList extends Vue {
   async addByPassword(): Promise<void> {
     const name = await this.getAccountName();
     const password = await this.getPassword();
-    store.dispatch("createAccountByPassword", { name, password });
+    store.dispatch("createAccountByPassword", { name, password })
+    .catch(error => this.$buefy.dialog.alert(error.message));
   }
 
   addBySerial(): void {
@@ -99,7 +100,8 @@ export default class AccountList extends Vue {
   async addByLegacy(): Promise<void> {
     const name = await this.getAccountName();
     const legacyMnemonic = await this.getLegacyMnemonic();
-    store.dispatch("createAccountByLegacyMnemonic", { name, legacyMnemonic });
+    store.dispatch("createAccountByLegacyMnemonic", { name, legacyMnemonic })
+    .catch(error => this.$buefy.dialog.alert(error.message));
   }
 
   getAccountName(): Promise<string> {

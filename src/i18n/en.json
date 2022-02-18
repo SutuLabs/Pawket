@@ -163,6 +163,10 @@
         "setLegacyMnemonic": "Enter the 24 words mnemonic used by Chia Client:",
         "cancelText": "Cancel",
         "confirmText": "Ok"
+      },
+      "error": {
+        "accountPasswordExists": "Account with same password already exists",
+        "accountMnemonicExists": "Account with same mnemonic already exists"
       }
     }
   },
@@ -207,7 +211,7 @@
   "receive": {
     "ui": {
       "title": {
-        "receive": "接收"
+        "receive": "Receive"
       }
     }
   }

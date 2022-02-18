@@ -4,7 +4,7 @@ import { CoinRecord } from "@/models/wallet";
 import Vue from 'vue';
 import receive from '@/services/crypto/receive';
 import { prefix0x } from '@/services/coin/condition';
-
+import { translate } from "@/i18n/i18n";
 type AccountType = "Serial" | "Password" | "Legacy";
 
 export interface AccountTokenAddress {
@@ -98,13 +98,17 @@ store.registerModule<IAccountState>('account', {
   },
   actions: {
 
-    createAccountByPassword(
+    async createAccountByPassword(
       { state, dispatch, rootState },
       { password, name }: { password: string; name: string }
     ) {
-      account.getAccount(rootState.vault.seedMnemonic, password).then((account) => {
+        const acc = await account.getAccount(rootState.vault.seedMnemonic, password)
+        const exists = state.accounts.find(a => a.key.fingerprint === acc.fingerprint) !== undefined;
+        if (exists) {
+          throw new Error(translate('accountList.message.error.accountPasswordExists'));
+        }
         state.accounts.push({
-          key: account,
+          key: acc,
           name: name,
           type: "Password",
           tokens: {},
@@ -113,7 +117,6 @@ store.registerModule<IAccountState>('account', {
         });
         dispatch("initWalletAddress");
         dispatch("persistent");
-      });
     },
     async createAccountBySerial({ state, dispatch, rootState }, name: string) {
       const serial = Math.max(...state.accounts.map((_) => (_.serial ? _.serial : 0)), 0) + 1;
@@ -132,6 +135,10 @@ store.registerModule<IAccountState>('account', {
     },
     async createAccountByLegacyMnemonic({ state, dispatch }, { name, legacyMnemonic }: { name: string, legacyMnemonic: string }) {
       const acc = await account.getAccount("", null, legacyMnemonic);
+      const exists = state.accounts.find(a => a.key.fingerprint === acc.fingerprint) !== undefined;
+      if (exists) {
+        throw new Error(translate('accountList.message.error.accountMnemonicExists'));
+      }
       state.accounts.push({
         key: acc,
         name: name,
