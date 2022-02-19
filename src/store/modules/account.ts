@@ -103,7 +103,7 @@ store.registerModule<IAccountState>('account', {
       { password, name }: { password: string; name: string }
     ) {
       const acc = await account.getAccount(rootState.vault.seedMnemonic, password)
-      if (!state.accounts.find(a => a.key.fingerprint === acc.fingerprint)) {
+      if (state.accounts.find(a => a.key.fingerprint === acc.fingerprint)) {
         throw new Error("account with same fingerprint already exists");
       }
       state.accounts.push({
@@ -134,7 +134,7 @@ store.registerModule<IAccountState>('account', {
     },
     async createAccountByLegacyMnemonic({ state, dispatch }, { name, legacyMnemonic }: { name: string, legacyMnemonic: string }) {
       const acc = await account.getAccount("", null, legacyMnemonic);
-      if (!state.accounts.find(a => a.key.fingerprint === acc.fingerprint)) {
+      if (state.accounts.find(a => a.key.fingerprint === acc.fingerprint)) {
         throw new Error("account with same fingerprint already exists");
       }
       state.accounts.push({
