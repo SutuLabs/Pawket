@@ -38,6 +38,7 @@ import { AccountEntity } from "@/store/modules/account";
 import AccountExport from "@/components/AccountExport.vue";
 import MnemonicExport from "@/components/MnemonicExport.vue";
 import { translate } from "@/i18n/i18n";
+import account from '@/services/crypto/account';
 
 @Component
 export default class AccountList extends Vue {
@@ -87,8 +88,13 @@ export default class AccountList extends Vue {
   async addByPassword(): Promise<void> {
     const name = await this.getAccountName();
     const password = await this.getPassword();
-    store.dispatch("createAccountByPassword", { name, password })
-    .catch(error => this.$buefy.dialog.alert(error.message));
+    const acc = await account.getAccount(store.state.vault.seedMnemonic, password)
+    if (store.state.account.accounts.find(a => a.key.fingerprint === acc.fingerprint)) {
+      this.$buefy.dialog.alert(translate("accountList.message.error.accountPasswordExists"));
+      return;
+    }
+
+    await store.dispatch("createAccountByPassword", { name, password });
   }
 
   addBySerial(): void {
@@ -100,8 +106,13 @@ export default class AccountList extends Vue {
   async addByLegacy(): Promise<void> {
     const name = await this.getAccountName();
     const legacyMnemonic = await this.getLegacyMnemonic();
-    store.dispatch("createAccountByLegacyMnemonic", { name, legacyMnemonic })
-    .catch(error => this.$buefy.dialog.alert(error.message));
+    const acc = await account.getAccount("", null, legacyMnemonic);
+    if (store.state.account.accounts.find(a => a.key.fingerprint === acc.fingerprint)) {
+      this.$buefy.dialog.alert(translate("accountList.message.error.accountMnemonicExists"));
+      return;
+    }
+
+    await store.dispatch("createAccountByLegacyMnemonic", { name, legacyMnemonic })
   }
 
   getAccountName(): Promise<string> {
