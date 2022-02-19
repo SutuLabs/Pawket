@@ -46,6 +46,22 @@
       <b-field :label="$t('send.ui.label.memo')">
         <b-input maxlength="100" v-model="memo" type="text" @input="reset()" :disabled="selectedToken == 'XCH'"></b-input>
       </b-field>
+      <b-field :label="$t('send.ui.label.fee')">
+        <b-input max="1000000000" v-model="fee" type="number" @input="reset()" expanded :disabled="feeType > 0"></b-input>
+        <p class="control">
+          <span class="button is-static"><span class="is-size-7">mojos</span></span>
+        </p>
+        <p class="control">
+          <span class="button" style="min-width: 200px">
+            <b-slider :min="0" :max="3" v-model="feeType" :tooltip="false" @input="changeFee()">
+              <b-slider-tick :value="0">Custom</b-slider-tick>
+              <b-slider-tick :value="1">Low</b-slider-tick>
+              <b-slider-tick :value="2">Medium</b-slider-tick>
+              <b-slider-tick :value="3">High</b-slider-tick>
+            </b-slider>
+          </span>
+        </p>
+      </b-field>
       <b-field v-if="bundle">
         <template #label>
           {{ $t("send.ui.label.bundle") }}
@@ -102,6 +118,8 @@ export default class Send extends Vue {
   @Prop() private account!: AccountEntity;
   public submitting = false;
   public amount = 0;
+  public fee = 0;
+  public feeType = 0;
   public address = "";
   public selectedToken = "XCH";
   public memo = "";
@@ -292,6 +310,17 @@ export default class Send extends Vue {
         },
       },
     });
+  }
+
+  changeFee(): void {
+    const fees: { [type: number]: number } = {
+      1: 5,
+      2: 100,
+      3: 1000,
+    };
+    if (this.feeType > 0) {
+      this.fee = fees[this.feeType];
+    }
   }
 }
 </script>
