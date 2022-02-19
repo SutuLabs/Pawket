@@ -98,22 +98,24 @@ store.registerModule<IAccountState>('account', {
   },
   actions: {
 
-    createAccountByPassword(
+    async createAccountByPassword(
       { state, dispatch, rootState },
       { password, name }: { password: string; name: string }
     ) {
-      account.getAccount(rootState.vault.seedMnemonic, password).then((account) => {
-        state.accounts.push({
-          key: account,
-          name: name,
-          type: "Password",
-          tokens: {},
-          addressRetrievalCount: DEFAULT_ADDRESS_RETRIEVAL_COUNT,
-          cats: [],
-        });
-        dispatch("initWalletAddress");
-        dispatch("persistent");
+      const acc = await account.getAccount(rootState.vault.seedMnemonic, password)
+      if (state.accounts.find(a => a.key.fingerprint === acc.fingerprint)) {
+        throw new Error("account with same fingerprint already exists");
+      }
+      state.accounts.push({
+        key: acc,
+        name: name,
+        type: "Password",
+        tokens: {},
+        addressRetrievalCount: DEFAULT_ADDRESS_RETRIEVAL_COUNT,
+        cats: [],
       });
+      await dispatch("initWalletAddress");
+      await dispatch("persistent");
     },
     async createAccountBySerial({ state, dispatch, rootState }, name: string) {
       const serial = Math.max(...state.accounts.map((_) => (_.serial ? _.serial : 0)), 0) + 1;
@@ -132,6 +134,9 @@ store.registerModule<IAccountState>('account', {
     },
     async createAccountByLegacyMnemonic({ state, dispatch }, { name, legacyMnemonic }: { name: string, legacyMnemonic: string }) {
       const acc = await account.getAccount("", null, legacyMnemonic);
+      if (state.accounts.find(a => a.key.fingerprint === acc.fingerprint)) {
+        throw new Error("account with same fingerprint already exists");
+      }
       state.accounts.push({
         key: acc,
         name: name,
@@ -140,8 +145,8 @@ store.registerModule<IAccountState>('account', {
         addressRetrievalCount: DEFAULT_ADDRESS_RETRIEVAL_COUNT,
         cats: [],
       });
-      dispatch("initWalletAddress");
-      dispatch("persistent");
+      await dispatch("initWalletAddress");
+      await dispatch("persistent");
     },
     renameAccount(
       { state, dispatch },

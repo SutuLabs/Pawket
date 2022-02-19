@@ -163,6 +163,10 @@
         "setLegacyMnemonic": "输入Chia客户端24个助记词",
         "cancelText": "取消",
         "confirmText": "确认"
+      },
+      "error": {
+        "accountPasswordExists": "已有账户使用相同密码！",
+        "accountMnemonicExists": "已有账户使用相同助记词!"
       }
     }
   },
