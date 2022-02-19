@@ -20,18 +20,18 @@ class Transfer {
     getPuzzlesSolutionResult: (coin: OriginCoin, puzzle_reveal: string) => Promise<PuzzleSolutionResult>,
     signSolution: (BLS: ModuleInstance, solution_executed_result: string, synthetic_sk: PrivateKey, coinname: Bytes) => Promise<G2Element>,
     amount: bigint,
-    fee: bigint): Promise<SpendBundle | null> {
-    if (!store.state.app.bls) return null;
+    fee: bigint): Promise<SpendBundle> {
+    if (!store.state.app.bls) throw new Error("bls not initialized");
     const BLS = store.state.app.bls;
-    if (coins.length < 1) return null;
+    if (coins.length < 1) throw new Error("no coin");
     const coin = this.findPossibleSmallest(coins, amount + fee);
-    if (!coin) return null;
-    if (amount + fee > coin.amount) return null;
+    if (!coin) throw new Error("cannot find proper coin");
+    if (amount + fee > coin.amount) throw new Error("amount + fee exceeds max available");
     // console.log("prepare to use coin", coin)
 
     const puzzleDict: { [key: string]: PuzzleDetail } = Object.assign({}, ...puzzles.map((x) => ({ [prefix0x(x.hash)]: x })));
     const puz = puzzleDict[coin.puzzle_hash];
-    if (!puz) return null;
+    if (!puz) throw new Error("cannot find puzzle");
     const puzzle_reveal = prefix0x(await puzzle.encodePuzzle(puz.puzzle));
     const sk = puz.privateKey;
 
