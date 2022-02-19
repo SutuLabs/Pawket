@@ -47,12 +47,22 @@
         <b-input maxlength="100" v-model="memo" type="text" @input="reset()" :disabled="selectedToken == 'XCH'"></b-input>
       </b-field>
       <b-field :label="$t('send.ui.label.fee')">
-        <b-input max="1000000000" v-model="fee" type="number" @input="reset()" expanded :disabled="feeType > 0"></b-input>
+        <b-numberinput
+          controls-alignment="left"
+          controls-position="compact"
+          max="1000000000"
+          min="0"
+          v-model="fee"
+          @input="reset()"
+          expanded
+          :disabled="feeType > 0"
+        ></b-numberinput>
+
         <p class="control">
           <span class="button is-static"><span class="is-size-7">mojos</span></span>
         </p>
         <p class="control">
-          <span class="button" style="min-width: 200px">
+          <span class="button" style="min-width: 150px">
             <b-slider :min="0" :max="3" v-model="feeType" :tooltip="false" @input="changeFee()">
               <b-slider-tick :value="0">Custom</b-slider-tick>
               <b-slider-tick :value="1">Low</b-slider-tick>
@@ -71,22 +81,27 @@
         <b-input type="textarea" disabled :value="bundleJson"></b-input>
       </b-field>
     </section>
-    <footer class="modal-card-foot">
-      <b-button :label="$t('send.ui.button.cancel')" @click="close()"></b-button>
-      <b-button
-        :label="$t('send.ui.button.submit')"
-        v-if="bundle"
-        type="is-primary"
-        @click="submit()"
-        :disabled="submitting"
-      ></b-button>
-      <b-button
-        :label="$t('send.ui.button.sign')"
-        v-if="!bundle"
-        type="is-success"
-        @click="sign()"
-        :disabled="submitting"
-      ></b-button>
+    <footer class="modal-card-foot is-justify-content-space-between">
+      <div>
+        <b-button :label="$t('send.ui.button.cancel')" @click="close()"></b-button>
+        <b-button
+          :label="$t('send.ui.button.sign')"
+          v-if="!bundle"
+          type="is-success"
+          @click="sign()"
+          :disabled="submitting"
+        ></b-button>
+      </div>
+      <div>
+        <b-button
+          :label="$t('send.ui.button.submit')"
+          v-if="bundle"
+          type="is-primary"
+          class="is-pulled-right"
+          @click="submit()"
+          :disabled="submitting"
+        ></b-button>
+      </div>
     </footer>
     <b-loading :is-full-page="false" v-model="submitting"></b-loading>
   </div>
@@ -98,7 +113,7 @@ import { AccountEntity, TokenInfo } from "@/store/modules/account";
 import KeyBox from "@/components/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { ApiResponse } from "@/models/api";
-import receive from "../services/crypto/receive";
+import receive, { TokenPuzzleDetail } from "../services/crypto/receive";
 import store from "@/store";
 import { CoinItem, SpendBundle, CoinRecord } from "@/models/wallet";
 import utility from "@/services/crypto/utility";
@@ -108,6 +123,7 @@ import catBundle from "@/services/transfer/catBundle";
 import stdBundle from "@/services/transfer/stdBundle";
 import bigDecimal from "js-big-decimal";
 import ScanQrCode from "@/components/ScanQrCode.vue";
+import { prefix0x } from '../services/coin/condition';
 
 @Component({
   components: {
@@ -125,10 +141,13 @@ export default class Send extends Vue {
   public memo = "";
   public bundle: SpendBundle | null = null;
   public coins: CoinRecord[] = [];
+  public availcoins: { [symbol: string]: CoinRecord[] } | null = null;
   public maxAmount = "-1";
   public totalAmount = "-1";
   public INVALID_AMOUNT_MESSAGE = "Invalid amount";
   public maxStatus: "Loading" | "Loaded" = "Loading";
+
+  public requests: TokenPuzzleDetail[] = [];
 
   mounted(): void {
     this.loadCoins();
@@ -188,6 +207,7 @@ export default class Send extends Vue {
   }
 
   setMax(amount: number): void {
+    this.reset();
     this.amount = amount;
   }
 
@@ -197,11 +217,23 @@ export default class Send extends Vue {
 
     const maxId = this.account.addressRetrievalCount;
     const sk_hex = this.account.key.privateKey;
-    const requests = await receive.getAssetsRequestDetail(sk_hex, maxId, this.account.cats ?? []);
-    const tgtreqs = requests.filter(_ => _.symbol == this.selectedToken);
+    if (!this.requests || this.requests.length == 0) {
+      this.requests = await receive.getAssetsRequestDetail(sk_hex, maxId, this.account.cats ?? []);
+    }
 
-    this.coins = await receive.getCoinRecords(tgtreqs, false);
-    const availcoins = this.coins.map(_ => _.coin?.amount ?? 0);
+    if (!this.availcoins) {
+      this.coins = await receive.getCoinRecords(this.requests, false);
+
+      this.availcoins =
+        this.tokenNames.map(symbol => {
+          const tgtpuzs = this.requests.filter(_ => _.symbol == this.selectedToken)[0].puzzles.map(_ => prefix0x(_.hash));
+          return { symbol, coins: this.coins.filter(_ => tgtpuzs.findIndex(p => p == _.coin?.puzzleHash) > -1) };
+        }).reduce((a, c) => ({ ...a, [c.symbol]: c.coins }), {});
+    }
+
+
+    const availcoins = this.availcoins[this.selectedToken].map(_ => _.coin?.amount ?? 0);
+
     this.maxAmount = bigDecimal.divide(Math.max(...availcoins, 0), Math.pow(10, this.decimal), this.decimal);
     this.totalAmount = bigDecimal.divide(availcoins.reduce((a, b) => a + b, 0), Math.pow(10, this.decimal), this.decimal);
     this.maxStatus = "Loaded";
@@ -215,7 +247,7 @@ export default class Send extends Vue {
         return;
       }
 
-      const sk_hex = this.account.key.privateKey;
+      // const sk_hex = this.account.key.privateKey;
       const decimal = this.selectedToken == "XCH" ? 12 : 3;
       const amount = BigInt(this.amount * Math.pow(10, decimal));
 
@@ -227,16 +259,14 @@ export default class Send extends Vue {
         }));
 
 
+      const puzzles = this.requests.filter(_ => _.symbol == this.selectedToken)[0].puzzles;
       if (this.selectedToken == "XCH") {
-        const puzzles = await puzzle.getPuzzleDetails(utility.fromHexString(sk_hex), 0, 5);
         this.bundle = await stdBundle.generateSpendBundle(
-          filteredCoins, puzzles, this.address, amount, 0n, this.account.firstAddress);
+          filteredCoins, puzzles, this.address, amount, BigInt(this.fee), this.account.firstAddress);
       }
       else {
-        const assetId = this.tokenInfo[this.selectedToken].id ?? "";
-        const puzzles = await puzzle.getCatPuzzleDetails(utility.fromHexString(sk_hex), assetId, 0, 30);
         this.bundle = await catBundle.generateCatSpendBundle(
-          filteredCoins, puzzles, this.address, amount, 0n, this.account.firstAddress, this.memo);
+          filteredCoins, puzzles, this.address, amount, BigInt(this.fee), this.account.firstAddress, this.memo);
 
       }
 
@@ -313,6 +343,7 @@ export default class Send extends Vue {
   }
 
   changeFee(): void {
+    this.reset();
     const fees: { [type: number]: number } = {
       1: 5,
       2: 100,
@@ -325,4 +356,8 @@ export default class Send extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.field ::v-deep textarea {
+  font-size: 0.6em;
+}
+</style>
