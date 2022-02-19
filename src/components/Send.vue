@@ -16,14 +16,10 @@
       <b-field :message="amountMessage">
         <template #label>
           {{ $t("send.ui.label.amount") }}
-          <span class="is-pulled-right is-size-6">
-            <b-button type="is-info is-light" size="is-small" @click="setMax(maxAmount)">
-              <span v-if="maxStatus == 'Loading'">Loading {{ selectedToken }}</span>
-              <span v-if="maxStatus == 'Loaded'">Max: {{ maxAmount }} / {{ totalAmount }} {{ selectedToken }}</span>
-            </b-button>
-            <b-tooltip :triggers="['click']" :auto-close="['outside', 'escape']" position="is-left" type="is-light">
+          <span class="is-size-6">
+            <b-tooltip :triggers="['click']" :auto-close="['outside', 'escape']" position="is-right" type="is-light" multilined>
               <template v-slot:content>
-                Currently only support one code mode,
+                Currently only support one coin mode,
                 <a href="https://pawket.app" target="_blank">
                   Learn more
                   <b-icon icon="open-in-new" size="is-small"></b-icon>
@@ -31,6 +27,10 @@
               </template>
               <b-icon icon="comment-question" size="is-small" type="is-info" class="px-4"></b-icon>
             </b-tooltip>
+            <b-button tag="a" type="is-info is-light" size="is-small" @click="setMax(maxAmount)">
+              <span v-if="maxStatus == 'Loading'">Loading {{ selectedToken }}</span>
+              <span v-if="maxStatus == 'Loaded'">Max: {{ maxAmount }} / {{ totalAmount }} {{ selectedToken }}</span>
+            </b-button>
           </span>
         </template>
         <b-select v-model="selectedToken" @input="loadCoins()">
