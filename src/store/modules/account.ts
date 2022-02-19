@@ -114,8 +114,8 @@ store.registerModule<IAccountState>('account', {
         addressRetrievalCount: DEFAULT_ADDRESS_RETRIEVAL_COUNT,
         cats: [],
       });
-      dispatch("initWalletAddress");
-      dispatch("persistent");
+      await dispatch("initWalletAddress");
+      await dispatch("persistent");
     },
     async createAccountBySerial({ state, dispatch, rootState }, name: string) {
       const serial = Math.max(...state.accounts.map((_) => (_.serial ? _.serial : 0)), 0) + 1;
@@ -145,8 +145,8 @@ store.registerModule<IAccountState>('account', {
         addressRetrievalCount: DEFAULT_ADDRESS_RETRIEVAL_COUNT,
         cats: [],
       });
-      dispatch("initWalletAddress");
-      dispatch("persistent");
+      await dispatch("initWalletAddress");
+      await dispatch("persistent");
     },
     renameAccount(
       { state, dispatch },
