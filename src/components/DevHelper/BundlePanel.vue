@@ -20,24 +20,40 @@
           <span>{{ idx }}</span>
         </b-radio-button>
       </b-field>
-      <b-field label="used coin name">
+      <b-field label="Information">
         <template #message>
-          Amount: {{ bundle.coin_spends[selectedCoin].coin.amount }}<br />
-          ParentCoinInfo: {{ bundle.coin_spends[selectedCoin].coin.parent_coin_info }}
+          <ul>
+            <li
+              class="pt-1"
+              v-for="(val, key) in {
+                Amount: bundle.coin_spends[selectedCoin].coin.amount,
+                ParentCoinInfo: bundle.coin_spends[selectedCoin].coin.parent_coin_info,
+                'UsedCoin Name': used_coin_name,
+                'UsedCoin Address': used_coin_tgt_address,
+                'UsedCoin PuzHash': bundle.coin_spends[selectedCoin].coin.puzzle_hash,
+              }"
+              :key="key"
+            >
+              <b-taglist attached>
+                <b-tag type="is-info">{{ key }}</b-tag>
+                <b-tag type="">{{ val }}</b-tag>
+              </b-taglist>
+            </li>
+          </ul>
         </template>
-        <b-input :value="used_coin_name" type="text" disabled></b-input>
-      </b-field>
-      <b-field label="used coin address" :message="bundle.coin_spends[selectedCoin].coin.puzzle_hash">
-        <b-input :value="used_coin_tgt_address" type="text" disabled></b-input>
       </b-field>
       <b-field>
         <template #label>
           Puzzle
           <key-box display="✂️" :value="puzzle" tooltip="Copy"></key-box>
-          <b-button size="is-small" @click="uncurry(puzzle)">Uncurry</b-button>
+          <b-button tag="a" size="is-small" @click="uncurry(puzzle)">Uncurry</b-button>
           <span v-if="modsdict[puzzle]" class="tag is-info is-light is-small">{{ modsdict[puzzle] }}</span>
         </template>
-        <b-input type="textarea" disabled :value="puzzle"></b-input>
+        <template #message>
+          <div class="puzzle-content">
+            {{ puzzle }}
+          </div>
+        </template>
       </b-field>
       <b-field v-if="uncurried_module">
         <template #label>
@@ -46,6 +62,9 @@
           <span v-if="modsdict[uncurried_module]" class="tag is-info is-light is-small">{{ modsdict[uncurried_module] }}</span>
         </template>
         <template #message>
+          <div class="puzzle-content">
+            {{ uncurried_module }}
+          </div>
           <ul class="args_list">
             <li v-for="(arg, i) in uncurried_args" :key="i">
               {{ arg }}
@@ -53,28 +72,35 @@
             </li>
           </ul>
         </template>
-        <b-input type="textarea" disabled :value="uncurried_module"></b-input>
       </b-field>
       <b-field>
         <template #label>
           Solution
           <key-box display="✂️" :value="solution" tooltip="Copy"></key-box>
-          <b-button size="is-small" @click="executePuzzle(puzzle, solution)">Execute</b-button>
-          <b-button size="is-small" @click="solution = beautifyLisp(solution)">
+          <b-button tag="a" size="is-small" @click="executePuzzle(puzzle, solution)">Execute</b-button>
+          <b-button tag="a" size="is-small" @click="solution = beautifyLisp(solution)">
             <b-icon icon="format-paint"></b-icon>
           </b-button>
         </template>
-        <b-input type="textarea" disabled :value="solution"></b-input>
+        <template #message>
+          <div class="puzzle-content">
+            {{ solution }}
+          </div>
+        </template>
       </b-field>
       <b-field v-if="solution_result">
         <template #label>
           Solution Result
           <key-box display="✂️" :value="solution_result" tooltip="Copy"></key-box>
-          <b-button size="is-small" @click="solution_result = beautifyLisp(solution_result)">
+          <b-button tag="a" size="is-small" @click="solution_result = beautifyLisp(solution_result)">
             <b-icon icon="format-paint"></b-icon>
           </b-button>
         </template>
-        <b-input type="textarea" disabled :value="solution_result"></b-input>
+        <template #message>
+          <div class="puzzle-content">
+            {{ solution_result }}
+          </div>
+        </template>
       </b-field>
     </template>
   </div>
@@ -198,5 +224,11 @@ ul.args_list {
 
 .field ::v-deep textarea {
   font-size: 0.8em;
+}
+
+.puzzle-content {
+  max-height: 10em;
+  overflow: auto;
+  white-space: pre-wrap;
 }
 </style>
