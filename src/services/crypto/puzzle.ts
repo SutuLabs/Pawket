@@ -125,7 +125,7 @@ class PuzzleMaker {
   }
 
   public async getPuzzleDetails(privateKey: Uint8Array, startIndex = 0, endIndex = 10): Promise<PuzzleDetail[]> {
-    return await this.getPuzzleDetailsInner(privateKey, async (spk) => this.getPuzzle(spk), startIndex, endIndex)
+    return await this.getPuzzleDetailsInner(privateKey, async (spk) => this.getPuzzle(spk), startIndex, endIndex, true)
   }
 
   public async getCatPuzzleDetails(privateKey: Uint8Array, assetId: string, startIndex = 0, endIndex = 10): Promise<PuzzleDetail[]> {
@@ -176,7 +176,7 @@ class PuzzleMaker {
     return result;
   }
 
-  public async compileRun(puzzle_source:string): Promise<string> {
+  public async compileRun(puzzle_source: string): Promise<string> {
     let output: any = null;
     clvm_tools.setPrintFunction((...args) => output = args)
 
