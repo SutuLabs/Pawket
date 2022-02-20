@@ -1,15 +1,13 @@
-import { PrivateKey, G2Element, ModuleInstance } from "@chiamine/bls-signatures";
 import { Bytes } from "clvm";
-import { OriginCoin, SpendBundle } from "@/models/wallet";
+import { CoinSpend, OriginCoin } from "@/models/wallet";
 import { GetParentPuzzleRequest, GetParentPuzzleResponse } from "@/models/api";
 import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
 import { uncurry } from "clvm_tools/browser";
 import { SExp, Tuple } from "clvm";
-import { AGG_SIG_ME_ADDITIONAL_DATA } from "../coin/consts";
-import { ConditionOpcode } from "../coin/opcode";
-import { CoinConditions, formatAmount, prefix0x } from "../coin/condition";
+import { formatAmount, prefix0x } from "../coin/condition";
 import puzzle, { PuzzleDetail } from "../crypto/puzzle";
-import transfer, { GetPuzzleApiCallback } from "./transfer";
+import transfer, { GetPuzzleApiCallback, TokenSpendPlan } from "./transfer";
+import { TokenPuzzleDetail } from "../crypto/receive";
 
 interface LineageProof {
   coinId: string;
@@ -17,98 +15,47 @@ interface LineageProof {
   proof: string;
 }
 
-interface ConditionEntity {
-  code: number;
-  args: (Uint8Array | undefined)[];
-}
-
 class CatBundle {
 
-  public async generateCatSpendBundle(
-    coins: OriginCoin[],
-    puzzles: PuzzleDetail[],
-    tgt_address: string,
-    amount: bigint,
-    fee: bigint,
-    change_address: string,
-    memo: string | null,
+  public async generateCoinSpends(
+    plan: TokenSpendPlan,
+    puzzles: TokenPuzzleDetail[],
     getPuzzle: GetPuzzleApiCallback | null = null,
-  ): Promise<SpendBundle | null> {
-    return await transfer.generateSpendBundleInternal(coins, puzzles,
-      async (coin, puzzle_reveal_hex) => {
-        if (!getPuzzle) getPuzzle = this.getLineageProofPuzzle;
-        const proof = await this.getLineageProof(coin.parent_coin_info, getPuzzle);
-        // console.log(proof);
-        const inner_puzzle_hash = await this.getInnerPuzzleHash(puzzles, coin.puzzle_hash);
-        const solution_reveal = this.getCatPuzzleSolution(coin, proof, memo, tgt_address, inner_puzzle_hash, amount, fee, change_address);
-        const puzzle_reveal = await puzzle.disassemblePuzzle(puzzle_reveal_hex);
+  ): Promise<CoinSpend[]> {
+    const coin_spends: CoinSpend[] = [];
 
-        const solution_executed_result = await puzzle.calcPuzzleResult(puzzle_reveal, solution_reveal);
-        if (solution_executed_result.startsWith("FAIL")) {
-          console.warn(`brun '${puzzle_reveal}' '${solution_reveal}'`);
-          throw `Failed to execute, ${solution_executed_result}`;
-        }
-
-        return { solution: solution_reveal, result: solution_executed_result }
-      },
-      this.signCatSolution,
-      amount, fee);
-  }
-
-  private async getInnerPuzzleHash(puzzles: PuzzleDetail[], puzzle_hash: string): Promise<string> {
-    const p = puzzles.find(_ => prefix0x(_.hash) == puzzle_hash);
-    if (!p) {
-      console.log(puzzles, puzzle_hash);
-      throw "cannot find corresponding puzzle";
+    const puzzleDict: { [key: string]: PuzzleDetail } = Object.assign({}, ...puzzles.flatMap(_ => _.puzzles).map((x) => ({ [prefix0x(x.hash)]: x })));
+    const getPuzDetail=(hash:string)=>{
+      const puz = puzzleDict[hash];
+      if (!puz) throw new Error("cannot find puzzle");
+      return puz;
     }
 
-    const pk = Bytes.from(p.privateKey.get_g1().serialize()).hex();
-    const hash = await puzzle.getPuzzleHash(pk);
-    // console.log(puzzle_hash, "->", hash);
+    for (let i = 0; i < plan.coins.length - 1; i++) {
+      const coin = plan.coins[i];
+      const puz = getPuzDetail(coin.puzzle_hash);
 
-    return hash;
-  }
+      const inner_puzzle_solution = "(() (q) ())";
 
-  private async signCatSolution(BLS: ModuleInstance, solution_executed_result: string, synthetic_sk: PrivateKey, coinname: Bytes): Promise<G2Element> {
-
-    const parseConditions = (conditonString: string): ConditionEntity[] => {
-      const conds = Array.from(assemble(conditonString).as_iter())
-        .map(cond => ({
-          code: cond.first().atom?.at(0) ?? 0,
-          args: Array.from(cond.rest().as_iter()).map(_ => _.atom?.raw())
-        }));
-
-      return conds;
-    };
-
-    const conds = parseConditions(solution_executed_result);
-    // console.log("conditions", solution_executed_result, conds);
-
-    const sigs: G2Element[] = [];
-    const synthetic_pk_hex = Bytes.from(synthetic_sk.get_g1().serialize()).hex();
-
-    for (let i = 0; i < conds.length; i++) {
-      const cond = conds[i];
-      if (cond.code == ConditionOpcode.AGG_SIG_UNSAFE) {
-        throw "not implement";
-      }
-      else if (cond.code == ConditionOpcode.AGG_SIG_ME) {
-        if (!cond.args || cond.args.length != 2) throw "wrong args"
-        const args = cond.args as Uint8Array[];
-        const msg = Uint8Array.from([...args[1], ...coinname.raw(), ...AGG_SIG_ME_ADDITIONAL_DATA.raw()]);
-        // const pk = BLS.G1Element.from_bytes(args[0]);
-        const pk_hex = Bytes.from(args[0]).hex();
-        if (pk_hex != synthetic_pk_hex) throw "wrong args due to pk != synthetic_pk";
-        const sig = BLS.AugSchemeMPL.sign(synthetic_sk, msg);
-        sigs.push(sig);
-      }
+      const cs = await this.generateCoinSpend(coin, puz, inner_puzzle_solution, getPuzzle);
+      coin_spends.push(cs);
     }
 
-    const agg_sig = BLS.AugSchemeMPL.aggregate(sigs);
-    return agg_sig;
+    // last coin with proper condition solution
+    {
+      const coin = plan.coins[plan.coins.length - 1];
+      const puz = getPuzDetail(coin.puzzle_hash);
+
+      const inner_puzzle_solution = transfer.getSolution(plan.targets);
+
+      const cs = await this.generateCoinSpend(coin, puz, inner_puzzle_solution, getPuzzle);
+      coin_spends.push(cs);
+    }
+
+    return coin_spends;
   }
 
-  public async getLineageProofPuzzle(parentCoinId: string): Promise<GetParentPuzzleResponse> {
+  private async getLineageProofPuzzle(parentCoinId: string): Promise<GetParentPuzzleResponse> {
     const resp = await fetch(process.env.VUE_APP_API_URL + "Wallet/get-puzzle", {
       method: "POST",
       headers: {
@@ -146,28 +93,23 @@ class CatBundle {
   }
 
   private getCatPuzzleSolution(
-    coin: OriginCoin,
+    inner_puzzle_solution: string,
+    catcoin: OriginCoin,
     proof: LineageProof,
-    memo: string | null,
-    tgt_address: string,
     inner_puzzle_hash: string,
-    amount: bigint,
-    fee: bigint,
-    change_address: string): string {
+  ): string {
 
     const ljoin = (...args: string[]) => "(" + args.join(" ") + ")";
 
     // inner_puzzle_solution    ;; if invalid, INNER_PUZZLE will fail
-    const inner_puzzle_solution =
-      "(() " + this.getCatInnerPuzzleSolution(coin, memo, tgt_address, amount, fee, change_address) + " ())";
     // lineage_proof            ;; This is the parent's coin info, used to check if the parent was a CAT. Optional if using tail_program. parent_parent_(coin_info puzzle_hash amount)
     const lineage_proof = ljoin(prefix0x(proof.coinId), prefix0x(proof.proof), formatAmount(proof.amount));
     // prev_coin_id             ;; used in this coin's announcement, prev_coin ASSERT_COIN_ANNOUNCEMENT will fail if wrong (parent_coin_name)
-    const prev_coin_id = prefix0x(transfer.getCoinName(coin).hex());
+    const prev_coin_id = prefix0x(transfer.getCoinName(catcoin).hex());
     // this_coin_info           ;; verified with ASSERT_MY_COIN_ID comsumed coin (parent_coin_info puzzle_hash amount)
-    const this_coin_info = ljoin(coin.parent_coin_info, coin.puzzle_hash, formatAmount(coin.amount));
+    const this_coin_info = ljoin(catcoin.parent_coin_info, catcoin.puzzle_hash, formatAmount(catcoin.amount));
     // next_coin_proof          ;; used to generate ASSERT_COIN_ANNOUNCEMENT (parent_coin_info coin_inner_puzzle_treehash(puzzle_hash -> pk -> inner_puzzle_hash) total_amount)
-    const next_coin_proof = ljoin(coin.parent_coin_info, prefix0x(inner_puzzle_hash), formatAmount(coin.amount));
+    const next_coin_proof = ljoin(catcoin.parent_coin_info, prefix0x(inner_puzzle_hash), formatAmount(catcoin.amount));
     // prev_subtotal            ;; included in announcement, prev_coin ASSERT_COIN_ANNOUNCEMENT will fail if wrong
     const prev_subtotal = "()";
     // extra_delta              ;; this is the "legal discrepancy" between your real delta and what you're announcing your delta is
@@ -182,58 +124,37 @@ class CatBundle {
       prev_subtotal,
       extra_delta,
     );
-    // console.log("inner_solution", inner_puzzle_solution);
     // console.log("solution", solution);
 
     return solution;
   }
 
-  private getCatInnerPuzzleSolution(
+
+
+  private async generateCoinSpend(
     coin: OriginCoin,
-    memo: string | null,
-    tgt_address: string,
-    amount: bigint,
-    fee: bigint,
-    change_address: string): string {
-    const tgt_hex = puzzle.getPuzzleHashFromAddress(tgt_address);
-    const change_hex = puzzle.getPuzzleHashFromAddress(change_address);
-
-    const conditions = [];
-
-    const remainder = coin.amount - amount - fee;
-    conditions.push(CoinConditions.CREATE_COIN_Extend(tgt_hex, amount, tgt_hex, memo));
-    if (remainder > 0)
-      conditions.push(CoinConditions.CREATE_COIN(change_hex, remainder));
-
-    const delegated_puzzle_solution = transfer.getDelegatedPuzzle(conditions);
-    // console.log(conditions, delegated_puzzle_solution);
-    return delegated_puzzle_solution;
+    puz: PuzzleDetail,
+    inner_puzzle_solution: string,
+    getPuzzle: GetPuzzleApiCallback | null = null,
+  ): Promise<CoinSpend> {
+      const puzzle_reveal = prefix0x(await puzzle.encodePuzzle(puz.puzzle));
+      const solution = await this.generateSolution(coin, puz, inner_puzzle_solution, getPuzzle);
+      const solution_hex = prefix0x(await puzzle.encodePuzzle(solution));
+      return { coin, puzzle_reveal, solution: solution_hex };
   }
 
-  subtotals_for_deltas(deltas: number[]): number[] {
-    // Given a list of deltas corresponding to input coins, create the "subtotals" list
-    // needed in solutions spending those coins.
-    const subtotals: number[] = [];
-    let subtotal = 0
-    for (let i = 0; i < deltas.length; i++) {
-      const delta = deltas[i];
-      subtotals.push(subtotal)
-      subtotal += delta
-    }
-
-    // tweak the subtotals so the smallest value is 0
-    const subtotal_offset = Math.min(...subtotals);
-    const offset_subtotals = subtotals.map(_ => _ - subtotal_offset)
-    return offset_subtotals;
-  }
-
-  get_delta(args: number[], amount: bigint) {
-    // for _ in conditions.get(ConditionOpcode.CREATE_COIN, []):
-    let total = 0n;
-    if (args[1] != -113)
-      total += BigInt(args[1]);
-    return amount - total;
-    // deltas.append(spend_info.coin.amount - total)
+  private async generateSolution(
+    coin: OriginCoin,
+    puz: PuzzleDetail,
+    inner_puzzle_solution: string,
+    getPuzzle: GetPuzzleApiCallback | null = null,
+  ): Promise<string> {
+    if (!getPuzzle) getPuzzle = this.getLineageProofPuzzle;
+    const proof = await this.getLineageProof(coin.parent_coin_info, getPuzzle);
+    const pk = Bytes.from(puz.privateKey.get_g1().serialize()).hex();
+    const inner_puzzle_hash = await puzzle.getPuzzleHash(pk);
+    const solution = this.getCatPuzzleSolution(inner_puzzle_solution, coin, proof, inner_puzzle_hash);
+    return solution;
   }
 }
 

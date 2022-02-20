@@ -29,7 +29,7 @@
             </b-tooltip>
             <b-button tag="a" type="is-info is-light" size="is-small" @click="setMax(maxAmount)">
               <span v-if="maxStatus == 'Loading'">Loading {{ selectedToken }}</span>
-              <span v-if="maxStatus == 'Loaded'">Max: {{ maxAmount }} / {{ totalAmount }} {{ selectedToken }}</span>
+              <span v-if="maxStatus == 'Loaded'">Max: {{ maxAmount }} {{ selectedToken }}</span>
             </b-button>
           </span>
         </template>
@@ -53,7 +53,11 @@
           max="1000000000"
           min="0"
           v-model="fee"
-          @input="reset()"
+          :exponential="true"
+          @input="
+            if (!fee) fee = 0;
+            reset();
+          "
           expanded
           :disabled="feeType > 0"
         ></b-numberinput>
@@ -115,7 +119,7 @@ import { NotificationProgrammatic as Notification } from "buefy";
 import { ApiResponse } from "@/models/api";
 import receive, { TokenPuzzleDetail } from "../services/crypto/receive";
 import store from "@/store";
-import { CoinItem, SpendBundle, CoinRecord } from "@/models/wallet";
+import { CoinItem, SpendBundle, CoinRecord, OriginCoin } from "@/models/wallet";
 import utility from "@/services/crypto/utility";
 import puzzle from "@/services/crypto/puzzle";
 import DevHelper from "@/components/DevHelper.vue";
@@ -124,6 +128,7 @@ import stdBundle from "@/services/transfer/stdBundle";
 import bigDecimal from "js-big-decimal";
 import ScanQrCode from "@/components/ScanQrCode.vue";
 import { prefix0x } from '../services/coin/condition';
+import transfer, { SymbolCoins } from '../services/transfer/transfer';
 
 @Component({
   components: {
@@ -140,10 +145,8 @@ export default class Send extends Vue {
   public selectedToken = "XCH";
   public memo = "";
   public bundle: SpendBundle | null = null;
-  public coins: CoinRecord[] = [];
-  public availcoins: { [symbol: string]: CoinRecord[] } | null = null;
+  public availcoins: SymbolCoins | null = null;
   public maxAmount = "-1";
-  public totalAmount = "-1";
   public INVALID_AMOUNT_MESSAGE = "Invalid amount";
   public maxStatus: "Loading" | "Loaded" = "Loading";
 
@@ -222,20 +225,24 @@ export default class Send extends Vue {
     }
 
     if (!this.availcoins) {
-      this.coins = await receive.getCoinRecords(this.requests, false);
+      const coins = (await receive.getCoinRecords(this.requests, false))
+        .filter(_ => _.coin).map(_ => _.coin as CoinItem).map(_ => ({
+          amount: BigInt(_.amount),
+          parent_coin_info: _.parentCoinInfo,
+          puzzle_hash: _.puzzleHash,
+        }));
 
       this.availcoins =
         this.tokenNames.map(symbol => {
-          const tgtpuzs = this.requests.filter(_ => _.symbol == this.selectedToken)[0].puzzles.map(_ => prefix0x(_.hash));
-          return { symbol, coins: this.coins.filter(_ => tgtpuzs.findIndex(p => p == _.coin?.puzzleHash) > -1) };
+          const tgtpuzs = this.requests.filter(_ => _.symbol == symbol)[0].puzzles.map(_ => prefix0x(_.hash));
+          return { symbol, coins: coins.filter(_ => tgtpuzs.findIndex(p => p == _.puzzle_hash) > -1) };
         }).reduce((a, c) => ({ ...a, [c.symbol]: c.coins }), {});
     }
 
 
-    const availcoins = this.availcoins[this.selectedToken].map(_ => _.coin?.amount ?? 0);
+    const availcoins = this.availcoins[this.selectedToken].map(_ => _.amount);
 
-    this.maxAmount = bigDecimal.divide(Math.max(...availcoins, 0), Math.pow(10, this.decimal), this.decimal);
-    this.totalAmount = bigDecimal.divide(availcoins.reduce((a, b) => a + b, 0), Math.pow(10, this.decimal), this.decimal);
+    this.maxAmount = bigDecimal.divide(availcoins.reduce((a, b) => a + b, 0n), Math.pow(10, this.decimal), this.decimal);
     this.maxStatus = "Loaded";
   }
 
@@ -247,29 +254,15 @@ export default class Send extends Vue {
         return;
       }
 
-      // const sk_hex = this.account.key.privateKey;
       const decimal = this.selectedToken == "XCH" ? 12 : 3;
       const amount = BigInt(this.amount * Math.pow(10, decimal));
 
-      const filteredCoins =
-        this.coins.filter(_ => _.coin).map(_ => _.coin as CoinItem).map(_ => ({
-          amount: BigInt(_.amount),
-          parent_coin_info: _.parentCoinInfo,
-          puzzle_hash: _.puzzleHash,
-        }));
-
-
-      const puzzles = this.requests.filter(_ => _.symbol == this.selectedToken)[0].puzzles;
-      if (this.selectedToken == "XCH") {
-        this.bundle = await stdBundle.generateSpendBundle(
-          filteredCoins, puzzles, this.address, amount, BigInt(this.fee), this.account.firstAddress);
-      }
-      else {
-        this.bundle = await catBundle.generateCatSpendBundle(
-          filteredCoins, puzzles, this.address, amount, BigInt(this.fee), this.account.firstAddress, this.memo);
-
-      }
-
+      if (this.availcoins == null) return;
+      const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.address));
+      const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
+      const tgts = [{ address: tgt_hex, amount, symbol: this.selectedToken, memo: this.memo }];
+      const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee));
+      this.bundle = await transfer.generateSpendBundle(plan, this.requests);
     } catch (error) {
       Notification.open({
         message: `failed to sign: ${error}`,

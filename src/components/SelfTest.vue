@@ -154,8 +154,11 @@ export default class SelfTest extends Vue {
       "0x4f45877796d7a64e192bcc9f899afeedae391f71af3afd7e15a0792c049d23d3",
       "xch"
     );
+    const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(tgt_addr));
+    const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(change_addr));
     const puzzles = await puzzle.getPuzzleDetails(utility.fromHexString(sk_hex), 0, 5);
-    const bundle = await stdBundle.generateSpendBundle([coin], puzzles, tgt_addr, 1_000_000n, 0n, change_addr);
+    const plan = await transfer.generateSpendPlan({ "XCH": [coin] }, [{ symbol: "XCH", address: tgt_hex, amount: 1_000_000n, }], change_hex, 0n);
+    const bundle = await transfer.generateSpendBundle(plan, [{ symbol: "XCH", puzzles }]);
     this.assert(
       "0x81198e68402824e0585fac43d79edf3efe19e4651747f4e9b8d28f6a8a5c319dac67d4a0c03ad957cbb7d7c3c955605d03d6c5750e0aa44baf73ddaa5fcfbe74e3cb922034b72656f0df410ff6ef8e81b56b1a6a0c9bddd9331b7a9c90f897ce",
       bundle?.aggregated_signature
@@ -185,10 +188,14 @@ export default class SelfTest extends Vue {
       "0x1cf63b7cc60279a1b0745e8f426585ee81d8da0cd2d92dd9b44e6efbd88d40ce",
       "xch"
     );
-    const assetId = "78ad32a8c9ea70f27d73e9306fc467bab2a6b15b30289791e37ab6e8612212b1";
-    const puzzles = await puzzle.getCatPuzzleDetails(utility.fromHexString(sk_hex), assetId, 0, 5);
+    const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(tgt_addr));
+    const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(change_addr));
 
-    const bundle = await catBundle.generateCatSpendBundle([coin], puzzles, tgt_addr, 300n, 0n, change_addr, null, this.localPuzzleApiCall);
+    const assetId = "78ad32a8c9ea70f27d73e9306fc467bab2a6b15b30289791e37ab6e8612212b1";
+
+    const puzzles = await puzzle.getCatPuzzleDetails(utility.fromHexString(sk_hex), assetId, 0, 5);
+    const plan = await transfer.generateSpendPlan({ "CAT": [coin] }, [{ symbol: "CAT", address: tgt_hex, amount: 300n, memos: [tgt_hex] }], change_hex, 0n);
+    const bundle = await transfer.generateSpendBundle(plan, [{ symbol: "CAT", puzzles }], this.localPuzzleApiCall);
     this.assert(
       "0xa2b3ea73ce4c16248e6b57fb72498d95881866fce4651aeba3b98e1c287700b35aebba853f11d4c7fef14d3381c6172d1847796d44b3f4c5f9ed42315a53694b9b849f4b28690fcb553617d0b7f1b9080dc060f6ac0ad4eb34661bce37e92a40",
       bundle?.aggregated_signature
@@ -228,10 +235,15 @@ export default class SelfTest extends Vue {
       "0xc467280169dfc93e7a14b98475641996966d4d3800f814a2baaeab14a96e3b40",
       "xch"
     );
+
+    const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(tgt_addr));
+    const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(change_addr));
+
     const assetId = "6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b";
     const puzzles = await puzzle.getCatPuzzleDetails(utility.fromHexString(sk_hex), assetId, 0, 8);
 
-    const bundle = await catBundle.generateCatSpendBundle([coin], puzzles, tgt_addr, 300n, 0n, change_addr, null, this.localPuzzleApiCall);
+    const plan = await transfer.generateSpendPlan({ "CAT": [coin] }, [{ symbol: "CAT", address: tgt_hex, amount: 300n, memos: [tgt_hex] }], change_hex, 0n);
+    const bundle = await transfer.generateSpendBundle(plan, [{ symbol: "CAT", puzzles }], this.localPuzzleApiCall);
     this.assert(
       "0xad060a5265b32a23f96022588fcb422684bb0f44dc1aaa49415ce6ed78d931a4c3b3dc71c0c677b8f868b83f5d693a08187899f1d4579bab6b35670566579e9bd1108e7f6a353109b8a2bd563ba8458a224c80e57a104c8b165151eb959fe096",
       bundle?.aggregated_signature
