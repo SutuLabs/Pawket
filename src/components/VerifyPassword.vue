@@ -3,11 +3,15 @@
     <div class="columns is-centered">
       <div class="box p-6">
         <section v-if="mode == 'Verify'">
-           <h1 class="title is-4">{{ $t("verifyPassword.ui.title.verifyPassword") }}</h1>
-          <b-field :label="$t('verifyPassword.ui.label.password')" label-position="on-border" :type="isCorrect? '' : 'is-danger'">
-            <b-input type="password" @keyup.native.enter="confirm()" v-model="password"></b-input>
+          <h1 class="title is-4">{{ $t("verifyPassword.ui.title.verifyPassword") }}</h1>
+          <b-field
+            :label="$t('verifyPassword.ui.label.password')"
+            label-position="on-border"
+            :type="isCorrect ? '' : 'is-danger'"
+          >
+            <b-input type="password" ref="password" @keyup.native.enter="confirm()" v-model="password"></b-input>
           </b-field>
-           <p class="help is-danger" v-if="!isCorrect">{{ $t("verifyPassword.message.error.incorrectPassword") }}</p>
+          <p class="help is-danger" v-if="!isCorrect">{{ $t("verifyPassword.message.error.incorrectPassword") }}</p>
           <div class="buttons">
             <b-button @click="confirm()" type="is-primary">{{ $t("verifyPassword.ui.button.confirm") }}</b-button>
             <b-button v-if="!isCorrect" type="is-danger" @click="clear()">{{ $t("verifyPassword.ui.button.clear") }}</b-button>
@@ -15,7 +19,7 @@
         </section>
 
         <section v-if="mode == 'Create'">
-           <h1 class="title is-4">{{ $t("verifyPassword.ui.title.createPassword") }}</h1>
+          <h1 class="title is-4">{{ $t("verifyPassword.ui.title.createPassword") }}</h1>
           <b-field :label="$t('verifyPassword.ui.label.password')" label-position="on-border">
             <b-input type="password" v-model="password" @input.native.enter="checkStrength()"></b-input>
           </b-field>
@@ -59,6 +63,8 @@ export default class VerifyPassword extends Vue {
 
   mounted(): void {
     this.mode = store.state.vault.passwordHash ? "Verify" : "Create";
+    const pswElm = this.$refs.password as HTMLInputElement | undefined;
+    if (pswElm) pswElm.focus();
   }
 
   async confirm(): Promise<void> {
