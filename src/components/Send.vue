@@ -267,6 +267,7 @@ export default class Send extends Vue {
       Notification.open({
         message: `failed to sign: ${error}`,
         type: "is-danger",
+        autoClose: false,
       });
       console.warn(error);
       this.submitting = false;
