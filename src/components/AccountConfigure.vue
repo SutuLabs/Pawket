@@ -8,7 +8,7 @@
     </header>
     <section class="modal-card-body">
       <b-field :label="$t('accountConfigure.ui.label.maxAddress')">
-        <b-slider v-model="maxAddress" :max="8" :min="1"></b-slider>
+        <b-slider v-model="maxAddress" :max="12" :min="1"></b-slider>
       </b-field>
       <b-field :label="$t('accountConfigure.ui.label.listingCATs')">
         <b-taginput

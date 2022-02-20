@@ -199,6 +199,7 @@
         "address": "地址",
         "amount": "数量",
         "memo": "便签",
+        "fee": "交易费",
         "bundle": "数据包"
       },
       "button": {

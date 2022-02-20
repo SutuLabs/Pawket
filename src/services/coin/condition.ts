@@ -5,8 +5,8 @@ export class CoinConditions {
   public static CREATE_COIN(puzzlehash: string, amount: bigint): string[] {
     return [ConditionOpcode.CREATE_COIN.toString(), prefix0x(puzzlehash), formatAmount(amount)];
   }
-  public static CREATE_COIN_Extend(puzzlehash: string, amount: bigint, id: string, memo: string | null): (string | string[])[] {
-    return [...this.CREATE_COIN(puzzlehash, amount), [prefix0x(id), memo ? `"${memo}"` : undefined].filter(_ => _ !== undefined) as string[]];
+  public static CREATE_COIN_Extend(puzzlehash: string, amount: bigint, memos: string[]): (string | string[])[] {
+    return [...this.CREATE_COIN(puzzlehash, amount), ...((memos && memos.length > 0) ? [memos] : [])];
   }
   public static CREATE_COIN_ANNOUNCEMENT(message: string): string[] {
     return [ConditionOpcode.CREATE_COIN_ANNOUNCEMENT.toString(), message];

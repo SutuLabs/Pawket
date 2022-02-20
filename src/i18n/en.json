@@ -199,6 +199,7 @@
         "address": "Address",
         "amount": "Amount",
         "memo": "Memo",
+        "fee": "Fee",
         "bundle": "Bundle"
       },
       "button": {

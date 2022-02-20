@@ -20,24 +20,40 @@
           <span>{{ idx }}</span>
         </b-radio-button>
       </b-field>
-      <b-field label="used coin name">
+      <b-field label="Information">
         <template #message>
-          Amount: {{ bundle.coin_spends[selectedCoin].coin.amount }}<br />
-          ParentCoinInfo: {{ bundle.coin_spends[selectedCoin].coin.parent_coin_info }}
+          <ul>
+            <li
+              class="pt-1"
+              v-for="(val, key) in {
+                Amount: bundle.coin_spends[selectedCoin].coin.amount,
+                ParentCoinInfo: bundle.coin_spends[selectedCoin].coin.parent_coin_info,
+                'UsedCoin Name': used_coin_name,
+                'UsedCoin Address': used_coin_tgt_address,
+                'UsedCoin PuzHash': bundle.coin_spends[selectedCoin].coin.puzzle_hash,
+              }"
+              :key="key"
+            >
+              <b-taglist attached>
+                <b-tag type="is-info">{{ key }}</b-tag>
+                <b-tag type="">{{ val }}</b-tag>
+              </b-taglist>
+            </li>
+          </ul>
         </template>
-        <b-input :value="used_coin_name" type="text" disabled></b-input>
-      </b-field>
-      <b-field label="used coin address" :message="bundle.coin_spends[selectedCoin].coin.puzzle_hash">
-        <b-input :value="used_coin_tgt_address" type="text" disabled></b-input>
       </b-field>
       <b-field>
         <template #label>
           Puzzle
           <key-box display="✂️" :value="puzzle" tooltip="Copy"></key-box>
-          <b-button size="is-small" @click="uncurry(puzzle)">Uncurry</b-button>
+          <b-button tag="a" size="is-small" @click="uncurry(puzzle)">Uncurry</b-button>
           <span v-if="modsdict[puzzle]" class="tag is-info is-light is-small">{{ modsdict[puzzle] }}</span>
         </template>
-        <b-input type="textarea" disabled :value="puzzle"></b-input>
+        <template #message>
+          <div class="puzzle-content">
+            {{ puzzle }}
+          </div>
+        </template>
       </b-field>
       <b-field v-if="uncurried_module">
         <template #label>
@@ -46,6 +62,9 @@
           <span v-if="modsdict[uncurried_module]" class="tag is-info is-light is-small">{{ modsdict[uncurried_module] }}</span>
         </template>
         <template #message>
+          <div class="puzzle-content">
+            {{ uncurried_module }}
+          </div>
           <ul class="args_list">
             <li v-for="(arg, i) in uncurried_args" :key="i">
               {{ arg }}
@@ -53,28 +72,66 @@
             </li>
           </ul>
         </template>
-        <b-input type="textarea" disabled :value="uncurried_module"></b-input>
       </b-field>
       <b-field>
         <template #label>
           Solution
           <key-box display="✂️" :value="solution" tooltip="Copy"></key-box>
-          <b-button size="is-small" @click="executePuzzle(puzzle, solution)">Execute</b-button>
-          <b-button size="is-small" @click="solution = beautifyLisp(solution)">
+          <b-button tag="a" size="is-small" @click="executePuzzle(puzzle, solution)">Execute</b-button>
+          <b-button tag="a" size="is-small" @click="solution = beautifyLisp(solution)">
             <b-icon icon="format-paint"></b-icon>
           </b-button>
         </template>
-        <b-input type="textarea" disabled :value="solution"></b-input>
+        <template #message>
+          <div class="puzzle-content">
+            {{ solution }}
+          </div>
+        </template>
       </b-field>
       <b-field v-if="solution_result">
         <template #label>
           Solution Result
           <key-box display="✂️" :value="solution_result" tooltip="Copy"></key-box>
-          <b-button size="is-small" @click="solution_result = beautifyLisp(solution_result)">
+          <b-button tag="a" size="is-small" @click="solution_result = beautifyLisp(solution_result)">
             <b-icon icon="format-paint"></b-icon>
           </b-button>
         </template>
-        <b-input type="textarea" disabled :value="solution_result"></b-input>
+        <template #message>
+          <div class="puzzle-content">
+            {{ solution_result }}
+          </div>
+          <ul class="args_list">
+            <li v-for="(sol, i) in solution_results" :key="i">
+              <b-tooltip
+                v-if="conditionsdict[sol.op]"
+                :label="conditionsdict[sol.op].args + '\n' + conditionsdict[sol.op].desc"
+                multilined
+              >
+                <div class="control mr-2">
+                  <div class="tags has-addons">
+                    <span class="tag is-info">
+                      {{ conditionsdict[sol.op].id }}
+                    </span>
+                    <span class="tag is-info is-light">
+                      {{ conditionsdict[sol.op].name }}
+                    </span>
+                  </div>
+                </div>
+              </b-tooltip>
+              <ul v-if="sol.args.length > 0" class="args_list ellipsis-item">
+                <li v-for="(arg, i) in sol.args" :key="i" :title="arg">{{ arg }}</li>
+                <li v-if="sol.op == 60">
+                  <b-tag type="is-success is-light">annoID:</b-tag>
+                  {{ sha256(used_coin_name, sol.args[0]) }}
+                </li>
+                <li v-if="sol.op == 62">
+                  <b-tag type="is-success is-light">annoID:</b-tag>
+                  {{ sha256(bundle.coin_spends[selectedCoin].coin.puzzle_hash, sol.args[0]) }}
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </template>
       </b-field>
     </template>
   </div>
@@ -90,6 +147,15 @@ import { assemble, disassemble } from 'clvm_tools/clvm_tools/binutils';
 import { uncurry } from 'clvm_tools/clvm_tools/curry';
 import { SExp, Tuple } from "clvm";
 import { beautifyLisp } from '@/services/coin/lisp';
+import { Bytes } from "clvm";
+import { prefix0x } from '../../services/coin/condition';
+
+interface ConditionInfo {
+  name: string;
+  id: number;
+  args: string;
+  desc: string;
+}
 
 @Component({
   components: {
@@ -107,6 +173,7 @@ export default class BundlePanel extends Vue {
   public selectedCoin = 0;
   public uncurried_module = "";
   public uncurried_args: string[] = [];
+  public solution_results: { op: number, args: string[] }[] = [];
   public bundle: SpendBundle | null = null;
 
   public readonly modsdict: { [mod: string]: string } = {
@@ -115,6 +182,25 @@ export default class BundlePanel extends Vue {
     "(a (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1))"
       : "p2_delegated_puzzle_or_hidden_puzzle",
   }
+
+  public readonly conditionsdict: { [id: number]: ConditionInfo } = [
+    { name: "AGG_SIG_UNSAFE", id: 49, args: "(49 pubkey message)", desc: "This spend is only valid if the attached aggregated signature contains a signature from the given public key of the given message. This is labeled unsafe because if you sign a message once, any other coins you have that require that signature may potentially also be unlocked. It's probably better just to use AGG_SIG_ME because of the natural entropy introduced by the coin ID." },
+    { name: "AGG_SIG_ME", id: 50, args: "(50 pubkey message)", desc: "This spend is only valid if the attached aggregated signature contains a signature from the specified public key of that message concatenated with the coin's ID and the network's genesis challenge." },
+    { name: "CREATE_COIN", id: 51, args: "(51 puzzlehash amount)", desc: "If this spend is valid, then create a new coin with the given puzzlehash and amount." },
+    { name: "RESERVE_FEE", id: 52, args: "(52 amount)", desc: "This spend is only valid if there is unused value in this transaction greater than or equal to amount, which is explicitly to be used as the fee." },
+    { name: "CREATE_COIN_ANNOUNCEMENT", id: 60, args: "(60 message)", desc: "If this spend is valid, this creates an ephemeral announcement with an ID dependent on the coin that creates it. Other coins can then assert an announcement exists for inter-coin communication inside a block." },
+    { name: "ASSERT_COIN_ANNOUNCEMENT", id: 61, args: "(61 announcementID)", desc: "This spend is only valid if there was an announcement in this block matching the announcementID. The announcementID is the hash of the message that was announced concatenated with the coin ID of the coin that announced it announcementID == sha256(coinID + message)." },
+    { name: "CREATE_PUZZLE_ANNOUNCEMENT", id: 62, args: "(62 message)", desc: "If this spend is valid, this creates an ephemeral announcement with an ID dependent on the puzzle that creates it. Other coins can then assert an announcement exists for inter-coin communication inside a block." },
+    { name: "ASSERT_PUZZLE_ANNOUNCEMENT", id: 63, args: "(63 announcementID)", desc: "This spend is only valid if there was an announcement in this block matching the announcementID. The announcementID is the message that was announced concatenated with the puzzle hash of the coin that announced it announcementID == sha256(puzzle_hash + message)." },
+    { name: "ASSERT_MY_COIN_ID", id: 70, args: "(70 coinID)", desc: "This spend is only valid if the presented coin ID is exactly the same as the ID of the coin that contains this puzzle." },
+    { name: "ASSERT_MY_PARENT_ID", id: 71, args: "(71 parentID)", desc: "This spend is only valid if the presented parent coin info is exactly the same as the parent coin info of the coin that contains this puzzle." },
+    { name: "ASSERT_MY_PUZZLEHASH", id: 72, args: "(72 puzzlehash)", desc: "This spend is only valid if the presented puzzle hash is exactly the same as the puzzle hash of the coin that contains this puzzle." },
+    { name: "ASSERT_MY_AMOUNT", id: 73, args: "(73 amount)", desc: "This spend is only valid if the presented amount is exactly the same as the amount of the coin that contains this puzzle." },
+    { name: "ASSERT_SECONDS_RELATIVE", id: 80, args: "(80 seconds)", desc: "This spend is only valid if the given time has passed since this coin was created. The coin's creation time or\"birthday\" is defined by the timestamp of the previous block not the actual block in which it was created. Similarly, the previous block's timestamp is used as the current time when evaluating these time locks." },
+    { name: "ASSERT_SECONDS_ABSOLUTE", id: 81, args: "(81 time)", desc: "This spend is only valid if the timestamp on this block is greater than the specified timestamp. Again, the coin's birthday and the current time are defined by the timestamp of the previous block." },
+    { name: "ASSERT_HEIGHT_RELATIVE", id: 82, args: "(82 block_age)", desc: "This spend is only valid if the specified number of blocks have passed since this coin was created." },
+    { name: "ASSERT_HEIGHT_ABSOLUTE", id: 83, args: "(83 block_height)", desc: "This spend is only valid if the given block_height has been reached." },
+  ].reduce((arr, cur) => ({ ...arr, [cur.id]: cur }), {});
 
   updateBundle(): void {
     try {
@@ -169,13 +255,17 @@ export default class BundlePanel extends Vue {
 
   async executePuzzle(puz: string, solution: string): Promise<void> {
     this.solution_result = await puzzle.calcPuzzleResult(puz, solution);
+
+    const conds = assemble(this.solution_result);
+    const argarr = Array.from(conds.as_iter()).map(_ => Array.from(_.as_iter()).map(_ => disassemble(_)));
+    this.solution_results = argarr.map(_ => ({ op: Number(_[0]), args: _.slice(1) }));
   }
 
   async uncurry(puz: string): Promise<void> {
     const curried = assemble(puz);
     const [mod, args] = uncurry(curried) as Tuple<SExp, SExp>;
     const mods = disassemble(mod);
-    const argarr = Array.from(args.as_iter()).map(_ => disassemble(_ as any));
+    const argarr = Array.from(args.as_iter()).map(_ => disassemble(_ as SExp));
     this.uncurried_module = mods;
     this.uncurried_args = argarr;
   }
@@ -188,6 +278,11 @@ export default class BundlePanel extends Vue {
     this.used_coin_tgt_address = puzzle.getAddressFromPuzzleHash(this.bundle.coin_spends[this.selectedCoin].coin.puzzle_hash, "xch");
   }
 
+  public sha256(...args: string[]): string {
+    const cont = new Uint8Array(args.map(_ => Bytes.from(_, "hex").raw()).reduce((acc, cur) => [...acc, ...cur], [] as number[]));
+    const result = Bytes.SHA256(cont);
+    return prefix0x(result.hex());
+  }
 }
 </script>
 
@@ -196,7 +291,23 @@ ul.args_list {
   list-style: inside square;
 }
 
+ul.args_list ul.args_list {
+  margin-left: 2em;
+}
+
+ul.args_list.ellipsis-item > li {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
 .field ::v-deep textarea {
   font-size: 0.8em;
+}
+
+.puzzle-content {
+  max-height: 10em;
+  overflow: auto;
+  white-space: pre-wrap;
 }
 </style>
