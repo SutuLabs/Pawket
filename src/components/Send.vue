@@ -5,8 +5,17 @@
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
+      <b-notification
+        v-if="notificationMessage"
+        :type="notificationType || 'is-success'"
+        has-icon
+        :icon="notificationIcon || 'heart'"
+        :closable="notificationClosable"
+      >
+        {{ notificationMessage }}
+      </b-notification>
       <b-field :label="$t('send.ui.label.address')">
-        <b-input v-model="address" @change="reset()" expanded></b-input>
+        <b-input v-model="address" @change="reset()" expanded :disabled="!addressEditable"></b-input>
         <p class="control">
           <b-button @click="scanQrCode()">
             <b-icon icon="qrcode"></b-icon>
@@ -38,7 +47,15 @@
             {{ token }}
           </option>
         </b-select>
-        <b-input v-model="amount" expanded @input="reset()"></b-input>
+        <b-input
+          v-model="amount"
+          expanded
+          :disabled="!amountEditable"
+          @input="
+            reset();
+            selectMax = false;
+          "
+        ></b-input>
         <p class="control">
           <span class="button is-static">{{ selectedToken }}</span>
         </p>
@@ -54,10 +71,7 @@
           min="0"
           v-model="fee"
           :exponential="true"
-          @input="
-            if (!fee) fee = 0;
-            reset();
-          "
+          @input="changeFee()"
           expanded
           :disabled="feeType > 0"
         ></b-numberinput>
@@ -119,12 +133,9 @@ import { NotificationProgrammatic as Notification } from "buefy";
 import { ApiResponse } from "@/models/api";
 import receive, { TokenPuzzleDetail } from "../services/crypto/receive";
 import store from "@/store";
-import { CoinItem, SpendBundle, CoinRecord, OriginCoin } from "@/models/wallet";
-import utility from "@/services/crypto/utility";
+import { CoinItem, SpendBundle } from "@/models/wallet";
 import puzzle from "@/services/crypto/puzzle";
 import DevHelper from "@/components/DevHelper.vue";
-import catBundle from "@/services/transfer/catBundle";
-import stdBundle from "@/services/transfer/stdBundle";
 import bigDecimal from "js-big-decimal";
 import ScanQrCode from "@/components/ScanQrCode.vue";
 import { prefix0x } from '../services/coin/condition';
@@ -137,8 +148,17 @@ import transfer, { SymbolCoins } from '../services/transfer/transfer';
 })
 export default class Send extends Vue {
   @Prop() private account!: AccountEntity;
+  @Prop() private inputAddress!: string;
+  @Prop() private inputAmount!: string;
+  @Prop({ default: true }) private addressEditable!: boolean;
+  @Prop({ default: true }) private amountEditable!: boolean;
+  @Prop() private notificationMessage!: string;
+  @Prop() private notificationType!: string;
+  @Prop() private notificationIcon!: string;
+  @Prop() private notificationClosable!: boolean;
+
   public submitting = false;
-  public amount = 0;
+  public amount = "0";
   public fee = 0;
   public feeType = 0;
   public address = "";
@@ -149,10 +169,13 @@ export default class Send extends Vue {
   public maxAmount = "-1";
   public INVALID_AMOUNT_MESSAGE = "Invalid amount";
   public maxStatus: "Loading" | "Loaded" = "Loading";
+  public selectMax = false;
 
   public requests: TokenPuzzleDetail[] = [];
 
   mounted(): void {
+    if (this.inputAddress) this.address = this.inputAddress;
+    if (this.inputAmount) this.amount = this.inputAmount;
     this.loadCoins();
   }
 
@@ -165,7 +188,7 @@ export default class Send extends Vue {
     if (!this.amount) return "";
     try { new bigDecimal(this.amount); }
     catch { return ""; }
-    if (this.amount == 0) return "";
+    if (Number(this.amount) == 0) return "";
 
     if (bigDecimal.compareTo(this.amount, this.maxAmount) > 0) return this.INVALID_AMOUNT_MESSAGE;
 
@@ -209,9 +232,14 @@ export default class Send extends Vue {
     return tokenInfo;
   }
 
-  setMax(amount: number): void {
+  setMax(amount: string, excludingFee = false): void {
     this.reset();
-    this.amount = amount;
+    excludingFee = this.selectedToken != "XCH" ? true : excludingFee;
+    const newAmount = excludingFee
+      ? amount
+      : bigDecimal.subtract(amount, bigDecimal.divide(this.fee, Math.pow(10, this.decimal), this.decimal));
+    this.amount = newAmount;
+    this.selectMax = true;
   }
 
   async loadCoins(): Promise<void> {
@@ -255,7 +283,7 @@ export default class Send extends Vue {
       }
 
       const decimal = this.selectedToken == "XCH" ? 12 : 3;
-      const amount = BigInt(this.amount * Math.pow(10, decimal));
+      const amount = BigInt(bigDecimal.multiply(this.amount, Math.pow(10, decimal)));
 
       if (this.availcoins == null) return;
       const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.address));
@@ -346,6 +374,9 @@ export default class Send extends Vue {
     if (this.feeType > 0) {
       this.fee = fees[this.feeType];
     }
+
+    if (!this.fee) this.fee = 0;
+    if (this.selectMax) this.setMax(this.maxAmount);
   }
 }
 </script>
