@@ -17,15 +17,15 @@
             <li class="done">Address variation(derivative addresses) for XCH/CATs</li>
             <li class="done">Import and manage custom CAT</li>
             <li class="done">Comprehensive developer tool for coins</li>
+            <li class="done">Support customize fee</li>
+            <li class="done">Support multiple coins mix send</li>
           </ul>
           <ul class="py-3">
-            <li class="plan">Support customize fee</li>
             <li class="plan">Support multiple target address in one transaction</li>
-            <li class="plan">Package as extension and provide API for dApps</li>
-            <li class="plan">Support multiple coins mix send</li>
-            <li class="plan">Package as the app and provide download through AppStore and Google Play</li>
-            <li class="plan">Support view only wallet</li>
             <li class="plan">Support offer creation/consumption</li>
+            <li class="plan">Support view only wallet</li>
+            <li class="plan">Package as extension and provide API for dApps</li>
+            <li class="plan">Package as the app and provide download through AppStore and Google Play</li>
             <li class="plan">Support view NFT</li>
             <li class="plan">Support send NFT</li>
             <li class="plan">Support NFT creation</li>
