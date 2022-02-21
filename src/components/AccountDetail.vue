@@ -62,6 +62,12 @@
         </b-tab-item>
       </b-tabs>
     </div>
+    <div class="box">
+      <h2 class="has-text-weight-bold is-size-4 pb-5">DApps</h2>
+      <b-tooltip label="Donation to support development" multilined position="is-right">
+        <b-button @click="openDonation()" size="is-large">❤️</b-button>
+      </b-tooltip>
+    </div>
   </div>
 </template>
 
@@ -173,6 +179,7 @@ export default class AccountDetail extends Vue {
       component: Send,
       hasModalCard: true,
       trapFocus: true,
+      canCancel: ['x'],
       props: { account: this.account },
     });
   }
@@ -184,6 +191,25 @@ export default class AccountDetail extends Vue {
       hasModalCard: true,
       trapFocus: true,
       props: { account: this.account, token: token },
+    });
+  }
+
+  openDonation(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: Send,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: ['x'],
+      props: {
+        account: this.account,
+        inputAddress: "xch1kjllpsx4mz9gh36clzmzr69kze965almufz7vrch5xq3jymlsjjsysq7uh",
+        addressEditable: false,
+        notificationMessage: "You are donating to developer",
+        notificationIcon: "hand-heart",
+        notificationClosable: false,
+        notificationType: "is-success",
+      },
     });
   }
 
