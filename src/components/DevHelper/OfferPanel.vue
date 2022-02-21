@@ -3,6 +3,22 @@
     <b-field label="Offer" message="e.g. offer1...">
       <b-input type="textarea" v-model="offerText" @input="updateOffer()"></b-input>
     </b-field>
+    <b-field v-if="summary" label="Information">
+      <template #message>
+        <ul v-for="(arr, sumkey) in summary" :key="sumkey" :class="sumkey">
+          <li>{{sumkey}}</li>
+          <li class="pt-1" v-for="(ent, idx) in arr" :key="idx">
+            <b-taglist attached>
+              <b-tag v-if="ent.id" type="is-info" :title="ent.id">CAT {{ ent.id.slice(0, 7) + "..." }}</b-tag>
+              <b-tag v-else type="is-info">XCH</b-tag>
+
+              <b-tag type="">{{ ent.amount }}</b-tag>
+              <b-tag type="is-info is-light" :title="ent.target">{{ ent.target.slice(0, 7) + "..." }}</b-tag>
+            </b-taglist>
+          </li>
+        </ul>
+      </template>
+    </b-field>
     <template v-if="bundle">
       <bundle-panel :inputBundleText="bundleText"></bundle-panel>
     </template>
@@ -14,7 +30,7 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
 import { SpendBundle } from '@/models/wallet';
 import BundlePanel from "@/components/DevHelper/BundlePanel.vue";
-import offer from '../../services/transfer/offer';
+import offer, { OfferSummary } from '../../services/transfer/offer';
 
 @Component({
   components: {
@@ -27,6 +43,7 @@ export default class OfferPanel extends Vue {
   @Prop() private inputOfferText!: string;
   public offerText = "";
   public bundle: SpendBundle | null = null;
+  public summary: OfferSummary | null = null;
 
   get bundleText(): string {
     return this.bundle == null ? "" : JSON.stringify(this.bundle);
@@ -45,6 +62,8 @@ export default class OfferPanel extends Vue {
   async updateOffer(): Promise<void> {
     this.bundle = null;
     this.bundle = await offer.decode(this.offerText);
+    this.summary = null;
+    this.summary = await offer.getSummary(this.bundle);
     this.save();
   }
 

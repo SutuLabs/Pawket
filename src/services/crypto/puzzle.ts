@@ -4,12 +4,20 @@ import store from "../../store";
 import { Bytes } from "clvm";
 import { PrivateKey } from "@chiamine/bls-signatures";
 import utility from "./utility";
+import { assemble } from "clvm_tools/clvm_tools/binutils";
 
 export interface PuzzleDetail {
   privateKey: PrivateKey;
   puzzle: string;
   hash: string;
   address: string;
+}
+
+export type ConditionArgs = (Uint8Array | undefined | ConditionArgs[]);
+
+export interface ConditionEntity {
+  code: number;
+  args: ConditionArgs[];
 }
 
 class PuzzleMaker {
@@ -24,7 +32,7 @@ class PuzzleMaker {
     await store.dispatch("initializeClvm");
     const hidden_puzzle_hash = "0x711d6c4e32c92e53179b199484cf8c897542bc57f2b22582799f9d657eec4699";
 
-    let output: any = null;
+    let output: string[] = [];
     clvm_tools.setPrintFunction((...args) => output = args)
 
     clvm_tools.go(
@@ -44,7 +52,7 @@ class PuzzleMaker {
   }
 
   public async getPuzzleHashFromPuzzle(puzzle: string): Promise<string> {
-    let output: any = null;
+    let output: string[] = [];
     clvm_tools.setPrintFunction((...args) => output = args)
 
     clvm_tools.go("opc", "-H", puzzle);
@@ -54,7 +62,7 @@ class PuzzleMaker {
   }
 
   public async encodePuzzle(puzzle: string): Promise<string> {
-    let output: any = null;
+    let output: string[] = [];
     clvm_tools.setPrintFunction((...args) => output = args)
 
     clvm_tools.go("opc", puzzle);
@@ -65,7 +73,7 @@ class PuzzleMaker {
 
   public async disassemblePuzzle(puzzle_hex: string): Promise<string> {
     puzzle_hex = puzzle_hex.startsWith("0x") ? puzzle_hex.substring(2) : puzzle_hex;
-    let output: any = null;
+    let output: string[] = [];
     clvm_tools.setPrintFunction((...args) => output = args)
 
     clvm_tools.go("opd", puzzle_hex);
@@ -167,24 +175,38 @@ class PuzzleMaker {
   }
 
   public async calcPuzzleResult(puzzle_reveal: string, solution: string): Promise<string> {
-    let output: any = null;
+    let output: string[] = [];
     clvm_tools.setPrintFunction((...args) => output = args)
 
     clvm_tools.go("brun", puzzle_reveal, solution);
     const result = output[0];
 
+    if (result.startsWith("FAIL")) throw new Error(`Error calculating puzzle [${puzzle_reveal}] from solution [${solution}]: ${result}`);
+
     return result;
   }
 
   public async compileRun(puzzle_source: string): Promise<string> {
-    let output: any = null;
+    let output: string[] = [];
     clvm_tools.setPrintFunction((...args) => output = args)
 
     clvm_tools.go("run", puzzle_source);
     const result = output[0];
 
+    if (result.startsWith("FAIL")) throw new Error(result);
+
     return result;
   }
+
+  public parseConditions(conditonString: string): ConditionEntity[] {
+    const conds = Array.from(assemble(conditonString).as_iter())
+      .map(cond => ({
+        code: cond.first().atom?.at(0) ?? 0,
+        args: Array.from(cond.rest().as_iter()).map(_ => _.listp() ? Array.from(_.as_iter()).map(_ => _.atom?.raw()) : _.atom?.raw())
+      }));
+
+    return conds;
+  };
 }
 
 export default new PuzzleMaker();

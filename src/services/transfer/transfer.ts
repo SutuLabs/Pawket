@@ -8,7 +8,6 @@ import { CoinConditions, prefix0x } from "../coin/condition";
 import puzzle, { PuzzleDetail } from "../crypto/puzzle";
 import { TokenPuzzleDetail } from "../crypto/receive";
 import stdBundle from "./stdBundle";
-import { assemble } from "clvm_tools/clvm_tools/binutils";
 import { ConditionOpcode } from "../coin/opcode";
 import catBundle from "./catBundle";
 
@@ -141,17 +140,8 @@ class Transfer {
 
   private async signSolution(BLS: ModuleInstance, solution_executed_result: string, synthetic_sk: PrivateKey, coinname: Bytes): Promise<G2Element> {
 
-    const parseConditions = (conditonString: string): ConditionEntity[] => {
-      const conds = Array.from(assemble(conditonString).as_iter())
-        .map(cond => ({
-          code: cond.first().atom?.at(0) ?? 0,
-          args: Array.from(cond.rest().as_iter()).map(_ => _.atom?.raw())
-        }));
 
-      return conds;
-    };
-
-    const conds = parseConditions(solution_executed_result);
+    const conds = puzzle.parseConditions(solution_executed_result);
 
     const sigs: G2Element[] = [];
     const synthetic_pk_hex = Bytes.from(synthetic_sk.get_g1().serialize()).hex();
@@ -241,10 +231,6 @@ export interface TransferTarget {
   address: string;
   amount: bigint;
   memos?: string[];
-}
-interface ConditionEntity {
-  code: number;
-  args: (Uint8Array | undefined)[];
 }
 
 export default new Transfer();
