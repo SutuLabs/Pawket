@@ -2,11 +2,13 @@ import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
 import { bech32m } from "@scure/base";
 import zlib from 'zlib';
 import { Buffer } from 'buffer';
-import { Bytes, sexp_buffer_from_stream, Stream, sexp_from_stream, SExp } from "clvm";
+import { Bytes, sexp_buffer_from_stream, Stream, sexp_from_stream, SExp, Tuple } from "clvm";
 import { prefix0x } from '@/services/coin/condition';
-import { disassemble } from 'clvm_tools/clvm_tools/binutils';
+import { assemble, disassemble } from 'clvm_tools/clvm_tools/binutils';
 import puzzle from "../crypto/puzzle";
-
+import { modsdict, modsprog } from '@/services/coin/mods';
+import { uncurry } from 'clvm_tools/clvm_tools/curry';
+import { ConditionOpcode } from "../coin/opcode";
 
 class Offer {
   private initDict = [
@@ -14,7 +16,7 @@ class Offer {
     "ff02ffff01ff02ff0affff04ff02ffff04ff03ff80808080ffff04ffff01ffff333effff02ffff03ff05ffff01ff04ffff04ff0cffff04ffff02ff1effff04ff02ffff04ff09ff80808080ff808080ffff02ff16ffff04ff02ffff04ff19ffff04ffff02ff0affff04ff02ffff04ff0dff80808080ff808080808080ff8080ff0180ffff02ffff03ff05ffff01ff04ffff04ff08ff0980ffff02ff16ffff04ff02ffff04ff0dffff04ff0bff808080808080ffff010b80ff0180ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff1effff04ff02ffff04ff09ff80808080ffff02ff1effff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080"]
     .map((t => Buffer.from(t, "hex")))
 
-  async decode(offerText: string): Promise<SpendBundle> {
+  public async decode(offerText: string): Promise<SpendBundle> {
     const offer_compressed = bech32m.decodeToBytes(offerText).bytes;
     const buff = Buffer.from(offer_compressed);
     const initDict = this.initDict;
@@ -79,6 +81,107 @@ class Offer {
 
     return bundle;
   }
+
+  public async getSummary(bundle: SpendBundle): Promise<OfferSummary> {
+
+    const ocs = this.getOfferedCoins(bundle);
+    const rcs = this.getRequestedCoins(bundle);
+    const requested: OfferEntity[] = [];
+    const offered: OfferEntity[] = [];
+
+    const tryGetAssetId = async (puzzle_reveal: string): Promise<string> => {
+      const { module, args } = await this.uncurry(puzzle_reveal);
+      if (modsdict[module] == "cat") {
+        const assetId = args[1];
+        return assetId;
+      }
+
+      return "";
+    }
+
+    const getCoinEntities = async (coin: CoinSpend, type: "offer" | "request") => {
+      const entities: OfferEntity[] = [];
+      const puzzle_reveal = await puzzle.disassemblePuzzle(coin.puzzle_reveal);
+      const solution = await puzzle.disassemblePuzzle(coin.solution);
+      let result = "";
+      let assetId = "";
+      if (type == "request") {
+        if (modsdict[puzzle_reveal] == "settlement_payments") {
+          result = await puzzle.calcPuzzleResult(modsprog["settlement_payments"], solution);
+        }
+        else {
+          assetId = await tryGetAssetId(puzzle_reveal);
+          result = await puzzle.calcPuzzleResult(modsprog["settlement_payments"], solution);
+        }
+      } else if (type == "offer") {
+        result = await puzzle.calcPuzzleResult(puzzle_reveal, solution);
+        assetId = await tryGetAssetId(puzzle_reveal);
+      }
+      else {
+        throw "not implement"
+      }
+
+      const conds = puzzle.parseConditions(result);
+      for (let j = 0; j < conds.length; j++) {
+        const cond = conds[j];
+        if (cond.code == ConditionOpcode.CREATE_COIN) {
+          entities.push({
+            id: assetId,
+            amount: BigInt(prefix0x(Bytes.from(cond.args[1] as Uint8Array).hex())),
+            target: prefix0x(Bytes.from(((cond.args[2] && cond.args[2]?.length > 0) ? cond.args[2][0] : cond.args[0]) as Uint8Array).hex()),
+          })
+        }
+      }
+
+      return entities;
+    }
+
+    for (let i = 0; i < ocs.length; i++) {
+      const coin = ocs[i];
+      offered.push(...(await getCoinEntities(coin, "offer")).filter(_ => _.target == "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79"));
+    }
+
+    for (let i = 0; i < rcs.length; i++) {
+      const coin = rcs[i];
+      requested.push(...await getCoinEntities(coin, "request"));
+    }
+
+    return { requested, offered };
+  }
+
+
+  private async uncurry(puz: string): Promise<UncurriedPuzzle> {
+    const curried = assemble(puz);
+    const [mod, args] = uncurry(curried) as Tuple<SExp, SExp>;
+    const mods = disassemble(mod);
+    const argarr = Array.from(args.as_iter()).map(_ => disassemble(_ as SExp));
+    return { module: mods, args: argarr };
+  }
+
+  private readonly EmptyParent = "0x0000000000000000000000000000000000000000000000000000000000000000";
+
+  private getOfferedCoins(bundle: SpendBundle): CoinSpend[] {
+    return bundle.coin_spends.filter(_ => _.coin.parent_coin_info != this.EmptyParent)
+  }
+  private getRequestedCoins(bundle: SpendBundle): CoinSpend[] {
+    return bundle.coin_spends.filter(_ => _.coin.parent_coin_info == this.EmptyParent)
+  }
+}
+
+export interface UncurriedPuzzle {
+  module: string;
+  args: string[];
+}
+
+export interface OfferEntity {
+  id: string;
+  amount: bigint;
+  target: string;
+}
+
+export interface OfferSummary {
+  requested: OfferEntity[];
+  offered: OfferEntity[];
 }
 
 export default new Offer();

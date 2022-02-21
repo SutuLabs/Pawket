@@ -63,9 +63,12 @@
       </b-tabs>
     </div>
     <div class="box">
-      <h2 class="has-text-weight-bold is-size-4 pb-5">DApps</h2>
+      <h2 class="has-text-weight-bold is-size-4 pb-5">dApps</h2>
       <b-tooltip label="Donation to support development" multilined position="is-right">
         <b-button @click="openDonation()" size="is-large">❤️</b-button>
+      </b-tooltip>
+      <b-tooltip v-if="debugMode" label="Take offer" multilined position="is-right">
+        <b-button @click="openOfferManagement()" size="is-large" class="mx-5">💱</b-button>
       </b-tooltip>
     </div>
   </div>
@@ -83,6 +86,7 @@ import Send from "./Send.vue";
 import { demojo } from "@/filters/unitConversion";
 import { TokenInfo, AccountEntity, AccountToken } from "@/store/modules/account";
 import { translate } from "@/i18n/i18n";
+import OfferManagement from './OfferManagement.vue';
 
 type Mode = "Verify" | "Create";
 
@@ -209,6 +213,19 @@ export default class AccountDetail extends Vue {
         notificationIcon: "hand-heart",
         notificationClosable: false,
         notificationType: "is-success",
+      },
+    });
+  }
+
+  openOfferManagement(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: OfferManagement,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: ['x'],
+      props: {
+        account: this.account,
       },
     });
   }
