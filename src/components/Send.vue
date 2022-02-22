@@ -26,19 +26,9 @@
         <template #label>
           {{ $t("send.ui.label.amount") }}
           <span class="is-size-6">
-            <b-tooltip :triggers="['click']" :auto-close="['outside', 'escape']" position="is-right" type="is-light" multilined>
-              <template v-slot:content>
-                {{ $t('send.ui.tooltip.oneCoinOnly')}}
-                <a href="https://pawket.app" target="_blank">
-                   {{ $t('send.ui.tooltip.learnMore')}}
-                  <b-icon icon="open-in-new" size="is-small"></b-icon>
-                </a>
-              </template>
-              <b-icon icon="comment-question" size="is-small" type="is-info" class="px-4"></b-icon>
-            </b-tooltip>
             <b-button tag="a" type="is-info is-light" size="is-small" @click="setMax(maxAmount)">
               <span v-if="maxStatus == 'Loading'"> {{ $t('send.ui.span.loading')}} {{ selectedToken }}</span>
-              <span v-if="maxStatus == 'Loaded'"> {{ $t('send.ui.span.loaded')}} {{ maxAmount }} {{ selectedToken }}</span>
+              <span v-if="maxStatus == 'Loaded'"> {{ $t('send.ui.span.maxLeadingText')}} {{ maxAmount }} {{ selectedToken }}</span>
             </b-button>
           </span>
         </template>

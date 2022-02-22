@@ -74,6 +74,13 @@
       "tab": {
         "asset": "资产",
         "activity": "活动"
+      },
+      "title": {
+        "dApps": "捐赠"
+      },
+      "tooltip": {
+        "donate":"捐助开发者",
+        "offer": "发起邀约"
       }
     },
     "message": {
@@ -240,6 +247,39 @@
         "OverconstrainedError": "错误：已安装的相机不适合",
         "StreamApiNotSupportedError": "错误：浏览器不支持串流API",
         "InsecureContextError": "错误：相机访问只在安全连接下允许，使用HTTPS或localhost而不是HTTP"
+      }
+    }
+  },
+  "about": {
+    "ui": {
+      "title": {
+        "roadmap": "路线图"
+      },
+      "blackquote": {
+        "slogan": "用Pawket管理你的CAT!"
+      },
+      "list": {
+        "1":"完全支持离线场景",
+        "2":"查看 XCH/CATs 余额",
+        "3":"在线/离线模式下接收XCH/CATs",
+        "4":"通过自由12/24字助记符初始化钱包",
+        "5":"生成的兼容助记词可以直接在Chia&trade;客户端使用",
+        "6":"显示与Chia&trade;客户端完全兼容的指纹",
+        "7":"无限衍生钱包",
+        "8":"影子钱包(密码保护助记词)",
+        "9":"XCH/CATs 的地址变化（衍生地址）",
+        "10":"导入和管理自定义 CAT",
+        "11":"硬币综合开发工具",
+        "12":"支持自定义收费",
+        "13":"支持多币混发",
+        "14":"一次交易支持多个目标地址",
+        "15":"支持报价创建/消费",
+        "16":"只支持查看钱包",
+        "17":"打包为扩展并为dApps提供API",
+        "18":"打包成应用并通过AppStore和Google Play提供下载",
+        "19":"支持查看 NFT",
+        "20":"支持发送 NFT",
+        "21":"支持 NFT 创建"
       }
     }
   }
