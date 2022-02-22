@@ -14,7 +14,7 @@
   "verifyPassword": {
     "ui": {
       "button": {
-        "confirm": "Confrm",
+        "confirm": "Confirm",
         "clear": "Clear Data",
         "create": "Create"
       },
@@ -27,12 +27,12 @@
         "createPassword": "Create Password"
       },
       "alt": {
-        "logoAlt": "Pawket logo"
+        "logoAlt": "Pawket Logo"
       }
     },
     "message": {
       "confirmation": {
-        "clear": "Clear all data? Everything would empty!!!",
+        "clear": "Clear all data? Everything would be empty!!!",
         "confirmText": "Confirm",
         "cancelText": "Cancel"
       },
@@ -88,7 +88,7 @@
         "configure": "Configure"
       },
       "label": {
-        "maxAddress": "Max privacy addresses to search",
+        "maxAddress": "Max Privacy Addresses to Search",
         "listingCATs": "Listing CATs"
       },
       "button": {
@@ -103,14 +103,14 @@
     "message": {
       "prompt": {
         "addAsset": "Enter the Asset ID",
-        "oldPassword": "Enter the old password",
-        "newPassword": "Enter the new password",
-        "newPassword2": "Reenter the new password",
+        "oldPassword": "Enter the Old Password",
+        "newPassword": "Enter the New Password",
+        "newPassword2": "Reenter the New Password",
         "confirmText": "OK",
         "cancelText": "Cancel"
       },
       "error": {
-        "passwordNotMatch": "password not match"
+        "passwordNotMatch": "Password does not match"
       }
     }
   },
@@ -147,26 +147,26 @@
         "showMnemonic": "Show Mnemonic",
         "addBySerial": "Add By Serial",
         "addByPassword": "Add By Password",
-        "addByLegacy": "Import Chia 24 Mnemonic words"
+        "addByLegacy": "Import Chia 24 Mnemonic Words"
       }
     },
     "message": {
       "confirmation": {
         "showMnemonic": "Mnemonic is very sensitive, make sure you are safe and continue, OK?",
-        "removeAccount": "Remove account? Operation cannot undone!!!",
+        "removeAccount": "Remove account? Operation cannot be undone!!!",
         "cancelText": "Cancel",
-        "confirmText": "Ok"
+        "confirmText": "OK"
       },
       "prompt": {
         "setAccountName": "Enter the new account name",
         "setPassword": "Enter the password",
         "setLegacyMnemonic": "Enter the 24 words mnemonic used by Chia Client:",
         "cancelText": "Cancel",
-        "confirmText": "Ok"
+        "confirmText": "OK"
       },
       "error": {
-        "accountPasswordExists": "Account with same password already exists",
-        "accountMnemonicExists": "Account with same mnemonic already exists"
+        "accountPasswordExists": "An account with the same password already exists",
+        "accountMnemonicExists": "An account with the same mnemonic already exists"
       }
     }
   },
@@ -204,7 +204,7 @@
       },
       "button": {
         "cancel": "Cancel",
-        "submit": "submit",
+        "submit": "Submit",
         "sign": "Sign"
       },
       "slider": {
@@ -233,11 +233,11 @@
   "scanQrCode": {
     "message": {
       "error": {
-        "NotAllowedError": "ERROR: you need to grant camera access permission",
-        "NotFoundError": "ERROR: no camera on this device",
-        "NotSupportedError": "ERROR: secure context required (HTTPS, localhost)",
-        "NotReadableError": "ERROR: is the camera already in use?",
-        "OverconstrainedError": "ERROR: installed cameras are not suitable",
+        "NotAllowedError": "ERROR: You need to grant camera access permission",
+        "NotFoundError": "ERROR: No camera on this device",
+        "NotSupportedError": "ERROR: Secure context required (HTTPS, localhost)",
+        "NotReadableError": "ERROR: Is the camera already in use?",
+        "OverconstrainedError": "ERROR: Installed cameras are not suitable",
         "StreamApiNotSupportedError": "ERROR: Stream API is not supported in this browser",
         "InsecureContextError": "ERROR: Camera access is only permitted in secure context. Use HTTPS or localhost rather than HTTP."
       }
