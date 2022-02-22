@@ -206,6 +206,20 @@
         "cancel": "Cancel",
         "submit": "submit",
         "sign": "Sign"
+      },
+      "slider": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "custom": "Custom"
+      },
+      "tooltip": {
+        "oneCoinOnly": "Currently only support one coin mode,",
+        "learnMore": "Learn more"
+      },
+      "span": {
+        "loading": "Loading",
+        "loaded": "Max:"
       }
     }
   },
@@ -213,6 +227,19 @@
     "ui": {
       "title": {
         "receive": "Receive"
+      }
+    }
+  },
+  "scanQrCode": {
+    "message": {
+      "error": {
+        "NotAllowedError": "ERROR: you need to grant camera access permission",
+        "NotFoundError": "ERROR: no camera on this device",
+        "NotSupportedError": "ERROR: secure context required (HTTPS, localhost)",
+        "NotReadableError": "ERROR: is the camera already in use?",
+        "OverconstrainedError": "ERROR: installed cameras are not suitable",
+        "StreamApiNotSupportedError": "ERROR: Stream API is not supported in this browser",
+        "InsecureContextError": "ERROR: Camera access is only permitted in secure context. Use HTTPS or localhost rather than HTTP."
       }
     }
   }

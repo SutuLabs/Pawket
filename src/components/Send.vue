@@ -28,17 +28,17 @@
           <span class="is-size-6">
             <b-tooltip :triggers="['click']" :auto-close="['outside', 'escape']" position="is-right" type="is-light" multilined>
               <template v-slot:content>
-                Currently only support one coin mode,
+                {{ $t('send.ui.tooltip.oneCoinOnly')}}
                 <a href="https://pawket.app" target="_blank">
-                  Learn more
+                   {{ $t('send.ui.tooltip.learnMore')}}
                   <b-icon icon="open-in-new" size="is-small"></b-icon>
                 </a>
               </template>
               <b-icon icon="comment-question" size="is-small" type="is-info" class="px-4"></b-icon>
             </b-tooltip>
             <b-button tag="a" type="is-info is-light" size="is-small" @click="setMax(maxAmount)">
-              <span v-if="maxStatus == 'Loading'">Loading {{ selectedToken }}</span>
-              <span v-if="maxStatus == 'Loaded'">Max: {{ maxAmount }} {{ selectedToken }}</span>
+              <span v-if="maxStatus == 'Loading'"> {{ $t('send.ui.span.loading')}} {{ selectedToken }}</span>
+              <span v-if="maxStatus == 'Loaded'"> {{ $t('send.ui.span.loaded')}} {{ maxAmount }} {{ selectedToken }}</span>
             </b-button>
           </span>
         </template>
@@ -82,10 +82,10 @@
         <p class="control">
           <span class="button" style="min-width: 150px">
             <b-slider :min="0" :max="3" v-model="feeType" :tooltip="false" @input="changeFee()">
-              <b-slider-tick :value="0">Custom</b-slider-tick>
-              <b-slider-tick :value="1">Low</b-slider-tick>
-              <b-slider-tick :value="2">Medium</b-slider-tick>
-              <b-slider-tick :value="3">High</b-slider-tick>
+              <b-slider-tick :value="0">{{ $t('send.ui.slider.custom')}}</b-slider-tick>
+              <b-slider-tick :value="1">{{ $t('send.ui.slider.low')}}</b-slider-tick>
+              <b-slider-tick :value="2">{{ $t('send.ui.slider.medium')}}</b-slider-tick>
+              <b-slider-tick :value="3">{{ $t('send.ui.slider.high')}}</b-slider-tick>
             </b-slider>
           </span>
         </p>
