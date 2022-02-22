@@ -4,6 +4,7 @@ import { AccountEntity } from './account';
 import Vue from 'vue';
 import encryption from '@/services/crypto/encryption';
 import puzzle from '@/services/crypto/puzzle';
+import { translate } from '@/i18n/i18n';
 
 export interface IVaultState {
   passwordHash: string;
@@ -30,7 +31,7 @@ store.registerModule<IVaultState>('vault', {
     async importSeed({ state, dispatch }, mnemonic: string) {
       state.seedMnemonic = mnemonic;
       await dispatch("persistent");
-      await dispatch("createAccountBySerial", "Default");
+      await dispatch("createAccountBySerial", translate('default.accountName'));
       await dispatch("refreshBalance");
     },
     setPassword({ state, dispatch }, password: string) {

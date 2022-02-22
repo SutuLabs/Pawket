@@ -1,4 +1,7 @@
 {
+  "default": {
+    "accountName": "Account1"
+  },
   "html": {
     "document": {
       "title": "Pawket"
