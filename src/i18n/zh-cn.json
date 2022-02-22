@@ -32,7 +32,7 @@
     },
     "message": {
       "confirmation": {
-        "clear": "所有数据都会被清空，确认执行？",
+        "clear": "所有数据将会被清空，确认执行？",
         "confirmText": "确认",
         "cancelText": "取消"
       },
@@ -131,7 +131,7 @@
         "firstWalletSecretKey": "第一个钱包私钥 (m/12381/8444/2/0)",
         "PrivateKey": "私钥",
         "firstWalletPublicKey": "第一个钱包公钥 (m/12381/8444/2/0)",
-        "mnemonicSeed": "助记词种子(24个助记词)"
+        "mnemonicSeed": "助记词种子(24位助记词)"
       },
       "button": {
         "revealMnemonic": "显示助记词"
@@ -147,7 +147,7 @@
         "showMnemonic": "展示助记词",
         "addBySerial": "序列添加",
         "addByPassword": "通过密码添加",
-        "addByLegacy": "导入Chia 24位助记词"
+        "addByLegacy": "通过Chia 24位助记词导入"
       }
     },
     "message": {
@@ -160,13 +160,13 @@
       "prompt": {
         "setAccountName": "输入账户名",
         "setPassword": "输入密码",
-        "setLegacyMnemonic": "输入Chia客户端24个助记词",
+        "setLegacyMnemonic": "输入Chia客户端24位助记词",
         "cancelText": "取消",
         "confirmText": "确认"
       },
       "error": {
-        "accountPasswordExists": "已有账户使用相同密码！",
-        "accountMnemonicExists": "已有账户使用相同助记词!"
+        "accountPasswordExists": "该密码账户已存在于账户列表中。",
+        "accountMnemonicExists": "该助记词账户已存在于账户列表中。"
       }
     }
   },
@@ -197,7 +197,7 @@
       },
       "label": {
         "address": "地址",
-        "amount": "数量",
+        "amount": "金额",
         "memo": "便签",
         "fee": "交易费",
         "bundle": "数据包"
