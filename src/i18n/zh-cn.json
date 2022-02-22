@@ -113,14 +113,33 @@
     "message": {
       "prompt": {
         "addAsset": "输入资产ID",
-        "oldPassword": "输入旧密码",
-        "newPassword": "输入新密码",
-        "newPassword2": "确认新密码",
         "confirmText": "确认",
         "cancelText": "取消"
+      }
+    }
+  },
+  "changePassword": {
+    "ui": {
+      "title": {
+        "changePassword": "更改密码"
       },
+      "label": {
+        "oldPassword": "旧密码",
+        "newPassword": "新密码",
+        "rePassword": "确认密码"
+      },
+      "button": {
+        "back": "返回",
+        "submitChange": "提交"
+      }
+    },
+    "message": {
       "error": {
-        "passwordNotMatch": "密码不匹配，请检查"
+        "passwordNotCorrect": "密码不正确",
+        "passwordNotMatch": "密码不匹配"
+      },
+      "alert": {
+        "passwordChanged": "密码已更改，请重新登录"
       }
     }
   },
