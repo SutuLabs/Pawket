@@ -3,32 +3,32 @@
     <div class="container p-6">
       <div class="columns">
         <div class="column">
-          <h1 class="is-size-3">Roadmap</h1>
-          <blockquote>Manage your CATs in Pawket!</blockquote>
+          <h1 class="is-size-3">{{ $t('about.ui.title.roadmap')}}</h1>
+          <blockquote>{{ $t('about.ui.blackquote.slogan')}}</blockquote>
           <ul class="py-3">
-            <li class="done">Fully support offline scenario</li>
-            <li class="done">View XCH/CATs balance</li>
-            <li class="done">Receive XCH/CATs in online/offline mode</li>
-            <li class="done">Init wallet by freely 12/24 words mnemonic</li>
-            <li class="done">Generated compatible mnemonic which could be used directly in Chia&trade; client</li>
-            <li class="done">Show fingerprint which fully compatible with Chia&trade; client</li>
-            <li class="done">Infinite derivative wallet</li>
-            <li class="done">Shadow wallet(password protected mnemonic)</li>
-            <li class="done">Address variation(derivative addresses) for XCH/CATs</li>
-            <li class="done">Import and manage custom CAT</li>
-            <li class="done">Comprehensive developer tool for coins</li>
-            <li class="done">Support customize fee</li>
-            <li class="done">Support multiple coins mix send</li>
+            <li class="done">{{ $t('about.ui.list.1')}}</li>
+            <li class="done">{{ $t('about.ui.list.2')}}</li>
+            <li class="done">{{ $t('about.ui.list.3')}}</li>
+            <li class="done">{{ $t('about.ui.list.4')}}</li>
+            <li class="done">{{ $t('about.ui.list.5')}}</li>
+            <li class="done">{{ $t('about.ui.list.6')}}</li>
+            <li class="done">{{ $t('about.ui.list.7')}}</li>
+            <li class="done">{{ $t('about.ui.list.8')}}</li>
+            <li class="done">{{ $t('about.ui.list.9')}}</li>
+            <li class="done">{{ $t('about.ui.list.10')}}</li>
+            <li class="done">{{ $t('about.ui.list.11')}}</li>
+            <li class="done">{{ $t('about.ui.list.12')}}</li>
+            <li class="done">{{ $t('about.ui.list.13')}}</li>
           </ul>
           <ul class="py-3">
-            <li class="plan">Support multiple target address in one transaction</li>
-            <li class="plan">Support offer creation/consumption</li>
-            <li class="plan">Support view only wallet</li>
-            <li class="plan">Package as extension and provide API for dApps</li>
-            <li class="plan">Package as the app and provide download through AppStore and Google Play</li>
-            <li class="plan">Support view NFT</li>
-            <li class="plan">Support send NFT</li>
-            <li class="plan">Support NFT creation</li>
+            <li class="plan">{{ $t('about.ui.list.14')}}</li>
+            <li class="plan">{{ $t('about.ui.list.15')}}</li>
+            <li class="plan">{{ $t('about.ui.list.16')}}</li>
+            <li class="plan">{{ $t('about.ui.list.17')}}</li>
+            <li class="plan">{{ $t('about.ui.list.18')}}</li>
+            <li class="plan">{{ $t('about.ui.list.19')}}</li>
+            <li class="plan">{{ $t('about.ui.list.20')}}</li>
+            <li class="plan">{{ $t('about.ui.list.21')}}</li>
           </ul>
         </div>
       </div>

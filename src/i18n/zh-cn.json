@@ -35,7 +35,7 @@
     },
     "message": {
       "confirmation": {
-        "clear": "所有数据都会被清空，确认执行？",
+        "clear": "所有数据将会被清空，确认执行？",
         "confirmText": "确认",
         "cancelText": "取消"
       },
@@ -77,6 +77,13 @@
       "tab": {
         "asset": "资产",
         "activity": "活动"
+      },
+      "title": {
+        "dApps": "捐赠"
+      },
+      "tooltip": {
+        "donate":"捐助开发者",
+        "offer": "发起邀约"
       }
     },
     "message": {
@@ -134,7 +141,7 @@
         "firstWalletSecretKey": "第一个钱包私钥 (m/12381/8444/2/0)",
         "PrivateKey": "私钥",
         "firstWalletPublicKey": "第一个钱包公钥 (m/12381/8444/2/0)",
-        "mnemonicSeed": "助记词种子(24个助记词)"
+        "mnemonicSeed": "助记词种子(24位助记词)"
       },
       "button": {
         "revealMnemonic": "显示助记词"
@@ -150,7 +157,7 @@
         "showMnemonic": "展示助记词",
         "addBySerial": "序列添加",
         "addByPassword": "通过密码添加",
-        "addByLegacy": "导入Chia 24位助记词"
+        "addByLegacy": "通过Chia 24位助记词导入"
       }
     },
     "message": {
@@ -163,13 +170,13 @@
       "prompt": {
         "setAccountName": "输入账户名",
         "setPassword": "输入密码",
-        "setLegacyMnemonic": "输入Chia客户端24个助记词",
+        "setLegacyMnemonic": "输入Chia客户端24位助记词",
         "cancelText": "取消",
         "confirmText": "确认"
       },
       "error": {
-        "accountPasswordExists": "已有账户使用相同密码！",
-        "accountMnemonicExists": "已有账户使用相同助记词!"
+        "accountPasswordExists": "该密码账户已存在于账户列表中。",
+        "accountMnemonicExists": "该助记词账户已存在于账户列表中。"
       }
     }
   },
@@ -200,7 +207,7 @@
       },
       "label": {
         "address": "地址",
-        "amount": "数量",
+        "amount": "金额",
         "memo": "便签",
         "fee": "交易费",
         "bundle": "数据包"
@@ -209,6 +216,20 @@
         "cancel": "取消",
         "submit": "提交",
         "sign": "签名"
+      },
+      "slider": {
+        "low": "低",
+        "medium": "中",
+        "high": "高",
+        "custom": "自定义"
+      },
+      "tooltip": {
+        "oneCoinOnly": "当前仅支持单币模式，",
+        "learnMore": "了解更多"
+      },
+      "span": {
+        "loading": "载入中",
+        "loaded": "最大:"
       }
     }
   },
@@ -216,6 +237,52 @@
     "ui": {
       "title": {
         "receive": "接收"
+      }
+    }
+  },
+  "scanQrCode": {
+    "message": {
+      "error": {
+        "NotAllowedError": "错误：你需要授权相机访问权限",
+        "NotFoundError": "错误：此设备没有相机",
+        "NotSupportedError": "错误：需要安全传输协议（HTTPS，localhost）",
+        "NotReadableError": "错误：请检查相机是否在使用",
+        "OverconstrainedError": "错误：已安装的相机不适合",
+        "StreamApiNotSupportedError": "错误：浏览器不支持串流API",
+        "InsecureContextError": "错误：相机访问只在安全连接下允许，使用HTTPS或localhost而不是HTTP"
+      }
+    }
+  },
+  "about": {
+    "ui": {
+      "title": {
+        "roadmap": "路线图"
+      },
+      "blackquote": {
+        "slogan": "用 Pawket 管理你的 CAT!"
+      },
+      "list": {
+        "1":"完全支持离线场景",
+        "2":"查看 XCH/CATs 余额",
+        "3":"在线/离线模式下接收 XCH/CATs",
+        "4":"通过自由 12/24 字助记符初始化钱包",
+        "5":"生成的兼容助记词可以直接在 Chia&trade; 客户端使用",
+        "6":"显示与 Chia&trade; 客户端完全兼容的指纹",
+        "7":"无限衍生钱包",
+        "8":"影子钱包(密码保护助记词)",
+        "9":"XCH/CATs 的地址变化（衍生地址）",
+        "10":"导入和管理自定义 CAT",
+        "11":"硬币综合开发工具",
+        "12":"支持自定义收费",
+        "13":"支持多币混发",
+        "14":"一次交易支持多个目标地址",
+        "15":"支持报价创建/消费",
+        "16":"只支持查看钱包",
+        "17":"打包为扩展并为 dApps 提供 API",
+        "18":"打包成应用并通过 AppStore 和 Google Play提供下载",
+        "19":"支持查看 NFT",
+        "20":"支持发送 NFT",
+        "21":"支持 NFT 创建"
       }
     }
   }

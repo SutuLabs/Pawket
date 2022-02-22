@@ -10,6 +10,7 @@
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
 import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from 'vue-qrcode-reader'
+import { translate } from "@/i18n/i18n";
 
 @Component({
   components: {
@@ -51,19 +52,19 @@ export default class ScanQrCode extends Vue {
       await promise;
     } catch (error) {
       if (error.name === 'NotAllowedError') {
-        this.error = "ERROR: you need to grant camera access permission"
+        this.error = translate('scanQrCode.message.error.NotAllowedError')
       } else if (error.name === 'NotFoundError') {
-        this.error = "ERROR: no camera on this device"
+        this.error = translate('scanQrCode.message.error.NotFoundError')
       } else if (error.name === 'NotSupportedError') {
-        this.error = "ERROR: secure context required (HTTPS, localhost)"
+        this.error = translate('scanQrCode.message.error.NotSupportedError')
       } else if (error.name === 'NotReadableError') {
-        this.error = "ERROR: is the camera already in use?"
+       this.error = translate('scanQrCode.message.error.NotReadableError')
       } else if (error.name === 'OverconstrainedError') {
-        this.error = "ERROR: installed cameras are not suitable"
+        this.error = translate('scanQrCode.message.error.OverconstrainedError')
       } else if (error.name === 'StreamApiNotSupportedError') {
-        this.error = "ERROR: Stream API is not supported in this browser"
+       this.error = translate('scanQrCode.message.error.StreamApiNotSupportedError')
       } else if (error.name === 'InsecureContextError') {
-        this.error = 'ERROR: Camera access is only permitted in secure context. Use HTTPS or localhost rather than HTTP.';
+       this.error = translate('scanQrCode.message.error.InsecureContextError')
       } else {
         this.error = `ERROR: Camera error (${error.name})`;
       }
