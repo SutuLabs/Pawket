@@ -14,6 +14,8 @@ variables:
   versionNumber: '0.1.$(Build.BuildNumber)'
   qaEnvironment: 'chiabee_wallet_qa'
   qaFtp: 'chiabee_wallet_dev_ftp'
+  prEnvironment: 'chiabee_wallet_pr'
+  prFtp: 'chiabee_wallet_pr_ftp'
 
 stages:
 - stage: build
@@ -58,6 +60,33 @@ stages:
         publishLocation: 'Container'
 
 
+- stage: pr
+  displayName: pr
+  condition: and(succeeded(), eq(variables['system.pullrequest.targetbranch'], 'refs/heads/master'))
+  dependsOn:
+  - build
+  jobs:
+  - deployment: prdeploy
+    displayName: prDeploy
+    timeoutInMinutes: 10
+    cancelTimeoutInMinutes: 1
+    environment: $(prEnvironment)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: FtpUpload@2
+            inputs:
+              credentialsOption: 'serviceEndpoint'
+              serverEndpoint: '$(prFtp)'
+              rootDirectory: '$(Pipeline.Workspace)/$(artifactName)'
+              filePatterns: '**'
+              remoteDirectory: '/'
+              clean: false
+              cleanContents: false
+              preservePaths: true
+              trustSSL: false
+
 - stage: qa
   displayName: qa
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -83,4 +112,4 @@ stages:
               clean: false
               cleanContents: false
               preservePaths: true
-              trustSSL: false      
+              trustSSL: false
