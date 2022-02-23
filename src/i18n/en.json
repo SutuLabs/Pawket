@@ -113,14 +113,33 @@
     "message": {
       "prompt": {
         "addAsset": "Enter the Asset ID",
-        "oldPassword": "Enter the Old Password",
-        "newPassword": "Enter the New Password",
-        "newPassword2": "Reenter the New Password",
         "confirmText": "OK",
         "cancelText": "Cancel"
+      }
+    }
+  },
+  "changePassword": {
+    "ui": {
+      "title": {
+        "changePassword": "Change Password"
       },
+      "label": {
+        "oldPassword": "Old Password",
+        "newPassword": "New Password",
+        "rePassword": "Re-Enter Password"
+      },
+      "button": {
+        "back": "Back",
+        "submitChange": "Submit"
+      }
+    },
+    "message": {
       "error": {
-        "passwordNotMatch": "Password does not match"
+        "passwordNotCorrect": "Password not correct",
+        "passwordNotMatch": "Password not match"
+      },
+      "alert": {
+        "passwordChanged": "Password has been changed, please Re-login"
       }
     }
   },
