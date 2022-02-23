@@ -10,8 +10,9 @@ const languages = {
   zhcn: zhcnText,
 };
 
-const messages = Object.assign(languages)
-const defaultLocale = 'en'
+const messages = Object.assign(languages);
+const locale = localStorage.getItem("Locale");
+const defaultLocale = locale == null ? "zhcn" : locale;
 
 // Create VueI18n instance with options
 const i18n = new VueI18n({

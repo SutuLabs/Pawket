@@ -63,11 +63,11 @@
       </b-tabs>
     </div>
     <div class="box">
-      <h2 class="has-text-weight-bold is-size-4 pb-5">dApps</h2>
-      <b-tooltip label="Donation to support development" multilined position="is-right">
+      <h2 class="has-text-weight-bold is-size-4 pb-5">{{ $t('accountDetail.ui.title.dApps')}}</h2>
+      <b-tooltip :label="$t('accountDetail.ui.tooltip.donate')" multilined position="is-right">
         <b-button @click="openDonation()" size="is-large">❤️</b-button>
       </b-tooltip>
-      <b-tooltip v-if="debugMode" label="Take offer" multilined position="is-right">
+      <b-tooltip v-if="debugMode" :label="$t('accountDetail.ui.tooltip.offer')" multilined position="is-right">
         <b-button @click="openOfferManagement()" size="is-large" class="mx-5">💱</b-button>
       </b-tooltip>
     </div>
@@ -209,7 +209,7 @@ export default class AccountDetail extends Vue {
         account: this.account,
         inputAddress: "xch1kjllpsx4mz9gh36clzmzr69kze965almufz7vrch5xq3jymlsjjsysq7uh",
         addressEditable: false,
-        notificationMessage: "You are donating to developer",
+        notificationMessage: translate("accountDetail.message.notification.donate"),
         notificationIcon: "hand-heart",
         notificationClosable: false,
         notificationType: "is-success",

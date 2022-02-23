@@ -14,6 +14,13 @@
       }
     }
   },
+  "self-test": {
+    "message": {
+      "checking": "Checking",
+      "passed": "Passed",
+      "failed": "Failed"
+    }
+  },
   "verifyPassword": {
     "ui": {
       "button": {
@@ -89,6 +96,9 @@
     "message": {
       "confirmation": {
         "lock": "Lock?"
+      },
+      "notification": {
+        "donate": "You are donating to developer"
       }
     }
   },
@@ -281,8 +291,8 @@
         "2":"View XCH/CATs balance",
         "3":"Receive XCH/CATs in online/offline mode",
         "4":"Init wallet by freely 12/24 words mnemonic",
-        "5":"Generated compatible mnemonic which could be used directly in Chia&trade; client",
-        "6":"Show fingerprint which fully compatible with Chia&trade; client",
+        "5":"Generated compatible mnemonic which could be used directly in Chia™; client",
+        "6":"Show fingerprint which fully compatible with Chia™; client",
         "7":"Infinite derivative wallet",
         "8":"Shadow wallet(password protected mnemonic)",
         "9":"Address variation(derivative addresses) for XCH/CATs",

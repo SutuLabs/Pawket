@@ -1,5 +1,9 @@
 <template>
-  <div class="box" v-show="status" id="self-test">{{ errorMessage }}</div>
+  <div class="box" id="self-test">
+    <div v-if="status == -1">⌛{{ $t("self-test.message.checking") }}</div>
+    <div v-else-if="status == 0">✅{{ $t("self-test.message.passed") }}</div>
+    <div v-else>❌{{ $t("self-test.message.failed") + ":" + errorMessage }}</div>
+  </div>
 </template>
 
 <script lang="ts">

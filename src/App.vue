@@ -69,6 +69,7 @@ export default class ProfileCorner extends Vue {
 
   changeLang(lang: string): void {
     this.$i18n.locale = lang;
+    localStorage.setItem('Locale', lang);
   }
 
   disableDebug(): void {
