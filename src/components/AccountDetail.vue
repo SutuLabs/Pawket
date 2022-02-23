@@ -38,7 +38,7 @@
               }}</span>
               <span class="has-text-grey-light is-size-7 pl-3">{{ token.amount }} mojos</span>
             </span>
-            <a class="is-pulled-right" href="javascript:void(0)" @click="openLink(token)">⚓</a>
+            <a v-if="debugMode" class="is-pulled-right" href="javascript:void(0)" @click="openLink(token)">⚓</a>
           </a>
         </b-tab-item>
         <b-tab-item :label="$t('accountDetail.ui.tab.activity')">
