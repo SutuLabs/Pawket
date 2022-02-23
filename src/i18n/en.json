@@ -64,10 +64,38 @@
         "create": "Create",
         "back": "Back",
         "refresh": "Refresh",
-        "confirm": "Confirm"
+        "confirm": "Confirm",
+        "later": "Later",
+        "ready": "Ready",
+        "import12": "Import via Pawket 12-mnemonic",
+        "import24": "Import via Chia 24-mnemonic",
+        "comingSoon": "Coming Soon"
       },
       "label": {
         "mnemonic": "Mnemonic"
+      },
+      "text": {
+        "importMenu": {
+          "title": "Choose Import Method",
+          "tips": "Tips",
+          "tip1": "The main wallet currently only supports Pawket 12-digit mnemonic import.",
+          "tip2": "After entering the wallet, you can import the Chia wallet account through the Chia 24-digit mnemonic."
+        },
+        "create": {
+          "title": "Mnemonic",
+          "tips": "Tips",
+          "tip1": "Please record the mnemonic phrases on paper in order and keep them in a safe place.",
+          "tip2": "Remember not to disclose your mnemonic phrase to others. Once known by others, you can use the mnemonic phrase to enter your account and even transfer your assets."
+        },
+        "import12": {
+          "title": "Import Via Pawket 12-Mnemonic",
+          "tip": "Please enter your 12-digit Pawket mnemonics in order, using spaces between mnemonics."
+        }
+      }
+    },
+    "message": {
+      "error": {
+        "wrongSeed": "import failed, please check your mnemonic"
       }
     }
   },
