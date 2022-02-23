@@ -69,7 +69,7 @@
         "ready": "Ready",
         "import12": "Import via Pawket 12-mnemonic",
         "import24": "Import via Chia 24-mnemonic",
-        "comingSoon": "Comming Soon"
+        "comingSoon": "Coming Soon"
       },
       "label": {
         "mnemonic": "Mnemonic"
