@@ -118,8 +118,12 @@ store.registerModule<IAccountState>('account', {
       await dispatch("persistent");
     },
     async createAccountBySerial({ state, dispatch, rootState }, name: string) {
+      const seedLen = rootState.vault.seedMnemonic.trim().split(" ").length;
+      if (seedLen != 12 && seedLen != 24) throw new Error("Wrong root mnemonic length, only accept with 12/24 words.");
       const serial = Math.max(...state.accounts.map((_) => (_.serial ? _.serial : 0)), 0) + 1;
-      const acc = await account.getAccount(rootState.vault.seedMnemonic, serial.toFixed(0));
+      const acc = (seedLen == 24 && serial == 1)
+        ? await account.getAccount("", null, rootState.vault.seedMnemonic)
+        : await account.getAccount(rootState.vault.seedMnemonic, serial.toFixed(0));
       state.accounts.push({
         key: acc,
         name: name,

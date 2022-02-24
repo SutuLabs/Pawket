@@ -29,6 +29,8 @@ store.registerModule<IVaultState>('vault', {
   },
   actions: {
     async importSeed({ state, dispatch }, mnemonic: string) {
+      const seedLen = mnemonic.trim().split(" ").length;
+      if (seedLen != 12 && seedLen != 24) throw new Error("Only accept mnemonic with 12/24 words.");
       state.seedMnemonic = mnemonic;
       await dispatch("persistent");
       await dispatch("createAccountBySerial", translate('default.accountName'));
@@ -102,10 +104,10 @@ store.registerModule<IVaultState>('vault', {
           addressRetrievalCount: _.addressRetrievalCount,
           cats: _.cats,
         }))), state.password
-        )
+      )
       state.encryptedAccounts = encryptedAccounts;
       state.encryptedSeed = encryptedSeed;
-      
+
       localStorage.setItem(
         "SETTINGS",
         JSON.stringify({
