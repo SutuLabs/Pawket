@@ -82,8 +82,8 @@
         "create": {
           "title": "Mnemonic",
           "tips": "Tips",
-          "tip1": "Please write the mnemonic phrases on paper in order and keep them in a safe place.",
-          "tip2": "Remember not to disclose your mnemonic phrase to others, otherwise he can enter your account through the mnemonic phrase and even transfer your assets."
+          "tip1": "Please write the mnemonic words on paper in order and keep them in a safe place.",
+          "tip2": "Remember not to disclose your mnemonic words to others, otherwise he can enter your account through the mnemonic words and even transfer your assets."
         },
         "import12": {
           "title": "Import Pawket Mnemonic Words",
@@ -97,7 +97,7 @@
     },
     "message": {
       "error": {
-        "wrongSeed": "import failed, please check your mnemonic words"
+        "wrongSeed": "Import failed, please check your mnemonic words"
       }
     }
   },
