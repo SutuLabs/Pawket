@@ -283,6 +283,15 @@
         "high": "High",
         "custom": "Custom"
       },
+      "messages": {
+        "getFailedResponse": "Get error response: ",
+        "failedToSubmit": "Failed to submit to memory pool: ",
+        "failedToSign": "Failed to sign: ",
+        "submitted": "Submitted to memory pool."
+      },
+      "tooltip": {
+        "singleCoinExplanation": "Currently only support one coin mode, mix coin send is under development."
+      },
       "span": {
         "loading": "Loading",
         "maxLeadingText": "Max:"

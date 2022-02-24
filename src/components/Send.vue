@@ -26,9 +26,23 @@
         <template #label>
           {{ $t("send.ui.label.amount") }}
           <span class="is-size-6">
+            <b-tooltip
+              v-if="totalAmount >= 0"
+              position="is-right"
+              type="is-light"
+              multilined
+              :label="$t('send.ui.tooltip.singleCoinExplanation')"
+            >
+              <b-icon icon="comment-question" size="is-small" type="is-info" class="px-4"></b-icon>
+            </b-tooltip>
             <b-button tag="a" type="is-info is-light" size="is-small" @click="setMax(maxAmount)">
-              <span v-if="maxStatus == 'Loading'"> {{ $t('send.ui.span.loading')}} {{ selectedToken }}</span>
-              <span v-if="maxStatus == 'Loaded'"> {{ $t('send.ui.span.maxLeadingText')}} {{ maxAmount }} {{ selectedToken }}</span>
+              <span v-if="maxStatus == 'Loading'"> {{ $t("send.ui.span.loading") }} {{ selectedToken }}</span>
+              <span v-if="maxStatus == 'Loaded'">
+                <span v-if="totalAmount >= 0">
+                  {{ $t("send.ui.span.maxLeadingText") }} {{ maxAmount }} / {{ totalAmount }} {{ selectedToken }}
+                </span>
+                <span v-else> {{ $t("send.ui.span.maxLeadingText") }} {{ maxAmount }} {{ selectedToken }} </span>
+              </span>
             </b-button>
           </span>
         </template>
@@ -72,10 +86,10 @@
         <p class="control">
           <span class="button" style="min-width: 150px">
             <b-slider :min="0" :max="3" v-model="feeType" :tooltip="false" @input="changeFee()">
-              <b-slider-tick :value="0">{{ $t('send.ui.slider.custom')}}</b-slider-tick>
-              <b-slider-tick :value="1">{{ $t('send.ui.slider.low')}}</b-slider-tick>
-              <b-slider-tick :value="2">{{ $t('send.ui.slider.medium')}}</b-slider-tick>
-              <b-slider-tick :value="3">{{ $t('send.ui.slider.high')}}</b-slider-tick>
+              <b-slider-tick :value="0">{{ $t("send.ui.slider.custom") }}</b-slider-tick>
+              <b-slider-tick :value="1">{{ $t("send.ui.slider.low") }}</b-slider-tick>
+              <b-slider-tick :value="2">{{ $t("send.ui.slider.medium") }}</b-slider-tick>
+              <b-slider-tick :value="3">{{ $t("send.ui.slider.high") }}</b-slider-tick>
             </b-slider>
           </span>
         </p>
@@ -97,7 +111,7 @@
           v-if="!bundle"
           type="is-success"
           @click="sign()"
-          :disabled="submitting"
+          :disabled="this.amountMessage == this.INVALID_AMOUNT_MESSAGE || submitting"
         ></b-button>
       </div>
       <div>
@@ -130,6 +144,7 @@ import bigDecimal from "js-big-decimal";
 import ScanQrCode from "@/components/ScanQrCode.vue";
 import { prefix0x } from '../services/coin/condition';
 import transfer, { SymbolCoins } from '../services/transfer/transfer';
+import { translate } from '../i18n/i18n';
 
 @Component({
   components: {
@@ -157,6 +172,7 @@ export default class Send extends Vue {
   public bundle: SpendBundle | null = null;
   public availcoins: SymbolCoins | null = null;
   public maxAmount = "-1";
+  public totalAmount = "-1";
   public INVALID_AMOUNT_MESSAGE = "Invalid amount";
   public maxStatus: "Loading" | "Loaded" = "Loading";
   public selectMax = false;
@@ -260,7 +276,15 @@ export default class Send extends Vue {
 
     const availcoins = this.availcoins[this.selectedToken].map(_ => _.amount);
 
-    this.maxAmount = bigDecimal.divide(availcoins.reduce((a, b) => a + b, 0n), Math.pow(10, this.decimal), this.decimal);
+    this.totalAmount = bigDecimal.divide(availcoins.reduce((a, b) => a + b, 0n), Math.pow(10, this.decimal), this.decimal);
+    const singleMax = bigDecimal.divide(availcoins.reduce((a, b) => a > b ? a : b), Math.pow(10, this.decimal), this.decimal);
+    if (this.selectedToken == "XCH") {
+      this.maxAmount = this.totalAmount;
+      this.totalAmount = "-1";
+    }
+    else {
+      this.maxAmount = singleMax;
+    }
     this.maxStatus = "Loaded";
   }
 
@@ -283,7 +307,7 @@ export default class Send extends Vue {
       this.bundle = await transfer.generateSpendBundle(plan, this.requests);
     } catch (error) {
       Notification.open({
-        message: `failed to sign: ${error}`,
+        message: translate("send.ui.messages.failedToSign") + error,
         type: "is-danger",
         autoClose: false,
       });
@@ -309,19 +333,19 @@ export default class Send extends Vue {
       this.submitting = false;
       if (json.success) {
         Notification.open({
-          message: `Submitted to memory pool.`,
+          message: translate("send.ui.messages.submitted"),
           type: "is-success",
         });
         this.close();
       } else {
         Notification.open({
-          message: `Submit failed: ${json.error}`,
+          message: translate("send.ui.messages.getFailedResponse") + json.error,
           type: "is-danger",
         });
       }
     } catch (error) {
       Notification.open({
-        message: `failed to submit: ${error}`,
+        message: translate("send.ui.messages.failedToSubmit") + error,
         type: "is-danger",
       });
       console.warn(error);
