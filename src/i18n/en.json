@@ -48,7 +48,7 @@
       },
       "error": {
         "passwordNotMatch": "Password does not match",
-        "incorrectPassword": "Password is incorrect"
+        "incorrectPassword": "Incorrect password"
       },
       "tip": {
         "weakPassword": "Weak",
@@ -69,8 +69,8 @@
         "ready": "Ready",
         "12word": "12 Words",
         "24word": "24 Words",
-        "import12": "Import via Pawket 12-mnemonic",
-        "import24": "Import via Chia 24-mnemonic"
+        "import12": "Import Pawket Mnemonic Words",
+        "import24": "Import Chia Client Mnemonic Words"
       },
       "label": {
         "mnemonic": "Mnemonic"
@@ -82,22 +82,22 @@
         "create": {
           "title": "Mnemonic",
           "tips": "Tips",
-          "tip1": "Please record the mnemonic phrases on paper in order and keep them in a safe place.",
-          "tip2": "Remember not to disclose your mnemonic phrase to others. Once known by others, you can use the mnemonic phrase to enter your account and even transfer your assets."
+          "tip1": "Please write the mnemonic phrases on paper in order and keep them in a safe place.",
+          "tip2": "Remember not to disclose your mnemonic phrase to others, otherwise he can enter your account through the mnemonic phrase and even transfer your assets."
         },
         "import12": {
-          "title": "Import Via Pawket 12-Mnemonic",
-          "tip": "Please enter your 12 Pawket mnemonics in order, using spaces between mnemonics."
+          "title": "Import Pawket Mnemonic Words",
+          "tip": "Please enter your Pawket mnemonic words in order, using spaces between mnemonics."
         },
         "import24": {
-          "title": "Import Via Chia 24-Mnemonic",
-          "tip": "Please enter your 24 Pawket mnemonics in order, using spaces between mnemonics."
+          "title": "Import Chia Client Mnemonic Words",
+          "tip": "Please enter your Chia client mnemonic words in order, using spaces between mnemonics."
         }
       }
     },
     "message": {
       "error": {
-        "wrongSeed": "import failed, please check your mnemonic"
+        "wrongSeed": "import failed, please check your mnemonic words"
       }
     }
   },
@@ -116,10 +116,10 @@
         "activity": "Activity"
       },
       "title": {
-        "dApps": "dApps"
+        "dApps": "Donate"
       },
       "tooltip": {
-        "donate":"Donation to support development",
+        "donate":"Donate to Support Development",
         "offer": "Take Offer"
       }
     },
@@ -128,7 +128,7 @@
         "lock": "Lock?"
       },
       "notification": {
-        "donate": "You are donating to developer"
+        "donate": "You are donating to the developer"
       }
     }
   },
@@ -175,8 +175,8 @@
     },
     "message": {
       "error": {
-        "passwordNotCorrect": "Password not correct",
-        "passwordNotMatch": "Password not match"
+        "passwordNotCorrect": "Incorrect password",
+        "passwordNotMatch": "Password does not match"
       },
       "alert": {
         "passwordChanged": "Password has been changed, please Re-login"
@@ -216,7 +216,7 @@
         "showMnemonic": "Show Mnemonic",
         "addBySerial": "Add By Serial",
         "addByPassword": "Add By Password",
-        "addByLegacy": "Import Chia 24 Mnemonic Words"
+        "addByLegacy": "Import Chia Client Mnemonic Words"
       }
     },
     "message": {
@@ -229,14 +229,14 @@
       "prompt": {
         "setAccountName": "Enter the new account name",
         "setPassword": "Enter the password",
-        "setLegacyMnemonic": "Enter the 24 words mnemonic used by Chia Client:",
+        "setLegacyMnemonic": "Enter mnemonic words:",
         "cancelText": "Cancel",
         "confirmText": "OK"
       },
       "error": {
         "accountPasswordExists": "An account with the same password already exists",
         "accountMnemonicExists": "An account with the same mnemonic already exists",
-        "invalidMnemonic": "import failed, please check your mnemonic"
+        "invalidMnemonic": "Import failed, please check your mnemonic words"
       }
     }
   },
@@ -322,8 +322,8 @@
         "2":"View XCH/CATs balance",
         "3":"Receive XCH/CATs in online/offline mode",
         "4":"Init wallet by freely 12/24 words mnemonic",
-        "5":"Generated compatible mnemonic which could be used directly in Chia™; client",
-        "6":"Show fingerprint which fully compatible with Chia™; client",
+        "5":"Generated compatible mnemonic which could be used directly in Chia™ client",
+        "6":"Show fingerprint which fully compatible with Chia™ client",
         "7":"Infinite derivative wallet",
         "8":"Shadow wallet(password protected mnemonic)",
         "9":"Address variation(derivative addresses) for XCH/CATs",
