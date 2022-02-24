@@ -1,6 +1,6 @@
 {
   "default": {
-    "accountName": "账户壹"
+    "accountName": "账户1"
   },
   "html": {
     "document": {
@@ -67,10 +67,10 @@
         "confirm": "确认",
         "later": "稍后记录",
         "ready": "记好了",
-        "12word": "12词",
-        "24word": "24词",
-        "import12": "通过Pawket12位助记词导入",
-        "import24": "通过Chia24位助记词导入"
+        "12word": "12 词",
+        "24word": "24 词",
+        "import12": "通过 Pawket 助记词导入",
+        "import24": "通过 Chia 客户端助记词导入"
       },
       "label": {
         "mnemonic": "助记词"
@@ -86,12 +86,12 @@
           "tip2": "切记不要向其他人透露你的助记词，一旦被他人知晓，即可通过助记词进入你的账户，甚至转移你的资产。"
         },
         "import12": {
-          "title": "Pawket助记词导入",
-          "tip": "请按顺序输入你的12位Pawket助记词，助记词间使用空格间隔。"
+          "title": "Pawket 助记词导入",
+          "tip": "请按顺序输入 Pawket 助记词，并使用空格作为间隔。"
         },
         "import24": {
-          "title": "Chia助记词导入",
-          "tip": "请按顺序输入你的24位Chia助记词，助记词间使用空格间隔。"
+          "title": "Chia 助记词导入",
+          "tip": "请按顺序输入 Chia 客户端助记词，并使用空格作为间隔。"
         }
       }
     },
@@ -139,7 +139,7 @@
       },
       "label": {
         "maxAddress": "最大隐私地址搜索数量",
-        "listingCATs": "CAT列表"
+        "listingCATs": "CAT 列表"
       },
       "button": {
         "submit": "提交",
@@ -147,12 +147,12 @@
         "changePassword": "修改密码"
       },
       "placeholder": {
-        "addCAT": "添加CAT"
+        "addCAT": "添加 CAT"
       }
     },
     "message": {
       "prompt": {
-        "addAsset": "输入资产ID",
+        "addAsset": "输入资产 ID",
         "confirmText": "确认",
         "cancelText": "取消"
       }
@@ -161,7 +161,7 @@
   "changePassword": {
     "ui": {
       "title": {
-        "changePassword": "更改密码"
+        "changePassword": "修改密码"
       },
       "label": {
         "oldPassword": "旧密码",
@@ -189,7 +189,7 @@
         "export": "账户导出"
       },
       "label": {
-        "name": "用户名",
+        "name": "账户名称",
         "type": "类型",
         "fingerprint": "指纹",
         "masterPublicKey": "主节点公钥 (m)",
@@ -216,7 +216,7 @@
         "showMnemonic": "展示助记词",
         "addBySerial": "序列添加",
         "addByPassword": "通过密码添加",
-        "addByLegacy": "通过Chia 24位助记词导入"
+        "addByLegacy": "通过 Chia 客户端助记词导入"
       }
     },
     "message": {
@@ -229,7 +229,7 @@
       "prompt": {
         "setAccountName": "输入账户名",
         "setPassword": "输入密码",
-        "setLegacyMnemonic": "输入Chia客户端24位助记词",
+        "setLegacyMnemonic": "输入助记词",
         "cancelText": "取消",
         "confirmText": "确认"
       },
@@ -308,8 +308,8 @@
         "NotSupportedError": "错误：需要安全传输协议（HTTPS，localhost）",
         "NotReadableError": "错误：请检查相机是否在使用",
         "OverconstrainedError": "错误：已安装的相机不适合",
-        "StreamApiNotSupportedError": "错误：浏览器不支持串流API",
-        "InsecureContextError": "错误：相机访问只在安全连接下允许，使用HTTPS或localhost而不是HTTP"
+        "StreamApiNotSupportedError": "错误：浏览器不支持串流 API",
+        "InsecureContextError": "错误：相机访问只在安全连接下允许，使用 HTTPS 或 localhost 而不是 HTTP"
       }
     }
   },
@@ -325,9 +325,9 @@
         "1":"完全支持离线场景",
         "2":"查看 XCH/CATs 余额",
         "3":"在线/离线模式下接收 XCH/CATs",
-        "4":"通过自由 12/24 字助记符初始化钱包",
-        "5":"生成的兼容助记词可以直接在 Chia™; 客户端使用",
-        "6":"显示与 Chia™; 客户端完全兼容的指纹",
+        "4":"通过自由 12/24 个助记词初始化钱包",
+        "5":"生成的兼容助记词可以直接在 Chia™ 客户端使用",
+        "6":"显示与 Chia™ 客户端完全兼容的指纹",
         "7":"无限衍生钱包",
         "8":"影子钱包(密码保护助记词)",
         "9":"XCH/CATs 的地址变化（衍生地址）",
@@ -339,7 +339,7 @@
         "15":"支持报价创建/消费",
         "16":"只支持查看钱包",
         "17":"打包为扩展并为 dApps 提供 API",
-        "18":"打包成应用并通过 AppStore 和 Google Play提供下载",
+        "18":"打包成应用并通过 AppStore 和 Google Play 提供下载",
         "19":"支持查看 NFT",
         "20":"支持发送 NFT",
         "21":"支持 NFT 创建"
