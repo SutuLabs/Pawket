@@ -30,7 +30,10 @@ class Transfer {
 
       const outgoingExtra = (symbol.toLocaleLowerCase() == "xch") ? fee : 0n;
       const outgoingTotal = tgts.reduce((acc, cur) => acc + cur.amount, 0n) + outgoingExtra;
-      const incomingCoins = this.findCoins(coins, outgoingTotal);
+      const incomingCoins = (symbol.toLocaleLowerCase() == "xch")
+        ? this.findCoins(coins, outgoingTotal)
+        : this.findPossibleSmallest(coins, outgoingTotal);
+
       const incomingTotal = incomingCoins.reduce((acc, cur) => acc + cur.amount, 0n);
 
       const change = incomingTotal - outgoingTotal;
@@ -166,7 +169,7 @@ class Transfer {
     return agg_sig;
   }
 
-  public findCoins(coins: OriginCoin[], num: bigint): OriginCoin[] {
+  private findCoins(coins: OriginCoin[], num: bigint): OriginCoin[] {
     const sortcoins = coins.sort((a, b) => Number(a.amount - b.amount)); // ascending
     const outcoins: OriginCoin[] = [];
 
@@ -190,6 +193,18 @@ class Transfer {
     }
 
     return outcoins;
+  }
+
+  private findPossibleSmallest(coins: OriginCoin[], num: bigint): OriginCoin[] {
+    if (num == 0n) return [];
+
+    const sortcoins = coins.sort((a, b) => Number(a.amount - b.amount));
+    for (let i = 0; i < sortcoins.length; i++) {
+      const coin = sortcoins[i];
+      if (coin.amount >= num) return [coin];
+    }
+
+    return [];
   }
 
 

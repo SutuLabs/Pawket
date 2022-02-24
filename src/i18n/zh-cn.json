@@ -283,13 +283,18 @@
         "high": "高",
         "custom": "自定义"
       },
+      "messages": {
+        "getFailedResponse": "提交时发生错误: ",
+        "failedToSubmit": "提交至内存池失败: ",
+        "failedToSign": "签名失败: ",
+        "submitted": "已经提交进内存池，请等待确认"
+      },
       "tooltip": {
-        "oneCoinOnly": "当前仅支持单币模式，",
-        "learnMore": "了解更多"
+        "singleCoinExplanation": "当前仅支持单币模式"
       },
       "span": {
         "loading": "载入中",
-        "loaded": "最大:"
+        "maxLeadingText": "最大:"
       }
     }
   },
@@ -333,7 +338,7 @@
         "9":"XCH/CATs 的地址变化（衍生地址）",
         "10":"导入和管理自定义 CAT",
         "11":"硬币综合开发工具",
-        "12":"支持自定义收费",
+        "12":"支持自定义手续费",
         "13":"支持多币混发",
         "14":"一次交易支持多个目标地址",
         "15":"支持报价创建/消费",

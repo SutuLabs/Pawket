@@ -18,9 +18,9 @@
             <li class="done">{{ $t('about.ui.list.10')}}</li>
             <li class="done">{{ $t('about.ui.list.11')}}</li>
             <li class="done">{{ $t('about.ui.list.12')}}</li>
-            <li class="done">{{ $t('about.ui.list.13')}}</li>
           </ul>
           <ul class="py-3">
+            <li class="plan">{{ $t('about.ui.list.13')}}</li>
             <li class="plan">{{ $t('about.ui.list.14')}}</li>
             <li class="plan">{{ $t('about.ui.list.15')}}</li>
             <li class="plan">{{ $t('about.ui.list.16')}}</li>
