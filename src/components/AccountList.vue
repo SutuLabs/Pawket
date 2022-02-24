@@ -106,6 +106,10 @@ export default class AccountList extends Vue {
   async addByLegacy(): Promise<void> {
     const name = await this.getAccountName();
     const legacyMnemonic = await this.getLegacyMnemonic();
+    if (legacyMnemonic.trim().split(' ').length != 24) {
+      this.$buefy.dialog.alert(translate("accountList.message.error.invalidMnemonic"));
+      return;
+    }
     const acc = await account.getAccount("", null, legacyMnemonic);
     if (store.state.account.accounts.find(a => a.key.fingerprint === acc.fingerprint)) {
       this.$buefy.dialog.alert(translate("accountList.message.error.accountMnemonicExists"));
