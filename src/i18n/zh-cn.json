@@ -155,6 +155,9 @@
         "addAsset": "输入资产 ID",
         "confirmText": "确认",
         "cancelText": "取消"
+      },
+      "notification": {
+        "saved": "已保存"
       }
     }
   },
