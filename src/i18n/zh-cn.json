@@ -67,19 +67,17 @@
         "confirm": "确认",
         "later": "稍后记录",
         "ready": "记好了",
+        "12word": "12词",
+        "24word": "24词",
         "import12": "通过Pawket12位助记词导入",
-        "import24": "通过Chia24位助记词导入",
-        "comingSoon": "暂不支持，敬请期待"
+        "import24": "通过Chia24位助记词导入"
       },
       "label": {
         "mnemonic": "助记词"
       },
       "text": {
         "importMenu": {
-          "title": "选择导入方式",
-          "tips": "提示：",
-          "tip1": "主钱包当前仅支持Pawket12位助记词导入。",
-          "tip2": "进入钱包后，可通过Chia24位助记词导入Chia钱包账户。"
+          "title": "选择导入方式"
         },
         "create": {
           "title": "助记词",
@@ -90,6 +88,10 @@
         "import12": {
           "title": "Pawket助记词导入",
           "tip": "请按顺序输入你的12位Pawket助记词，助记词间使用空格间隔。"
+        },
+        "import24": {
+          "title": "Chia助记词导入",
+          "tip": "请按顺序输入你的24位Chia助记词，助记词间使用空格间隔。"
         }
       }
     },

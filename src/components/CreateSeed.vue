@@ -13,36 +13,36 @@
         <div class="buttons">
           <b-button icon-left="chevron-left" rounded @click="back()">{{ $t("createSeed.ui.button.back") }}</b-button>
         </div>
-        <h4 class="is-size-4">{{ $t("createSeed.ui.text.importMenu.title") }}</h4>
-        <p class="is-size-5">{{ $t("createSeed.ui.text.importMenu.tips") }}</p>
-        <ol class="is-size-6">
-          <li>{{ $t("createSeed.ui.text.importMenu.tip1") }}</li>
-          <li>{{ $t("createSeed.ui.text.importMenu.tip2") }}</li>
-        </ol>
-      </div>
-      <div class="import-wrapper">
-        <a @click="import12()">
-          <div class="import-box">
-            <img class="logo" src="../assets/logo.svg" />
-            <p class="is-size-6">{{ $t("createSeed.ui.button.import12") }}</p>
+        <p class="is-size-4">{{ $t("createSeed.ui.text.importMenu.title") }}</p>
+        <div class="columns">
+          <div class="column is-half">
+            <div class="menu-btn" @click="import12()">
+              <h2 class="is-size-2 menu-title">{{ $t("createSeed.ui.button.12word") }}</h2>
+              <p class="is-size-6">{{ $t("createSeed.ui.button.import12") }}</p>
+            </div>
           </div>
-        </a>
-        <a @click="import24()" class="isDisabled">
-          <div class="import-box gray">
-            <img class="logo" src="../assets/chia-logo.svg" />
-            <p class="is-size-6">{{ $t("createSeed.ui.button.import24") }}</p>
-            <p class="is-size-6">{{ $t("createSeed.ui.button.comingSoon") }}</p>
+          <div class="column is-half">
+            <div class="menu-btn" @click="import24()">
+              <h2 class="is-size-2 menu-title-black">{{ $t("createSeed.ui.button.24word") }}</h2>
+              <p class="is-size-6">{{ $t("createSeed.ui.button.import24") }}</p>
+            </div>
           </div>
-        </a>
+        </div>
       </div>
     </div>
-    <div v-if="mode == 'Import12'">
+    <div v-if="mode == 'Import'">
       <div class="block content centered">
         <div class="buttons">
-          <b-button icon-left="chevron-left" rounded @click="back()">{{ $t("createSeed.ui.button.back") }}</b-button>
+          <b-button icon-left="chevron-left" rounded @click="backToImportMenu()">{{ $t("createSeed.ui.button.back") }}</b-button>
         </div>
-        <h4 class="is-size-4">{{ $t("createSeed.ui.text.import12.title") }}</h4>
-        <p class="is-size-6">{{ $t("createSeed.ui.text.import12.tip") }}</p>
+        <section v-if="mnemonicLen == 12">
+          <h4 class="is-size-4">{{ $t("createSeed.ui.text.import12.title") }}</h4>
+          <p class="is-size-6">{{ $t("createSeed.ui.text.import12.tip") }}</p>
+        </section>
+        <section v-if="mnemonicLen == 24">
+          <h4 class="is-size-4">{{ $t("createSeed.ui.text.import24.title") }}</h4>
+          <p class="is-size-6">{{ $t("createSeed.ui.text.import24.tip") }}</p>
+        </section>
         <b-field :type="isLegal ? '' : 'is-danger'" :message="isLegal ? '' : $t('createSeed.message.error.wrongSeed')">
           <b-input type="textarea" v-model="seedMnemonic"></b-input>
         </b-field>
@@ -79,7 +79,8 @@ import { Component, Vue } from "vue-property-decorator";
 import store from "@/store";
 import account from "../services/crypto/account";
 
-type Mode = "Menu" | "ImportMenu" | "Import12" | "Create";
+type Mode = "Menu" | "ImportMenu" | "Import" | "Create";
+type MnemonicLen = 12 | 24;
 
 @Component
 export default class CreateSeed extends Vue {
@@ -87,6 +88,7 @@ export default class CreateSeed extends Vue {
   public seedMnemonicList: string[] = [];
   public mode: Mode = "Menu";
   public isLegal = true;
+  public mnemonicLen: MnemonicLen = 12;
 
   gotoImport(): void {
     this.mode = "ImportMenu";
@@ -113,27 +115,31 @@ export default class CreateSeed extends Vue {
   }
 
   import12(): void {
-    this.mode = "Import12";
+    this.mnemonicLen = 12;
+    this.mode = "Import";
   }
 
   import24(): void {
-    // TODO: support import 24
-    return;
+    this.mnemonicLen = 24;
+    this.mode = "Import";
   }
 
-  confirm(): void {
+  async confirm(): Promise<void> {
     this.isLegal = true;
     this.seedMnemonicList = this.seedMnemonic.trim().split(" ");
-    console.log(this.seedMnemonicList);
-    if (this.seedMnemonicList.length != 12) {
+    if (this.seedMnemonicList.length != this.mnemonicLen) {
       this.isLegal = false;
       return;
     }
-    store.dispatch("importSeed", this.seedMnemonic);
+    await store.dispatch("importSeed", this.seedMnemonic).catch((error) => (this.isLegal = error == null));
   }
 
   back(): void {
     this.mode = "Menu";
+  }
+
+  backToImportMenu(): void {
+    this.mode = "ImportMenu";
   }
 }
 </script>
@@ -153,33 +159,28 @@ export default class CreateSeed extends Vue {
     width: 90%;
   }
 }
-.import-wrapper {
-  width: 50%;
-  margin: auto;
-  display: flex;
-  justify-content: left;
-}
-.import-box {
-  width: 16rem;
-  height: 10rem;
-  margin-right: 6rem;
+
+.menu-btn {
   background-color: #fff;
   border-radius: 6px;
   box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%), 0 0 0 1px rgb(10 10 10 / 2%);
   color: #4a4a4a;
   padding: 1.25rem;
   text-align: center;
+  :hover {
+    cursor: pointer;
+  }
 }
-.logo {
-  width: 10rem;
-  height: 3rem;
-  margin-bottom: 1rem;
+.menu-title {
+  font-weight: bold;
+  color: #39c0ae;
+  margin-bottom: 1.5rem;
+  margin-top: 1rem;
 }
-.gray {
-  filter: grayscale(100%);
-}
-.isDisabled {
-  cursor: not-allowed;
+.menu-title-black {
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  margin-top: 1rem;
 }
 .word-button {
   width: 6rem;

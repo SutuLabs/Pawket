@@ -67,19 +67,17 @@
         "confirm": "Confirm",
         "later": "Later",
         "ready": "Ready",
+        "12word": "12 Words",
+        "24word": "24 Words",
         "import12": "Import via Pawket 12-mnemonic",
-        "import24": "Import via Chia 24-mnemonic",
-        "comingSoon": "Coming Soon"
+        "import24": "Import via Chia 24-mnemonic"
       },
       "label": {
         "mnemonic": "Mnemonic"
       },
       "text": {
         "importMenu": {
-          "title": "Choose Import Method",
-          "tips": "Tips",
-          "tip1": "The main wallet currently only supports Pawket 12-digit mnemonic import.",
-          "tip2": "After entering the wallet, you can import the Chia wallet account through the Chia 24-digit mnemonic."
+          "title": "Choose Import Method"
         },
         "create": {
           "title": "Mnemonic",
@@ -89,7 +87,11 @@
         },
         "import12": {
           "title": "Import Via Pawket 12-Mnemonic",
-          "tip": "Please enter your 12-digit Pawket mnemonics in order, using spaces between mnemonics."
+          "tip": "Please enter your 12 Pawket mnemonics in order, using spaces between mnemonics."
+        },
+        "import24": {
+          "title": "Import Via Chia 24-Mnemonic",
+          "tip": "Please enter your 24 Pawket mnemonics in order, using spaces between mnemonics."
         }
       }
     },
