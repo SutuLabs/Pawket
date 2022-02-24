@@ -235,7 +235,8 @@
       },
       "error": {
         "accountPasswordExists": "An account with the same password already exists",
-        "accountMnemonicExists": "An account with the same mnemonic already exists"
+        "accountMnemonicExists": "An account with the same mnemonic already exists",
+        "invalidMnemonic": "import failed, please check your mnemonic"
       }
     }
   },

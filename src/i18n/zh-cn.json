@@ -235,7 +235,8 @@
       },
       "error": {
         "accountPasswordExists": "该密码账户已存在于账户列表中。",
-        "accountMnemonicExists": "该助记词账户已存在于账户列表中。"
+        "accountMnemonicExists": "该助记词账户已存在于账户列表中。",
+        "invalidMnemonic": "导入失败，请输入正确的助记词"
       }
     }
   },
