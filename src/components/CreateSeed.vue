@@ -54,12 +54,12 @@
         <div class="buttons">
           <b-button icon-left="chevron-left" rounded @click="back()">{{ $t("createSeed.ui.button.back") }}</b-button>
         </div>
-        <h4 class="is-size-4">{{ $t("createSeed.ui.text.create.title") }}</h4>
+        <!-- <h4 class="is-size-4">{{ $t("createSeed.ui.text.create.title") }}</h4>
         <p class="is-size-5">{{ $t("createSeed.ui.text.create.tips") }}</p>
         <ol class="is-size-6">
           <li>{{ $t("createSeed.ui.text.create.tip1") }}</li>
           <li>{{ $t("createSeed.ui.text.create.tip2") }}</li>
-        </ol>
+        </ol> -->
       </div>
       <div class="block centered">
         <b-tag class="word-button" type="is-info is-light" v-for="(m, index) in seedMnemonicList" :key="index">
@@ -67,8 +67,9 @@
         </b-tag>
       </div>
       <div class="block buttons centered">
-        <b-button rounded @click="later()">{{ $t("createSeed.ui.button.later") }}</b-button>
-        <b-button rounded type="is-success" @click="ready()">{{ $t("createSeed.ui.button.ready") }}</b-button>
+        <!-- <b-button rounded @click="later()">{{ $t("createSeed.ui.button.later") }}</b-button>
+        <b-button rounded type="is-success" @click="ready()">{{ $t("createSeed.ui.button.ready") }}</b-button> -->
+        <b-button rounded type="is-success" @click="ready()">OK</b-button>
       </div>
     </div>
   </div>

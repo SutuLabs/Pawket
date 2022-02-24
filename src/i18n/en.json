@@ -155,6 +155,9 @@
         "addAsset": "Enter the Asset ID",
         "confirmText": "OK",
         "cancelText": "Cancel"
+      },
+      "notification": {
+        "saved": "Saved"
       }
     }
   },

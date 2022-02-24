@@ -12,7 +12,7 @@ const languages = {
 
 const messages = Object.assign(languages);
 const locale = localStorage.getItem("Locale");
-const defaultLocale = locale == null ? "zhcn" : locale;
+const defaultLocale = locale == null ? "en" : locale;
 
 // Create VueI18n instance with options
 const i18n = new VueI18n({

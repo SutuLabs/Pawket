@@ -132,7 +132,7 @@ export default class AccountConfigure extends Vue {
       type: "is-info",
       onConfirm: (name: string) => {
         Dialog.prompt({
-          message: translate("accountConfigure.message.prompt.message.addAsset"),
+          message: translate("accountConfigure.message.prompt.addAsset"),
           confirmText: translate("accountConfigure.message.prompt.confirmText"),
           cancelText: translate("accountConfigure.message.prompt.cancelText"),
           trapFocus: true,
@@ -153,7 +153,7 @@ export default class AccountConfigure extends Vue {
     store.dispatch("persistent");
 
     Notification.open({
-      message: `Saved.`,
+      message: translate("accountConfigure.message.notification.saved"),
       type: "is-success",
     });
 
