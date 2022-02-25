@@ -277,7 +277,7 @@ export default class Send extends Vue {
     const availcoins = this.availcoins[this.selectedToken].map(_ => _.amount);
 
     this.totalAmount = bigDecimal.divide(availcoins.reduce((a, b) => a + b, 0n), Math.pow(10, this.decimal), this.decimal);
-    const singleMax = bigDecimal.divide(availcoins.reduce((a, b) => a > b ? a : b), Math.pow(10, this.decimal), this.decimal);
+    const singleMax = bigDecimal.divide(availcoins.reduce((a, b) => a > b ? a : b, 0n), Math.pow(10, this.decimal), this.decimal);
     if (this.selectedToken == "XCH") {
       this.maxAmount = this.totalAmount;
       this.totalAmount = "-1";
