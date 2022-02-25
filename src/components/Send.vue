@@ -376,6 +376,7 @@ export default class Send extends Vue {
       props: {},
       events: {
         "scanned": (value: string): void => {
+          this.reset();
           this.address = value;
         },
       },
