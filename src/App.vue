@@ -20,19 +20,20 @@
         <p>
           <strong>Pawket</strong>
           [{{ version }}] by <a href="https://www.chiabee.net">Chiabee</a>. <br />
-          This app is in
-          <span @click="alphaClick()">ALPHA</span> stage, don't use in PRODUCTION.
+          {{ $t("footer.ui.warning.paragraph1") }}
+          <span @click="alphaClick()">{{ $t("footer.ui.warning.stage") }}</span>
+          {{ $t("footer.ui.warning.paragraph2") }}
           <span v-if="debugMode" @click="disableDebug()">[DEBUG]</span>
           <br />
           <a href="#/about" target="_blank" size="is-small">
             <b-icon icon="rocket-launch" size="is-small"></b-icon>
-            Roadmap
+            {{ $t("footer.ui.button.roadmap") }}
             <b-icon icon="open-in-new" size="is-small"></b-icon>
           </a>
           |
           <a href="javascript:void(0)" size="is-small" @click="showDebugHelper()">
             <b-icon icon="developer-board" size="is-small"></b-icon>
-            Developer
+            {{ $t("footer.ui.button.developer") }}
           </a>
         </p>
       </div>

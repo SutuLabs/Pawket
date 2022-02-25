@@ -15,9 +15,9 @@
         {{ notificationMessage }}
       </b-notification>
       <b-field :label="$t('send.ui.label.address')">
-        <b-input v-model="address" @change="reset()" expanded :disabled="!addressEditable"></b-input>
+        <b-input v-model="address" @input="reset()" expanded :disabled="!addressEditable"></b-input>
         <p class="control">
-          <b-button @click="scanQrCode()">
+          <b-button @click="scanQrCode()" :disabled="!addressEditable">
             <b-icon icon="qrcode"></b-icon>
           </b-button>
         </p>
@@ -250,6 +250,10 @@ export default class Send extends Vue {
 
   async loadCoins(): Promise<void> {
     this.bundle = null;
+    this.maxAmount = "-1";
+    this.totalAmount = "-1";
+    this.amount = "0";
+    this.selectMax = false;
     this.maxStatus = "Loading";
 
     const maxId = this.account.addressRetrievalCount;
@@ -277,7 +281,7 @@ export default class Send extends Vue {
     const availcoins = this.availcoins[this.selectedToken].map(_ => _.amount);
 
     this.totalAmount = bigDecimal.divide(availcoins.reduce((a, b) => a + b, 0n), Math.pow(10, this.decimal), this.decimal);
-    const singleMax = bigDecimal.divide(availcoins.reduce((a, b) => a > b ? a : b), Math.pow(10, this.decimal), this.decimal);
+    const singleMax = bigDecimal.divide(availcoins.reduce((a, b) => a > b ? a : b, 0n), Math.pow(10, this.decimal), this.decimal);
     if (this.selectedToken == "XCH") {
       this.maxAmount = this.totalAmount;
       this.totalAmount = "-1";
@@ -299,7 +303,11 @@ export default class Send extends Vue {
       const decimal = this.selectedToken == "XCH" ? 12 : 3;
       const amount = BigInt(bigDecimal.multiply(this.amount, Math.pow(10, decimal)));
 
-      if (this.availcoins == null) return;
+      if (this.availcoins == null) {
+        this.submitting = false;
+        return;
+      }
+
       const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.address));
       const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
       const tgts = [{ address: tgt_hex, amount, symbol: this.selectedToken, memo: this.memo }];
@@ -372,6 +380,7 @@ export default class Send extends Vue {
       props: {},
       events: {
         "scanned": (value: string): void => {
+          this.reset();
           this.address = value;
         },
       },

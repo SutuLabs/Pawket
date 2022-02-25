@@ -62,6 +62,8 @@ import { sortable } from "@/directives/sortable";
 import { AccountEntity, CustomCat } from "@/store/modules/account";
 import { translate } from "@/i18n/i18n";
 import ChangePassword from "./ChangePassword.vue";
+import { Bytes } from "clvm";
+
 @Component({
   directives: {
     sortable,
@@ -88,7 +90,7 @@ export default class AccountConfigure extends Vue {
       return;
     }
     this.maxAddress = this.account.addressRetrievalCount;
-    this.assetIds = this.account.cats ?? [];
+    this.assetIds = [...(this.account.cats ?? [])];
     this.cats = this.assetIds.map((_) => _.name);
   }
 
@@ -106,23 +108,59 @@ export default class AccountConfigure extends Vue {
   }
 
   beforeAdd(name: string): boolean {
+    const type = this.isAssetId(name) ? "ENTERNAME" : "ENTERASSETID";
+    const msg = type == "ENTERNAME"
+      ? translate("accountConfigure.message.prompt.enterAssetName")
+      : translate("accountConfigure.message.prompt.enterAssetId");
     Dialog.prompt({
-      message: translate("accountConfigure.message.prompt.addAsset"),
+      message: msg,
       confirmText: translate("accountConfigure.message.prompt.confirmText"),
       cancelText: translate("accountConfigure.message.prompt.cancelText"),
       trapFocus: true,
       type: "is-info",
-      onConfirm: (assetId) => {
-        this.addOrUpdateAsset(name, assetId);
+      onConfirm: (input) => {
+        if (type == "ENTERNAME") {
+          this.remove(name);
+          this.cats.push(input);
+          this.addOrUpdateAsset(input, name);
+        }
+        else {
+          if (this.isAssetId(input)) {
+            this.addOrUpdateAsset(name, input);
+          }
+          else {
+            this.remove(name);
+            Notification.open({
+              message: translate("accountConfigure.message.notification.wrongAssetId"),
+              type: "is-danger",
+            });
+          }
+        }
       },
+      onCancel: () => {
+        this.remove(name);
+      }
     });
     return true;
+  }
+
+  remove(name: string): void {
+    const eidx = this.cats.findIndex((_) => _ == name);
+    if (eidx > -1) this.cats.splice(eidx, 1);
   }
 
   addOrUpdateAsset(name: string, assetId: string): void {
     const eidx = this.assetIds.findIndex((_) => _.id == assetId);
     if (eidx > -1) this.assetIds.splice(eidx, 1);
     this.assetIds.push({ name: name, id: assetId });
+  }
+
+  isAssetId(assetId: string): boolean {
+    try {
+      return Bytes.from(assetId, "hex").length == 32;
+    } catch{
+      return false;
+    }
   }
 
   addCat(): void {
@@ -146,11 +184,11 @@ export default class AccountConfigure extends Vue {
     });
   }
 
-  submit(): void {
+  async submit(): Promise<void> {
     if (this.maxAddress) this.account.addressRetrievalCount = this.maxAddress;
     const dict = Object.assign({}, ...this.assetIds.map((x) => ({ [x.name]: x.id })));
     this.account.cats = this.cats.map((_) => ({ name: _, id: dict[_] }));
-    store.dispatch("persistent");
+    await store.dispatch("persistent");
 
     Notification.open({
       message: translate("accountConfigure.message.notification.saved"),
