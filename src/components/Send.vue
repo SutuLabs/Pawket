@@ -250,6 +250,10 @@ export default class Send extends Vue {
 
   async loadCoins(): Promise<void> {
     this.bundle = null;
+    this.maxAmount = "-1";
+    this.totalAmount = "-1";
+    this.amount = "0";
+    this.selectMax = false;
     this.maxStatus = "Loading";
 
     const maxId = this.account.addressRetrievalCount;
