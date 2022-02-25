@@ -132,7 +132,7 @@
         "dApps": "Donate"
       },
       "tooltip": {
-        "donate":"Donate to Support Development",
+        "donate": "Donate to Support Development",
         "offer": "Take Offer"
       }
     },
@@ -155,7 +155,7 @@
         "listingCATs": "Listing CATs"
       },
       "button": {
-        "submit": "Submit",
+        "submit": "Save",
         "cancel": "Cancel",
         "changePassword": "Change Password"
       },
@@ -165,11 +165,13 @@
     },
     "message": {
       "prompt": {
-        "addAsset": "Enter the Asset ID",
+        "enterAssetId": "Enter the Asset ID",
+        "enterAssetName": "Enter the Asset Name",
         "confirmText": "OK",
         "cancelText": "Cancel"
       },
       "notification": {
+        "wrongAssetId": "Wrong asset Id, failed to add new CAT!",
         "saved": "Saved"
       }
     }
@@ -343,27 +345,27 @@
         "slogan": "Manage your CATs in Pawket!"
       },
       "list": {
-        "1":"Fully support offline scenario",
-        "2":"View XCH/CATs balance",
-        "3":"Receive XCH/CATs in online/offline mode",
-        "4":"Init wallet by freely 12/24 words mnemonic",
-        "5":"Generated compatible mnemonic which could be used directly in Chia™ client",
-        "6":"Show fingerprint which fully compatible with Chia™ client",
-        "7":"Infinite derivative wallet",
-        "8":"Shadow wallet(password protected mnemonic)",
-        "9":"Address variation(derivative addresses) for XCH/CATs",
-        "10":"Import and manage custom CAT",
-        "11":"Comprehensive developer tool for coins",
-        "12":"Support customize fee",
-        "13":"Support multiple coins mix send",
-        "14":"Support multiple target address in one transaction",
-        "15":"Support offer creation/consumption",
-        "16":"Support view only wallet",
-        "17":"Package as extension and provide API for dApps",
-        "18":"Package as the app and provide download through AppStore and Google Play",
-        "19":"Support view NFT",
-        "20":"Support send NFT",
-        "21":"Support NFT creation"
+        "1": "Fully support offline scenario",
+        "2": "View XCH/CATs balance",
+        "3": "Receive XCH/CATs in online/offline mode",
+        "4": "Init wallet by freely 12/24 words mnemonic",
+        "5": "Generated compatible mnemonic which could be used directly in Chia™ client",
+        "6": "Show fingerprint which fully compatible with Chia™ client",
+        "7": "Infinite derivative wallet",
+        "8": "Shadow wallet(password protected mnemonic)",
+        "9": "Address variation(derivative addresses) for XCH/CATs",
+        "10": "Import and manage custom CAT",
+        "11": "Comprehensive developer tool for coins",
+        "12": "Support customize fee",
+        "13": "Support multiple coins mix send",
+        "14": "Support multiple target address in one transaction",
+        "15": "Support offer creation/consumption",
+        "16": "Support view only wallet",
+        "17": "Package as extension and provide API for dApps",
+        "18": "Package as the app and provide download through AppStore and Google Play",
+        "19": "Support view NFT",
+        "20": "Support send NFT",
+        "21": "Support NFT creation"
       }
     }
   }
