@@ -303,7 +303,11 @@ export default class Send extends Vue {
       const decimal = this.selectedToken == "XCH" ? 12 : 3;
       const amount = BigInt(bigDecimal.multiply(this.amount, Math.pow(10, decimal)));
 
-      if (this.availcoins == null) return;
+      if (this.availcoins == null) {
+        this.submitting = false;
+        return;
+      }
+
       const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.address));
       const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
       const tgts = [{ address: tgt_hex, amount, symbol: this.selectedToken, memo: this.memo }];
