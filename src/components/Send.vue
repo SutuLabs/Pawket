@@ -17,7 +17,7 @@
       <b-field :label="$t('send.ui.label.address')">
         <b-input v-model="address" @input="reset()" expanded :disabled="!addressEditable"></b-input>
         <p class="control">
-          <b-button @click="scanQrCode()">
+          <b-button @click="scanQrCode()" :disabled="!addressEditable">
             <b-icon icon="qrcode"></b-icon>
           </b-button>
         </p>
