@@ -15,7 +15,7 @@
         {{ notificationMessage }}
       </b-notification>
       <b-field :label="$t('send.ui.label.address')">
-        <b-input v-model="address" @change="reset()" expanded :disabled="!addressEditable"></b-input>
+        <b-input v-model="address" @input="reset()" expanded :disabled="!addressEditable"></b-input>
         <p class="control">
           <b-button @click="scanQrCode()">
             <b-icon icon="qrcode"></b-icon>
