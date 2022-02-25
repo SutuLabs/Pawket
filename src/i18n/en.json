@@ -18,7 +18,7 @@
     "message": {
       "checking": "Checking",
       "passed": "Passed",
-      "failed": "Failed"
+      "failed": "Failed to check: "
     }
   },
   "verifyPassword": {

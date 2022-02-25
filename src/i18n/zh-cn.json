@@ -18,7 +18,7 @@
     "message": {
       "checking": "检查中",
       "passed": "通过",
-      "failed": "失败"
+      "failed": "环境不支持: "
     }
   },
   "verifyPassword": {

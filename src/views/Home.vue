@@ -3,7 +3,9 @@
     <verify-password v-if="!password"></verify-password>
     <create-seed v-else-if="!mnemonic"></create-seed>
     <account-detail v-else></account-detail>
-    <self-test v-if="!unlocked"></self-test>
+    <div class="sticky">
+      <self-test v-if="!unlocked"></self-test>
+    </div>
   </div>
 </template>
 
@@ -41,5 +43,12 @@ export default class Home extends Vue {
   width: 100%;
   height: 70%;
   display: table;
+}
+
+.sticky {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  z-index: 1000;
 }
 </style>
