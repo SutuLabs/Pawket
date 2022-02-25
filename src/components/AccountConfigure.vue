@@ -90,7 +90,7 @@ export default class AccountConfigure extends Vue {
       return;
     }
     this.maxAddress = this.account.addressRetrievalCount;
-    this.assetIds = this.account.cats ?? [];
+    this.assetIds = [...(this.account.cats ?? [])];
     this.cats = this.assetIds.map((_) => _.name);
   }
 
@@ -184,11 +184,11 @@ export default class AccountConfigure extends Vue {
     });
   }
 
-  submit(): void {
+  async submit(): Promise<void> {
     if (this.maxAddress) this.account.addressRetrievalCount = this.maxAddress;
     const dict = Object.assign({}, ...this.assetIds.map((x) => ({ [x.name]: x.id })));
     this.account.cats = this.cats.map((_) => ({ name: _, id: dict[_] }));
-    store.dispatch("persistent");
+    await store.dispatch("persistent");
 
     Notification.open({
       message: translate("accountConfigure.message.notification.saved"),

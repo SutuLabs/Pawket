@@ -163,6 +163,7 @@ export default class AccountDetail extends Vue {
       component: AccountConfigure,
       hasModalCard: true,
       trapFocus: true,
+      canCancel: ['x'],
       props: { account: this.account },
     });
   }
