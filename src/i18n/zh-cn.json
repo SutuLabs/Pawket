@@ -14,6 +14,19 @@
       }
     }
   },
+  "footer": {
+    "ui": {
+      "warning": {
+        "paragraph1": "本应用尚处于 ",
+        "paragraph2": " 阶段，请勿用于重要的场合",
+        "stage": "内部测试"
+      },
+      "button": {
+        "roadmap": "路线图",
+        "developer": "开发者工具"
+      }
+    }
+  },
   "self-test": {
     "message": {
       "checking": "检查中",

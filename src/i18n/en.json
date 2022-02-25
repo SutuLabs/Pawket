@@ -14,6 +14,19 @@
       }
     }
   },
+  "footer": {
+    "ui": {
+      "warning": {
+        "paragraph1": "This app is in ",
+        "paragraph2": " stage, don't use in PRODUCTION.",
+        "stage": "ALPHA"
+      },
+      "button": {
+        "roadmap": "Roadmap",
+        "developer": "Developer"
+      }
+    }
+  },
   "self-test": {
     "message": {
       "checking": "Checking",
