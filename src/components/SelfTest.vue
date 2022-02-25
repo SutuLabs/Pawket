@@ -1,7 +1,9 @@
 <template>
   <div class="box" id="self-test">
     <div v-if="status == -1">⌛{{ $t("self-test.message.checking") }}</div>
-    <div v-else-if="status == 0">✅{{ $t("self-test.message.passed") }}</div>
+    <div v-else-if="status == 0">
+      <template v-if="showPassed">✅{{ $t("self-test.message.passed") }}</template>
+    </div>
     <div v-else>❌{{ $t("self-test.message.failed") + ":" + errorMessage }}</div>
   </div>
 </template>
@@ -28,6 +30,7 @@ enum Status {
 export default class SelfTest extends Vue {
   public status = Status.Checking;
   public errorMessage: unknown = Status[this.status];
+  public showPassed = false;
 
   mounted(): void {
     this.selfTest().then(() => {
