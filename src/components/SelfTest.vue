@@ -69,6 +69,7 @@ export default class SelfTest extends Vue {
       this.status = Status.Passed;
       this.errorMessage = Status[this.status];
     } catch (error) {
+      this.status = Status.Failed;
       this.errorMessage = error;
       console.warn(error);
     }
