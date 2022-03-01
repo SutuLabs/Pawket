@@ -130,7 +130,8 @@ export default class CreateSeed extends Vue {
 
   async confirm(): Promise<void> {
     this.isLegal = true;
-    this.seedMnemonicList = this.seedMnemonic.trim().split(" ");
+    this.seedMnemonic = this.seedMnemonic.replace(/\s+/g, ' ').trim();
+    this.seedMnemonicList = this.seedMnemonic.split(" ");
     if (this.seedMnemonicList.length != this.mnemonicLen) {
       this.isLegal = false;
       return;
