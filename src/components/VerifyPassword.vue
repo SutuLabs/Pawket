@@ -84,14 +84,17 @@ export default class VerifyPassword extends Vue {
 
   checkStrength(): void {
     this.passwordStrength = 0;
-    if (this.password.length > 0) {
-      this.passwordStrength += 30;
+    if (this.password.length > 6) {
+      this.passwordStrength += 60;
     }
     if (this.hasSpecialCharacter(this.password)) {
-      this.passwordStrength += 40;
+      this.passwordStrength += 20;
     }
-    if (this.hasCapitalAndLower(this.password)) {
-      this.passwordStrength += 30;
+    if (this.hasCapital(this.password)) {
+      this.passwordStrength += 10;
+    }
+    if (this.hasLower(this.password)) {
+      this.passwordStrength += 10;
     }
     this.strengthMsg = this.generateStrengthMsg(this.passwordStrength);
     this.showStrength = true;
@@ -104,17 +107,18 @@ export default class VerifyPassword extends Vue {
     return false;
   }
 
-  hasCapitalAndLower(s: string): boolean {
-    let capital = false;
-    let lower = false;
+  hasCapital(s: string): boolean {
     for (var i = 0; i < s.length; i++) {
-      if (!lower && s[i] >= "a" && s[i] <= "z") {
-        lower = true;
+      if (s[i] >= "A" && s[i] <= "Z") {
+        return true;
       }
-      if (!capital && s[i] >= "A" && s[i] <= "Z") {
-        capital = true;
-      }
-      if (capital && lower) {
+    }
+    return false;
+  }
+
+  hasLower(s: string): boolean {
+    for (var i = 0; i < s.length; i++) {
+      if (s[i] >= "a" && s[i] <= "z") {
         return true;
       }
     }
@@ -122,11 +126,11 @@ export default class VerifyPassword extends Vue {
   }
 
   generateStrengthMsg(strength: number): string {
-    if (strength <= 30) {
+    if (strength < 60) {
       this.strengthClass = "is-danger";
       return translate("verifyPassword.message.tip.weakPassword");
     }
-    if (strength <= 60) {
+    if (strength <= 80) {
       this.strengthClass = "is-warning";
       return translate("verifyPassword.message.tip.mediumPassword");
     }
