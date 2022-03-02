@@ -30,7 +30,7 @@
   "self-test": {
     "message": {
       "checking": "Checking",
-      "passed": "Passed",
+      "passed": "Normal",
       "failed": "Failed to check: "
     }
   },
@@ -55,7 +55,7 @@
     },
     "message": {
       "confirmation": {
-        "clear": "Clear all data? Everything would be empty!!!",
+        "clear": "Are you sure you want to delete all data? If you do this, all data (including mnemonic, private key) will be completely deleted from this device. ",
         "confirmText": "Confirm",
         "cancelText": "Cancel"
       },
@@ -232,9 +232,9 @@
       },
       "button": {
         "showMnemonic": "Show Mnemonic",
-        "addBySerial": "Add By Serial",
-        "addByPassword": "Add By Password",
-        "addByLegacy": "Import Chia Client Mnemonic Words"
+        "addBySerial": "New Serial Account",
+        "addByPassword": "New Password Account",
+        "addByLegacy": "Import chia client account (24 words)"
       }
     },
     "message": {
@@ -354,7 +354,7 @@
         "7": "Infinite derivative wallet",
         "8": "Shadow wallet(password protected mnemonic)",
         "9": "Address variation(derivative addresses) for XCH/CATs",
-        "10": "Import and manage custom CAT",
+        "10": "Import and manage custom CATs",
         "11": "Comprehensive developer tool for coins",
         "12": "Support customize fee",
         "13": "Support multiple coins mix send",
