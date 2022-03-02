@@ -62,7 +62,12 @@
         </ol>
       </div>
       <div class="block centered mb-4">
-        <b-tag class="word-button is-size-6 m-2" type="is-info is-light" v-for="(m, index) in seedMnemonicList" :key="index">
+        <b-tag
+          class="is-justify-content-left py-5 word-button is-size-6 m-2"
+          type="is-info is-light"
+          v-for="(m, index) in seedMnemonicList"
+          :key="index"
+        >
           <p class="has-text-grey is-size-7">{{ index + 1 }}</p>
           {{ m }}
         </b-tag>
@@ -190,10 +195,5 @@ export default class CreateSeed extends Vue {
 }
 .word-button {
   width: 6rem;
-  height: 3rem;
-  justify-content: left;
-}
-.sup {
-  vertical-align: top;
 }
 </style>
