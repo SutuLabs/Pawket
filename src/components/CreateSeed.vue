@@ -63,7 +63,7 @@
       </div>
       <div class="block centered mb-4">
         <b-tag
-          class="is-justify-content-left py-5 word-button is-size-6 m-2"
+          class="is-justify-content-left py-5 word-button is-size-5 m-2"
           type="is-info is-light"
           v-for="(m, index) in seedMnemonicList"
           :key="index"
@@ -74,7 +74,7 @@
       </div>
       <div class="block buttons centered">
         <b-button v-if="debugMode" rounded @click="later()">{{ $t("createSeed.ui.button.later") }}</b-button>
-        <b-button rounded type="is-success" @click="ready()">{{ $t("createSeed.ui.button.ready") }}</b-button>
+        <b-button icon-right="chevron-right" rounded type="is-success" @click="ready()">{{ $t("createSeed.ui.button.ready") }}</b-button>
       </div>
     </div>
   </div>
