@@ -232,8 +232,8 @@
       },
       "button": {
         "showMnemonic": "展示助记词",
-        "addBySerial": "创建序列账户",
-        "addByPassword": "创建密码账户",
+        "addBySerial": "新增序列账户",
+        "addByPassword": "新增密码账户",
         "addByLegacy": "导入 Chia 客户端账户（24 词）"
       }
     },
