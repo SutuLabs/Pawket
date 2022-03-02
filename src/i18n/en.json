@@ -55,7 +55,7 @@
     },
     "message": {
       "confirmation": {
-        "clear": "Clear all data? Everything would be empty!!!",
+        "clear": "Clearing data will permanently remove all data from your device, make sure that wallet mnemonic have been backed up. Are you sure you want to continue?",
         "confirmText": "Confirm",
         "cancelText": "Cancel"
       },
@@ -232,9 +232,9 @@
       },
       "button": {
         "showMnemonic": "Show Mnemonic",
-        "addBySerial": "Add By Serial",
-        "addByPassword": "Add By Password",
-        "addByLegacy": "Import Chia Client Mnemonic Words"
+        "addBySerial": "Add by Serial",
+        "addByPassword": "Add by Password",
+        "addByLegacy": "Import Chia Client 24 Mnemonic Words"
       }
     },
     "message": {
@@ -354,7 +354,7 @@
         "7": "Infinite derivative wallet",
         "8": "Shadow wallet(password protected mnemonic)",
         "9": "Address variation(derivative addresses) for XCH/CATs",
-        "10": "Import and manage custom CAT",
+        "10": "Import and manage custom CATs",
         "11": "Comprehensive developer tool for coins",
         "12": "Support customize fee",
         "13": "Support multiple coins mix send",
