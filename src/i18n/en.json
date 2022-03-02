@@ -30,7 +30,7 @@
   "self-test": {
     "message": {
       "checking": "Checking",
-      "passed": "Normal",
+      "passed": "Passed",
       "failed": "Failed to check: "
     }
   },
@@ -232,9 +232,9 @@
       },
       "button": {
         "showMnemonic": "Show Mnemonic",
-        "addBySerial": "New Serial Account",
-        "addByPassword": "New Password Account",
-        "addByLegacy": "Import chia client account (24 words)"
+        "addBySerial": "Add by Serial",
+        "addByPassword": "Add by Passwordt",
+        "addByLegacy": "Import Chia Client 24 Mnemonic Words"
       }
     },
     "message": {
