@@ -55,7 +55,7 @@
     },
     "message": {
       "confirmation": {
-        "clear": "Are you sure you want to delete all data? If you do this, all data (including mnemonic, private key) will be completely deleted from this device. ",
+        "clear": "Are you sure you want to delete all data? If you do this, all data (including mnemonic, private key) will be deleted completely from this device. ",
         "confirmText": "Confirm",
         "cancelText": "Cancel"
       },
