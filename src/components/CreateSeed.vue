@@ -62,14 +62,19 @@
         </ol>
       </div>
       <div class="block centered mb-4">
-        <b-tag class="word-button is-size-6 m-2" type="is-info is-light" v-for="(m, index) in seedMnemonicList" :key="index">
+        <b-tag
+          class="is-justify-content-left py-5 word-button is-size-5 m-2"
+          type="is-info is-light"
+          v-for="(m, index) in seedMnemonicList"
+          :key="index"
+        >
           <p class="has-text-grey is-size-7">{{ index + 1 }}</p>
           {{ m }}
         </b-tag>
       </div>
       <div class="block buttons centered">
         <b-button v-if="debugMode" rounded @click="later()">{{ $t("createSeed.ui.button.later") }}</b-button>
-        <b-button rounded type="is-success" @click="ready()">{{ $t("createSeed.ui.button.ready") }}</b-button>
+        <b-button icon-right="chevron-right" rounded type="is-success" @click="ready()">{{ $t("createSeed.ui.button.ready") }}</b-button>
       </div>
     </div>
   </div>
@@ -190,10 +195,5 @@ export default class CreateSeed extends Vue {
 }
 .word-button {
   width: 6rem;
-  height: 3rem;
-  justify-content: left;
-}
-.sup {
-  vertical-align: top;
 }
 </style>
