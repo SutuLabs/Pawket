@@ -61,9 +61,10 @@
           <li>{{ $t("createSeed.ui.text.create.tip2") }}</li>
         </ol>
       </div>
-      <div class="block centered">
-        <b-tag class="word-button" type="is-info is-light" v-for="(m, index) in seedMnemonicList" :key="index">
-          {{ index + 1 + ". " + m }}
+      <div class="block centered mb-4">
+        <b-tag class="word-button is-size-6 m-2" type="is-info is-light" v-for="(m, index) in seedMnemonicList" :key="index">
+          <p class="has-text-grey is-size-7">{{ index + 1 }}</p>
+          {{ m }}
         </b-tag>
       </div>
       <div class="block buttons centered">
@@ -89,7 +90,7 @@ export default class CreateSeed extends Vue {
   public mode: Mode = "Menu";
   public isLegal = true;
   public mnemonicLen: MnemonicLen = 12;
-  
+
   get debugMode(): boolean {
     return store.state.app.debug;
   }
@@ -130,7 +131,7 @@ export default class CreateSeed extends Vue {
 
   async confirm(): Promise<void> {
     this.isLegal = true;
-    this.seedMnemonic = this.seedMnemonic.replace(/\s+/g, ' ').trim();
+    this.seedMnemonic = this.seedMnemonic.replace(/\s+/g, " ").trim();
     this.seedMnemonicList = this.seedMnemonic.split(" ");
     if (this.seedMnemonicList.length != this.mnemonicLen) {
       this.isLegal = false;
@@ -189,7 +190,10 @@ export default class CreateSeed extends Vue {
 }
 .word-button {
   width: 6rem;
-  height: 2rem;
-  margin: 0.5rem;
+  height: 3rem;
+  justify-content: left;
+}
+.sup {
+  vertical-align: top;
 }
 </style>
