@@ -30,7 +30,7 @@
   "self-test": {
     "message": {
       "checking": "检查中",
-      "passed": "通过",
+      "passed": "服务正常",
       "failed": "环境不支持: "
     }
   },
@@ -55,7 +55,7 @@
     },
     "message": {
       "confirmation": {
-        "clear": "所有数据将会被清空，确认执行？",
+        "clear": "确认要删除所有数据吗？如果执行该操作，所有数据（包括助记词、私钥信息）将从这个设备上完全删除。",
         "confirmText": "确认",
         "cancelText": "取消"
       },
@@ -152,7 +152,7 @@
       },
       "label": {
         "maxAddress": "最大隐私地址搜索数量",
-        "listingCATs": "CAT 列表"
+        "listingCATs": "CATs 列表"
       },
       "button": {
         "submit": "保存",
@@ -232,9 +232,9 @@
       },
       "button": {
         "showMnemonic": "展示助记词",
-        "addBySerial": "序列添加",
-        "addByPassword": "通过密码添加",
-        "addByLegacy": "通过 Chia 客户端助记词导入"
+        "addBySerial": "创建序列账户",
+        "addByPassword": "创建密码账户",
+        "addByLegacy": "导入 Chia 客户端账户（24 词）"
       }
     },
     "message": {
@@ -286,7 +286,7 @@
       "label": {
         "address": "地址",
         "amount": "金额",
-        "memo": "便签",
+        "memo": "备注",
         "fee": "交易费",
         "bundle": "数据包"
       },
@@ -342,7 +342,7 @@
         "roadmap": "路线图"
       },
       "blackquote": {
-        "slogan": "用 Pawket 管理你的 CAT!"
+        "slogan": "用 Pawket 管理你的 CATs!"
       },
       "list": {
         "1": "完全支持离线场景",
@@ -354,7 +354,7 @@
         "7": "无限衍生钱包",
         "8": "影子钱包(密码保护助记词)",
         "9": "XCH/CATs 的地址变化（衍生地址）",
-        "10": "导入和管理自定义 CAT",
+        "10": "导入和管理自定义 CATs",
         "11": "硬币综合开发工具",
         "12": "支持自定义手续费",
         "13": "支持多币混发",
