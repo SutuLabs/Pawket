@@ -44,7 +44,7 @@
           <p class="is-size-6">{{ $t("createSeed.ui.text.import24.tip") }}</p>
         </section>
         <b-field :type="isLegal ? '' : 'is-danger'" :message="isLegal ? '' : $t('createSeed.message.error.wrongSeed')">
-          <b-input type="textarea" v-model="seedMnemonic"></b-input>
+          <b-input type="textarea" v-model="seedMnemonic" @input="clearErrorMsg()"></b-input>
         </b-field>
         <b-button rounded type="is-success" @click="confirm()">{{ $t("createSeed.ui.button.confirm") }}</b-button>
       </div>
@@ -149,8 +149,18 @@ export default class CreateSeed extends Vue {
     this.mode = "Menu";
   }
 
+  clearErrorMsg(): void {
+    this.isLegal = true;
+  }
+
+  clearMnemonic(): void {
+    this.seedMnemonic = "";
+  }
+
   backToImportMenu(): void {
     this.mode = "ImportMenu";
+    this.clearErrorMsg();
+    this.clearMnemonic();
   }
 }
 </script>
