@@ -61,9 +61,9 @@
           <li>{{ $t("createSeed.ui.text.create.tip2") }}</li>
         </ol>
       </div>
-      <div class="block centered">
-        <b-tag class="word-button is-size-6" type="is-info is-light" v-for="(m, index) in seedMnemonicList" :key="index">
-          <p class="sup is-size-7">{{ index + 1 }}</p>
+      <div class="block centered mb-4">
+        <b-tag class="word-button is-size-6 m-2" type="is-info is-light" v-for="(m, index) in seedMnemonicList" :key="index">
+          <p class="has-text-grey is-size-7">{{ index + 1 }}</p>
           {{ m }}
         </b-tag>
       </div>
@@ -191,13 +191,9 @@ export default class CreateSeed extends Vue {
 .word-button {
   width: 6rem;
   height: 3rem;
-  margin: 0.5rem;
   justify-content: left;
-  font-size: 1rem;
 }
 .sup {
   vertical-align: top;
-  text-align: left;
-  color: grey;
 }
 </style>
