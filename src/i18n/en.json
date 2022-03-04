@@ -221,8 +221,14 @@
         "mnemonicSeed": "Mnemonic seed (24 secret words)"
       },
       "button": {
-        "revealMnemonic": "Reveal Mnemonic"
+        "revealMnemonic": "Reveal Mnemonic",
+        "confirm": "Confirm",
+        "cancel": "Cancel"
       }
+    },
+    "message": {
+      "inputPassword": "Please input your password",
+      "passwordNotCorrect": "Password is not correct"
     }
   },
   "accountList": {
@@ -249,12 +255,14 @@
         "setPassword": "Enter the password",
         "setLegacyMnemonic": "Enter mnemonic words:",
         "cancelText": "Cancel",
-        "confirmText": "OK"
+        "confirmText": "OK",
+        "inputPassword": "Please input your password"
       },
       "error": {
         "accountPasswordExists": "An account with the same password already exists",
         "accountMnemonicExists": "An account with the same mnemonic already exists",
-        "invalidMnemonic": "Import failed, please check your mnemonic words"
+        "invalidMnemonic": "Import failed, please check your mnemonic words",
+        "passwordNotCorrect": "Password is not correct"
       }
     }
   },

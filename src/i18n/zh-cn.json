@@ -221,8 +221,14 @@
         "mnemonicSeed": "助记词种子(24位助记词)"
       },
       "button": {
-        "revealMnemonic": "显示助记词"
+        "revealMnemonic": "显示助记词",
+        "confirm": "确认",
+        "cancel": "取消"
       }
+    },
+    "message": {
+      "inputPassword": "请输入密码",
+      "passwordNotCorrect": "密码不正确"
     }
   },
   "accountList": {
@@ -249,12 +255,14 @@
         "setPassword": "输入密码",
         "setLegacyMnemonic": "输入助记词",
         "cancelText": "取消",
-        "confirmText": "确认"
+        "confirmText": "确认",
+        "inputPassword": "请输入密码"
       },
       "error": {
         "accountPasswordExists": "该密码账户已存在于账户列表中。",
         "accountMnemonicExists": "该助记词账户已存在于账户列表中。",
-        "invalidMnemonic": "导入失败，请输入正确的助记词"
+        "invalidMnemonic": "导入失败，请输入正确的助记词",
+        "passwordNotCorrect": "密码不正确"
       }
     }
   },

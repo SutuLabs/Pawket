@@ -49,7 +49,7 @@
             <qrcode-vue v-if="debugMode" :value="account.key.compatibleMnemonic" size="300"></qrcode-vue>
           </span>
           <span v-else>
-            <b-button size="is-small" @click="showMnemonic = true">{{ $t("accountExport.ui.button.revealMnemonic") }}</b-button>
+            <b-button size="is-small" @click="show()">{{ $t("accountExport.ui.button.revealMnemonic") }}</b-button>
           </span>
         </li>
       </ul>
@@ -64,6 +64,7 @@ import { AccountEntity } from "@/store/modules/account";
 import KeyBox from "@/components/KeyBox.vue";
 import QrcodeVue from "qrcode.vue";
 import utility from "@/services/crypto/utility";
+import { translate } from "@/i18n/i18n";
 
 @Component({
   components: {
@@ -106,6 +107,32 @@ export default class AccountExport extends Vue {
 
   copy(text: string): void {
     store.dispatch("copy", text);
+  }
+
+  show(): void {
+    this.$buefy.dialog.prompt({
+      message: translate("accountExport.message.inputPassword"),
+      inputAttrs: {
+        type: "password",
+      },
+      trapFocus: true,
+      closeOnConfirm: false,
+      cancelText: translate("accountExport.ui.button.cancel"),
+      confirmText: translate("accountExport.ui.button.confirm"),
+      onConfirm: async (password, { close }) => {
+        const pswhash = await utility.hash(password);
+        if (pswhash != store.state.vault.passwordHash) {
+          this.$buefy.toast.open({
+            message: translate("accountExport.message.passwordNotCorrect"),
+            type: "is-danger",
+          });
+          this.showMnemonic = false;
+          return;
+        }
+        close();
+        this.showMnemonic = true;
+      },
+    });
   }
 }
 </script>
