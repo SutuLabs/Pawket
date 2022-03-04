@@ -117,6 +117,7 @@ export default class AccountExport extends Vue {
       },
       trapFocus: true,
       closeOnConfirm: false,
+      canCancel: ['button'],
       cancelText: translate("accountExport.ui.button.cancel"),
       confirmText: translate("accountExport.ui.button.confirm"),
       onConfirm: async (password, { close }) => {

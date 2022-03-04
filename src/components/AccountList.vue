@@ -186,6 +186,7 @@ export default class AccountList extends Vue {
       },
       trapFocus: true,
       closeOnConfirm: false,
+      canCancel: ['button'],
       cancelText: translate("accountExport.ui.button.cancel"),
       confirmText: translate("accountExport.ui.button.confirm"),
       onConfirm: async (password, { close }) => {
@@ -203,6 +204,7 @@ export default class AccountList extends Vue {
           component: MnemonicExport,
           hasModalCard: true,
           trapFocus: true,
+          canCancel: ['x'],
           props: { mnemonic: store.state.vault.seedMnemonic },
         });
       },
