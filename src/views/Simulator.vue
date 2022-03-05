@@ -22,7 +22,7 @@
                 <transition-group class="op_stack" name="fade" tag="ul">
                   <li v-for="({ op, id }, idx) in op_stack.slice().reverse()" :key="id">
                     {{ op.name }}
-                    <span class="is-size-7 has-text-grey-lighter">{{ idx }}</span>
+                    <span class="is-size-7 has-text-grey-lighter">{{ op_stack.length - idx }}</span>
                   </li>
                 </transition-group>
                 <!-- </ul> -->
@@ -61,11 +61,9 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-// import { Program, RunOptions, ProgramOutput, makeDefaultOperators, Instruction, instructions } from "@rigidity/clvm/src"
 import {  SExp, Tuple, CLVMType, TOperatorDict, None, TPreEvalF, to_pre_eval_op, PATH_LOOKUP_BASE_COST,
   PATH_LOOKUP_COST_PER_LEG, Bytes, t, PATH_LOOKUP_COST_PER_ZERO_BYTE, msb_mask, isCons, APPLY_COST, QUOTE_COST, isAtom,
   EvalError, OPERATOR_LOOKUP} from "clvm";
-// import {initialize } from 'clvm_tools';
 import { assemble } from "clvm_tools/clvm_tools/binutils";
 import SExpBox from "@/components/SExpBox.vue";
 type ValStackType = idSExp[];
@@ -79,6 +77,10 @@ interface StepType {
   op_stack: OpStackType;
   cost: number;
   result: CLVMType | None;
+}
+
+export interface SExpWithId extends SExp {
+  id: number;
 }
 
 @Component({
@@ -101,7 +103,6 @@ export default class Home extends Vue {
   operator_lookup: TOperatorDict = OPERATOR_LOOKUP;
 
   max_cost: number | None = None;
-  // first_backward = false;
 
   private _uid = 100000;
   getuid(): number {
@@ -129,39 +130,30 @@ export default class Home extends Vue {
     "bound swap_op": { parameters: ["v1", "v2"] },
     "bound eval_op": { parameters: ["(sexp, args)"] },
   };
-    /*
-    (sexp, args) => 
-      atom sexp [idx] => (arg)
-      sexp.f(op) =>
-        cons op => apply(op.f, sexp.r)
-        atom op == quote => (sexp.r)
-        atom op == _ => apply(op,[swap+eval+cons(r,args) of r in sexp.r])
-     */
+  /*
+  (sexp, args) => 
+    atom sexp [idx] => (arg)
+    sexp.f(op) =>
+      cons op => apply(op.f, sexp.r)
+      atom op == quote => (sexp.r)
+      atom op == _ => apply(op,[swap+eval+cons(r,args) of r in sexp.r])
+   */
   async mounted(): Promise<void> {
     this.restart();
   }
 
   restart(): void {
-
-    // await clvm.initialize();
-    // await initialize();
-
-    // const { SExp, OPERATOR_LOOKUP, KEYWORD_TO_ATOM, h, t, run_program } = clvm;
-    // const plus = h(KEYWORD_TO_ATOM["+"]);
-    // const q = h(KEYWORD_TO_ATOM["q"]);
-    // console.log(plus, q)
     // const str = "(a (q . q) (q . (2 3 4)))";
     const str = "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xb5c7539888af59f601be0ea2eddd32c06a80d932170eec55ef7a7640cbc5b37b81c4258644229eca2322298a9bf0189f) 1))";
     this.program = assemble(str);
+    this.program = this.assignIdRecursive(this.program);
 
-    // const program = SExp.to([plus, 1, t(q, 175)]);
     // this.solution = SExp.null();
     this.solution = assemble("(() (q (51 0x3eb239190ce59b4af1e461291b9185cea62d6072fd3718051a530fd8a8218bc0 190)) ())");
+    this.solution = this.assignIdRecursive(this.solution);
 
-    // console.log("puzzle", this.program, "solution", env);
     // const [cost, result] = this.start_program(program, env);
     this.start_program(this.program, this.solution);
-    // console.log(this.cost, this.result);
   }
 
   start_program(
@@ -169,12 +161,36 @@ export default class Home extends Vue {
     args: CLVMType,
   ): void {
     this.program = SExp.to(program);
+    const firstStackValue = this.assignIdRecursive(program.cons(args));
     this.op_stack = [{ op: this.eval_op, id: this.getuid() }];
-    this.value_stack = [{ sexp: program.cons(args), id: this.getuid() }];
+    this.value_stack = [{ sexp: firstStackValue, id: this.getuid() }];
     this.cost = 0;
     this.result = None;
     this.steps = [];
-    // this.snapshot();
+  }
+
+  assignIdRecursive(se: SExp): SExpWithId {
+    if (!se) return se;
+    const sexp = se as SExpWithId;
+    if (!sexp.id) {
+      sexp.id = this.getuid();
+    }
+    else {
+      // assume sexp with id, all its children has id, avoid redundant recursive
+      // return sexp;
+    }
+    if (sexp.atom) return sexp;
+    if (isCons(sexp)) {
+      const pair = sexp.pair;
+      if (pair) {
+        const [f, r] = pair;
+        this.assignIdRecursive(f);
+        this.assignIdRecursive(r);
+        return sexp;
+      }
+    }
+
+    throw new Error("Unknown status")
   }
 
   snapshot(): void {
@@ -184,21 +200,15 @@ export default class Home extends Vue {
       cost: this.cost,
       result: this.result,
     });
-    // this.first_backward = true;
   }
 
   prev_step(): void {
-    // if (this.first_backward) {
-    //   this.first_backward = false;
-    //   this.prev_step();
-    // }
     if (this.steps.length == 0) {
       console.log("reach started");
       return;
     }
 
     const step = this.steps[this.steps.length - 1];
-    // console.log(step);
     this.op_stack = step.op_stack;
     this.value_stack = step.value_stack;
     this.cost = step.cost;
@@ -221,7 +231,6 @@ export default class Home extends Vue {
       throw new EvalError("cost exceeded", SExp.to(this.max_cost));
     }
     this.result = this.value_stack[this.value_stack.length - 1]?.sexp;
-    // console.log(this.value_stack);
   }
 
   traverse_path(sexp: SExp, env: SExp): Tuple<number, SExp> {
@@ -280,7 +289,7 @@ export default class Home extends Vue {
   cons_op(op_stack: OpStackType, value_stack: ValStackType): number {
     const v1 = value_stack.pop() as idSExp;
     const v2 = value_stack.pop() as idSExp;
-    value_stack.push({ sexp: v1.sexp.cons(v2.sexp), id: this.getuid() });
+    value_stack.push({ sexp: this.assignIdRecursive(v1.sexp.cons(v2.sexp)), id: this.getuid() });
     return 0;
   }
 
@@ -296,7 +305,7 @@ export default class Home extends Vue {
     const args = pair.rest();
 
     const value_stackpush = (sexp: SExp): void => {
-      value_stack.push({ id: this.getuid(), sexp });
+      value_stack.push({ id: this.getuid(), sexp: this.assignIdRecursive(sexp) });
     };
 
     const op_stackpush = (op: opType): void => {
@@ -326,7 +335,6 @@ export default class Home extends Vue {
     }
     const op = operator.atom as Bytes;
     let operand_list = sexp.rest();
-    console.log("atom op", op, operand_list);
     // op === operator_lookup.quote_atom
     if (op.equal_to(this.operator_lookup.quote_atom)) {
       value_stackpush(operand_list);
@@ -350,7 +358,7 @@ export default class Home extends Vue {
   apply_op(op_stack: OpStackType, value_stack: ValStackType): number {
 
     const value_stackpush = (sexp: SExp): void => {
-      value_stack.push({ id: this.getuid(), sexp });
+      value_stack.push({ id: this.getuid(), sexp: this.assignIdRecursive(sexp) });
     };
 
     const op_stackpush = (op: opType): void => {
@@ -369,10 +377,11 @@ export default class Home extends Vue {
     const op = operator.atom;
     // op === operator_lookup.apply_atom
     if (op.equal_to(this.operator_lookup.apply_atom)) {
-      if (operand_list.list_len() !== 2) {
+      if (operand_list.list_len() !== 2 || !operand_list.pair) {
         throw new EvalError("apply requires exactly 2 parameters", operand_list);
       }
-      const new_program = operand_list.first();
+      // const new_program = operand_list.first();
+      const new_program = operand_list.pair[0];
       const new_args = operand_list.rest().first();
       value_stackpush(new_program.cons(new_args));
       op_stackpush(this.eval_op);
@@ -383,43 +392,6 @@ export default class Home extends Vue {
     value_stackpush(r as SExp);
     return additional_cost;
   }
-
-
-  // public run(
-  //   puzzle: Program,
-  //   solution: Program,
-  //   options: Partial<RunOptions> = {}
-  // ): ProgramOutput {
-  //   const fullOptions: RunOptions = {
-  //     strict: false,
-  //     operators: makeDefaultOperators(),
-  //     ...options,
-  //   };
-  //   if (fullOptions.strict)
-  //     fullOptions.operators.unknown = (_operator, args) => {
-  //       throw new Error(
-  //         `Unimplemented operator${args.positionSuffix}.`
-  //       );
-  //     };
-  //   const instructionStack: Array<Instruction> = [instructions.eval];
-  //   const stack: Array<Program> = [Program.cons(puzzle, solution)];
-  //   let cost = 0n;
-  //   while (instructionStack.length) {
-  //     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  //     const instruction = instructionStack.pop()!;
-  //     cost += instruction(instructionStack, stack, fullOptions);
-  //     if (fullOptions.maxCost !== undefined && cost > fullOptions.maxCost)
-  //       throw new Error(
-  //         `Exceeded cost of ${fullOptions.maxCost}${
-  //         stack[stack.length - 1].positionSuffix
-  //         }.`
-  //       );
-  //   }
-  //   return {
-  //     value: stack[stack.length - 1],
-  //     cost,
-  //   };
-  // }
 }
 </script>
 

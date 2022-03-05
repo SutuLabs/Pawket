@@ -11,7 +11,7 @@
     <template v-else-if="arr">
       <!-- LIST: {{ value.list_len() }} -->
       <div>
-        {{ arr[0] }}
+        {{ arr[0] }} {{ value.id }}
         <span v-if="collapse">
           <a href="javascript:void(0)" @click="unfold()">
             <b-icon icon="plus" size="is-small"></b-icon>
@@ -83,11 +83,11 @@ export default class SExpBox extends Vue {
     if (this.isAtom(this.value)) return null;
     try {
       const type = this.isCons(this.value) ? "CONL" : "LIST";
-      return [type, Array.from(this.value.as_iter())];
+      return [type, Array.from(this.getIter(this.value))];
     }
     catch (error) {
       if (this.isCons(this.value)) {
-        return ["CONS", this.value.as_pair() ?? []];
+        return ["CONS", this.value.pair ?? []];
       }
       else {
         console.warn("failed to parse", this.isCons(this.value), this.value, error)
@@ -96,10 +96,17 @@ export default class SExpBox extends Vue {
     }
   }
 
-  isAtom(obj: SExp): boolean { return isAtom(obj); }
-  isCons(obj: SExp): boolean { return isCons(obj); }
+  isAtom(obj: SExp): boolean { return obj && isAtom(obj); }
+  isCons(obj: SExp): boolean { return obj && isCons(obj); }
 
-
+  private *getIter(sexp: SExp): IterableIterator<SExp> {
+    let v: SExp = sexp;
+    while (!v.nullp()) {
+      if (!v.pair) throw new EvalError("rest of non-cons");
+      yield v.pair[0];
+      v = v.pair[1];
+    }
+  }
 }
 </script>
 
