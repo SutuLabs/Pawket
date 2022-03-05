@@ -285,7 +285,6 @@ export default class Home extends Vue {
 
   prev_step(): void {
     if (this.steps.length == 0) {
-      console.log("reach started");
       return;
     }
 
@@ -300,7 +299,6 @@ export default class Home extends Vue {
   next_step(): void {
 
     if (!this.op_stack.length) {
-      console.log("End");
       return;
     }
 
