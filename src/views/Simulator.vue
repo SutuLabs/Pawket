@@ -1,6 +1,42 @@
 <template>
   <div class="simulator">
-    <div class="">
+    <div class="puzzle_input" v-if="!started">
+      <div class="card">
+        <div class="card-content">
+          <div class="content">
+            <div class="columns">
+              <div class="column is-full">
+                <b-field label="Example">
+                  <b-select placeholder="Select a example" v-model="selectedExample" @input="setExample()">
+                    <option v-for="(ex, idx) in examples" :value="ex" :key="idx">
+                      {{ ex.name }}
+                    </option>
+                  </b-select>
+                </b-field>
+              </div>
+            </div>
+            <div class="columns">
+              <div class="column is-half">
+                <b-field label="Puzzle">
+                  <b-input type="textarea" v-model="puzzlecl"></b-input>
+                </b-field>
+              </div>
+              <div class="column is-half">
+                <b-field label="Solution">
+                  <b-input type="textarea" v-model="solutioncl"></b-input>
+                </b-field>
+              </div>
+            </div>
+            <div class="columns">
+              <div class="column is-full">
+                <b-button type="is-success" @click="restart()">Analyze</b-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-if="started" class="">
       <div class="columns is-mobile">
         <div class="column is-half">
           <div class="program_tree">
@@ -13,19 +49,28 @@
         <div class="column is-half">
           <b-button type="is-light" @click="prev_step()">previous</b-button>
           <b-button type="is-success" @click="next_step()">next</b-button>
-          <b-button type="is-danger" class="is-pulled-right" @click="restart()">restart</b-button>
+
+          <b-dropdown :triggers="['hover']">
+            <template #trigger>
+              <b-button label="" type="is-info is-light" icon-right="dots-vertical" />
+            </template>
+
+            <b-dropdown-item type="is-danger" @click="restart()">restart</b-dropdown-item>
+            <b-dropdown-item type="is-danger" @click="reset()">reset</b-dropdown-item>
+          </b-dropdown>
 
           <div class="card">
             <div class="card-content">
               <div class="content">
-                <!-- <ul class="op_stack"> -->
-                <transition-group class="op_stack" name="fade" tag="ul">
+                <transition-group v-if="op_stack.length > 0" class="op_stack" name="fade" tag="ul">
                   <li v-for="({ op, id }, idx) in op_stack.slice().reverse()" :key="id">
                     {{ op.name }}
                     <span class="is-size-7 has-text-grey-lighter">{{ op_stack.length - idx }}</span>
                   </li>
                 </transition-group>
-                <!-- </ul> -->
+                <div v-else>
+                  <span>Completed</span>
+                </div>
               </div>
             </div>
           </div>
@@ -83,6 +128,12 @@ export interface SExpWithId extends SExp {
   id: number;
 }
 
+interface ExampleType {
+  name: string;
+  puzzle: string;
+  solution: string;
+}
+
 @Component({
   components: {
     SExpBox,
@@ -104,13 +155,34 @@ export default class Home extends Vue {
 
   max_cost: number | None = None;
 
-  private _uid = 100000;
+  puzzlecl = "";
+  solutioncl = "";
+  started = false;
+  selectedExample: ExampleType | null = null;
+
+  examples: ExampleType[] = [
+    {
+      name: "simple1",
+      puzzle: "(a (q . q) (q . (2 3 4)))",
+      solution: "()",
+    },
+    {
+      name: "p2_delegated_puzzle_or_hidden_puzzle1",
+      puzzle: "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xb5c7539888af59f601be0ea2eddd32c06a80d932170eec55ef7a7640cbc5b37b81c4258644229eca2322298a9bf0189f) 1))",
+      solution: "(() (q (51 0x3eb239190ce59b4af1e461291b9185cea62d6072fd3718051a530fd8a8218bc0 190)) ())",
+    },
+  ];
+
+  private _uid = 10000;
   getuid(): number {
     this._uid = this._uid + 1;
     return this._uid;
   }
 
   get oppars(): string[] {
+    if (this.op_stack.length == 0) {
+      return [];
+    }
     const opname = this.op_stack[this.op_stack.length - 1].op.name;
     return this.opdefs[opname].parameters;
   }
@@ -138,18 +210,27 @@ export default class Home extends Vue {
       atom op == quote => (sexp.r)
       atom op == _ => apply(op,[swap+eval+cons(r,args) of r in sexp.r])
    */
-  async mounted(): Promise<void> {
-    this.restart();
+  // async mounted(): Promise<void> {
+  //   this.restart();
+  // }
+
+  setExample(): void {
+    const example = this.selectedExample;
+    if (!example) return;
+    this.solutioncl = example.solution;
+    this.puzzlecl = example.puzzle;
+  }
+
+  reset(): void {
+    this.started = false;
   }
 
   restart(): void {
-    // const str = "(a (q . q) (q . (2 3 4)))";
-    const str = "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xb5c7539888af59f601be0ea2eddd32c06a80d932170eec55ef7a7640cbc5b37b81c4258644229eca2322298a9bf0189f) 1))";
-    this.program = assemble(str);
+    this.started = true;
+    this.program = assemble(this.puzzlecl);
     this.program = this.assignIdRecursive(this.program);
 
-    // this.solution = SExp.null();
-    this.solution = assemble("(() (q (51 0x3eb239190ce59b4af1e461291b9185cea62d6072fd3718051a530fd8a8218bc0 190)) ())");
+    this.solution = this.solutioncl ? assemble(this.solutioncl) : SExp.null();
     this.solution = this.assignIdRecursive(this.solution);
 
     // const [cost, result] = this.start_program(program, env);
