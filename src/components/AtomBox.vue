@@ -23,7 +23,6 @@ export default class AtomBox extends Vue {
   get value(): string {
     if (this.atom) {
       const hex = this.atom.hex();
-      // console.log(hex, hex.length, hex=="", this.atom.raw());
       if (hex == "" && this.atom.raw()[0] == 0)
         return "00";
       if (hex == "" && this.atom.raw().length == 0)
@@ -40,7 +39,6 @@ export default class AtomBox extends Vue {
       if (Object.prototype.hasOwnProperty.call(ConditionOpcode, key)) {
         const opcode = (ConditionOpcode as unknown as { [key: string]: number })[key];
         this.conditionDict[Bytes.from([opcode]).hex()] = key;
-        // console.log(element, key)
       }
     }
 

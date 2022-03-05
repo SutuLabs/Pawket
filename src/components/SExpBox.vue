@@ -1,15 +1,10 @@
 <template>
   <ul>
-    <!-- <li v-else-if="isCons(value)">CONS</li> -->
-    <!-- <li v-if="isCons(value)">CONS: {{ value.as_pair() }}</li> -->
     <li v-if="isAtom(value)" class="atom">
       <atom-box :atom="value.atom"></atom-box>
-      <!-- {{ value.atom.hex() }}
-      <span class="has-text-grey-light" v-if="keywords[value.atom.hex()]">{{ keywords[value.atom.hex()] }}</span> -->
     </li>
 
     <template v-else-if="arr">
-      <!-- LIST: {{ value.list_len() }} -->
       <div>
         {{ arr[0] }} {{ value.id }}
         <span v-if="collapse">
@@ -25,24 +20,16 @@
       </div>
       <template v-if="!collapse">
         <li v-for="(item, idx) in arr[1]" :key="idx">
-          <!-- {{ idx }}|{{ item }} -->
           <span v-if="isAtom(item)" class="atom">
             <div>
               <atom-box :atom="item.atom"></atom-box>
-              <!-- {{ item.atom.hex() }}
-            <span class="has-text-grey-light" v-if="keywords[item.atom.hex()]">{{ keywords[item.atom.hex()] }}</span> -->
             </div>
           </span>
           <s-exp-box v-else :value="item" :auto-collapse="autoCollapse == 1 ? 1 : autoCollapse - 1"></s-exp-box>
         </li>
       </template>
     </template>
-    <!-- <template v-else-if="isCons(value)">
-      CONS:
-      <li v-for="(item, idx) in value.as_pair()" :key="idx">
-        <s-exp-box :value="item"></s-exp-box>
-      </li>
-    </template> -->
+
     <li v-else>ELSE</li>
   </ul>
 </template>
@@ -111,10 +98,6 @@ export default class SExpBox extends Vue {
 </script>
 
 <style scoped lang="scss">
-// ul > li {
-//   margin-left: 10px;
-// }
-
 ul {
   padding: 0;
   margin: 0;
