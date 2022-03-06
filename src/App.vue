@@ -48,7 +48,7 @@ import store from "./store";
 import DevHelper from "@/components/DevHelper.vue";
 
 @Component
-export default class ProfileCorner extends Vue {
+export default class App extends Vue {
   public debugClick = 9;
   get version(): string {
     return process.env.VUE_APP_VERSION || "";
