@@ -85,7 +85,7 @@ store.registerModule<IVaultState>('vault', {
       state.password = newPassword;
       await dispatch("persistent");
     },
-    async initWalletAddress({ state, rootState }) {
+    async initWalletAddress({ rootState }) {
       for (let i = 0; i < rootState.account.accounts.length; i++) {
         const account = rootState.account.accounts[i];
         const privkey = utility.fromHexString(account.key.privateKey);

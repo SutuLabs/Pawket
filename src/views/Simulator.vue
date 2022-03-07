@@ -106,6 +106,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {  SExp, Tuple, CLVMType, TOperatorDict, None, TPreEvalF, to_pre_eval_op, PATH_LOOKUP_BASE_COST,
   PATH_LOOKUP_COST_PER_LEG, Bytes, t, PATH_LOOKUP_COST_PER_ZERO_BYTE, msb_mask, isCons, APPLY_COST, QUOTE_COST, isAtom,
   EvalError, OPERATOR_LOOKUP} from "clvm";

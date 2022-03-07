@@ -10,6 +10,7 @@ import App from '../views/popup.vue'
 Vue.config.productionTip = false;
 Vue.use(Buefy);
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 (Vue as any).$storeType = 'background';
 
 document.title = "Pawket";
@@ -26,6 +27,7 @@ import "@/store/modules/account";
 import "@/store/modules/vault";
 import "@/store/modules/network";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 (BigInt.prototype as any).toJSON = function () {
   return this.toString();
 };

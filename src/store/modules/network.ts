@@ -1,4 +1,3 @@
-import UniStorage from '@/services/storage';
 import store from '@/store'
 
 export interface NetworkDetail {
