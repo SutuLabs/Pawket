@@ -33,6 +33,9 @@ store.registerModule<IVaultState>('vault', {
     async initState({ state, rootState }) {
       const ustore = UniStorage.create();
 
+      await store.dispatch("initializeBls");
+      await store.dispatch("initializeClvm");
+
       const locale = await UniStorage.create().getItem("Locale")
       if (locale) i18n.locale = locale;
 
@@ -44,11 +47,12 @@ store.registerModule<IVaultState>('vault', {
         rootState.account.refreshing = false;
         rootState.network = sts.network;
         rootState.vault = sts.vault;
+        rootState.app.selfTestStatus = sts.app.selfTestStatus;
+        rootState.app.debug = sts.app.debug;
         state.loading = false;
-        return;
       }
 
-      {
+      if (state.loading) {
         const value = await ustore.getItem("SETTINGS");
         const sts = JSON.parse(value || "{}") as IVaultState;
         state.passwordHash = sts.passwordHash;
@@ -56,6 +60,8 @@ store.registerModule<IVaultState>('vault', {
         state.encryptedAccounts = sts.encryptedAccounts;
         state.loading = false;
       }
+
+      await store.dispatch("selfTest");
     },
     async importSeed({ state, dispatch }, mnemonic: string) {
       const seedLen = mnemonic.trim().split(" ").length;
@@ -152,6 +158,10 @@ store.registerModule<IVaultState>('vault', {
           account: rootState.account,
           network: rootState.network,
           vault: rootState.vault,
+          app: {
+            debug: rootState.app.debug,
+            selfTestStatus: rootState.app.selfTestStatus == "Passed" ? "Passed" : "Checking",
+          }
         }));
       }
     },

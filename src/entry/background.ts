@@ -13,6 +13,8 @@ export interface ResponseType {
   value?: string;
 }
 
+const memoryState: { [key: string]: string } = {};
+
 chrome.runtime.onMessage.addListener(
   function (request: RequestType, sender, sendResponse: (response?: ResponseType) => void) {
     // console.log(sender.tab ?
@@ -21,21 +23,38 @@ chrome.runtime.onMessage.addListener(
 
     if (request.command === "store" && request.key && request.value) {
       // console.log("background: store")
-      chrome.storage.local.set({ [request.key]: request.value }, () => {
+      if (request.key.startsWith("MEMORY_")) {
+        memoryState[request.key] = request.value;
         sendResponse({ ok: true, key: request.key });
-      });
+      }
+      else {
+        chrome.storage.local.set({ [request.key]: request.value }, () => {
+          sendResponse({ ok: true, key: request.key });
+        });
+      }
     }
     else if (request.command === "retrieve" && request.key) {
       // console.log("background: retrieve", request)
-      chrome.storage.local.get(request.key, (valueObj) => {
-        sendResponse({ ok: true, key: request.key, value: valueObj[request.key ?? ""] ?? null });
-      });
+      if (request.key.startsWith("MEMORY_")) {
+        sendResponse({ ok: true, key: request.key, value: memoryState[request.key] ?? null });
+      }
+      else {
+        chrome.storage.local.get(request.key, (valueObj) => {
+          sendResponse({ ok: true, key: request.key, value: valueObj[request.key ?? ""] ?? null });
+        });
+      }
     }
     else if (request.command === "remove" && request.key) {
       // console.log("background: remove", request)
-      chrome.storage.local.remove(request.key, () => {
+      if (request.key.startsWith("MEMORY_")) {
+        delete memoryState[request.key];
         sendResponse({ ok: true, key: request.key });
-      });
+      }
+      else {
+        chrome.storage.local.remove(request.key, () => {
+          sendResponse({ ok: true, key: request.key });
+        });
+      }
     }
     else {
       sendResponse({ ok: false, error: "unknown command: " + request.command });

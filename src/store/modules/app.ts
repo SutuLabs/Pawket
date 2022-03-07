@@ -3,12 +3,16 @@ import store from '@/store'
 import { ModuleInstance } from "@chiamine/bls-signatures";
 import * as clvm_tools from "clvm_tools/browser";
 import loadBls from "@chiamine/bls-signatures";
+import TestRunner from "@/services/selftest/runner";
 
+export type SelfTestStatus = "Checking" | "Passed" | "Failed";
 export interface IAppState {
   bls?: ModuleInstance;
   clvmInitialized: boolean;
   debug: boolean;
   externalExplorerPrefix: string;
+  selfTestStatus: SelfTestStatus;
+  selfTestError: string;
 }
 
 store.registerModule<IAppState>('app', {
@@ -18,6 +22,8 @@ store.registerModule<IAppState>('app', {
       externalExplorerPrefix: 'https://chia.tt/info/address/',
       debug: false,
       bls: undefined,
+      selfTestStatus: "Checking",
+      selfTestError: "",
     };
   },
   actions: {
@@ -34,6 +40,15 @@ store.registerModule<IAppState>('app', {
       state.bls = BLS;
     },
 
+    async selfTest({ state, dispatch }) {
+      await dispatch("initializeBls");
+
+      if (state.selfTestStatus == "Checking") {
+        await TestRunner.selfTest();
+      }
+    },
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     copy({ state }, copyText: string) {
       const textArea = document.createElement("textarea");
       textArea.value = copyText;
