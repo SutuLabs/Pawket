@@ -121,8 +121,9 @@ store.registerModule<IVaultState>('vault', {
       state.password = "";
       state.seedMnemonic = "";
       state.unlocked = false;
+      await dispatch("saveState");
     },
-    async persistent({ state, rootState }) {
+    async persistent({ state, rootState, dispatch }) {
       if (!state.unlocked) return;
       if (!state.password || !state.seedMnemonic)
         console.warn("abnormal situration, password or seed mnemonic is empty!!!");
@@ -153,6 +154,10 @@ store.registerModule<IVaultState>('vault', {
         })
       );
 
+      await dispatch("saveState");
+    },
+    async saveState({ rootState }) {
+      const ustore = UniStorage.create();
       if (ustore.type == "background") {
         await ustore.setItem("MEMORY_STATE", JSON.stringify({
           account: rootState.account,
