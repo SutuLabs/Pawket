@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import store from "@/store";
 import utility from "@/services/crypto/utility";
 import { translate } from "@/i18n/i18n";
@@ -64,9 +64,12 @@ export default class VerifyPassword extends Vue {
     return store.state.vault.passwordHash ? "Verify" : "Create";
   }
 
-  mounted(): void {
-    const pswElm = this.$refs.password as HTMLInputElement | undefined;
-    if (pswElm) pswElm.focus();
+  @Watch("mode")
+  onModeChanged(): void {
+    setTimeout(() => {
+      const pswElm = this.$refs.password as HTMLInputElement | undefined;
+      if (pswElm) pswElm.focus();
+    }, 100);
   }
 
   async confirm(): Promise<void> {
