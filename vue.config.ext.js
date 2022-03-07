@@ -34,9 +34,14 @@ module.exports = {
   outputDir,
   filenameHashing: false,
   chainWebpack: (config) => {
-    config.plugin('copy').use(new copyPlugin([{
+    config.plugins.delete('pwa');
+    config.plugin('copy-manifest').use(new copyPlugin([{
       from: path.resolve(`src/manifest.${process.env.NODE_ENV}.json`),
       to: `${path.resolve(outputDir)}/manifest.json`
+    }]));
+    config.plugin('copy-icon').use(new copyPlugin([{
+      from: path.resolve(`src/assets/icons`),
+      to: `${path.resolve(outputDir)}/icons`
     }]));
   },
   configureWebpack: {
