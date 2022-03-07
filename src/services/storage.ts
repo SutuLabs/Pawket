@@ -11,12 +11,11 @@ export default class UniStorage {
 
   constructor(type: StorageType) {
     this.type = type;
-    console.log("initialize storage with type: ", this.type);
+    // console.log("initialize storage with type: ", this.type);
   }
 
   public static create(): UniStorage {
     const dt = (Vue as unknown as TypedVue)?.$storeType;
-    console.trace("create with", dt)
     // if (!dt) throw new Error("should initialize through `Vue.prototype.$storeType = 'localStorage';` first.");
     if (!dt) return new UniStorage("localStorage");
     return new UniStorage(dt);
@@ -73,7 +72,6 @@ export default class UniStorage {
   }
 
   private retrieveFromBackground(key: string): Promise<string> {
-    // console.log(chrome, chrome.runtime, chrome.storage, iframe.contentWindow.postMessage)
     return new Promise((resolve, reject) => {
       chrome.runtime.sendMessage({ command: "retrieve", key }, function (response) {
         if (response.ok && response.value !== undefined) return resolve(response.value);

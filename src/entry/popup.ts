@@ -11,7 +11,6 @@ Vue.config.productionTip = false;
 Vue.use(Buefy);
 
 (Vue as any).$storeType = 'background';
-console.log((Vue as any).$storeType)
 
 document.title = "Pawket";
 
@@ -31,4 +30,4 @@ import "@/store/modules/network";
   return this.toString();
 };
 
-// store.dispatch("initState");
+store.dispatch("initState");

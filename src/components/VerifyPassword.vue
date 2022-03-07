@@ -53,7 +53,6 @@ type Mode = "Verify" | "Create";
 export default class VerifyPassword extends Vue {
   public password = "";
   public repassword = "";
-  public mode: Mode = "Verify";
   public isCorrect = true;
   public isMatch = true;
   public passwordStrength = 0;
@@ -61,8 +60,11 @@ export default class VerifyPassword extends Vue {
   public strengthClass: "is-danger" | "is-warning" | "is-success" = "is-danger";
   public showStrength = false;
 
+  get mode(): Mode {
+    return store.state.vault.passwordHash ? "Verify" : "Create";
+  }
+
   mounted(): void {
-    this.mode = store.state.vault.passwordHash ? "Verify" : "Create";
     const pswElm = this.$refs.password as HTMLInputElement | undefined;
     if (pswElm) pswElm.focus();
   }

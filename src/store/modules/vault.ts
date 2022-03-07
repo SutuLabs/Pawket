@@ -4,7 +4,8 @@ import { AccountEntity } from './account';
 import Vue from 'vue';
 import encryption from '@/services/crypto/encryption';
 import puzzle from '@/services/crypto/puzzle';
-import { translate } from '@/i18n/i18n';
+import i18n, { translate } from '@/i18n/i18n';
+import UniStorage from '@/services/storage';
 
 export interface IVaultState {
   passwordHash: string;
@@ -13,21 +14,34 @@ export interface IVaultState {
   password: string;
   seedMnemonic: string;
   unlocked: boolean;
+  loading: boolean;
 }
 
 store.registerModule<IVaultState>('vault', {
   state() {
-    const sts = JSON.parse(localStorage.getItem("SETTINGS") || "{}");
     return {
       seedMnemonic: "",
-      passwordHash: sts.passwordHash,
-      encryptedSeed: sts.encryptedSeed,
-      encryptedAccounts: sts.encryptedAccounts,
+      passwordHash: "",
+      encryptedSeed: "",
+      encryptedAccounts: "",
       password: "",
       unlocked: false,
+      loading: true,
     };
   },
   actions: {
+    async initState({ state }) {
+      const value = await UniStorage.create().getItem("SETTINGS");
+      const sts = JSON.parse(value || "{}");
+      state.passwordHash = sts.passwordHash;
+      state.encryptedSeed = sts.encryptedSeed;
+      state.encryptedAccounts = sts.encryptedAccounts;
+      state.loading = false;
+
+      UniStorage.create().getItem("Locale").then((locale) => {
+        if (locale) i18n.locale = locale;
+      });
+    },
     async importSeed({ state, dispatch }, mnemonic: string) {
       const seedLen = mnemonic.trim().split(" ").length;
       if (seedLen != 12 && seedLen != 24) throw new Error("Only accept mnemonic with 12/24 words.");
@@ -108,8 +122,7 @@ store.registerModule<IVaultState>('vault', {
       state.encryptedAccounts = encryptedAccounts;
       state.encryptedSeed = encryptedSeed;
 
-      localStorage.setItem(
-        "SETTINGS",
+      UniStorage.create().setItem("SETTINGS",
         JSON.stringify({
           encryptedSeed: encryptedSeed,
           passwordHash: state.passwordHash,
@@ -119,7 +132,7 @@ store.registerModule<IVaultState>('vault', {
       );
     },
     clear() {
-      localStorage.removeItem("SETTINGS");
+      UniStorage.create().removeItem("SETTINGS")
       location.reload();
     },
 

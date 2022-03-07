@@ -37,9 +37,7 @@
         "unlimitedStorage",
         "clipboardWrite",
         "activeTab",
-        "notifications"
-    ],
-    "host_permissions": [
+        "notifications",
         "http://localhost:8080/",
         "http://walletapi.chiabee.net/*",
         "http://api.pawket.app/*"

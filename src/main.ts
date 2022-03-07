@@ -28,3 +28,5 @@ import "./store/modules/network";
 (BigInt.prototype as any).toJSON = function () {
   return this.toString();
 };
+
+store.dispatch("initState");
