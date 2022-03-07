@@ -1,10 +1,11 @@
-import store from '@/store'
+import store, { IRootState } from '@/store'
 import utility from '../../services/crypto/utility';
 import { AccountEntity } from './account';
 import Vue from 'vue';
 import encryption from '@/services/crypto/encryption';
 import puzzle from '@/services/crypto/puzzle';
-import { translate } from '@/i18n/i18n';
+import i18n, { translate } from '@/i18n/i18n';
+import UniStorage from '@/services/storage';
 
 export interface IVaultState {
   passwordHash: string;
@@ -13,21 +14,55 @@ export interface IVaultState {
   password: string;
   seedMnemonic: string;
   unlocked: boolean;
+  loading: boolean;
 }
 
 store.registerModule<IVaultState>('vault', {
   state() {
-    const sts = JSON.parse(localStorage.getItem("SETTINGS") || "{}");
     return {
       seedMnemonic: "",
-      passwordHash: sts.passwordHash,
-      encryptedSeed: sts.encryptedSeed,
-      encryptedAccounts: sts.encryptedAccounts,
+      passwordHash: "",
+      encryptedSeed: "",
+      encryptedAccounts: "",
       password: "",
       unlocked: false,
+      loading: true,
     };
   },
   actions: {
+    async initState({ state, rootState }) {
+      const ustore = UniStorage.create();
+
+      await store.dispatch("initializeBls");
+      await store.dispatch("initializeClvm");
+
+      const locale = await UniStorage.create().getItem("Locale")
+      if (locale) i18n.locale = locale;
+
+      const memsetting = await ustore.getItem("MEMORY_STATE");
+
+      if (ustore.type == "background" && memsetting) {
+        const sts = JSON.parse(memsetting) as IRootState;
+        rootState.account = sts.account;
+        rootState.account.refreshing = false;
+        rootState.network = sts.network;
+        rootState.vault = sts.vault;
+        rootState.app.selfTestStatus = sts.app.selfTestStatus;
+        rootState.app.debug = sts.app.debug;
+        state.loading = false;
+      }
+
+      if (state.loading) {
+        const value = await ustore.getItem("SETTINGS");
+        const sts = JSON.parse(value || "{}") as IVaultState;
+        state.passwordHash = sts.passwordHash;
+        state.encryptedSeed = sts.encryptedSeed;
+        state.encryptedAccounts = sts.encryptedAccounts;
+        state.loading = false;
+      }
+
+      await store.dispatch("selfTest");
+    },
     async importSeed({ state, dispatch }, mnemonic: string) {
       const seedLen = mnemonic.trim().split(" ").length;
       if (seedLen != 12 && seedLen != 24) throw new Error("Only accept mnemonic with 12/24 words.");
@@ -50,7 +85,7 @@ store.registerModule<IVaultState>('vault', {
       state.password = newPassword;
       await dispatch("persistent");
     },
-    async initWalletAddress({ state, rootState }) {
+    async initWalletAddress({ rootState }) {
       for (let i = 0; i < rootState.account.accounts.length; i++) {
         const account = rootState.account.accounts[i];
         const privkey = utility.fromHexString(account.key.privateKey);
@@ -86,8 +121,9 @@ store.registerModule<IVaultState>('vault', {
       state.password = "";
       state.seedMnemonic = "";
       state.unlocked = false;
+      await dispatch("saveState");
     },
-    async persistent({ state, rootState }) {
+    async persistent({ state, rootState, dispatch }) {
       if (!state.unlocked) return;
       if (!state.password || !state.seedMnemonic)
         console.warn("abnormal situration, password or seed mnemonic is empty!!!");
@@ -108,8 +144,8 @@ store.registerModule<IVaultState>('vault', {
       state.encryptedAccounts = encryptedAccounts;
       state.encryptedSeed = encryptedSeed;
 
-      localStorage.setItem(
-        "SETTINGS",
+      const ustore = UniStorage.create();
+      await ustore.setItem("SETTINGS",
         JSON.stringify({
           encryptedSeed: encryptedSeed,
           passwordHash: state.passwordHash,
@@ -117,9 +153,27 @@ store.registerModule<IVaultState>('vault', {
           network: rootState.network.network,
         })
       );
+
+      await dispatch("saveState");
     },
-    clear() {
-      localStorage.removeItem("SETTINGS");
+    async saveState({ rootState }) {
+      const ustore = UniStorage.create();
+      if (ustore.type == "background") {
+        await ustore.setItem("MEMORY_STATE", JSON.stringify({
+          account: rootState.account,
+          network: rootState.network,
+          vault: rootState.vault,
+          app: {
+            debug: rootState.app.debug,
+            selfTestStatus: rootState.app.selfTestStatus == "Passed" ? "Passed" : "Checking",
+          }
+        }));
+      }
+    },
+    async clear() {
+      const ustore = UniStorage.create();
+      await ustore.removeItem("SETTINGS")
+      await ustore.removeItem("MEMORY_STATE")
       location.reload();
     },
 

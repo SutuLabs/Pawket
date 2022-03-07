@@ -11,8 +11,8 @@ const languages = {
 };
 
 const messages = Object.assign(languages);
-const locale = localStorage.getItem("Locale");
-const defaultLocale = locale == null ? "en" : locale;
+
+const defaultLocale = "en";
 
 // Create VueI18n instance with options
 const i18n = new VueI18n({
@@ -20,7 +20,7 @@ const i18n = new VueI18n({
   messages, // set locale messages
 });
 
-export const translate = (key: string) => {
+export const translate = (key: string):string => {
   if (!key) {
     return '';
   }

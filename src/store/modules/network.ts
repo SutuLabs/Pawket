@@ -17,10 +17,8 @@ export interface INetworkState {
 
 store.registerModule<INetworkState>('network', {
   state() {
-    const sts = JSON.parse(localStorage.getItem("SETTINGS") || "{}");
-
     return {
-      network: sts.network || "main",
+      network: 0 || "main",
       networks: {
         testnet10: {
           name: "testnet10",

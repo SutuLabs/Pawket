@@ -106,16 +106,35 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import {  SExp, Tuple, CLVMType, TOperatorDict, None, TPreEvalF, to_pre_eval_op, PATH_LOOKUP_BASE_COST,
-  PATH_LOOKUP_COST_PER_LEG, Bytes, t, PATH_LOOKUP_COST_PER_ZERO_BYTE, msb_mask, isCons, APPLY_COST, QUOTE_COST, isAtom,
-  EvalError, OPERATOR_LOOKUP} from "clvm";
+import {
+  SExp,
+  Tuple,
+  CLVMType,
+  TOperatorDict,
+  None,
+  TPreEvalF,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  to_pre_eval_op,
+  PATH_LOOKUP_BASE_COST,
+  PATH_LOOKUP_COST_PER_LEG,
+  Bytes,
+  t,
+  PATH_LOOKUP_COST_PER_ZERO_BYTE,
+  msb_mask,
+  isCons,
+  APPLY_COST,
+  QUOTE_COST,
+  isAtom,
+  EvalError,
+  OPERATOR_LOOKUP,
+} from "clvm";
 import { assemble } from "clvm_tools/clvm_tools/binutils";
 import SExpBox from "@/components/SExpBox.vue";
 type ValStackType = idSExp[];
 type OpStackType = idOpType[];
 type opType = (op_stack: OpStackType, value_stack: ValStackType) => number;
-type idSExp = { sexp: SExp, id: number };
-type idOpType = { op: opType, id: number };
+type idSExp = { sexp: SExp; id: number };
+type idOpType = { op: opType; id: number };
 
 interface StepType {
   value_stack: ValStackType;
@@ -140,7 +159,7 @@ interface ExampleType {
   },
 })
 export default class Home extends Vue {
-  value_stack: ValStackType = []
+  value_stack: ValStackType = [];
   op_stack: OpStackType = [];
   cost = 0;
   result: CLVMType | None = None;
@@ -168,7 +187,8 @@ export default class Home extends Vue {
     },
     {
       name: "p2_delegated_puzzle_or_hidden_puzzle1",
-      puzzle: "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xb5c7539888af59f601be0ea2eddd32c06a80d932170eec55ef7a7640cbc5b37b81c4258644229eca2322298a9bf0189f) 1))",
+      puzzle:
+        "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xb5c7539888af59f601be0ea2eddd32c06a80d932170eec55ef7a7640cbc5b37b81c4258644229eca2322298a9bf0189f) 1))",
       solution: "(() (q (51 0x3eb239190ce59b4af1e461291b9185cea62d6072fd3718051a530fd8a8218bc0 190)) ())",
     },
   ];
@@ -184,7 +204,12 @@ export default class Home extends Vue {
       return [];
     }
     const opname = this.op_stack[this.op_stack.length - 1].op.name;
-    return this.opdefs[opname].parameters;
+    const opdef = this.opdefs[opname];
+    if (!opdef) {
+      console.warn(`cannot find ${opname} for parameter naming.`);
+      return [];
+    }
+    return opdef.parameters;
   }
 
   private getWrappedSExp(sexp: SExp): idSExp {
@@ -237,10 +262,7 @@ export default class Home extends Vue {
     this.start_program(this.program, this.solution);
   }
 
-  start_program(
-    program: SExp,
-    args: CLVMType,
-  ): void {
+  start_program(program: SExp, args: CLVMType): void {
     this.program = SExp.to(program);
     const firstStackValue = this.assignIdRecursive(program.cons(args));
     this.op_stack = [{ op: this.eval_op, id: this.getuid() }];
@@ -255,8 +277,7 @@ export default class Home extends Vue {
     const sexp = se as SExpWithId;
     if (!sexp.id) {
       sexp.id = this.getuid();
-    }
-    else {
+    } else {
       // assume sexp with id, all its children has id, avoid redundant recursive
       // return sexp;
     }
@@ -271,7 +292,7 @@ export default class Home extends Vue {
       }
     }
 
-    throw new Error("Unknown status")
+    throw new Error("Unknown status");
   }
 
   snapshot(): void {
@@ -297,7 +318,6 @@ export default class Home extends Vue {
   }
 
   next_step(): void {
-
     if (!this.op_stack.length) {
       return;
     }
@@ -343,8 +363,7 @@ export default class Home extends Vue {
       }
       if (b.at(byte_cursor) & bitmask) {
         env = env.rest();
-      }
-      else {
+      } else {
         env = env.first();
       }
       cost += PATH_LOOKUP_COST_PER_LEG;
@@ -389,7 +408,7 @@ export default class Home extends Vue {
 
     const op_stackpush = (op: opType): void => {
       op_stack.push({ id: this.getuid(), op });
-    }
+    };
 
     // put a bunch of ops on op_stack
     if (!isCons(sexp)) {
@@ -435,14 +454,13 @@ export default class Home extends Vue {
   }
 
   apply_op(op_stack: OpStackType, value_stack: ValStackType): number {
-
     const value_stackpush = (sexp: SExp): void => {
       value_stack.push({ id: this.getuid(), sexp: this.assignIdRecursive(sexp) });
     };
 
     const op_stackpush = (op: opType): void => {
       op_stack.push({ id: this.getuid(), op });
-    }
+    };
 
     const operand_list_wrap = value_stack.pop() as idSExp;
     const operator_wrap = value_stack.pop() as idSExp;

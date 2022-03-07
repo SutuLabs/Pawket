@@ -1,9 +1,10 @@
 <template>
   <div class="home">
-    <verify-password v-if="!password"></verify-password>
+    <b-loading v-if="loading" :is-full-page="true" v-model="loading"></b-loading>
+    <verify-password v-else-if="!password"></verify-password>
     <create-seed v-else-if="!mnemonic"></create-seed>
     <account-detail v-else></account-detail>
-    <div class="sticky">
+    <div v-if="!loading" class="sticky">
       <self-test v-if="!unlocked"></self-test>
     </div>
   </div>
@@ -34,6 +35,9 @@ export default class Home extends Vue {
   }
   get unlocked(): boolean {
     return store.state.vault.unlocked;
+  }
+  get loading(): boolean {
+    return store.state.vault.loading;
   }
 }
 </script>

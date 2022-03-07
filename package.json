@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "yarn check-i18n && vue-cli-service build",
+    "build": "vue-cli-service build",
+    "build-ext": "cross-env VUE_CLI_SERVICE_CONFIG_PATH=vue.config.ext.js vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "check-i18n": "vue-i18n-extract report --vueFiles './src/*.?(js|vue)' --languageFiles './src/i18n/*.?(json|yml|yaml|js)'"
+    "serve-ext": "cross-env VUE_CLI_SERVICE_CONFIG_PATH=vue.config.ext.js vue-cli-service --env.NODE_ENV=development build-watch --mode development",
+    "check-i18n": "vue-i18n-extract report --ci --vueFiles \"./src/**/*.?(js|ts|vue)\" --languageFiles \"./src/i18n/*.?(json|yml|yaml|js)\""
   },
   "dependencies": {
     "@mdi/font": "^6.5.95",
@@ -17,6 +19,7 @@
     "buffer": "^6.0.3",
     "clvm_tools": "^0.9.5",
     "core-js": "^3.6.5",
+    "cross-env": "^7.0.3",
     "js-big-decimal": "^1.3.4",
     "pbkdf2-hmac": "^1.0.4",
     "qrcode.vue": "^1.0.0",
@@ -33,6 +36,7 @@
     "zlib": "^1.0.5"
   },
   "devDependencies": {
+    "@types/chrome": "^0.0.179",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
     "@typescript-eslint/parser": "^4.18.0",
     "@vue/cli-plugin-babel": "~4.5.0",
@@ -51,12 +55,14 @@
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
     "typescript": "~4.1.5",
+    "vue-cli-plugin-chrome-extension-cli": "~1.1.1",
     "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {
     "root": true,
     "env": {
-      "node": true
+      "node": true,
+      "webextensions": true
     },
     "extends": [
       "plugin:vue/essential",

@@ -3,7 +3,7 @@
     <b-navbar>
       <template #brand>
         <b-navbar-item tag="router-link" :to="{ path: '/' }">
-          <img src="./assets/logo.svg" :alt="$t('verifyPassword.ui.alt.logoAlt')" />
+          <img src="@/assets/logo.svg" :alt="$t('verifyPassword.ui.alt.logoAlt')" />
         </b-navbar-item>
       </template>
       <template #start> </template>
@@ -15,37 +15,14 @@
       </template>
     </b-navbar>
     <router-view />
-    <footer class="footer">
-      <div class="content has-text-centered">
-        <p>
-          <strong>Pawket</strong>
-          [{{ version }}] by <b-icon icon="github" size="is-small"> </b-icon><a href="https://github.com/chiabee">Chiabee</a>.
-          <br />
-          {{ $t("footer.ui.warning.paragraph1") }}
-          <span @click="alphaClick()">{{ $t("footer.ui.warning.stage") }}</span>
-          {{ $t("footer.ui.warning.paragraph2") }}
-          <span v-if="debugMode" @click="disableDebug()">[DEBUG]</span>
-          <br />
-          <a href="#/about" target="_blank" size="is-small">
-            <b-icon icon="rocket-launch" size="is-small"></b-icon>
-            {{ $t("footer.ui.button.roadmap") }}
-            <b-icon icon="open-in-new" size="is-small"></b-icon>
-          </a>
-          |
-          <a href="javascript:void(0)" size="is-small" @click="showDebugHelper()">
-            <b-icon icon="developer-board" size="is-small"></b-icon>
-            {{ $t("footer.ui.button.developer") }}
-          </a>
-        </p>
-      </div>
-    </footer>
   </div>
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { NotificationProgrammatic as Notification } from "buefy";
-import store from "./store";
+import store from "@/store";
 import DevHelper from "@/components/DevHelper.vue";
+import UniStorage from '@/services/storage';
 
 @Component
 export default class App extends Vue {
@@ -69,9 +46,9 @@ export default class App extends Vue {
     }
   }
 
-  changeLang(lang: string): void {
+  async changeLang(lang: string):Promise< void> {
     this.$i18n.locale = lang;
-    localStorage.setItem("Locale", lang);
+    await UniStorage.create().setItem("Locale", lang);
   }
 
   disableDebug(): void {
@@ -102,6 +79,8 @@ html {
   height: 100%;
   margin: 0;
   padding: 0;
+  min-width: 400px;
+  min-height: 600px;
 }
 
 #app {

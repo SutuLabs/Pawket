@@ -10,7 +10,8 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  artifactName: chia-wallet
+  webArtifactName: chia-wallet
+  extArtifactName: chia-wallet-ext
   versionNumber: '0.1.$(Build.BuildNumber)'
   qaEnvironment: 'chiabee_wallet_qa'
   qaFtp: 'chiabee_wallet_dev_ftp'
@@ -50,13 +51,31 @@ stages:
     - task: CmdLine@2
       inputs:
         workingDirectory: '$(Build.SourcesDirectory)'
-        script: 'echo $(versionNumber)>$(Build.SourcesDirectory)/dist/version.txt'
+        script: 'echo $(versionNumber)>$(Build.SourcesDirectory)/dist/web/version.txt'
       displayName: 'write version file'
+
+    - task: CmdLine@2
+      inputs:
+        workingDirectory: '$(Build.SourcesDirectory)'
+        script: 'yarn build-ext'
+      displayName: 'yarn build-ext'
+
+    - task: CmdLine@2
+      inputs:
+        workingDirectory: '$(Build.SourcesDirectory)'
+        script: 'echo $(versionNumber)>$(Build.SourcesDirectory)/dist/ext/version.txt'
+      displayName: 'write version file(ext)'
 
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: '$(Build.SourcesDirectory)/dist'
-        ArtifactName: '$(artifactName)'
+        PathtoPublish: '$(Build.SourcesDirectory)/dist/web'
+        ArtifactName: '$(webArtifactName)'
+        publishLocation: 'Container'
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.SourcesDirectory)/dist/ext'
+        ArtifactName: '$(extArtifactName)'
         publishLocation: 'Container'
 
 
@@ -79,7 +98,7 @@ stages:
             inputs:
               credentialsOption: 'serviceEndpoint'
               serverEndpoint: '$(prFtp)'
-              rootDirectory: '$(Pipeline.Workspace)/$(artifactName)'
+              rootDirectory: '$(Pipeline.Workspace)/$(webArtifactName)'
               filePatterns: '**'
               remoteDirectory: '/'
               clean: false
@@ -106,7 +125,7 @@ stages:
             inputs:
               credentialsOption: 'serviceEndpoint'
               serverEndpoint: '$(qaFtp)'
-              rootDirectory: '$(Pipeline.Workspace)/$(artifactName)'
+              rootDirectory: '$(Pipeline.Workspace)/$(webArtifactName)'
               filePatterns: '**'
               remoteDirectory: '/'
               clean: false
