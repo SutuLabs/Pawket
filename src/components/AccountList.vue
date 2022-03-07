@@ -38,7 +38,8 @@ import { AccountEntity } from "@/store/modules/account";
 import AccountExport from "@/components/AccountExport.vue";
 import MnemonicExport from "@/components/MnemonicExport.vue";
 import { translate } from "@/i18n/i18n";
-import account from '@/services/crypto/account';
+import account from "@/services/crypto/account";
+import utility from "@/services/crypto/utility";
 
 @Component
 export default class AccountList extends Vue {
@@ -88,8 +89,8 @@ export default class AccountList extends Vue {
   async addByPassword(): Promise<void> {
     const name = await this.getAccountName();
     const password = await this.getPassword();
-    const acc = await account.getAccount(store.state.vault.seedMnemonic, password)
-    if (store.state.account.accounts.find(a => a.key.fingerprint === acc.fingerprint)) {
+    const acc = await account.getAccount(store.state.vault.seedMnemonic, password);
+    if (store.state.account.accounts.find((a) => a.key.fingerprint === acc.fingerprint)) {
       this.$buefy.dialog.alert(translate("accountList.message.error.accountPasswordExists"));
       return;
     }
@@ -106,17 +107,17 @@ export default class AccountList extends Vue {
   async addByLegacy(): Promise<void> {
     const name = await this.getAccountName();
     const legacyMnemonic = await this.getLegacyMnemonic();
-    if (legacyMnemonic.trim().split(' ').length != 24) {
+    if (legacyMnemonic.trim().split(" ").length != 24) {
       this.$buefy.dialog.alert(translate("accountList.message.error.invalidMnemonic"));
       return;
     }
     const acc = await account.getAccount("", null, legacyMnemonic);
-    if (store.state.account.accounts.find(a => a.key.fingerprint === acc.fingerprint)) {
+    if (store.state.account.accounts.find((a) => a.key.fingerprint === acc.fingerprint)) {
       this.$buefy.dialog.alert(translate("accountList.message.error.accountMnemonicExists"));
       return;
     }
 
-    await store.dispatch("createAccountByLegacyMnemonic", { name, legacyMnemonic })
+    await store.dispatch("createAccountByLegacyMnemonic", { name, legacyMnemonic });
   }
 
   getAccountName(): Promise<string> {
@@ -178,17 +179,32 @@ export default class AccountList extends Vue {
   }
 
   showMnemonic(): void {
-    this.$buefy.dialog.confirm({
-      message: translate("accountList.message.confirmation.showMnemonic"),
+    this.$buefy.dialog.prompt({
+      message: translate("accountExport.message.inputPassword"),
+      inputAttrs: {
+        type: "password",
+      },
       trapFocus: true,
-      confirmText: translate("accountList.message.confirmation.confirmText"),
-      cancelText: translate("accountList.message.confirmation.cancelText"),
-      onConfirm: () => {
+      closeOnConfirm: false,
+      canCancel: ['button'],
+      cancelText: translate("accountExport.ui.button.cancel"),
+      confirmText: translate("accountExport.ui.button.confirm"),
+      onConfirm: async (password, { close }) => {
+        const pswhash = await utility.hash(password);
+        if (pswhash != store.state.vault.passwordHash) {
+          this.$buefy.toast.open({
+            message: translate("accountExport.message.passwordNotCorrect"),
+            type: "is-danger",
+          });
+          return;
+        }
+        close();
         this.$buefy.modal.open({
           parent: this,
           component: MnemonicExport,
           hasModalCard: true,
           trapFocus: true,
+          canCancel: ['x'],
           props: { mnemonic: store.state.vault.seedMnemonic },
         });
       },
