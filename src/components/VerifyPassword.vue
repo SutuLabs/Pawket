@@ -66,10 +66,18 @@ export default class VerifyPassword extends Vue {
 
   @Watch("mode")
   onModeChanged(): void {
+    this.focus();
+  }
+
+  mounted(): void {
+    this.focus();
+  }
+
+  focus(): void {
     setTimeout(() => {
       const pswElm = this.$refs.password as HTMLInputElement | undefined;
       if (pswElm) pswElm.focus();
-    }, 100);
+    }, 300);
   }
 
   async confirm(): Promise<void> {
