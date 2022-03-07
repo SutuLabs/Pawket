@@ -31,4 +31,4 @@ import "@/store/modules/network";
   return this.toString();
 };
 
-store.dispatch("initState");
+// store.dispatch("initState");
