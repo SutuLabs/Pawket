@@ -1,4 +1,4 @@
-import store from '@/store'
+import store, { IRootState } from '@/store'
 import utility from '../../services/crypto/utility';
 import { AccountEntity } from './account';
 import Vue from 'vue';
@@ -30,17 +30,32 @@ store.registerModule<IVaultState>('vault', {
     };
   },
   actions: {
-    async initState({ state }) {
-      const value = await UniStorage.create().getItem("SETTINGS");
-      const sts = JSON.parse(value || "{}");
-      state.passwordHash = sts.passwordHash;
-      state.encryptedSeed = sts.encryptedSeed;
-      state.encryptedAccounts = sts.encryptedAccounts;
-      state.loading = false;
+    async initState({ state, rootState }) {
+      const ustore = UniStorage.create();
 
-      UniStorage.create().getItem("Locale").then((locale) => {
-        if (locale) i18n.locale = locale;
-      });
+      const locale = await UniStorage.create().getItem("Locale")
+      if (locale) i18n.locale = locale;
+
+      const memsetting = await ustore.getItem("MEMORY_STATE");
+
+      if (ustore.type == "background" && memsetting) {
+        const sts = JSON.parse(memsetting) as IRootState;
+        rootState.account = sts.account;
+        rootState.account.refreshing = false;
+        rootState.network = sts.network;
+        rootState.vault = sts.vault;
+        state.loading = false;
+        return;
+      }
+
+      {
+        const value = await ustore.getItem("SETTINGS");
+        const sts = JSON.parse(value || "{}") as IVaultState;
+        state.passwordHash = sts.passwordHash;
+        state.encryptedSeed = sts.encryptedSeed;
+        state.encryptedAccounts = sts.encryptedAccounts;
+        state.loading = false;
+      }
     },
     async importSeed({ state, dispatch }, mnemonic: string) {
       const seedLen = mnemonic.trim().split(" ").length;
@@ -122,7 +137,8 @@ store.registerModule<IVaultState>('vault', {
       state.encryptedAccounts = encryptedAccounts;
       state.encryptedSeed = encryptedSeed;
 
-      UniStorage.create().setItem("SETTINGS",
+      const ustore = UniStorage.create();
+      await ustore.setItem("SETTINGS",
         JSON.stringify({
           encryptedSeed: encryptedSeed,
           passwordHash: state.passwordHash,
@@ -130,9 +146,19 @@ store.registerModule<IVaultState>('vault', {
           network: rootState.network.network,
         })
       );
+
+      if (ustore.type == "background") {
+        await ustore.setItem("MEMORY_STATE", JSON.stringify({
+          account: rootState.account,
+          network: rootState.network,
+          vault: rootState.vault,
+        }));
+      }
     },
-    clear() {
-      UniStorage.create().removeItem("SETTINGS")
+    async clear() {
+      const ustore = UniStorage.create();
+      await ustore.removeItem("SETTINGS")
+      await ustore.removeItem("MEMORY_STATE")
       location.reload();
     },
 

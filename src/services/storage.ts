@@ -7,7 +7,7 @@ interface TypedVue extends Vue {
 }
 
 export default class UniStorage {
-  private type: StorageType = "localStorage";
+  public type: StorageType = "localStorage";
 
   constructor(type: StorageType) {
     this.type = type;
