@@ -22,9 +22,6 @@
             :placeholder="$t('accountConfigure.ui.placeholder.addCAT')"
           >
           </b-taginput>
-          <!-- <p class="control">
-          <b-button @click="addCat()">Add</b-button>
-        </p> -->
           <template #message>
             <ul>
               <li v-for="asset in assetIds" :key="asset.id">{{ asset.name }}: {{ asset.id }}</li>
@@ -160,27 +157,6 @@ export default class AccountConfigure extends Vue {
     } catch{
       return false;
     }
-  }
-
-  addCat(): void {
-    Dialog.prompt({
-      message: `Enter the Asset Name`,
-      trapFocus: true,
-      type: "is-info",
-      onConfirm: (name: string) => {
-        Dialog.prompt({
-          message: this.$tc("accountConfigure.message.prompt.addAsset"),
-          confirmText: this.$tc("accountConfigure.message.prompt.confirmText"),
-          cancelText: this.$tc("accountConfigure.message.prompt.cancelText"),
-          trapFocus: true,
-          type: "is-info",
-          onConfirm: (assetId) => {
-            this.cats.push(name);
-            this.addOrUpdateAsset(name, assetId);
-          },
-        });
-      },
-    });
   }
 
   async submit(): Promise<void> {

@@ -76,7 +76,6 @@
         "import": "导入",
         "create": "创建",
         "back": "后退",
-        "refresh": "刷新",
         "confirm": "确认",
         "later": "稍后记录",
         "ready": "下一步",
@@ -84,9 +83,6 @@
         "24word": "24 词",
         "import12": "通过 Pawket 助记词导入",
         "import24": "通过 Chia 客户端助记词导入"
-      },
-      "label": {
-        "mnemonic": "助记词"
       },
       "text": {
         "importMenu": {
@@ -245,7 +241,6 @@
     },
     "message": {
       "confirmation": {
-        "showMnemonic": "助记词是敏感信息, 确认要展示吗?",
         "removeAccount": "确认删除账户吗？删除操作不可恢复！",
         "cancelText": "取消",
         "confirmText": "确认"
@@ -255,14 +250,12 @@
         "setPassword": "输入密码",
         "setLegacyMnemonic": "输入助记词",
         "cancelText": "取消",
-        "confirmText": "确认",
-        "inputPassword": "请输入密码"
+        "confirmText": "确认"
       },
       "error": {
         "accountPasswordExists": "该密码账户已存在于账户列表中。",
         "accountMnemonicExists": "该助记词账户已存在于账户列表中。",
-        "invalidMnemonic": "导入失败，请输入正确的助记词",
-        "passwordNotCorrect": "密码不正确"
+        "invalidMnemonic": "导入失败，请输入正确的助记词"
       }
     }
   },
@@ -321,13 +314,6 @@
       "span": {
         "loading": "载入中",
         "maxLeadingText": "最大:"
-      }
-    }
-  },
-  "receive": {
-    "ui": {
-      "title": {
-        "receive": "接收"
       }
     }
   },

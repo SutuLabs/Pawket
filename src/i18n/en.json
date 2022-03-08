@@ -76,7 +76,6 @@
         "import": "Import",
         "create": "Create",
         "back": "Back",
-        "refresh": "Refresh",
         "confirm": "Confirm",
         "later": "Later",
         "ready": "Next",
@@ -84,9 +83,6 @@
         "24word": "24 Words",
         "import12": "Import Pawket Mnemonic Words",
         "import24": "Import Chia Client Mnemonic Words"
-      },
-      "label": {
-        "mnemonic": "Mnemonic"
       },
       "text": {
         "importMenu": {
@@ -245,7 +241,6 @@
     },
     "message": {
       "confirmation": {
-        "showMnemonic": "Mnemonic is very sensitive, make sure you are safe and continue, OK?",
         "removeAccount": "Remove account? Operation cannot be undone!!!",
         "cancelText": "Cancel",
         "confirmText": "OK"
@@ -255,14 +250,12 @@
         "setPassword": "Enter the password",
         "setLegacyMnemonic": "Enter mnemonic words:",
         "cancelText": "Cancel",
-        "confirmText": "OK",
-        "inputPassword": "Please input your password"
+        "confirmText": "OK"
       },
       "error": {
         "accountPasswordExists": "An account with the same password already exists",
         "accountMnemonicExists": "An account with the same mnemonic already exists",
-        "invalidMnemonic": "Import failed, please check your mnemonic words",
-        "passwordNotCorrect": "Password is not correct"
+        "invalidMnemonic": "Import failed, please check your mnemonic words"
       }
     }
   },
@@ -321,13 +314,6 @@
       "span": {
         "loading": "Loading",
         "maxLeadingText": "Max:"
-      }
-    }
-  },
-  "receive": {
-    "ui": {
-      "title": {
-        "receive": "Receive"
       }
     }
   },
