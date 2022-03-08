@@ -10,7 +10,6 @@
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
 import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from 'vue-qrcode-reader'
-import { translate } from "@/i18n/i18n";
 
 @Component({
   components: {
@@ -52,19 +51,19 @@ export default class ScanQrCode extends Vue {
       await promise;
     } catch (error) {
       if (error.name === 'NotAllowedError') {
-        this.error = translate('scanQrCode.message.error.NotAllowedError')
+        this.error = this.$tc('scanQrCode.message.error.NotAllowedError')
       } else if (error.name === 'NotFoundError') {
-        this.error = translate('scanQrCode.message.error.NotFoundError')
+        this.error = this.$tc('scanQrCode.message.error.NotFoundError')
       } else if (error.name === 'NotSupportedError') {
-        this.error = translate('scanQrCode.message.error.NotSupportedError')
+        this.error = this.$tc('scanQrCode.message.error.NotSupportedError')
       } else if (error.name === 'NotReadableError') {
-       this.error = translate('scanQrCode.message.error.NotReadableError')
+       this.error = this.$tc('scanQrCode.message.error.NotReadableError')
       } else if (error.name === 'OverconstrainedError') {
-        this.error = translate('scanQrCode.message.error.OverconstrainedError')
+        this.error = this.$tc('scanQrCode.message.error.OverconstrainedError')
       } else if (error.name === 'StreamApiNotSupportedError') {
-       this.error = translate('scanQrCode.message.error.StreamApiNotSupportedError')
+       this.error = this.$tc('scanQrCode.message.error.StreamApiNotSupportedError')
       } else if (error.name === 'InsecureContextError') {
-       this.error = translate('scanQrCode.message.error.InsecureContextError')
+       this.error = this.$tc('scanQrCode.message.error.InsecureContextError')
       } else {
         this.error = `ERROR: Camera error (${error.name})`;
       }

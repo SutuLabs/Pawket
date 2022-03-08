@@ -85,7 +85,6 @@ import KeyBox from "@/components/KeyBox.vue";
 import Send from "./Send.vue";
 import { demojo } from "@/filters/unitConversion";
 import { TokenInfo, AccountEntity, AccountToken } from "@/store/modules/account";
-import { translate } from "@/i18n/i18n";
 import OfferManagement from './OfferManagement.vue';
 
 type Mode = "Verify" | "Create";
@@ -137,9 +136,9 @@ export default class AccountDetail extends Vue {
 
   lock(): void {
     this.$buefy.dialog.confirm({
-      message: translate("accountDetail.message.confirmation.lock"),
-      confirmText: translate("accountDetail.ui.button.confirm"),
-      cancelText: translate("accountDetail.ui.button.cancel"),
+      message: this.$tc("accountDetail.message.confirmation.lock"),
+      confirmText: this.$tc("accountDetail.ui.button.confirm"),
+      cancelText: this.$tc("accountDetail.ui.button.cancel"),
       trapFocus: true,
       onConfirm: () => {
         store.dispatch("lock");
@@ -210,7 +209,7 @@ export default class AccountDetail extends Vue {
         account: this.account,
         inputAddress: "xch1kjllpsx4mz9gh36clzmzr69kze965almufz7vrch5xq3jymlsjjsysq7uh",
         addressEditable: false,
-        notificationMessage: translate("accountDetail.message.notification.donate"),
+        notificationMessage: this.$tc("accountDetail.message.notification.donate"),
         notificationIcon: "hand-heart",
         notificationClosable: false,
         notificationType: "is-success",

@@ -4,7 +4,7 @@ import { AccountEntity } from './account';
 import Vue from 'vue';
 import encryption from '@/services/crypto/encryption';
 import puzzle from '@/services/crypto/puzzle';
-import i18n, { translate } from '@/i18n/i18n';
+import i18n, { tc } from '@/i18n/i18n';
 import UniStorage from '@/services/storage';
 
 export interface IVaultState {
@@ -68,7 +68,7 @@ store.registerModule<IVaultState>('vault', {
       if (seedLen != 12 && seedLen != 24) throw new Error("Only accept mnemonic with 12/24 words.");
       state.seedMnemonic = mnemonic;
       await dispatch("persistent");
-      await dispatch("createAccountBySerial", translate('default.accountName'));
+      await dispatch("createAccountBySerial", tc('default.accountName'));
       await dispatch("refreshBalance");
     },
     setPassword({ state, dispatch }, password: string) {

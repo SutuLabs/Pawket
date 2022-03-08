@@ -45,7 +45,6 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import store from "@/store";
 import utility from "@/services/crypto/utility";
-import { translate } from "@/i18n/i18n";
 
 type Mode = "Verify" | "Create";
 
@@ -141,14 +140,14 @@ export default class VerifyPassword extends Vue {
   generateStrengthMsg(strength: number): string {
     if (strength < 60) {
       this.strengthClass = "is-danger";
-      return translate("verifyPassword.message.tip.weakPassword");
+      return this.$tc("verifyPassword.message.tip.weakPassword");
     }
     if (strength <= 80) {
       this.strengthClass = "is-warning";
-      return translate("verifyPassword.message.tip.mediumPassword");
+      return this.$tc("verifyPassword.message.tip.mediumPassword");
     }
     this.strengthClass = "is-success";
-    return translate("verifyPassword.message.tip.strongPassword");
+    return this.$tc("verifyPassword.message.tip.strongPassword");
   }
 
   checkMatch(): void {
@@ -159,9 +158,9 @@ export default class VerifyPassword extends Vue {
 
   clear(): void {
     this.$buefy.dialog.confirm({
-      message: translate("verifyPassword.message.confirmation.clear"),
-      confirmText: translate("verifyPassword.message.confirmation.confirmText"),
-      cancelText: translate("verifyPassword.message.confirmation.cancelText"),
+      message: this.$tc("verifyPassword.message.confirmation.clear"),
+      confirmText: this.$tc("verifyPassword.message.confirmation.confirmText"),
+      cancelText: this.$tc("verifyPassword.message.confirmation.cancelText"),
       trapFocus: true,
       type: "is-danger",
       onConfirm: () => {

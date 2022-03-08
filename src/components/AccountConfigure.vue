@@ -60,7 +60,6 @@ import { NotificationProgrammatic as Notification } from "buefy";
 import { DialogProgrammatic as Dialog } from "buefy";
 import { sortable } from "@/directives/sortable";
 import { AccountEntity, CustomCat } from "@/store/modules/account";
-import { translate } from "@/i18n/i18n";
 import ChangePassword from "./ChangePassword.vue";
 import { Bytes } from "clvm";
 
@@ -110,12 +109,12 @@ export default class AccountConfigure extends Vue {
   beforeAdd(name: string): boolean {
     const type = this.isAssetId(name) ? "ENTERNAME" : "ENTERASSETID";
     const msg = type == "ENTERNAME"
-      ? translate("accountConfigure.message.prompt.enterAssetName")
-      : translate("accountConfigure.message.prompt.enterAssetId");
+      ? this.$tc("accountConfigure.message.prompt.enterAssetName")
+      : this.$tc("accountConfigure.message.prompt.enterAssetId");
     Dialog.prompt({
       message: msg,
-      confirmText: translate("accountConfigure.message.prompt.confirmText"),
-      cancelText: translate("accountConfigure.message.prompt.cancelText"),
+      confirmText: this.$tc("accountConfigure.message.prompt.confirmText"),
+      cancelText: this.$tc("accountConfigure.message.prompt.cancelText"),
       trapFocus: true,
       type: "is-info",
       onConfirm: (input) => {
@@ -131,7 +130,7 @@ export default class AccountConfigure extends Vue {
           else {
             this.remove(name);
             Notification.open({
-              message: translate("accountConfigure.message.notification.wrongAssetId"),
+              message: this.$tc("accountConfigure.message.notification.wrongAssetId"),
               type: "is-danger",
             });
           }
@@ -170,9 +169,9 @@ export default class AccountConfigure extends Vue {
       type: "is-info",
       onConfirm: (name: string) => {
         Dialog.prompt({
-          message: translate("accountConfigure.message.prompt.addAsset"),
-          confirmText: translate("accountConfigure.message.prompt.confirmText"),
-          cancelText: translate("accountConfigure.message.prompt.cancelText"),
+          message: this.$tc("accountConfigure.message.prompt.addAsset"),
+          confirmText: this.$tc("accountConfigure.message.prompt.confirmText"),
+          cancelText: this.$tc("accountConfigure.message.prompt.cancelText"),
           trapFocus: true,
           type: "is-info",
           onConfirm: (assetId) => {
@@ -191,7 +190,7 @@ export default class AccountConfigure extends Vue {
     await store.dispatch("persistent");
 
     Notification.open({
-      message: translate("accountConfigure.message.notification.saved"),
+      message: this.$tc("accountConfigure.message.notification.saved"),
       type: "is-success",
     });
 

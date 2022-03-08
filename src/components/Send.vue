@@ -144,7 +144,6 @@ import bigDecimal from "js-big-decimal";
 import ScanQrCode from "@/components/ScanQrCode.vue";
 import { prefix0x } from '../services/coin/condition';
 import transfer, { SymbolCoins } from '../services/transfer/transfer';
-import { translate } from '../i18n/i18n';
 
 @Component({
   components: {
@@ -315,7 +314,7 @@ export default class Send extends Vue {
       this.bundle = await transfer.generateSpendBundle(plan, this.requests);
     } catch (error) {
       Notification.open({
-        message: translate("send.ui.messages.failedToSign") + error,
+        message: this.$tc("send.ui.messages.failedToSign") + error,
         type: "is-danger",
         autoClose: false,
       });
@@ -341,19 +340,19 @@ export default class Send extends Vue {
       this.submitting = false;
       if (json.success) {
         Notification.open({
-          message: translate("send.ui.messages.submitted"),
+          message: this.$tc("send.ui.messages.submitted"),
           type: "is-success",
         });
         this.close();
       } else {
         Notification.open({
-          message: translate("send.ui.messages.getFailedResponse") + json.error,
+          message: this.$tc("send.ui.messages.getFailedResponse") + json.error,
           type: "is-danger",
         });
       }
     } catch (error) {
       Notification.open({
-        message: translate("send.ui.messages.failedToSubmit") + error,
+        message: this.$tc("send.ui.messages.failedToSubmit") + error,
         type: "is-danger",
       });
       console.warn(error);

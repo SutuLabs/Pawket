@@ -64,7 +64,6 @@ import { AccountEntity } from "@/store/modules/account";
 import KeyBox from "@/components/KeyBox.vue";
 import QrcodeVue from "qrcode.vue";
 import utility from "@/services/crypto/utility";
-import { translate } from "@/i18n/i18n";
 
 @Component({
   components: {
@@ -111,20 +110,20 @@ export default class AccountExport extends Vue {
 
   show(): void {
     this.$buefy.dialog.prompt({
-      message: translate("accountExport.message.inputPassword"),
+      message: this.$tc("accountExport.message.inputPassword"),
       inputAttrs: {
         type: "password",
       },
       trapFocus: true,
       closeOnConfirm: false,
       canCancel: ['button'],
-      cancelText: translate("accountExport.ui.button.cancel"),
-      confirmText: translate("accountExport.ui.button.confirm"),
+      cancelText: this.$tc("accountExport.ui.button.cancel"),
+      confirmText: this.$tc("accountExport.ui.button.confirm"),
       onConfirm: async (password, { close }) => {
         const pswhash = await utility.hash(password);
         if (pswhash != store.state.vault.passwordHash) {
           this.$buefy.toast.open({
-            message: translate("accountExport.message.passwordNotCorrect"),
+            message: this.$tc("accountExport.message.passwordNotCorrect"),
             type: "is-danger",
           });
           this.showMnemonic = false;
