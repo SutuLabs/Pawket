@@ -14,6 +14,7 @@ class Utility {
   fromHexString(hexString: string): Uint8Array {
     if (!hexString) return new Uint8Array();
     return new Uint8Array(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (<any>hexString).match(/.{1,2}/g).map((byte: any) => parseInt(byte, 16))
     );
   }

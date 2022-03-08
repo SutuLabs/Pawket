@@ -20,11 +20,8 @@ const i18n = new VueI18n({
   messages, // set locale messages
 });
 
-export const translate = (key: string):string => {
-  if (!key) {
-    return '';
-  }
-  return <string>i18n.t(key)
+export const tc = (key: VueI18n.Path, choice?: VueI18n.Choice, values?: VueI18n.Values): string => {
+  return i18n.tc(key, choice, values);
 }
 
 export default i18n;

@@ -37,7 +37,6 @@ import store from "@/store";
 import { AccountEntity } from "@/store/modules/account";
 import AccountExport from "@/components/AccountExport.vue";
 import MnemonicExport from "@/components/MnemonicExport.vue";
-import { translate } from "@/i18n/i18n";
 import account from "@/services/crypto/account";
 import utility from "@/services/crypto/utility";
 
@@ -70,9 +69,9 @@ export default class AccountList extends Vue {
 
   remove(idx: number): void {
     this.$buefy.dialog.confirm({
-      message: translate("accountList.message.confirmation.removeAccount"),
-      confirmText: translate("accountList.message.confirmation.confirmText"),
-      cancelText: translate("accountList.message.confirmation.cancelText"),
+      message: this.$tc("accountList.message.confirmation.removeAccount"),
+      confirmText: this.$tc("accountList.message.confirmation.confirmText"),
+      cancelText: this.$tc("accountList.message.confirmation.cancelText"),
       trapFocus: true,
       type: "is-danger",
       onConfirm: () => {
@@ -91,7 +90,7 @@ export default class AccountList extends Vue {
     const password = await this.getPassword();
     const acc = await account.getAccount(store.state.vault.seedMnemonic, password);
     if (store.state.account.accounts.find((a) => a.key.fingerprint === acc.fingerprint)) {
-      this.$buefy.dialog.alert(translate("accountList.message.error.accountPasswordExists"));
+      this.$buefy.dialog.alert(this.$tc("accountList.message.error.accountPasswordExists"));
       return;
     }
 
@@ -108,12 +107,12 @@ export default class AccountList extends Vue {
     const name = await this.getAccountName();
     const legacyMnemonic = await this.getLegacyMnemonic();
     if (legacyMnemonic.trim().split(" ").length != 24) {
-      this.$buefy.dialog.alert(translate("accountList.message.error.invalidMnemonic"));
+      this.$buefy.dialog.alert(this.$tc("accountList.message.error.invalidMnemonic"));
       return;
     }
     const acc = await account.getAccount("", null, legacyMnemonic);
     if (store.state.account.accounts.find((a) => a.key.fingerprint === acc.fingerprint)) {
-      this.$buefy.dialog.alert(translate("accountList.message.error.accountMnemonicExists"));
+      this.$buefy.dialog.alert(this.$tc("accountList.message.error.accountMnemonicExists"));
       return;
     }
 
@@ -124,9 +123,9 @@ export default class AccountList extends Vue {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return new Promise((resolve, reject) => {
       this.$buefy.dialog.prompt({
-        message: translate("accountList.message.prompt.setAccountName"),
-        confirmText: translate("accountList.message.prompt.confirmText"),
-        cancelText: translate("accountList.message.prompt.cancelText"),
+        message: this.$tc("accountList.message.prompt.setAccountName"),
+        confirmText: this.$tc("accountList.message.prompt.confirmText"),
+        cancelText: this.$tc("accountList.message.prompt.cancelText"),
         trapFocus: true,
         onConfirm: (name) => {
           resolve(name);
@@ -139,9 +138,9 @@ export default class AccountList extends Vue {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return new Promise((resolve, reject) => {
       this.$buefy.dialog.prompt({
-        message: translate("accountList.message.prompt.setPassword"),
-        confirmText: translate("accountList.message.prompt.confirmText"),
-        cancelText: translate("accountList.message.prompt.cancelText"),
+        message: this.$tc("accountList.message.prompt.setPassword"),
+        confirmText: this.$tc("accountList.message.prompt.confirmText"),
+        cancelText: this.$tc("accountList.message.prompt.cancelText"),
         trapFocus: true,
         inputAttrs: {
           type: "password",
@@ -157,9 +156,9 @@ export default class AccountList extends Vue {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return new Promise((resolve, reject) => {
       this.$buefy.dialog.prompt({
-        message: translate("accountList.message.prompt.setLegacyMnemonic"),
-        confirmText: translate("accountList.message.prompt.confirmText"),
-        cancelText: translate("accountList.message.prompt.cancelText"),
+        message: this.$tc("accountList.message.prompt.setLegacyMnemonic"),
+        confirmText: this.$tc("accountList.message.prompt.confirmText"),
+        cancelText: this.$tc("accountList.message.prompt.cancelText"),
         trapFocus: true,
         onConfirm: (name) => {
           resolve(name);
@@ -180,20 +179,20 @@ export default class AccountList extends Vue {
 
   showMnemonic(): void {
     this.$buefy.dialog.prompt({
-      message: translate("accountExport.message.inputPassword"),
+      message: this.$tc("accountExport.message.inputPassword"),
       inputAttrs: {
         type: "password",
       },
       trapFocus: true,
       closeOnConfirm: false,
       canCancel: ['button'],
-      cancelText: translate("accountExport.ui.button.cancel"),
-      confirmText: translate("accountExport.ui.button.confirm"),
+      cancelText: this.$tc("accountExport.ui.button.cancel"),
+      confirmText: this.$tc("accountExport.ui.button.confirm"),
       onConfirm: async (password, { close }) => {
         const pswhash = await utility.hash(password);
         if (pswhash != store.state.vault.passwordHash) {
           this.$buefy.toast.open({
-            message: translate("accountExport.message.passwordNotCorrect"),
+            message: this.$tc("accountExport.message.passwordNotCorrect"),
             type: "is-danger",
           });
           return;

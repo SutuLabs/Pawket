@@ -33,7 +33,6 @@
 import { Component, Vue } from "vue-property-decorator";
 import { DialogProgrammatic as Dialog } from "buefy";
 import store from "@/store/index";
-import { translate } from "@/i18n/i18n";
 import utility from "@/services/crypto/utility";
 
 @Component
@@ -71,7 +70,7 @@ export default class ChangePassword extends Vue {
     const oldPwd = this.oldPwd;
     const newPwd = this.newPwd;
     await store.dispatch("changePassword", {oldPassword: oldPwd, newPassword: newPwd});
-    Dialog.alert(translate("changePassword.message.alert.passwordChanged"));
+    Dialog.alert(this.$tc("changePassword.message.alert.passwordChanged"));
     this.close();
     store.dispatch("lock");
   }
