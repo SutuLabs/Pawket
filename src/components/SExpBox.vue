@@ -5,7 +5,7 @@
     </li>
 
     <template v-else-if="arr">
-      <div>
+      <div :class="{ highlight: highlight }">
         {{ arr[0] }} {{ value.id }}
         <span v-if="collapse">
           <a href="javascript:void(0)" @click="unfold()">
@@ -21,11 +21,16 @@
       <template v-if="!collapse">
         <li v-for="(item, idx) in arr[1]" :key="idx">
           <span v-if="isAtom(item)" class="atom">
-            <div>
+            <div :class="{ highlight: highlightIds && highlightIds.indexOf(item.id) > -1 }">
               <atom-box :atom="item.atom"></atom-box>
             </div>
           </span>
-          <s-exp-box v-else :value="item" :auto-collapse="autoCollapse == 1 ? 1 : autoCollapse - 1"></s-exp-box>
+          <s-exp-box
+            v-else
+            :value="item"
+            :auto-collapse="autoCollapse == 1 ? 1 : autoCollapse - 1"
+            :highlight-ids="highlightIds"
+          ></s-exp-box>
         </li>
       </template>
     </template>
@@ -39,6 +44,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { SExp, isAtom, isCons } from "clvm";
 import AtomBox from "@/components/AtomBox.vue";
 import { getIter } from "@/services/simulator/sexpExt";
+import { SExpWithId } from "@/services/simulator/opVm";
 
 @Component({
   components: {
@@ -46,13 +52,19 @@ import { getIter } from "@/services/simulator/sexpExt";
   },
 })
 export default class SExpBox extends Vue {
-  @Prop() private value!: SExp;
+  @Prop() private value!: SExpWithId;
   @Prop() private autoCollapse!: number;
+  @Prop() private highlightIds!: number[];
 
   private manualCollapse = false;
 
   mounted(): void {
     this.manualCollapse = this.autoCollapse == 1;
+  }
+
+  get highlight(): boolean {
+    if (!this.highlightIds) return false;
+    return this.highlightIds.indexOf(this.value.id) > -1;
   }
 
   get collapse(): boolean {
@@ -124,5 +136,9 @@ li div::before {
 
 ul > li:last-child {
   border-left: 2px solid transparent;
+}
+
+div.highlight {
+  background-color: aqua;
 }
 </style>

@@ -40,10 +40,10 @@
       <div class="columns is-mobile">
         <div class="column is-half">
           <div class="program_tree">
-            <s-exp-box v-if="program" :value="program" :auto-collapse="3"> </s-exp-box>
+            <s-exp-box v-if="program" :value="program" :auto-collapse="3" :highlight-ids="highlightIds"></s-exp-box>
           </div>
           <div class="program_tree">
-            <s-exp-box v-if="solution" :value="solution"> </s-exp-box>
+            <s-exp-box v-if="solution" :value="solution" :highlight-ids="highlightIds"></s-exp-box>
           </div>
         </div>
         <div class="column is-half">
@@ -108,7 +108,8 @@
 import { Component, Vue } from "vue-property-decorator";
 import { SExp, None } from "clvm";
 import SExpBox from "@/components/SExpBox.vue";
-import OpVm, { OpStackType, ValStackType } from "@/services/simulator/opVm";
+import OpVm, { OpStackType, SExpWithId, ValStackType } from "@/services/simulator/opVm";
+import { first, rest } from "@/services/simulator/sexpExt";
 
 interface ExampleType {
   name: string;
@@ -189,6 +190,23 @@ export default class Home extends Vue {
   // async mounted(): Promise<void> {
   //   this.restart();
   // }
+
+  get highlightIds(): number[] {
+    const ss = this.value_stack.slice(this.value_stack.length - this.oppars.length, this.value_stack.length);
+    const arr = ss.flatMap((_) => this.getAllIdsRecursive(_.sexp as SExpWithId));
+
+    console.log(ss, arr);
+    return arr;
+  }
+
+  getAllIdsRecursive(sexp: SExpWithId): number[] {
+    const arr: number[] = [];
+    arr.push(sexp.id);
+    if (sexp.atom) return arr;
+    arr.push(...this.getAllIdsRecursive(first(sexp) as SExpWithId));
+    arr.push(...this.getAllIdsRecursive(rest(sexp) as SExpWithId));
+    return arr;
+  }
 
   setExample(): void {
     const example = this.selectedExample;
