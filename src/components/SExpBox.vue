@@ -38,6 +38,7 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { SExp, isAtom, isCons } from "clvm";
 import AtomBox from "@/components/AtomBox.vue";
+import { getIter } from "@/services/simulator/sexpExt";
 
 @Component({
   components: {
@@ -70,29 +71,22 @@ export default class SExpBox extends Vue {
     if (this.isAtom(this.value)) return null;
     try {
       const type = this.isCons(this.value) ? "CONL" : "LIST";
-      return [type, Array.from(this.getIter(this.value))];
-    }
-    catch (error) {
+      return [type, Array.from(getIter(this.value))];
+    } catch (error) {
       if (this.isCons(this.value)) {
         return ["CONS", this.value.pair ?? []];
-      }
-      else {
-        console.warn("failed to parse", this.isCons(this.value), this.value, error)
+      } else {
+        console.warn("failed to parse", this.isCons(this.value), this.value, error);
         return null;
       }
     }
   }
 
-  isAtom(obj: SExp): boolean { return obj && isAtom(obj); }
-  isCons(obj: SExp): boolean { return obj && isCons(obj); }
-
-  private *getIter(sexp: SExp): IterableIterator<SExp> {
-    let v: SExp = sexp;
-    while (!v.nullp()) {
-      if (!v.pair) throw new EvalError("rest of non-cons");
-      yield v.pair[0];
-      v = v.pair[1];
-    }
+  isAtom(obj: SExp): boolean {
+    return obj && isAtom(obj);
+  }
+  isCons(obj: SExp): boolean {
+    return obj && isCons(obj);
   }
 }
 </script>

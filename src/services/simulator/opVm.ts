@@ -21,6 +21,7 @@ import {
   OPERATOR_LOOKUP,
 } from "clvm";
 import { assemble } from "clvm_tools/clvm_tools/binutils";
+import { cons, first, rest } from "./sexpExt";
 
 export type ValStackType = idSExp[];
 export type OpStackType = idOpType[];
@@ -228,8 +229,8 @@ export default class OpVm {
 
     const pairwrap = value_stack.pop() as idSExp;
     const pair = pairwrap.sexp;
-    const sexp = pair.first();
-    const args = pair.rest();
+    const sexp = first(pair);
+    const args = rest(pair);
 
     const value_stackpush = (sexp: SExp): void => {
       value_stack.push({ id: this.getuid(), sexp: this.assignIdRecursive(sexp) });
@@ -247,21 +248,21 @@ export default class OpVm {
       return cost;
     }
 
-    const operator = sexp.first();
+    const operator = first(sexp);
     if (isCons(operator)) {
-      const pair = operator.as_pair() as Tuple<SExp, SExp>;
+      const pair = operator.pair as Tuple<SExp, SExp>;
       const [new_operator, must_be_nil] = pair;
       if (new_operator.pair || !Bytes.NULL.equal_to(must_be_nil.atom)) {
         throw new EvalError("in ((X)...) syntax X must be lone atom", sexp);
       }
-      const new_operand_list = sexp.rest();
+      const new_operand_list = rest(sexp);
       value_stackpush(new_operator);
       value_stackpush(new_operand_list);
       op_stackpush("apply");
       return APPLY_COST;
     }
     const op = operator.atom as Bytes;
-    let operand_list = sexp.rest();
+    let operand_list = rest(sexp);
     // op === operator_lookup.quote_atom
     if (op.equal_to(this.operator_lookup.quote_atom)) {
       value_stackpush(operand_list);
@@ -271,12 +272,12 @@ export default class OpVm {
     op_stackpush("apply");
     value_stackpush(operator);
     while (!operand_list.nullp()) {
-      const _ = operand_list.first();
-      value_stackpush(_.cons(args));
+      const _ = first(operand_list);
+      value_stackpush(cons(_, args));
       op_stackpush("cons");
       op_stackpush("eval");
       op_stackpush("swap");
-      operand_list = operand_list.rest();
+      operand_list = rest(operand_list);
     }
     value_stackpush(SExp.null());
     return 1;
@@ -308,7 +309,7 @@ export default class OpVm {
       }
       // const new_program = operand_list.first();
       const new_program = operand_list.pair[0];
-      const new_args = operand_list.rest().first();
+      const new_args = first(rest(operand_list));
       value_stackpush(new_program.cons(new_args));
       op_stackpush("eval");
       return APPLY_COST;
