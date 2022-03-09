@@ -83,8 +83,20 @@
         <p class="control">
           <span class="button is-static"><span class="is-size-7">mojos</span></span>
         </p>
-        <p class="control">
+        <p class="control is-hidden-mobile">
           <span class="button" style="min-width: 150px">
+            <b-slider :min="0" :max="3" v-model="feeType" :tooltip="false" @input="changeFee()">
+              <b-slider-tick :value="0">{{ $t("send.ui.slider.custom") }}</b-slider-tick>
+              <b-slider-tick :value="1">{{ $t("send.ui.slider.low") }}</b-slider-tick>
+              <b-slider-tick :value="2">{{ $t("send.ui.slider.medium") }}</b-slider-tick>
+              <b-slider-tick :value="3">{{ $t("send.ui.slider.high") }}</b-slider-tick>
+            </b-slider>
+          </span>
+        </p>
+      </b-field>
+      <b-field>
+        <p class="is-hidden-tablet">
+          <span class="button" style="width: 100%">
             <b-slider :min="0" :max="3" v-model="feeType" :tooltip="false" @input="changeFee()">
               <b-slider-tick :value="0">{{ $t("send.ui.slider.custom") }}</b-slider-tick>
               <b-slider-tick :value="1">{{ $t("send.ui.slider.low") }}</b-slider-tick>
@@ -142,8 +154,8 @@ import puzzle from "@/services/crypto/puzzle";
 import DevHelper from "@/components/DevHelper.vue";
 import bigDecimal from "js-big-decimal";
 import ScanQrCode from "@/components/ScanQrCode.vue";
-import { prefix0x } from '../services/coin/condition';
-import transfer, { SymbolCoins } from '../services/transfer/transfer';
+import { prefix0x } from "../services/coin/condition";
+import transfer, { SymbolCoins } from "../services/transfer/transfer";
 
 @Component({
   components: {
@@ -191,8 +203,11 @@ export default class Send extends Vue {
 
   get amountMessage(): string {
     if (!this.amount) return "";
-    try { new bigDecimal(this.amount); }
-    catch { return ""; }
+    try {
+      new bigDecimal(this.amount);
+    } catch {
+      return "";
+    }
     if (Number(this.amount) == 0) return "";
 
     if (bigDecimal.compareTo(this.amount, this.maxAmount) > 0) return this.INVALID_AMOUNT_MESSAGE;
@@ -202,7 +217,9 @@ export default class Send extends Vue {
     return bigDecimal.getPrettyValue(mojo, 3, ",") + " mojos";
   }
 
-  get decimal(): number { return this.selectedToken == "XCH" ? 12 : 3; }
+  get decimal(): number {
+    return this.selectedToken == "XCH" ? 12 : 3;
+  }
 
   get tokenNames(): string[] {
     return Object.keys(store.state.account.tokenInfo).concat(this.account.cats.map((_) => _.name));
@@ -263,29 +280,38 @@ export default class Send extends Vue {
 
     if (!this.availcoins) {
       const coins = (await receive.getCoinRecords(this.requests, false))
-        .filter(_ => _.coin).map(_ => _.coin as CoinItem).map(_ => ({
+        .filter((_) => _.coin)
+        .map((_) => _.coin as CoinItem)
+        .map((_) => ({
           amount: BigInt(_.amount),
           parent_coin_info: _.parentCoinInfo,
           puzzle_hash: _.puzzleHash,
         }));
 
-      this.availcoins =
-        this.tokenNames.map(symbol => {
-          const tgtpuzs = this.requests.filter(_ => _.symbol == symbol)[0].puzzles.map(_ => prefix0x(_.hash));
-          return { symbol, coins: coins.filter(_ => tgtpuzs.findIndex(p => p == _.puzzle_hash) > -1) };
-        }).reduce((a, c) => ({ ...a, [c.symbol]: c.coins }), {});
+      this.availcoins = this.tokenNames
+        .map((symbol) => {
+          const tgtpuzs = this.requests.filter((_) => _.symbol == symbol)[0].puzzles.map((_) => prefix0x(_.hash));
+          return { symbol, coins: coins.filter((_) => tgtpuzs.findIndex((p) => p == _.puzzle_hash) > -1) };
+        })
+        .reduce((a, c) => ({ ...a, [c.symbol]: c.coins }), {});
     }
 
+    const availcoins = this.availcoins[this.selectedToken].map((_) => _.amount);
 
-    const availcoins = this.availcoins[this.selectedToken].map(_ => _.amount);
-
-    this.totalAmount = bigDecimal.divide(availcoins.reduce((a, b) => a + b, 0n), Math.pow(10, this.decimal), this.decimal);
-    const singleMax = bigDecimal.divide(availcoins.reduce((a, b) => a > b ? a : b, 0n), Math.pow(10, this.decimal), this.decimal);
+    this.totalAmount = bigDecimal.divide(
+      availcoins.reduce((a, b) => a + b, 0n),
+      Math.pow(10, this.decimal),
+      this.decimal
+    );
+    const singleMax = bigDecimal.divide(
+      availcoins.reduce((a, b) => (a > b ? a : b), 0n),
+      Math.pow(10, this.decimal),
+      this.decimal
+    );
     if (this.selectedToken == "XCH") {
       this.maxAmount = this.totalAmount;
       this.totalAmount = "-1";
-    }
-    else {
+    } else {
       this.maxAmount = singleMax;
     }
     this.maxStatus = "Loaded";
@@ -378,7 +404,7 @@ export default class Send extends Vue {
       trapFocus: true,
       props: {},
       events: {
-        "scanned": (value: string): void => {
+        scanned: (value: string): void => {
           this.reset();
           this.address = value;
         },
