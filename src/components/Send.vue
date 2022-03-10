@@ -413,10 +413,10 @@ export default class Send extends Vue {
   changeFee(): void {
     this.reset();
     const fees: { [type in FeeType]: number } = {
-      "Custom": 0,
-      "Low": 5,
-      "Medium": 100,
-      "High": 1000,
+      Custom: 0,
+      Low: 5,
+      Medium: 100,
+      High: 1000,
     };
     if (this.feeType !== "Custom") {
       this.fee = fees[this.feeType];

@@ -28,10 +28,12 @@ export default class FeeTypeSlider extends Vue {
     Medium: 2,
     High: 3,
   };
+
   changeFeeType(): void {
     this.feeType = this.typeMap[this.feeTypeNumber];
     this.$emit("changeFeeType", this.feeType);
   }
+
   mounted(): void {
     if (this.feeType == undefined) {
       this.feeTypeNumber = 0;
