@@ -77,7 +77,7 @@
           :exponential="true"
           @input="changeFee()"
           expanded
-          :disabled="feeType > 0"
+          :disabled="feeType !== 'Custom'"
         ></b-numberinput>
 
         <p class="control">
@@ -85,14 +85,14 @@
         </p>
         <p class="control is-hidden-mobile">
           <span class="button" style="min-width: 150px">
-            <fee-slider :feeType.sync="feeType" @changeFeeType="changeFeeType"></fee-slider>
+            <fee-type-slider :feeType.sync="feeType" @changeFeeType="changeFeeType"></fee-type-slider>
           </span>
         </p>
       </b-field>
       <b-field>
         <p class="is-hidden-tablet">
           <span class="button column is-full">
-            <fee-slider :feeType.sync="feeType" @changeFeeType="changeFeeType"></fee-slider>
+            <fee-type-slider :feeType.sync="feeType" @changeFeeType="changeFeeType"></fee-type-slider>
           </span>
         </p>
       </b-field>
@@ -135,7 +135,8 @@
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import { AccountEntity, TokenInfo } from "@/store/modules/account";
 import KeyBox from "@/components/KeyBox.vue";
-import FeeSlider from "@/components/FeeSlider.vue";
+import { FeeType } from "@/components/FeeTypeSlider.vue";
+import FeeTypeSlider from "@/components/FeeTypeSlider.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { ApiResponse } from "@/models/api";
 import receive, { TokenPuzzleDetail } from "../services/crypto/receive";
@@ -151,7 +152,7 @@ import transfer, { SymbolCoins } from "../services/transfer/transfer";
 @Component({
   components: {
     KeyBox,
-    FeeSlider,
+    FeeTypeSlider,
   },
 })
 export default class Send extends Vue {
@@ -168,7 +169,7 @@ export default class Send extends Vue {
   public submitting = false;
   public amount = "0";
   public fee = 0;
-  public feeType = 0;
+  public feeType: FeeType = "Custom";
   public address = "";
   public selectedToken = "XCH";
   public memo = "";
@@ -404,19 +405,20 @@ export default class Send extends Vue {
     });
   }
 
-  changeFeeType(n: number): void {
-    this.feeType = n;
+  changeFeeType(t: FeeType): void {
+    this.feeType = t;
     this.changeFee();
   }
 
   changeFee(): void {
     this.reset();
-    const fees: { [type: number]: number } = {
-      1: 5,
-      2: 100,
-      3: 1000,
+    const fees: { [type in FeeType]: number } = {
+      "Custom": 0,
+      "Low": 5,
+      "Medium": 100,
+      "High": 1000,
     };
-    if (this.feeType > 0) {
+    if (this.feeType !== "Custom") {
       this.fee = fees[this.feeType];
     }
 
