@@ -84,7 +84,7 @@
           <span class="button is-static"><span class="is-size-7">mojos</span></span>
         </p>
         <p class="control is-hidden-mobile">
-          <span class="button" style="min-width: 150px">
+          <span class="button" style="min-width: 180px">
             <fee-type-slider :feeType.sync="feeType" @changeFeeType="changeFeeType"></fee-type-slider>
           </span>
         </p>
