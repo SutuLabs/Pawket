@@ -1,7 +1,7 @@
 <template>
   <ul>
     <li v-if="isAtom(value)" class="atom">
-      <atom-box :atom="value.atom"></atom-box>
+      <atom-box :atom="value.atom" :sexp="value"></atom-box>
     </li>
 
     <template v-else-if="arr">
@@ -17,12 +17,14 @@
             <b-icon icon="minus" size="is-small"></b-icon>
           </a>
         </span>
+
+        <breakpoint :value="value"></breakpoint>
       </div>
       <template v-if="!collapse">
         <li v-for="(item, idx) in arr[1]" :key="idx">
           <span v-if="isAtom(item)" class="atom">
             <div :class="{ highlight: highlightIds && highlightIds.indexOf(item.id) > -1 }">
-              <atom-box :atom="item.atom"></atom-box>
+              <atom-box :atom="item.atom" :sexp="item"></atom-box>
             </div>
           </span>
           <s-exp-box
@@ -43,12 +45,14 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { SExp, isAtom, isCons } from "clvm";
 import AtomBox from "@/components/AtomBox.vue";
+import Breakpoint from "@/components/Simulator/Breakpoint.vue";
 import { getIter } from "@/services/simulator/sexpExt";
 import { SExpWithId } from "@/services/simulator/opVm";
 
 @Component({
   components: {
     AtomBox,
+    Breakpoint,
   },
 })
 export default class SExpBox extends Vue {
@@ -139,6 +143,18 @@ ul > li:last-child {
 }
 
 div.highlight {
-  background-color: aqua;
+  background-color: #def;
+}
+
+.breakpoint {
+  &.active {
+    color: #e51400;
+  }
+  &.inactive {
+    color: transparent;
+  }
+  &.inactive:hover {
+    color: #f49c88;
+  }
 }
 </style>

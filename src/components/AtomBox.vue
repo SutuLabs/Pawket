@@ -1,6 +1,7 @@
 <template>
   <span class="atom">
     {{ value }}
+    <breakpoint v-if="sexp" :value="sexp"></breakpoint>
     <span class="has-text-grey-light" v-if="keywords[value]">{{ keywords[value] }}</span>
   </span>
 </template>
@@ -9,12 +10,19 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { Bytes } from "clvm";
 import { ConditionOpcode } from "@/services/coin/opcode";
+import { SExpWithId } from "@/services/simulator/opVm";
+import Breakpoint from "@/components/Simulator/Breakpoint.vue";
 
 type KeyDict = { [key: string]: string };
 
-@Component
+@Component({
+  components: {
+    Breakpoint,
+  },
+})
 export default class AtomBox extends Vue {
   @Prop() private atom!: Bytes;
+  @Prop() private sexp!: SExpWithId;
 
   private conditionDict: KeyDict = {};
 
@@ -23,13 +31,10 @@ export default class AtomBox extends Vue {
   get value(): string {
     if (this.atom) {
       const hex = this.atom.hex();
-      if (hex == "" && this.atom.raw()[0] == 0)
-        return "00";
-      if (hex == "" && this.atom.raw().length == 0)
-        return "EMPTY";
+      if (hex == "" && this.atom.raw()[0] == 0) return "00";
+      if (hex == "" && this.atom.raw().length == 0) return "EMPTY";
       return hex;
-    }
-    else {
+    } else {
       return "NONE";
     }
   }

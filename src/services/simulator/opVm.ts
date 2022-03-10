@@ -27,8 +27,8 @@ export type ValStackType = idSExp[];
 export type OpStackType = idOpType[];
 export type opType = (op_stack: OpStackType, value_stack: ValStackType) => number;
 export type OpType = "apply" | "cons" | "swap" | "eval";
-export type idSExp = { sexp: SExp; id: number };
-export type idOpType = { op: OpType; id: number };
+export type idSExp = { sexp: SExp; id: number; };
+export type idOpType = { op: OpType; id: number; };
 
 export interface StepType {
   value_stack: ValStackType;
@@ -39,6 +39,7 @@ export interface StepType {
 
 export interface SExpWithId extends SExp {
   id: number;
+  breakpoint?: boolean;
 }
 
 export default class OpVm {
