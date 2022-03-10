@@ -44,8 +44,8 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { SExp, isAtom, isCons } from "clvm";
-import AtomBox from "@/components/AtomBox.vue";
-import Breakpoint from "@/components/Simulator/Breakpoint.vue";
+import AtomBox from "./AtomBox.vue";
+import Breakpoint from "./Breakpoint.vue";
 import { getIter } from "@/services/simulator/sexpExt";
 import { SExpWithId } from "@/services/simulator/opVm";
 

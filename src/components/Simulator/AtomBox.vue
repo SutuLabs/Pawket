@@ -11,7 +11,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { Bytes } from "clvm";
 import { ConditionOpcode } from "@/services/coin/opcode";
 import { SExpWithId } from "@/services/simulator/opVm";
-import Breakpoint from "@/components/Simulator/Breakpoint.vue";
+import Breakpoint from "./Breakpoint.vue";
 
 type KeyDict = { [key: string]: string };
 
