@@ -152,6 +152,11 @@ export default class Home extends Vue {
       solution: "()",
     },
     {
+      name: "simplecalc1",
+      puzzle: "(/ 2 5)",
+      solution: "(80001 73)",
+    },
+    {
       name: "p2_delegated_puzzle_or_hidden_puzzle1",
       puzzle:
         "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xb5c7539888af59f601be0ea2eddd32c06a80d932170eec55ef7a7640cbc5b37b81c4258644229eca2322298a9bf0189f) 1))",
@@ -194,8 +199,6 @@ export default class Home extends Vue {
   get highlightIds(): number[] {
     const ss = this.value_stack.slice(this.value_stack.length - this.oppars.length, this.value_stack.length);
     const arr = ss.flatMap((_) => this.getAllIdsRecursive(_.sexp as SExpWithId));
-
-    console.log(ss, arr);
     return arr;
   }
 
