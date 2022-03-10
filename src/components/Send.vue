@@ -85,24 +85,14 @@
         </p>
         <p class="control is-hidden-mobile">
           <span class="button" style="min-width: 150px">
-            <b-slider :min="0" :max="3" v-model="feeType" :tooltip="false" @input="changeFee()">
-              <b-slider-tick :value="0">{{ $t("send.ui.slider.custom") }}</b-slider-tick>
-              <b-slider-tick :value="1">{{ $t("send.ui.slider.low") }}</b-slider-tick>
-              <b-slider-tick :value="2">{{ $t("send.ui.slider.medium") }}</b-slider-tick>
-              <b-slider-tick :value="3">{{ $t("send.ui.slider.high") }}</b-slider-tick>
-            </b-slider>
+            <fee-slider :feeType.sync="feeType" @changeFeeType="changeFeeType"></fee-slider>
           </span>
         </p>
       </b-field>
       <b-field>
         <p class="is-hidden-tablet">
-          <span class="button" style="width: 100%">
-            <b-slider :min="0" :max="3" v-model="feeType" :tooltip="false" @input="changeFee()">
-              <b-slider-tick :value="0">{{ $t("send.ui.slider.custom") }}</b-slider-tick>
-              <b-slider-tick :value="1">{{ $t("send.ui.slider.low") }}</b-slider-tick>
-              <b-slider-tick :value="2">{{ $t("send.ui.slider.medium") }}</b-slider-tick>
-              <b-slider-tick :value="3">{{ $t("send.ui.slider.high") }}</b-slider-tick>
-            </b-slider>
+          <span class="button column is-full">
+            <fee-slider :feeType.sync="feeType" @changeFeeType="changeFeeType"></fee-slider>
           </span>
         </p>
       </b-field>
@@ -145,6 +135,7 @@
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import { AccountEntity, TokenInfo } from "@/store/modules/account";
 import KeyBox from "@/components/KeyBox.vue";
+import FeeSlider from "@/components/FeeSlider.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { ApiResponse } from "@/models/api";
 import receive, { TokenPuzzleDetail } from "../services/crypto/receive";
@@ -160,6 +151,7 @@ import transfer, { SymbolCoins } from "../services/transfer/transfer";
 @Component({
   components: {
     KeyBox,
+    FeeSlider,
   },
 })
 export default class Send extends Vue {
@@ -410,6 +402,11 @@ export default class Send extends Vue {
         },
       },
     });
+  }
+
+  changeFeeType(n: number): void {
+    this.feeType = n;
+    this.changeFee();
   }
 
   changeFee(): void {
