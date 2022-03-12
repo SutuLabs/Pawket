@@ -24,48 +24,20 @@
           </b-tooltip>
         </p>
       </b-field>
-      <b-field :message="amountMessage">
-        <template #label>
-          {{ $t("send.ui.label.amount") }}
-          <span class="is-size-6">
-            <b-tooltip
-              v-if="totalAmount >= 0"
-              position="is-right"
-              type="is-light"
-              multilined
-              :label="$t('send.ui.tooltip.singleCoinExplanation')"
-            >
-              <b-icon icon="comment-question" size="is-small" type="is-info" class="px-4"></b-icon>
-            </b-tooltip>
-            <b-button tag="a" type="is-info is-light" size="is-small" @click="setMax(maxAmount)">
-              <span v-if="maxStatus == 'Loading'"> {{ $t("send.ui.span.loading") }} {{ selectedToken }}</span>
-              <span v-if="maxStatus == 'Loaded'">
-                <span v-if="totalAmount >= 0">
-                  {{ $t("send.ui.span.maxLeadingText") }} {{ maxAmount }} / {{ totalAmount }} {{ selectedToken }}
-                </span>
-                <span v-else> {{ $t("send.ui.span.maxLeadingText") }} {{ maxAmount }} {{ selectedToken }} </span>
-              </span>
-            </b-button>
-          </span>
-        </template>
-        <b-select v-model="selectedToken" @input="loadCoins()">
-          <option v-for="token in tokenNames" :key="token" :value="token">
-            {{ token }}
-          </option>
-        </b-select>
-        <b-input
-          v-model="amount"
-          expanded
-          :disabled="!amountEditable"
-          @input="
-            reset();
-            selectMax = false;
-          "
-        ></b-input>
-        <p class="control">
-          <span class="button is-static">{{ selectedToken }}</span>
-        </p>
-      </b-field>
+      <token-amount-field
+        v-model="amount"
+        :selectedToken="selectedToken"
+        :token-names="tokenNames"
+        :fee="fee"
+        :amount-editable="amountEditable"
+        :max-amount="maxAmount"
+        :total-amount="totalAmount"
+        @input="updateTokenAmount"
+        @change-token="changeToken"
+        @validity="changeValidity"
+        @set-max="setMax()"
+      >
+      </token-amount-field>
       <b-field :label="$t('send.ui.label.memo')">
         <b-input maxlength="100" v-model="memo" type="text" @input="reset()" :disabled="selectedToken == 'XCH'"></b-input>
       </b-field>
@@ -115,7 +87,7 @@
           v-if="!bundle"
           type="is-success"
           @click="sign()"
-          :disabled="this.amountMessage == this.INVALID_AMOUNT_MESSAGE || submitting"
+          :disabled="!validity || submitting"
         ></b-button>
       </div>
       <div>
@@ -150,11 +122,13 @@ import bigDecimal from "js-big-decimal";
 import ScanQrCode from "@/components/ScanQrCode.vue";
 import { prefix0x } from "../services/coin/condition";
 import transfer, { SymbolCoins } from "../services/transfer/transfer";
+import TokenAmountField from "@/components/TokenAmountField.vue";
 
 @Component({
   components: {
     KeyBox,
     FeeTypeSlider,
+    TokenAmountField,
   },
 })
 export default class Send extends Vue {
@@ -169,11 +143,9 @@ export default class Send extends Vue {
   @Prop() private notificationClosable!: boolean;
 
   public submitting = false;
-  public amount = "0";
   public fee = 0;
   public feeType: FeeType = "Custom";
   public address = "";
-  public selectedToken = "XCH";
   public memo = "";
   public bundle: SpendBundle | null = null;
   public availcoins: SymbolCoins | null = null;
@@ -182,6 +154,9 @@ export default class Send extends Vue {
   public INVALID_AMOUNT_MESSAGE = "Invalid amount";
   public maxStatus: "Loading" | "Loaded" = "Loading";
   public selectMax = false;
+  public amount = "";
+  public selectedToken = "XCH";
+  public validity = false;
 
   public requests: TokenPuzzleDetail[] = [];
 
@@ -194,22 +169,6 @@ export default class Send extends Vue {
   @Emit("close")
   close(): void {
     return;
-  }
-
-  get amountMessage(): string {
-    if (!this.amount) return "";
-    try {
-      new bigDecimal(this.amount);
-    } catch {
-      return "";
-    }
-    if (Number(this.amount) == 0) return "";
-
-    if (bigDecimal.compareTo(this.amount, this.maxAmount) > 0) return this.INVALID_AMOUNT_MESSAGE;
-
-    const mojo = bigDecimal.multiply(this.amount, Math.pow(10, this.decimal));
-    if (Number(mojo) < 1) return this.INVALID_AMOUNT_MESSAGE;
-    return bigDecimal.getPrettyValue(mojo, 3, ",") + " mojos";
   }
 
   get decimal(): number {
@@ -249,14 +208,31 @@ export default class Send extends Vue {
     return tokenInfo;
   }
 
-  setMax(amount: string, excludingFee = false): void {
+  setMax(excludingFee = false): void {
     this.reset();
     excludingFee = this.selectedToken != "XCH" ? true : excludingFee;
     const newAmount = excludingFee
-      ? amount
-      : bigDecimal.subtract(amount, bigDecimal.divide(this.fee, Math.pow(10, this.decimal), this.decimal));
+      ? this.maxAmount
+      : bigDecimal.subtract(this.maxAmount, bigDecimal.divide(this.fee, Math.pow(10, this.decimal), this.decimal));
     this.amount = newAmount;
     this.selectMax = true;
+  }
+
+  updateTokenAmount(value:string): void {
+    this.amount= value;
+    this.reset();
+    this.selectMax = false;
+  }
+
+  changeToken(token: string): void {
+    this.selectedToken = token;
+    this.reset();
+    this.loadCoins();
+  }
+
+  changeValidity(valid: boolean): void {
+    this.validity = valid;
+    this.reset();
   }
 
   async loadCoins(): Promise<void> {
@@ -425,7 +401,7 @@ export default class Send extends Vue {
     }
 
     if (!this.fee) this.fee = 0;
-    if (this.selectMax) this.setMax(this.maxAmount);
+    if (this.selectMax) this.setMax();
   }
 }
 </script>
