@@ -66,7 +66,7 @@ class Transfer {
       const tp = plan[symbol];
       const css = symbol.toLocaleLowerCase() == "xch"
         ? await stdBundle.generateCoinSpends(tp, puzzles)
-        : await catBundle.generateCoinSpends(tp, puzzles,catAdditionalConditions, getPuzzle);
+        : await catBundle.generateCoinSpends(tp, puzzles, catAdditionalConditions, getPuzzle);
       coin_spends.push(...css);
     }
 
@@ -89,6 +89,7 @@ class Transfer {
     const sigs: G2Element[] = [];
     for (let i = 0; i < css.length; i++) {
       const coin_spend = css[i];
+      if (coin_spend.coin.parent_coin_info == "0x0000000000000000000000000000000000000000000000000000000000000000") continue;
       const puz = getPuzDetail(coin_spend.coin.puzzle_hash);
 
       const puzzle_reveal = puz.puzzle;

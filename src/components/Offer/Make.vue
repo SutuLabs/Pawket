@@ -139,8 +139,8 @@ export default class MakeOffer extends Vue {
 
   public requests: OfferTokenAmount[] = [{ token: "XCH", amount: "0" }];
   public offers: OfferTokenAmount[] = [{ token: "XCH", amount: "0" }];
-  // public requests: OfferTokenAmount[] = [{ token: "XCH", amount: "0.00000000001" }];
-  // public offers: OfferTokenAmount[] = [{ token: "BSH", amount: "0.01" }];
+  // public requests: OfferTokenAmount[] = [{ token: "BSH", amount: "0.01" }];
+  // public offers: OfferTokenAmount[] = [{ token: "XCH", amount: "0.00000000001" }];
 
   get bundleText(): string {
     return this.offerBundle == null ? "" : JSON.stringify(this.offerBundle);
@@ -160,7 +160,19 @@ export default class MakeOffer extends Vue {
   }
 
   get cats(): { [id: string]: string } {
-    return Object.assign({}, ...this.account.cats.map((_) => ({ [prefix0x(_.id)]: _.name })));
+    return Object.assign(
+      {},
+      ...Object.values(store.state.account.tokenInfo).map((_) => ({ [prefix0x(_.id ?? "")]: _.symbol })),
+      ...this.account.cats.map((_) => ({ [prefix0x(_.id)]: _.name }))
+    );
+  }
+
+  get catIds(): { [name: string]: string } {
+    return Object.assign(
+      {},
+      ...Object.values(store.state.account.tokenInfo).map((_) => ({ [_.symbol]: prefix0x(_.id ?? "") })),
+      ...this.account.cats.map((_) => ({ [_.name]: prefix0x(_.id) }))
+    );
   }
 
   get tokenNames(): string[] {
@@ -201,21 +213,24 @@ export default class MakeOffer extends Vue {
     const settlement_tgt = "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79";
 
     const tgts: TransferTarget[] = [
-      { address: settlement_tgt, amount: this.getAmount(off.token, off.amount), symbol: off.token, memos: [settlement_tgt] },
+      {
+        address: settlement_tgt,
+        amount: this.getAmount(off.token, off.amount),
+        symbol: off.token,
+        memos: off.token == "XCH" ? undefined : [settlement_tgt],
+      },
     ];
     const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, 0n);
     const keys = Object.keys(plan);
     if (keys.length != 1) throw new Error("key length abnormal");
-    const offplan = { id: "any", plan: plan[keys[0]] };
-    const bundle = await offer.generateOffer(
-      [offplan],
-      this.requests.map((_) => ({
-        id: _.token == "XCH" ? "" : _.token,
-        amount: this.getAmount(_.token, _.amount),
-        target: change_hex,
-      })),
-      this.tokenPuzzles
-    );
+    const offplan = { id: off.token == "XCH" ? "" : "any", plan: plan[keys[0]] };
+    const reqs = this.requests.map((_) => ({
+      id: _.token == "XCH" ? "" : this.catIds[_.token],
+      symbol: _.token,
+      amount: this.getAmount(_.token, _.amount),
+      target: change_hex,
+    }));
+    const bundle = await offer.generateOffer([offplan], reqs, this.tokenPuzzles);
     this.bundle = bundle;
     this.offerText = await offer.encode(bundle);
 

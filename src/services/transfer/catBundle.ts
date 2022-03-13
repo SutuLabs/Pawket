@@ -20,7 +20,7 @@ class CatBundle {
   public async generateCoinSpends(
     plan: TokenSpendPlan,
     puzzles: TokenPuzzleDetail[],
-    additionalConditions: ConditionType[],
+    additionalConditions: ConditionType[] = [],
     getPuzzle: GetPuzzleApiCallback | null = null,
   ): Promise<CoinSpend[]> {
     const coin_spends: CoinSpend[] = [];
