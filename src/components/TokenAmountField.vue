@@ -1,7 +1,7 @@
 <template>
   <b-field :message="amountMessage || '0 mojos'">
     <template #label>
-      {{ $t("send.ui.label.amount") }}
+      {{ label }}
       <span class="is-size-6">
         <b-tooltip
           v-if="totalAmount >= 0"
@@ -12,7 +12,7 @@
         >
           <b-icon icon="comment-question" size="is-small" type="is-info" class="px-4"></b-icon>
         </b-tooltip>
-        <b-button tag="a" type="is-info is-light" size="is-small" @click="setMax()">
+        <b-button v-if="maxAmount > -1" tag="a" type="is-info is-light" size="is-small" @click="setMax()">
           <span v-if="maxAmount == -1"> {{ $t("send.ui.span.loading") }} {{ selectedToken }}</span>
           <span v-else>
             <span v-if="totalAmount >= 0">
@@ -39,6 +39,7 @@
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
 import bigDecimal from "js-big-decimal";
+import { tc } from "@/i18n/i18n";
 
 @Component({
   components: {
@@ -55,6 +56,7 @@ export default class TotalAmountField extends Vue {
   @Prop({ default: "-1" }) private maxAmount!: string;
   @Prop({ default: "-1" }) private totalAmount!: string;
   @Prop({ default: "XCH" }) private selectedToken!: string;
+  @Prop({ default: tc("send.ui.label.amount") }) private label!: string;
 
   public INVALID_AMOUNT_MESSAGE = "Invalid amount";
   public selectMax = false;
@@ -89,7 +91,7 @@ export default class TotalAmountField extends Vue {
     }
     if (Number(this.amount) == 0) return "";
 
-    if (bigDecimal.compareTo(this.amount, this.maxAmount) > 0) return this.INVALID_AMOUNT_MESSAGE;
+    if (Number(this.maxAmount) > -1 && bigDecimal.compareTo(this.amount, this.maxAmount) > 0) return this.INVALID_AMOUNT_MESSAGE;
 
     const mojo = bigDecimal.multiply(this.amount, Math.pow(10, this.decimal));
     if (Number(mojo) < 1) return this.INVALID_AMOUNT_MESSAGE;

@@ -123,6 +123,7 @@ import ScanQrCode from "@/components/ScanQrCode.vue";
 import { prefix0x } from "../services/coin/condition";
 import transfer, { SymbolCoins } from "../services/transfer/transfer";
 import TokenAmountField from "@/components/TokenAmountField.vue";
+import coinHandler from "../services/transfer/coin";
 
 @Component({
   components: {
@@ -218,8 +219,8 @@ export default class Send extends Vue {
     this.selectMax = true;
   }
 
-  updateTokenAmount(value:string): void {
-    this.amount= value;
+  updateTokenAmount(value: string): void {
+    this.amount = value;
     this.reset();
     this.selectMax = false;
   }
@@ -243,28 +244,12 @@ export default class Send extends Vue {
     this.selectMax = false;
     this.maxStatus = "Loading";
 
-    const maxId = this.account.addressRetrievalCount;
-    const sk_hex = this.account.key.privateKey;
     if (!this.requests || this.requests.length == 0) {
-      this.requests = await receive.getAssetsRequestDetail(sk_hex, maxId, this.account.cats ?? []);
+      this.requests = await coinHandler.getAssetsRequestDetail(this.account);
     }
 
     if (!this.availcoins) {
-      const coins = (await receive.getCoinRecords(this.requests, false))
-        .filter((_) => _.coin)
-        .map((_) => _.coin as CoinItem)
-        .map((_) => ({
-          amount: BigInt(_.amount),
-          parent_coin_info: _.parentCoinInfo,
-          puzzle_hash: _.puzzleHash,
-        }));
-
-      this.availcoins = this.tokenNames
-        .map((symbol) => {
-          const tgtpuzs = this.requests.filter((_) => _.symbol == symbol)[0].puzzles.map((_) => prefix0x(_.hash));
-          return { symbol, coins: coins.filter((_) => tgtpuzs.findIndex((p) => p == _.puzzle_hash) > -1) };
-        })
-        .reduce((a, c) => ({ ...a, [c.symbol]: c.coins }), {});
+      this.availcoins = await coinHandler.getAvailableCoins(this.requests, coinHandler.getTokenNames(this.account));
     }
 
     const availcoins = this.availcoins[this.selectedToken].map((_) => _.amount);
@@ -308,7 +293,7 @@ export default class Send extends Vue {
       const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
       const tgts = [{ address: tgt_hex, amount, symbol: this.selectedToken, memo: this.memo }];
       const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee));
-      this.bundle = await transfer.generateSpendBundle(plan, this.requests);
+      this.bundle = await transfer.generateSpendBundle(plan, this.requests, []);
     } catch (error) {
       Notification.open({
         message: this.$tc("send.ui.messages.failedToSign") + error,

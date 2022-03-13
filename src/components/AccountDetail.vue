@@ -74,7 +74,10 @@
         <b-button @click="openDonation()" size="is-large">❤️</b-button>
       </b-tooltip>
       <b-tooltip :label="$t('accountDetail.ui.tooltip.offer')" multilined position="is-right">
-        <b-button @click="openOfferManagement()" size="is-large" class="mx-5">💱</b-button>
+        <b-button @click="openTakeOffer()" size="is-large" class="ml-5">💱</b-button>
+      </b-tooltip>
+      <b-tooltip :label="'TODO:makeoffer'" multilined position="is-right">
+        <b-button @click="openMakeOffer()" size="is-large" class="ml-5">💸</b-button>
       </b-tooltip>
     </div>
   </div>
@@ -92,6 +95,7 @@ import Send from "./Send.vue";
 import { demojo } from "@/filters/unitConversion";
 import { TokenInfo, AccountEntity, AccountToken } from "@/store/modules/account";
 import TakeOffer from './Offer/Take.vue';
+import MakeOffer from "./Offer/Make.vue";
 
 type Mode = "Verify" | "Create";
 
@@ -223,13 +227,26 @@ export default class AccountDetail extends Vue {
     });
   }
 
-  openOfferManagement(): void {
+  openTakeOffer(): void {
     this.$buefy.modal.open({
       parent: this,
       component: TakeOffer,
       hasModalCard: true,
       trapFocus: true,
       canCancel: ["x"],
+      props: {
+        account: this.account,
+      },
+    });
+  }
+
+  openMakeOffer(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: MakeOffer,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: ['x'],
       props: {
         account: this.account,
       },

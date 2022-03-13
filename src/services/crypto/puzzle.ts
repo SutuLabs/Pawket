@@ -206,7 +206,19 @@ class PuzzleMaker {
       }));
 
     return conds;
-  };
+  }
+
+  public getSettlementPaymentsPuzzle(): string {
+    const puzzle = `(a (q 2 10 (c 2 (c 3 ()))) (c (q (51 . 62) (a (i 5 (q 4 (c 12 (c (a 30 (c 2 (c 9 ()))) ())) (a 22 (c 2 (c 25 (c (a 10 (c 2 (c 13 ()))) ()))))) ()) 1) (a (i 5 (q 4 (c 8 9) (a 22 (c 2 (c 13 (c 11 ()))))) (q . 11)) 1) 2 (i (l 5) (q 11 (q . 2) (a 30 (c 2 (c 9 ()))) (a 30 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1))`;
+    return puzzle;
+  }
+
+  public getEmptyPrivateKey(
+  ): PrivateKey {
+    if (!store.state.app.bls) throw new Error("bls not initialized");
+    const BLS = store.state.app.bls;
+    return BLS.PrivateKey.from_bytes(new Uint8Array(32), false);
+  }
 }
 
 export default new PuzzleMaker();

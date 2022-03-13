@@ -1,18 +1,23 @@
 import { Bytes, bigint_to_bytes } from "clvm";
 import { ConditionOpcode } from "./opcode";
 
+export type ConditionType = (string | string[])[];
+
 export class CoinConditions {
-  public static CREATE_COIN(puzzlehash: string, amount: bigint): string[] {
+  public static CREATE_COIN(puzzlehash: string, amount: bigint): ConditionType {
     return [ConditionOpcode.CREATE_COIN.toString(), prefix0x(puzzlehash), formatAmount(amount)];
   }
-  public static CREATE_COIN_Extend(puzzlehash: string, amount: bigint, memos: string[]): (string | string[])[] {
+  public static CREATE_COIN_Extend(puzzlehash: string, amount: bigint, memos: string[]): ConditionType {
     return [...this.CREATE_COIN(puzzlehash, amount), ...((memos && memos.length > 0) ? [memos] : [])];
   }
-  public static CREATE_COIN_ANNOUNCEMENT(message: string): string[] {
+  public static CREATE_COIN_ANNOUNCEMENT(message: string): ConditionType {
     return [ConditionOpcode.CREATE_COIN_ANNOUNCEMENT.toString(), message];
   }
-  public static ASSERT_COIN_ANNOUNCEMENT(announcementId: string): string[] {
+  public static ASSERT_COIN_ANNOUNCEMENT(announcementId: string): ConditionType {
     return [ConditionOpcode.ASSERT_COIN_ANNOUNCEMENT.toString(), announcementId];
+  }
+  public static ASSERT_PUZZLE_ANNOUNCEMENT(announcementId: string): ConditionType {
+    return [ConditionOpcode.ASSERT_PUZZLE_ANNOUNCEMENT.toString(), announcementId];
   }
 }
 

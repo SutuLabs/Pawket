@@ -4,7 +4,7 @@ import { GetParentPuzzleRequest, GetParentPuzzleResponse } from "@/models/api";
 import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
 import { uncurry } from "clvm_tools/browser";
 import { SExp, Tuple } from "clvm";
-import { formatAmount, prefix0x } from "../coin/condition";
+import { ConditionType, formatAmount, prefix0x } from "../coin/condition";
 import puzzle, { PuzzleDetail } from "../crypto/puzzle";
 import transfer, { GetPuzzleApiCallback, TokenSpendPlan } from "./transfer";
 import { TokenPuzzleDetail } from "../crypto/receive";
@@ -20,12 +20,13 @@ class CatBundle {
   public async generateCoinSpends(
     plan: TokenSpendPlan,
     puzzles: TokenPuzzleDetail[],
+    additionalConditions: ConditionType[],
     getPuzzle: GetPuzzleApiCallback | null = null,
   ): Promise<CoinSpend[]> {
     const coin_spends: CoinSpend[] = [];
 
     const puzzleDict: { [key: string]: PuzzleDetail } = Object.assign({}, ...puzzles.flatMap(_ => _.puzzles).map((x) => ({ [prefix0x(x.hash)]: x })));
-    const getPuzDetail=(hash:string)=>{
+    const getPuzDetail = (hash: string) => {
       const puz = puzzleDict[hash];
       if (!puz) throw new Error("cannot find puzzle");
       return puz;
@@ -46,7 +47,7 @@ class CatBundle {
       const coin = plan.coins[plan.coins.length - 1];
       const puz = getPuzDetail(coin.puzzle_hash);
 
-      const inner_puzzle_solution = transfer.getSolution(plan.targets);
+      const inner_puzzle_solution = transfer.getSolution(plan.targets, additionalConditions);
 
       const cs = await this.generateCoinSpend(coin, puz, inner_puzzle_solution, getPuzzle);
       coin_spends.push(cs);
@@ -137,10 +138,10 @@ class CatBundle {
     inner_puzzle_solution: string,
     getPuzzle: GetPuzzleApiCallback | null = null,
   ): Promise<CoinSpend> {
-      const puzzle_reveal = prefix0x(await puzzle.encodePuzzle(puz.puzzle));
-      const solution = await this.generateSolution(coin, puz, inner_puzzle_solution, getPuzzle);
-      const solution_hex = prefix0x(await puzzle.encodePuzzle(solution));
-      return { coin, puzzle_reveal, solution: solution_hex };
+    const puzzle_reveal = prefix0x(await puzzle.encodePuzzle(puz.puzzle));
+    const solution = await this.generateSolution(coin, puz, inner_puzzle_solution, getPuzzle);
+    const solution_hex = prefix0x(await puzzle.encodePuzzle(solution));
+    return { coin, puzzle_reveal, solution: solution_hex };
   }
 
   private async generateSolution(

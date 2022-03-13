@@ -4,7 +4,7 @@ import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
 import store from "@/store";
 import { GetParentPuzzleResponse } from "@/models/api";
 import { AGG_SIG_ME_ADDITIONAL_DATA, DEFAULT_HIDDEN_PUZZLE_HASH, GROUP_ORDER } from "../coin/consts";
-import { CoinConditions, prefix0x } from "../coin/condition";
+import { CoinConditions, ConditionType, prefix0x } from "../coin/condition";
 import puzzle, { PuzzleDetail } from "../crypto/puzzle";
 import { TokenPuzzleDetail } from "../crypto/receive";
 import stdBundle from "./stdBundle";
@@ -55,13 +55,30 @@ class Transfer {
   public async generateSpendBundle(
     plan: SpendPlan,
     puzzles: TokenPuzzleDetail[],
+    catAdditionalConditions: ConditionType[],
     getPuzzle: GetPuzzleApiCallback | null = null,
   ): Promise<SpendBundle> {
-    if (!store.state.app.bls) throw new Error("bls not initialized");
-    const BLS = store.state.app.bls;
-
     const coin_spends: CoinSpend[] = [];
 
+    for (const symbol in plan) {
+      if (!Object.prototype.hasOwnProperty.call(plan, symbol)) continue;
+
+      const tp = plan[symbol];
+      const css = symbol.toLocaleLowerCase() == "xch"
+        ? await stdBundle.generateCoinSpends(tp, puzzles)
+        : await catBundle.generateCoinSpends(tp, puzzles,catAdditionalConditions, getPuzzle);
+      coin_spends.push(...css);
+    }
+
+    return this.getSpendBundle(coin_spends, puzzles);
+  }
+
+  public async getSignaturesFromCoinSpends(
+    css: CoinSpend[],
+    puzzles: TokenPuzzleDetail[],
+  ): Promise<G2Element> {
+    if (!store.state.app.bls) throw new Error("bls not initialized");
+    const BLS = store.state.app.bls;
     const puzzleDict: { [key: string]: PuzzleDetail } = Object.assign({}, ...puzzles.flatMap(_ => _.puzzles).map((x) => ({ [prefix0x(x.hash)]: x })));
     const getPuzDetail = (hash: string) => {
       const puz = puzzleDict[hash];
@@ -70,36 +87,32 @@ class Transfer {
     }
 
     const sigs: G2Element[] = [];
+    for (let i = 0; i < css.length; i++) {
+      const coin_spend = css[i];
+      const puz = getPuzDetail(coin_spend.coin.puzzle_hash);
 
-    for (const symbol in plan) {
-      if (!Object.prototype.hasOwnProperty.call(plan, symbol)) continue;
+      const puzzle_reveal = puz.puzzle;
 
-      const tp = plan[symbol];
-      const css = symbol.toLocaleLowerCase() == "xch"
-        ? await stdBundle.generateCoinSpends(tp, puzzles)
-        : await catBundle.generateCoinSpends(tp, puzzles, getPuzzle);
-      coin_spends.push(...css);
+      const synthetic_sk = this.calculate_synthetic_secret_key(BLS, puz.privateKey, DEFAULT_HIDDEN_PUZZLE_HASH.raw());
+      const coinname = this.getCoinName(coin_spend.coin);
 
-      for (let i = 0; i < css.length; i++) {
-        const coin_spend = css[i];
-        const puz = getPuzDetail(coin_spend.coin.puzzle_hash);
+      const result = await puzzle.calcPuzzleResult(puzzle_reveal, await puzzle.disassemblePuzzle(coin_spend.solution));
+      const signature = await this.signSolution(BLS, result, synthetic_sk, coinname);
 
-        const puzzle_reveal = puz.puzzle;
-
-        const synthetic_sk = this.calculate_synthetic_secret_key(BLS, puz.privateKey, DEFAULT_HIDDEN_PUZZLE_HASH.raw());
-        const coinname = this.getCoinName(coin_spend.coin);
-
-        const result = await puzzle.calcPuzzleResult(puzzle_reveal, await puzzle.disassemblePuzzle(coin_spend.solution));
-        const signature = await this.signSolution(BLS, result, synthetic_sk, coinname);
-
-        sigs.push(signature);
-      }
+      sigs.push(signature);
     }
 
     const agg_sig = BLS.AugSchemeMPL.aggregate(sigs);
-    const sig = Bytes.from(agg_sig.serialize()).hex();
-    // console.log("coin_spends", coin_spends);
 
+    return agg_sig;
+  }
+
+  public async getSpendBundle(coin_spends: CoinSpend[],
+    puzzles: TokenPuzzleDetail[],
+  ): Promise<SpendBundle> {
+    const agg_sig = await this.getSignaturesFromCoinSpends(coin_spends, puzzles);
+
+    const sig = Bytes.from(agg_sig.serialize()).hex();
     return {
       aggregated_signature: prefix0x(sig),
       coin_spends
@@ -208,9 +221,9 @@ class Transfer {
   }
 
 
-  public getSolution(targets: TransferTarget[]) {
+  public getSolution(targets: TransferTarget[], additionalConditions: ConditionType[]): string {
 
-    const conditions = [];
+    const conditions: ConditionType[] = [];
 
     for (let i = 0; i < targets.length; i++) {
       const tgt = targets[i];
@@ -219,6 +232,9 @@ class Transfer {
       else
         conditions.push(CoinConditions.CREATE_COIN(tgt.address, tgt.amount));
     }
+
+    if (additionalConditions && additionalConditions.length > 0)
+      conditions.push(...additionalConditions);
 
     const delegated_puzzle_solution = this.getDelegatedPuzzle(conditions);
     // const solution_executed_result = delegated_puzzle_solution;

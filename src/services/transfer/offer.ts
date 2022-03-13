@@ -3,12 +3,15 @@ import { bech32m } from "@scure/base";
 import zlib from 'zlib';
 import { Buffer } from 'buffer';
 import { Bytes, sexp_buffer_from_stream, Stream, sexp_from_stream, SExp, Tuple } from "clvm";
-import { prefix0x } from '@/services/coin/condition';
+import { CoinConditions, ConditionType, prefix0x } from '@/services/coin/condition';
 import { assemble, disassemble } from 'clvm_tools/clvm_tools/binutils';
 import puzzle from "../crypto/puzzle";
 import { modsdict, modsprog } from '@/services/coin/mods';
 import { uncurry } from 'clvm_tools/clvm_tools/curry';
 import { ConditionOpcode } from "../coin/opcode";
+import transfer, { GetPuzzleApiCallback, TokenSpendPlan } from "./transfer";
+import { TokenPuzzleDetail } from "../crypto/receive";
+import catBundle from "./catBundle";
 
 class Offer {
   private initDict = [
@@ -82,6 +85,46 @@ class Offer {
     return bundle;
   }
 
+  public async encode(bundle: SpendBundle): Promise<string> {
+    // big endian
+    const chunks: Buffer[] = [];
+    const spendnum = bundle.coin_spends.length;
+    chunks.push(getUint32Buffer(spendnum));
+
+    for (let i = 0; i < spendnum; i++) {
+      const cs = bundle.coin_spends[i];
+      const coin = cs.coin;
+      chunks.push(Buffer.from(Bytes.from(coin.parent_coin_info, "hex").raw()));
+      chunks.push(Buffer.from(Bytes.from(coin.puzzle_hash, "hex").raw()));
+      chunks.push(getUint64Buffer(coin.amount));
+
+      chunks.push(Buffer.from(assemble(await puzzle.disassemblePuzzle(cs.puzzle_reveal)).as_bin().raw()));
+      chunks.push(Buffer.from(assemble(await puzzle.disassemblePuzzle(cs.solution)).as_bin().raw()));
+    }
+
+    chunks.push(Buffer.from(Bytes.from(bundle.aggregated_signature, "hex").raw()));
+
+    const buff = Buffer.concat(chunks);
+
+    const initDict = this.initDict;
+
+    const ver = 2;
+
+    const dict = function () {
+      let b = Buffer.from([]);
+      for (const r of initDict.slice(0, ver))
+        b = Buffer.concat([b, r]);
+      return b;
+    }();
+
+    const def = zlib.deflateSync(buff, { dictionary: dict });
+
+    const final_buff = Buffer.concat([getUint16Buffer(ver), def]);
+
+    const encoded = bech32m.encode("offer", bech32m.toWords(final_buff), false);
+    return encoded;
+  }
+
   public async getSummary(bundle: SpendBundle): Promise<OfferSummary> {
 
     const ocs = this.getOfferedCoins(bundle);
@@ -149,6 +192,94 @@ class Offer {
     return { requested, offered };
   }
 
+  public async generateOffer(
+    offered: OfferPlan[],
+    requested: OfferEntity[],
+    puzzles: TokenPuzzleDetail[],
+    getPuzzle: GetPuzzleApiCallback | null = null,
+  ): Promise<SpendBundle> {
+    if (offered.length != 1 || requested.length != 1) throw new Error("currently, only support single offer/request");
+    if (offered[0].id && offered[0].plan.coins.length != 1) throw new Error("currently, only support single coin for CAT");
+
+    const settlement_tgt = "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79";
+    const spends: CoinSpend[] = [];
+    const puz_anno_msgs: Uint8Array[] = [];
+    // generate requested
+    for (let i = 0; i < requested.length; i++) {
+      const req = requested[i];
+      if (!req.id) {// XCH
+        const coin = {
+          parent_coin_info: "0x0000000000000000000000000000000000000000000000000000000000000000",
+          puzzle_hash: settlement_tgt,
+          amount: 0n,
+        };
+
+        const puzzle_reveal_text = puzzle.getSettlementPaymentsPuzzle();
+
+        // put special target into puzzle reverse dict
+        puzzles.filter(_ => _.symbol == "XCH")[0].puzzles.push({
+          privateKey: puzzle.getEmptyPrivateKey(), // this private key will not really calculated due to no AGG_SIG_ME exist in this spend
+          puzzle: puzzle_reveal_text,
+          hash: settlement_tgt,
+          address: "",
+        })
+
+        const nonceArr = new Uint8Array(256 / 8);
+        crypto.getRandomValues(nonceArr)
+        const nonce = Bytes.from(nonceArr).hex();
+        const solution_text = `((${prefix0x(nonce)} (${prefix0x(req.target)} ${req.amount} ())))`;
+        const getPuzAnnoMsg = async (puz: string, solution: string): Promise<Uint8Array> => {
+          const output = await puzzle.calcPuzzleResult(puz, solution);
+          const conds = puzzle.parseConditions(output);
+          const cannos = conds.filter(_ => _.code == ConditionOpcode.CREATE_PUZZLE_ANNOUNCEMENT);
+          if (cannos.length != 1) throw new Error("Unexpected result of create puzzle");
+          const canno = cannos[0];
+          return canno.args[0] as Uint8Array;
+        };
+        const msg = await getPuzAnnoMsg(puzzle_reveal_text, solution_text);
+        puz_anno_msgs.push(msg);
+
+        const puzzle_reveal = prefix0x(await puzzle.encodePuzzle(puzzle_reveal_text));
+        const solution = prefix0x(await puzzle.encodePuzzle(solution_text));
+
+        spends.push({ coin, solution, puzzle_reveal })
+      }
+      else {
+        throw new Error("Not implemented: requested of CAT");
+      }
+    }
+
+    if (puz_anno_msgs.length != 1) throw new Error("unexpected puzzle annocement message number");
+
+    // genreate offered
+    for (let i = 0; i < offered.length; i++) {
+      const off = offered[i];
+      if (off.id) {//CAT
+        for (let j = 0; j < off.plan.coins.length; j++) {
+          const coin = off.plan.coins[j];
+
+          const conds: ConditionType[] = [];
+          for (let k = 0; k < puz_anno_msgs.length; k++) {
+            const msg = puz_anno_msgs[k];
+            const puz_anno_id = this.sha256(coin.puzzle_hash, msg);
+            conds.push(CoinConditions.ASSERT_COIN_ANNOUNCEMENT(puz_anno_id));
+          }
+
+          const css = await catBundle.generateCoinSpends(off.plan, puzzles, conds, getPuzzle);
+          spends.push(...css);
+        }
+      }
+    }
+
+    // combine into one spendbundle
+    return transfer.getSpendBundle(spends, puzzles);
+  }
+
+  public sha256(...args: (string | Uint8Array)[]): string {
+    const cont = new Uint8Array(args.map(_ => Bytes.from(_, "hex").raw()).reduce((acc, cur) => [...acc, ...cur], [] as number[]));
+    const result = Bytes.SHA256(cont);
+    return prefix0x(result.hex());
+  }
 
   private async uncurry(puz: string): Promise<UncurriedPuzzle> {
     const curried = assemble(puz);
@@ -167,6 +298,49 @@ class Offer {
     return bundle.coin_spends.filter(_ => _.coin.parent_coin_info == this.EmptyParent)
   }
 }
+function getUint16Buffer(number: number): Buffer {
+  const buf = Buffer.alloc(2);
+  buf.writeUInt16BE(number);
+  return buf;
+}
+
+function getUint32Buffer(number: number): Buffer {
+  const buf = Buffer.alloc(4);
+  buf.writeUInt32BE(number);
+  return buf;
+}
+
+function getUint64Buffer(number: bigint): Buffer {
+  const buf = Buffer.alloc(8);
+  writeBigUInt64BE(buf, number);
+  return buf;
+}
+
+// due to unknown `writeBigUInt64BE not a function` error, get following code from https://github.com/feross/buffer/blob/master/index.js#L1516
+function writeBigUInt64BE(buf: Buffer, value: bigint, offset = 0) {
+  return wrtBigUInt64BE(buf, value, offset)
+}
+
+function wrtBigUInt64BE(buf: Buffer, value: bigint, offset: number) {
+
+  let lo = Number(value & BigInt(0xffffffff))
+  buf[offset + 7] = lo
+  lo = lo >> 8
+  buf[offset + 6] = lo
+  lo = lo >> 8
+  buf[offset + 5] = lo
+  lo = lo >> 8
+  buf[offset + 4] = lo
+  let hi = Number(value >> BigInt(32) & BigInt(0xffffffff))
+  buf[offset + 3] = hi
+  hi = hi >> 8
+  buf[offset + 2] = hi
+  hi = hi >> 8
+  buf[offset + 1] = hi
+  hi = hi >> 8
+  buf[offset] = hi
+  return offset + 8
+}
 
 export interface UncurriedPuzzle {
   module: string;
@@ -177,6 +351,11 @@ export interface OfferEntity {
   id: string;
   amount: bigint;
   target: string;
+}
+
+export interface OfferPlan {
+  id: string;
+  plan: TokenSpendPlan;
 }
 
 export interface OfferSummary {

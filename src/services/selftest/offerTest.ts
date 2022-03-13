@@ -43,4 +43,7 @@ export async function testOffer(): Promise<void> {
     assert(expect.coin_spends[i].coin.parent_coin_info, bundle.coin_spends[i].coin.parent_coin_info);
     assert(expect.coin_spends[i].coin.puzzle_hash, bundle.coin_spends[i].coin.puzzle_hash);
   }
+  
+  const encoded = await offer.encode(bundle);
+  assert(offerText, encoded);
 }
