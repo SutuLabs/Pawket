@@ -1,11 +1,11 @@
 <template>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">{{ $t("send.ui.title.send") }}</p>
+      <p class="modal-card-title">Take Offer</p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
-      <b-field label="Offer" message="paste offer here, e.g. offer1...">
+      <b-field label="Offer" :message="offerText ? '' : 'paste offer here, e.g. offer1...'">
         <b-input type="textarea" v-model="offerText" @input="updateOffer()"></b-input>
       </b-field>
       <b-field v-if="summary" label="Information">
@@ -14,7 +14,10 @@
             <li>{{ sumkey }}</li>
             <li class="pt-1" v-for="(ent, idx) in arr" :key="idx">
               <b-taglist attached>
-                <b-tag v-if="ent.id" type="is-info" :title="ent.id">CAT {{ ent.id.slice(0, 7) + "..." }}</b-tag>
+                <b-tag v-if="ent.id && cats[ent.id]" type="is-info" :title="cats[ent.id] + '(' + ent.id + ')'">{{
+                  cats[ent.id]
+                }}</b-tag>
+                <b-tag v-else-if="ent.id" type="is-info" :title="ent.id">CAT {{ ent.id.slice(0, 7) + "..." }}</b-tag>
                 <b-tag v-else type="is-info">XCH</b-tag>
 
                 <b-tag type="">{{ ent.amount }}</b-tag>
@@ -54,17 +57,17 @@
 <script lang="ts">
 import { Component, Vue, Prop, Emit } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
-import { SpendBundle } from '@/models/wallet';
-import offer, { OfferSummary } from '@/services/transfer/offer';
-import { AccountEntity } from '@/store/modules/account';
+import { SpendBundle } from "@/models/wallet";
+import offer, { OfferSummary } from "@/services/transfer/offer";
+import { AccountEntity } from "@/store/modules/account";
+import { prefix0x } from "@/services/coin/condition";
 
 @Component({
   components: {
     KeyBox,
   },
 })
-export default class OfferManagement extends Vue {
-
+export default class TakeOffer extends Vue {
   @Prop() private account!: AccountEntity;
   @Prop() private inputOfferText!: string;
   public offerText = "";
@@ -80,6 +83,10 @@ export default class OfferManagement extends Vue {
   @Emit("close")
   close(): void {
     return;
+  }
+
+  get cats(): { [id: string]: string } {
+    return Object.assign({}, ...this.account.cats.map((_) => ({ [prefix0x(_.id)]: _.name })));
   }
 
   mounted(): void {
@@ -98,5 +105,4 @@ export default class OfferManagement extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

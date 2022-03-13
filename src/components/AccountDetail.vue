@@ -73,7 +73,7 @@
       <b-tooltip :label="$t('accountDetail.ui.tooltip.donate')" multilined position="is-right">
         <b-button @click="openDonation()" size="is-large">❤️</b-button>
       </b-tooltip>
-      <b-tooltip v-if="debugMode" :label="$t('accountDetail.ui.tooltip.offer')" multilined position="is-right">
+      <b-tooltip :label="$t('accountDetail.ui.tooltip.offer')" multilined position="is-right">
         <b-button @click="openOfferManagement()" size="is-large" class="mx-5">💱</b-button>
       </b-tooltip>
     </div>
@@ -91,7 +91,7 @@ import KeyBox from "@/components/KeyBox.vue";
 import Send from "./Send.vue";
 import { demojo } from "@/filters/unitConversion";
 import { TokenInfo, AccountEntity, AccountToken } from "@/store/modules/account";
-import OfferManagement from "./OfferManagement.vue";
+import TakeOffer from './Offer/Take.vue';
 
 type Mode = "Verify" | "Create";
 
@@ -226,7 +226,7 @@ export default class AccountDetail extends Vue {
   openOfferManagement(): void {
     this.$buefy.modal.open({
       parent: this,
-      component: OfferManagement,
+      component: TakeOffer,
       hasModalCard: true,
       trapFocus: true,
       canCancel: ["x"],
