@@ -29,7 +29,7 @@
             </b-progress>
           </b-field>
           <b-field :label="$t('verifyPassword.ui.label.reEnter')" :type="isMatch ? '' : 'is-danger'" label-position="on-border">
-            <b-input type="password" @input.native.enter="checkMatch()" v-model="repassword"></b-input>
+            <b-input type="password" @input.native.enter="checkMatch()" @keyup.native.enter="create()" v-model="repassword"></b-input>
           </b-field>
           <p class="help is-danger" v-if="!isMatch">{{ $t("verifyPassword.message.error.passwordNotMatch") }}</p>
           <b-button @click="create()" type="is-success" :disabled="!isMatch" expanded>{{
