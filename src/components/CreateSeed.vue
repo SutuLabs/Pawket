@@ -16,13 +16,13 @@
         <p class="is-size-4">{{ $t("createSeed.ui.text.importMenu.title") }}</p>
         <div class="columns">
           <div class="column is-half">
-            <div class="menu-btn" @click="import12()">
+            <div class="menu-btn is-clickable" @click="import12()">
               <h2 class="is-size-2 menu-title">{{ $t("createSeed.ui.button.12word") }}</h2>
               <p class="is-size-6">{{ $t("createSeed.ui.button.import12") }}</p>
             </div>
           </div>
           <div class="column is-half">
-            <div class="menu-btn" @click="import24()">
+            <div class="menu-btn is-clickable" @click="import24()">
               <h2 class="is-size-2 menu-title-black">{{ $t("createSeed.ui.button.24word") }}</h2>
               <p class="is-size-6">{{ $t("createSeed.ui.button.import24") }}</p>
             </div>
