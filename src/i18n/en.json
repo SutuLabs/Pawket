@@ -61,7 +61,8 @@
       },
       "error": {
         "passwordNotMatch": "Password does not match",
-        "incorrectPassword": "Incorrect password"
+        "incorrectPassword": "Incorrect password",
+        "passwordEmpty": "Password can not be empty"
       },
       "tip": {
         "weakPassword": "Weak",

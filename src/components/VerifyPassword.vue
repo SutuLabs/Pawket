@@ -20,16 +20,22 @@
 
         <section v-if="mode == 'Create'">
           <h1 class="title is-4">{{ $t("verifyPassword.ui.title.createPassword") }}</h1>
-          <b-field :label="$t('verifyPassword.ui.label.password')" label-position="on-border">
+          <b-field :label="$t('verifyPassword.ui.label.password')" :type="isEmpty ? 'is-danger' : ''" label-position="on-border">
             <b-input type="password" v-model="password" @input.native.enter="checkStrength()"></b-input>
           </b-field>
+          <p class="help is-danger" v-if="isEmpty">{{ $t("verifyPassword.message.error.passwordEmpty") }}</p>
           <b-field>
             <b-progress :type="strengthClass" :value="passwordStrength" show-value v-show="showStrength">
               {{ strengthMsg }}
             </b-progress>
           </b-field>
           <b-field :label="$t('verifyPassword.ui.label.reEnter')" :type="isMatch ? '' : 'is-danger'" label-position="on-border">
-            <b-input type="password" @input.native.enter="checkMatch()" @keyup.native.enter="create()" v-model="repassword"></b-input>
+            <b-input
+              type="password"
+              @input.native.enter="checkMatch()"
+              @keyup.native.enter="create()"
+              v-model="repassword"
+            ></b-input>
           </b-field>
           <p class="help is-danger" v-if="!isMatch">{{ $t("verifyPassword.message.error.passwordNotMatch") }}</p>
           <b-button @click="create()" type="is-success" :disabled="!isMatch" expanded>{{
@@ -54,6 +60,7 @@ export default class VerifyPassword extends Vue {
   public repassword = "";
   public isCorrect = true;
   public isMatch = true;
+  public isEmpty = false;
   public passwordStrength = 0;
   public strengthMsg = "";
   public strengthClass: "is-danger" | "is-warning" | "is-success" = "is-danger";
@@ -90,12 +97,20 @@ export default class VerifyPassword extends Vue {
   }
 
   create(): void {
+    this.checkStrength();
+    this.checkMatch();
+    if (this.isEmpty || !this.isMatch) return;
     if (this.repassword != this.password) return;
     store.dispatch("setPassword", this.password);
   }
 
   checkStrength(): void {
     this.passwordStrength = 0;
+    if (this.password == "") {
+      this.isEmpty = true;
+      return;
+    }
+    this.isEmpty = false;
     if (this.password.length > 6) {
       this.passwordStrength += 60;
     }
