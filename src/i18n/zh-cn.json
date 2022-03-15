@@ -61,7 +61,8 @@
       },
       "error": {
         "passwordNotMatch": "密码不匹配",
-        "incorrectPassword": "密码不正确"
+        "incorrectPassword": "密码不正确",
+        "passwordEmpty": "密码不能为空"
       },
       "tip": {
         "weakPassword": "弱",
