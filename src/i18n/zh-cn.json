@@ -130,7 +130,10 @@
       },
       "tooltip": {
         "donate": "捐赠开发者",
-        "offer": "发起邀约"
+        "offer": "发起邀约",
+        "setting": "设置",
+        "address": "地址",
+        "lock": "锁定"
       }
     },
     "message": {
@@ -221,6 +224,9 @@
         "revealMnemonic": "显示助记词",
         "confirm": "确认",
         "cancel": "取消"
+      },
+      "tooltip": {
+        "copy": "复制"
       }
     },
     "message": {
@@ -238,6 +244,14 @@
         "addBySerial": "新增序列账户",
         "addByPassword": "新增密码账户",
         "addByLegacy": "导入 Chia 客户端账户（24 词）"
+      },
+      "tooltip": {
+        "delete": "删除",
+        "edit": "编辑名称",
+        "details": "查看详情",
+        "addBySerial": "主账户衍生的序列钱包。",
+        "addByPassword": "通过密码创建的新钱包，同时拥有助记词和密码，才能进入钱包。",
+        "addByLegacy": "Chia 客户端钱包。"
       }
     },
     "message": {
@@ -277,6 +291,9 @@
       },
       "button": {
         "close": "关闭"
+      },
+      "tooltip": {
+        "copy": "复制"
       }
     }
   },
@@ -310,7 +327,8 @@
         "submitted": "已经提交进内存池，请等待确认"
       },
       "tooltip": {
-        "singleCoinExplanation": "当前仅支持单币模式"
+        "singleCoinExplanation": "当前仅支持单币模式",
+        "qr": "扫描二维码"
       },
       "span": {
         "loading": "载入中",

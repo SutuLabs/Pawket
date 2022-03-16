@@ -2,15 +2,21 @@
   <div class="container">
     <div class="box has-text-centered" v-if="account && account.key">
       <section>
-        <b-button class="is-pulled-left" @click="configureAccount()">⚙️</b-button>
-        <b-button class="is-pulled-right" @click="lock()">🔒</b-button>
+        <b-tooltip :label="$t('accountDetail.ui.tooltip.setting')" class="is-pulled-left">
+          <b-button @click="configureAccount()">⚙️</b-button>
+        </b-tooltip>
+        <b-tooltip :label="$t('accountDetail.ui.tooltip.lock')" class="is-pulled-right">
+          <b-button @click="lock()">🔒</b-button>
+        </b-tooltip>
         <b-button class="is-pulled-right" @click="selectAccount()">{{ account.name }}: {{ account.key.fingerprint }}</b-button>
         <br />
         <div>
           <h2 class="is-size-3 py-5">
             <span v-if="account.tokens && account.tokens.hasOwnProperty('XCH')">
               {{ account.tokens["XCH"].amount | demojo }}
-              <a class="is-size-6" href="javascript:void(0)" @click="openLink(account.tokens['XCH'])">⚓</a>
+              <b-tooltip :label="$t('accountDetail.ui.tooltip.address')">
+                <a class="is-size-6" href="javascript:void(0)" @click="openLink(account.tokens['XCH'])">⚓</a>
+              </b-tooltip>
             </span>
             <span v-else>- XCH</span>
             <br />
@@ -63,7 +69,7 @@
       </b-tabs>
     </div>
     <div class="box">
-      <h2 class="has-text-weight-bold is-size-4 pb-5">{{ $t('accountDetail.ui.title.dApps')}}</h2>
+      <h2 class="has-text-weight-bold is-size-4 pb-5">{{ $t("accountDetail.ui.title.dApps") }}</h2>
       <b-tooltip :label="$t('accountDetail.ui.tooltip.donate')" multilined position="is-right">
         <b-button @click="openDonation()" size="is-large">❤️</b-button>
       </b-tooltip>
@@ -85,7 +91,7 @@ import KeyBox from "@/components/KeyBox.vue";
 import Send from "./Send.vue";
 import { demojo } from "@/filters/unitConversion";
 import { TokenInfo, AccountEntity, AccountToken } from "@/store/modules/account";
-import OfferManagement from './OfferManagement.vue';
+import OfferManagement from "./OfferManagement.vue";
 
 type Mode = "Verify" | "Create";
 
@@ -162,7 +168,7 @@ export default class AccountDetail extends Vue {
       component: AccountConfigure,
       hasModalCard: true,
       trapFocus: true,
-      canCancel: ['x'],
+      canCancel: ["x"],
       props: { account: this.account },
     });
   }
@@ -183,7 +189,7 @@ export default class AccountDetail extends Vue {
       component: Send,
       hasModalCard: true,
       trapFocus: true,
-      canCancel: ['x'],
+      canCancel: ["x"],
       props: { account: this.account },
     });
   }
@@ -204,7 +210,7 @@ export default class AccountDetail extends Vue {
       component: Send,
       hasModalCard: true,
       trapFocus: true,
-      canCancel: ['x'],
+      canCancel: ["x"],
       props: {
         account: this.account,
         inputAddress: "xch1kjllpsx4mz9gh36clzmzr69kze965almufz7vrch5xq3jymlsjjsysq7uh",
@@ -223,7 +229,7 @@ export default class AccountDetail extends Vue {
       component: OfferManagement,
       hasModalCard: true,
       trapFocus: true,
-      canCancel: ['x'],
+      canCancel: ["x"],
       props: {
         account: this.account,
       },

@@ -11,21 +11,33 @@
       <a class="panel-block" v-for="(account, idx) in accounts" :key="idx">
         <span class="panel-icon">✨</span>
         <span @click="select(idx)">{{ account.name }}: {{ account.key.fingerprint }} [{{ account.type }}]</span>
-        <span class="is-pulled-right" @click="remove(idx)" v-if="idx > 0">🗑️</span>
-        <span class="is-pulled-right" @click="rename(idx)">📝️</span>
-        <span class="is-pulled-right" @click="showExport(account)">🖨️️</span>
+        <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.delete')">
+          <span class="is-pulled-right" @click="remove(idx)" v-if="idx > 0">🗑️</span>
+        </b-tooltip>
+        <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.edit')">
+          <span class="is-pulled-right" @click="rename(idx)">📝️</span>
+        </b-tooltip>
+        <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.details')">
+          <span class="is-pulled-right" @click="showExport(account)">🖨️️</span>
+        </b-tooltip>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addByPassword()">
-        <span class="panel-icon">➕</span>
-        {{ $t("accountList.ui.button.addByPassword") }}
+        <b-tooltip :label="$t('accountList.ui.tooltip.addByPassword')" position="is-right">
+          <span class="panel-icon">➕</span>
+          {{ $t("accountList.ui.button.addByPassword") }}
+        </b-tooltip>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addBySerial()">
-        <span class="panel-icon">➕</span>
-        {{ $t("accountList.ui.button.addBySerial") }}
+        <b-tooltip :label="$t('accountList.ui.tooltip.addBySerial')" position="is-right">
+          <span class="panel-icon">➕</span>
+          {{ $t("accountList.ui.button.addBySerial") }}
+        </b-tooltip>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addByLegacy()">
-        <span class="panel-icon">➕</span>
-        {{ $t("accountList.ui.button.addByLegacy") }}
+        <b-tooltip :label="$t('accountList.ui.tooltip.addByLegacy')" position="is-right">
+          <span class="panel-icon">➕</span>
+          {{ $t("accountList.ui.button.addByLegacy") }}
+        </b-tooltip>
       </a>
     </section>
   </div>
@@ -185,7 +197,7 @@ export default class AccountList extends Vue {
       },
       trapFocus: true,
       closeOnConfirm: false,
-      canCancel: ['button'],
+      canCancel: ["button"],
       cancelText: this.$tc("accountExport.ui.button.cancel"),
       confirmText: this.$tc("accountExport.ui.button.confirm"),
       onConfirm: async (password, { close }) => {
@@ -203,7 +215,7 @@ export default class AccountList extends Vue {
           component: MnemonicExport,
           hasModalCard: true,
           trapFocus: true,
-          canCancel: ['x'],
+          canCancel: ["x"],
           props: { mnemonic: store.state.vault.seedMnemonic },
         });
       },

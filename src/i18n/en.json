@@ -130,7 +130,10 @@
       },
       "tooltip": {
         "donate": "Donate to Support Development",
-        "offer": "Take Offer"
+        "offer": "Take Offer",
+        "setting": "Settings",
+        "address": "Addresses",
+        "lock": "Lock"
       }
     },
     "message": {
@@ -221,6 +224,9 @@
         "revealMnemonic": "Reveal Mnemonic",
         "confirm": "Confirm",
         "cancel": "Cancel"
+      },
+      "tooltip": {
+        "copy": "Copy"
       }
     },
     "message": {
@@ -238,6 +244,14 @@
         "addBySerial": "Add by Serial",
         "addByPassword": "Add by Password",
         "addByLegacy": "Import Chia Client 24 Mnemonic Words"
+      },
+      "tooltip": {
+        "delete": "Delete",
+        "edit": "Edit",
+        "details": "Details",
+        "addBySerial": "A serial wallet derived from the master account.",
+        "addByPassword": "New wallet created with password. You can enter the wallet only if you have the mnemonic and password at the same time.",
+        "addByLegacy": "Chia client wallet."
       }
     },
     "message": {
@@ -277,6 +291,9 @@
       },
       "button": {
         "close": "Close"
+      },
+      "tooltip": {
+        "copy": "Copy"
       }
     }
   },
@@ -310,7 +327,8 @@
         "submitted": "Submitted to memory pool."
       },
       "tooltip": {
-        "singleCoinExplanation": "Currently only support one coin mode, mix coin send is under development."
+        "singleCoinExplanation": "Currently only support one coin mode, mix coin send is under development.",
+        "qr": "Scan QR"
       },
       "span": {
         "loading": "Loading",

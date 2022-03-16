@@ -17,9 +17,11 @@
       <b-field :label="$t('send.ui.label.address')">
         <b-input v-model="address" @input="reset()" expanded :disabled="!addressEditable"></b-input>
         <p class="control">
-          <b-button @click="scanQrCode()" :disabled="!addressEditable">
-            <b-icon icon="qrcode"></b-icon>
-          </b-button>
+          <b-tooltip :label="$t('send.ui.tooltip.qr')">
+            <b-button @click="scanQrCode()" :disabled="!addressEditable">
+              <b-icon icon="qrcode"></b-icon>
+            </b-button>
+          </b-tooltip>
         </p>
       </b-field>
       <b-field :message="amountMessage">
