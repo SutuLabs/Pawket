@@ -17,7 +17,7 @@
                 @click="address = addr.address"
               >
                 <template #label>
-                  {{ addressSlice(addr.address) }}
+                  {{ addr.address | addressSlice }}
                   [{{ addr.coins.filter((_) => _.coin && !_.spent).length }}]
                 </template>
               </b-menu-item>
@@ -49,12 +49,14 @@ import store from "@/store/index";
 import { AccountEntity, AccountToken } from "@/store/modules/account";
 import KeyBox from "@/components/KeyBox.vue";
 import QrcodeVue from "qrcode.vue";
+import { addressSlice } from "@/filters/unitConversion";
 
 @Component({
   components: {
     KeyBox,
     QrcodeVue,
   },
+  filters: { addressSlice },
 })
 export default class ExplorerLink extends Vue {
   @Prop() private account!: AccountEntity;
@@ -67,10 +69,6 @@ export default class ExplorerLink extends Vue {
 
   mounted(): void {
     Vue.set(this, "address", this.token.addresses[0].address);
-  }
-
-  addressSlice(address: string): string {
-    return address.slice(0, 7) + "..." + address.slice(-4);
   }
 
   @Emit("close")

@@ -3,4 +3,8 @@ export function demojo(mojo: null | number, unit = "XCH", decimal = 12, digits =
     return Number((mojo / Math.pow(10, decimal)).toFixed(digits)) + " " + unit;
 }
 
-export default { demojo };
+export function addressSlice(address: string, separator = "...", start = 0, end = 7, tail = 4): string {
+  return address.slice(start, end) + separator + address.slice(-tail);
+}
+
+export default { demojo, addressSlice };

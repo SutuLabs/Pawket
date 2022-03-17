@@ -6,7 +6,7 @@
     <div class="control mr-2">
       <div class="tags has-addons">
         <span class="tag is-info is-light">
-          <a @click="copy(value)">{{ display ? display : value.slice(0,7) + "..." + value.slice(-4) }}</a>
+          <a @click="copy(value)">{{ display ? display : $options.filters.addressSlice(value) }}</a>
         </span>
         <!-- <span class="tag is-info">
                       {{ machine.name }}
@@ -19,8 +19,11 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import store from "@/store";
+import { addressSlice } from "@/filters/unitConversion";
 
-@Component
+@Component({
+  filters: { addressSlice }
+})
 export default class KeyBox extends Vue {
   @Prop() private value!: string;
   @Prop() private display!: string;
