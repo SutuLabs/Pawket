@@ -1,9 +1,12 @@
 <template>
-  <b-tooltip v-if="value" :label="tooltip ? tooltip : value">
+  <b-tooltip v-if="value" :multilined="multilined == undefined ? true : multilined">
+    <template v-slot:content>
+      <p class="break-all">{{ tooltip ? tooltip : value }}</p>
+    </template>
     <div class="control mr-2">
       <div class="tags has-addons">
         <span class="tag is-info is-light">
-          <a @click="copy(value)">{{ display ? display : value.slice(0, Math.min(value.length, length || defaultLength)) }}</a>
+          <a @click="copy(value)">{{ display ? display : value.slice(0,7) + "..." + value.slice(-4) }}</a>
         </span>
         <!-- <span class="tag is-info">
                       {{ machine.name }}
@@ -22,7 +25,7 @@ export default class KeyBox extends Vue {
   @Prop() private value!: string;
   @Prop() private display!: string;
   @Prop() private tooltip!: string;
-  @Prop() private length!: number;
+  @Prop() private multilined!: boolean;
 
   private defaultLength = 20;
 
@@ -32,4 +35,8 @@ export default class KeyBox extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.break-all {
+  word-break: break-all;
+}
+</style>

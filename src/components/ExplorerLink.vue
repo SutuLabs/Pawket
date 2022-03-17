@@ -17,8 +17,8 @@
                 @click="address = addr.address"
               >
                 <template #label>
-                  {{ addr.address.slice(0, 9) + "..." }}
-                  {{ addr.coins.filter((_) => _.coin && !_.spent).length }}
+                  {{ addr.address.slice(0, 7) + "..." + addr.address.slice(-4)}}
+                  [{{ addr.coins.filter((_) => _.coin && !_.spent).length }}]
                 </template>
               </b-menu-item>
             </b-menu-list>
