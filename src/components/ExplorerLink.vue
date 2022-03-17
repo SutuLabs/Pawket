@@ -17,7 +17,7 @@
                 @click="address = addr.address"
               >
                 <template #label>
-                  {{ addr.address.slice(0, 7) + "..." + addr.address.slice(-4) }}
+                  {{ addressSlice(addr.address) }}
                   [{{ addr.coins.filter((_) => _.coin && !_.spent).length }}]
                 </template>
               </b-menu-item>
@@ -34,7 +34,7 @@
           ></qrcode-vue>
           <qrcode-vue class="is-hidden-tablet" :value="externalExplorerPrefix + address" size="100"></qrcode-vue>
           <key-box :value="address"></key-box>
-          <b-tooltip :label="$t('explorerLink.ui.tooltip.blockchainExpl')">
+          <b-tooltip :label="$t('explorerLink.ui.tooltip.blockchainExplorer')">
             <a target="_blank" :href="externalExplorerPrefix + address">⚓</a>
           </b-tooltip>
         </div>
@@ -67,6 +67,10 @@ export default class ExplorerLink extends Vue {
 
   mounted(): void {
     Vue.set(this, "address", this.token.addresses[0].address);
+  }
+
+  addressSlice(address: string): string {
+    return address.slice(0, 7) + "..." + address.slice(-4);
   }
 
   @Emit("close")

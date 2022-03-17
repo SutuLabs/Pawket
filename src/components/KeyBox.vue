@@ -1,5 +1,5 @@
 <template>
-  <b-tooltip v-if="value" :multilined="multilined == undefined ? true : multilined">
+  <b-tooltip v-if="value" :multilined="multilined === undefined ? true : multilined">
     <template v-slot:content>
       <p class="break-all">{{ tooltip ? tooltip : value }}</p>
     </template>
@@ -26,8 +26,6 @@ export default class KeyBox extends Vue {
   @Prop() private display!: string;
   @Prop() private tooltip!: string;
   @Prop() private multilined!: boolean;
-
-  private defaultLength = 20;
 
   copy(text: string): void {
     store.dispatch("copy", text);

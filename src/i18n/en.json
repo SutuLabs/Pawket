@@ -283,7 +283,7 @@
         "address": "Address"
       },
       "tooltip": {
-        "blockchainExpl": "Blockchain Explorer"
+        "blockchainExplorer": "Blockchain Explorer"
       }
     }
   },

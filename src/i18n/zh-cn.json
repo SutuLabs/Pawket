@@ -283,7 +283,7 @@
         "address": "地址"
       },
       "tooltip": {
-        "blockchainExpl": "打开区块链浏览器"
+        "blockchainExplorer": "打开区块链浏览器"
       }
     }
   },
