@@ -281,6 +281,9 @@
       },
       "label": {
         "address": "Address"
+      },
+      "tooltip": {
+        "blockchainExpl": "Blockchain Explorer"
       }
     }
   },
