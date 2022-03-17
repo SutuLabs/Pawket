@@ -17,8 +17,8 @@
                 @click="address = addr.address"
               >
                 <template #label>
-                  {{ addr.address.slice(0, 9) + "..." }}
-                  {{ addr.coins.filter((_) => _.coin && !_.spent).length }}
+                  {{ addr.address | shorten }}
+                  [{{ addr.coins.filter((_) => _.coin && !_.spent).length }}]
                 </template>
               </b-menu-item>
             </b-menu-list>
@@ -34,7 +34,9 @@
           ></qrcode-vue>
           <qrcode-vue class="is-hidden-tablet" :value="externalExplorerPrefix + address" size="100"></qrcode-vue>
           <key-box :value="address"></key-box>
-          <a target="_blank" :href="externalExplorerPrefix + address">⚓</a>
+          <b-tooltip :label="$t('explorerLink.ui.tooltip.blockchainExplorer')">
+            <a target="_blank" :href="externalExplorerPrefix + address">⚓</a>
+          </b-tooltip>
         </div>
       </div>
     </section>
@@ -47,12 +49,14 @@ import store from "@/store/index";
 import { AccountEntity, AccountToken } from "@/store/modules/account";
 import KeyBox from "@/components/KeyBox.vue";
 import QrcodeVue from "qrcode.vue";
+import { shorten } from "@/filters/addressConversion";
 
 @Component({
   components: {
     KeyBox,
     QrcodeVue,
   },
+  filters: { shorten },
 })
 export default class ExplorerLink extends Vue {
   @Prop() private account!: AccountEntity;
