@@ -4,6 +4,7 @@ import { ModuleInstance } from "@chiamine/bls-signatures";
 import * as clvm_tools from "clvm_tools/browser";
 import loadBls from "@chiamine/bls-signatures";
 import TestRunner from "@/services/selftest/runner";
+import { tc } from "../../i18n/i18n";
 
 export type SelfTestStatus = "Checking" | "Passed" | "Failed";
 export interface IAppState {
@@ -64,12 +65,12 @@ store.registerModule<IAppState>('app', {
       try {
         document.execCommand("copy");
         Notification.open({
-          message: `拷贝成功: ${copyText}`,
+          message: tc('app.message.notification.copySuccess'),
           type: "is-success",
         });
       } catch (err) {
         Notification.open({
-          message: "拷贝成功失败",
+          message: tc('app.message.notification.copyFailed'),
           type: "is-danger",
         });
       }

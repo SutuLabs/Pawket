@@ -12,6 +12,12 @@
       "button": {
         "lang": "简体中文"
       }
+    },
+    "message": {
+      "notification": {
+        "copySuccess": "拷贝成功",
+        "copyFailed": "拷贝失败"
+      }
     }
   },
   "footer": {
