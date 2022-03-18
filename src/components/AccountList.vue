@@ -69,10 +69,6 @@ export default class AccountList extends Vue {
     return;
   }
 
-  copy(text: string): void {
-    store.dispatch("copy", text);
-  }
-
   select(idx: number): void {
     store.state.account.selectedAccount = idx;
     store.dispatch("refreshBalance");

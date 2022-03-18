@@ -104,10 +104,6 @@ export default class AccountExport extends Vue {
     return;
   }
 
-  copy(text: string): void {
-    store.dispatch("copy", text);
-  }
-
   show(): void {
     this.$buefy.dialog.prompt({
       message: this.$tc("accountExport.message.inputPassword"),

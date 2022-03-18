@@ -12,6 +12,12 @@
       "button": {
         "lang": "English"
       }
+    },
+    "message": {
+      "notification": {
+        "copySuccess": "Copy Successfully",
+        "copyFailed": "Copy Failed"
+      }
     }
   },
   "footer": {
