@@ -201,12 +201,10 @@ export default class MakeOffer extends Vue {
   }
 
   async sign(): Promise<void> {
-    if (!this.availcoins) {
+    if (!this.availcoins || !this.tokenPuzzles || !this.account.firstAddress) {
       return;
     }
-    if (!this.account.firstAddress) {
-      return;
-    }
+
     const off = this.offers[0];
 
     const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
@@ -231,6 +229,11 @@ export default class MakeOffer extends Vue {
       target: change_hex,
     }));
     const bundle = await offer.generateOffer([offplan], reqs, this.tokenPuzzles);
+    // for creating unit test
+    // console.log("const offplan=", JSON.stringify([offplan], null, 2), ";");
+    // console.log("const reqs=", JSON.stringify(reqs, null, 2), ";");
+    // console.log("const bundle=", JSON.stringify(bundle, null, 2), ";");
+    // console.log("coinHandler.getAssetsRequestDetail", JSON.stringify(this.account, null, 2), ";");
     this.bundle = bundle;
     this.offerText = await offer.encode(bundle);
 

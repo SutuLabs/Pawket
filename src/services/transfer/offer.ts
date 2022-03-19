@@ -197,6 +197,7 @@ class Offer {
     offered: OfferPlan[],
     requested: OfferEntity[],
     puzzles: TokenPuzzleDetail[],
+    nonceHex: string | null = null,
     getPuzzle: GetPuzzleApiCallback | null = null,
   ): Promise<SpendBundle> {
     if (offered.length != 1 || requested.length != 1) throw new Error("currently, only support single offer/request");
@@ -206,9 +207,13 @@ class Offer {
     const cat_settlement_tgt = "0xdf4ec566122b8507fc920d03b04d7021909d5bcd58beed99710ba9bea58f970b";
     const spends: CoinSpend[] = [];
     const puz_anno_msgs: Uint8Array[] = [];
-    const nonceArr = new Uint8Array(256 / 8);
-    crypto.getRandomValues(nonceArr)
-    const nonce = Bytes.from(nonceArr).hex();
+    const getNonce = () => {
+      const nonceArr = new Uint8Array(256 / 8);
+      crypto.getRandomValues(nonceArr)
+      return Bytes.from(nonceArr).hex();
+    }
+    const nonce = nonceHex ?? getNonce();
+    // console.log("nonce=",nonce)
     const getPuzAnnoMsg = async (puz: string, solution: string): Promise<Uint8Array> => {
       const output = await puzzle.calcPuzzleResult(puz, solution);
       const conds = puzzle.parseConditions(output);

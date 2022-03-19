@@ -1,12 +1,16 @@
-import offer from "../transfer/offer";
-import { assert } from "./runner";
+import { GetParentPuzzleResponse } from "@/models/api";
+import { SpendBundle } from "@/models/wallet";
+import { AccountEntity } from "@/store/modules/account";
+import offer, { OfferEntity, OfferPlan } from "../transfer/offer";
+import { assert, assertBundle } from "./runner";
+import coinHandler from "@/services/transfer/coin";
 
-export async function testOffer(): Promise<void> {
+export async function testOfferEncoding(): Promise<void> {
   const expect = {
     'aggregated_signature': '0x98c70db3903a9804825c68d92d0ac911986a56815966dcd9475dd354600aed6a8c224b318376ad85b3ed484c51a31b770ed22e72388e3b822a1a5917ed896f41153671856b2f4f903680fc7fa28955908f693d8b0f5dba002d3009dff320c000',
     'coin_spends': [{
       'coin': {
-        'amount': 0,
+        'amount': 0n,
         'parent_coin_info': '0x0000000000000000000000000000000000000000000000000000000000000000',
         'puzzle_hash': '0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79'
       },
@@ -15,7 +19,7 @@ export async function testOffer(): Promise<void> {
     },
     {
       'coin': {
-        'amount': 1337000,
+        'amount': 1337000n,
         'parent_coin_info': '0x16f79de5eb9f31ce2ec65b67c7c6a8d5d44ec8ef35dd6ecbc9c6c9ab37b5e7f1',
         'puzzle_hash': '0xd8d5f15deb6861bb977d76f26b8db6cabc1a21c8fd5ff7ec8e7703c256ee285f'
       },
@@ -34,16 +38,175 @@ export async function testOffer(): Promise<void> {
   assert("0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79", summary.offered[0].target);
   assert("0xf1c3875cc0f8cd4926d8a9423a244c30af5b7dfa7a25c947c570634423ca2157", summary.requested[0].target);
 
-  assert(expect.aggregated_signature, bundle.aggregated_signature);
-  assert(expect.coin_spends.length, bundle.coin_spends.length);
-  for (let i = 0; i < expect.coin_spends.length; i++) {
-    assert(expect.coin_spends[i].puzzle_reveal, bundle.coin_spends[i].puzzle_reveal);
-    assert(expect.coin_spends[i].solution, bundle.coin_spends[i].solution);
-    assert(expect.coin_spends[i].coin.amount, Number(bundle.coin_spends[i].coin.amount));
-    assert(expect.coin_spends[i].coin.parent_coin_info, bundle.coin_spends[i].coin.parent_coin_info);
-    assert(expect.coin_spends[i].coin.puzzle_hash, bundle.coin_spends[i].coin.puzzle_hash);
-  }
-  
+  assertBundle(expect, bundle);
+
   const encoded = await offer.encode(bundle);
   assert(offerText, encoded);
+}
+
+export async function testMakeOffer1(): Promise<void> {
+  const expect: SpendBundle = {
+    "aggregated_signature": "0xb2db6d95e1149b16f98935903aa8f08d39d508c1409eba887df167e51d4f576847010f58dc0d8d00798be26251aa2395105784e83697e36764b45dbf3c43cd4a93e794ab09470b7b136f8db497e0ad896fd4f4d8b408736b67559b035b758e58",
+    "coin_spends": [
+      {
+        "coin": {
+          "parent_coin_info": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "puzzle_hash": "0xdf4ec566122b8507fc920d03b04d7021909d5bcd58beed99710ba9bea58f970b",
+          "amount": 0n,
+        },
+        "solution": "0xffffa0e9aea70aeed9275834abcff268016d0f2961957ff5dcd037413eeb2dbc06012bffffa0907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96ff0affffa0907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac9680808080",
+        "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ff5effff04ff02ffff04ffff04ff05ffff04ffff0bff2cff0580ffff04ff0bff80808080ffff04ffff02ff17ff2f80ffff04ff5fffff04ffff02ff2effff04ff02ffff04ff17ff80808080ffff04ffff0bff82027fff82057fff820b7f80ffff04ff81bfffff04ff82017fffff04ff8202ffffff04ff8205ffffff04ff820bffff80808080808080808080808080ffff04ffff01ffffffff81ca3dff46ff0233ffff3c04ff01ff0181cbffffff02ff02ffff03ff05ffff01ff02ff32ffff04ff02ffff04ff0dffff04ffff0bff22ffff0bff2cff3480ffff0bff22ffff0bff22ffff0bff2cff5c80ff0980ffff0bff22ff0bffff0bff2cff8080808080ff8080808080ffff010b80ff0180ffff02ffff03ff0bffff01ff02ffff03ffff09ffff02ff2effff04ff02ffff04ff13ff80808080ff820b9f80ffff01ff02ff26ffff04ff02ffff04ffff02ff13ffff04ff5fffff04ff17ffff04ff2fffff04ff81bfffff04ff82017fffff04ff1bff8080808080808080ffff04ff82017fff8080808080ffff01ff088080ff0180ffff01ff02ffff03ff17ffff01ff02ffff03ffff20ff81bf80ffff0182017fffff01ff088080ff0180ffff01ff088080ff018080ff0180ffff04ffff04ff05ff2780ffff04ffff10ff0bff5780ff778080ff02ffff03ff05ffff01ff02ffff03ffff09ffff02ffff03ffff09ff11ff7880ffff0159ff8080ff0180ffff01818f80ffff01ff02ff7affff04ff02ffff04ff0dffff04ff0bffff04ffff04ff81b9ff82017980ff808080808080ffff01ff02ff5affff04ff02ffff04ffff02ffff03ffff09ff11ff7880ffff01ff04ff78ffff04ffff02ff36ffff04ff02ffff04ff13ffff04ff29ffff04ffff0bff2cff5b80ffff04ff2bff80808080808080ff398080ffff01ff02ffff03ffff09ff11ff2480ffff01ff04ff24ffff04ffff0bff20ff2980ff398080ffff010980ff018080ff0180ffff04ffff02ffff03ffff09ff11ff7880ffff0159ff8080ff0180ffff04ffff02ff7affff04ff02ffff04ff0dffff04ff0bffff04ff17ff808080808080ff80808080808080ff0180ffff01ff04ff80ffff04ff80ff17808080ff0180ffffff02ffff03ff05ffff01ff04ff09ffff02ff26ffff04ff02ffff04ff0dffff04ff0bff808080808080ffff010b80ff0180ff0bff22ffff0bff2cff5880ffff0bff22ffff0bff22ffff0bff2cff5c80ff0580ffff0bff22ffff02ff32ffff04ff02ffff04ff07ffff04ffff0bff2cff2c80ff8080808080ffff0bff2cff8080808080ffff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff2effff04ff02ffff04ff09ff80808080ffff02ff2effff04ff02ffff04ff0dff8080808080ffff01ff0bff2cff058080ff0180ffff04ffff04ff28ffff04ff5fff808080ffff02ff7effff04ff02ffff04ffff04ffff04ff2fff0580ffff04ff5fff82017f8080ffff04ffff02ff7affff04ff02ffff04ff0bffff04ff05ffff01ff808080808080ffff04ff17ffff04ff81bfffff04ff82017fffff04ffff0bff8204ffffff02ff36ffff04ff02ffff04ff09ffff04ff820affffff04ffff0bff2cff2d80ffff04ff15ff80808080808080ff8216ff80ffff04ff8205ffffff04ff820bffff808080808080808080808080ff02ff2affff04ff02ffff04ff5fffff04ff3bffff04ffff02ffff03ff17ffff01ff09ff2dffff0bff27ffff02ff36ffff04ff02ffff04ff29ffff04ff57ffff04ffff0bff2cff81b980ffff04ff59ff80808080808080ff81b78080ff8080ff0180ffff04ff17ffff04ff05ffff04ff8202ffffff04ffff04ffff04ff24ffff04ffff0bff7cff2fff82017f80ff808080ffff04ffff04ff30ffff04ffff0bff81bfffff0bff7cff15ffff10ff82017fffff11ff8202dfff2b80ff8202ff808080ff808080ff138080ff80808080808080808080ff018080ffff04ffff01a072dec062874cd4d3aab892a0906688a1ae412b0109982e1797a170add88bdcdcffff04ffff01a06e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6bffff04ffff01ff02ffff01ff02ff0affff04ff02ffff04ff03ff80808080ffff04ffff01ffff333effff02ffff03ff05ffff01ff04ffff04ff0cffff04ffff02ff1effff04ff02ffff04ff09ff80808080ff808080ffff02ff16ffff04ff02ffff04ff19ffff04ffff02ff0affff04ff02ffff04ff0dff80808080ff808080808080ff8080ff0180ffff02ffff03ff05ffff01ff04ffff04ff08ff0980ffff02ff16ffff04ff02ffff04ff0dffff04ff0bff808080808080ffff010b80ff0180ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff1effff04ff02ffff04ff09ff80808080ffff02ff1effff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ff0180808080"
+      },
+      {
+        "coin": {
+          "amount": 15n,
+          "parent_coin_info": "0xd46f5f861aeb19a3ff8c7bbb73aa1797f585332eb846333d5092c7dcc75af204",
+          "puzzle_hash": "0x907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96"
+        },
+        "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0b7c28887d666be1a8d1a22148cfbf829520687b84c997d6ab40804fdd2e5ce066a78457121a467ce444a9a387e8d02b5ff018080",
+        "solution": "0xff80ffff01ffff33ffa0bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79ff0a80ffff33ffa0907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96ff0580ffff3fffa0a0bb8989800ae52b3383dcc03f1d965b8ebb9a68763699006dc2c055567bb33b8080ff8080"
+      }
+    ]
+  };
+  const expectOfferText = "offer1qqp83w76wzru6cmqvpsxygqqama36ngn6fhxtlen3xthnqm0s83gfww3vu3ld0vat8yt6ukl6tlwnhpswkcxq8dduarwhww30fhtf8sm4hnsdw57qvthkzu2acw5s6hhh9e8n4vwfy9jdfr493ww02xdequ5xnmultpg9dfhhthaeqf2ewf3qlt8lnfrj00038u39m26u5umc8r2zd2p48su46g8lemd2sne6rfdg3r7knncj78pzg4nurjm4e2uaah253uc4sl072vrxxt47vm3dt7awwchesw76hhtaesk84qx92v4qa7xa3gae0ffd9mkgdl3klw53mlkptk8yrkurt69ku5lc206cdwngp0zd2qgvnwetl8cx65a0y5tllm4fmewtcjnaltt4wcaur3hv0dcqjw8auwgl7kygtyqc6zaek84ykg0ualr0k8qphds7ad5ta9akf749wjjf5hnlwrkvyzmlv8flxd4t9dnsk87tea84r3d40pt25r3f8arj9a0tyt8t02vt0q45xeq98a0lqja3uwf8hh0ph47lhznvhprucuevrhs0zte8v0llj9v86m636h8lnlv4l6up4s82prrr8jzh7llpvtwemhvdns842ndm37w0q9aaj6w30kakvev4nrxxtjpuwssrfttmkg6r3pfkmh8fe7jsvjma3n606gy4v23773d4aepcayck7468anrlff4nllsp3m5dl5g8w7t6ry4mk8eyqjh99832zr009sndlt30t9fdk8axm8x00fx870m9xknnka45w9lwl9lgpmt80e67l9ekxz6xwpm846rvum5d90sgqxmy7umyafquze";
+
+  const offplan: OfferPlan[] = [
+    {
+      "id": "",
+      "plan": {
+        "coins": [
+          {
+            "amount": 15n,
+            "parent_coin_info": "0xd46f5f861aeb19a3ff8c7bbb73aa1797f585332eb846333d5092c7dcc75af204",
+            "puzzle_hash": "0x907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96"
+          }
+        ],
+        "targets": [
+          {
+            "address": "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79",
+            "amount": 10n,
+            "symbol": "XCH"
+          },
+          {
+            "symbol": "XCH",
+            "address": "0x907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96",
+            "amount": 5n
+          }
+        ]
+      }
+    }
+  ];
+  const reqs: OfferEntity[] = [
+    {
+      "id": "0x6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b",
+      "symbol": "BSH",
+      "amount": 10n,
+      "target": "0x907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96"
+    }
+  ];
+  const account: AccountEntity = {
+    addressRetrievalCount: 4,
+    key: {
+      privateKey: "46815978e90da660427161c265b400831ee59f9aae9a40b449fbcd67ca140590",
+      fingerprint: 0,
+      compatibleMnemonic: "",
+    },
+    name: "",
+    type: "Legacy",
+    tokens: {},
+    cats: [],
+  }
+  const tokenPuzzles = await coinHandler.getAssetsRequestDetail(account);
+
+  const nonce = "e9aea70aeed9275834abcff268016d0f2961957ff5dcd037413eeb2dbc06012b";
+  const bundle = await offer.generateOffer(offplan, reqs, tokenPuzzles, nonce, null);
+  const encoded = await offer.encode(bundle);
+
+  assertBundle(expect, bundle);
+  assert(expectOfferText, encoded);
+}
+
+export async function testMakeOffer2(): Promise<void> {
+  const expect: SpendBundle = {
+    "aggregated_signature": "0xb64e11b18f445171dc965b2d76f568cce71b0c760891739d1595fa5a5be7b38a43f625116f708d92a097a34d03a4c8e800022c22ad0b526455fbdf72bafcbb323355be84daab62a8a6beea1fbb8a6523b18964df440fe396203cddeeec0c7e3c",
+    "coin_spends": [
+      {
+        "coin": {
+          "parent_coin_info": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "puzzle_hash": "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79",
+          "amount": 0n
+        },
+        "solution": "0xffffa0cf9285b6bd7b7cfbdfdd78b17e5bc3670fb6e0952c836afcc4191a11dd4b66baffffa0907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96ff0cff80808080",
+        "puzzle_reveal": "0xff02ffff01ff02ff0affff04ff02ffff04ff03ff80808080ffff04ffff01ffff333effff02ffff03ff05ffff01ff04ffff04ff0cffff04ffff02ff1effff04ff02ffff04ff09ff80808080ff808080ffff02ff16ffff04ff02ffff04ff19ffff04ffff02ff0affff04ff02ffff04ff0dff80808080ff808080808080ff8080ff0180ffff02ffff03ff05ffff01ff04ffff04ff08ff0980ffff02ff16ffff04ff02ffff04ff0dffff04ff0bff808080808080ffff010b80ff0180ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff1effff04ff02ffff04ff09ff80808080ffff02ff1effff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080"
+      },
+      {
+        "coin": {
+          "amount": 100n,
+          "parent_coin_info": "0xd538ae235752c68078884bfb129e2c0832c2d8ed67674bde6c9a48603e6b875e",
+          "puzzle_hash": "0x9d974f53c5a3d12ef729f38f2c1603b4f4f959a033d0a6ed763fab46a7cc5577"
+        },
+        "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ff5effff04ff02ffff04ffff04ff05ffff04ffff0bff2cff0580ffff04ff0bff80808080ffff04ffff02ff17ff2f80ffff04ff5fffff04ffff02ff2effff04ff02ffff04ff17ff80808080ffff04ffff0bff82027fff82057fff820b7f80ffff04ff81bfffff04ff82017fffff04ff8202ffffff04ff8205ffffff04ff820bffff80808080808080808080808080ffff04ffff01ffffffff81ca3dff46ff0233ffff3c04ff01ff0181cbffffff02ff02ffff03ff05ffff01ff02ff32ffff04ff02ffff04ff0dffff04ffff0bff22ffff0bff2cff3480ffff0bff22ffff0bff22ffff0bff2cff5c80ff0980ffff0bff22ff0bffff0bff2cff8080808080ff8080808080ffff010b80ff0180ffff02ffff03ff0bffff01ff02ffff03ffff09ffff02ff2effff04ff02ffff04ff13ff80808080ff820b9f80ffff01ff02ff26ffff04ff02ffff04ffff02ff13ffff04ff5fffff04ff17ffff04ff2fffff04ff81bfffff04ff82017fffff04ff1bff8080808080808080ffff04ff82017fff8080808080ffff01ff088080ff0180ffff01ff02ffff03ff17ffff01ff02ffff03ffff20ff81bf80ffff0182017fffff01ff088080ff0180ffff01ff088080ff018080ff0180ffff04ffff04ff05ff2780ffff04ffff10ff0bff5780ff778080ff02ffff03ff05ffff01ff02ffff03ffff09ffff02ffff03ffff09ff11ff7880ffff0159ff8080ff0180ffff01818f80ffff01ff02ff7affff04ff02ffff04ff0dffff04ff0bffff04ffff04ff81b9ff82017980ff808080808080ffff01ff02ff5affff04ff02ffff04ffff02ffff03ffff09ff11ff7880ffff01ff04ff78ffff04ffff02ff36ffff04ff02ffff04ff13ffff04ff29ffff04ffff0bff2cff5b80ffff04ff2bff80808080808080ff398080ffff01ff02ffff03ffff09ff11ff2480ffff01ff04ff24ffff04ffff0bff20ff2980ff398080ffff010980ff018080ff0180ffff04ffff02ffff03ffff09ff11ff7880ffff0159ff8080ff0180ffff04ffff02ff7affff04ff02ffff04ff0dffff04ff0bffff04ff17ff808080808080ff80808080808080ff0180ffff01ff04ff80ffff04ff80ff17808080ff0180ffffff02ffff03ff05ffff01ff04ff09ffff02ff26ffff04ff02ffff04ff0dffff04ff0bff808080808080ffff010b80ff0180ff0bff22ffff0bff2cff5880ffff0bff22ffff0bff22ffff0bff2cff5c80ff0580ffff0bff22ffff02ff32ffff04ff02ffff04ff07ffff04ffff0bff2cff2c80ff8080808080ffff0bff2cff8080808080ffff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff2effff04ff02ffff04ff09ff80808080ffff02ff2effff04ff02ffff04ff0dff8080808080ffff01ff0bff2cff058080ff0180ffff04ffff04ff28ffff04ff5fff808080ffff02ff7effff04ff02ffff04ffff04ffff04ff2fff0580ffff04ff5fff82017f8080ffff04ffff02ff7affff04ff02ffff04ff0bffff04ff05ffff01ff808080808080ffff04ff17ffff04ff81bfffff04ff82017fffff04ffff0bff8204ffffff02ff36ffff04ff02ffff04ff09ffff04ff820affffff04ffff0bff2cff2d80ffff04ff15ff80808080808080ff8216ff80ffff04ff8205ffffff04ff820bffff808080808080808080808080ff02ff2affff04ff02ffff04ff5fffff04ff3bffff04ffff02ffff03ff17ffff01ff09ff2dffff0bff27ffff02ff36ffff04ff02ffff04ff29ffff04ff57ffff04ffff0bff2cff81b980ffff04ff59ff80808080808080ff81b78080ff8080ff0180ffff04ff17ffff04ff05ffff04ff8202ffffff04ffff04ffff04ff24ffff04ffff0bff7cff2fff82017f80ff808080ffff04ffff04ff30ffff04ffff0bff81bfffff0bff7cff15ffff10ff82017fffff11ff8202dfff2b80ff8202ff808080ff808080ff138080ff80808080808080808080ff018080ffff04ffff01a072dec062874cd4d3aab892a0906688a1ae412b0109982e1797a170add88bdcdcffff04ffff01a06e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6bffff04ffff01ff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0b7c28887d666be1a8d1a22148cfbf829520687b84c997d6ab40804fdd2e5ce066a78457121a467ce444a9a387e8d02b5ff018080ff0180808080",
+        "solution": "0xffff80ffff01ffff33ffa0bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79ff09ffffa0bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f798080ffff33ffa0907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96ff5b80ffff3fffa0ca08f84548cd1a0ef6d4c524490dc5a6c0a05e4f97bbb9e1cb12e8ee89cde91c8080ff8080ffffa00cd93529333db5ffcb7aef5a1f9610df8467ae739b083697479dbb88a82467f5ffa03eb239190ce59b4af1e461291b9185cea62d6072fd3718051a530fd8a8218bc0ff82009f80ffa034b83e2b27a38a3591a4cea279ddc2c496996cf5fe41e440045f7a14a717756fffffa0d538ae235752c68078884bfb129e2c0832c2d8ed67674bde6c9a48603e6b875effa09d974f53c5a3d12ef729f38f2c1603b4f4f959a033d0a6ed763fab46a7cc5577ff6480ffffa0d538ae235752c68078884bfb129e2c0832c2d8ed67674bde6c9a48603e6b875effa0907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96ff6480ff80ff8080"
+      }
+    ]
+  };
+  const expectOfferText = "offer1qqp83w76wzru6cmqvpsxygqqwc7hynr6hum6e0mnf72sn7uvvkpt68eyumkhelprk0adeg42nlelk2mpafrgx923m0l47ur72t4md0w4xkl7lhadmpvpwlfcn4lahqaf8tx4jluwfp9qnhh4fmds24pj58hgekdrhpa485hwephwymamj80w69wcu5wtsd0gkljrapflt946vqvrqajvz4vtwh9wzsw8rg4r40rlp0xa8cfs8f6wxmt6htmmm8zercyhdk0dw9e607c8rawhc500h0nwwlsax8nz6hm7gchrp04sa3kenlt2kljkwskt58gexq5tnlghvzr2uj8mvs6xmvs68mvs69mq30py53dnkpzuaskj3wnhyz5ame72u42nkf3dnzgddvtsnk3nvgl8ps7lr6gtp0tda697wvr65tz0gt6fmu2tul6tcflxfw6xh9087pe2sn2sd9u89wzzl6wmw5vawsmtgyz99mjgwumlrfk0pphdsuad4ta9akf7492jzt5lnl2rxwy26lv8elxd4tpdrsk87tea8hrev40pt25tsf8anj9awtythf02dtws6gpkc6qr532lylcp5yrqu2qpzd2qgvk3nzyr5825ltvl7hms3t3c0278ty5mum6h36483us7t4mxqsvull6d6wclnct84udw70kykx2get7tlq885656dv0d6ml60277gly57yacm7ftatncx6raja8hhxank44g53llm07qd6f62fx060v4u8uly34y5nmv8km5cdapazhmjp9t2sc0lrg43tws0l3hxyqzhts9yca7edx4zamejnjuwfh9rewagdr6dnwvl8avluvfqd9he9wgwtcayl9qtkzp5xhlzugx56hufa5jpjsus2ssgdq8zsqdhlqyxlmtkpqkm6v3dt2m7c678nrndx0r9r5fc4e5tfl73298a04ee0ueh2nq0eq7lfq96vtlkv3088cc9q2fga5j6a6sft5wl769h0lwcd3jpmwawuntwhfg5e0mtmy7lmj22h0d3xtjm7zlluf5qkdmhm777r2djqqqpdc5c6cvktnyr";
+
+  const offplan: OfferPlan[] = [
+    {
+      "id": "any",
+      "plan": {
+        "coins": [
+          {
+            "amount": 100n,
+            "parent_coin_info": "0xd538ae235752c68078884bfb129e2c0832c2d8ed67674bde6c9a48603e6b875e",
+            "puzzle_hash": "0x9d974f53c5a3d12ef729f38f2c1603b4f4f959a033d0a6ed763fab46a7cc5577"
+          }
+        ],
+        "targets": [
+          {
+            "address": "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79",
+            "amount": 9n,
+            "symbol": "BSH",
+            "memos": [
+              "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79"
+            ]
+          },
+          {
+            "symbol": "BSH",
+            "address": "0x907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96",
+            "amount": 91n
+          }
+        ]
+      }
+    }
+  ];
+  const reqs: OfferEntity[] = [
+    {
+      "id": "",
+      "symbol": "XCH",
+      "amount": 12n,
+      "target": "0x907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96"
+    }
+  ];
+  const account: AccountEntity = {
+    addressRetrievalCount: 4,
+    key: {
+      privateKey: "46815978e90da660427161c265b400831ee59f9aae9a40b449fbcd67ca140590",
+      fingerprint: 0,
+      compatibleMnemonic: "",
+    },
+    name: "",
+    type: "Legacy",
+    tokens: {},
+    cats: [],
+  }
+  const tokenPuzzles = await coinHandler.getAssetsRequestDetail(account);
+
+  const nonce = "cf9285b6bd7b7cfbdfdd78b17e5bc3670fb6e0952c836afcc4191a11dd4b66ba";
+  const bundle = await offer.generateOffer(offplan, reqs, tokenPuzzles, nonce, null);
+  const encoded = await offer.encode(bundle);
+
+  assertBundle(expect, bundle);
+  assert(expectOfferText, encoded);
 }
