@@ -74,10 +74,10 @@
         <b-button @click="openDonation()" size="is-large">❤️</b-button>
       </b-tooltip>
       <b-tooltip :label="$t('accountDetail.ui.tooltip.offer')" multilined position="is-right">
-        <b-button @click="openTakeOffer()" size="is-large" class="ml-5">💱</b-button>
+        <b-button v-if="debugMode" @click="openTakeOffer()" size="is-large" class="ml-5">💱</b-button>
       </b-tooltip>
       <b-tooltip :label="'TODO:makeoffer'" multilined position="is-right">
-        <b-button @click="openMakeOffer()" size="is-large" class="ml-5">💸</b-button>
+        <b-button v-if="debugMode" @click="openMakeOffer()" size="is-large" class="ml-5">💸</b-button>
       </b-tooltip>
     </div>
   </div>
