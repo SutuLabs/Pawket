@@ -113,11 +113,12 @@ export default class TakeOffer extends Vue {
     return getTokenInfo(this.account);
   }
 
-  mounted(): void {
+  async mounted(): Promise<void> {
     if (this.inputOfferText) {
       this.offerText = this.inputOfferText;
       this.updateOffer();
     }
+    await this.loadCoins();
   }
 
   async updateOffer(): Promise<void> {
