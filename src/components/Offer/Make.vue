@@ -92,7 +92,7 @@
 import { Component, Vue, Prop, Emit } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
 import { SpendBundle } from "@/models/wallet";
-import offer, { OfferSummary } from "@/services/transfer/offer";
+import offer, { getCatIdDict, getCatNameDict, OfferSummary } from "@/services/transfer/offer";
 import { AccountEntity } from "@/store/modules/account";
 import { prefix0x } from "@/services/coin/condition";
 import store from "@/store";
@@ -150,19 +150,11 @@ export default class MakeOffer extends Vue {
   }
 
   get cats(): { [id: string]: string } {
-    return Object.assign(
-      {},
-      ...Object.values(store.state.account.tokenInfo).map((_) => ({ [prefix0x(_.id ?? "")]: _.symbol })),
-      ...this.account.cats.map((_) => ({ [prefix0x(_.id)]: _.name }))
-    );
+    return getCatNameDict(this.account);
   }
 
   get catIds(): { [name: string]: string } {
-    return Object.assign(
-      {},
-      ...Object.values(store.state.account.tokenInfo).map((_) => ({ [_.symbol]: prefix0x(_.id ?? "") })),
-      ...this.account.cats.map((_) => ({ [_.name]: prefix0x(_.id) }))
-    );
+    return getCatIdDict(this.account);
   }
 
   get tokenNames(): string[] {

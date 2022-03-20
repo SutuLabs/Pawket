@@ -39,13 +39,15 @@ export interface CustomCat {
 const DEFAULT_ADDRESS_RETRIEVAL_COUNT = 4;
 
 export interface TokenInfo {
-  [symbol: string]: {
-    id?: string,
-    symbol: string,
-    decimal: number,
-    unit: string,
-  }
-};
+  [symbol: string]: OneTokenInfo
+}
+
+export interface OneTokenInfo {
+    id?: string;
+    symbol: string;
+    decimal: number;
+    unit: string;
+}
 
 export interface PersistentAccount {
   key: AccountKey;
