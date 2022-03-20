@@ -76,26 +76,15 @@
     <footer class="modal-card-foot is-justify-content-space-between">
       <div>
         <b-button :label="$t('send.ui.button.cancel')" @click="close()"></b-button>
-        <b-button
-          :label="$t('send.ui.button.sign')"
-          v-if="!bundle"
-          type="is-success"
-          @click="sign()"
-          :disabled="submitting"
-        ></b-button>
+        <b-button v-if="!bundle" type="is-success" @click="sign()">
+          {{ $t("send.ui.button.sign") }}
+          <b-loading :is-full-page="false" :active="!tokenPuzzles || !availcoins || signing"></b-loading>
+        </b-button>
       </div>
       <div>
-        <b-button
-          :label="$t('send.ui.button.submit')"
-          v-if="bundle"
-          type="is-primary"
-          class="is-pulled-right"
-          @click="submit()"
-          :disabled="submitting"
-        ></b-button>
+        <b-button :label="'copy'" v-if="bundle" type="is-primary" class="is-pulled-right" @click="copy()"></b-button>
       </div>
     </footer>
-    <b-loading :is-full-page="false" v-model="submitting"></b-loading>
   </div>
 </template>
 
@@ -103,7 +92,7 @@
 import { Component, Vue, Prop, Emit } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
 import { SpendBundle } from "@/models/wallet";
-import offer, { OfferPlan, OfferSummary } from "@/services/transfer/offer";
+import offer, { OfferSummary } from "@/services/transfer/offer";
 import { AccountEntity } from "@/store/modules/account";
 import { prefix0x } from "@/services/coin/condition";
 import store from "@/store";
@@ -114,6 +103,7 @@ import { TokenPuzzleDetail } from "@/services/crypto/receive";
 import puzzle from "@/services/crypto/puzzle";
 import bigDecimal from "js-big-decimal";
 import DevHelper from "../DevHelper.vue";
+import { NotificationProgrammatic as Notification } from "buefy";
 
 interface OfferTokenAmount {
   token: string;
@@ -131,11 +121,11 @@ export default class MakeOffer extends Vue {
   public offerText = "";
   public offerBundle: SpendBundle | null = null;
   public summary: OfferSummary | null = null;
-  public submitting = false;
   public bundle: SpendBundle | null = null;
   public step: "Input" | "Confirmation" = "Input";
   public availcoins: SymbolCoins | null = null;
   public tokenPuzzles: TokenPuzzleDetail[] = [];
+  public signing = false;
 
   public requests: OfferTokenAmount[] = [{ token: "XCH", amount: "0" }];
   public offers: OfferTokenAmount[] = [{ token: "XCH", amount: "0" }];
@@ -205,39 +195,56 @@ export default class MakeOffer extends Vue {
       return;
     }
 
-    const off = this.offers[0];
+    try {
+      this.signing = true;
+      const off = this.offers[0];
 
-    const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
-    const settlement_tgt = "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79";
+      const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
+      const settlement_tgt = "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79";
 
-    const tgts: TransferTarget[] = [
-      {
-        address: settlement_tgt,
-        amount: this.getAmount(off.token, off.amount),
-        symbol: off.token,
-        memos: off.token == "XCH" ? undefined : [settlement_tgt],
-      },
-    ];
-    const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, 0n);
-    const keys = Object.keys(plan);
-    if (keys.length != 1) throw new Error("key length abnormal");
-    const offplan = { id: off.token == "XCH" ? "" : "any", plan: plan[keys[0]] };
-    const reqs = this.requests.map((_) => ({
-      id: _.token == "XCH" ? "" : this.catIds[_.token],
-      symbol: _.token,
-      amount: this.getAmount(_.token, _.amount),
-      target: change_hex,
-    }));
-    const bundle = await offer.generateOffer([offplan], reqs, this.tokenPuzzles);
-    // for creating unit test
-    // console.log("const offplan=", JSON.stringify([offplan], null, 2), ";");
-    // console.log("const reqs=", JSON.stringify(reqs, null, 2), ";");
-    // console.log("const bundle=", JSON.stringify(bundle, null, 2), ";");
-    // console.log("coinHandler.getAssetsRequestDetail", JSON.stringify(this.account, null, 2), ";");
-    this.bundle = bundle;
-    this.offerText = await offer.encode(bundle);
+      const tgts: TransferTarget[] = [
+        {
+          address: settlement_tgt,
+          amount: this.getAmount(off.token, off.amount),
+          symbol: off.token,
+          memos: off.token == "XCH" ? undefined : [settlement_tgt],
+        },
+      ];
+      const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, 0n);
+      const keys = Object.keys(plan);
+      if (keys.length != 1) {
+        this.signing = false;
+        throw new Error("key length abnormal");
+      }
 
-    this.step = "Confirmation";
+      const offplan = { id: off.token == "XCH" ? "" : "any", plan: plan[keys[0]] };
+      const reqs = this.requests.map((_) => ({
+        id: _.token == "XCH" ? "" : this.catIds[_.token],
+        symbol: _.token,
+        amount: this.getAmount(_.token, _.amount),
+        target: change_hex,
+      }));
+      const bundle = await offer.generateOffer([offplan], reqs, this.tokenPuzzles);
+      // for creating unit test
+      // console.log("const offplan=", JSON.stringify([offplan], null, 2), ";");
+      // console.log("const reqs=", JSON.stringify(reqs, null, 2), ";");
+      // console.log("const bundle=", JSON.stringify(bundle, null, 2), ";");
+      // console.log("coinHandler.getAssetsRequestDetail", JSON.stringify(this.account, null, 2), ";");
+      this.bundle = bundle;
+      this.offerText = await offer.encode(bundle);
+
+      this.step = "Confirmation";
+    } catch (error) {
+      Notification.open({
+        message: this.$tc("send.ui.messages.failedToSign") + error,
+        type: "is-danger",
+        autoClose: false,
+      });
+      console.warn(error);
+      this.signing = false;
+    }
+
+    this.signing = false;
   }
 
   private getAmount(symbol: string, amount: string): bigint {
@@ -253,6 +260,10 @@ export default class MakeOffer extends Vue {
       trapFocus: true,
       props: { inputOfferText: this.offerText },
     });
+  }
+
+  copy(): void {
+    store.dispatch("copy", this.offerText);
   }
 }
 </script>
