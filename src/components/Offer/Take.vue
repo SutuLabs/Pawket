@@ -40,13 +40,10 @@
     <footer class="modal-card-foot is-justify-content-space-between">
       <div>
         <b-button :label="$t('send.ui.button.cancel')" @click="close()"></b-button>
-        <b-button
-          :label="$t('send.ui.button.sign')"
-          v-if="!bundle"
-          type="is-success"
-          @click="sign()"
-          :disabled="submitting"
-        ></b-button>
+        <b-button v-if="!bundle" type="is-success" @click="sign()">
+          {{ $t("send.ui.button.sign") }}
+          <b-loading :is-full-page="false" :active="!tokenPuzzles || !availcoins"></b-loading>
+        </b-button>
       </div>
       <div>
         <b-button
@@ -59,7 +56,7 @@
         ></b-button>
       </div>
     </footer>
-    <b-loading :is-full-page="false" v-model="submitting"></b-loading>
+    <b-loading :is-full-page="false" :active="submitting || signing"></b-loading>
   </div>
 </template>
 
@@ -70,6 +67,9 @@ import { SpendBundle } from "@/models/wallet";
 import offer, { getCatIdDict, getCatNameDict, getTokenInfo, OfferSummary } from "@/services/transfer/offer";
 import { AccountEntity, TokenInfo } from "@/store/modules/account";
 import { demojo } from "@/filters/unitConversion";
+import { SymbolCoins } from "@/services/transfer/transfer";
+import { TokenPuzzleDetail } from "@/services/crypto/receive";
+import coinHandler from "@/services/transfer/coin";
 
 @Component({
   components: {
@@ -90,6 +90,9 @@ export default class TakeOffer extends Vue {
   public summary: OfferSummary | null = null;
   public submitting = false;
   public bundle: SpendBundle | null = null;
+  public availcoins: SymbolCoins | null = null;
+  public tokenPuzzles: TokenPuzzleDetail[] = [];
+  public signing = false;
 
   @Emit("close")
   close(): void {
@@ -120,6 +123,24 @@ export default class TakeOffer extends Vue {
     this.offerBundle = await offer.decode(this.offerText);
     this.summary = null;
     this.summary = await offer.getSummary(this.offerBundle);
+  }
+
+  async loadCoins(): Promise<void> {
+    if (!this.tokenPuzzles || this.tokenPuzzles.length == 0) {
+      this.tokenPuzzles = await coinHandler.getAssetsRequestDetail(this.account);
+    }
+
+    if (!this.availcoins) {
+      this.availcoins = await coinHandler.getAvailableCoins(this.tokenPuzzles, coinHandler.getTokenNames(this.account));
+    }
+  }
+
+  async sign():Promise<void>{
+//
+  }
+
+  async submit():Promise<void>{
+//
   }
 }
 </script>
