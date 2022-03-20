@@ -64,12 +64,14 @@
 import { Component, Vue, Prop, Emit } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
 import { SpendBundle } from "@/models/wallet";
-import offer, { getCatIdDict, getCatNameDict, getTokenInfo, OfferSummary } from "@/services/transfer/offer";
+import { getCatIdDict, getCatNameDict, getTokenInfo } from "@/services/coin/cat";
 import { AccountEntity, TokenInfo } from "@/store/modules/account";
 import { demojo } from "@/filters/unitConversion";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import { TokenPuzzleDetail } from "@/services/crypto/receive";
 import coinHandler from "@/services/transfer/coin";
+import { getOfferSummary, OfferSummary } from "@/services/offer/summary";
+import { decodeOffer } from "@/services/offer/encoding";
 
 @Component({
   components: {
@@ -120,9 +122,9 @@ export default class TakeOffer extends Vue {
 
   async updateOffer(): Promise<void> {
     this.offerBundle = null;
-    this.offerBundle = await offer.decode(this.offerText);
+    this.offerBundle = await decodeOffer(this.offerText);
     this.summary = null;
-    this.summary = await offer.getSummary(this.offerBundle);
+    this.summary = await getOfferSummary(this.offerBundle);
   }
 
   async loadCoins(): Promise<void> {

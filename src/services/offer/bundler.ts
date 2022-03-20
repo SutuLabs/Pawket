@@ -1,0 +1,142 @@
+import { CoinSpend, SpendBundle } from "@/models/wallet";
+import { Bytes } from "clvm";
+import { CoinConditions, ConditionType, prefix0x } from '@/services/coin/condition';
+import puzzle from "../crypto/puzzle";
+import { ConditionOpcode } from "../coin/opcode";
+import transfer, { GetPuzzleApiCallback } from "../transfer/transfer";
+import { TokenPuzzleDetail } from "../crypto/receive";
+import catBundle from "../transfer/catBundle";
+import stdBundle from "../transfer/stdBundle";
+import { OfferEntity, OfferPlan } from "./summary";
+
+export async function generateOffer(
+  offered: OfferPlan[],
+  requested: OfferEntity[],
+  puzzles: TokenPuzzleDetail[],
+  nonceHex: string | null = null,
+  getPuzzle: GetPuzzleApiCallback | null = null,
+): Promise<SpendBundle> {
+  if (offered.length != 1 || requested.length != 1) throw new Error("currently, only support single offer/request");
+  if (offered[0].id && offered[0].plan.coins.length != 1) throw new Error("currently, only support single coin for CAT");
+
+  const settlement_tgt = "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79";
+  const cat_settlement_tgt = "0xdf4ec566122b8507fc920d03b04d7021909d5bcd58beed99710ba9bea58f970b";
+  const spends: CoinSpend[] = [];
+  const puz_anno_msgs: Uint8Array[] = [];
+  const getNonce = () => {
+    const nonceArr = new Uint8Array(256 / 8);
+    crypto.getRandomValues(nonceArr)
+    return Bytes.from(nonceArr).hex();
+  }
+  const nonce = nonceHex ?? getNonce();
+  // console.log("nonce=",nonce)
+  const getPuzAnnoMsg = async (puz: string, solution: string): Promise<Uint8Array> => {
+    const output = await puzzle.calcPuzzleResult(puz, solution);
+    const conds = puzzle.parseConditions(output);
+    const cannos = conds.filter(_ => _.code == ConditionOpcode.CREATE_PUZZLE_ANNOUNCEMENT);
+    if (cannos.length != 1) throw new Error("Unexpected result of create puzzle");
+    const canno = cannos[0];
+    return canno.args[0] as Uint8Array;
+  };
+  // generate requested
+  for (let i = 0; i < requested.length; i++) {
+    const req = requested[i];
+    if (!req.id) {// XCH
+      const coin = {
+        parent_coin_info: "0x0000000000000000000000000000000000000000000000000000000000000000",
+        puzzle_hash: settlement_tgt,
+        amount: 0n,
+      };
+
+      const puzzle_reveal_text = puzzle.getSettlementPaymentsPuzzle();
+
+      // put special target into puzzle reverse dict
+      puzzles.filter(_ => _.symbol == "XCH")[0].puzzles.push({
+        privateKey: puzzle.getEmptyPrivateKey(), // this private key will not really calculated due to no AGG_SIG_ME exist in this spend
+        puzzle: puzzle_reveal_text,
+        hash: settlement_tgt,
+        address: "",
+      })
+
+      const solution_text = `((${prefix0x(nonce)} (${prefix0x(req.target)} ${req.amount} ())))`;
+      const msg = await getPuzAnnoMsg(puzzle_reveal_text, solution_text);
+      puz_anno_msgs.push(msg);
+
+      const puzzle_reveal = prefix0x(await puzzle.encodePuzzle(puzzle_reveal_text));
+      const solution = prefix0x(await puzzle.encodePuzzle(solution_text));
+
+      spends.push({ coin, solution, puzzle_reveal })
+    }
+    else {
+      if (!req.symbol) throw new Error("symbol cannot be empty.");
+
+      const coin = {
+        parent_coin_info: "0x0000000000000000000000000000000000000000000000000000000000000000",
+        puzzle_hash: cat_settlement_tgt,
+        amount: 0n,
+      };
+
+      const puzzle_reveal_text = puzzle.getCatSettlementPuzzle(req.id);
+
+      // put special target into puzzle reverse dict
+      puzzles.filter(_ => _.symbol == req.symbol)[0].puzzles.push({
+        privateKey: puzzle.getEmptyPrivateKey(), // this private key will not really calculated due to no AGG_SIG_ME exist in this spend
+        puzzle: puzzle_reveal_text,
+        hash: cat_settlement_tgt,
+        address: "",
+      })
+
+      const solution_text = `((${prefix0x(nonce)} (${prefix0x(req.target)} ${req.amount} (${prefix0x(req.target)}))))`;
+      const msg = await getPuzAnnoMsg(puzzle.getSettlementPaymentsPuzzle(), solution_text);
+      puz_anno_msgs.push(msg);
+
+      const puzzle_reveal = prefix0x(await puzzle.encodePuzzle(puzzle_reveal_text));
+      const solution = prefix0x(await puzzle.encodePuzzle(solution_text));
+
+      spends.push({ coin, solution, puzzle_reveal });
+    }
+  }
+
+  if (puz_anno_msgs.length != 1) throw new Error("unexpected puzzle annocement message number");
+
+  // genreate offered
+  const getPuzzleAnnoConditions = (coin_puzzle_hash: string): ConditionType[] => {
+    const conds: ConditionType[] = [];
+    for (let k = 0; k < puz_anno_msgs.length; k++) {
+      const msg = puz_anno_msgs[k];
+      const puz_anno_id = sha256(coin_puzzle_hash, msg);
+      conds.push(CoinConditions.ASSERT_PUZZLE_ANNOUNCEMENT(puz_anno_id));
+    }
+    return conds;
+  }
+
+  for (let i = 0; i < offered.length; i++) {
+    const off = offered[i];
+    if (off.id) {//CAT
+      for (let j = 0; j < off.plan.coins.length; j++) {
+        const coin = off.plan.coins[j];
+        const conds = getPuzzleAnnoConditions(coin.puzzle_hash);
+
+        const css = await catBundle.generateCoinSpends(off.plan, puzzles, conds, getPuzzle);
+        spends.push(...css);
+      }
+    } else {
+      for (let j = 0; j < off.plan.coins.length; j++) {
+        const coin = off.plan.coins[j];
+        const conds = getPuzzleAnnoConditions(coin.puzzle_hash);
+
+        const css = await stdBundle.generateCoinSpends(off.plan, puzzles, conds);
+        spends.push(...css);
+      }
+    }
+  }
+
+  // combine into one spendbundle
+  return transfer.getSpendBundle(spends, puzzles);
+}
+
+export function sha256(...args: (string | Uint8Array)[]): string {
+  const cont = new Uint8Array(args.map(_ => Bytes.from(_, "hex").raw()).reduce((acc, cur) => [...acc, ...cur], [] as number[]));
+  const result = Bytes.SHA256(cont);
+  return prefix0x(result.hex());
+}

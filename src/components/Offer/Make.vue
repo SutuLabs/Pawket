@@ -92,7 +92,6 @@
 import { Component, Vue, Prop, Emit } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
 import { SpendBundle } from "@/models/wallet";
-import offer, { getCatIdDict, getCatNameDict, OfferSummary } from "@/services/transfer/offer";
 import { AccountEntity } from "@/store/modules/account";
 import { prefix0x } from "@/services/coin/condition";
 import store from "@/store";
@@ -104,6 +103,10 @@ import puzzle from "@/services/crypto/puzzle";
 import bigDecimal from "js-big-decimal";
 import DevHelper from "../DevHelper.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
+import { getOfferSummary, OfferSummary } from "@/services/offer/summary";
+import { getCatIdDict, getCatNameDict } from "@/services/coin/cat";
+import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
+import { generateOffer } from "@/services/offer/bundler";
 
 interface OfferTokenAmount {
   token: string;
@@ -177,9 +180,9 @@ export default class MakeOffer extends Vue {
 
   async updateOffer(): Promise<void> {
     this.offerBundle = null;
-    this.offerBundle = await offer.decode(this.offerText);
+    this.offerBundle = await decodeOffer(this.offerText);
     this.summary = null;
-    this.summary = await offer.getSummary(this.offerBundle);
+    this.summary = await getOfferSummary(this.offerBundle);
   }
 
   async sign(): Promise<void> {
@@ -216,14 +219,14 @@ export default class MakeOffer extends Vue {
         amount: this.getAmount(_.token, _.amount),
         target: change_hex,
       }));
-      const bundle = await offer.generateOffer([offplan], reqs, this.tokenPuzzles);
+      const bundle = await generateOffer([offplan], reqs, this.tokenPuzzles);
       // for creating unit test
       // console.log("const offplan=", JSON.stringify([offplan], null, 2), ";");
       // console.log("const reqs=", JSON.stringify(reqs, null, 2), ";");
       // console.log("const bundle=", JSON.stringify(bundle, null, 2), ";");
       // console.log("coinHandler.getAssetsRequestDetail", JSON.stringify(this.account, null, 2), ";");
       this.bundle = bundle;
-      this.offerText = await offer.encode(bundle);
+      this.offerText = await encodeOffer(bundle);
 
       this.step = "Confirmation";
     } catch (error) {

@@ -92,7 +92,7 @@ import { demojo } from "@/filters/unitConversion";
 import { TokenInfo, AccountEntity, AccountToken } from "@/store/modules/account";
 import TakeOffer from "./Offer/Take.vue";
 import MakeOffer from "./Offer/Make.vue";
-import { getTokenInfo } from "@/services/transfer/offer";
+import { getTokenInfo } from "@/services/coin/cat";
 
 type Mode = "Verify" | "Create";
 
