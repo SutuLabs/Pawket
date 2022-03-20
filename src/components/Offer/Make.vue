@@ -97,16 +97,16 @@ import { prefix0x } from "@/services/coin/condition";
 import store from "@/store";
 import TokenAmountField from "@/components/TokenAmountField.vue";
 import coinHandler from "@/services/transfer/coin";
-import transfer, { SymbolCoins, TransferTarget } from "@/services/transfer/transfer";
+import { SymbolCoins } from "@/services/transfer/transfer";
 import { TokenPuzzleDetail } from "@/services/crypto/receive";
 import puzzle from "@/services/crypto/puzzle";
 import bigDecimal from "js-big-decimal";
 import DevHelper from "../DevHelper.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { getOfferSummary, OfferSummary } from "@/services/offer/summary";
+import { getOfferSummary, OfferEntity, OfferSummary } from "@/services/offer/summary";
 import { getCatIdDict, getCatNameDict } from "@/services/coin/cat";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
-import { generateOffer } from "@/services/offer/bundler";
+import { generateOffer, generateOfferPlan } from "@/services/offer/bundler";
 
 interface OfferTokenAmount {
   token: string;
@@ -192,34 +192,13 @@ export default class MakeOffer extends Vue {
 
     try {
       this.signing = true;
-      const off = this.offers[0];
 
       const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
-      const settlement_tgt = "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79";
+      const offs: OfferEntity[] = this.getOfferEntities(this.offers, "");
+      const reqs: OfferEntity[] = this.getOfferEntities(this.requests, change_hex);
 
-      const tgts: TransferTarget[] = [
-        {
-          address: settlement_tgt,
-          amount: this.getAmount(off.token, off.amount),
-          symbol: off.token,
-          memos: off.token == "XCH" ? undefined : [settlement_tgt],
-        },
-      ];
-      const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, 0n);
-      const keys = Object.keys(plan);
-      if (keys.length != 1) {
-        this.signing = false;
-        throw new Error("key length abnormal");
-      }
-
-      const offplan = { id: off.token == "XCH" ? "" : "any", plan: plan[keys[0]] };
-      const reqs = this.requests.map((_) => ({
-        id: _.token == "XCH" ? "" : this.catIds[_.token],
-        symbol: _.token,
-        amount: this.getAmount(_.token, _.amount),
-        target: change_hex,
-      }));
-      const bundle = await generateOffer([offplan], reqs, this.tokenPuzzles);
+      const offplan = await generateOfferPlan(offs, change_hex, this.availcoins, 0n);
+      const bundle = await generateOffer(offplan, reqs, this.tokenPuzzles);
       // for creating unit test
       // console.log("const offplan=", JSON.stringify([offplan], null, 2), ";");
       // console.log("const reqs=", JSON.stringify(reqs, null, 2), ";");
@@ -240,6 +219,15 @@ export default class MakeOffer extends Vue {
     }
 
     this.signing = false;
+  }
+
+  private getOfferEntities(ents: OfferTokenAmount[], target: string): OfferEntity[] {
+    return ents.map((_) => ({
+      id: _.token == "XCH" ? "" : this.catIds[_.token],
+      symbol: _.token,
+      amount: this.getAmount(_.token, _.amount),
+      target: target,
+    }));
   }
 
   private getAmount(symbol: string, amount: string): bigint {

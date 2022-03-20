@@ -3,11 +3,12 @@ import { Bytes } from "clvm";
 import { CoinConditions, ConditionType, prefix0x } from '@/services/coin/condition';
 import puzzle from "../crypto/puzzle";
 import { ConditionOpcode } from "../coin/opcode";
-import transfer, { GetPuzzleApiCallback } from "../transfer/transfer";
+import transfer, { GetPuzzleApiCallback, SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { TokenPuzzleDetail } from "../crypto/receive";
 import catBundle from "../transfer/catBundle";
 import stdBundle from "../transfer/stdBundle";
 import { OfferEntity, OfferPlan } from "./summary";
+import store from "@/store";
 
 export async function generateOffer(
   offered: OfferPlan[],
@@ -139,4 +140,54 @@ export function sha256(...args: (string | Uint8Array)[]): string {
   const cont = new Uint8Array(args.map(_ => Bytes.from(_, "hex").raw()).reduce((acc, cur) => [...acc, ...cur], [] as number[]));
   const result = Bytes.SHA256(cont);
   return prefix0x(result.hex());
+}
+
+const settlement_tgt = "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79";
+
+export async function generateOfferPlan(
+  offered: OfferEntity[],
+  change_hex: string,
+  availcoins: SymbolCoins,
+  fee: bigint,
+): Promise<OfferPlan[]> {
+  const plans: OfferPlan[] = [];
+  change_hex = prefix0x(change_hex);
+
+  for (let i = 0; i < offered.length; i++) {
+    const off = offered[i];
+
+    const tgt: TransferTarget = {
+      address: settlement_tgt,
+      amount: off.amount,
+      symbol: off.symbol ?? "XCH",
+      memos: off.symbol == "XCH" ? undefined : [settlement_tgt],
+    };
+
+    const plan = transfer.generateSpendPlan(availcoins, [tgt], change_hex, fee);
+    const keys = Object.keys(plan);
+    if (keys.length != 1) {
+      throw new Error("spend plan must be 1");
+    }
+
+    const offplan = { id: off.id, plan: plan[keys[0]] };
+    plans.push(offplan);
+  }
+
+  return plans;
+}
+
+
+export async function combineSpendBundle(
+  spendbundles: SpendBundle[]
+): Promise<SpendBundle> {
+  if (!store.state.app.bls) throw new Error("bls not initialized");
+  const BLS = store.state.app.bls;
+  const sigs = spendbundles.map(_ => BLS.G2Element.from_bytes(Bytes.from(_.aggregated_signature, "hex").raw()));
+  const agg_sig = BLS.AugSchemeMPL.aggregate(sigs);
+  const sig = Bytes.from(agg_sig.serialize()).hex();
+  const spends = spendbundles.flatMap(_ => _.coin_spends);
+  return {
+    aggregated_signature: sig,
+    coin_spends: spends,
+  }
 }
