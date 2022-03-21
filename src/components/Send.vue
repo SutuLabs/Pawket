@@ -112,18 +112,17 @@ import KeyBox from "@/components/KeyBox.vue";
 import { FeeType } from "@/components/FeeTypeSlider.vue";
 import FeeTypeSlider from "@/components/FeeTypeSlider.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { ApiResponse } from "@/models/api";
-import receive, { TokenPuzzleDetail } from "../services/crypto/receive";
+import { TokenPuzzleDetail } from "../services/crypto/receive";
 import store from "@/store";
-import { CoinItem, SpendBundle } from "@/models/wallet";
+import { SpendBundle } from "@/models/wallet";
 import puzzle from "@/services/crypto/puzzle";
-import DevHelper from "@/components/DevHelper.vue";
 import bigDecimal from "js-big-decimal";
 import ScanQrCode from "@/components/ScanQrCode.vue";
 import { prefix0x } from "../services/coin/condition";
 import transfer, { SymbolCoins } from "../services/transfer/transfer";
 import TokenAmountField from "@/components/TokenAmountField.vue";
 import coinHandler from "../services/transfer/coin";
+import { debugBundle, submitBundle } from "@/services/view/bundle";
 
 @Component({
   components: {
@@ -307,49 +306,13 @@ export default class Send extends Vue {
   }
 
   async submit(): Promise<void> {
-    this.submitting = true;
-
-    try {
-      const resp = await fetch(process.env.VUE_APP_API_URL + "Wallet/pushtx", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ bundle: this.bundle }),
-      });
-      const json = (await resp.json()) as ApiResponse;
-      this.submitting = false;
-      if (json.success) {
-        Notification.open({
-          message: this.$tc("send.ui.messages.submitted"),
-          type: "is-success",
-        });
-        this.close();
-      } else {
-        Notification.open({
-          message: this.$tc("send.ui.messages.getFailedResponse") + json.error,
-          type: "is-danger",
-        });
-      }
-    } catch (error) {
-      Notification.open({
-        message: this.$tc("send.ui.messages.failedToSubmit") + error,
-        type: "is-danger",
-      });
-      console.warn(error);
-      this.submitting = false;
-    }
+    if (!this.bundle) return;
+    submitBundle(this.bundle, (_) => (this.submitting = _), close);
   }
 
   debugBundle(): void {
-    this.$buefy.modal.open({
-      parent: this,
-      component: DevHelper,
-      hasModalCard: true,
-      trapFocus: true,
-      props: { inputBundleText: this.bundleJson },
-    });
+    if (!this.bundle) return;
+    debugBundle(this, this.bundle);
   }
 
   scanQrCode(): void {
