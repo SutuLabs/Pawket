@@ -1,4 +1,4 @@
-import { CoinSpend, SpendBundle } from "@/models/wallet";
+import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
 import { Bytes } from "clvm";
 import { CoinConditions, ConditionType, prefix0x } from '@/services/coin/condition';
 import puzzle from "../crypto/puzzle";
@@ -7,8 +7,9 @@ import transfer, { GetPuzzleApiCallback, SymbolCoins, TransferTarget } from "../
 import { TokenPuzzleDetail } from "../crypto/receive";
 import catBundle from "../transfer/catBundle";
 import stdBundle from "../transfer/stdBundle";
-import { OfferEntity, OfferPlan, OfferSummary } from "./summary";
+import { getOfferSummary, OfferEntity, OfferPlan, OfferSummary } from "./summary";
 import store from "@/store";
+import { GetParentPuzzleResponse } from "@/models/api";
 
 export async function generateOffer(
   offered: OfferPlan[],
@@ -189,11 +190,52 @@ export function getReversePlan(
 export async function combineSpendBundle(
   spendbundles: SpendBundle[]
 ): Promise<SpendBundle> {
+  if (spendbundles.length != 2) throw new Error("unexpected length of spendbundle");
+
   if (!store.state.app.bls) throw new Error("bls not initialized");
   const BLS = store.state.app.bls;
   const sigs = spendbundles.map(_ => BLS.G2Element.from_bytes(Bytes.from(_.aggregated_signature, "hex").raw()));
   const agg_sig = BLS.AugSchemeMPL.aggregate(sigs);
   const sig = Bytes.from(agg_sig.serialize()).hex();
+
+  const summaries = await Promise.all(spendbundles.map(_ => getOfferSummary(_)));
+  for (let i = 0; i < summaries.length; i++) {
+    const summary = summaries[i];
+
+    if (summary.requested.length != 1) throw new Error("unexpected length of request");
+    const req = summary.requested[0];
+    const reqcs = spendbundles[i].coin_spends[0];
+    const offcs = spendbundles[(i + 1) % summaries.length].coin_spends[1];
+    const sumoff = summaries[(i + 1) % summaries.length].offered[0];
+    reqcs.coin.parent_coin_info = prefix0x(transfer.getCoinName(offcs.coin).hex());
+    reqcs.coin.amount = req.amount;
+
+    // generate cat solution
+    if (req.id) {
+      const settlement_inner_puzzle = "ff02ffff01ff02ff0affff04ff02ffff04ff03ff80808080ffff04ffff01ffff333effff02ffff03ff05ffff01ff04ffff04ff0cffff04ffff02ff1effff04ff02ffff04ff09ff80808080ff808080ffff02ff16ffff04ff02ffff04ff19ffff04ffff02ff0affff04ff02ffff04ff0dff80808080ff808080808080ff8080ff0180ffff02ffff03ff05ffff01ff04ffff04ff08ff0980ffff02ff16ffff04ff02ffff04ff0dffff04ff0bff808080808080ffff010b80ff0180ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff1effff04ff02ffff04ff09ff80808080ffff02ff1effff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080";
+      // const settlement_inner_puzzle_hex = "ff02ffff01ff02ff0affff04ff02ffff04ff03ff80808080ffff04ffff01ffff333effff02ffff03ff05ffff01ff04ffff04ff0cffff04ffff02ff1effff04ff02ffff04ff09ff80808080ff808080ffff02ff16ffff04ff02ffff04ff19ffff04ffff02ff0affff04ff02ffff04ff0dff80808080ff808080808080ff8080ff0180ffff02ffff03ff05ffff01ff04ffff04ff08ff0980ffff02ff16ffff04ff02ffff04ff0dffff04ff0bff808080808080ffff010b80ff0180ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff1effff04ff02ffff04ff09ff80808080ffff02ff1effff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080";
+      const inner_puzzle = await puzzle.disassemblePuzzle(reqcs.solution);
+      if (!sumoff.cat_target) throw new Error("cat target should be parsed");
+      const offnewcoin: OriginCoin = {
+        parent_coin_info: prefix0x(transfer.getCoinName(offcs.coin).hex()),
+        amount: req.amount,
+        puzzle_hash: sumoff.cat_target,
+      }
+
+      const localPuzzleApiCall = async function (): Promise<GetParentPuzzleResponse> {
+        return {
+          "parentCoinId": "",
+          "amount": Number(offcs.coin.amount),
+          "parentParentCoinId": offcs.coin.parent_coin_info,
+          "puzzleReveal": offcs.puzzle_reveal,
+        };
+      }
+      const proof = await catBundle.getLineageProof(prefix0x(transfer.getCoinName(offcs.coin).hex()), localPuzzleApiCall);
+      const solution = catBundle.getCatPuzzleSolution(inner_puzzle, offnewcoin, proof, settlement_tgt)
+      reqcs.solution = prefix0x(await puzzle.encodePuzzle(solution));
+    }
+  }
+
   const spends = spendbundles.flatMap(_ => _.coin_spends);
   return {
     aggregated_signature: sig,

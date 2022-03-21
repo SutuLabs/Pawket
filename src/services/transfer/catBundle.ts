@@ -9,7 +9,7 @@ import puzzle, { PuzzleDetail } from "../crypto/puzzle";
 import transfer, { GetPuzzleApiCallback, TokenSpendPlan } from "./transfer";
 import { TokenPuzzleDetail } from "../crypto/receive";
 
-interface LineageProof {
+export interface LineageProof {
   coinId: string;
   amount: bigint;
   proof: string;
@@ -72,7 +72,10 @@ class CatBundle {
     return presp;
   }
 
-  private async getLineageProof(parentCoinId: string, api: GetPuzzleApiCallback): Promise<LineageProof> {
+  public async getLineageProof(parentCoinId: string,
+    api: GetPuzzleApiCallback | null = null,
+  ): Promise<LineageProof> {
+    if (!api) api = this.getLineageProofPuzzle;
     // console.log("parentCoinId", parentCoinId)
     const calcLineageProof = async (puzzleReveal: string) => {
       puzzleReveal = puzzleReveal.startsWith("0x") ? puzzleReveal.substring(2) : puzzleReveal;
@@ -93,7 +96,7 @@ class CatBundle {
     return { coinId: presp.parentParentCoinId, amount: BigInt(presp.amount), proof: hash };
   }
 
-  private getCatPuzzleSolution(
+  public getCatPuzzleSolution(
     inner_puzzle_solution: string,
     catcoin: OriginCoin,
     proof: LineageProof,
@@ -150,7 +153,6 @@ class CatBundle {
     inner_puzzle_solution: string,
     getPuzzle: GetPuzzleApiCallback | null = null,
   ): Promise<string> {
-    if (!getPuzzle) getPuzzle = this.getLineageProofPuzzle;
     const proof = await this.getLineageProof(coin.parent_coin_info, getPuzzle);
     const pk = Bytes.from(puz.privateKey.get_g1().serialize()).hex();
     const inner_puzzle_hash = await puzzle.getPuzzleHash(pk);

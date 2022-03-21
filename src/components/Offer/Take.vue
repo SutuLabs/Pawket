@@ -90,6 +90,7 @@ import { prefix0x } from "@/services/coin/condition";
 import puzzle from "@/services/crypto/puzzle";
 import store from "@/store";
 import DevHelper from "../DevHelper.vue";
+import { ApiResponse } from "@/models/api";
 
 @Component({
   components: {
@@ -99,14 +100,11 @@ import DevHelper from "../DevHelper.vue";
 })
 export default class TakeOffer extends Vue {
   @Prop() private account!: AccountEntity;
-  @Prop({
-    default:
-      "offer1qqp83w76wzru6cmqvpsxygqqama36ngn6fhxtlen3xthnqm0s83gfww3vu3ld0vat8yt6ukl6tlwnhpswkcxq8dduarwhww30fhtf8sm4hnsdw57qvthkzu2acw5s6hhh9e8n4vwfy9jdfr493ww02xdequ5xnmultpg9dfhhthaeqf2ewf3qlt8lnfrj00038u39m26u5umc8r2zd2p48su46g8lemd2sne6rfdg3r7knncj78pzg4nvzr99k5hq5nnf87vadw0dk57a4y0tamaxvwvl0dsnygj873h9geldnel5zfqjat8es0vthvmjfmywasn0ldcmarw4lqzae7q44qm7f0h987vjk3npk2gvzf2qfvhwfflhex74d0yutlnm4dm3dtcjnllmf42ed7rehvrvcxj7yau0ge7kygryq662le6x4xkcwua7rfk0rplvscaahta9ajf749znz05lnl2zxwy66lvxemxdhtpvr5kh7tea8nrew48qt25tjf8ank9dwty2hf06dttp4sxfz90a0mq6u3u0f8h00pl5wlh2jvmpn6cymv0kstzmm8vw0ej408jm2h68xlmlu3lxzqcr4q333j3dgp6l0lskdhu0hjlpm6djr75duff5kannl7897tglhan38nadmumw0ng40rj20uqkr4p48a2ax77mk088ekxx6h6c6a4nafy2eadhzteej07ls6el7fhheackkjdyuncs2k0zyf0mwer59n05s2hz9rdz4l8nnkd3sjk4tremwtjw5mf82n45w57rec06a2ejft83rmz6wmawfxl4nazg6x4lutkh0vv6979y5psq2q0hlfscgd2p5",
-  })
-  private inputOfferText!: string;
-  // @Prop() private inputOfferText!: string;
+  // @Prop({ default: "offer1qqp83w76wzru6cmqvpsxygqqgtz8czhc9m7htaj54ten8j0925a2n80flhclm8y8lshnwepyfuud2rjnqu9ad5t6d66fuxaduarwhww30fh2p6eewzcm0g8gm6q6ga5l9wt40mvck3syykk8cf6cak5vnself3989uk9s7arl08pm29j8syaza7x97wa8uu7nqhartj4nmpuhgfkgxj7rj0pptuh0hjxwhfdn5zzwj6waprhayvzzvstkmhwy96gnrhrww0ucvdnhjde2deavetuka6gmuztlmthuse576dwgh4qjgyh2e7vrmzamxujwerhvymlmwxlgm40cqhw0s9dgxljtaeflny45vcdvsuyz3fqawhwf3ahfx7evh8uh7nh5al39tc7jh6m3h6hdwqemvrycwn7uaudgfckgfnyp6m2062v573c77auzpn0mpl23glattdra2279yjer8kl8u6g8kx6wluvetxdmtpvruhh6tfhxmzezkhgtzjt6t8mj7xdk25wkew6pttd5qzf68l30mr6ujv0gln0tpl70832z0mpnjcy0vl53nxml8uyweh4h9z420l87atcyyaqxygmrnqx23nl7l7pa2587lm5xkkkxe8zskwy64lytcywja2l5a4a25q66swvhl2gdm0qwuqg44l0s23zj9v5ful0s97xvfgh3w2795awuch4rkrnvd04t9hgm8ha6vtte57m6tececa4jytujlc5zc7z86c4tfv74jnz2764ze8wmxml9jlnnva7ap80nxmd8xpwmyla77kdsgv5y5tevmwnyreag7z9wlfwefjfwyqrug4c2cuc00dv", })
+  // private inputOfferText!: string;
+  @Prop() private inputOfferText!: string;
   public offerText = "";
-  public offerBundle: SpendBundle | null = null;
+  public makerBundle: SpendBundle | null = null;
   public summary: OfferSummary | null = null;
   public submitting = false;
   public bundle: SpendBundle | null = null;
@@ -149,10 +147,10 @@ export default class TakeOffer extends Vue {
   }
 
   async updateOffer(): Promise<void> {
-    this.offerBundle = null;
-    this.offerBundle = await decodeOffer(this.offerText);
+    this.makerBundle = null;
+    this.makerBundle = await decodeOffer(this.offerText);
     this.summary = null;
-    this.summary = await getOfferSummary(this.offerBundle);
+    this.summary = await getOfferSummary(this.makerBundle);
   }
 
   async loadCoins(): Promise<void> {
@@ -166,7 +164,7 @@ export default class TakeOffer extends Vue {
   }
 
   async sign(): Promise<void> {
-    if (!this.availcoins || !this.tokenPuzzles || !this.account.firstAddress || !this.summary || !this.offerBundle) {
+    if (!this.availcoins || !this.tokenPuzzles || !this.account.firstAddress || !this.summary || !this.makerBundle) {
       return;
     }
 
@@ -175,15 +173,13 @@ export default class TakeOffer extends Vue {
 
       const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
       const revSummary = getReversePlan(this.summary, change_hex);
-      // console.log("reverse summary generated", revSummary);
-
       const offered: OfferEntity[] = revSummary.offered.map((_) => Object.assign({}, _, { symbol: this.cats[_.id] }));
-      // console.log("offered", offered);
-
       const offplan = await generateOfferPlan(offered, change_hex, this.availcoins, 0n);
-      // console.log("off plan", offplan);
-      const bundle = await generateOffer(offplan, revSummary.requested, this.tokenPuzzles);
-      const combined = await combineSpendBundle([this.offerBundle, bundle]);
+      const takerBundle = await generateOffer(offplan, revSummary.requested, this.tokenPuzzles);
+      const combined = await combineSpendBundle([this.makerBundle, takerBundle]);
+      // for creating unit test
+      // console.log("const change_hex=", change_hex, ";");
+      // console.log("const bundle=", JSON.stringify(combined, null, 2), ";");
       this.bundle = combined;
 
       this.step = "Confirmation";
@@ -201,7 +197,39 @@ export default class TakeOffer extends Vue {
   }
 
   async submit(): Promise<void> {
-    //
+    this.submitting = true;
+
+    try {
+      const resp = await fetch(process.env.VUE_APP_API_URL + "Wallet/pushtx", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ bundle: this.bundle }),
+      });
+      const json = (await resp.json()) as ApiResponse;
+      this.submitting = false;
+      if (json.success) {
+        Notification.open({
+          message: this.$tc("send.ui.messages.submitted"),
+          type: "is-success",
+        });
+        this.close();
+      } else {
+        Notification.open({
+          message: this.$tc("send.ui.messages.getFailedResponse") + json.error,
+          type: "is-danger",
+        });
+      }
+    } catch (error) {
+      Notification.open({
+        message: this.$tc("send.ui.messages.failedToSubmit") + error,
+        type: "is-danger",
+      });
+      console.warn(error);
+      this.submitting = false;
+    }
   }
 
   debugBundle(): void {
