@@ -21,9 +21,9 @@ export async function generateOffer(
   if (offered[0].id && offered[0].plan.coins.length != 1) throw new Error("currently, only support single coin for CAT");
 
   const settlement_tgt = "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79";
-  const cat_settlement_tgt = "0xdf4ec566122b8507fc920d03b04d7021909d5bcd58beed99710ba9bea58f970b";
+  const cat_settlement_tgt = "0x54164c700ed2fd4349227e4e346d0d22c92b694bf1ef9ce10fe9b0686390ca87";
   const spends: CoinSpend[] = [];
-  const puz_anno_msgs: Uint8Array[] = [];
+  const puz_anno_ids: string[] = [];
   const getNonce = () => {
     const nonceArr = new Uint8Array(256 / 8);
     crypto.getRandomValues(nonceArr)
@@ -39,6 +39,10 @@ export async function generateOffer(
     const canno = cannos[0];
     return canno.args[0] as Uint8Array;
   };
+  const getPuzzleAnnoId = (coin_puzzle_hash: string, puz_anno_msg: Uint8Array): string => {
+    const puz_anno_id = sha256(coin_puzzle_hash, puz_anno_msg);
+    return puz_anno_id;
+  }
   // generate requested
   for (let i = 0; i < requested.length; i++) {
     const req = requested[i];
@@ -61,7 +65,7 @@ export async function generateOffer(
 
       const solution_text = `((${prefix0x(nonce)} (${prefix0x(req.target)} ${req.amount} ())))`;
       const msg = await getPuzAnnoMsg(puzzle_reveal_text, solution_text);
-      puz_anno_msgs.push(msg);
+      puz_anno_ids.push(getPuzzleAnnoId(coin.puzzle_hash, msg));
 
       const puzzle_reveal = prefix0x(await puzzle.encodePuzzle(puzzle_reveal_text));
       const solution = prefix0x(await puzzle.encodePuzzle(solution_text));
@@ -89,7 +93,7 @@ export async function generateOffer(
 
       const solution_text = `((${prefix0x(nonce)} (${prefix0x(req.target)} ${req.amount} (${prefix0x(req.target)}))))`;
       const msg = await getPuzAnnoMsg(puzzle.getSettlementPaymentsPuzzle(), solution_text);
-      puz_anno_msgs.push(msg);
+      puz_anno_ids.push(getPuzzleAnnoId(coin.puzzle_hash, msg));
 
       const puzzle_reveal = prefix0x(await puzzle.encodePuzzle(puzzle_reveal_text));
       const solution = prefix0x(await puzzle.encodePuzzle(solution_text));
@@ -98,14 +102,13 @@ export async function generateOffer(
     }
   }
 
-  if (puz_anno_msgs.length != 1) throw new Error("unexpected puzzle annocement message number");
+  if (puz_anno_ids.length != 1) throw new Error("unexpected puzzle annocement message number");
 
   // genreate offered
-  const getPuzzleAnnoConditions = (coin_puzzle_hash: string): ConditionType[] => {
+  const getPuzzleAnnoConditions = (): ConditionType[] => {
     const conds: ConditionType[] = [];
-    for (let k = 0; k < puz_anno_msgs.length; k++) {
-      const msg = puz_anno_msgs[k];
-      const puz_anno_id = sha256(coin_puzzle_hash, msg);
+    for (let k = 0; k < puz_anno_ids.length; k++) {
+      const puz_anno_id = puz_anno_ids[k];
       conds.push(CoinConditions.ASSERT_PUZZLE_ANNOUNCEMENT(puz_anno_id));
     }
     return conds;
@@ -115,16 +118,16 @@ export async function generateOffer(
     const off = offered[i];
     if (off.id) {//CAT
       for (let j = 0; j < off.plan.coins.length; j++) {
-        const coin = off.plan.coins[j];
-        const conds = getPuzzleAnnoConditions(coin.puzzle_hash);
+        // const coin = off.plan.coins[j];
+        const conds = getPuzzleAnnoConditions();
 
         const css = await catBundle.generateCoinSpends(off.plan, puzzles, conds, getPuzzle);
         spends.push(...css);
       }
     } else {
       for (let j = 0; j < off.plan.coins.length; j++) {
-        const coin = off.plan.coins[j];
-        const conds = getPuzzleAnnoConditions(coin.puzzle_hash);
+        // const coin = off.plan.coins[j];
+        const conds = getPuzzleAnnoConditions();
 
         const css = await stdBundle.generateCoinSpends(off.plan, puzzles, conds);
         spends.push(...css);
