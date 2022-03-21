@@ -41,35 +41,7 @@
       <b-field :label="$t('send.ui.label.memo')">
         <b-input maxlength="100" v-model="memo" type="text" @input="reset()" :disabled="selectedToken == 'XCH'"></b-input>
       </b-field>
-      <b-field :label="$t('send.ui.label.fee')">
-        <b-numberinput
-          controls-alignment="left"
-          controls-position="compact"
-          max="1000000000"
-          min="0"
-          v-model="fee"
-          :exponential="true"
-          @input="changeFee()"
-          expanded
-          :disabled="feeType !== 'Custom'"
-        ></b-numberinput>
-
-        <p class="control">
-          <span class="button is-static"><span class="is-size-7">mojos</span></span>
-        </p>
-        <p class="control is-hidden-mobile">
-          <span class="button" style="min-width: 180px">
-            <fee-type-slider :feeType.sync="feeType" @changeFeeType="changeFeeType"></fee-type-slider>
-          </span>
-        </p>
-      </b-field>
-      <b-field>
-        <p class="is-hidden-tablet">
-          <span class="button column is-full">
-            <fee-type-slider :feeType.sync="feeType" @changeFeeType="changeFeeType"></fee-type-slider>
-          </span>
-        </p>
-      </b-field>
+      <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
       <b-field v-if="bundle">
         <template #label>
           {{ $t("send.ui.label.bundle") }}
@@ -109,8 +81,6 @@
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import { AccountEntity, TokenInfo } from "@/store/modules/account";
 import KeyBox from "@/components/KeyBox.vue";
-import { FeeType } from "@/components/FeeTypeSlider.vue";
-import FeeTypeSlider from "@/components/FeeTypeSlider.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { TokenPuzzleDetail } from "../services/crypto/receive";
 import store from "@/store";
@@ -123,11 +93,12 @@ import transfer, { SymbolCoins } from "../services/transfer/transfer";
 import TokenAmountField from "@/components/TokenAmountField.vue";
 import coinHandler from "../services/transfer/coin";
 import { debugBundle, submitBundle } from "@/services/view/bundle";
+import FeeSelector from "@/components/FeeSelector.vue";
 
 @Component({
   components: {
     KeyBox,
-    FeeTypeSlider,
+    FeeSelector,
     TokenAmountField,
   },
 })
@@ -144,7 +115,6 @@ export default class Send extends Vue {
 
   public submitting = false;
   public fee = 0;
-  public feeType: FeeType = "Custom";
   public address = "";
   public memo = "";
   public bundle: SpendBundle | null = null;
@@ -331,24 +301,8 @@ export default class Send extends Vue {
     });
   }
 
-  changeFeeType(t: FeeType): void {
-    this.feeType = t;
-    this.changeFee();
-  }
-
   changeFee(): void {
     this.reset();
-    const fees: { [type in FeeType]: number } = {
-      Custom: 0,
-      Low: 5,
-      Medium: 100,
-      High: 1000,
-    };
-    if (this.feeType !== "Custom") {
-      this.fee = fees[this.feeType];
-    }
-
-    if (!this.fee) this.fee = 0;
     if (this.selectMax) this.setMax();
   }
 }
