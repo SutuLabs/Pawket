@@ -100,18 +100,12 @@ import coinHandler from "@/services/transfer/coin";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import { TokenPuzzleDetail } from "@/services/crypto/receive";
 import puzzle from "@/services/crypto/puzzle";
-import bigDecimal from "js-big-decimal";
 import DevHelper from "../DevHelper.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { getOfferSummary, OfferEntity, OfferSummary } from "@/services/offer/summary";
+import { getOfferEntities, getOfferSummary, OfferEntity, OfferSummary, OfferTokenAmount } from "@/services/offer/summary";
 import { getCatIdDict, getCatNameDict } from "@/services/coin/cat";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
 import { generateOffer, generateOfferPlan } from "@/services/offer/bundler";
-
-interface OfferTokenAmount {
-  token: string;
-  amount: string;
-}
 
 @Component({
   components: {
@@ -194,8 +188,8 @@ export default class MakeOffer extends Vue {
       this.signing = true;
 
       const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
-      const offs: OfferEntity[] = this.getOfferEntities(this.offers, "");
-      const reqs: OfferEntity[] = this.getOfferEntities(this.requests, change_hex);
+      const offs: OfferEntity[] = getOfferEntities(this.offers, "", this.catIds);
+      const reqs: OfferEntity[] = getOfferEntities(this.requests, change_hex, this.catIds);
 
       const offplan = await generateOfferPlan(offs, change_hex, this.availcoins, 0n);
       const bundle = await generateOffer(offplan, reqs, this.tokenPuzzles);
@@ -221,20 +215,6 @@ export default class MakeOffer extends Vue {
     this.signing = false;
   }
 
-  private getOfferEntities(ents: OfferTokenAmount[], target: string): OfferEntity[] {
-    return ents.map((_) => ({
-      id: _.token == "XCH" ? "" : this.catIds[_.token],
-      symbol: _.token,
-      amount: this.getAmount(_.token, _.amount),
-      target: target,
-    }));
-  }
-
-  private getAmount(symbol: string, amount: string): bigint {
-    const decimal = symbol == "XCH" ? 12 : 3;
-    return BigInt(bigDecimal.multiply(amount, Math.pow(10, decimal)));
-  }
-
   debugOffer(): void {
     this.$buefy.modal.open({
       parent: this,
@@ -247,6 +227,16 @@ export default class MakeOffer extends Vue {
 
   copy(): void {
     store.dispatch("copy", this.offerText);
+  }
+
+  debugBundle(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: DevHelper,
+      hasModalCard: true,
+      trapFocus: true,
+      props: { inputBundleText: this.bundleJson },
+    });
   }
 }
 </script>

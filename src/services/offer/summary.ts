@@ -7,6 +7,7 @@ import { modsdict, modsprog } from '@/services/coin/mods';
 import { uncurry } from 'clvm_tools/clvm_tools/curry';
 import { ConditionOpcode } from "../coin/opcode";
 import { TokenSpendPlan } from "../transfer/transfer";
+import bigDecimal from "js-big-decimal";
 
 export async function getOfferSummary(bundle: SpendBundle): Promise<OfferSummary> {
 
@@ -92,6 +93,20 @@ function getRequestedCoins(bundle: SpendBundle): CoinSpend[] {
   return bundle.coin_spends.filter(_ => _.coin.parent_coin_info == EmptyParent)
 }
 
+export function getOfferEntities(ents: OfferTokenAmount[], target: string, catIds: { [name: string]: string }): OfferEntity[] {
+  return ents.map((_) => ({
+    id: _.token == "XCH" ? "" : catIds[_.token],
+    symbol: _.token,
+    amount: getAmount(_.token, _.amount),
+    target: target,
+  }));
+}
+
+function getAmount(symbol: string, amount: string): bigint {
+  const decimal = symbol == "XCH" ? 12 : 3;
+  return BigInt(bigDecimal.multiply(amount, Math.pow(10, decimal)));
+}
+
 export interface UncurriedPuzzle {
   module: string;
   args: string[];
@@ -113,3 +128,9 @@ export interface OfferSummary {
   requested: OfferEntity[];
   offered: OfferEntity[];
 }
+
+export interface OfferTokenAmount {
+  token: string;
+  amount: string;
+}
+

@@ -5,37 +5,49 @@
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
-      <b-field label="Offer" :message="offerText ? '' : 'paste offer here, e.g. offer1...'">
-        <b-input type="textarea" v-model="offerText" @input="updateOffer()"></b-input>
-      </b-field>
-      <b-field v-if="summary" label="Information">
-        <template #message>
-          <ul v-for="(arr, sumkey) in summary" :key="sumkey" :class="sumkey">
-            <li v-if="sumkey == 'requested'">In exchange for</li>
-            <li v-if="sumkey == 'offered'">You will receive</li>
-            <li>
-              <ol class="token-list">
-                <li class="pt-1" v-for="(ent, idx) in arr" :key="idx">
-                  <b-taglist attached>
-                    <b-tag v-if="ent.id && cats[ent.id]" type="is-info" :title="cats[ent.id] + ' (' + ent.id + ')'">{{
-                      cats[ent.id]
-                    }}</b-tag>
-                    <b-tag v-else-if="ent.id" type="is-info" :title="ent.id">CAT {{ ent.id.slice(0, 7) + "..." }}</b-tag>
-                    <b-tag v-else type="is-info" title="Original XCH">XCH</b-tag>
+      <template v-if="step == 'Input'">
+        <b-field label="Offer" :message="offerText ? '' : 'paste offer here, e.g. offer1...'">
+          <b-input type="textarea" v-model="offerText" @input="updateOffer()"></b-input>
+        </b-field>
+        <b-field v-if="summary" label="Information">
+          <template #message>
+            <ul v-for="(arr, sumkey) in summary" :key="sumkey" :class="sumkey">
+              <li v-if="sumkey == 'requested'">In exchange for</li>
+              <li v-if="sumkey == 'offered'">You will receive</li>
+              <li>
+                <ol class="token-list">
+                  <li class="pt-1" v-for="(ent, idx) in arr" :key="idx">
+                    <b-taglist attached>
+                      <b-tag v-if="ent.id && cats[ent.id]" type="is-info" :title="cats[ent.id] + ' (' + ent.id + ')'">{{
+                        cats[ent.id]
+                      }}</b-tag>
+                      <b-tag v-else-if="ent.id" type="is-info" :title="ent.id">CAT {{ ent.id.slice(0, 7) + "..." }}</b-tag>
+                      <b-tag v-else type="is-info" title="Original XCH">XCH</b-tag>
 
-                    <b-tag class="" :title="ent.amount + ' mojos'">{{
-                      ent.amount | demojo(ent.id && tokenInfo[cats[ent.id]])
-                    }}</b-tag>
-                    <b-tag v-if="sumkey == 'requested'" type="is-info is-light" :title="ent.target">{{
-                      ent.target.slice(0, 10) + "..."
-                    }}</b-tag>
-                  </b-taglist>
-                </li>
-              </ol>
-            </li>
-          </ul>
-        </template>
-      </b-field>
+                      <b-tag class="" :title="ent.amount + ' mojos'">{{
+                        ent.amount | demojo(ent.id && tokenInfo[cats[ent.id]])
+                      }}</b-tag>
+                      <b-tag v-if="sumkey == 'requested'" type="is-info is-light" :title="ent.target">{{
+                        ent.target.slice(0, 10) + "..."
+                      }}</b-tag>
+                    </b-taglist>
+                  </li>
+                </ol>
+              </li>
+            </ul>
+          </template>
+        </b-field>
+      </template>
+      <template v-if="step == 'Confirmation'">
+        <b-field v-if="bundle">
+          <template #label>
+            {{ $t("send.ui.label.bundle") }}
+            <key-box display="✂️" :value="JSON.stringify(bundle)" tooltip="Copy"></key-box>
+            <a href="javascript:void(0)" v-if="debugMode" @click="debugBundle()">🐞</a>
+          </template>
+          <b-input type="textarea" disabled :value="bundleJson"></b-input>
+        </b-field>
+      </template>
     </section>
     <footer class="modal-card-foot is-justify-content-space-between">
       <div>
@@ -70,8 +82,14 @@ import { demojo } from "@/filters/unitConversion";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import { TokenPuzzleDetail } from "@/services/crypto/receive";
 import coinHandler from "@/services/transfer/coin";
-import { getOfferSummary, OfferSummary } from "@/services/offer/summary";
+import { getOfferSummary, OfferEntity, OfferSummary } from "@/services/offer/summary";
 import { decodeOffer } from "@/services/offer/encoding";
+import { NotificationProgrammatic as Notification } from "buefy";
+import { combineSpendBundle, generateOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
+import { prefix0x } from "@/services/coin/condition";
+import puzzle from "@/services/crypto/puzzle";
+import store from "@/store";
+import DevHelper from "../DevHelper.vue";
 
 @Component({
   components: {
@@ -95,6 +113,7 @@ export default class TakeOffer extends Vue {
   public availcoins: SymbolCoins | null = null;
   public tokenPuzzles: TokenPuzzleDetail[] = [];
   public signing = false;
+  public step: "Input" | "Confirmation" = "Input";
 
   @Emit("close")
   close(): void {
@@ -111,6 +130,14 @@ export default class TakeOffer extends Vue {
 
   get tokenInfo(): TokenInfo {
     return getTokenInfo(this.account);
+  }
+
+  get bundleJson(): string {
+    return JSON.stringify(this.bundle, null, 4);
+  }
+
+  get debugMode(): boolean {
+    return store.state.app.debug;
   }
 
   async mounted(): Promise<void> {
@@ -138,12 +165,53 @@ export default class TakeOffer extends Vue {
     }
   }
 
-  async sign():Promise<void>{
-//
+  async sign(): Promise<void> {
+    if (!this.availcoins || !this.tokenPuzzles || !this.account.firstAddress || !this.summary || !this.offerBundle) {
+      return;
+    }
+
+    try {
+      this.signing = true;
+
+      const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
+      const revSummary = getReversePlan(this.summary, change_hex);
+      // console.log("reverse summary generated", revSummary);
+
+      const offered: OfferEntity[] = revSummary.offered.map((_) => Object.assign({}, _, { symbol: this.cats[_.id] }));
+      // console.log("offered", offered);
+
+      const offplan = await generateOfferPlan(offered, change_hex, this.availcoins, 0n);
+      // console.log("off plan", offplan);
+      const bundle = await generateOffer(offplan, revSummary.requested, this.tokenPuzzles);
+      const combined = await combineSpendBundle([this.offerBundle, bundle]);
+      this.bundle = combined;
+
+      this.step = "Confirmation";
+    } catch (error) {
+      Notification.open({
+        message: this.$tc("send.ui.messages.failedToSign") + error,
+        type: "is-danger",
+        autoClose: false,
+      });
+      console.warn(error);
+      this.signing = false;
+    }
+
+    this.signing = false;
   }
 
-  async submit():Promise<void>{
-//
+  async submit(): Promise<void> {
+    //
+  }
+
+  debugBundle(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: DevHelper,
+      hasModalCard: true,
+      trapFocus: true,
+      props: { inputBundleText: this.bundleJson },
+    });
   }
 }
 </script>

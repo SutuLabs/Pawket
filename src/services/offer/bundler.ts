@@ -7,7 +7,7 @@ import transfer, { GetPuzzleApiCallback, SymbolCoins, TransferTarget } from "../
 import { TokenPuzzleDetail } from "../crypto/receive";
 import catBundle from "../transfer/catBundle";
 import stdBundle from "../transfer/stdBundle";
-import { OfferEntity, OfferPlan } from "./summary";
+import { OfferEntity, OfferPlan, OfferSummary } from "./summary";
 import store from "@/store";
 
 export async function generateOffer(
@@ -176,6 +176,12 @@ export async function generateOfferPlan(
   return plans;
 }
 
+export function getReversePlan(
+  summary: OfferSummary,
+  change_hex: string,
+): OfferSummary {
+  return { offered: summary.requested, requested: summary.offered.map(_ => Object.assign({}, _, { target: change_hex })) };
+}
 
 export async function combineSpendBundle(
   spendbundles: SpendBundle[]
