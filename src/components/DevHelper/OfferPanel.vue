@@ -30,7 +30,8 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
 import { SpendBundle } from '@/models/wallet';
 import BundlePanel from "@/components/DevHelper/BundlePanel.vue";
-import offer, { OfferSummary } from '../../services/transfer/offer';
+import { getOfferSummary, OfferSummary } from "@/services/offer/summary";
+import { decodeOffer } from "@/services/offer/encoding";
 
 @Component({
   components: {
@@ -61,9 +62,9 @@ export default class OfferPanel extends Vue {
 
   async updateOffer(): Promise<void> {
     this.bundle = null;
-    this.bundle = await offer.decode(this.offerText);
+    this.bundle = await decodeOffer(this.offerText);
     this.summary = null;
-    this.summary = await offer.getSummary(this.bundle);
+    this.summary = await getOfferSummary(this.bundle);
     this.save();
   }
 

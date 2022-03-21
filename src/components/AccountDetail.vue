@@ -13,7 +13,7 @@
         <div>
           <h2 class="is-size-3 py-5">
             <span v-if="account.tokens && account.tokens.hasOwnProperty('XCH')">
-              {{ account.tokens["XCH"].amount | demojo }}
+              {{ account.tokens["XCH"].amount | demojo(null, 6) }}
               <b-tooltip :label="$t('accountDetail.ui.tooltip.address')">
                 <a class="is-size-6" href="javascript:void(0)" @click="openLink(account.tokens['XCH'])">⚓</a>
               </b-tooltip>
@@ -39,9 +39,7 @@
           <a class="panel-block is-justify-content-space-between" v-for="(token, symbol) in account.tokens" :key="symbol">
             <span class="is-pulled-right">
               <span class="panel-icon"></span>
-              <span class="" v-if="tokenInfo[symbol]">{{
-                token.amount | demojo(tokenInfo[symbol].unit, tokenInfo[symbol].decimal)
-              }}</span>
+              <span class="" v-if="tokenInfo[symbol]">{{ token.amount | demojo(tokenInfo[symbol]) }}</span>
               <span class="has-text-grey-light is-size-7 pl-3">{{ token.amount }} mojos</span>
             </span>
             <a v-if="debugMode" class="is-pulled-right" href="javascript:void(0)" @click="openLink(token)">⚓</a>
@@ -50,9 +48,7 @@
         <b-tab-item :label="$t('accountDetail.ui.tab.activity')">
           <a class="panel-block" v-for="(act, i) in account.activities" :key="i">
             <span class="panel-icon">🗒️</span>
-            <span class="" v-if="tokenInfo[act.symbol]">{{
-              act.coin.amount | demojo(tokenInfo[act.symbol].unit, tokenInfo[act.symbol].decimal)
-            }}</span>
+            <span class="" v-if="tokenInfo[act.symbol]">{{ act.coin.amount | demojo(tokenInfo[act.symbol]) }}</span>
             <span class="has-text-grey-light is-size-7 pl-3">{{ act.coin.amount }} mojos</span>
             <span class="has-text-grey-light" v-if="act.spent">☑️ Used on {{ act.spentBlockIndex }}</span>
             <span class="has-text-grey-light" v-if="act.coinbase">🌰️ Coinbase</span>
@@ -69,12 +65,15 @@
       </b-tabs>
     </div>
     <div class="box">
-      <h2 class="has-text-weight-bold is-size-4 pb-5">{{ $t("accountDetail.ui.title.dApps") }}</h2>
-      <b-tooltip :label="$t('accountDetail.ui.tooltip.donate')" multilined position="is-right">
+      <h2 class="has-text-weight-bold is-size-4 pb-5">{{ $t("accountDetail.ui.dApps.title") }}</h2>
+      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.donate')" multilined position="is-right">
         <b-button @click="openDonation()" size="is-large">❤️</b-button>
       </b-tooltip>
-      <b-tooltip v-if="debugMode" :label="$t('accountDetail.ui.tooltip.offer')" multilined position="is-right">
-        <b-button @click="openOfferManagement()" size="is-large" class="mx-5">💱</b-button>
+      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.takeOffer')" multilined position="is-right">
+        <b-button @click="openTakeOffer()" size="is-large" class="ml-5">💱</b-button>
+      </b-tooltip>
+      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.makeOffer')" multilined position="is-right">
+        <b-button @click="openMakeOffer()" size="is-large" class="ml-5">💸</b-button>
       </b-tooltip>
     </div>
   </div>
@@ -91,7 +90,9 @@ import KeyBox from "@/components/KeyBox.vue";
 import Send from "./Send.vue";
 import { demojo } from "@/filters/unitConversion";
 import { TokenInfo, AccountEntity, AccountToken } from "@/store/modules/account";
-import OfferManagement from "./OfferManagement.vue";
+import TakeOffer from "./Offer/Take.vue";
+import MakeOffer from "./Offer/Make.vue";
+import { getTokenInfo } from "@/services/coin/cat";
 
 type Mode = "Verify" | "Create";
 
@@ -119,20 +120,7 @@ export default class AccountDetail extends Vue {
   }
 
   get tokenInfo(): TokenInfo {
-    const tokenInfo = Object.assign({}, store.state.account.tokenInfo);
-    if (this.account.cats) {
-      for (let i = 0; i < this.account.cats.length; i++) {
-        const cat = this.account.cats[i];
-        tokenInfo[cat.name] = {
-          id: cat.id,
-          symbol: cat.name,
-          decimal: 3,
-          unit: cat.name,
-        };
-      }
-    }
-
-    return tokenInfo;
+    return getTokenInfo(this.account);
   }
 
   mounted(): void {
@@ -223,10 +211,23 @@ export default class AccountDetail extends Vue {
     });
   }
 
-  openOfferManagement(): void {
+  openTakeOffer(): void {
     this.$buefy.modal.open({
       parent: this,
-      component: OfferManagement,
+      component: TakeOffer,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: ["x"],
+      props: {
+        account: this.account,
+      },
+    });
+  }
+
+  openMakeOffer(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: MakeOffer,
       hasModalCard: true,
       trapFocus: true,
       canCancel: ["x"],

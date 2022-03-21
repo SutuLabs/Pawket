@@ -16,7 +16,7 @@
           <bundle-panel :input-bundle-text="inputBundleText"></bundle-panel>
         </b-tab-item>
         <b-tab-item label="Offer">
-          <offer-panel></offer-panel>
+          <offer-panel :input-offer-text="inputOfferText"></offer-panel>
         </b-tab-item>
         <b-tab-item v-if="debugMode" label="Coin">
           <coin-panel></coin-panel>
@@ -51,11 +51,15 @@ import store from '@/store';
 })
 export default class DevHelper extends Vue {
   @Prop() private inputBundleText!: string;
+  @Prop() private inputOfferText!: string;
   public selectedTab = 0;
 
   mounted(): void {
     if (this.inputBundleText) {
       this.selectedTab = 2;
+    }
+    if (this.inputOfferText) {
+      this.selectedTab = 3;
     }
   }
 

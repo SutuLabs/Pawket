@@ -131,15 +131,18 @@
         "asset": "Asset",
         "activity": "Activity"
       },
-      "title": {
-        "dApps": "Donate"
-      },
       "tooltip": {
-        "donate": "Donate to Support Development",
-        "offer": "Take Offer",
         "setting": "Settings",
         "address": "Addresses",
         "lock": "Lock"
+      },
+      "dApps": {
+        "title": "dApps",
+        "tooltip": {
+          "donate": "Donate to Support Development",
+          "takeOffer": "Take Offer",
+          "makeOffer": "Make Offer"
+        }
       }
     },
     "message": {
@@ -388,6 +391,71 @@
         "19": "Support view NFT",
         "20": "Support send NFT",
         "21": "Support NFT creation"
+      }
+    }
+  },
+  "offer": {
+    "make": {
+      "ui": {
+        "title": "Make Offer",
+        "panel": {
+          "information": "Information",
+          "hint": {
+            "thisIsYourOffer": "this is your offer text"
+          }
+        },
+        "label": {
+          "yourOfferTitle": "Your Offer",
+          "bundle": "Bundle"
+        },
+        "button": {
+          "cancel": "Cancel",
+          "sign": "Sign",
+          "copy": "Copy"
+        },
+        "field": {
+          "offer": "Offer",
+          "request": "Request"
+        }
+      },
+      "messages": {
+        "failedToSign": "Failed to make offer"
+      }
+    },
+    "symbol": {
+      "CAT": "CAT",
+      "XCH": "XCH",
+      "hint": {
+        "XCH": "Original XCH"
+      }
+    },
+    "take": {
+      "ui": {
+        "title": "Take Offer",
+        "hint": {
+          "pasteOffer": "paste your offer here, e.g. offer1..."
+        },
+        "panel": {
+          "information": "Information"
+        },
+        "label": {
+          "bundle": "Bundle"
+        },
+        "button": {
+          "cancel": "Cancel",
+          "sign": "Sign",
+          "submit": "Submit"
+        },
+        "field": {
+          "offer": "Offer"
+        }
+      },
+      "information": {
+        "requested": "In exchange for",
+        "offered": "You will receive"
+      },
+      "messages": {
+        "failedToSign": "Failed to take offer"
       }
     }
   }

@@ -131,15 +131,18 @@
         "asset": "资产",
         "activity": "活动"
       },
-      "title": {
-        "dApps": "捐赠"
-      },
       "tooltip": {
-        "donate": "捐赠开发者",
-        "offer": "发起邀约",
         "setting": "设置",
         "address": "地址",
         "lock": "锁定"
+      },
+      "dApps": {
+        "title": "应用",
+        "tooltip": {
+          "donate": "向开发者捐赠",
+          "takeOffer": "发起Offer",
+          "makeOffer": "接受Offer"
+        }
       }
     },
     "message": {
@@ -388,6 +391,71 @@
         "19": "支持查看 NFT",
         "20": "支持发送 NFT",
         "21": "支持 NFT 创建"
+      }
+    }
+  },
+  "offer": {
+    "make": {
+      "ui": {
+        "title": "发起Offer",
+        "panel": {
+          "information": "信息",
+          "hint": {
+            "thisIsYourOffer": "这就是你的Offer"
+          }
+        },
+        "label": {
+          "yourOfferTitle": "你的Offer",
+          "bundle": "Bundle"
+        },
+        "button": {
+          "cancel": "取消",
+          "sign": "签名",
+          "copy": "复制"
+        },
+        "field": {
+          "offer": "提供",
+          "request": "请求"
+        }
+      },
+      "messages": {
+        "failedToSign": "发起Offer失败"
+      }
+    },
+    "symbol": {
+      "CAT": "CAT",
+      "XCH": "XCH",
+      "hint": {
+        "XCH": "原生代币XCH"
+      }
+    },
+    "take": {
+      "ui": {
+        "title": "接受Offer",
+        "hint": {
+          "pasteOffer": "在此处粘贴Offer"
+        },
+        "panel": {
+          "information": "信息"
+        },
+        "label": {
+          "bundle": "Bundle"
+        },
+        "button": {
+          "cancel": "取消",
+          "sign": "签名",
+          "submit": "提交"
+        },
+        "field": {
+          "offer": "Offer信息"
+        }
+      },
+      "information": {
+        "requested": "付出",
+        "offered": "获得"
+      },
+      "messages": {
+        "failedToSign": "接受Offer失败"
       }
     }
   }

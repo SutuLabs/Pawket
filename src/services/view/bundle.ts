@@ -1,0 +1,56 @@
+import { tc } from "@/i18n/i18n";
+import { ApiResponse } from "@/models/api";
+import { SpendBundle } from "@/models/wallet";
+import { NotificationProgrammatic as Notification } from "buefy";
+import { ModalProgrammatic as Modal } from "buefy";
+import DevHelper from "@/components/DevHelper.vue";
+
+export async function submitBundle(bundle: SpendBundle, setSubmitting: (state: boolean) => void, success: () => void): Promise<void> {
+  setSubmitting(true);
+
+  try {
+    const resp = await fetch(process.env.VUE_APP_API_URL + "Wallet/pushtx", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ bundle: bundle }),
+    });
+    const json = (await resp.json()) as ApiResponse;
+    setSubmitting(false);
+    if (json.success) {
+      Notification.open({
+        message: tc("send.ui.messages.submitted"),
+        type: "is-success",
+      });
+      success();
+    } else {
+      Notification.open({
+        message: tc("send.ui.messages.getFailedResponse") + json.error,
+        type: "is-danger",
+      });
+    }
+  } catch (error) {
+    Notification.open({
+      message: tc("send.ui.messages.failedToSubmit") + error,
+      type: "is-danger",
+    });
+    console.warn(error);
+    setSubmitting(false);
+  }
+}
+
+function getBundleJson(bundle: SpendBundle): string {
+  return JSON.stringify(bundle, null, 4);
+}
+
+export function debugBundle(parent: Vue, bundle: SpendBundle): void {
+  Modal.open({
+    parent: parent,
+    component: DevHelper,
+    hasModalCard: true,
+    trapFocus: true,
+    props: { inputBundleText: getBundleJson(bundle) },
+  });
+}
