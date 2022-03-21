@@ -1,19 +1,19 @@
 <template>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">Take Offer</p>
+      <p class="modal-card-title">{{ $t("offer.take.ui.title") }}</p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
       <template v-if="step == 'Input'">
-        <b-field label="Offer" :message="offerText ? '' : 'paste offer here, e.g. offer1...'">
+        <b-field :label="$t('offer.take.ui.field.offer')" :message="offerText ? '' : $t('offer.take.ui.hint.pasteOffer')">
           <b-input type="textarea" v-model="offerText" @input="updateOffer()"></b-input>
         </b-field>
-        <b-field v-if="summary" label="Information">
+        <b-field v-if="summary" :label="$t('offer.take.ui.panel.information')">
           <template #message>
             <ul v-for="(arr, sumkey) in summary" :key="sumkey" :class="sumkey">
-              <li v-if="sumkey == 'requested'">In exchange for</li>
-              <li v-if="sumkey == 'offered'">You will receive</li>
+              <li v-if="sumkey == 'requested'">{{ $t("offer.take.information.requested") }}</li>
+              <li v-if="sumkey == 'offered'">{{ $t("offer.take.information.offered") }}</li>
               <li>
                 <ol class="token-list">
                   <li class="pt-1" v-for="(ent, idx) in arr" :key="idx">
@@ -21,8 +21,8 @@
                       <b-tag v-if="ent.id && cats[ent.id]" type="is-info" :title="cats[ent.id] + ' (' + ent.id + ')'">{{
                         cats[ent.id]
                       }}</b-tag>
-                      <b-tag v-else-if="ent.id" type="is-info" :title="ent.id">CAT {{ ent.id.slice(0, 7) + "..." }}</b-tag>
-                      <b-tag v-else type="is-info" title="Original XCH">XCH</b-tag>
+                      <b-tag v-else-if="ent.id" type="is-info" :title="ent.id">{{ $t("offer.symbol.CAT") }} {{ ent.id.slice(0, 7) + "..." }}</b-tag>
+                      <b-tag v-else type="is-info" :title="$t('offer.symbol.hint.XCH')">{{ $t("offer.symbol.XCH") }}</b-tag>
 
                       <b-tag class="" :title="ent.amount + ' mojos'">{{
                         ent.amount | demojo(ent.id && tokenInfo[cats[ent.id]])
@@ -41,7 +41,7 @@
       <template v-if="step == 'Confirmation'">
         <b-field v-if="bundle">
           <template #label>
-            {{ $t("send.ui.label.bundle") }}
+            {{ $t("offer.take.ui.label.bundle") }}
             <key-box display="✂️" :value="JSON.stringify(bundle)" tooltip="Copy"></key-box>
             <a href="javascript:void(0)" v-if="debugMode" @click="debugBundle()">🐞</a>
           </template>
@@ -51,15 +51,15 @@
     </section>
     <footer class="modal-card-foot is-justify-content-space-between">
       <div>
-        <b-button :label="$t('send.ui.button.cancel')" @click="close()"></b-button>
+        <b-button :label="$t('offer.take.ui.button.cancel')" @click="close()"></b-button>
         <b-button v-if="!bundle" type="is-success" @click="sign()">
-          {{ $t("send.ui.button.sign") }}
+          {{ $t("offer.take.ui.button.sign") }}
           <b-loading :is-full-page="false" :active="!tokenPuzzles || !availcoins"></b-loading>
         </b-button>
       </div>
       <div>
         <b-button
-          :label="$t('send.ui.button.submit')"
+          :label="$t('offer.take.ui.button.submit')"
           v-if="bundle"
           type="is-primary"
           class="is-pulled-right"
@@ -184,7 +184,7 @@ export default class TakeOffer extends Vue {
       this.step = "Confirmation";
     } catch (error) {
       Notification.open({
-        message: this.$tc("send.ui.messages.failedToSign") + error,
+        message: this.$tc("offer.take.messages.failedToSign") + error,
         type: "is-danger",
         autoClose: false,
       });

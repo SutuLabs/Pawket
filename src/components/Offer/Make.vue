@@ -1,12 +1,12 @@
 <template>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">Make Offer</p>
+      <p class="modal-card-title">{{ $t("offer.make.ui.title") }}</p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
       <template v-if="step == 'Input'">
-        <b-field label="Offer">
+        <b-field :label="$t('offer.make.ui.field.offer')">
           <template v-for="(offer, idx) in offers">
             <token-amount-field
               :key="idx"
@@ -20,7 +20,7 @@
             </token-amount-field>
           </template>
         </b-field>
-        <b-field label="Request">
+        <b-field :label="$t('offer.make.ui.field.request')">
           <template v-for="(request, idx) in requests">
             <token-amount-field
               :key="idx"
@@ -36,7 +36,7 @@
         </b-field>
       </template>
       <template v-if="step == 'Confirmation'">
-        <b-field v-if="summary" label="Information">
+        <b-field v-if="summary" :label="$t('offer.make.ui.panel.information')">
           <template #message>
             <ul v-for="(arr, sumkey) in summary" :key="sumkey" :class="sumkey">
               <li>{{ sumkey }}</li>
@@ -45,8 +45,10 @@
                   <b-tag v-if="ent.id && cats[ent.id]" type="is-info" :title="cats[ent.id] + '(' + ent.id + ')'">{{
                     cats[ent.id]
                   }}</b-tag>
-                  <b-tag v-else-if="ent.id" type="is-info" :title="ent.id">CAT {{ ent.id.slice(0, 7) + "..." }}</b-tag>
-                  <b-tag v-else type="is-info">XCH</b-tag>
+                  <b-tag v-else-if="ent.id" type="is-info" :title="ent.id"
+                    >{{ $t("offer.symbol.CAT") }} {{ ent.id.slice(0, 7) + "..." }}</b-tag
+                  >
+                  <b-tag v-else type="is-info">{{ $t("offer.symbol.XCH") }}</b-tag>
 
                   <b-tag type="">{{ ent.amount }}</b-tag>
                   <b-tag type="is-info is-light" :title="ent.target">{{ ent.target.slice(0, 7) + "..." }}</b-tag>
@@ -55,9 +57,9 @@
             </ul>
           </template>
         </b-field>
-        <b-field message="This is your offer text">
+        <b-field message="$t('offer.make.ui.panel.hint.thisIsYourOffer')">
           <template #label>
-            Your Offer
+            {{ $t("offer.make.ui.label.yourOfferTitle") }}
             <key-box display="✂️" :value="offerText" tooltip="Copy"></key-box>
             <a href="javascript:void(0)" v-if="debugMode || true" @click="debugOffer()">🐞</a>
           </template>
@@ -65,7 +67,7 @@
         </b-field>
         <b-field v-if="debugMode && bundle">
           <template #label>
-            {{ $t("send.ui.label.bundle") }}
+            {{ $t("offer.make.ui.label.bundle") }}
             <key-box display="✂️" :value="JSON.stringify(bundle)" tooltip="Copy"></key-box>
             <a href="javascript:void(0)" v-if="debugMode" @click="debugBundle()">🐞</a>
           </template>
@@ -75,14 +77,20 @@
     </section>
     <footer class="modal-card-foot is-justify-content-space-between">
       <div>
-        <b-button :label="$t('send.ui.button.cancel')" @click="close()"></b-button>
+        <b-button :label="$t('offer.make.ui.button.cancel')" @click="close()"></b-button>
         <b-button v-if="!bundle" type="is-success" @click="sign()">
-          {{ $t("send.ui.button.sign") }}
+          {{ $t("offer.make.ui.button.sign") }}
           <b-loading :is-full-page="false" :active="!tokenPuzzles || !availcoins || signing"></b-loading>
         </b-button>
       </div>
       <div>
-        <b-button :label="'copy'" v-if="bundle" type="is-primary" class="is-pulled-right" @click="copy()"></b-button>
+        <b-button
+          :label="$t('offer.make.ui.button.copy')"
+          v-if="bundle"
+          type="is-primary"
+          class="is-pulled-right"
+          @click="copy()"
+        ></b-button>
       </div>
     </footer>
   </div>
@@ -126,8 +134,8 @@ export default class MakeOffer extends Vue {
 
   public requests: OfferTokenAmount[] = [{ token: "XCH", amount: "0" }];
   public offers: OfferTokenAmount[] = [{ token: "XCH", amount: "0" }];
-  // public requests: OfferTokenAmount[] = [{ token: "BSH", amount: "0.01" }];
-  // public offers: OfferTokenAmount[] = [{ token: "XCH", amount: "0.00000000001" }];
+  // public requests: OfferTokenAmount[] = [{ token: "BSH", amount: "0.011" }];
+  // public offers: OfferTokenAmount[] = [{ token: "XCH", amount: "0.000000000009" }];
 
   get bundleText(): string {
     return this.offerBundle == null ? "" : JSON.stringify(this.offerBundle);
@@ -204,7 +212,7 @@ export default class MakeOffer extends Vue {
       this.step = "Confirmation";
     } catch (error) {
       Notification.open({
-        message: this.$tc("send.ui.messages.failedToSign") + error,
+        message: this.$tc("offer.make.messages.failedToSign") + error,
         type: "is-danger",
         autoClose: false,
       });
