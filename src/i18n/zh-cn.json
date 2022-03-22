@@ -140,8 +140,8 @@
         "title": "应用",
         "tooltip": {
           "donate": "向开发者捐赠",
-          "takeOffer": "发起Offer",
-          "makeOffer": "接受Offer"
+          "takeOffer": "接受Offer",
+          "makeOffer": "发起Offer"
         }
       }
     },
