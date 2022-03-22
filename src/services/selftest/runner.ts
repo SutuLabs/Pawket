@@ -13,19 +13,19 @@ class TestRunner {
         console.log("self-test started");
       }
 
-      await testCryptography();
-      await testPuzzleAssemble();
-      await testCoinName();
+      await this.runTest(testCryptography);
+      await this.runTest(testPuzzleAssemble);
+      await this.runTest(testCoinName);
 
       // make extra tests not in production
       if (process.env.NODE_ENV !== "production") {
-        await testStandardTransfer();
-        await testCatTransfer();
-        await testCatTransfer2();
-        await testOfferEncoding();
-        await testMakeOffer1();
-        await testMakeOffer2();
-        await testTakeOffer();
+        await this.runTest(testStandardTransfer);
+        await this.runTest(testCatTransfer);
+        await this.runTest(testCatTransfer2);
+        await this.runTest(testOfferEncoding);
+        await this.runTest(testMakeOffer1);
+        await this.runTest(testMakeOffer2);
+        await this.runTest(testTakeOffer);
 
         console.log("self-test passed");
       }
@@ -35,16 +35,25 @@ class TestRunner {
     } catch (error) {
       store.state.app.selfTestStatus = "Failed";
       store.state.app.selfTestError = error;
-      console.warn(error);
+    }
+  }
+
+  async runTest(test: () => Promise<void>): Promise<void> {
+    try {
+      await test();
+    } catch (error) {
+      console.warn(test.name, error);
+      throw error;
     }
   }
 }
 
 export default new TestRunner();
 
-export function assert<T>(expect: T, actual: T): void {
+export function assert<T>(expect: T, actual: T, desc: string | undefined = undefined): void {
+  const descHint = desc ? " " + desc : "";
   if (expect != actual) {
-    throw `asserting failed\nexpect:${expect}\nactual:${actual}`;
+    throw `asserting${descHint} failed\nexpect:${expect}\nactual:${actual}`;
   }
 }
 

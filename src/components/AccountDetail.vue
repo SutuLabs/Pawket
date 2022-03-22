@@ -70,10 +70,10 @@
         <b-button @click="openDonation()" size="is-large">❤️</b-button>
       </b-tooltip>
       <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.takeOffer')" multilined position="is-right">
-        <b-button @click="openTakeOffer()" size="is-large" class="ml-5">💱</b-button>
+        <b-button v-if="experimentMode" @click="openTakeOffer()" size="is-large" class="ml-5">💱</b-button>
       </b-tooltip>
       <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.makeOffer')" multilined position="is-right">
-        <b-button @click="openMakeOffer()" size="is-large" class="ml-5">💸</b-button>
+        <b-button v-if="experimentMode" @click="openMakeOffer()" size="is-large" class="ml-5">💸</b-button>
       </b-tooltip>
     </div>
   </div>
@@ -117,6 +117,10 @@ export default class AccountDetail extends Vue {
 
   get debugMode(): boolean {
     return store.state.app.debug;
+  }
+
+  get experimentMode(): boolean {
+    return store.state.vault.experiment;
   }
 
   get tokenInfo(): TokenInfo {

@@ -36,6 +36,15 @@
         </div>
         <div>
           <b-button
+            :label="
+              experimentMode
+                ? $t('accountConfigure.ui.button.disableExperiment')
+                : $t('accountConfigure.ui.button.enableExperiment')
+            "
+            :type="experimentMode ? 'is-light' : 'is-danger'"
+            @click="toggleExperiment()"
+          ></b-button>
+          <b-button
             :label="$t('accountConfigure.ui.button.changePassword')"
             type="is-warning"
             @click="changePassword()"
@@ -80,6 +89,10 @@ export default class AccountConfigure extends Vue {
   assetIds: CustomCat[] = [];
   configureOption: "Default" | "Password" = "Default";
 
+  get experimentMode(): boolean {
+    return store.state.vault.experiment;
+  }
+
   mounted(): void {
     if (!this.account) {
       console.error("account is empty, cannot get settings");
@@ -105,9 +118,10 @@ export default class AccountConfigure extends Vue {
 
   beforeAdd(name: string): boolean {
     const type = this.isAssetId(name) ? "ENTERNAME" : "ENTERASSETID";
-    const msg = type == "ENTERNAME"
-      ? this.$tc("accountConfigure.message.prompt.enterAssetName")
-      : this.$tc("accountConfigure.message.prompt.enterAssetId");
+    const msg =
+      type == "ENTERNAME"
+        ? this.$tc("accountConfigure.message.prompt.enterAssetName")
+        : this.$tc("accountConfigure.message.prompt.enterAssetId");
     Dialog.prompt({
       message: msg,
       confirmText: this.$tc("accountConfigure.message.prompt.confirmText"),
@@ -119,12 +133,10 @@ export default class AccountConfigure extends Vue {
           this.remove(name);
           this.cats.push(input);
           this.addOrUpdateAsset(input, name);
-        }
-        else {
+        } else {
           if (this.isAssetId(input)) {
             this.addOrUpdateAsset(name, input);
-          }
-          else {
+          } else {
             this.remove(name);
             Notification.open({
               message: this.$tc("accountConfigure.message.notification.wrongAssetId"),
@@ -135,7 +147,7 @@ export default class AccountConfigure extends Vue {
       },
       onCancel: () => {
         this.remove(name);
-      }
+      },
     });
     return true;
   }
@@ -154,7 +166,7 @@ export default class AccountConfigure extends Vue {
   isAssetId(assetId: string): boolean {
     try {
       return Bytes.from(assetId, "hex").length == 32;
-    } catch{
+    } catch {
       return false;
     }
   }
@@ -171,6 +183,24 @@ export default class AccountConfigure extends Vue {
     });
 
     this.close();
+  }
+
+  async toggleExperiment(): Promise<void> {
+    if (!this.experimentMode) {
+      this.$buefy.dialog.confirm({
+        message: this.$tc("accountConfigure.message.confirmation.experiment"),
+        confirmText: this.$tc("accountConfigure.ui.button.confirm"),
+        cancelText: this.$tc("accountConfigure.ui.button.cancel"),
+        trapFocus: true,
+        onConfirm: async () => {
+          store.state.vault.experiment = true;
+          await store.dispatch("persistent");
+        },
+      });
+    } else {
+      store.state.vault.experiment = false;
+      await store.dispatch("persistent");
+    }
   }
 }
 </script>

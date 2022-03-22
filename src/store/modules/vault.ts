@@ -15,6 +15,7 @@ export interface IVaultState {
   seedMnemonic: string;
   unlocked: boolean;
   loading: boolean;
+  experiment: boolean;
 }
 
 store.registerModule<IVaultState>('vault', {
@@ -27,6 +28,7 @@ store.registerModule<IVaultState>('vault', {
       password: "",
       unlocked: false,
       loading: true,
+      experiment: false,
     };
   },
   actions: {
@@ -58,6 +60,7 @@ store.registerModule<IVaultState>('vault', {
         state.passwordHash = sts.passwordHash;
         state.encryptedSeed = sts.encryptedSeed;
         state.encryptedAccounts = sts.encryptedAccounts;
+        state.experiment = sts.experiment;
         state.loading = false;
       }
 
@@ -151,6 +154,7 @@ store.registerModule<IVaultState>('vault', {
           passwordHash: state.passwordHash,
           encryptedAccounts: encryptedAccounts,
           network: rootState.network.network,
+          experiment: state.experiment,
         })
       );
 
