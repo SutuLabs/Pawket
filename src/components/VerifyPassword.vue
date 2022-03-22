@@ -9,7 +9,7 @@
             label-position="on-border"
             :type="isCorrect ? '' : 'is-danger'"
           >
-            <b-input type="password" ref="password" @keyup.native.enter="confirm()" v-model="password"></b-input>
+            <b-input type="password" ref="password" @keyup.native.enter="confirm()" @input.native.enter="clearErrorMsg()" v-model="password"></b-input>
           </b-field>
           <p class="help is-danger" v-if="!isCorrect">{{ $t("verifyPassword.message.error.incorrectPassword") }}</p>
           <div class="buttons">
@@ -94,6 +94,10 @@ export default class VerifyPassword extends Vue {
     }
     this.isCorrect = true;
     await store.dispatch("unlock", this.password);
+  }
+
+  clearErrorMsg(): void {
+    this.isCorrect = true;
   }
 
   create(): void {
