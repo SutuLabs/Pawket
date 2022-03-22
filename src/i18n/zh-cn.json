@@ -183,7 +183,7 @@
         "cancelText": "取消"
       },
       "notification": {
-        "wrongAssetId": "CAT的资产 ID不正确，添加不成功！",
+        "wrongAssetId": "CAT 的资产 ID 不正确，添加失败！",
         "saved": "已保存"
       },
       "confirmation": {
@@ -264,8 +264,8 @@
         "delete": "删除",
         "edit": "编辑名称",
         "details": "查看详情",
-        "addBySerial": "主账户衍生的序列钱包。",
-        "addByPassword": "通过密码创建的新钱包，同时拥有助记词和密码，才能进入钱包。",
+        "addBySerial": "衍生的序列账户。",
+        "addByPassword": "通过密码创建的新账户，同时拥有助记词和密码，才能进入该账户。",
         "addByLegacy": "Chia 客户端钱包。"
       }
     },
@@ -295,7 +295,7 @@
         "link": "链接"
       },
       "label": {
-        "address": "地址"
+        "address": "地址[硬币数]"
       },
       "tooltip": {
         "blockchainExplorer": "打开区块链浏览器"
