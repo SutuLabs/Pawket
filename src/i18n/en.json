@@ -166,7 +166,10 @@
       "button": {
         "submit": "Save",
         "cancel": "Cancel",
-        "changePassword": "Change Password"
+        "changePassword": "Change Password",
+        "disableExperiment": "Disable Experimental",
+        "enableExperiment": "Experimental Features",
+        "confirm": "Confirm"
       },
       "placeholder": {
         "addCAT": "Add a CAT"
@@ -182,6 +185,9 @@
       "notification": {
         "wrongAssetId": "Wrong asset Id, failed to add new CAT!",
         "saved": "Saved"
+      },
+      "confirmation": {
+        "experiment": "Experimental features are not stable and not fully tested yet, you can have a try and give us your feedback."
       }
     }
   },
