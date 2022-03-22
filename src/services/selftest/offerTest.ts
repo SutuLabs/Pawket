@@ -7,6 +7,7 @@ import { decodeOffer, encodeOffer } from "../offer/encoding";
 import { getOfferSummary, OfferEntity, OfferPlan } from "../offer/summary";
 import { combineSpendBundle, generateOffer, generateOfferPlan, getReversePlan } from "../offer/bundler";
 import { getCatNameDict } from "../coin/cat";
+import { SymbolCoins } from "../transfer/transfer";
 
 export async function testOfferEncoding(): Promise<void> {
   const expect = {
@@ -284,14 +285,23 @@ export async function testTakeOffer(): Promise<void> {
   const change_hex = "0x907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96";
   const nonce = "c616dec58b3c9a898b167f4ea26adb27b464c7e28d2656eeb845a525b9f5786c";
   const tokenPuzzles = await coinHandler.getAssetsRequestDetail(account);
-  const availcoins = await coinHandler.getAvailableCoins(tokenPuzzles, coinHandler.getTokenNames(account));
+  // const availcoins = await coinHandler.getAvailableCoins(tokenPuzzles, coinHandler.getTokenNames(account));
+  const availcoins: SymbolCoins = {
+    "BSH": [
+      {
+        "amount": 100n,
+        "parent_coin_info": "0xd538ae235752c68078884bfb129e2c0832c2d8ed67674bde6c9a48603e6b875e",
+        "puzzle_hash": "0x9d974f53c5a3d12ef729f38f2c1603b4f4f959a033d0a6ed763fab46a7cc5577"
+      }
+    ]
+  };
 
   const revSummary = getReversePlan(summary, change_hex);
 
   const cats = getCatNameDict(account);
   const offered: OfferEntity[] = revSummary.offered.map((_) => Object.assign({}, _, { symbol: cats[_.id] }));
   const offplan = await generateOfferPlan(offered, change_hex, availcoins, 0n);
-  const takerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, nonce);
+  const takerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, nonce, localPuzzleApiCall);
   const combined = await combineSpendBundle([makerBundle, takerBundle]);
 
   assertBundle(expect, combined);
