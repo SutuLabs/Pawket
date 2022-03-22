@@ -1,40 +1,14 @@
 <template>
   <div class="modal-card">
-    <section v-if="configureOption === 'Default'">
+    <section>
       <header class="modal-card-head">
         <p class="modal-card-title">
-          {{ $t("accountConfigure.ui.title.configure") }}
+          添加CAT
         </p>
         <button type="button" class="delete" @click="close()"></button>
       </header>
       <section class="modal-card-body">
-        <a
-          href="javascript:void(0)"
-          :class="displayMaxAddressSlider ? 'panel-block has-background-light' : 'panel-block'"
-          @click="ToggleChangeAddress()"
-        >
-          <div class="column is-full">
-            <span>{{ $t("accountConfigure.ui.label.maxAddress") }}</span>
-          </div>
-        </a>
-        <b-slider v-model="maxAddress" :max="12" :min="1" v-if="displayMaxAddressSlider" indicator></b-slider>
-        <a href="javascript:void(0)" class="panel-block" @click="changePassword()">
-          <div class="column is-full">
-            <b-tooltip :label="$t('accountList.ui.tooltip.addByPassword')" position="is-right" multilined size="is-small">
-              {{ $t("accountConfigure.ui.button.changePassword") }}
-            </b-tooltip>
-          </div>
-        </a>
-        <a class="panel-block">
-          <div class="column is-full">
-            <span>{{ $t("accountConfigure.ui.button.disableExperiment") }}</span>
-            <b-switch class="is-pulled-right" :value="experimentMode" @input="toggleExperiment()"></b-switch>
-          </div>
-        </a>
-        <a href="https://info.pawket.app/privacy-policy/" target="_blank">
-          <div class="has-text-centered has-text-dark mt-2">隐私声明</div>
-        </a>
-        <!-- <b-field :label="$t('accountConfigure.ui.label.listingCATs')">
+        <b-field :label="$t('accountConfigure.ui.label.listingCATs')">
           <b-taginput
             class="taginput-sortable"
             v-sortable="sortableOptions"
@@ -50,11 +24,14 @@
               <li v-for="asset in assetIds" :key="asset.id">{{ asset.name }}: {{ asset.id }}</li>
             </ul>
           </template>
-        </b-field> -->
+        </b-field>
       </section>
-    </section>
-    <section v-if="configureOption === 'Password'">
-      <change-password @close="close()" @back="back()"></change-password>
+       <footer class="modal-card-foot is-justify-content-space-between">
+        <div>
+          <b-button :label="$t('accountConfigure.ui.button.cancel')" @click="close()"></b-button>
+          <b-button :label="$t('accountConfigure.ui.button.submit')" type="is-primary" @click="submit()"></b-button>
+        </div>
+      </footer>
     </section>
   </div>
 </template>
@@ -62,24 +39,18 @@
 <script lang="ts">
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import store from "@/store/index";
-import KeyBox from "@/components/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { DialogProgrammatic as Dialog } from "buefy";
 import { sortable } from "@/directives/sortable";
 import { AccountEntity, CustomCat } from "@/store/modules/account";
-import ChangePassword from "./ChangePassword.vue";
 import { Bytes } from "clvm";
 
 @Component({
   directives: {
     sortable,
   },
-  components: {
-    KeyBox,
-    ChangePassword,
-  },
 })
-export default class AccountConfigure extends Vue {
+export default class AddCAT extends Vue {
   @Prop() private account!: AccountEntity;
   public maxAddress: number | null = null;
   public displayMaxAddressSlider = false;
@@ -90,18 +61,12 @@ export default class AccountConfigure extends Vue {
   };
   cats: string[] = [];
   assetIds: CustomCat[] = [];
-  configureOption: "Default" | "Password" = "Default";
-
-  get experimentMode(): boolean {
-    return store.state.vault.experiment;
-  }
 
   mounted(): void {
     if (!this.account) {
       console.error("account is empty, cannot get settings");
       return;
     }
-    this.maxAddress = this.account.addressRetrievalCount;
     this.assetIds = [...(this.account.cats ?? [])];
     this.cats = this.assetIds.map((_) => _.name);
   }
@@ -109,18 +74,6 @@ export default class AccountConfigure extends Vue {
   @Emit("close")
   close(): void {
     return;
-  }
-
-  back(): void {
-    this.configureOption = "Default";
-  }
-
-  changePassword(): void {
-    this.configureOption = "Password";
-  }
-
-  ToggleChangeAddress(): void {
-    this.displayMaxAddressSlider = !this.displayMaxAddressSlider;
   }
 
   beforeAdd(name: string): boolean {
@@ -190,24 +143,6 @@ export default class AccountConfigure extends Vue {
     });
 
     this.close();
-  }
-
-  async toggleExperiment(): Promise<void> {
-    if (!this.experimentMode) {
-      this.$buefy.dialog.confirm({
-        message: this.$tc("accountConfigure.message.confirmation.experiment"),
-        confirmText: this.$tc("accountConfigure.ui.button.confirm"),
-        cancelText: this.$tc("accountConfigure.ui.button.cancel"),
-        trapFocus: true,
-        onConfirm: async () => {
-          store.state.vault.experiment = true;
-          await store.dispatch("persistent");
-        },
-      });
-    } else {
-      store.state.vault.experiment = false;
-      await store.dispatch("persistent");
-    }
   }
 }
 </script>
