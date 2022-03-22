@@ -18,17 +18,15 @@
     <footer class="footer">
       <div class="content has-text-centered">
         <p>
-          <strong>Pawket</strong>
-          [{{ version }}] by <b-icon icon="github" size="is-small"> </b-icon><a href="https://github.com/chiabee">Chiabee</a>.
+          <strong> {{ $t("footer.ui.productInfo.name") }}</strong>
+          <span @click="versionClick()">[{{ version }}]</span><span v-if="debugMode" @click="disableDebug()">[DEBUG]</span> by
+          <b-icon icon="github" size="is-small"></b-icon
+          ><a href="https://github.com/chiabee" target="_blank">{{ $t("footer.ui.productInfo.author") }}</a
+          >.
           <br />
-          {{ $t("footer.ui.warning.paragraph1") }}
-          <span @click="alphaClick()">{{ $t("footer.ui.warning.stage") }}</span>
-          {{ $t("footer.ui.warning.paragraph2") }}
-          <span v-if="debugMode" @click="disableDebug()">[DEBUG]</span>
-          <br />
-          <a href="#/about" target="_blank" size="is-small">
-            <b-icon icon="rocket-launch" size="is-small"></b-icon>
-            {{ $t("footer.ui.button.roadmap") }}
+          <a href="https://info.pawket.app/" target="_blank" size="is-small">
+            <b-icon icon="home" size="is-small"></b-icon>
+            {{ $t("footer.ui.button.home") }}
             <b-icon icon="open-in-new" size="is-small"></b-icon>
           </a>
           |
@@ -58,7 +56,7 @@ export default class App extends Vue {
     return store.state.app.debug;
   }
 
-  alphaClick(): void {
+  versionClick(): void {
     this.debugClick--;
     if (this.debugClick == 0) {
       store.state.app.debug = true;

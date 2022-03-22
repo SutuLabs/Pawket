@@ -22,13 +22,12 @@
   },
   "footer": {
     "ui": {
-      "warning": {
-        "paragraph1": "This app is in ",
-        "paragraph2": " stage, don't use in PRODUCTION.",
-        "stage": "ALPHA"
+      "productInfo": {
+        "name": "Pawket",
+        "author": "Chiabee"
       },
       "button": {
-        "roadmap": "Roadmap",
+        "home": "Home",
         "developer": "Developer"
       }
     }
