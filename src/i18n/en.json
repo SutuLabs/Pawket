@@ -60,7 +60,7 @@
     },
     "message": {
       "confirmation": {
-        "clear": "Clearing data will permanently remove all data from your device, make sure that wallet mnemonic have been backed up. Are you sure you want to continue?",
+        "clear": "Clearing data will permanently remove all data from your device, make sure that wallet mnemonics have been backed up. Are you sure you want to continue?",
         "confirmText": "Confirm",
         "cancelText": "Cancel"
       },
@@ -182,7 +182,7 @@
         "cancelText": "Cancel"
       },
       "notification": {
-        "wrongAssetId": "Wrong asset Id, failed to add new CAT!",
+        "wrongAssetId": "Wrong asset Id, failed to add a new CAT!",
         "saved": "Saved"
       },
       "confirmation": {
@@ -245,7 +245,7 @@
     },
     "message": {
       "inputPassword": "Please input your password",
-      "passwordNotCorrect": "Password is not correct"
+      "passwordNotCorrect": "Incorrect Password"
     }
   },
   "accountList": {
@@ -263,8 +263,8 @@
         "delete": "Delete",
         "edit": "Edit",
         "details": "Details",
-        "addBySerial": "A serial wallet derived from the master account.",
-        "addByPassword": "New wallet created with password. You can enter the wallet only if you have the mnemonic and password at the same time.",
+        "addBySerial": "Derived serial account.",
+        "addByPassword": "New account created with password. You can enter the account only if you have the mnemonic and password at the same time.",
         "addByLegacy": "Chia client wallet."
       }
     },
@@ -294,7 +294,7 @@
         "link": "Links"
       },
       "label": {
-        "address": "Address"
+        "address": "Address[number of coins]"
       },
       "tooltip": {
         "blockchainExplorer": "View on Blockchain Explorer"
