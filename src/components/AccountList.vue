@@ -21,16 +21,16 @@
           <span class="is-pulled-right" @click="showExport(account)">🖨️️</span>
         </b-tooltip>
       </a>
-      <a href="javascript:void(0)" class="panel-block" @click="addByPassword()">
-        <b-tooltip :label="$t('accountList.ui.tooltip.addByPassword')" position="is-right" multilined size="is-small">
-          <span class="panel-icon">➕</span>
-          {{ $t("accountList.ui.button.addByPassword") }}
-        </b-tooltip>
-      </a>
       <a href="javascript:void(0)" class="panel-block" @click="addBySerial()">
         <b-tooltip :label="$t('accountList.ui.tooltip.addBySerial')" position="is-right" multilined size="is-small">
           <span class="panel-icon">➕</span>
           {{ $t("accountList.ui.button.addBySerial") }}
+        </b-tooltip>
+      </a>
+      <a href="javascript:void(0)" class="panel-block" @click="addByPassword()">
+        <b-tooltip :label="$t('accountList.ui.tooltip.addByPassword')" position="is-right" multilined size="is-small">
+          <span class="panel-icon">➕</span>
+          {{ $t("accountList.ui.button.addByPassword") }}
         </b-tooltip>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addByLegacy()">

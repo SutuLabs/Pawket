@@ -124,7 +124,8 @@
         "send": "Send",
         "export": "Export",
         "confirm": "Confirm",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "addToken": "Add Token"
       },
       "tab": {
         "asset": "Asset",
@@ -156,35 +157,23 @@
   "accountConfigure": {
     "ui": {
       "title": {
-        "configure": "Configure"
+        "settings": "Settings"
       },
       "label": {
-        "maxAddress": "Max Privacy Addresses to Search",
-        "listingCATs": "Listing CATs"
+        "receiveAddress": "Receive Address Settings",
+        "privacyPolicy": "Privacy Policy"
       },
       "button": {
-        "submit": "Save",
         "cancel": "Cancel",
         "changePassword": "Change Password",
-        "disableExperiment": "Disable Experimental",
-        "enableExperiment": "Experimental Features",
+        "experimental": "Experimental",
         "confirm": "Confirm"
       },
-      "placeholder": {
-        "addCAT": "Add a CAT"
+      "tooltip": {
+        "receiveAddress": "You can check the balance on more addresses if you increase the value, but the wallet will run slower."
       }
     },
     "message": {
-      "prompt": {
-        "enterAssetId": "Enter the Asset ID",
-        "enterAssetName": "Enter the Asset Name",
-        "confirmText": "OK",
-        "cancelText": "Cancel"
-      },
-      "notification": {
-        "wrongAssetId": "Wrong asset Id, failed to add a new CAT!",
-        "saved": "Saved"
-      },
       "confirmation": {
         "experiment": "Experimental features are not stable and not fully tested yet, you can have a try and give us your feedback."
       }
@@ -256,7 +245,7 @@
       "button": {
         "showMnemonic": "Show Mnemonic",
         "addBySerial": "Add by Serial",
-        "addByPassword": "Add by Password",
+        "addByPassword": "Add by Password ( Advanced )",
         "addByLegacy": "Import Chia Client 24 Mnemonic Words"
       },
       "tooltip": {
@@ -461,6 +450,35 @@
       },
       "messages": {
         "failedToSign": "Failed to take offer"
+      }
+    }
+  },
+  "addToken": {
+    "ui": {
+      "title": {
+        "addToken": "Add Token"
+      },
+      "placeholder": {
+        "addToken":"Add Token"
+      },
+      "label":{
+        "listingCATs":"Listing CATs"
+      },
+      "button": {
+        "cancel":"Cancel",
+        "submit": "Submit"
+      }
+    },
+    "message": {
+      "prompt": {
+        "enterAssetId": "Enter the Asset ID",
+        "enterAssetName": "Enter the Asset Name",
+        "confirmText": "OK",
+        "cancelText": "Cancel"
+      },
+      "notification": {
+        "wrongAssetId": "Wrong asset Id, failed to add a new CAT!",
+        "saved": "Saved"
       }
     }
   }

@@ -64,6 +64,12 @@
         </b-tab-item>
       </b-tabs>
     </div>
+    <div class="mb-4">
+      <b-button expanded @click="addCAT()">
+        <b-icon icon="plus" size="is-small"> </b-icon>
+        <span class="has-text-dark">{{ $t("accountDetail.ui.button.addToken") }}</span>
+      </b-button>
+    </div>
     <div class="box">
       <h2 class="has-text-weight-bold is-size-4 pb-5">{{ $t("accountDetail.ui.dApps.title") }}</h2>
       <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.donate')" multilined position="is-right">
@@ -85,6 +91,7 @@ import store from "@/store";
 import AccountExport from "@/components/AccountExport.vue";
 import AccountList from "@/components/AccountList.vue";
 import AccountConfigure from "@/components/AccountConfigure.vue";
+import AddToken from "@/components/AddToken.vue";
 import ExplorerLink from "@/components/ExplorerLink.vue";
 import KeyBox from "@/components/KeyBox.vue";
 import Send from "./Send.vue";
@@ -158,6 +165,17 @@ export default class AccountDetail extends Vue {
     this.$buefy.modal.open({
       parent: this,
       component: AccountConfigure,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: ["x"],
+      props: { account: this.account },
+    });
+  }
+
+  addCAT(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: AddToken,
       hasModalCard: true,
       trapFocus: true,
       canCancel: ["x"],
