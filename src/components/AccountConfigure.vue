@@ -23,7 +23,7 @@
         <b-slider v-model="maxAddress" :max="12" :min="1" v-if="displayMaxAddressSlider" indicator></b-slider>
         <a href="javascript:void(0)" class="panel-block" @click="changePassword()">
           <div class="column is-full">
-              {{ $t("accountConfigure.ui.button.changePassword") }}
+            {{ $t("accountConfigure.ui.button.changePassword") }}
           </div>
         </a>
         <a class="panel-block">
