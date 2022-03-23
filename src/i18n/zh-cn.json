@@ -280,13 +280,13 @@
   "explorerLink": {
     "ui": {
       "title": {
-        "link": "链接"
+        "link": "接收地址"
       },
       "label": {
         "address": "地址[硬币数]"
       },
       "tooltip": {
-        "blockchainExplorer": "打开区块链浏览器"
+        "blockchainExplorer": "在区块链浏览器里查看"
       }
     }
   },
@@ -328,9 +328,9 @@
       },
       "messages": {
         "getFailedResponse": "提交时发生错误: ",
-        "failedToSubmit": "提交至内存池失败: ",
+        "failedToSubmit": "提交至交易池失败: ",
         "failedToSign": "签名失败: ",
-        "submitted": "已经提交进内存池，请等待确认"
+        "submitted": "已经提交进交易池，请等待确认"
       },
       "tooltip": {
         "singleCoinExplanation": "当前仅支持单币模式",
