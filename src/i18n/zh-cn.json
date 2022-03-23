@@ -252,14 +252,14 @@
         "delete": "删除",
         "edit": "编辑名称",
         "details": "查看详情",
-        "addBySerial": "衍生的序列账户。",
-        "addByPassword": "通过密码创建的新账户，同时拥有助记词和密码，才能进入该账户。",
+        "addBySerial": "按顺序创建派生的序列账户。",
+        "addByPassword": "由【助记词+密码】保护的账户。输入相同的密码即可进入相同的账户。",
         "addByLegacy": "Chia 客户端钱包。"
       }
     },
     "message": {
       "confirmation": {
-        "removeAccount": "确认删除账户吗？删除操作不可恢复！",
+        "removeAccount": "确认删除账户吗？",
         "cancelText": "取消",
         "confirmText": "确认"
       },
