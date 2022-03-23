@@ -245,7 +245,7 @@
       "button": {
         "showMnemonic": "Show Mnemonic",
         "addBySerial": "Add by Serial",
-        "addByPassword": "Add by Password",
+        "addByPassword": "Add by Password ( Advanced )",
         "addByLegacy": "Import Chia Client 24 Mnemonic Words"
       },
       "tooltip": {
