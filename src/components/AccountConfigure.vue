@@ -23,9 +23,7 @@
         <b-slider v-model="maxAddress" :max="12" :min="1" v-if="displayMaxAddressSlider" indicator></b-slider>
         <a href="javascript:void(0)" class="panel-block" @click="changePassword()">
           <div class="column is-full">
-            <b-tooltip :label="$t('accountList.ui.tooltip.addByPassword')" position="is-right" multilined size="is-small">
               {{ $t("accountConfigure.ui.button.changePassword") }}
-            </b-tooltip>
           </div>
         </a>
         <a class="panel-block">
