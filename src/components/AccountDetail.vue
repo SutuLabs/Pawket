@@ -67,7 +67,7 @@
     <div class="mb-4">
       <b-button expanded @click="addCAT()">
         <b-icon icon="plus" size="is-small"> </b-icon>
-        <span class="has-text-dark">Add CAT</span>
+        <span class="has-text-dark">{{ $t("accountDetail.ui.button.addToken") }}</span>
       </b-button>
     </div>
     <div class="box">
@@ -91,7 +91,7 @@ import store from "@/store";
 import AccountExport from "@/components/AccountExport.vue";
 import AccountList from "@/components/AccountList.vue";
 import AccountConfigure from "@/components/AccountConfigure.vue";
-import AddCAT from "@/components/AddCAT.vue";
+import AddToken from "@/components/AddToken.vue";
 import ExplorerLink from "@/components/ExplorerLink.vue";
 import KeyBox from "@/components/KeyBox.vue";
 import Send from "./Send.vue";
@@ -175,7 +175,7 @@ export default class AccountDetail extends Vue {
   addCAT(): void {
     this.$buefy.modal.open({
       parent: this,
-      component: AddCAT,
+      component: AddToken,
       hasModalCard: true,
       trapFocus: true,
       canCancel: ["x"],

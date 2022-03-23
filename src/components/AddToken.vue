@@ -3,12 +3,12 @@
     <section>
       <header class="modal-card-head">
         <p class="modal-card-title">
-          添加CAT
+          {{ $t('addToken.ui.title.addToken') }}
         </p>
         <button type="button" class="delete" @click="close()"></button>
       </header>
       <section class="modal-card-body">
-        <b-field :label="$t('accountConfigure.ui.label.listingCATs')">
+        <b-field :label="$t('addToken.ui.label.listingCATs')">
           <b-taginput
             class="taginput-sortable"
             v-sortable="sortableOptions"
@@ -16,7 +16,7 @@
             ellipsis
             icon="label"
             :before-adding="beforeAdd"
-            :placeholder="$t('accountConfigure.ui.placeholder.addCAT')"
+            :placeholder="$t('addToken.ui.placeholder.addToken')"
           >
           </b-taginput>
           <template #message>
@@ -28,8 +28,8 @@
       </section>
        <footer class="modal-card-foot is-justify-content-space-between">
         <div>
-          <b-button :label="$t('accountConfigure.ui.button.cancel')" @click="close()"></b-button>
-          <b-button :label="$t('accountConfigure.ui.button.submit')" type="is-primary" @click="submit()"></b-button>
+          <b-button :label="$t('addToken.ui.button.cancel')" @click="close()"></b-button>
+          <b-button :label="$t('addToken.ui.button.submit')" type="is-primary" @click="submit()"></b-button>
         </div>
       </footer>
     </section>
@@ -50,7 +50,7 @@ import { Bytes } from "clvm";
     sortable,
   },
 })
-export default class AddCAT extends Vue {
+export default class AddToken extends Vue {
   @Prop() private account!: AccountEntity;
   public maxAddress: number | null = null;
   public displayMaxAddressSlider = false;
@@ -80,12 +80,12 @@ export default class AddCAT extends Vue {
     const type = this.isAssetId(name) ? "ENTERNAME" : "ENTERASSETID";
     const msg =
       type == "ENTERNAME"
-        ? this.$tc("accountConfigure.message.prompt.enterAssetName")
-        : this.$tc("accountConfigure.message.prompt.enterAssetId");
+        ? this.$tc("addToken.message.prompt.enterAssetName")
+        : this.$tc("addToken.message.prompt.enterAssetId");
     Dialog.prompt({
       message: msg,
-      confirmText: this.$tc("accountConfigure.message.prompt.confirmText"),
-      cancelText: this.$tc("accountConfigure.message.prompt.cancelText"),
+      confirmText: this.$tc("addToken.message.prompt.confirmText"),
+      cancelText: this.$tc("addToken.message.prompt.cancelText"),
       trapFocus: true,
       type: "is-info",
       onConfirm: (input) => {
@@ -99,7 +99,7 @@ export default class AddCAT extends Vue {
           } else {
             this.remove(name);
             Notification.open({
-              message: this.$tc("accountConfigure.message.notification.wrongAssetId"),
+              message: this.$tc("addToken.message.notification.wrongAssetId"),
               type: "is-danger",
             });
           }
@@ -138,7 +138,7 @@ export default class AddCAT extends Vue {
     await store.dispatch("persistent");
 
     Notification.open({
-      message: this.$tc("accountConfigure.message.notification.saved"),
+      message: this.$tc("addToken.message.notification.saved"),
       type: "is-success",
     });
 
