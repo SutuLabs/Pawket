@@ -233,7 +233,7 @@
       }
     },
     "message": {
-      "inputPassword": "Please input your password",
+      "inputPassword": "Please input your login password",
       "passwordNotCorrect": "Incorrect Password"
     }
   },
@@ -252,7 +252,7 @@
         "delete": "Delete",
         "edit": "Edit",
         "details": "Details",
-        "addBySerial": "Derived serial account.",
+        "addBySerial": "Derived serial accounts are created in order.",
         "addByPassword": "Account protected by MNEMONIC and PASSWORD. Enter the same password to access the same account.",
         "addByLegacy": "Chia client wallet."
       }
@@ -280,7 +280,7 @@
   "explorerLink": {
     "ui": {
       "title": {
-        "link": "Links"
+        "link": "Receive Address"
       },
       "label": {
         "address": "Address[number of coins]"
