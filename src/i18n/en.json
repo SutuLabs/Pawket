@@ -472,7 +472,7 @@
     "message": {
       "prompt": {
         "enterAssetId": "Enter the Asset ID",
-        "enterAssetName": "Enter the CAT Name",
+        "enterAssetName": "Enter CAT's name",
         "confirmText": "OK",
         "cancelText": "Cancel"
       },
