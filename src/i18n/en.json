@@ -43,7 +43,7 @@
     "ui": {
       "button": {
         "confirm": "Confirm",
-        "clear": "Clear Data",
+        "clear": "Reset Wallet",
         "create": "Create"
       },
       "label": {
@@ -60,7 +60,7 @@
     },
     "message": {
       "confirmation": {
-        "clear": "Clearing data will permanently remove all data from your device, make sure that wallet mnemonics have been backed up. Are you sure you want to continue?",
+        "clear": "Resetting wallet will permanently remove all data (including mnemonics and passwords) from your device, make sure that wallet mnemonics have been backed up. Are you sure to reset?",
         "confirmText": "Confirm",
         "cancelText": "Cancel"
       },
@@ -165,7 +165,7 @@
       },
       "button": {
         "cancel": "Cancel",
-        "changePassword": "Change Password",
+        "changePassword": "Change Login Password",
         "experimental": "Experimental",
         "confirm": "Confirm"
       },
@@ -182,7 +182,7 @@
   "changePassword": {
     "ui": {
       "title": {
-        "changePassword": "Change Password"
+        "changePassword": "Change Login Password"
       },
       "label": {
         "oldPassword": "Old Password",
@@ -233,7 +233,7 @@
       }
     },
     "message": {
-      "inputPassword": "Please input your password",
+      "inputPassword": "Please input your login password",
       "passwordNotCorrect": "Incorrect Password"
     }
   },
@@ -243,7 +243,7 @@
         "list": "Account List"
       },
       "button": {
-        "showMnemonic": "Show Mnemonic",
+        "showMnemonic": "Reveal Mnemonic",
         "addBySerial": "Add by Serial",
         "addByPassword": "Add by Password ( Advanced )",
         "addByLegacy": "Import Chia Client 24 Mnemonic Words"
@@ -252,14 +252,14 @@
         "delete": "Delete",
         "edit": "Edit",
         "details": "Details",
-        "addBySerial": "Derived serial account.",
-        "addByPassword": "New account created with password. You can enter the account only if you have the mnemonic and password at the same time.",
+        "addBySerial": "Derived serial accounts are created in order.",
+        "addByPassword": "Account protected by MNEMONIC and PASSWORD. Enter the same password to access the same account.",
         "addByLegacy": "Chia client wallet."
       }
     },
     "message": {
       "confirmation": {
-        "removeAccount": "Remove account? Operation cannot be undone!!!",
+        "removeAccount": "Remove account? ",
         "cancelText": "Cancel",
         "confirmText": "OK"
       },
@@ -280,7 +280,7 @@
   "explorerLink": {
     "ui": {
       "title": {
-        "link": "Links"
+        "link": "Receive Address"
       },
       "label": {
         "address": "Address[number of coins]"
@@ -472,7 +472,7 @@
     "message": {
       "prompt": {
         "enterAssetId": "Enter the Asset ID",
-        "enterAssetName": "Enter the Asset Name",
+        "enterAssetName": "Enter CAT's name",
         "confirmText": "OK",
         "cancelText": "Cancel"
       },
