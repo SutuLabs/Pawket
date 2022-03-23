@@ -11,7 +11,7 @@
         <a
           href="javascript:void(0)"
           :class="displayMaxAddressSlider ? 'panel-block has-background-light' : 'panel-block'"
-          @click="ToggleChangeAddress()"
+          @click="toggleChangeAddress()"
         >
           <div class="column is-full">
             <span>{{ $t("accountConfigure.ui.label.receiveAddress") }}</span>
@@ -80,9 +80,9 @@ export default class AccountConfigure extends Vue {
   }
 
   @Emit("close")
-  close(): void {
-    this.submit();
-    return;
+  async close(): Promise<void> {
+    if (this.maxAddress) this.account.addressRetrievalCount = this.maxAddress;
+    await store.dispatch("persistent");
   }
 
   back(): void {
@@ -93,13 +93,8 @@ export default class AccountConfigure extends Vue {
     this.configureOption = "Password";
   }
 
-  ToggleChangeAddress(): void {
+  toggleChangeAddress(): void {
     this.displayMaxAddressSlider = !this.displayMaxAddressSlider;
-  }
-
-  async submit(): Promise<void> {
-    if (this.maxAddress) this.account.addressRetrievalCount = this.maxAddress;
-    await store.dispatch("persistent");
   }
 
   async toggleExperiment(): Promise<void> {
@@ -122,8 +117,4 @@ export default class AccountConfigure extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-.taginput-sortable::v-deep .tag {
-  cursor: grab !important;
-}
-</style>
+<style scoped lang="scss"></style>

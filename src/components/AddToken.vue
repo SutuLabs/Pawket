@@ -52,8 +52,6 @@ import { Bytes } from "clvm";
 })
 export default class AddToken extends Vue {
   @Prop() private account!: AccountEntity;
-  public maxAddress: number | null = null;
-  public displayMaxAddressSlider = false;
 
   sortableOptions = {
     chosenClass: "is-primary",
@@ -132,7 +130,6 @@ export default class AddToken extends Vue {
   }
 
   async submit(): Promise<void> {
-    if (this.maxAddress) this.account.addressRetrievalCount = this.maxAddress;
     const dict = Object.assign({}, ...this.assetIds.map((x) => ({ [x.name]: x.id })));
     this.account.cats = this.cats.map((_) => ({ name: _, id: dict[_] }));
     await store.dispatch("persistent");
