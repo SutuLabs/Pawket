@@ -277,7 +277,7 @@ export default class Send extends Vue {
 
   async submit(): Promise<void> {
     if (!this.bundle) return;
-    submitBundle(this.bundle, (_) => (this.submitting = _), close);
+    submitBundle(this.bundle, (_) => (this.submitting = _), this.close);
   }
 
   debugBundle(): void {
