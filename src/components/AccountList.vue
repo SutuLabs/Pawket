@@ -27,7 +27,7 @@
           {{ $t("accountList.ui.button.addBySerial") }}
         </b-tooltip>
       </a>
-      <a href="javascript:void(0)" class="panel-block" @click="addByPassword()">
+      <a href="javascript:void(0)" class="panel-block" @click="addByPassword()" v-if="experimentMode">
         <b-tooltip :label="$t('accountList.ui.tooltip.addByPassword')" position="is-right" multilined size="is-small">
           <span class="panel-icon">➕</span>
           {{ $t("accountList.ui.button.addByPassword") }}
@@ -62,6 +62,10 @@ export default class AccountList extends Vue {
 
   get accountIndex(): number {
     return store.state.account.selectedAccount;
+  }
+
+  get experimentMode(): boolean {
+    return store.state.vault.experiment;
   }
 
   @Emit("close")
