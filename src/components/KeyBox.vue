@@ -3,16 +3,18 @@
     <template v-slot:content>
       <p class="break-all">{{ tooltip ? tooltip : value }}</p>
     </template>
-    <div class="control mr-2">
-      <div class="tags has-addons">
-        <span class="tag is-info is-light">
-          <a @click="copy(value)">{{ display ? display : $options.filters.shorten(value) }}</a>
-        </span>
-        <!-- <span class="tag is-info">
+    <a @click="copy(value)">
+      <div class="control mr-2">
+        <div class="tags has-addons">
+          <span class="tag is-info is-light">
+            {{ display ? display : $options.filters.shorten(value) }}
+          </span>
+          <!-- <span class="tag is-info">
                       {{ machine.name }}
         </span>-->
+        </div>
       </div>
-    </div>
+    </a>
   </b-tooltip>
 </template>
 
