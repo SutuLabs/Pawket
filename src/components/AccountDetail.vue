@@ -64,8 +64,8 @@
         </b-tab-item>
       </b-tabs>
     </div>
-    <div class="mb-4">
-      <b-button expanded @click="addCAT()">
+    <div class="column is-2 is-offset-5">
+      <b-button expanded @click="addCAT()" class="is-white">
         <b-icon icon="plus" size="is-small"> </b-icon>
         <span class="has-text-dark">{{ $t("accountDetail.ui.button.addToken") }}</span>
       </b-button>
