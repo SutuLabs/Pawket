@@ -26,8 +26,11 @@ export async function submitBundle(bundle: SpendBundle, setSubmitting: (state: b
       });
       success();
     } else {
+      const err = typeof(json.error) === "string" ? json.error.match('error ([A-Z_]+)') : null;
+      const errMsg = err !== null ? err[1] : '';
+      const msg = tc("send.ui.messages.error." + errMsg) === undefined ? json.error : tc("send.ui.messages.error." + errMsg);
       Notification.open({
-        message: tc("send.ui.messages.getFailedResponse") + json.error,
+        message: tc("send.ui.messages.getFailedResponse") + msg,
         type: "is-danger",
       });
     }
