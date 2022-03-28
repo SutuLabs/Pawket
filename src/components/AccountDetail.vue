@@ -64,11 +64,8 @@
         </b-tab-item>
       </b-tabs>
     </div>
-    <div class="column is-2 is-offset-5">
-      <b-button expanded @click="addCAT()" class="is-white">
-        <b-icon icon="plus" size="is-small"> </b-icon>
-        <span class="has-text-dark">{{ $t("accountDetail.ui.button.addToken") }}</span>
-      </b-button>
+    <div class="column is-full has-text-centered">
+        <a @click="addCAT()"><span><b-icon icon="plus" size="is-small"></b-icon> {{ $t("accountDetail.ui.button.addToken") }}</span></a>
     </div>
     <div class="box">
       <h2 class="has-text-weight-bold is-size-4 pb-5">{{ $t("accountDetail.ui.dApps.title") }}</h2>
