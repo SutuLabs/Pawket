@@ -46,7 +46,7 @@
                     cats[ent.id]
                   }}</b-tag>
                   <b-tag v-else-if="ent.id" type="is-info" :title="ent.id"
-                    >{{ $t("offer.symbol.CAT") }} {{ ent.id.slice(0, 7) + "..." }}</b-tag
+                    >{{ $t("offer.symbol.Cat") }} {{ ent.id.slice(0, 7) + "..." }}</b-tag
                   >
                   <b-tag v-else type="is-info">{{ $t("offer.symbol.XCH") }}</b-tag>
 

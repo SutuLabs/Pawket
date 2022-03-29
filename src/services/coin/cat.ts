@@ -1,6 +1,6 @@
 import { prefix0x } from '@/services/coin/condition';
 import store from "@/store";
-import { AccountEntity, TokenInfo } from "@/store/modules/account";
+import { AccountEntity, TokenInfo, defaultCats } from "@/store/modules/account";
 
 export function getCatNameDict(account: AccountEntity): { [id: string]: string } {
   return Object.assign(
@@ -20,6 +20,17 @@ export function getCatIdDict(account: AccountEntity): { [name: string]: string }
 
 export function getTokenInfo(account: AccountEntity): TokenInfo {
   const tokenInfo = Object.assign({}, store.state.account.tokenInfo);
+  if (defaultCats) {
+    for (let i = 0; i < defaultCats.length; i++) {
+      const dcat = defaultCats[i];
+      tokenInfo[dcat.name] = {
+        id: dcat.id,
+        symbol: dcat.name,
+        decimal: 3,
+        unit: dcat.name,
+      };
+    }
+  }
   if (account.cats) {
     for (let i = 0; i < account.cats.length; i++) {
       const cat = account.cats[i];

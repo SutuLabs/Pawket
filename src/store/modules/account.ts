@@ -36,6 +36,12 @@ export interface CustomCat {
   name: string;
   id: string;
 }
+
+export const defaultCats: CustomCat[] = [
+  {name: 'USDS', id: '6d95dae356e32a71db5ddcb42224754a02524c615c5fc35f568c2af04774e589'},
+  {name: 'BSH', id: '6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b'},
+];
+
 const DEFAULT_ADDRESS_RETRIEVAL_COUNT = 4;
 
 export interface TokenInfo {
@@ -73,25 +79,7 @@ store.registerModule<IAccountState>('account', {
           symbol: "XCH",
           decimal: 12,
           unit: "XCH",
-        },
-        "BSH": {
-          id: "6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b",
-          symbol: "BSH",
-          decimal: 3,
-          unit: "BSH",
-        },
-        // "SBX": {
-        //   id: "78ad32a8c9ea70f27d73e9306fc467bab2a6b15b30289791e37ab6e8612212b1",
-        //   symbol: "SBX",
-        //   decimal: 3,
-        //   unit: "SBX",
-        // },
-        // "CH21": {
-        //   id: "509deafe3cd8bbfbb9ccce1d930e3d7b57b40c964fa33379b18d628175eb7a8f",
-        //   symbol: "CH21",
-        //   decimal: 3,
-        //   unit: "CH21",
-        // },
+        }
       },
       accounts: [],
       selectedAccount: 0,
@@ -237,6 +225,6 @@ store.registerModule<IAccountState>('account', {
       }
 
       resetState();
-    }
-  }
+    },
+  },
 });

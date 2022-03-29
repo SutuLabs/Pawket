@@ -439,7 +439,7 @@
       }
     },
     "symbol": {
-      "CAT": "CAT",
+      "Cat": "CAT",
       "XCH": "XCH",
       "hint": {
         "XCH": "Original XCH"
@@ -480,27 +480,35 @@
       "title": {
         "addToken": "Add Token"
       },
-      "placeholder": {
-        "addToken": "Add Token"
-      },
       "label": {
-        "listingCATs": "Listing CATs"
+        "listingCats": "Listing CATs",
+        "name": "Name",
+        "assetID": "Asset ID"
       },
       "button": {
-        "cancel": "Cancel",
-        "submit": "Submit"
+        "add": "Add"
+      },
+      "tooltip": {
+        "removeToken": "remove token",
+        "drag": "drag to sort"
+      },
+      "message": {
+        "nameRequired": "Name is required",
+        "assetIdRequired": "Asset ID is required"
       }
     },
     "message": {
-      "prompt": {
-        "enterAssetId": "Enter the Asset ID",
-        "enterAssetName": "Enter CAT's name",
-        "confirmText": "OK",
-        "cancelText": "Cancel"
-      },
       "notification": {
         "wrongAssetId": "Wrong asset Id, failed to add a new CAT!",
         "saved": "Saved"
+      },
+      "confirm": {
+        "removeToken": "Are you sure to remove this token?"
+      },
+      "alert": {
+        "nameExists": "Name Already Exists!",
+        "idExists": "Asset ID Already Exists!",
+        "isDefaultCat": "Asset ID/Name already exists in Default CATs List!"
       }
     }
   },

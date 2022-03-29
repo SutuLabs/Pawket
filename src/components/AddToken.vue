@@ -1,64 +1,79 @@
 <template>
   <div class="modal-card">
+    <b-loading :is-full-page="true" v-model="submitting"></b-loading>
     <section>
       <header class="modal-card-head">
         <p class="modal-card-title">
-          {{ $t('addToken.ui.title.addToken') }}
+          {{ $t("addToken.ui.title.addToken") }}
         </p>
         <button type="button" class="delete" @click="close()"></button>
       </header>
       <section class="modal-card-body">
-        <b-field :label="$t('addToken.ui.label.listingCATs')">
-          <b-taginput
-            class="taginput-sortable"
-            v-sortable="sortableOptions"
-            v-model="cats"
-            ellipsis
-            icon="label"
-            :before-adding="beforeAdd"
-            :placeholder="$t('addToken.ui.placeholder.addToken')"
-          >
-          </b-taginput>
-          <template #message>
-            <ul>
-              <li v-for="asset in assetIds" :key="asset.id">{{ asset.name }}: {{ asset.id }}</li>
-            </ul>
-          </template>
+        <b-field :label="$t('addToken.ui.label.name')">
+          <b-input
+            v-model="name"
+            type="text"
+            required
+            :validation-message="$t('addToken.ui.message.nameRequired')"
+            ref="name"
+          ></b-input>
         </b-field>
-      </section>
-       <footer class="modal-card-foot is-justify-content-space-between">
-        <div>
-          <b-button :label="$t('addToken.ui.button.cancel')" @click="close()"></b-button>
-          <b-button :label="$t('addToken.ui.button.submit')" type="is-primary" @click="submit()"></b-button>
+        <b-field :label="$t('addToken.ui.label.assetID')">
+          <b-input
+            v-model="assetId"
+            type="text"
+            required
+            ref="assetId"
+            :validation-message="$t('addToken.ui.message.assetIdRequired')"
+          ></b-input>
+        </b-field>
+        <div class="has-text-centered">
+          <b-button :label="$t('addToken.ui.button.add')" type="is-success" class="mx-2" @click="add()"></b-button>
         </div>
-      </footer>
+        <hr />
+        <div class="y-scroll pt-5" style="height: 40vh">
+          <b-field :label="$t('addToken.ui.label.listingCats')">
+            <token-item :catList="assetIds" @remove="remove" v-sortable="sortableOptions" @updateOrder="updateOrder"></token-item>
+          </b-field>
+        </div>
+      </section>
     </section>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Emit } from "vue-property-decorator";
+import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import store from "@/store/index";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { DialogProgrammatic as Dialog } from "buefy";
 import { sortable } from "@/directives/sortable";
-import { AccountEntity, CustomCat } from "@/store/modules/account";
+import { AccountEntity, CustomCat, defaultCats } from "@/store/modules/account";
+import TokenItem from "@/components/TokenItem.vue";
 import { Bytes } from "clvm";
+import { shorten } from "@/filters/addressConversion";
 
 @Component({
   directives: {
     sortable,
+  },
+  filters: {
+    shorten,
+  },
+  components: {
+    TokenItem,
   },
 })
 export default class AddToken extends Vue {
   @Prop() private account!: AccountEntity;
 
   sortableOptions = {
-    chosenClass: "is-primary",
-    draggable: ".tag",
+    chosenClass: "box",
+    draggable: ".panel-block",
+    handle: ".drag-handle",
   };
-  cats: string[] = [];
   assetIds: CustomCat[] = [];
+  name = "";
+  assetId = "";
+  submitting = false;
 
   mounted(): void {
     if (!this.account) {
@@ -66,7 +81,6 @@ export default class AddToken extends Vue {
       return;
     }
     this.assetIds = [...(this.account.cats ?? [])];
-    this.cats = this.assetIds.map((_) => _.name);
   }
 
   @Emit("close")
@@ -74,51 +88,61 @@ export default class AddToken extends Vue {
     return;
   }
 
-  beforeAdd(name: string): boolean {
-    const type = this.isAssetId(name) ? "ENTERNAME" : "ENTERASSETID";
-    const msg =
-      type == "ENTERNAME"
-        ? this.$tc("addToken.message.prompt.enterAssetName")
-        : this.$tc("addToken.message.prompt.enterAssetId");
-    Dialog.prompt({
-      message: msg,
-      confirmText: this.$tc("addToken.message.prompt.confirmText"),
-      cancelText: this.$tc("addToken.message.prompt.cancelText"),
-      trapFocus: true,
-      type: "is-info",
-      onConfirm: (input) => {
-        if (type == "ENTERNAME") {
-          this.remove(name);
-          this.cats.push(input);
-          this.addOrUpdateAsset(input, name);
-        } else {
-          if (this.isAssetId(input)) {
-            this.addOrUpdateAsset(name, input);
-          } else {
-            this.remove(name);
-            Notification.open({
-              message: this.$tc("addToken.message.notification.wrongAssetId"),
-              type: "is-danger",
-            });
-          }
+  validate(): void {
+    (this.$refs.name as Vue & { checkHtml5Validity: () => boolean }).checkHtml5Validity();
+    (this.$refs.assetId as Vue & { checkHtml5Validity: () => boolean }).checkHtml5Validity();
+  }
+
+  async add(): Promise<void> {
+    this.validate();
+    if (this.name.length == 0 || this.assetId.length == 0) {
+      return;
+    }
+    if (!this.isAssetId(this.assetId)) {
+      Notification.open({
+        message: this.$tc("addToken.message.notification.wrongAssetId"),
+        type: "is-danger",
+      });
+      return;
+    }
+    const idx = this.assetIds.findIndex((a) => a.name == this.name);
+    if (idx > -1) {
+      this.$buefy.dialog.alert({
+        message: this.$tc("addToken.message.alert.nameExists"),
+      });
+      return;
+    }
+    const eidx = this.assetIds.findIndex((_) => _.id == this.assetId);
+    if (eidx > -1) {
+      this.$buefy.dialog.alert({
+        message: this.$tc("addToken.message.alert.idExists"),
+      });
+      return;
+    }
+    const didx = defaultCats.findIndex((_) => _.id == this.assetId);
+    const dname = defaultCats.findIndex((_) => _.name == this.name);
+    if (didx > -1 || dname > -1) {
+      this.$buefy.dialog.alert({
+        message: this.$tc("addToken.message.alert.isDefaultCat"),
+      });
+      return;
+    }
+    this.assetIds.push({ name: this.name, id: this.assetId });
+    this.submit();
+    this.reset();
+  }
+
+  remove(id: string): void {
+    this.$buefy.dialog.confirm({
+      message: this.$tc("addToken.message.confirm.removeToken"),
+      onConfirm: () => {
+        const aid = this.assetIds.findIndex((a) => a.id == id);
+        if (aid > -1) {
+          this.assetIds.splice(aid, 1);
         }
       },
-      onCancel: () => {
-        this.remove(name);
-      },
     });
-    return true;
-  }
-
-  remove(name: string): void {
-    const eidx = this.cats.findIndex((_) => _ == name);
-    if (eidx > -1) this.cats.splice(eidx, 1);
-  }
-
-  addOrUpdateAsset(name: string, assetId: string): void {
-    const eidx = this.assetIds.findIndex((_) => _.id == assetId);
-    if (eidx > -1) this.assetIds.splice(eidx, 1);
-    this.assetIds.push({ name: name, id: assetId });
+    this.submit();
   }
 
   isAssetId(assetId: string): boolean {
@@ -129,23 +153,34 @@ export default class AddToken extends Vue {
     }
   }
 
+  reset(): void {
+    this.assetId = "";
+    this.name = "";
+  }
+
   async submit(): Promise<void> {
-    const dict = Object.assign({}, ...this.assetIds.map((x) => ({ [x.name]: x.id })));
-    this.account.cats = this.cats.map((_) => ({ name: _, id: dict[_] }));
+    this.submitting = true;
+    this.account.cats = this.assetIds;
     await store.dispatch("persistent");
+    this.$emit("refresh");
 
     Notification.open({
       message: this.$tc("addToken.message.notification.saved"),
       type: "is-success",
     });
 
-    this.close();
+    this.submitting = false;
+  }
+
+  updateOrder(newOrder: CustomCat[]): void {
+    this.assetIds = newOrder;
+    this.submit();
   }
 }
 </script>
 
 <style scoped lang="scss">
-.taginput-sortable::v-deep .tag {
-  cursor: grab !important;
+.y-scroll {
+  overflow-y: scroll;
 }
 </style>
