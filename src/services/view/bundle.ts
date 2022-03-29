@@ -4,10 +4,23 @@ import { SpendBundle } from "@/models/wallet";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { ModalProgrammatic as Modal } from "buefy";
 import DevHelper from "@/components/DevHelper.vue";
-
 export async function submitBundle(bundle: SpendBundle, setSubmitting: (state: boolean) => void, success: () => void): Promise<void> {
   setSubmitting(true);
-
+  /** 
+   * Do not delele! For avoiding check i18n failure.
+   *  tc("send.messages.error.DOUBLE_SPEND")
+      tc("send.messages.error.UNKNOWN_UNSPENT")
+      tc("send.messages.error.BAD_AGGREGATE_SIGNATURE")
+      tc("send.messages.error.INVALID_CONDITION")
+      tc("send.messages.error.COIN_AMOUNT_EXCEEDS_MAXIMUM"
+      tc("send.messages.error.INVALID_FEE_LOW_FEE")
+      tc("send.messages.error.MEMPOOL_NOT_INITIALIZED")
+      tc("send.messages.error.ALREADY_INCLUDING_TRANSACTION")
+      tc("send.messages.error.INCOMPATIBLE_NETWORK_ID")
+      tc("send.messages.error.NO_TRANSACTIONS_WHILE_SYNCING")
+      tc("send.messages.error.INVALID_FEE_TOO_CLOSE_TO_ZERO")
+      tc("send.messages.error.COIN_AMOUNT_NEGATIVE")
+   */
   try {
     const resp = await fetch(process.env.VUE_APP_API_URL + "Wallet/pushtx", {
       method: "POST",
@@ -28,7 +41,7 @@ export async function submitBundle(bundle: SpendBundle, setSubmitting: (state: b
     } else {
       const err = typeof(json.error) === "string" ? json.error.match('error ([A-Z_]+)') : null;
       const errMsg = err !== null ? err[1] : '';
-      const path = "send.ui.messages.error." + errMsg
+      const path = "send.messages.error." + errMsg
       const msg = tc(path) === undefined ? json.error : tc(path);
       Notification.open({
         message: tc("send.ui.messages.getFailedResponse") + msg,
