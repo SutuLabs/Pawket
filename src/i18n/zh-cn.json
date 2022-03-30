@@ -340,6 +340,22 @@
         "loading": "载入中",
         "maxLeadingText": "最大:"
       }
+    },
+    "messages": {
+      "error": {
+        "DOUBLE_SPEND": "重复消费",
+        "UNKNOWN_UNSPENT": "未知，未使用",
+        "BAD_AGGREGATE_SIGNATURE": "坏的聚合签名",
+        "INVALID_CONDITION": "无效的条件",
+        "COIN_AMOUNT_EXCEEDS_MAXIMUM": "硬币数量超过最大值",
+        "INVALID_FEE_LOW_FEE": "无效的费用/低费用",
+        "MEMPOOL_NOT_INITIALIZED": "内存池未初始化",
+        "ALREADY_INCLUDING_TRANSACTION": "已经包括交易",
+        "INCOMPATIBLE_NETWORK_ID": "不兼容的网络ID",
+        "NO_TRANSACTIONS_WHILE_SYNCING": "同步时没有交易",
+        "INVALID_FEE_TOO_CLOSE_TO_ZERO": "无效的费用，太接近于零",
+        "COIN_AMOUNT_NEGATIVE": "币值为负数"
+      }
     }
   },
   "scanQrCode": {

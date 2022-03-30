@@ -340,6 +340,22 @@
         "loading": "Loading",
         "maxLeadingText": "Max:"
       }
+    },
+    "messages": {
+      "error": {
+        "DOUBLE_SPEND": "Doubel Spend",
+        "UNKNOWN_UNSPENT": "Unknown Unspent",
+        "BAD_AGGREGATE_SIGNATURE":"Bad Aggregate Signature",
+        "INVALID_CONDITION":"Invalid Condition",
+        "COIN_AMOUNT_EXCEEDS_MAXIMUM": "Coin Amount Exceeds Maximum",
+        "INVALID_FEE_LOW_FEE":"Invalid Fee/Low fee",
+        "MEMPOOL_NOT_INITIALIZED":"Mempool not Initialized",
+        "ALREADY_INCLUDING_TRANSACTION":"Already Including Transaction",
+        "INCOMPATIBLE_NETWORK_ID":"Incompatible Network ID",
+        "NO_TRANSACTIONS_WHILE_SYNCING":"No Transaction While Syncing",
+        "INVALID_FEE_TOO_CLOSE_TO_ZERO":"Invalid Fee, Too Close to Zero",
+        "COIN_AMOUNT_NEGATIVE":"Coin Amount Negative"
+      }
     }
   },
   "scanQrCode": {
