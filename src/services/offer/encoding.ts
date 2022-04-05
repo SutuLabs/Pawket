@@ -77,7 +77,7 @@ export async function decodeOffer(offerText: string): Promise<SpendBundle> {
   return bundle;
 }
 
-export async function encodeOffer(bundle: SpendBundle): Promise<string> {
+export async function encodeOffer(bundle: SpendBundle, prefix = "offer"): Promise<string> {
   // big endian
   const chunks: Buffer[] = [];
   const spendnum = bundle.coin_spends.length;
@@ -111,7 +111,7 @@ export async function encodeOffer(bundle: SpendBundle): Promise<string> {
 
   const final_buff = Buffer.concat([getUint16Buffer(ver), def]);
 
-  const encoded = bech32m.encode("offer", bech32m.toWords(final_buff), false);
+  const encoded = bech32m.encode(prefix, bech32m.toWords(final_buff), false);
   return encoded;
 }
 

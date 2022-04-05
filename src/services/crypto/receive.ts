@@ -1,6 +1,6 @@
 import { CoinRecord, GetRecordsResponse } from "@/models/wallet";
 import store from "@/store";
-import puzzle from "./puzzle";
+import puzzle, { PuzzleAddress } from "./puzzle";
 import { PuzzleDetail } from "./puzzle";
 import utility from "./utility";
 import { CustomCat } from "@/store/modules/account";
@@ -8,6 +8,11 @@ import { CustomCat } from "@/store/modules/account";
 export interface TokenPuzzleDetail {
   symbol: string;
   puzzles: PuzzleDetail[];
+}
+
+export interface TokenPuzzleAddress {
+  symbol: string;
+  puzzles: PuzzleAddress[];
 }
 
 class Receive {
@@ -31,7 +36,7 @@ class Receive {
     return tokens;
   }
 
-  async getCoinRecords(tokens: TokenPuzzleDetail[], includeSpentCoins: boolean): Promise<CoinRecord[]> {
+  async getCoinRecords(tokens: TokenPuzzleAddress[], includeSpentCoins: boolean): Promise<CoinRecord[]> {
     const dictAssets: { [key: string]: string } = {};
     for (let i = 0; i < tokens.length; i++) {
       const t = tokens[i];

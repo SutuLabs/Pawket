@@ -32,10 +32,12 @@
         :amount-editable="amountEditable"
         :max-amount="maxAmount"
         :total-amount="totalAmount"
+        :offline="offline"
         @input="updateTokenAmount"
         @change-token="changeToken"
         @validity="changeValidity"
         @set-max="setMax()"
+        @offline-scan="offlineScan()"
       >
       </token-amount-field>
       <b-field :label="$t('send.ui.label.memo')">
@@ -65,10 +67,18 @@
       <div>
         <b-button
           :label="$t('send.ui.button.submit')"
-          v-if="bundle"
+          v-if="bundle && !offline"
           type="is-primary"
           class="is-pulled-right"
           @click="submit()"
+          :disabled="submitting"
+        ></b-button>
+        <b-button
+          :label="$t('send.ui.button.showSend')"
+          v-if="bundle && offline"
+          type="is-primary"
+          class="is-pulled-right"
+          @click="showSend()"
           :disabled="submitting"
         ></b-button>
       </div>
@@ -84,7 +94,7 @@ import KeyBox from "@/components/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { TokenPuzzleDetail } from "../services/crypto/receive";
 import store from "@/store";
-import { SpendBundle } from "@/models/wallet";
+import { OriginCoin, SpendBundle } from "@/models/wallet";
 import puzzle from "@/services/crypto/puzzle";
 import bigDecimal from "js-big-decimal";
 import ScanQrCode from "@/components/ScanQrCode.vue";
@@ -94,6 +104,8 @@ import TokenAmountField from "@/components/TokenAmountField.vue";
 import coinHandler from "../services/transfer/coin";
 import { debugBundle, submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/FeeSelector.vue";
+import OfflineQrCode from "@/components/OfflineQrCode.vue";
+import OfflineSendShowBundle from "./OfflineSendShowBundle.vue";
 
 @Component({
   components: {
@@ -127,6 +139,7 @@ export default class Send extends Vue {
   public amount = "";
   public selectedToken = "XCH";
   public validity = false;
+  public offline = false;
 
   public requests: TokenPuzzleDetail[] = [];
 
@@ -218,7 +231,15 @@ export default class Send extends Vue {
     }
 
     if (!this.availcoins) {
-      this.availcoins = await coinHandler.getAvailableCoins(this.requests, coinHandler.getTokenNames(this.account));
+      try {
+        this.availcoins = await coinHandler.getAvailableCoins(this.requests, coinHandler.getTokenNames(this.account));
+      } catch (err) {
+        this.offline = true;
+      }
+    }
+
+    if (!this.availcoins || !this.availcoins[this.selectedToken]) {
+      return;
     }
 
     const availcoins = this.availcoins[this.selectedToken].map((_) => _.amount);
@@ -304,6 +325,34 @@ export default class Send extends Vue {
   changeFee(): void {
     this.reset();
     if (this.selectMax) this.setMax();
+  }
+
+  offlineScan(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: OfflineQrCode,
+      hasModalCard: true,
+      trapFocus: true,
+      props: { puzzles: this.requests.find((_) => _.symbol == this.selectedToken)?.puzzles },
+      events: {
+        scanned: (coins: OriginCoin[]): void => {
+          this.availcoins = {
+            XCH: coins,
+          };
+          this.loadCoins();
+        },
+      },
+    });
+  }
+
+  showSend(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: OfflineSendShowBundle,
+      hasModalCard: true,
+      trapFocus: false,
+      props: { bundle: this.bundle },
+    });
   }
 }
 </script>

@@ -28,7 +28,8 @@
       },
       "button": {
         "home": "Home",
-        "developer": "Developer"
+        "developer": "Developer",
+        "proxy": "Proxy"
       }
     }
   },
@@ -318,7 +319,8 @@
       "button": {
         "cancel": "Cancel",
         "submit": "Submit",
-        "sign": "Sign"
+        "sign": "Sign",
+        "showSend": "Show"
       },
       "slider": {
         "low": "Low",
@@ -334,7 +336,8 @@
       },
       "tooltip": {
         "singleCoinExplanation": "Currently only support one coin mode, mix coin send is under development.",
-        "qr": "Scan QR"
+        "qr": "Scan QR",
+        "offlineScan": "You are in offline mode, communicate with proxy via qr code to send transaction."
       },
       "span": {
         "loading": "Loading",
@@ -345,16 +348,16 @@
       "error": {
         "DOUBLE_SPEND": "Doubel Spend",
         "UNKNOWN_UNSPENT": "Unknown Unspent",
-        "BAD_AGGREGATE_SIGNATURE":"Bad Aggregate Signature",
-        "INVALID_CONDITION":"Invalid Condition",
+        "BAD_AGGREGATE_SIGNATURE": "Bad Aggregate Signature",
+        "INVALID_CONDITION": "Invalid Condition",
         "COIN_AMOUNT_EXCEEDS_MAXIMUM": "Coin Amount Exceeds Maximum",
-        "INVALID_FEE_LOW_FEE":"Invalid Fee/Low fee",
-        "MEMPOOL_NOT_INITIALIZED":"Mempool not Initialized",
-        "ALREADY_INCLUDING_TRANSACTION":"Already Including Transaction",
-        "INCOMPATIBLE_NETWORK_ID":"Incompatible Network ID",
-        "NO_TRANSACTIONS_WHILE_SYNCING":"No Transaction While Syncing",
-        "INVALID_FEE_TOO_CLOSE_TO_ZERO":"Invalid Fee, Too Close to Zero",
-        "COIN_AMOUNT_NEGATIVE":"Coin Amount Negative"
+        "INVALID_FEE_LOW_FEE": "Invalid Fee/Low fee",
+        "MEMPOOL_NOT_INITIALIZED": "Mempool not Initialized",
+        "ALREADY_INCLUDING_TRANSACTION": "Already Including Transaction",
+        "INCOMPATIBLE_NETWORK_ID": "Incompatible Network ID",
+        "NO_TRANSACTIONS_WHILE_SYNCING": "No Transaction While Syncing",
+        "INVALID_FEE_TOO_CLOSE_TO_ZERO": "Invalid Fee, Too Close to Zero",
+        "COIN_AMOUNT_NEGATIVE": "Coin Amount Negative"
       }
     }
   },
@@ -475,13 +478,13 @@
         "addToken": "Add Token"
       },
       "placeholder": {
-        "addToken":"Add Token"
+        "addToken": "Add Token"
       },
-      "label":{
-        "listingCATs":"Listing CATs"
+      "label": {
+        "listingCATs": "Listing CATs"
       },
       "button": {
-        "cancel":"Cancel",
+        "cancel": "Cancel",
         "submit": "Submit"
       }
     },
@@ -495,6 +498,50 @@
       "notification": {
         "wrongAssetId": "Wrong asset Id, failed to add a new CAT!",
         "saved": "Saved"
+      }
+    }
+  },
+  "offline": {
+    "proxy": {
+      "text": {
+        "status": "Collected {collected}, queried {queried}",
+        "gettingCoins": "Getting..."
+      },
+      "scan": {
+        "title": "Proxy Scan",
+        "numberField": "Coins",
+        "numberMessage": "Use Offline device to scan these coins"
+      },
+      "confirmBundle": {
+        "title": "Confirm",
+        "label": {
+          "bundle": "Bundle"
+        },
+        "button": {
+          "cancel": "Cancel",
+          "submit": "Submit"
+        }
+      }
+    },
+    "client": {
+      "text": {
+        "status": "Retrieved {coin} coin(s)."
+      },
+      "scan": {
+        "title": "Scan",
+        "numberField": "Addresses",
+        "numberMessage": "Use Proxy to scan these addresses"
+      },
+      "button": {
+        "finish": "Finish"
+      },
+      "show": {
+        "hint": "Use Proxy to scan this to send your transaction"
+      }
+    },
+    "ui": {
+      "button": {
+        "cancel": "Cancel"
       }
     }
   }
