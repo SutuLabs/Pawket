@@ -13,6 +13,11 @@ export interface PuzzleDetail {
   address: string;
 }
 
+export interface PuzzleAddress {
+  hash: string;
+  address: string;
+}
+
 export type ConditionArgs = (Uint8Array | undefined | ConditionArgs[]);
 
 export interface ConditionEntity {

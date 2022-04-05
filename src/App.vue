@@ -34,6 +34,11 @@
             <b-icon icon="developer-board" size="is-small"></b-icon>
             {{ $t("footer.ui.button.developer") }}
           </a>
+          |
+          <a href="javascript:void(0)" size="is-small" @click="showProxy()">
+            <b-icon icon="router-network" size="is-small"></b-icon>
+            {{ $t("footer.ui.button.proxy") }}
+          </a>
         </p>
       </div>
     </footer>
@@ -44,6 +49,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { NotificationProgrammatic as Notification } from "buefy";
 import store from "./store";
 import DevHelper from "@/components/DevHelper.vue";
+import OfflineQrCode from "./components/OfflineQrCode.vue";
 
 @Component
 export default class App extends Vue {
@@ -88,6 +94,16 @@ export default class App extends Vue {
       hasModalCard: true,
       trapFocus: true,
       props: {},
+    });
+  }
+
+  showProxy(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: OfflineQrCode,
+      hasModalCard: true,
+      trapFocus: true,
+      props: { mode: "PROXY" },
     });
   }
 }

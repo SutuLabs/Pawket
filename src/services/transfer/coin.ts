@@ -1,7 +1,7 @@
-import { CoinItem } from "@/models/wallet";
+import { CoinItem, OriginCoin } from "@/models/wallet";
 import store from "@/store";
 import { prefix0x } from "../coin/condition";
-import receive, { TokenPuzzleDetail } from "../crypto/receive";
+import receive, { TokenPuzzleAddress, TokenPuzzleDetail } from "../crypto/receive";
 import { AccountEntity } from "@/store/modules/account";
 import { SymbolCoins } from "./transfer";
 
@@ -15,7 +15,7 @@ class CoinHandler {
     return requests;
   }
 
-  public async getAvailableCoins(requests: TokenPuzzleDetail[], tokenNames: string[]): Promise<SymbolCoins> {
+  public async getAvailableCoins(requests: TokenPuzzleAddress[], tokenNames: string[]): Promise<SymbolCoins> {
     const coins = (await receive.getCoinRecords(requests, false))
       .filter((_) => _.coin)
       .map((_) => _.coin as CoinItem)
@@ -41,5 +41,8 @@ class CoinHandler {
 
 }
 
-
 export default new CoinHandler();
+
+export function compareOriginCoin(a: OriginCoin, b: OriginCoin): boolean {
+  return a.amount == b.amount && a.parent_coin_info == b.parent_coin_info && a.puzzle_hash == b.puzzle_hash;
+}

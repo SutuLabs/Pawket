@@ -28,7 +28,8 @@
       },
       "button": {
         "home": "主页",
-        "developer": "开发者工具"
+        "developer": "开发者工具",
+        "proxy": "离线代理"
       }
     }
   },
@@ -318,7 +319,8 @@
       "button": {
         "cancel": "取消",
         "submit": "提交",
-        "sign": "签名"
+        "sign": "签名",
+        "showSend": "显示"
       },
       "slider": {
         "low": "低",
@@ -334,11 +336,15 @@
       },
       "tooltip": {
         "singleCoinExplanation": "当前仅支持单币模式",
-        "qr": "扫描二维码"
+        "qr": "扫描二维码",
+        "offlineScan": "您现在处于离线模式，通过二维码与在线设备沟通以发起交易"
       },
       "span": {
         "loading": "载入中",
         "maxLeadingText": "最大:"
+      },
+      "text": {
+        "offlineOnlySupportXch": "目前离线发送仅支持XCH"
       }
     },
     "messages": {
@@ -475,13 +481,13 @@
         "addToken": "添加 Token"
       },
       "placeholder": {
-        "addToken":"添加 Token"
+        "addToken": "添加 Token"
       },
-      "label":{
-        "listingCATs":"CATs 列表"
+      "label": {
+        "listingCATs": "CATs 列表"
       },
       "button": {
-        "cancel":"取消",
+        "cancel": "取消",
         "submit": "提交"
       }
     },
@@ -495,6 +501,51 @@
       "notification": {
         "wrongAssetId": "CAT 的 Asset ID 不正确，添加失败！",
         "saved": "已保存"
+      }
+    }
+  },
+  "offline": {
+    "proxy": {
+      "text": {
+        "status": "已收集：{collected}, 已查询：{queried}",
+        "gettingCoins": "获取中..."
+      },
+      "scan": {
+        "title": "扫描二维码",
+        "numberField": "硬币",
+        "numberMessage": "用 离线设备 扫描以下二维码来获取硬币信息",
+        "titleTooltip": "该功能用于离线设备的交易发送功能，请从离线设备开始用起"
+      },
+      "confirmBundle": {
+        "title": "确认发送",
+        "label": {
+          "bundle": "Bundle"
+        },
+        "button": {
+          "cancel": "取消",
+          "submit": "提交"
+        }
+      }
+    },
+    "client": {
+      "text": {
+        "status": "已获取硬币数量：{coin}"
+      },
+      "scan": {
+        "title": "扫描二维码",
+        "numberField": "地址",
+        "numberMessage": "用 离线代理 扫描以下二维码来获取硬币信息"
+      },
+      "button": {
+        "finish": "完成"
+      },
+      "show": {
+        "hint": "用 离线代理 扫描该二维码来发送交易"
+      }
+    },
+    "ui": {
+      "button": {
+        "cancel": "取消"
       }
     }
   }

@@ -4,6 +4,9 @@ import transfer from "../transfer/transfer";
 import { assert } from "./runner";
 
 export async function testCryptography(): Promise<void> {
+  const hash = await utility.hash("test");
+  assert("9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08", hash);
+
   const privkey = utility.fromHexString("67b3dcf5ba985f77b7bb78b3edfd7e501f4669a3530b74f2247256e38b0529e2");
   const sk = await utility.getPrivateKey(privkey);
   const masterprikey = utility.toHexString(sk.serialize());

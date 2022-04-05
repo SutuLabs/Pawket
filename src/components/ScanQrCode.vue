@@ -9,7 +9,8 @@
 <script lang="ts">
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
-import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from 'vue-qrcode-reader'
+import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from "vue-qrcode-reader";
+import { decodeAddress, initCameraHandleError } from "@/services/view/camera";
 
 @Component({
   components: {
@@ -32,42 +33,18 @@ export default class ScanQrCode extends Vue {
   }
 
   async onDecode(result: string): Promise<void> {
-    const p = this.prefix + "1";
-    const reg = new RegExp(p + ".*");
-    const r = result.match(reg);
-    if (!r || r.length != 1) return;
-    const rr = r[0];
+    this.result = decodeAddress(this.prefix, result) ?? this.result;
 
-    if (rr.startsWith(p)) {
-      this.result = rr;
+    if (this.result) {
+      this.$emit("scanned", this.result);
+      this.close();
     }
-
-    this.$emit('scanned', this.result);
-    this.close();
   }
 
   async onInit(promise: Promise<void>): Promise<void> {
-    try {
-      await promise;
-    } catch (error) {
-      if (error.name === 'NotAllowedError') {
-        this.error = this.$tc('scanQrCode.message.error.NotAllowedError')
-      } else if (error.name === 'NotFoundError') {
-        this.error = this.$tc('scanQrCode.message.error.NotFoundError')
-      } else if (error.name === 'NotSupportedError') {
-        this.error = this.$tc('scanQrCode.message.error.NotSupportedError')
-      } else if (error.name === 'NotReadableError') {
-       this.error = this.$tc('scanQrCode.message.error.NotReadableError')
-      } else if (error.name === 'OverconstrainedError') {
-        this.error = this.$tc('scanQrCode.message.error.OverconstrainedError')
-      } else if (error.name === 'StreamApiNotSupportedError') {
-       this.error = this.$tc('scanQrCode.message.error.StreamApiNotSupportedError')
-      } else if (error.name === 'InsecureContextError') {
-       this.error = this.$tc('scanQrCode.message.error.InsecureContextError')
-      } else {
-        this.error = `ERROR: Camera error (${error.name})`;
-      }
-    }
+    await initCameraHandleError(promise, async (err) => {
+      this.error = err;
+    });
   }
 }
 </script>

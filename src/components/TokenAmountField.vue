@@ -1,5 +1,11 @@
 <template>
-  <b-field :message="amountMessage || '0 mojos'">
+  <b-field>
+    <template #message>
+      {{ amountMessage || "0 mojos" }}
+      <span v-if="offline && selectedToken != 'XCH'" class="is-pulled-right has-text-danger">
+        {{ $t("send.ui.text.offlineOnlySupportXch") }}
+      </span>
+    </template>
     <template #label>
       {{ label }}
       <span class="is-size-6">
@@ -21,6 +27,13 @@
             <span v-else> {{ $t("send.ui.span.maxLeadingText") }} {{ maxAmount }} {{ selectedToken }} </span>
           </span>
         </b-button>
+      </span>
+      <span v-if="offline" class="is-size-6">
+        <b-tooltip position="is-right" type="is-light" multilined :label="$t('send.ui.tooltip.offlineScan')">
+          <b-button tag="a" type="is-success is-light" size="is-small" @click="offlineScan()">
+            <b-icon icon="qrcode-scan" size="is-small" class="px-4"></b-icon>
+          </b-button>
+        </b-tooltip>
       </span>
     </template>
     <b-select :value="selectedToken" @input="changeToken">
@@ -57,6 +70,7 @@ export default class TotalAmountField extends Vue {
   @Prop({ default: "-1" }) private totalAmount!: string;
   @Prop({ default: "XCH" }) private selectedToken!: string;
   @Prop({ default: tc("send.ui.label.amount") }) private label!: string;
+  @Prop({ default: false }) private offline!: boolean;
 
   public INVALID_AMOUNT_MESSAGE = "Invalid amount";
   public selectMax = false;
@@ -104,6 +118,10 @@ export default class TotalAmountField extends Vue {
 
   setMax(): void {
     this.$emit("set-max");
+  }
+
+  offlineScan(): void {
+    this.$emit("offline-scan");
   }
 }
 </script>
