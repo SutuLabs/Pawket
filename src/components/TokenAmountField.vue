@@ -1,5 +1,11 @@
 <template>
-  <b-field :message="amountMessage || '0 mojos'">
+  <b-field>
+    <template #message>
+      {{ amountMessage || "0 mojos" }}
+      <span v-if="offline && selectedToken != 'XCH'" class="is-pulled-right has-text-danger">
+        {{ $t("send.ui.text.offlineOnlySupportXch") }}
+      </span>
+    </template>
     <template #label>
       {{ label }}
       <span class="is-size-6">

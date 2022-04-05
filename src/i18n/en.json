@@ -342,6 +342,9 @@
       "span": {
         "loading": "Loading",
         "maxLeadingText": "Max:"
+      },
+      "text": {
+        "offlineOnlySupportXch": "Offline send only support XCH now."
       }
     },
     "messages": {

@@ -342,6 +342,9 @@
       "span": {
         "loading": "载入中",
         "maxLeadingText": "最大:"
+      },
+      "text": {
+        "offlineOnlySupportXch": "目前离线发送仅支持XCH"
       }
     },
     "messages": {
