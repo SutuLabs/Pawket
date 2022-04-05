@@ -3,6 +3,9 @@
     <header class="modal-card-head">
       <p class="modal-card-title">
         {{ mode == "OFFLINE_CLIENT" ? $t("offline.client.scan.title") : $t("offline.proxy.scan.title") }}
+        <b-tooltip v-if="mode == 'PROXY'" :label="$t('offline.proxy.scan.titleTooltip')" position="is-bottom" multilined>
+          <b-icon icon="help-circle" size="is-small" class="px-5"></b-icon>
+        </b-tooltip>
       </p>
       <button type="button" class="delete" @click="close()"></button>
     </header>

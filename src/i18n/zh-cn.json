@@ -513,7 +513,8 @@
       "scan": {
         "title": "扫描二维码",
         "numberField": "硬币",
-        "numberMessage": "用 离线设备 扫描以下二维码来获取硬币信息"
+        "numberMessage": "用 离线设备 扫描以下二维码来获取硬币信息",
+        "titleTooltip": "该功能用于离线设备的交易发送功能，请从离线设备开始用起"
       },
       "confirmBundle": {
         "title": "确认发送",

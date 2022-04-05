@@ -513,7 +513,8 @@
       "scan": {
         "title": "Proxy Scan",
         "numberField": "Coins",
-        "numberMessage": "Use Offline device to scan these coins"
+        "numberMessage": "Use Offline device to scan these coins",
+        "titleTooltip": "This is a gateway for your transaction send from an offline device, please start with an offline Pawket."
       },
       "confirmBundle": {
         "title": "Confirm",
