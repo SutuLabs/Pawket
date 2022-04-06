@@ -17,7 +17,7 @@
           <span class="is-pulled-right" @click="remove(idx)" v-if="idx > 0"><b-icon icon="delete" size="is-small"></b-icon></span>
         </b-tooltip>
         <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.edit')">
-          <span class="is-pulled-right" @click="rename(idx)"> <b-icon icon="pencil" size="is-small"></b-icon></span>
+          <span class="is-pulled-right" @click="rename(idx)"> <b-icon icon="account-edit" size="is-small"></b-icon></span>
         </b-tooltip>
         <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.details')">
           <span class="is-pulled-right" @click="showExport(account)"

@@ -3,7 +3,7 @@
     <b-field>
       <template #label>
         Bundle
-        <key-box icon="checkbox-multiple-blank" :value="bundleText" tooltip="Copy"></key-box>
+        <key-box :showValue="false" icon="checkbox-multiple-blank" :value="bundleText" tooltip="Copy"></key-box>
       </template>
       <b-input type="textarea" v-model="bundleText" @input="updateBundle()"></b-input>
     </b-field>
@@ -45,7 +45,7 @@
       <b-field>
         <template #label>
           Puzzle
-          <key-box icon="checkbox-multiple-blank" :value="puzzle" tooltip="Copy"></key-box>
+          <key-box :showValue="false" icon="checkbox-multiple-blank" :value="puzzle" tooltip="Copy"></key-box>
           <b-button tag="a" size="is-small" @click="uncurry(puzzle)">Uncurry</b-button>
           <span v-if="modsdict[puzzle]" class="tag is-info is-light is-small">{{ modsdict[puzzle] }}</span>
           <span
@@ -64,7 +64,7 @@
       <b-field v-if="uncurried_module">
         <template #label>
           Uncurried Result
-          <key-box icon="checkbox-multiple-blank" :value="uncurried_module" tooltip="Copy"></key-box>
+          <key-box :showValue="false" icon="checkbox-multiple-blank" :value="uncurried_module" tooltip="Copy"></key-box>
           <span v-if="modsdict[uncurried_module]" class="tag is-info is-light is-small">{{ modsdict[uncurried_module] }}</span>
         </template>
         <template #message>
@@ -82,7 +82,7 @@
       <b-field>
         <template #label>
           Solution
-          <key-box icon="checkbox-multiple-blank" :value="solution" tooltip="Copy"></key-box>
+          <key-box :showValue="false" icon="checkbox-multiple-blank" :value="solution" tooltip="Copy"></key-box>
           <b-button
             v-if="
               bundle.coin_spends[selectedCoin].coin.parent_coin_info ==
@@ -108,7 +108,7 @@
       <b-field v-if="solution_result">
         <template #label>
           Solution Result
-          <key-box icon="checkbox-multiple-blank" :value="solution_result" tooltip="Copy"></key-box>
+          <key-box :showValue="false" icon="checkbox-multiple-blank" :value="solution_result" tooltip="Copy"></key-box>
           <b-button tag="a" size="is-small" @click="solution_result = beautifyLisp(solution_result)">
             <b-icon icon="format-paint"></b-icon>
           </b-button>

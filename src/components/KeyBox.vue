@@ -31,7 +31,7 @@ import { shorten } from "@/filters/addressConversion";
 export default class KeyBox extends Vue {
   @Prop() private value!: string;
   @Prop() private display!: string;
-  @Prop() private showValue!: boolean;
+  @Prop({ default: true }) private showValue!: boolean;
   @Prop() private icon!: string;
   @Prop() private tooltip!: string;
   @Prop() private multilined!: boolean;

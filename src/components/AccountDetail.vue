@@ -63,8 +63,8 @@
             <span class="has-text-grey-light">⏰ {{ new Date(act.timestamp * 1000).toISOString().slice(0, -5) }}</span>
             <br />
             <span>
-              <key-box :value="act.coin.parentCoinInfo" display="ParentCoinInfo"></key-box>
-              <key-box :value="act.coin.puzzleHash" display="PuzzleHash"></key-box>
+              <key-box :showValue="false" :value="act.coin.parentCoinInfo" display="ParentCoinInfo"></key-box>
+              <key-box :showValue="false" :value="act.coin.puzzleHash" display="PuzzleHash"></key-box>
             </span>
           </a>
         </b-tab-item>

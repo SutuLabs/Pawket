@@ -8,7 +8,7 @@
       <b-field v-if="bundle">
         <template #label>
           {{ $t("offline.proxy.confirmBundle.label.bundle") }}
-          <key-box icon="checkbox-multiple-blank" :value="JSON.stringify(bundle)" tooltip="Copy"></key-box>
+          <key-box :showValue="false" icon="checkbox-multiple-blank" :value="JSON.stringify(bundle)" tooltip="Copy"></key-box>
           <a href="javascript:void(0)" v-if="debugMode" @click="debugBundle()">🐞</a>
         </template>
         <b-input type="textarea" disabled :value="bundleJson"></b-input>
