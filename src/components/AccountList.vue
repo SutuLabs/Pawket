@@ -9,16 +9,20 @@
     </header>
     <section class="modal-card-body">
       <a class="panel-block" v-for="(account, idx) in accounts" :key="idx">
-        <span class="panel-icon">✨</span>
+        <span class="panel-icon">
+          <b-icon icon="account" size="is-small"></b-icon>
+        </span>
         <span @click="select(idx)">{{ account.name }}: {{ account.key.fingerprint }} [{{ account.type }}]</span>
         <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.delete')">
-          <span class="is-pulled-right" @click="remove(idx)" v-if="idx > 0">🗑️</span>
+          <span class="is-pulled-right" @click="remove(idx)" v-if="idx > 0"><b-icon icon="delete" size="is-small"></b-icon></span>
         </b-tooltip>
         <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.edit')">
-          <span class="is-pulled-right" @click="rename(idx)">📝️</span>
+          <span class="is-pulled-right" @click="rename(idx)"> <b-icon icon="pencil" size="is-small"></b-icon></span>
         </b-tooltip>
         <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.details')">
-          <span class="is-pulled-right" @click="showExport(account)">🖨️️</span>
+          <span class="is-pulled-right" @click="showExport(account)"
+            ><b-icon icon="text-box-search" size="is-small"></b-icon
+          ></span>
         </b-tooltip>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addBySerial()">
