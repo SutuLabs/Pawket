@@ -3,7 +3,7 @@ import store from "@/store";
 import puzzle, { PuzzleAddress } from "./puzzle";
 import { PuzzleDetail } from "./puzzle";
 import utility from "./utility";
-import { CustomCat } from "@/store/modules/account";
+import { CustomCat, defaultCats } from "@/store/modules/account";
 
 export interface TokenPuzzleDetail {
   symbol: string;
@@ -24,8 +24,9 @@ class Receive {
     const standardAssets = Object.values(store.state.account.tokenInfo)
       .filter(_ => _.id)
       .map(_ => ({ symbol: _.symbol, id: _.id ?? "" }));
-    const accountAssets = (customCats ?? []).map(_ => ({ symbol: _.name, id: _.id }))
-    const assets = standardAssets.concat(accountAssets);
+    const defaultAssets = (defaultCats ?? []).map(_ => ({ symbol: _.name, id: _.id }));
+    const accountAssets = (customCats ?? []).map(_ => ({ symbol: _.name, id: _.id }));
+    const assets = standardAssets.concat(defaultAssets, accountAssets);
 
     for (let i = 0; i < assets.length; i++) {
       const assetId = assets[i].id;

@@ -20,7 +20,7 @@
             </span>
             <span v-else>- XCH</span>
             <br />
-            <b-button size="is-small" @click="refreshBalance()" :disabled="refreshing">
+            <b-button size="is-small" @click="refresh()" :disabled="refreshing">
               {{ $t("accountDetail.ui.button.refresh") }}
               <b-loading :is-full-page="false" v-model="refreshing"></b-loading>
             </b-button>
@@ -36,13 +36,15 @@
     <div class="box">
       <b-tabs position="is-centered" class="block">
         <b-tab-item :label="$t('accountDetail.ui.tab.asset')">
-          <a class="panel-block is-justify-content-space-between" v-for="(token, symbol) in account.tokens" :key="symbol">
-            <span class="is-pulled-right">
+          <a class="panel-block is-justify-content-space-between" v-for="cat of tokenList" :key="cat.id">
+            <span class="is-pulled-right" v-if="account.tokens && account.tokens.hasOwnProperty(cat.name)">
               <span class="panel-icon"></span>
-              <span class="" v-if="tokenInfo[symbol]">{{ token.amount | demojo(tokenInfo[symbol]) }}</span>
-              <span class="has-text-grey-light is-size-7 pl-3">{{ token.amount }} mojos</span>
+              <span class="" v-if="tokenInfo[cat.name]">{{ account.tokens[cat.name].amount | demojo(tokenInfo[cat.name]) }}</span>
+              <span class="has-text-grey-light is-size-7 pl-3">{{ account.tokens[cat.name].amount }} mojos</span>
             </span>
-            <a v-if="debugMode" class="is-pulled-right" href="javascript:void(0)" @click="openLink(token)">⚓</a>
+            <a v-if="debugMode" class="is-pulled-right" href="javascript:void(0)" @click="openLink(account.tokens[cat.name])"
+              >⚓</a
+            >
           </a>
         </b-tab-item>
         <b-tab-item :label="$t('accountDetail.ui.tab.activity')">
@@ -65,7 +67,9 @@
       </b-tabs>
     </div>
     <div class="column is-full has-text-centered">
-        <a @click="addCAT()"><span><b-icon icon="plus" size="is-small"></b-icon> {{ $t("accountDetail.ui.button.addToken") }}</span></a>
+      <a @click="addCat()"
+        ><span><b-icon icon="plus" size="is-small"></b-icon> {{ $t("accountDetail.ui.button.addToken") }}</span></a
+      >
     </div>
     <div class="box">
       <h2 class="has-text-weight-bold is-size-4 pb-5">{{ $t("accountDetail.ui.dApps.title") }}</h2>
@@ -93,7 +97,7 @@ import ExplorerLink from "@/components/ExplorerLink.vue";
 import KeyBox from "@/components/KeyBox.vue";
 import Send from "./Send.vue";
 import { demojo } from "@/filters/unitConversion";
-import { TokenInfo, AccountEntity, AccountToken } from "@/store/modules/account";
+import { TokenInfo, AccountEntity, AccountToken, CustomCat, defaultCats } from "@/store/modules/account";
 import TakeOffer from "./Offer/Take.vue";
 import MakeOffer from "./Offer/Make.vue";
 import { getTokenInfo } from "@/services/coin/cat";
@@ -109,7 +113,6 @@ type Mode = "Verify" | "Create";
 })
 export default class AccountDetail extends Vue {
   public mode: Mode = "Verify";
-  public assets = ["SBS", "CHB", "BSH"];
 
   get refreshing(): boolean {
     return store.state.account.refreshing;
@@ -117,6 +120,10 @@ export default class AccountDetail extends Vue {
 
   get account(): AccountEntity {
     return store.state.account.accounts[store.state.account.selectedAccount] ?? {};
+  }
+
+  get tokenList(): CustomCat[] {
+    return [{ name: "XCH", id: "XCH" }, ...defaultCats, ...this.account.cats];
   }
 
   get debugMode(): boolean {
@@ -133,7 +140,7 @@ export default class AccountDetail extends Vue {
 
   mounted(): void {
     this.mode = store.state.vault.passwordHash ? "Verify" : "Create";
-    store.dispatch("refreshBalance");
+    this.refresh();
   }
 
   lock(): void {
@@ -169,7 +176,7 @@ export default class AccountDetail extends Vue {
     });
   }
 
-  addCAT(): void {
+  addCat(): void {
     this.$buefy.modal.open({
       parent: this,
       component: AddToken,
@@ -177,6 +184,7 @@ export default class AccountDetail extends Vue {
       trapFocus: true,
       canCancel: ["x"],
       props: { account: this.account },
+      events: { refresh: this.refresh },
     });
   }
 
@@ -256,7 +264,7 @@ export default class AccountDetail extends Vue {
     });
   }
 
-  async refreshBalance(): Promise<void> {
+  async refresh(): Promise<void> {
     store.dispatch("refreshBalance");
   }
 }
