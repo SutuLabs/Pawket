@@ -14,6 +14,7 @@
           @click="toggleChangeAddress()"
         >
           <div class="column is-full">
+            <b-icon icon="tune" size="is-small" class="mr-1"></b-icon>
             <span>{{ $t("accountConfigure.ui.label.receiveAddress") }}</span>
             <b-tooltip :label="$t('accountConfigure.ui.tooltip.receiveAddress')" position="is-bottom" multilined>
               <b-icon icon="help-circle" size="is-small"> </b-icon>
@@ -23,18 +24,22 @@
         <b-slider v-model="maxAddress" :max="12" :min="1" v-if="displayMaxAddressSlider" indicator></b-slider>
         <a href="javascript:void(0)" class="panel-block" @click="changePassword()">
           <div class="column is-full">
+            <b-icon icon="key" size="is-small" class="mr-1"></b-icon>
             {{ $t("accountConfigure.ui.button.changePassword") }}
           </div>
         </a>
         <a class="panel-block">
           <div class="column is-full">
+            <b-icon icon="flask" size="is-small" class="mr-1"></b-icon>
             <span>{{ $t("accountConfigure.ui.button.experimental") }}</span>
             <b-switch class="is-pulled-right" :value="experimentMode" @input="toggleExperiment()"></b-switch>
           </div>
         </a>
         <a class="panel-block" href="https://info.pawket.app/privacy-policy/" target="_blank">
           <div class="column is-full">
+            <b-icon icon="file-document" size="is-small" class="mr-1"></b-icon>
             <span class="has-text-dark">{{ $t("accountConfigure.ui.label.privacyPolicy") }}</span>
+             <b-icon icon="open-in-new" size="is-small"> </b-icon>
           </div>
         </a>
       </section>

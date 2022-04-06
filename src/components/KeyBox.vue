@@ -7,10 +7,9 @@
       <div class="control mr-2">
         <div class="tags has-addons">
           <span class="tag is-info is-light">
-            <div v-if="icon">
-              <b-icon :icon="icon" size="is-small"> </b-icon>
-            </div>
-            {{ display ? display : $options.filters.shorten(value) }}
+            <span class="mx-1" v-if="showValue">{{ $options.filters.shorten(value) }} </span>
+            <span class="mx-1" v-if="display">{{ display }} </span>
+            <b-icon v-if="icon" :icon="icon" size="is-small"> </b-icon>
           </span>
           <!-- <span class="tag is-info">
                       {{ machine.name }}
@@ -32,6 +31,7 @@ import { shorten } from "@/filters/addressConversion";
 export default class KeyBox extends Vue {
   @Prop() private value!: string;
   @Prop() private display!: string;
+  @Prop() private showValue!: boolean;
   @Prop() private icon!: string;
   @Prop() private tooltip!: string;
   @Prop() private multilined!: boolean;
