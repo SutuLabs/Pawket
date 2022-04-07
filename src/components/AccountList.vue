@@ -14,13 +14,13 @@
         </span>
         <span @click="select(idx)">{{ account.name }}: {{ account.key.fingerprint }} [{{ account.type }}]</span>
         <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.edit')">
-          <span @click="rename(idx)"> <b-icon icon="pencil-box"></b-icon></span>
+          <span @click="rename(idx)"> <b-icon icon="pencil-box" class="hover-primary"></b-icon></span>
         </b-tooltip>
         <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.details')">
-          <span @click="showExport(account)"><b-icon icon="text-box-search"></b-icon></span>
+          <span @click="showExport(account)"><b-icon icon="text-box-search" class="hover-primary"></b-icon></span>
         </b-tooltip>
         <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.delete')">
-          <span @click="remove(idx)" v-if="idx > 0"><b-icon icon="delete"></b-icon></span>
+          <span @click="remove(idx)" v-if="idx > 0"><b-icon icon="delete" class="hover-danger"></b-icon></span>
         </b-tooltip>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addBySerial()">
@@ -232,4 +232,15 @@ export default class AccountList extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.hover-primary {
+  &:hover {
+    color: #7957d5;
+  }
+}
+.hover-danger {
+  &:hover {
+    color: #f14668;
+  }
+}
+</style>
