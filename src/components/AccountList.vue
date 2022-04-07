@@ -27,19 +27,25 @@
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addBySerial()">
         <b-tooltip :label="$t('accountList.ui.tooltip.addBySerial')" position="is-right" multilined size="is-small">
-          <span class="panel-icon">➕</span>
+          <span class="panel-icon">
+            <b-icon icon="plus-thick" size="is-small"></b-icon>
+          </span>
           {{ $t("accountList.ui.button.addBySerial") }}
         </b-tooltip>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addByPassword()" v-if="experimentMode">
         <b-tooltip :label="$t('accountList.ui.tooltip.addByPassword')" position="is-right" multilined size="is-small">
-          <span class="panel-icon">➕</span>
+          <span class="panel-icon">
+            <b-icon icon="plus-thick" size="is-small"></b-icon>
+          </span>
           {{ $t("accountList.ui.button.addByPassword") }}
         </b-tooltip>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addByLegacy()">
         <b-tooltip :label="$t('accountList.ui.tooltip.addByLegacy')" multilined size="is-small">
-          <span class="panel-icon">➕</span>
+          <span class="panel-icon">
+            <b-icon icon="plus-thick" size="is-small"></b-icon>
+          </span>
           {{ $t("accountList.ui.button.addByLegacy") }}
         </b-tooltip>
       </a>

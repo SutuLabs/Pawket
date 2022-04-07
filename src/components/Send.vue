@@ -19,7 +19,7 @@
         <p class="control">
           <b-tooltip :label="$t('send.ui.tooltip.qr')">
             <b-button @click="scanQrCode()" :disabled="!addressEditable">
-              <b-icon icon="qrcode"></b-icon>
+              <b-icon icon="scan-helper"></b-icon>
             </b-button>
           </b-tooltip>
         </p>
