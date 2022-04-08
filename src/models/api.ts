@@ -19,3 +19,11 @@ export interface GetParentPuzzleResponse {
 export interface GetCoinSolutionResponse {
   coinSpend: CoinSpend;
 }
+
+export interface GetExchangeRateResponse {
+  source: string;
+  from: string;
+  to: string;
+  price: number;
+  time: string;
+}

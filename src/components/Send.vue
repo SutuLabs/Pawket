@@ -26,6 +26,7 @@
       </b-field>
       <token-amount-field
         v-model="amount"
+        :rate="rate"
         :selectedToken="selectedToken"
         :token-names="tokenNames"
         :fee="fee"
@@ -116,6 +117,7 @@ import OfflineSendShowBundle from "./OfflineSendShowBundle.vue";
 })
 export default class Send extends Vue {
   @Prop() private account!: AccountEntity;
+  @Prop({ default: -1 }) private rate!: number;
   @Prop() private inputAddress!: string;
   @Prop() private inputAmount!: string;
   @Prop({ default: true }) private addressEditable!: boolean;

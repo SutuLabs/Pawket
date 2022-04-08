@@ -2,6 +2,7 @@
   <b-field>
     <template #message>
       {{ amountMessage || "0 mojos" }}
+      {{ usdtValue }}
       <span v-if="offline && selectedToken != 'XCH'" class="is-pulled-right has-text-danger">
         {{ $t("send.ui.text.offlineOnlySupportXch") }}
       </span>
@@ -53,6 +54,7 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
 import bigDecimal from "js-big-decimal";
 import { tc } from "@/i18n/i18n";
+import { xchToUsdt } from "@/filters/usdtConversion";
 
 @Component({
   components: {
@@ -61,7 +63,7 @@ import { tc } from "@/i18n/i18n";
 })
 export default class TotalAmountField extends Vue {
   @Prop({ default: "0" }) private value!: string;
-
+  @Prop({ default: -1 }) private rate!: number;
   @Prop() private tokenNames!: string[];
   @Prop({ default: 0 }) private fee!: number;
 
@@ -110,6 +112,14 @@ export default class TotalAmountField extends Vue {
     const mojo = bigDecimal.multiply(this.amount, Math.pow(10, this.decimal));
     if (Number(mojo) < 1) return this.INVALID_AMOUNT_MESSAGE;
     return bigDecimal.getPrettyValue(mojo, 3, ",") + " mojos";
+  }
+
+  get usdtValue(): string {
+    if (this.selectedToken !== "XCH") return "";
+    if (this.amountMessage === this.INVALID_AMOUNT_MESSAGE) return "";
+    if (this.amountMessage === "") return "";
+    const mojo = bigDecimal.multiply(this.amount, Math.pow(10, this.decimal));
+    return "≈ " + xchToUsdt(Number(mojo), this.rate);
   }
 
   get decimal(): number {
