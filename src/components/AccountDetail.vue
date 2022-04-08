@@ -4,11 +4,11 @@
       <section>
         <b-tooltip :label="$t('accountDetail.ui.tooltip.setting')" class="is-pulled-left">
           <b-button @click="configureAccount()">
-            <b-icon icon="cog"> </b-icon>
+            <b-icon icon="cog" class="has-text-grey"> </b-icon>
           </b-button>
         </b-tooltip>
         <b-tooltip :label="$t('accountDetail.ui.tooltip.lock')" class="is-pulled-right">
-          <b-button @click="lock()"><b-icon icon="lock"> </b-icon></b-button>
+          <b-button @click="lock()"><b-icon icon="lock" class="has-text-grey"> </b-icon></b-button>
         </b-tooltip>
         <b-button class="is-pulled-right" @click="selectAccount()">{{ account.name }}: {{ account.key.fingerprint }}</b-button>
         <br />

@@ -10,23 +10,27 @@
     <section class="modal-card-body">
       <a class="panel-block" v-for="(account, idx) in accounts" :key="idx">
         <span class="panel-icon">
-          <b-icon icon="account"></b-icon>
+          <b-icon icon="account" class="has-text-gray"></b-icon>
         </span>
         <span @click="select(idx)" class="mx-2">{{ account.name }}: {{ account.key.fingerprint }} [{{ account.type }}]</span>
         <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.edit')">
-          <span @click="rename(idx)"> <b-icon icon="square-edit-outline" class="hover-primary mr-1"></b-icon></span>
+          <span @click="rename(idx)"> <b-icon icon="square-edit-outline" class="has-text-grey hover-primary mr-1"></b-icon></span>
         </b-tooltip>
         <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.details')">
-          <span @click="showExport(account)"><b-icon icon="text-box-search-outline" class="hover-primary mr-1"></b-icon></span>
+          <span @click="showExport(account)"
+            ><b-icon icon="text-box-search-outline" class="has-text-grey hover-primary mr-1"></b-icon
+          ></span>
         </b-tooltip>
         <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.delete')">
-          <span @click="remove(idx)" v-if="idx > 0"><b-icon icon="trash-can-outline" class="hover-danger"></b-icon></span>
+          <span @click="remove(idx)" v-if="idx > 0"
+            ><b-icon icon="trash-can-outline" class="has-text-grey hover-danger"></b-icon
+          ></span>
         </b-tooltip>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addBySerial()">
         <b-tooltip :label="$t('accountList.ui.tooltip.addBySerial')" position="is-right" multilined size="is-small">
           <span class="panel-icon">
-            <b-icon icon="plus-thick"></b-icon>
+            <b-icon icon="plus-thick" class="has-text-grey"></b-icon>
           </span>
           <span class="mx-2">{{ $t("accountList.ui.button.addBySerial") }}</span>
         </b-tooltip>
@@ -34,7 +38,7 @@
       <a href="javascript:void(0)" class="panel-block" @click="addByPassword()" v-if="experimentMode">
         <b-tooltip :label="$t('accountList.ui.tooltip.addByPassword')" position="is-right" multilined size="is-small">
           <span class="panel-icon">
-            <b-icon icon="plus-thick"></b-icon>
+            <b-icon icon="plus-thick" class="has-text-grey"></b-icon>
           </span>
           <span class="mx-2">{{ $t("accountList.ui.button.addByPassword") }}</span>
         </b-tooltip>
@@ -42,7 +46,7 @@
       <a href="javascript:void(0)" class="panel-block" @click="addByLegacy()">
         <b-tooltip :label="$t('accountList.ui.tooltip.addByLegacy')" multilined size="is-small">
           <span class="panel-icon">
-            <b-icon icon="plus-thick"></b-icon>
+            <b-icon icon="plus-thick" class="has-text-grey"></b-icon>
           </span>
           <span class="mx-2">{{ $t("accountList.ui.button.addByLegacy") }}</span>
         </b-tooltip>
