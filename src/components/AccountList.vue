@@ -8,16 +8,16 @@
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
-      <a class="panel-block is-vcentered" v-for="(account, idx) in accounts" :key="idx">
+      <a class="panel-block" v-for="(account, idx) in accounts" :key="idx">
         <span class="panel-icon">
           <b-icon icon="account"></b-icon>
         </span>
-        <span @click="select(idx)">{{ account.name }}: {{ account.key.fingerprint }} [{{ account.type }}]</span>
+        <span @click="select(idx)" class="mx-2">{{ account.name }}: {{ account.key.fingerprint }} [{{ account.type }}]</span>
         <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.edit')">
-          <span @click="rename(idx)"> <b-icon icon="square-edit-outline" class="hover-primary"></b-icon></span>
+          <span @click="rename(idx)"> <b-icon icon="square-edit-outline" class="hover-primary mr-1"></b-icon></span>
         </b-tooltip>
         <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.details')">
-          <span @click="showExport(account)"><b-icon icon="text-box-search-outline" class="hover-primary"></b-icon></span>
+          <span @click="showExport(account)"><b-icon icon="text-box-search-outline" class="hover-primary mr-1"></b-icon></span>
         </b-tooltip>
         <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.delete')">
           <span @click="remove(idx)" v-if="idx > 0"><b-icon icon="trash-can-outline" class="hover-danger"></b-icon></span>
@@ -28,7 +28,7 @@
           <span class="panel-icon">
             <b-icon icon="plus-thick"></b-icon>
           </span>
-          <span>{{ $t("accountList.ui.button.addBySerial") }}</span>
+          <span class="mx-2">{{ $t("accountList.ui.button.addBySerial") }}</span>
         </b-tooltip>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addByPassword()" v-if="experimentMode">
@@ -36,7 +36,7 @@
           <span class="panel-icon">
             <b-icon icon="plus-thick"></b-icon>
           </span>
-          <span>{{ $t("accountList.ui.button.addByPassword") }}</span>
+          <span class="mx-2">{{ $t("accountList.ui.button.addByPassword") }}</span>
         </b-tooltip>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addByLegacy()">
@@ -44,7 +44,7 @@
           <span class="panel-icon">
             <b-icon icon="plus-thick"></b-icon>
           </span>
-          <span>{{ $t("accountList.ui.button.addByLegacy") }}</span>
+          <span class="mx-2">{{ $t("accountList.ui.button.addByLegacy") }}</span>
         </b-tooltip>
       </a>
     </section>
