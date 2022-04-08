@@ -12,7 +12,7 @@
       </div>
       <div class="column is-3">
         <b-tooltip :label="$t('addToken.ui.tooltip.removeToken')">
-          <b-button @click="remove(asset.id)" type="is-text"><b-icon icon="delete" size="is-small"></b-icon></b-button>
+          <b-button @click="remove(asset.id)" type="is-text"><b-icon icon="trash-can-outline" size="is-small"></b-icon></b-button>
         </b-tooltip>
       </div>
     </li>

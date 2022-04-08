@@ -14,7 +14,7 @@
           @click="toggleChangeAddress()"
         >
           <div class="column is-full">
-            <b-icon icon="tune" size="is-small" class="mr-1"></b-icon>
+            <b-icon icon="tune-variant" size="is-small" class="mr-1"></b-icon>
             <span>{{ $t("accountConfigure.ui.label.receiveAddress") }}</span>
             <b-tooltip :label="$t('accountConfigure.ui.tooltip.receiveAddress')" position="is-bottom" multilined>
               <b-icon icon="help-circle" size="is-small"> </b-icon>
@@ -39,7 +39,7 @@
           <div class="column is-full">
             <b-icon icon="file-document-outline" size="is-small" class="mr-1"></b-icon>
             <span class="has-text-dark">{{ $t("accountConfigure.ui.label.privacyPolicy") }}</span>
-             <b-icon icon="open-in-new" size="is-small"> </b-icon>
+            <b-icon icon="open-in-new" size="is-small"> </b-icon>
           </div>
         </a>
       </section>

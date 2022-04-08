@@ -4,11 +4,11 @@
       <section>
         <b-tooltip :label="$t('accountDetail.ui.tooltip.setting')" class="is-pulled-left">
           <b-button @click="configureAccount()">
-            <b-icon icon="cog" size="is-small"> </b-icon>
+            <b-icon icon="cog"> </b-icon>
           </b-button>
         </b-tooltip>
         <b-tooltip :label="$t('accountDetail.ui.tooltip.lock')" class="is-pulled-right">
-          <b-button @click="lock()"><b-icon icon="lock" size="is-small"> </b-icon></b-button>
+          <b-button @click="lock()"><b-icon icon="lock"> </b-icon></b-button>
         </b-tooltip>
         <b-button class="is-pulled-right" @click="selectAccount()">{{ account.name }}: {{ account.key.fingerprint }}</b-button>
         <br />
@@ -18,7 +18,7 @@
               {{ account.tokens["XCH"].amount | demojo(null, 6) }}
               <b-tooltip :label="$t('accountDetail.ui.tooltip.address')">
                 <a class="is-size-6" href="javascript:void(0)" @click="openLink(account.tokens['XCH'])">
-                  <b-icon icon="qrcode" size="is-small"> </b-icon>
+                  <b-icon icon="qrcode"> </b-icon>
                 </a>
               </b-tooltip>
             </span>
