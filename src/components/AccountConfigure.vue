@@ -37,7 +37,7 @@
         </a>
         <a class="panel-block" href="https://info.pawket.app/privacy-policy/" target="_blank">
           <div class="column is-full">
-            <b-icon icon="file-document" size="is-small" class="mr-1"></b-icon>
+            <b-icon icon="file-document-outline" size="is-small" class="mr-1"></b-icon>
             <span class="has-text-dark">{{ $t("accountConfigure.ui.label.privacyPolicy") }}</span>
              <b-icon icon="open-in-new" size="is-small"> </b-icon>
           </div>

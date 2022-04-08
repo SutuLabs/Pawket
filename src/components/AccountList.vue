@@ -14,13 +14,13 @@
         </span>
         <span @click="select(idx)">{{ account.name }}: {{ account.key.fingerprint }} [{{ account.type }}]</span>
         <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.edit')">
-          <span @click="rename(idx)"> <b-icon icon="pencil-box" class="hover-primary"></b-icon></span>
+          <span @click="rename(idx)"> <b-icon icon="square-edit-outline" class="hover-primary"></b-icon></span>
         </b-tooltip>
         <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.details')">
-          <span @click="showExport(account)"><b-icon icon="text-box-search" class="hover-primary"></b-icon></span>
+          <span @click="showExport(account)"><b-icon icon="text-box-search-outline" class="hover-primary"></b-icon></span>
         </b-tooltip>
         <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.delete')">
-          <span @click="remove(idx)" v-if="idx > 0"><b-icon icon="delete" class="hover-danger"></b-icon></span>
+          <span @click="remove(idx)" v-if="idx > 0"><b-icon icon="trash-can-outline" class="hover-danger"></b-icon></span>
         </b-tooltip>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addBySerial()">

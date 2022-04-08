@@ -45,7 +45,7 @@
           <span v-if="showMnemonic">
             <br />
             {{ account.key.compatibleMnemonic }}
-            <key-box icon="checkbox-multiple-blank" :tooltip="$t('accountExport.ui.tooltip.copy')" :value="account.key.compatibleMnemonic"></key-box>
+            <key-box icon="checkbox-multiple-blank-outline" :tooltip="$t('accountExport.ui.tooltip.copy')" :value="account.key.compatibleMnemonic"></key-box>
             <qrcode-vue v-if="debugMode" :value="account.key.compatibleMnemonic" size="300"></qrcode-vue>
           </span>
           <span v-else>
