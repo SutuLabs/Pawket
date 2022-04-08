@@ -28,7 +28,7 @@
           <span class="panel-icon">
             <b-icon icon="plus-thick"></b-icon>
           </span>
-          {{ $t("accountList.ui.button.addBySerial") }}
+          <span>{{ $t("accountList.ui.button.addBySerial") }}</span>
         </b-tooltip>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addByPassword()" v-if="experimentMode">
@@ -36,7 +36,7 @@
           <span class="panel-icon">
             <b-icon icon="plus-thick"></b-icon>
           </span>
-          {{ $t("accountList.ui.button.addByPassword") }}
+          <span>{{ $t("accountList.ui.button.addByPassword") }}</span>
         </b-tooltip>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addByLegacy()">
@@ -44,7 +44,7 @@
           <span class="panel-icon">
             <b-icon icon="plus-thick"></b-icon>
           </span>
-          {{ $t("accountList.ui.button.addByLegacy") }}
+          <span>{{ $t("accountList.ui.button.addByLegacy") }}</span>
         </b-tooltip>
       </a>
     </section>
