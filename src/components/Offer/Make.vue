@@ -60,7 +60,7 @@
         <b-field message="$t('offer.make.ui.panel.hint.thisIsYourOffer')">
           <template #label>
             {{ $t("offer.make.ui.label.yourOfferTitle") }}
-            <key-box :showValue="false" icon="checkbox-multiple-blank-outline" :value="offerText" tooltip="Copy"></key-box>
+            <key-box icon="checkbox-multiple-blank-outline" :value="offerText" tooltip="Copy"></key-box>
             <a href="javascript:void(0)" v-if="debugMode || true" @click="debugOffer()">🐞</a>
           </template>
           <b-input type="textarea" :value="offerText" disabled></b-input>
@@ -68,7 +68,7 @@
         <b-field v-if="debugMode && bundle">
           <template #label>
             {{ $t("offer.make.ui.label.bundle") }}
-            <key-box :showValue="false" icon="checkbox-multiple-blank-outline" :value="JSON.stringify(bundle)" tooltip="Copy"></key-box>
+            <key-box icon="checkbox-multiple-blank-outline" :value="JSON.stringify(bundle)" tooltip="Copy"></key-box>
             <a href="javascript:void(0)" v-if="debugMode" @click="debugBundle()">🐞</a>
           </template>
           <b-input type="textarea" disabled :value="bundleJson"></b-input>

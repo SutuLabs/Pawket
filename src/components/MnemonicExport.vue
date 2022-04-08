@@ -9,7 +9,7 @@
     <section class="modal-card-body">
       {{ mnemonic }}
       <br />
-      <key-box :showValue="false" icon="checkbox-multiple-blank-outline" :tooltip="$t('mnemonicExport.ui.tooltip.copy')" :value="mnemonic"></key-box>
+      <key-box icon="checkbox-multiple-blank-outline" :tooltip="$t('mnemonicExport.ui.tooltip.copy')" :value="mnemonic"></key-box>
       <div class="has-text-centered">
         <qrcode-vue v-if="debugMode" :value="mnemonic" size="300"></qrcode-vue>
       </div>

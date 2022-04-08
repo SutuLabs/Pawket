@@ -8,7 +8,7 @@
         <div class="tags has-addons">
           <span class="tag is-info is-light">
             <span class="mx-1" v-if="showValue">{{ $options.filters.shorten(value) }} </span>
-            <span class="mx-1" v-if="display">{{ display }} </span>
+            <span class="mx-1" v-if="!showValue && display">{{ display }} </span>
             <b-icon v-if="icon" :icon="icon" size="is-small"> </b-icon>
           </span>
           <!-- <span class="tag is-info">
@@ -31,7 +31,7 @@ import { shorten } from "@/filters/addressConversion";
 export default class KeyBox extends Vue {
   @Prop() private value!: string;
   @Prop() private display!: string;
-  @Prop({ default: true }) private showValue!: boolean;
+  @Prop({ default: false }) private showValue!: boolean;
   @Prop() private icon!: string;
   @Prop() private tooltip!: string;
   @Prop() private multilined!: boolean;
