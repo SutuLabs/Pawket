@@ -10,42 +10,46 @@
         <li>{{ $t("accountExport.ui.label.type") }}:{{ account.type }}</li>
         <li>
           {{ $t("accountExport.ui.label.fingerprint") }}:
-          <key-box :value="account.key.fingerprint.toString()"></key-box>
+          <key-box :value="account.key.fingerprint.toString()" :showValue="true"></key-box>
         </li>
         <li>
           {{ $t("accountExport.ui.label.masterPublicKey") }}:
-          <key-box :value="masterpubkey"></key-box>
+          <key-box :value="masterpubkey" :showValue="true"></key-box>
         </li>
         <li>
           {{ $t("accountExport.ui.label.farmerPublicKey") }}:
-          <key-box :value="farmerpubkey"></key-box>
+          <key-box :value="farmerpubkey" :showValue="true"></key-box>
         </li>
         <li>
           {{ $t("accountExport.ui.label.poolPublicKey") }}:
-          <key-box :value="poolpubkey"></key-box>
+          <key-box :value="poolpubkey" :showValue="true"></key-box>
         </li>
         <li>
           {{ $t("accountExport.ui.label.firstWalletAddress") }}:
-          <key-box :value="account.firstAddress"></key-box>
+          <key-box :value="account.firstAddress" :showValue="true"></key-box>
         </li>
         <li>
           {{ $t("accountExport.ui.label.masterPrivateKey") }}:
-          <key-box :value="masterprikey"></key-box>
+          <key-box :value="masterprikey" :showValue="true"></key-box>
         </li>
         <li>
           {{ $t("accountExport.ui.label.firstWalletSecretKey") }}: &lt;{{ $t("accountExport.ui.label.PrivateKey") }}
-          <key-box :value="walletprikey"></key-box>&gt;
+          <key-box :value="walletprikey" :showValue="true"></key-box>&gt;
         </li>
         <li>
           {{ $t("accountExport.ui.label.firstWalletPublicKey") }}:
-          <key-box :value="walletpubkey"></key-box>
+          <key-box :value="walletpubkey" :showValue="true"></key-box>
         </li>
         <li>
           {{ $t("accountExport.ui.label.mnemonicSeed") }}:
           <span v-if="showMnemonic">
             <br />
             {{ account.key.compatibleMnemonic }}
-            <key-box display="✂️" :tooltip="$t('accountExport.ui.tooltip.copy')" :value="account.key.compatibleMnemonic"></key-box>
+            <key-box
+              icon="checkbox-multiple-blank-outline"
+              :tooltip="$t('accountExport.ui.tooltip.copy')"
+              :value="account.key.compatibleMnemonic"
+            ></key-box>
             <qrcode-vue v-if="debugMode" :value="account.key.compatibleMnemonic" size="300"></qrcode-vue>
           </span>
           <span v-else>
@@ -112,7 +116,7 @@ export default class AccountExport extends Vue {
       },
       trapFocus: true,
       closeOnConfirm: false,
-      canCancel: ['button'],
+      canCancel: ["button"],
       cancelText: this.$tc("accountExport.ui.button.cancel"),
       confirmText: this.$tc("accountExport.ui.button.confirm"),
       onConfirm: async (password, { close }) => {

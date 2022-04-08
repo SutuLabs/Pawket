@@ -33,9 +33,11 @@
             size="200"
           ></qrcode-vue>
           <qrcode-vue class="is-hidden-tablet" :value="externalExplorerPrefix + address" size="100"></qrcode-vue>
-          <key-box :value="address"></key-box>
+          <key-box icon="checkbox-multiple-blank-outline" :value="address" :showValue="true"></key-box>
           <b-tooltip :label="$t('explorerLink.ui.tooltip.blockchainExplorer')">
-            <a target="_blank" :href="externalExplorerPrefix + address">⚓</a>
+            <a target="_blank" :href="externalExplorerPrefix + address">
+              <b-icon icon="web" size="is-small"></b-icon>
+            </a>
           </b-tooltip>
         </div>
       </div>

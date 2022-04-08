@@ -9,34 +9,46 @@
     </header>
     <section class="modal-card-body">
       <a class="panel-block" v-for="(account, idx) in accounts" :key="idx">
-        <span class="panel-icon">✨</span>
-        <span @click="select(idx)">{{ account.name }}: {{ account.key.fingerprint }} [{{ account.type }}]</span>
-        <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.delete')">
-          <span class="is-pulled-right" @click="remove(idx)" v-if="idx > 0">🗑️</span>
-        </b-tooltip>
+        <span class="panel-icon">
+          <b-icon icon="account" class="has-text-gray"></b-icon>
+        </span>
+        <span @click="select(idx)" class="mx-2">{{ account.name }}: {{ account.key.fingerprint }} [{{ account.type }}]</span>
         <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.edit')">
-          <span class="is-pulled-right" @click="rename(idx)">📝️</span>
+          <span @click="rename(idx)"> <b-icon icon="square-edit-outline" class="has-text-grey hover-primary mr-1"></b-icon></span>
         </b-tooltip>
         <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.details')">
-          <span class="is-pulled-right" @click="showExport(account)">🖨️️</span>
+          <span @click="showExport(account)"
+            ><b-icon icon="text-box-search-outline" class="has-text-grey hover-primary mr-1"></b-icon
+          ></span>
+        </b-tooltip>
+        <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.delete')">
+          <span @click="remove(idx)" v-if="idx > 0"
+            ><b-icon icon="trash-can-outline" class="has-text-grey hover-danger"></b-icon
+          ></span>
         </b-tooltip>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addBySerial()">
         <b-tooltip :label="$t('accountList.ui.tooltip.addBySerial')" position="is-right" multilined size="is-small">
-          <span class="panel-icon">➕</span>
-          {{ $t("accountList.ui.button.addBySerial") }}
+          <span class="panel-icon">
+            <b-icon icon="plus-thick" class="has-text-grey"></b-icon>
+          </span>
+          <span class="mx-2">{{ $t("accountList.ui.button.addBySerial") }}</span>
         </b-tooltip>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addByPassword()" v-if="experimentMode">
         <b-tooltip :label="$t('accountList.ui.tooltip.addByPassword')" position="is-right" multilined size="is-small">
-          <span class="panel-icon">➕</span>
-          {{ $t("accountList.ui.button.addByPassword") }}
+          <span class="panel-icon">
+            <b-icon icon="plus-thick" class="has-text-grey"></b-icon>
+          </span>
+          <span class="mx-2">{{ $t("accountList.ui.button.addByPassword") }}</span>
         </b-tooltip>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addByLegacy()">
         <b-tooltip :label="$t('accountList.ui.tooltip.addByLegacy')" multilined size="is-small">
-          <span class="panel-icon">➕</span>
-          {{ $t("accountList.ui.button.addByLegacy") }}
+          <span class="panel-icon">
+            <b-icon icon="plus-thick" class="has-text-grey"></b-icon>
+          </span>
+          <span class="mx-2">{{ $t("accountList.ui.button.addByLegacy") }}</span>
         </b-tooltip>
       </a>
     </section>
@@ -224,4 +236,15 @@ export default class AccountList extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.hover-primary {
+  &:hover {
+    color: #7957d5;
+  }
+}
+.hover-danger {
+  &:hover {
+    color: #f14668;
+  }
+}
+</style>

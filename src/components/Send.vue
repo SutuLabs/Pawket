@@ -19,7 +19,7 @@
         <p class="control">
           <b-tooltip :label="$t('send.ui.tooltip.qr')">
             <b-button @click="scanQrCode()" :disabled="!addressEditable">
-              <b-icon icon="qrcode"></b-icon>
+              <b-icon icon="scan-helper"></b-icon>
             </b-button>
           </b-tooltip>
         </p>
@@ -47,7 +47,7 @@
       <b-field v-if="bundle">
         <template #label>
           {{ $t("send.ui.label.bundle") }}
-          <key-box display="✂️" :value="JSON.stringify(bundle)" tooltip="Copy"></key-box>
+          <key-box icon="checkbox-multiple-blank-outline" :value="JSON.stringify(bundle)" tooltip="Copy"></key-box>
           <a href="javascript:void(0)" v-if="debugMode" @click="debugBundle()">🐞</a>
         </template>
         <b-input type="textarea" disabled :value="bundleJson"></b-input>
