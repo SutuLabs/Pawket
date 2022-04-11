@@ -18,7 +18,7 @@
         <b-tab-item label="Offer">
           <offer-panel :input-offer-text="inputOfferText"></offer-panel>
         </b-tab-item>
-        <b-tab-item v-if="debugMode" label="Coin">
+        <b-tab-item label="Coin">
           <coin-panel></coin-panel>
         </b-tab-item>
       </b-tabs>
