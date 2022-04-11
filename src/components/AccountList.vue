@@ -237,15 +237,18 @@ export default class AccountList extends Vue {
 </script>
 
 <style scoped lang="scss">
+// Import Bulma's core
+@import "~bulma/sass/utilities/derived-variables";
+
 .hover-primary {
   &:hover {
-    color: #7957d5 !important;
+    color: $primary !important;
   }
 }
 
 .hover-danger {
   &:hover {
-    color: #f14668 !important;
+    color: $danger !important;
   }
 }
 </style>
