@@ -239,12 +239,13 @@ export default class AccountList extends Vue {
 <style scoped lang="scss">
 .hover-primary {
   &:hover {
-    color: #7957d5;
+    color: #7957d5!important;
   }
 }
+
 .hover-danger {
   &:hover {
-    color: #f14668;
+    color: #f14668!important;
   }
 }
 </style>
