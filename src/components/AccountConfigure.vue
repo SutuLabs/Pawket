@@ -32,7 +32,7 @@
           <div class="column is-full">
             <b-icon icon="flask" size="is-small" class="mr-2"></b-icon>
             <span>{{ $t("accountConfigure.ui.button.experimental") }}</span>
-            <b-switch class="is-pulled-right" :value="experimentMode" @input="toggleExperiment()"></b-switch>
+            <b-switch class="is-pulled-right" :value="experimentMode" @click.native.prevent="toggleExperiment()"></b-switch>
           </div>
         </a>
         <a class="panel-block" href="https://info.pawket.app/privacy-policy/" target="_blank">
