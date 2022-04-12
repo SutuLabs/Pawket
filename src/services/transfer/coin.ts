@@ -2,7 +2,7 @@ import { CoinItem, OriginCoin } from "@/models/wallet";
 import store from "@/store";
 import { prefix0x } from "../coin/condition";
 import receive, { TokenPuzzleAddress, TokenPuzzleDetail } from "../crypto/receive";
-import { AccountEntity } from "@/store/modules/account";
+import { AccountEntity, defaultCats } from "@/store/modules/account";
 import { SymbolCoins } from "./transfer";
 
 
@@ -36,9 +36,11 @@ class CoinHandler {
   }
 
   getTokenNames(account: AccountEntity): string[] {
-    return Object.keys(store.state.account.tokenInfo).concat(account.cats.map((_) => _.name));
+    return Object.keys(store.state.account.tokenInfo).concat(
+      defaultCats.map((_) => _.name),
+      account.cats.map((_) => _.name)
+    );
   }
-
 }
 
 export default new CoinHandler();
