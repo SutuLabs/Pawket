@@ -162,7 +162,8 @@
       },
       "label": {
         "receiveAddress": "接收地址设置",
-        "privacyPolicy": "隐私声明"
+        "privacyPolicy": "隐私声明",
+        "currencyConversion": "货币转换"
       },
       "button": {
         "cancel": "取消",

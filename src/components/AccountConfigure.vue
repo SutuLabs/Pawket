@@ -8,6 +8,15 @@
         <button type="button" class="delete" @click="close()"></button>
       </header>
       <section class="modal-card-body">
+        <a class="panel-block">
+          <div class="column is-full">
+            <b-icon icon="cash" size="is-small" class="mr-2"></b-icon>
+            <span>{{ $t("accountConfigure.ui.label.currencyConversion") }}</span>
+            <b-select class="is-pulled-right" size="is-small" v-model="currency">
+              <option v-for="[key, value] in currencyList" :label="key" :value="value" :key="key"></option>
+            </b-select>
+          </div>
+        </a>
         <a
           href="javascript:void(0)"
           :class="displayMaxAddressSlider ? 'panel-block has-background-light' : 'panel-block'"
@@ -56,6 +65,7 @@ import store from "@/store/index";
 import KeyBox from "@/components/KeyBox.vue";
 import { AccountEntity } from "@/store/modules/account";
 import ChangePassword from "./ChangePassword.vue";
+import { CurrencyType } from "@/services/exchange/currencyType";
 
 @Component({
   components: {
@@ -69,9 +79,21 @@ export default class AccountConfigure extends Vue {
   public displayMaxAddressSlider = false;
 
   configureOption: "Default" | "Password" = "Default";
+  currencyList: Map<string, CurrencyType> = new Map<string, CurrencyType>([
+    ["USD", CurrencyType.USDT],
+    ["CNY", CurrencyType.CNY],
+  ]);
 
   get experimentMode(): boolean {
     return store.state.vault.experiment;
+  }
+
+  get currency(): CurrencyType {
+    return store.state.vault.currency;
+  }
+
+  set currency(value: CurrencyType) {
+    store.dispatch("setCurrency", value);
   }
 
   mounted(): void {
@@ -86,6 +108,7 @@ export default class AccountConfigure extends Vue {
   async close(): Promise<void> {
     if (this.maxAddress) this.account.addressRetrievalCount = this.maxAddress;
     await store.dispatch("persistent");
+    this.$emit("refresh");
   }
 
   back(): void {

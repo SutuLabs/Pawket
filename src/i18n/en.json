@@ -162,7 +162,8 @@
       },
       "label": {
         "receiveAddress": "Receive Address Settings",
-        "privacyPolicy": "Privacy Policy"
+        "privacyPolicy": "Privacy Policy",
+        "currencyConversion": "Currency Conversion"
       },
       "button": {
         "cancel": "Cancel",

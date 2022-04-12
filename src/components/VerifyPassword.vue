@@ -9,7 +9,13 @@
             label-position="on-border"
             :type="isCorrect ? '' : 'is-danger'"
           >
-            <b-input type="password" ref="password" @keyup.native.enter="confirm()" @input.native.enter="clearErrorMsg()" v-model="password"></b-input>
+            <b-input
+              type="password"
+              ref="password"
+              @keyup.native.enter="confirm()"
+              @input.native.enter="clearErrorMsg()"
+              v-model="password"
+            ></b-input>
           </b-field>
           <p class="help is-danger" v-if="!isCorrect">{{ $t("verifyPassword.message.error.incorrectPassword") }}</p>
           <div class="buttons">
@@ -51,6 +57,7 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import store from "@/store";
 import utility from "@/services/crypto/utility";
+import { CurrencyType } from "@/services/exchange/currencyType";
 
 type Mode = "Verify" | "Create";
 
@@ -106,6 +113,7 @@ export default class VerifyPassword extends Vue {
     if (this.isEmpty || !this.isMatch) return;
     if (this.repassword != this.password) return;
     store.dispatch("setPassword", this.password);
+    store.dispatch("setCurrency", CurrencyType.USDT);
   }
 
   checkStrength(): void {

@@ -54,7 +54,8 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
 import bigDecimal from "js-big-decimal";
 import { tc } from "@/i18n/i18n";
-import { xchToUsdt } from "@/filters/usdtConversion";
+import { xchToCurrency } from "@/filters/usdtConversion";
+import { CurrencyType } from "@/services/exchange/currencyType";
 
 @Component({
   components: {
@@ -64,6 +65,7 @@ import { xchToUsdt } from "@/filters/usdtConversion";
 export default class TotalAmountField extends Vue {
   @Prop({ default: "0" }) private value!: string;
   @Prop({ default: -1 }) private rate!: number;
+  @Prop({ default: CurrencyType.USDT }) private currency!: CurrencyType;
   @Prop() private tokenNames!: string[];
   @Prop({ default: 0 }) private fee!: number;
 
@@ -119,7 +121,7 @@ export default class TotalAmountField extends Vue {
     if (this.amountMessage === this.INVALID_AMOUNT_MESSAGE) return "";
     if (this.amountMessage === "") return "";
     const mojo = bigDecimal.multiply(this.amount, Math.pow(10, this.decimal));
-    return "≈ " + xchToUsdt(Number(mojo), this.rate);
+    return "≈ " + xchToCurrency(Number(mojo), this.rate, this.currency);
   }
 
   get decimal(): number {
