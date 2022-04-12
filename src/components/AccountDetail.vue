@@ -145,11 +145,11 @@ export default class AccountDetail extends Vue {
   }
 
   get currency(): CurrencyType {
-    return store.state.vault.currency;
+    return store.state.vault.currency ? store.state.vault.currency : CurrencyType.USDT;
   }
 
   get currencyName(): string {
-    return CurrencyType[store.state.vault.currency];
+    return CurrencyType[this.currency];
   }
 
   get tokenInfo(): TokenInfo {
