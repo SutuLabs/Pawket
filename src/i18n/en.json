@@ -178,6 +178,9 @@
     "message": {
       "confirmation": {
         "experiment": "Experimental features are not stable and not fully tested yet, you can have a try and give us your feedback."
+      },
+      "notification": {
+        "saved": "Saved"
       }
     }
   },

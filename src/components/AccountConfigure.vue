@@ -63,6 +63,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
+import { NotificationProgrammatic as Notification } from "buefy";
 import store from "@/store/index";
 import KeyBox from "@/components/KeyBox.vue";
 import { AccountEntity } from "@/store/modules/account";
@@ -96,6 +97,10 @@ export default class AccountConfigure extends Vue {
 
   set currency(value: CurrencyType) {
     store.dispatch("setCurrency", value);
+    Notification.open({
+      message: this.$tc("accountConfigure.message.notification.saved"),
+      type: "is-success",
+    });
   }
 
   mounted(): void {
