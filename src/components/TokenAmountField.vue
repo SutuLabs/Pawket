@@ -120,6 +120,7 @@ export default class TotalAmountField extends Vue {
     if (this.selectedToken !== "XCH") return "";
     if (this.amountMessage === this.INVALID_AMOUNT_MESSAGE) return "";
     if (this.amountMessage === "") return "";
+    if (this.rate == -1) return "";
     const mojo = bigDecimal.multiply(this.amount, Math.pow(10, this.decimal));
     return "≈ " + xchToCurrency(Number(mojo), this.rate, this.currency);
   }
