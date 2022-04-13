@@ -89,7 +89,7 @@ export default class AccountConfigure extends Vue {
   }
 
   get currency(): CurrencyType {
-    return store.state.vault.currency;
+    return store.state.vault.currency ? store.state.vault.currency : CurrencyType.USDT;
   }
 
   set currency(value: CurrencyType) {
