@@ -13,7 +13,9 @@
             <b-icon icon="cash" size="is-small" class="mr-2"></b-icon>
             <span>{{ $t("accountConfigure.ui.label.currencyConversion") }}</span>
             <b-select class="is-pulled-right" size="is-small" v-model="currency">
-              <option v-for="[key, value] in currencyList" :label="key" :value="value" :key="key"></option>
+              <option v-for="[key, value] in currencyList" :label="key" :value="value" :key="key">
+                {{ key }}
+              </option>
             </b-select>
           </div>
         </a>
