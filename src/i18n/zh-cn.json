@@ -162,7 +162,8 @@
       },
       "label": {
         "receiveAddress": "接收地址设置",
-        "privacyPolicy": "隐私声明"
+        "privacyPolicy": "隐私声明",
+        "currencyConversion": "货币转换"
       },
       "button": {
         "cancel": "取消",
@@ -177,6 +178,9 @@
     "message": {
       "confirmation": {
         "experiment": "实验功能是还没有经过详细测试的功能，通常仅供内部人员及热心粉丝使用，您确定要启用吗？"
+      },
+      "notification": {
+        "saved": "已保存"
       }
     }
   },

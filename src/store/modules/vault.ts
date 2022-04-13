@@ -6,6 +6,7 @@ import encryption from '@/services/crypto/encryption';
 import puzzle from '@/services/crypto/puzzle';
 import i18n, { tc } from '@/i18n/i18n';
 import UniStorage from '@/services/storage';
+import { CurrencyType } from '@/services/exchange/currencyType';
 
 export interface IVaultState {
   passwordHash: string;
@@ -16,6 +17,7 @@ export interface IVaultState {
   unlocked: boolean;
   loading: boolean;
   experiment: boolean;
+  currency: CurrencyType;
 }
 
 store.registerModule<IVaultState>('vault', {
@@ -29,6 +31,7 @@ store.registerModule<IVaultState>('vault', {
       unlocked: false,
       loading: true,
       experiment: false,
+      currency: CurrencyType.USDT,
     };
   },
   actions: {
@@ -61,6 +64,7 @@ store.registerModule<IVaultState>('vault', {
         state.encryptedSeed = sts.encryptedSeed;
         state.encryptedAccounts = sts.encryptedAccounts;
         state.experiment = sts.experiment;
+        state.currency = sts.currency;
         state.loading = false;
       }
 
@@ -79,6 +83,10 @@ store.registerModule<IVaultState>('vault', {
         state.passwordHash = pswhash;
         dispatch("unlock", password);
       });
+    },
+    setCurrency({ state, dispatch }, currency: CurrencyType) {
+      state.currency = currency;
+      dispatch("persistent");
     },
     async changePassword({ state, dispatch }, { oldPassword, newPassword }: { oldPassword: string, newPassword: string }) {
       const pswhash = await utility.hash(oldPassword);
@@ -155,6 +163,7 @@ store.registerModule<IVaultState>('vault', {
           encryptedAccounts: encryptedAccounts,
           network: rootState.network.network,
           experiment: state.experiment,
+          currency: state.currency,
         })
       );
 

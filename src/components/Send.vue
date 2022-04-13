@@ -26,6 +26,8 @@
       </b-field>
       <token-amount-field
         v-model="amount"
+        :rate="rate"
+        :currency="currency"
         :selectedToken="selectedToken"
         :token-names="tokenNames"
         :fee="fee"
@@ -106,6 +108,7 @@ import { debugBundle, submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/FeeSelector.vue";
 import OfflineQrCode from "@/components/OfflineQrCode.vue";
 import OfflineSendShowBundle from "./OfflineSendShowBundle.vue";
+import { CurrencyType } from "@/services/exchange/currencyType";
 
 @Component({
   components: {
@@ -116,6 +119,8 @@ import OfflineSendShowBundle from "./OfflineSendShowBundle.vue";
 })
 export default class Send extends Vue {
   @Prop() private account!: AccountEntity;
+  @Prop({ default: -1 }) private rate!: number;
+  @Prop({ default: CurrencyType.USDT }) private currency!: CurrencyType;
   @Prop() private inputAddress!: string;
   @Prop() private inputAmount!: string;
   @Prop({ default: true }) private addressEditable!: boolean;

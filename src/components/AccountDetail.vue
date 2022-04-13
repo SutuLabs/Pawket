@@ -44,7 +44,9 @@
             <span class="is-pulled-right" v-if="account.tokens && account.tokens.hasOwnProperty(cat.name)">
               <span class="panel-icon"></span>
               <span class="" v-if="tokenInfo[cat.name]">{{ account.tokens[cat.name].amount | demojo(tokenInfo[cat.name]) }}</span>
-              <span class="has-text-grey-light is-size-7 pl-3">{{ account.tokens[cat.name].amount }} mojos</span>
+              <span class="has-text-grey-light is-size-7 pl-3" v-if="cat.name === 'XCH'">{{
+                account.tokens[cat.name].amount | xchToCurrency(rate, currency)
+              }}</span>
             </span>
             <a v-if="debugMode" class="is-pulled-right" href="javascript:void(0)" @click="openLink(account.tokens[cat.name])"
               >⚓</a
@@ -101,10 +103,13 @@ import ExplorerLink from "@/components/ExplorerLink.vue";
 import KeyBox from "@/components/KeyBox.vue";
 import Send from "./Send.vue";
 import { demojo } from "@/filters/unitConversion";
+import { xchToCurrency } from "@/filters/usdtConversion";
 import { TokenInfo, AccountEntity, AccountToken, CustomCat, defaultCats } from "@/store/modules/account";
 import TakeOffer from "./Offer/Take.vue";
 import MakeOffer from "./Offer/Make.vue";
 import { getTokenInfo } from "@/services/coin/cat";
+import { getExchangeRate } from "@/services/exchange/rates";
+import { CurrencyType } from "@/services/exchange/currencyType";
 
 type Mode = "Verify" | "Create";
 
@@ -113,10 +118,11 @@ type Mode = "Verify" | "Create";
     KeyBox,
     Send,
   },
-  filters: { demojo },
+  filters: { demojo, xchToCurrency },
 })
 export default class AccountDetail extends Vue {
   public mode: Mode = "Verify";
+  private exchangeRate = -1;
 
   get refreshing(): boolean {
     return store.state.account.refreshing;
@@ -138,8 +144,20 @@ export default class AccountDetail extends Vue {
     return store.state.vault.experiment;
   }
 
+  get currency(): CurrencyType {
+    return store.state.vault.currency ? store.state.vault.currency : CurrencyType.USDT;
+  }
+
+  get currencyName(): string {
+    return CurrencyType[this.currency];
+  }
+
   get tokenInfo(): TokenInfo {
     return getTokenInfo(this.account);
+  }
+
+  get rate(): number {
+    return this.exchangeRate;
   }
 
   mounted(): void {
@@ -177,6 +195,7 @@ export default class AccountDetail extends Vue {
       trapFocus: true,
       canCancel: ["x"],
       props: { account: this.account },
+      events: { refresh: this.refresh },
     });
   }
 
@@ -209,7 +228,7 @@ export default class AccountDetail extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: ["x"],
-      props: { account: this.account },
+      props: { account: this.account, rate: this.rate, currency: this.currency },
     });
   }
 
@@ -269,6 +288,7 @@ export default class AccountDetail extends Vue {
   }
 
   async refresh(): Promise<void> {
+    this.exchangeRate = await getExchangeRate("XCH", this.currencyName);
     store.dispatch("refreshBalance");
   }
 }
