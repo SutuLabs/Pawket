@@ -57,7 +57,7 @@
             </ul>
           </template>
         </b-field>
-        <b-field message="$t('offer.make.ui.panel.hint.thisIsYourOffer')">
+        <b-field :message="$t('offer.make.ui.panel.hint.thisIsYourOffer')">
           <template #label>
             {{ $t("offer.make.ui.label.yourOfferTitle") }}
             <key-box icon="checkbox-multiple-blank-outline" :value="offerText" tooltip="Copy"></key-box>
@@ -100,7 +100,7 @@
 import { Component, Vue, Prop, Emit } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
 import { SpendBundle } from "@/models/wallet";
-import { AccountEntity } from "@/store/modules/account";
+import { AccountEntity, defaultCats } from "@/store/modules/account";
 import { prefix0x } from "@/services/coin/condition";
 import store from "@/store";
 import TokenAmountField from "@/components/TokenAmountField.vue";
@@ -163,7 +163,10 @@ export default class MakeOffer extends Vue {
   }
 
   get tokenNames(): string[] {
-    return Object.keys(store.state.account.tokenInfo).concat(this.account.cats.map((_) => _.name));
+    return Object.keys(store.state.account.tokenInfo).concat(
+      defaultCats.map((_) => _.name),
+      this.account.cats.map((_) => _.name)
+    );
   }
 
   async mounted(): Promise<void> {

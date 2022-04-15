@@ -1,4 +1,4 @@
-import { prefix0x } from '@/services/coin/condition';
+import { prefix0x } from "@/services/coin/condition";
 import store from "@/store";
 import { AccountEntity, TokenInfo, defaultCats } from "@/store/modules/account";
 
@@ -6,6 +6,7 @@ export function getCatNameDict(account: AccountEntity): { [id: string]: string }
   return Object.assign(
     {},
     ...Object.values(store.state.account.tokenInfo).map((_) => ({ [prefix0x(_.id ?? "")]: _.symbol })),
+    ...defaultCats.map((_) => ({ [prefix0x(_.id)]: _.name })),
     ...account.cats.map((_) => ({ [prefix0x(_.id)]: _.name }))
   );
 }
@@ -14,6 +15,7 @@ export function getCatIdDict(account: AccountEntity): { [name: string]: string }
   return Object.assign(
     {},
     ...Object.values(store.state.account.tokenInfo).map((_) => ({ [_.symbol]: prefix0x(_.id ?? "") })),
+    ...defaultCats.map((_) => ({ [_.name]: prefix0x(_.id) })),
     ...account.cats.map((_) => ({ [_.name]: prefix0x(_.id) }))
   );
 }
