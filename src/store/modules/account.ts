@@ -37,11 +37,6 @@ export interface CustomCat {
   id: string;
 }
 
-export const defaultCats: CustomCat[] = [
-  {name: 'USDS', id: '6d95dae356e32a71db5ddcb42224754a02524c615c5fc35f568c2af04774e589'},
-  {name: 'BSH', id: '6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b'},
-];
-
 const DEFAULT_ADDRESS_RETRIEVAL_COUNT = 4;
 
 export interface TokenInfo {
@@ -49,10 +44,10 @@ export interface TokenInfo {
 }
 
 export interface OneTokenInfo {
-    id?: string;
-    symbol: string;
-    decimal: number;
-    unit: string;
+  id?: string;
+  symbol: string;
+  decimal: number;
+  unit: string;
 }
 
 export interface PersistentAccount {
@@ -79,7 +74,19 @@ store.registerModule<IAccountState>('account', {
           symbol: "XCH",
           decimal: 12,
           unit: "XCH",
-        }
+        },
+        "USDS": {
+          symbol: "USDS",
+          decimal: 3,
+          unit: "USDS",
+          id: "6d95dae356e32a71db5ddcb42224754a02524c615c5fc35f568c2af04774e589",
+        },
+        "BSH": {
+          symbol: "BSH",
+          decimal: 3,
+          unit: "BSH",
+          id: "6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b"
+        },
       },
       accounts: [],
       selectedAccount: 0,

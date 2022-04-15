@@ -104,7 +104,7 @@ import KeyBox from "@/components/KeyBox.vue";
 import Send from "./Send.vue";
 import { demojo } from "@/filters/unitConversion";
 import { xchToCurrency } from "@/filters/usdtConversion";
-import { TokenInfo, AccountEntity, AccountToken, CustomCat, defaultCats } from "@/store/modules/account";
+import { TokenInfo, AccountEntity, AccountToken, CustomCat } from "@/store/modules/account";
 import TakeOffer from "./Offer/Take.vue";
 import MakeOffer from "./Offer/Make.vue";
 import { getTokenInfo } from "@/services/coin/cat";
@@ -133,7 +133,7 @@ export default class AccountDetail extends Vue {
   }
 
   get tokenList(): CustomCat[] {
-    return [{ name: "XCH", id: "XCH" }, ...defaultCats, ...this.account.cats];
+    return Object.values(this.tokenInfo).map((_) => ({ name: _.symbol, id: _.id ?? "XCH" }));
   }
 
   get debugMode(): boolean {
