@@ -251,7 +251,8 @@
         "showMnemonic": "显示助记词",
         "addBySerial": "新增序列账户",
         "addByPassword": "新增密码账户（专家功能）",
-        "addByLegacy": "导入 Chia 客户端账户（24 词）"
+        "addByLegacy": "导入 Chia 客户端账户（24 词）",
+        "addByMnemonic": "导入账户（12词）"
       },
       "tooltip": {
         "delete": "删除",
@@ -276,9 +277,7 @@
         "confirmText": "确认"
       },
       "error": {
-        "accountPasswordExists": "该密码账户已存在于账户列表中。",
-        "accountMnemonicExists": "该助记词账户已存在于账户列表中。",
-        "invalidMnemonic": "导入失败，请输入正确的助记词"
+        "accountPasswordExists": "该密码账户已存在于账户列表中。"
       }
     }
   },
@@ -558,6 +557,28 @@
     "ui": {
       "button": {
         "cancel": "取消"
+      }
+    }
+  },
+  "addByMnemonic": {
+    "ui": {
+      "label": {
+        "name": "请输入账户名",
+        "mnemonic": "请输入助记词"
+      },
+      "message": {
+        "nameRequired": "账户名不能为空",
+        "mnemonicRequired": "助记词不能为空",
+        "invalidMnemonic": "导入失败，请输入正确的助记词"
+      },
+      "button": {
+        "back": "返回",
+        "submit": "提交"
+      }
+    },
+    "message": {
+      "error": {
+        "accountMnemonicExists": "该助记词账户已存在于账户列表中。"
       }
     }
   }

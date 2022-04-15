@@ -51,6 +51,14 @@
           <span class="mx-2">{{ $t("accountList.ui.button.addByLegacy") }}</span>
         </b-tooltip>
       </a>
+      <a href="javascript:void(0)" class="panel-block" @click="addByMnemonic()">
+        <b-tooltip :label="$t('accountList.ui.tooltip.addByLegacy')" multilined size="is-small">
+          <span class="panel-icon">
+            <b-icon icon="plus-thick" class="has-text-grey"></b-icon>
+          </span>
+          <span class="mx-2">{{ $t("accountList.ui.button.addByMnemonic") }}</span>
+        </b-tooltip>
+      </a>
     </section>
   </div>
 </template>
@@ -63,6 +71,7 @@ import AccountExport from "@/components/AccountExport.vue";
 import MnemonicExport from "@/components/MnemonicExport.vue";
 import account from "@/services/crypto/account";
 import utility from "@/services/crypto/utility";
+import AddByMnemonic from "./AddByMnemonic.vue";
 
 @Component
 export default class AccountList extends Vue {
@@ -128,19 +137,23 @@ export default class AccountList extends Vue {
   }
 
   async addByLegacy(): Promise<void> {
-    const name = await this.getAccountName();
-    const legacyMnemonic = await this.getLegacyMnemonic();
-    if (legacyMnemonic.trim().split(" ").length != 24) {
-      this.$buefy.dialog.alert(this.$tc("accountList.message.error.invalidMnemonic"));
-      return;
-    }
-    const acc = await account.getAccount("", null, legacyMnemonic);
-    if (store.state.account.accounts.find((a) => a.key.fingerprint === acc.fingerprint)) {
-      this.$buefy.dialog.alert(this.$tc("accountList.message.error.accountMnemonicExists"));
-      return;
-    }
+    this.$buefy.modal.open({
+      parent: this,
+      component: AddByMnemonic,
+      hasModalCard: true,
+      trapFocus: true,
+      props: { title: this.$t("accountList.ui.button.addByLegacy"), mnemonicLen: 24 },
+    });
+  }
 
-    await store.dispatch("createAccountByLegacyMnemonic", { name, legacyMnemonic });
+  async addByMnemonic(): Promise<void> {
+    this.$buefy.modal.open({
+      parent: this,
+      component: AddByMnemonic,
+      hasModalCard: true,
+      trapFocus: true,
+      props: { title: this.$t("accountList.ui.button.addByMnemonic"), mnemonicLen: 12 },
+    });
   }
 
   getAccountName(): Promise<string> {

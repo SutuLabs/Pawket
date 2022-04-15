@@ -251,7 +251,8 @@
         "showMnemonic": "Reveal Mnemonic",
         "addBySerial": "Add by Serial",
         "addByPassword": "Add by Password ( Advanced )",
-        "addByLegacy": "Import Chia Client 24 Mnemonic Words"
+        "addByLegacy": "Import Chia Client 24 Mnemonic Words",
+        "addByMnemonic": "Add Account (12 words)"
       },
       "tooltip": {
         "delete": "Delete",
@@ -276,9 +277,7 @@
         "confirmText": "OK"
       },
       "error": {
-        "accountPasswordExists": "An account with the same password already exists",
-        "accountMnemonicExists": "An account with the same mnemonic already exists",
-        "invalidMnemonic": "Import failed, please check your mnemonic words"
+        "accountPasswordExists": "An account with the same password already exists"
       }
     }
   },
@@ -558,6 +557,28 @@
     "ui": {
       "button": {
         "cancel": "Cancel"
+      }
+    }
+  },
+  "addByMnemonic": {
+    "ui": {
+      "label": {
+        "name": "Please input account name",
+        "mnemonic": "Please input mnemonic words"
+      },
+      "message": {
+        "nameRequired": "Account name is required",
+        "mnemonicRequired": "Mnemonic is required",
+        "invalidMnemonic": "Import failed, please check your mnemonic words"
+      },
+      "button": {
+        "back": "Back",
+        "submit": "Submit"
+      }
+    },
+    "message": {
+      "error": {
+        "accountMnemonicExists": "An account with the same mnemonic already exists"
       }
     }
   }
