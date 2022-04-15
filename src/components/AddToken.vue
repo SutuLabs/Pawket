@@ -46,7 +46,7 @@ import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import store from "@/store/index";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { sortable } from "@/directives/sortable";
-import { AccountEntity, CustomCat, defaultCats } from "@/store/modules/account";
+import { AccountEntity, CustomCat } from "@/store/modules/account";
 import TokenItem from "@/components/TokenItem.vue";
 import { Bytes } from "clvm";
 import { shorten } from "@/filters/addressConversion";
@@ -119,6 +119,9 @@ export default class AddToken extends Vue {
       });
       return;
     }
+    const defaultCats = Object.values(store.state.account.tokenInfo)
+      .map((_) => ({ name: _.symbol, id: _.id }))
+      .filter((_) => _.id);
     const didx = defaultCats.findIndex((_) => _.id == this.assetId);
     const dname = defaultCats.findIndex((_) => _.name == this.name);
     if (didx > -1 || dname > -1) {

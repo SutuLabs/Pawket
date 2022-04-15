@@ -100,7 +100,7 @@
 import { Component, Vue, Prop, Emit } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
 import { SpendBundle } from "@/models/wallet";
-import { AccountEntity, defaultCats } from "@/store/modules/account";
+import { AccountEntity } from "@/store/modules/account";
 import { prefix0x } from "@/services/coin/condition";
 import store from "@/store";
 import TokenAmountField from "@/components/TokenAmountField.vue";
@@ -164,7 +164,6 @@ export default class MakeOffer extends Vue {
 
   get tokenNames(): string[] {
     return Object.keys(store.state.account.tokenInfo).concat(
-      defaultCats.map((_) => _.name),
       this.account.cats.map((_) => _.name)
     );
   }

@@ -296,11 +296,10 @@ export async function testTakeOffer(): Promise<void> {
     ]
   };
 
-  const revSummary = getReversePlan(summary, change_hex);
-
   const cats = getCatNameDict(account);
-  const offered: OfferEntity[] = revSummary.offered.map((_) => Object.assign({}, _, { symbol: cats[_.id] }));
-  const offplan = await generateOfferPlan(offered, change_hex, availcoins, 0n);
+  
+  const revSummary = getReversePlan(summary, change_hex, cats);
+  const offplan = await generateOfferPlan(revSummary.offered, change_hex, availcoins, 0n);
   const takerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, nonce, localPuzzleApiCall);
   const combined = await combineSpendBundle([makerBundle, takerBundle]);
 

@@ -183,8 +183,12 @@ export async function generateOfferPlan(
 export function getReversePlan(
   summary: OfferSummary,
   change_hex: string,
+  cats: { [id: string]: string },
 ): OfferSummary {
-  return { offered: summary.requested, requested: summary.offered.map(_ => Object.assign({}, _, { target: change_hex })) };
+  return {
+    offered: summary.requested.map(_ => Object.assign({}, _, { symbol: cats[_.id] })),
+    requested: summary.offered.map(_ => Object.assign({}, _, { target: change_hex, symbol: cats[_.id] })),
+  };
 }
 
 export async function combineSpendBundle(
