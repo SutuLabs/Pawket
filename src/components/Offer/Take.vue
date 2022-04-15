@@ -173,9 +173,8 @@ export default class TakeOffer extends Vue {
       this.signing = true;
 
       const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
-      const revSummary = getReversePlan(this.summary, change_hex);
-      const offered: OfferEntity[] = revSummary.offered.map((_) => Object.assign({}, _, { symbol: this.cats[_.id] }));
-      const offplan = await generateOfferPlan(offered, change_hex, this.availcoins, 0n);
+      const revSummary = getReversePlan(this.summary, change_hex, this.cats);
+      const offplan = await generateOfferPlan(revSummary.offered, change_hex, this.availcoins, 0n);
       const takerBundle = await generateOffer(offplan, revSummary.requested, this.tokenPuzzles);
       const combined = await combineSpendBundle([this.makerBundle, takerBundle]);
       // for creating unit test
