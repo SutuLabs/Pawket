@@ -19,6 +19,14 @@ export const mods: { mod: string, name: string }[] = [
     name: "singleton_top_layer",
     mod: "(a (q 2 (i (logand 47 (q . 1)) (q 2 54 (c 2 (c 5 (c 23 (c (a 38 (c 2 (c 11 ()))) (c 47 (c 11 (c 95 ())))))))) (q 8)) 1) (c (q (((70 . 2) 51 . 4) (q . 1) 2 (a (i 5 (q 2 92 (c 2 (c 13 (c (sha256 44 (sha256 36 56) (sha256 44 (sha256 44 (sha256 36 52) 9) (sha256 44 11 (sha256 36 ())))) ())))) (q . 11)) 1) 2 (i 11 (q 2 50 (c 2 (c 5 (c 11 (c 23 (c (a 42 (c 2 (c (a (i (= 35 40) (q . -77) ()) 1) ()))) ())))))) (q 2 (i 23 () (q 8)) 1)) 1) (((sha256 (sha256 23 (a 58 (c 2 (c 9 (c 47 (c (a 38 (c 2 (c 5 ()))) ()))))) 95) 11 -65) 2 (i (not (all 79 23)) (q 2 126 (c 2 (c 111 (c (c (a (i 79 (q 4 35 (c (a 58 (c 2 (c 9 (c 83 (c (a 38 (c 2 (c 5 ()))) ()))))) (c -77 ()))) (q . 19)) 1) (a 124 (c 2 (c 5 (c 27 (c (any 79 23) ())))))) ())))) (q 8)) 1) (c (= (logand 5 (q . 1)) (q . 1)) (= 5 (q . -113))) 11 44 (sha256 36 48) (sha256 44 (sha256 44 (sha256 36 52) 5) (sha256 44 (a 92 (c 2 (c 7 (c (sha256 36 36) ())))) (sha256 36 ())))) ((a (i (l 5) (q 11 (q . 2) (a 38 (c 2 (c 9 ()))) (a 38 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 2 94 (c 2 (c 5 (c 11 (c (a 58 (c 2 (c 9 (c 23 (c (a 38 (c 2 (c 5 ()))) ()))))) (c 23 (c 47 (c 95 (c -65 ()))))))))) (c (c 32 (c 23 ())) (a 124 (c 2 (c 5 (c (a 383 (c (c (c 23 47) (c (c 95 -65) (c 11 5))) 767)) (q ())))))) (a 46 (c 2 (c 5 (c 11 (c (a (i 59 (q 2 34 (c 2 (c 5 (c 23 (c 19 (c 43 (c 91 (c 95 ())))))))) (q 2 (i (= 21 (sha256 19 29 43)) (q 11 21 23 95) (q 8)) 1)) 1) (c 23 (c 47 (c 95 (c -65 (c 383 ())))))))))) 2 (i 5 (q . 27) (q . 11)) 1) 1))"
   },
+  {
+    name: "pool_member_innerpuz",
+    mod: "(a (q 2 (i 767 (q 2 22 (c 2 (c 5 (c 1215 (c 1727 (c 383 (c (sha256 (logior 47 (logand (q . 0x00ffffffffffffffffffffffffffffffff) 767)) 11 383) ()))))))) (q 4 (c 8 (c 23 (c (a 30 (c 2 (c 383 ()))) ()))) (c (c 28 (c 95 (c 1727 ()))) ()))) 1) (c (q (50 61 . 51) 62 (c (c 28 (c 11 (c 23 ()))) (c (c 28 (c 5 (c 47 ()))) (c (c 10 (c 95 ())) (c (c 20 (c (sha256 95 (q . 36)) ())) ())))) 2 (i (l 5) (q 11 (q . 2) (a 30 (c 2 (c 9 ()))) (a 30 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1))"
+  },
+  {
+    name: "pool_waitingroom_innerpuz",
+    mod: "(a (q 2 (i 383 (q 4 (c 28 (c 95 ())) (c (c 18 (c 1535 (c 1727 ()))) (c (c 8 (c 23 (c (a 30 (c 2 (c (c 1535 (c 767 ())) ()))) ()))) ()))) (q 2 22 (c 2 (c 5 (c 1215 (c 1727 (c 767 (c (sha256 (logior 47 (logand (q . 0x00ffffffffffffffffffffffffffffffff) 1535)) 11 767) ())))))))) 1) (c (q (50 61 . 82) (51 . 62) (c (c 18 (c 11 (c 23 ()))) (c (c 18 (c 5 (c 47 ()))) (c (c 26 (c 95 ())) (c (c 20 (c (sha256 95 (q . 36)) ())) ())))) 2 (i (l 5) (q 11 (q . 2) (a 30 (c 2 (c 9 ()))) (a 30 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1))"
+  },
 ]
 export const modsdict: { [mod: string]: string } = mods.reduce((acc, cur) => ({ ...acc, [cur.mod]: cur.name }), {});
 export const modsprog: { [mod: string]: string } = mods.reduce((acc, cur) => ({ ...acc, [cur.name]: cur.mod }), {});
