@@ -42,7 +42,7 @@
           </ul>
         </template>
       </b-field>
-      <b-field>
+      <b-field v-if="puzzle">
         <template #label>
           Puzzle
           <key-box icon="checkbox-multiple-blank-outline" :value="puzzle" tooltip="Copy"></key-box>
@@ -79,7 +79,7 @@
           </ul>
         </template>
       </b-field>
-      <b-field>
+      <b-field v-if="solution">
         <template #label>
           Solution
           <key-box icon="checkbox-multiple-blank-outline" :value="solution" tooltip="Copy"></key-box>
@@ -267,14 +267,14 @@ export default class BundlePanel extends Vue {
 
   async update(): Promise<void> {
     if (!this.bundle) return;
-    this.puzzle = await puzzle.disassemblePuzzle(this.bundle.coin_spends[this.selectedCoin].puzzle_reveal);
-    this.puzzle_hash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(this.puzzle));
-    this.solution = await puzzle.disassemblePuzzle(this.bundle.coin_spends[this.selectedCoin].solution);
-    this.used_coin_name = transfer.getCoinName(this.bundle.coin_spends[this.selectedCoin].coin).hex();
-    this.used_coin_tgt_address = puzzle.getAddressFromPuzzleHash(
-      this.bundle.coin_spends[this.selectedCoin].coin.puzzle_hash,
-      "xch"
-    );
+    const c = this.bundle.coin_spends[this.selectedCoin];
+    if (c.puzzle_reveal && c.solution) {
+      this.puzzle = await puzzle.disassemblePuzzle(c.puzzle_reveal);
+      this.puzzle_hash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(this.puzzle));
+      this.solution = await puzzle.disassemblePuzzle(c.solution);
+    }
+    this.used_coin_name = transfer.getCoinName(c.coin).hex();
+    this.used_coin_tgt_address = puzzle.getAddressFromPuzzleHash(c.coin.puzzle_hash, "xch");
   }
 
   public sha256(...args: string[]): string {
