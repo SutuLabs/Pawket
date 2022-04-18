@@ -275,9 +275,6 @@
         "setLegacyMnemonic": "输入助记词",
         "cancelText": "取消",
         "confirmText": "确认"
-      },
-      "error": {
-        "accountPasswordExists": "该密码账户已存在于账户列表中。"
       }
     }
   },
@@ -579,6 +576,30 @@
     "message": {
       "error": {
         "accountMnemonicExists": "该助记词账户已存在于账户列表中。"
+      }
+    }
+  },
+  "addByPassword": {
+    "ui": {
+      "title": "添加密码账户",
+      "label": {
+        "name": "请输入账户名",
+        "password": "请输入密码",
+        "rePassword": "请确认密码"
+      },
+      "message": {
+        "nameRequired": "账户名不能为空",
+        "passwordRequired": "密码不能为空",
+        "invalidPassword": "密码不匹配"
+      },
+      "button": {
+        "back": "返回",
+        "submit": "提交"
+      }
+    },
+    "message": {
+      "error": {
+        "accountPasswordExists": "该密码账户已存在于账户列表中。"
       }
     }
   }

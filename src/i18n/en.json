@@ -275,9 +275,6 @@
         "setLegacyMnemonic": "Enter mnemonic words:",
         "cancelText": "Cancel",
         "confirmText": "OK"
-      },
-      "error": {
-        "accountPasswordExists": "An account with the same password already exists"
       }
     }
   },
@@ -579,6 +576,30 @@
     "message": {
       "error": {
         "accountMnemonicExists": "An account with the same mnemonic already exists"
+      }
+    }
+  },
+  "addByPassword": {
+    "ui": {
+      "title": "Add Account By Password",
+      "label": {
+        "name": "Please input account name",
+        "password": "Please input password",
+        "rePassword": "Please re-input your password"
+      },
+      "message": {
+        "nameRequired": "Account name is required",
+        "passwordRequired": "Password is required",
+        "invalidPassword": "Password does not match"
+      },
+      "button": {
+        "back": "Back",
+        "submit": "Submit"
+      }
+    },
+    "message": {
+      "error": {
+        "accountPasswordExists": "An account with the same password already exists"
       }
     }
   }
