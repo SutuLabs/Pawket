@@ -1,19 +1,15 @@
 <template>
-  <b-tooltip v-if="value" :multilined="multilined === undefined ? true : multilined">
+  <b-tooltip v-if="value" :multilined="effectiveMultilined">
     <template v-slot:content>
-      <p class="break-all">{{ tooltip ? tooltip : value }}</p>
+      <p class="break-all">{{ effectiveTooltip }}</p>
     </template>
     <a @click="copy(value)">
       <div class="control mr-2">
         <div class="tags has-addons">
           <span class="tag is-info is-light">
-            <span class="mx-1" v-if="showValue">{{ $options.filters.shorten(value) }} </span>
-            <span class="mx-1" v-if="!showValue && display">{{ display }} </span>
+            <span class="mx-1" v-if="effectiveDisplayValue">{{ effectiveDisplayValue }} </span>
             <b-icon v-if="icon" :icon="icon" size="is-small"> </b-icon>
           </span>
-          <!-- <span class="tag is-info">
-                      {{ machine.name }}
-        </span>-->
         </div>
       </div>
     </a>
@@ -34,7 +30,18 @@ export default class KeyBox extends Vue {
   @Prop({ default: false }) private showValue!: boolean;
   @Prop() private icon!: string;
   @Prop() private tooltip!: string;
-  @Prop() private multilined!: boolean;
+  @Prop() private multilined!: boolean | undefined;
+
+  get effectiveMultilined(): boolean {
+    return this.multilined === undefined ? this.effectiveTooltip?.length > 30 : this.multilined;
+  }
+  get effectiveTooltip(): string {
+    return this.tooltip ? this.tooltip : this.value;
+  }
+
+  get effectiveDisplayValue(): string {
+    return this.showValue ? shorten(this.value) : this.display;
+  }
 
   copy(text: string): void {
     store.dispatch("copy", text);

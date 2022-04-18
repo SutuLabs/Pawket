@@ -1,0 +1,23 @@
+ul.args_list {
+  list-style: inside square;
+}
+
+ul.args_list ul.args_list {
+  margin-left: 2em;
+}
+
+ul.args_list.ellipsis-item > li {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.field ::v-deep textarea {
+  font-size: 0.8em;
+}
+
+.puzzle-content {
+  max-height: 10em;
+  overflow: auto;
+  white-space: pre-wrap;
+}

@@ -42,12 +42,9 @@
           </ul>
         </template>
       </b-field>
-      <b-field>
+      <b-field v-if="puzzle">
         <template #label>
           Puzzle
-          <key-box icon="checkbox-multiple-blank-outline" :value="puzzle" tooltip="Copy"></key-box>
-          <b-button tag="a" size="is-small" @click="uncurry(puzzle)">Uncurry</b-button>
-          <span v-if="modsdict[puzzle]" class="tag is-info is-light is-small">{{ modsdict[puzzle] }}</span>
           <span
             v-if="bundle.coin_spends[selectedCoin].coin.puzzle_hash != puzzle_hash"
             class="tag is-danger is-light is-small"
@@ -56,30 +53,10 @@
           >
         </template>
         <template #message>
-          <div class="puzzle-content">
-            {{ puzzle }}
-          </div>
+          <uncurry-puzzle :puzzle="puzzle"></uncurry-puzzle>
         </template>
       </b-field>
-      <b-field v-if="uncurried_module">
-        <template #label>
-          Uncurried Result
-          <key-box icon="checkbox-multiple-blank-outline" :value="uncurried_module" tooltip="Copy"></key-box>
-          <span v-if="modsdict[uncurried_module]" class="tag is-info is-light is-small">{{ modsdict[uncurried_module] }}</span>
-        </template>
-        <template #message>
-          <div class="puzzle-content">
-            {{ uncurried_module }}
-          </div>
-          <ul class="args_list">
-            <li v-for="(arg, i) in uncurried_args" :key="i">
-              {{ arg }}
-              <span v-if="modsdict[arg]" class="tag is-info is-light is-small">{{ modsdict[arg] }}</span>
-            </li>
-          </ul>
-        </template>
-      </b-field>
-      <b-field>
+      <b-field v-if="solution">
         <template #label>
           Solution
           <key-box icon="checkbox-multiple-blank-outline" :value="solution" tooltip="Copy"></key-box>
@@ -165,16 +142,16 @@ import { SpendBundle } from "@/models/wallet";
 import puzzle from "@/services/crypto/puzzle";
 import transfer from "@/services/transfer/transfer";
 import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
-import { uncurry } from "clvm_tools/clvm_tools/curry";
-import { SExp, Tuple } from "clvm";
 import { beautifyLisp } from "@/services/coin/lisp";
 import { Bytes } from "clvm";
 import { conditionDict, ConditionInfo, prefix0x } from "@/services/coin/condition";
 import { modsdict, modsprog } from "@/services/coin/mods";
+import UncurryPuzzle from "@/components/DevHelper/UncurryPuzzle.vue";
 
 @Component({
   components: {
     KeyBox,
+    UncurryPuzzle,
   },
 })
 export default class BundlePanel extends Vue {
@@ -187,8 +164,6 @@ export default class BundlePanel extends Vue {
   public solution = "";
   public solution_result = "";
   public selectedCoin = 0;
-  public uncurried_module = "";
-  public uncurried_args: string[] = [];
   public solution_results: { op: number; args: string[] }[] = [];
   public bundle: SpendBundle | null = null;
 
@@ -243,8 +218,6 @@ export default class BundlePanel extends Vue {
     this.selectedCoin = idx;
     this.solution_result = "";
     this.puzzle_hash = "";
-    this.uncurried_args = [];
-    this.uncurried_module = "";
     await this.update();
   }
 
@@ -256,25 +229,16 @@ export default class BundlePanel extends Vue {
     this.solution_results = argarr.map((_) => ({ op: Number(_[0]), args: _.slice(1) }));
   }
 
-  async uncurry(puz: string): Promise<void> {
-    const curried = assemble(puz);
-    const [mod, args] = uncurry(curried) as Tuple<SExp, SExp>;
-    const mods = disassemble(mod);
-    const argarr = Array.from(args.as_iter()).map((_) => disassemble(_ as SExp));
-    this.uncurried_module = mods;
-    this.uncurried_args = argarr;
-  }
-
   async update(): Promise<void> {
     if (!this.bundle) return;
-    this.puzzle = await puzzle.disassemblePuzzle(this.bundle.coin_spends[this.selectedCoin].puzzle_reveal);
-    this.puzzle_hash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(this.puzzle));
-    this.solution = await puzzle.disassemblePuzzle(this.bundle.coin_spends[this.selectedCoin].solution);
-    this.used_coin_name = transfer.getCoinName(this.bundle.coin_spends[this.selectedCoin].coin).hex();
-    this.used_coin_tgt_address = puzzle.getAddressFromPuzzleHash(
-      this.bundle.coin_spends[this.selectedCoin].coin.puzzle_hash,
-      "xch"
-    );
+    const c = this.bundle.coin_spends[this.selectedCoin];
+    if (c.puzzle_reveal && c.solution) {
+      this.puzzle = await puzzle.disassemblePuzzle(c.puzzle_reveal);
+      this.puzzle_hash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(this.puzzle));
+      this.solution = await puzzle.disassemblePuzzle(c.solution);
+    }
+    this.used_coin_name = transfer.getCoinName(c.coin).hex();
+    this.used_coin_tgt_address = puzzle.getAddressFromPuzzleHash(c.coin.puzzle_hash, "xch");
   }
 
   public sha256(...args: string[]): string {
@@ -297,27 +261,5 @@ export default class BundlePanel extends Vue {
 </script>
 
 <style scoped lang="scss">
-ul.args_list {
-  list-style: inside square;
-}
-
-ul.args_list ul.args_list {
-  margin-left: 2em;
-}
-
-ul.args_list.ellipsis-item > li {
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.field ::v-deep textarea {
-  font-size: 0.8em;
-}
-
-.puzzle-content {
-  max-height: 10em;
-  overflow: auto;
-  white-space: pre-wrap;
-}
+@import "@/styles/arguments.scss"
 </style>
