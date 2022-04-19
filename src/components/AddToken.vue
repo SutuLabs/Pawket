@@ -142,10 +142,10 @@ export default class AddToken extends Vue {
         const aid = this.assetIds.findIndex((a) => a.id == id);
         if (aid > -1) {
           this.assetIds.splice(aid, 1);
+          this.submit();
         }
       },
     });
-    this.submit();
   }
 
   isAssetId(assetId: string): boolean {
