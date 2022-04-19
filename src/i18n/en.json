@@ -98,7 +98,7 @@
         "create": {
           "title": "Mnemonic",
           "tip1": "Welcome! The following words are used for your wallet backup. Without them, you will lose access to your wallet, keep them safe! Write down each word along with the order number next to them. (Order is important)",
-          "tip2": "WARNING: Never disclose your Mnemonic words. Anyone with this mnemonic can take your XCH forever."
+          "tip2": "WARNING: Never disclose your Mnemonic Words. Anyone with this mnemonic can take your XCH forever."
         },
         "import12": {
           "title": "Import Pawket Mnemonic Words",
