@@ -251,8 +251,8 @@
         "showMnemonic": "显示助记词",
         "addBySerial": "新增序列账户",
         "addByPassword": "新增密码账户（专家功能）",
-        "addByLegacy": "导入 Chia 客户端账户（24 词）",
-        "addByMnemonic": "导入账户（12词）"
+        "addByLegacy": "导入 Chia 客户端账户(24 词)",
+        "addByMnemonic": "导入其他钱包账户(12词)"
       },
       "tooltip": {
         "delete": "删除",
@@ -260,7 +260,8 @@
         "details": "查看详情",
         "addBySerial": "按顺序创建派生的序列账户。",
         "addByPassword": "由【助记词+密码】保护的账户。输入相同的密码即可进入相同的账户。",
-        "addByLegacy": "Chia 客户端钱包。"
+        "addByLegacy": "Chia 客户端钱包。",
+        "addByMnemonic": "支持 nucle、goby 12词账户导入"
       }
     },
     "message": {
@@ -275,9 +276,6 @@
         "setLegacyMnemonic": "输入助记词",
         "cancelText": "取消",
         "confirmText": "确认"
-      },
-      "error": {
-        "accountPasswordExists": "该密码账户已存在于账户列表中。"
       }
     }
   },
@@ -579,6 +577,30 @@
     "message": {
       "error": {
         "accountMnemonicExists": "该助记词账户已存在于账户列表中。"
+      }
+    }
+  },
+  "addByPassword": {
+    "ui": {
+      "title": "添加密码账户",
+      "label": {
+        "name": "请输入账户名",
+        "password": "请输入密码",
+        "rePassword": "请确认密码"
+      },
+      "message": {
+        "nameRequired": "账户名不能为空",
+        "passwordRequired": "密码不能为空",
+        "invalidPassword": "密码不匹配"
+      },
+      "button": {
+        "back": "返回",
+        "submit": "提交"
+      }
+    },
+    "message": {
+      "error": {
+        "accountPasswordExists": "该密码账户已存在于账户列表中。"
       }
     }
   }

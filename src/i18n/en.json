@@ -252,7 +252,7 @@
         "addBySerial": "Add by Serial",
         "addByPassword": "Add by Password ( Advanced )",
         "addByLegacy": "Import Chia Client 24 Mnemonic Words",
-        "addByMnemonic": "Add Account (12 words)"
+        "addByMnemonic": "Import Other Accounts 12 Mnemonic Words"
       },
       "tooltip": {
         "delete": "Delete",
@@ -260,7 +260,8 @@
         "details": "Details",
         "addBySerial": "Derived serial accounts are created in order.",
         "addByPassword": "Account protected by MNEMONIC and PASSWORD. Enter the same password to access the same account.",
-        "addByLegacy": "Chia client wallet."
+        "addByLegacy": "Chia client wallet.",
+        "addByMnemonic": "Import nucle or goby 12 mnemonic words account."
       }
     },
     "message": {
@@ -275,9 +276,6 @@
         "setLegacyMnemonic": "Enter mnemonic words:",
         "cancelText": "Cancel",
         "confirmText": "OK"
-      },
-      "error": {
-        "accountPasswordExists": "An account with the same password already exists"
       }
     }
   },
@@ -579,6 +577,30 @@
     "message": {
       "error": {
         "accountMnemonicExists": "An account with the same mnemonic already exists"
+      }
+    }
+  },
+  "addByPassword": {
+    "ui": {
+      "title": "Add Account By Password",
+      "label": {
+        "name": "Please input account name",
+        "password": "Please input password",
+        "rePassword": "Please re-input your password"
+      },
+      "message": {
+        "nameRequired": "Account name is required",
+        "passwordRequired": "Password is required",
+        "invalidPassword": "Password does not match"
+      },
+      "button": {
+        "back": "Back",
+        "submit": "Submit"
+      }
+    },
+    "message": {
+      "error": {
+        "accountPasswordExists": "An account with the same password already exists"
       }
     }
   }

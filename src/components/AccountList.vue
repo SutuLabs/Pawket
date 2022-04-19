@@ -52,7 +52,7 @@
         </b-tooltip>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addByMnemonic()">
-        <b-tooltip :label="$t('accountList.ui.tooltip.addByLegacy')" multilined size="is-small">
+        <b-tooltip :label="$t('accountList.ui.tooltip.addByMnemonic')" multilined size="is-small">
           <span class="panel-icon">
             <b-icon icon="plus-thick" class="has-text-grey"></b-icon>
           </span>
@@ -69,9 +69,9 @@ import store from "@/store";
 import { AccountEntity } from "@/store/modules/account";
 import AccountExport from "@/components/AccountExport.vue";
 import MnemonicExport from "@/components/MnemonicExport.vue";
-import account from "@/services/crypto/account";
 import utility from "@/services/crypto/utility";
-import AddByMnemonic from "./AddByMnemonic.vue";
+import AddByMnemonic from "./AddAccount/AddByMnemonic.vue";
+import AddByPassword from "./AddAccount/AddByPassword.vue";
 
 @Component
 export default class AccountList extends Vue {
@@ -119,15 +119,12 @@ export default class AccountList extends Vue {
   }
 
   async addByPassword(): Promise<void> {
-    const name = await this.getAccountName();
-    const password = await this.getPassword();
-    const acc = await account.getAccount(store.state.vault.seedMnemonic, password);
-    if (store.state.account.accounts.find((a) => a.key.fingerprint === acc.fingerprint)) {
-      this.$buefy.dialog.alert(this.$tc("accountList.message.error.accountPasswordExists"));
-      return;
-    }
-
-    await store.dispatch("createAccountByPassword", { name, password });
+    this.$buefy.modal.open({
+      parent: this,
+      component: AddByPassword,
+      hasModalCard: true,
+      trapFocus: true,
+    });
   }
 
   addBySerial(): void {

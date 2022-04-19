@@ -217,6 +217,7 @@ export default class AccountDetail extends Vue {
       component: AccountList,
       hasModalCard: true,
       trapFocus: true,
+      canCancel: ["x"],
       props: {},
     });
   }
