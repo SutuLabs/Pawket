@@ -252,7 +252,7 @@
         "addBySerial": "Add by Serial",
         "addByPassword": "Add by Password ( Advanced )",
         "addByLegacy": "Import Chia Client 24 Mnemonic Words",
-        "addByMnemonic": "Import other accounts 12 mnemonic words"
+        "addByMnemonic": "Import Other Accounts 12 Mnemonic Words"
       },
       "tooltip": {
         "delete": "Delete",
@@ -261,7 +261,7 @@
         "addBySerial": "Derived serial accounts are created in order.",
         "addByPassword": "Account protected by MNEMONIC and PASSWORD. Enter the same password to access the same account.",
         "addByLegacy": "Chia client wallet.",
-        "addByMnemonic": "Import nucle or goby 12 mnemonic words account"
+        "addByMnemonic": "Import nucle or goby 12 mnemonic words account."
       }
     },
     "message": {
