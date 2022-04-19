@@ -203,6 +203,6 @@ export default class CreateSeed extends Vue {
   margin-top: 1rem;
 }
 .word-button {
-  width: 6rem;
+  width: 9rem;
 }
 </style>
