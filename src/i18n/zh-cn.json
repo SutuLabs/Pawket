@@ -251,8 +251,8 @@
         "showMnemonic": "显示助记词",
         "addBySerial": "新增序列账户",
         "addByPassword": "新增密码账户（专家功能）",
-        "addByLegacy": "导入 Chia 客户端账户（24 词）",
-        "addByMnemonic": "导入账户（12词）"
+        "addByLegacy": "导入 Chia 客户端账户(24 词)",
+        "addByMnemonic": "导入其他钱包账户(12词)"
       },
       "tooltip": {
         "delete": "删除",
@@ -260,7 +260,8 @@
         "details": "查看详情",
         "addBySerial": "按顺序创建派生的序列账户。",
         "addByPassword": "由【助记词+密码】保护的账户。输入相同的密码即可进入相同的账户。",
-        "addByLegacy": "Chia 客户端钱包。"
+        "addByLegacy": "Chia 客户端钱包。",
+        "addByMnemonic": "支持 nucle、goby 12词账户导入"
       }
     },
     "message": {

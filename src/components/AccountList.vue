@@ -52,7 +52,7 @@
         </b-tooltip>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addByMnemonic()">
-        <b-tooltip :label="$t('accountList.ui.tooltip.addByLegacy')" multilined size="is-small">
+        <b-tooltip :label="$t('accountList.ui.tooltip.addByMnemonic')" multilined size="is-small">
           <span class="panel-icon">
             <b-icon icon="plus-thick" class="has-text-grey"></b-icon>
           </span>
