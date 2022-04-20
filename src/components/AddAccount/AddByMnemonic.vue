@@ -15,7 +15,7 @@
           :validation-message="$t('addByMnemonic.ui.message.nameRequired')"
         ></b-input>
       </b-field>
-      <b-field :label="$t('addByMnemonic.ui.label.mnemonic')" :type="errorMessage ? 'is-danger' : ''">
+      <b-field :label="$t('addByMnemonic.ui.label.mnemonic', { len: mnemonicLen })" :type="errorMessage ? 'is-danger' : ''">
         <b-input
           ref="mnemonic"
           v-model="mnemonic"
@@ -69,7 +69,8 @@ export default class AddByMnemonic extends Vue {
       return;
     }
     this.submitting = true;
-    if (this.mnemonic.trim().split(" ").length != this.mnemonicLen) {
+    this.mnemonic = this.mnemonic.replace(/\s+/g, " ").trim();
+    if (this.mnemonic.split(" ").length != this.mnemonicLen) {
       this.errorMessage = this.$tc("addByMnemonic.ui.message.invalidMnemonic");
       return;
     }

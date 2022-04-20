@@ -123,6 +123,7 @@ export default class AccountList extends Vue {
       parent: this,
       component: AddByPassword,
       hasModalCard: true,
+      canCancel: ["x"],
       trapFocus: true,
     });
   }
@@ -139,7 +140,8 @@ export default class AccountList extends Vue {
       component: AddByMnemonic,
       hasModalCard: true,
       trapFocus: true,
-      props: { title: this.$t("accountList.ui.button.addByLegacy"), mnemonicLen: 24 },
+      canCancel: ["x"],
+      props: { title: this.$t("accountList.ui.modal.addByLegacy"), mnemonicLen: 24 },
     });
   }
 
@@ -149,7 +151,8 @@ export default class AccountList extends Vue {
       component: AddByMnemonic,
       hasModalCard: true,
       trapFocus: true,
-      props: { title: this.$t("accountList.ui.button.addByMnemonic"), mnemonicLen: 12 },
+      canCancel: ["x"],
+      props: { title: this.$t("accountList.ui.modal.addByMnemonic"), mnemonicLen: 12 },
     });
   }
 

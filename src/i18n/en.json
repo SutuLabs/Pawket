@@ -261,6 +261,10 @@
         "addByPassword": "Account protected by MNEMONIC and PASSWORD. Enter the same password to access the same account.",
         "addByLegacy": "Chia client wallet.",
         "addByMnemonic": "Import nucle or goby 12 mnemonic words account."
+      },
+      "modal": {
+        "addByLegacy": "Import Chia Account",
+        "addByMnemonic": "Import Nucle/Goby Account"
       }
     },
     "message": {
@@ -560,8 +564,8 @@
   "addByMnemonic": {
     "ui": {
       "label": {
-        "name": "Please input account name",
-        "mnemonic": "Please input mnemonic words"
+        "name": "Input account name",
+        "mnemonic": "Input mnemonic words ({len}-word)"
       },
       "message": {
         "nameRequired": "Account name is required",
