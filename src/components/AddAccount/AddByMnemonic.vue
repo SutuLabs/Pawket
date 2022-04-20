@@ -69,6 +69,7 @@ export default class AddByMnemonic extends Vue {
       return;
     }
     this.submitting = true;
+    this.mnemonic = this.mnemonic.replace(/\s+/g, " ");
     if (this.mnemonic.trim().split(" ").length != this.mnemonicLen) {
       this.errorMessage = this.$tc("addByMnemonic.ui.message.invalidMnemonic");
       return;
