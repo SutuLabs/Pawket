@@ -21,7 +21,7 @@
           </b-field>
 
           <center>
-            <qrcode-vue :value="qrcodes[selectedQr]" size="250"></qrcode-vue>
+            <qrcode-vue :value="qrcodes[qrcodes.length > 1 ? selectedQr : 0]" size="250"></qrcode-vue>
           </center>
         </div>
         <div class="column">
