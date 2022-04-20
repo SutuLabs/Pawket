@@ -564,8 +564,8 @@
   "addByMnemonic": {
     "ui": {
       "label": {
-        "name": "请输入账户名",
-        "mnemonic": "请输入助记词 ({len}词)"
+        "name": "输入账户名",
+        "mnemonic": "输入助记词 ({len}词)"
       },
       "message": {
         "nameRequired": "账户名不能为空",
