@@ -261,6 +261,10 @@
         "addByPassword": "由【助记词+密码】保护的账户。输入相同的密码即可进入相同的账户。",
         "addByLegacy": "Chia 客户端钱包。",
         "addByMnemonic": "支持 nucle、goby 12词账户导入"
+      },
+      "modal": {
+        "addByLegacy": "导入 Chia 账户",
+        "addByMnemonic": "导入 Nucle/Goby 账户"
       }
     },
     "message": {
@@ -561,7 +565,7 @@
     "ui": {
       "label": {
         "name": "请输入账户名",
-        "mnemonic": "请输入助记词"
+        "mnemonic": "请输入助记词 ({len}词)"
       },
       "message": {
         "nameRequired": "账户名不能为空",

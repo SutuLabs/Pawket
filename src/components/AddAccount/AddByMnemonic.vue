@@ -15,7 +15,7 @@
           :validation-message="$t('addByMnemonic.ui.message.nameRequired')"
         ></b-input>
       </b-field>
-      <b-field :label="$t('addByMnemonic.ui.label.mnemonic')" :type="errorMessage ? 'is-danger' : ''">
+      <b-field :label="$t('addByMnemonic.ui.label.mnemonic', { len: mnemonicLen })" :type="errorMessage ? 'is-danger' : ''">
         <b-input
           ref="mnemonic"
           v-model="mnemonic"
