@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <b-navbar>
+    <b-navbar class="is-3-quarters">
       <template #brand>
         <b-navbar-item tag="router-link" :to="{ path: '/' }">
           <img src="./assets/logo.svg" :alt="$t('verifyPassword.ui.alt.logoAlt')" />
@@ -134,5 +134,17 @@ html {
 .tabs li.is-active a {
   color: #617ea1 !important;
   border-bottom-color: #617ea1 !important;
+}
+
+.is-3-quarters {
+  width: 75%;
+  margin: auto;
+}
+
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  .is-3-quarters {
+    width: 100%;
+  }
 }
 </style>

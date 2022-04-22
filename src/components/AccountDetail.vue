@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container is-3-quarters px-4">
     <b-loading :is-full-page="true" :active="!account.tokens"></b-loading>
     <div class="py-5 has-text-centered" v-if="account && account.key">
       <section>
@@ -15,7 +15,7 @@
         <br />
         <div class="mt-5">
           <h2 class="is-size-3 py-5">
-            <span v-if="account.tokens && account.tokens.hasOwnProperty('XCH')">
+            <span v-if="account.tokens && account.tokens.hasOwnProperty('XCH')" class="pl-4">
               {{ account.tokens["XCH"].amount | demojo(null, 6) }}
               <b-tooltip :label="$t('accountDetail.ui.tooltip.refresh')">
                 <a class="is-size-6" href="javascript:void(0)" @click="refresh()" :disabled="refreshing">
@@ -333,6 +333,18 @@ export default class AccountDetail extends Vue {
   }
   to {
     transform: rotate(359deg);
+  }
+}
+
+.is-3-quarters {
+  width: 75%;
+  margin: auto;
+}
+
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  .is-3-quarters {
+    width: 100%;
   }
 }
 </style>
