@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <b-loading :is-full-page="true" :active="!account.tokens"></b-loading>
     <div class="py-5 has-text-centered" v-if="account && account.key">
       <section>
         <b-tooltip :label="$t('accountDetail.ui.tooltip.setting')" class="is-pulled-left">
@@ -25,16 +26,16 @@
             <span v-else>- XCH</span>
           </h2>
         </div>
-        <div class="b-tooltip mr-4">
+        <div class="b-tooltip mr-5">
           <a @click="openLink(account.tokens['XCH'])" href="javascript:void(0)">
             <b-icon icon="download-circle" size="is-medium" class="has-color-pawket"> </b-icon>
-            <p class="has-color-pawket">{{ $t("accountDetail.ui.button.receive") }}</p>
+            <p class="has-color-pawket is-size-6">{{ $t("accountDetail.ui.button.receive") }}</p>
           </a>
         </div>
-        <div class="b-tooltip mr-4">
+        <div class="b-tooltip mr-5">
           <a @click="showSend()" href="javascript:void(0)">
             <b-icon icon="arrow-right-circle" size="is-medium" class="has-color-pawket"> </b-icon>
-            <p class="has-color-pawket">{{ $t("accountDetail.ui.button.send") }}</p>
+            <p class="has-color-pawket is-size-6">{{ $t("accountDetail.ui.button.send") }}</p>
           </a>
         </div>
         <b-button v-if="debugMode" @click="showExport()">{{ $t("accountDetail.ui.button.export") }}</b-button>
