@@ -133,7 +133,11 @@ export default class AccountDetail extends Vue {
   }
 
   get tokenList(): CustomCat[] {
-    return Object.values(this.tokenInfo).map((_) => ({ name: _.symbol, id: _.id ?? "XCH" }));
+    let list: CustomCat[] = [];
+    for (let key in store.state.account.tokenInfo) {
+      list.push({ name: store.state.account.tokenInfo[key].symbol, id: store.state.account.tokenInfo[key].id ?? "XCH" });
+    }
+    return list.concat(this.account.cats);
   }
 
   get debugMode(): boolean {
