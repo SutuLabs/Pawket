@@ -128,11 +128,11 @@ html {
 }
 
 .has-color-link {
-  color: #7590b1 !important;
+  color: #617ea1 !important;
 }
 
 .tabs li.is-active a {
-  color: #7590b1 !important;
-  border-bottom-color: #7590b1 !important;
+  color: #617ea1 !important;
+  border-bottom-color: #617ea1 !important;
 }
 </style>
