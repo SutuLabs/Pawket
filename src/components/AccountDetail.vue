@@ -18,8 +18,7 @@
               {{ account.tokens["XCH"].amount | demojo(null, 6) }}
               <b-tooltip :label="$t('accountDetail.ui.tooltip.refresh')">
                 <a class="is-size-6" href="javascript:void(0)" @click="refresh()" :disabled="refreshing">
-                  <b-loading :is-full-page="false" v-model="refreshing"></b-loading>
-                  <b-icon icon="refresh" class="has-color-pawket"> </b-icon>
+                  <b-icon :icon="refreshing ? 'sync' : 'refresh'" :class="refreshing ? 'rotate' : 'has-color-pawket'"> </b-icon>
                 </a>
               </b-tooltip>
             </span>
@@ -322,4 +321,17 @@ export default class AccountDetail extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.rotate {
+  animation: rotation 2s infinite linear;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+</style>
