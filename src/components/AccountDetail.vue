@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="box has-text-centered" v-if="account && account.key">
+    <div class="py-5 has-text-centered" v-if="account && account.key">
       <section>
         <b-tooltip :label="$t('accountDetail.ui.tooltip.setting')" class="is-pulled-left">
           <b-button @click="configureAccount()">
@@ -12,35 +12,39 @@
         </b-tooltip>
         <b-button class="is-pulled-right" @click="selectAccount()">{{ account.name }}: {{ account.key.fingerprint }}</b-button>
         <br />
-        <div>
-          <h2 class="is-size-3 py-5">
+        <div class="mt-5">
+          <h2 class="is-size-3 pt-6 pb-2">
             <span v-if="account.tokens && account.tokens.hasOwnProperty('XCH')">
               {{ account.tokens["XCH"].amount | demojo(null, 6) }}
-              <b-tooltip :label="$t('accountDetail.ui.tooltip.address')">
-                <a class="is-size-6" href="javascript:void(0)" @click="openLink(account.tokens['XCH'])">
-                  <b-icon icon="qrcode"> </b-icon>
+              <b-tooltip label="刷新">
+                <a class="is-size-6" href="javascript:void(0)" @click="refresh()" :disabled="refreshing">
+                  <b-loading :is-full-page="false" v-model="refreshing"></b-loading>
+                  <b-icon icon="refresh" class="has-color-pawket"> </b-icon>
                 </a>
               </b-tooltip>
             </span>
             <span v-else>- XCH</span>
-            <br />
-            <b-button size="is-small" @click="refresh()" :disabled="refreshing">
-              {{ $t("accountDetail.ui.button.refresh") }}
-              <b-loading :is-full-page="false" v-model="refreshing"></b-loading>
-            </b-button>
           </h2>
         </div>
-      </section>
-      <section>
-        <b-button @click="openLink(account.tokens['XCH'])">{{ $t("accountDetail.ui.button.receive") }}</b-button>
-        <b-button @click="showSend()">{{ $t("accountDetail.ui.button.send") }}</b-button>
+        <div class="b-tooltip mr-4">
+          <a @click="openLink(account.tokens['XCH'])" href="javascript:void(0)">
+            <b-icon icon="download-circle" size="is-large" class="has-color-pawket"> </b-icon>
+            <p class="has-color-pawket">{{ $t("accountDetail.ui.button.receive") }}</p>
+          </a>
+        </div>
+        <div class="b-tooltip mr-4">
+          <a @click="showSend()" href="javascript:void(0)">
+            <b-icon icon="arrow-right-circle" size="is-large" class="has-color-pawket"> </b-icon>
+            <p class="has-color-pawket">{{ $t("accountDetail.ui.button.send") }}</p>
+          </a>
+        </div>
         <b-button v-if="debugMode" @click="showExport()">{{ $t("accountDetail.ui.button.export") }}</b-button>
       </section>
     </div>
     <div class="box">
       <b-tabs position="is-centered" class="block">
         <b-tab-item :label="$t('accountDetail.ui.tab.asset')">
-          <a class="panel-block is-justify-content-space-between" v-for="cat of tokenList" :key="cat.id">
+          <a class="panel-block is-justify-content-space-between py-4" v-for="cat of tokenList" :key="cat.id">
             <span class="is-pulled-right" v-if="account.tokens && account.tokens.hasOwnProperty(cat.name)">
               <span class="panel-icon"></span>
               <span class="" v-if="tokenInfo[cat.name]">{{ account.tokens[cat.name].amount | demojo(tokenInfo[cat.name]) }}</span>
@@ -53,7 +57,7 @@
             >
           </a>
         </b-tab-item>
-        <b-tab-item :label="$t('accountDetail.ui.tab.activity')">
+        <b-tab-item :label="$t('accountDetail.ui.tab.utxos')">
           <a class="panel-block" v-for="(act, i) in account.activities" :key="i">
             <span class="panel-icon">🗒️</span>
             <span class="" v-if="tokenInfo[act.symbol]">{{ act.coin.amount | demojo(tokenInfo[act.symbol]) }}</span>
@@ -74,7 +78,9 @@
     </div>
     <div class="column is-full has-text-centered">
       <a @click="addCat()"
-        ><span><b-icon icon="plus" size="is-small"></b-icon> {{ $t("accountDetail.ui.button.addToken") }}</span></a
+        ><span class="has-color-link"
+          ><b-icon icon="plus" size="is-small"></b-icon> {{ $t("accountDetail.ui.button.addToken") }}</span
+        ></a
       >
     </div>
     <div class="box">

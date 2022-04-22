@@ -21,21 +21,21 @@
           <strong> {{ $t("footer.ui.productInfo.name") }}</strong>
           <span @click="versionClick()">[{{ version }}]</span><span v-if="debugMode" @click="disableDebug()">[DEBUG]</span> by
           <b-icon icon="github" size="is-small"></b-icon
-          ><a href="https://github.com/chiabee" target="_blank">{{ $t("footer.ui.productInfo.author") }}</a
+          ><a href="https://github.com/chiabee" target="_blank" class="has-color-link">{{ $t("footer.ui.productInfo.author") }}</a
           >.
           <br />
-          <a href="https://info.pawket.app/" target="_blank" size="is-small">
+          <a href="https://info.pawket.app/" target="_blank" size="is-small" class="has-color-link">
             <b-icon icon="home" size="is-small"></b-icon>
             {{ $t("footer.ui.button.home") }}
             <b-icon icon="open-in-new" size="is-small"></b-icon>
           </a>
           |
-          <a href="javascript:void(0)" size="is-small" @click="showDebugHelper()">
+          <a href="javascript:void(0)" size="is-small" @click="showDebugHelper()" class="has-color-link">
             <b-icon icon="developer-board" size="is-small"></b-icon>
             {{ $t("footer.ui.button.developer") }}
           </a>
           |
-          <a href="javascript:void(0)" size="is-small" @click="showProxy()">
+          <a href="javascript:void(0)" size="is-small" @click="showProxy()" class="has-color-link">
             <b-icon icon="router-network" size="is-small"></b-icon>
             {{ $t("footer.ui.button.proxy") }}
           </a>
@@ -121,5 +121,17 @@ html {
 #app {
   width: 100%;
   height: 100%;
+}
+
+.has-color-pawket {
+  color: #39c0ae !important;
+}
+
+.has-color-link {
+  color: #7590b1 !important;
+}
+
+.tabs li.is-active a {
+  color: #7590b1 !important;
 }
 </style>

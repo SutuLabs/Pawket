@@ -119,7 +119,6 @@
   "accountDetail": {
     "ui": {
       "button": {
-        "refresh": "Refresh",
         "receive": "Receive",
         "send": "Send",
         "export": "Export",
@@ -129,11 +128,10 @@
       },
       "tab": {
         "asset": "Asset",
-        "activity": "Activity"
+        "utxos": "UTXOs"
       },
       "tooltip": {
         "setting": "Settings",
-        "address": "Addresses",
         "lock": "Lock"
       },
       "dApps": {

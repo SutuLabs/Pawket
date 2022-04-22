@@ -119,7 +119,6 @@
   "accountDetail": {
     "ui": {
       "button": {
-        "refresh": "刷新",
         "receive": "接收",
         "send": "发送",
         "export": "导出",
@@ -129,11 +128,10 @@
       },
       "tab": {
         "asset": "资产",
-        "activity": "活动"
+        "utxos": "UTXOs"
       },
       "tooltip": {
         "setting": "设置",
-        "address": "地址",
         "lock": "锁定"
       },
       "dApps": {
