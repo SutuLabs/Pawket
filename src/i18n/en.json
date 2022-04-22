@@ -132,7 +132,8 @@
       },
       "tooltip": {
         "setting": "Settings",
-        "lock": "Lock"
+        "lock": "Lock",
+        "refresh": "Refresh"
       },
       "dApps": {
         "title": "dApps",

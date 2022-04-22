@@ -133,5 +133,6 @@ html {
 
 .tabs li.is-active a {
   color: #7590b1 !important;
+  border-bottom-color: #7590b1 !important;
 }
 </style>

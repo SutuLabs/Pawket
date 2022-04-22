@@ -132,7 +132,8 @@
       },
       "tooltip": {
         "setting": "设置",
-        "lock": "锁定"
+        "lock": "锁定",
+        "refresh": "刷新"
       },
       "dApps": {
         "title": "应用",

@@ -13,10 +13,10 @@
         <b-button class="is-pulled-right" @click="selectAccount()">{{ account.name }}: {{ account.key.fingerprint }}</b-button>
         <br />
         <div class="mt-5">
-          <h2 class="is-size-3 pt-6 pb-2">
+          <h2 class="is-size-3 py-5">
             <span v-if="account.tokens && account.tokens.hasOwnProperty('XCH')">
               {{ account.tokens["XCH"].amount | demojo(null, 6) }}
-              <b-tooltip label="刷新">
+              <b-tooltip :label="$t('accountDetail.ui.tooltip.refresh')">
                 <a class="is-size-6" href="javascript:void(0)" @click="refresh()" :disabled="refreshing">
                   <b-loading :is-full-page="false" v-model="refreshing"></b-loading>
                   <b-icon icon="refresh" class="has-color-pawket"> </b-icon>
@@ -28,20 +28,20 @@
         </div>
         <div class="b-tooltip mr-4">
           <a @click="openLink(account.tokens['XCH'])" href="javascript:void(0)">
-            <b-icon icon="download-circle" size="is-large" class="has-color-pawket"> </b-icon>
+            <b-icon icon="download-circle" size="is-medium" class="has-color-pawket"> </b-icon>
             <p class="has-color-pawket">{{ $t("accountDetail.ui.button.receive") }}</p>
           </a>
         </div>
         <div class="b-tooltip mr-4">
           <a @click="showSend()" href="javascript:void(0)">
-            <b-icon icon="arrow-right-circle" size="is-large" class="has-color-pawket"> </b-icon>
+            <b-icon icon="arrow-right-circle" size="is-medium" class="has-color-pawket"> </b-icon>
             <p class="has-color-pawket">{{ $t("accountDetail.ui.button.send") }}</p>
           </a>
         </div>
         <b-button v-if="debugMode" @click="showExport()">{{ $t("accountDetail.ui.button.export") }}</b-button>
       </section>
     </div>
-    <div class="box">
+    <div class="p-2">
       <b-tabs position="is-centered" class="block">
         <b-tab-item :label="$t('accountDetail.ui.tab.asset')">
           <a class="panel-block is-justify-content-space-between py-4" v-for="cat of tokenList" :key="cat.id">
