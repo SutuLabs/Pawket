@@ -141,7 +141,8 @@
         "tooltip": {
           "donate": "向开发者捐赠",
           "takeOffer": "接受Offer",
-          "makeOffer": "发起Offer"
+          "makeOffer": "发起Offer",
+          "batchSend": "批量发送"
         }
       }
     },
@@ -641,6 +642,30 @@
     "notification": {
       "error": {
         "unknownMod": "不支持此类交易的详情显示"
+      }
+    }
+  },
+  "batchSend": {
+    "ui": {
+      "title": {
+        "send": "批量发送"
+      },
+      "field": {
+        "csv": {
+          "title": "CSV输入",
+          "fillSample": "填充示例"
+        }
+      },
+      "summary": {
+        "notification": "确定要提交吗？<br/>请一定要检查一下您的交易内容。"
+      },
+      "button": {
+        "cancel": "取消",
+        "sign": "签名",
+        "submit": "提交"
+      },
+      "messages": {
+        "failedToSign": "签名失败: "
       }
     }
   }

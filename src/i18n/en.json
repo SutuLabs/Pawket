@@ -141,7 +141,8 @@
         "tooltip": {
           "donate": "Donate to Support Development",
           "takeOffer": "Take Offer",
-          "makeOffer": "Make Offer"
+          "makeOffer": "Make Offer",
+          "batchSend": "Batch Send"
         }
       }
     },
@@ -641,6 +642,30 @@
     "notification": {
       "error": {
         "unknownMod": "Unknown bundle, cannot parse correctly."
+      }
+    }
+  },
+  "batchSend": {
+    "ui": {
+      "title": {
+        "send": "Batch Send"
+      },
+      "field": {
+        "csv": {
+          "title": "CSV Input",
+          "fillSample": "Fill Sample"
+        }
+      },
+      "summary": {
+        "notification": "Are you sure you want to send?<br/>Please, review your transaction."
+      },
+      "button": {
+        "cancel": "Cancel",
+        "sign": "Sign",
+        "submit": "Submit"
+      },
+      "messages": {
+        "failedToSign": "Failed to sign: "
       }
     }
   }

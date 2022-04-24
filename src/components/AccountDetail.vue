@@ -88,6 +88,9 @@
       <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.makeOffer')" multilined position="is-right">
         <b-button v-if="experimentMode" @click="openMakeOffer()" size="is-large" class="ml-5">💸</b-button>
       </b-tooltip>
+      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.batchSend')" multilined position="is-right">
+        <b-button v-if="experimentMode" @click="openBatchSend()" size="is-large" class="ml-5">🏘️</b-button>
+      </b-tooltip>
     </div>
   </div>
 </template>
@@ -107,6 +110,7 @@ import { xchToCurrency } from "@/filters/usdtConversion";
 import { TokenInfo, AccountEntity, AccountToken, CustomCat } from "@/store/modules/account";
 import TakeOffer from "./Offer/Take.vue";
 import MakeOffer from "./Offer/Make.vue";
+import BatchSend from "./Transfer/BatchSend.vue";
 import { getTokenInfo } from "@/services/coin/cat";
 import { getExchangeRate } from "@/services/exchange/rates";
 import { CurrencyType } from "@/services/exchange/currencyType";
@@ -283,6 +287,19 @@ export default class AccountDetail extends Vue {
     this.$buefy.modal.open({
       parent: this,
       component: MakeOffer,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: ["x"],
+      props: {
+        account: this.account,
+      },
+    });
+  }
+
+  openBatchSend(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: BatchSend,
       hasModalCard: true,
       trapFocus: true,
       canCancel: ["x"],
