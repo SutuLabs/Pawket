@@ -50,7 +50,7 @@
       </template>
       <template v-if="bundle">
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$t('send.ui.summary.notification')"></span>
+          <span v-html="$sanitize($t('send.ui.summary.notification'))"></span>
         </b-notification>
         <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
       </template>
