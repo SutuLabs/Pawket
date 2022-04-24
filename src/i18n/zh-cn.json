@@ -429,7 +429,7 @@
         },
         "label": {
           "yourOfferTitle": "你的Offer",
-          "bundle": "Bundle"
+          "bundle": "数据包"
         },
         "button": {
           "cancel": "取消",
@@ -462,7 +462,7 @@
           "information": "信息"
         },
         "label": {
-          "bundle": "Bundle"
+          "bundle": "数据包"
         },
         "button": {
           "cancel": "取消",
@@ -611,7 +611,7 @@
   "bundleSummary": {
     "ui": {
       "bundle": {
-        "title": "Bundle",
+        "title": "数据包",
         "copy": "复制",
         "button": {
           "show": "显示详情",
