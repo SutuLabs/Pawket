@@ -296,7 +296,10 @@ export default class Send extends Vue {
 
       const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.address));
       const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
-      const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: this.selectedToken, memos: [tgt_hex, this.memo] }];
+      // there is error in checking this regular expression
+      // eslint-disable-next-line no-useless-escape
+      const memo = this.memo.replace(/[&/\\#,+()$~%.'":*?<>{}\[\] ]/g, "_");
+      const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: this.selectedToken, memos: [tgt_hex, memo] }];
       const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee));
       this.bundle = await transfer.generateSpendBundle(plan, this.requests, []);
     } catch (error) {
