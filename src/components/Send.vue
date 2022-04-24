@@ -101,7 +101,7 @@ import puzzle from "@/services/crypto/puzzle";
 import bigDecimal from "js-big-decimal";
 import ScanQrCode from "@/components/ScanQrCode.vue";
 import { prefix0x } from "../services/coin/condition";
-import transfer, { SymbolCoins } from "../services/transfer/transfer";
+import transfer, { SymbolCoins, TransferTarget } from "../services/transfer/transfer";
 import TokenAmountField from "@/components/TokenAmountField.vue";
 import coinHandler from "../services/transfer/coin";
 import { debugBundle, submitBundle } from "@/services/view/bundle";
@@ -296,7 +296,7 @@ export default class Send extends Vue {
 
       const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.address));
       const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
-      const tgts = [{ address: tgt_hex, amount, symbol: this.selectedToken, memo: this.memo }];
+      const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: this.selectedToken, memos: [tgt_hex, this.memo] }];
       const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee));
       this.bundle = await transfer.generateSpendBundle(plan, this.requests, []);
     } catch (error) {
