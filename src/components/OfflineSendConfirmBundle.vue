@@ -5,14 +5,12 @@
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
-      <b-field v-if="bundle">
-        <template #label>
-          {{ $t("offline.proxy.confirmBundle.label.bundle") }}
-          <key-box icon="checkbox-multiple-blank-outline" :value="JSON.stringify(bundle)" tooltip="Copy"></key-box>
-          <a href="javascript:void(0)" v-if="debugMode" @click="debugBundle()">🐞</a>
-        </template>
-        <b-input type="textarea" disabled :value="bundleJson"></b-input>
-      </b-field>
+      <template v-if="bundle">
+        <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
+          <span v-html="$t('offline.proxy.confirmBundle.notification')"></span>
+        </b-notification>
+        <bundle-summary :bundle="bundle"></bundle-summary>
+      </template>
     </section>
     <footer class="modal-card-foot is-justify-content-space-between">
       <div>
@@ -38,15 +36,13 @@ import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
 import store from "@/store";
 import { SpendBundle } from "@/models/wallet";
-import TokenAmountField from "@/components/TokenAmountField.vue";
 import { debugBundle, submitBundle } from "@/services/view/bundle";
-import FeeSelector from "@/components/FeeSelector.vue";
+import BundleSummary from "./BundleSummary.vue";
 
 @Component({
   components: {
     KeyBox,
-    FeeSelector,
-    TokenAmountField,
+    BundleSummary,
   },
 })
 export default class OfflineSendConfirmBundle extends Vue {

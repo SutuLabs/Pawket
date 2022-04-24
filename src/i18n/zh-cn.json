@@ -538,7 +538,8 @@
         "button": {
           "cancel": "取消",
           "submit": "提交"
-        }
+        },
+        "notification": "确定要提交吗？<br/>请一定要检查一下您的交易内容。"
       }
     },
     "client": {

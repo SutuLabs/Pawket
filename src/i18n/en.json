@@ -538,7 +538,8 @@
         "button": {
           "cancel": "Cancel",
           "submit": "Submit"
-        }
+        },
+        "notification": "Are you sure you want to send?<br/>Please, review your transaction."
       }
     },
     "client": {
