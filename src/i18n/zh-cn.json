@@ -317,8 +317,7 @@
         "address": "地址",
         "amount": "金额",
         "memo": "备注",
-        "fee": "交易费",
-        "bundle": "数据包"
+        "fee": "交易费"
       },
       "button": {
         "cancel": "取消",
@@ -349,6 +348,9 @@
       },
       "text": {
         "offlineOnlySupportXch": "目前离线发送仅支持XCH"
+      },
+      "summary": {
+        "notification": "确定要提交吗？<br/>请一定要检查一下您的交易内容。"
       }
     },
     "messages": {
@@ -604,6 +606,43 @@
     "message": {
       "error": {
         "accountPasswordExists": "该密码账户已存在于账户列表中。"
+      }
+    }
+  },
+  "bundleSummary": {
+    "ui": {
+      "bundle": {
+        "title": "Bundle",
+        "copy": "复制",
+        "button": {
+          "show": "显示详情",
+          "hide": "隐藏详情"
+        }
+      },
+      "fee": {
+        "title": "交易费",
+        "mojos": "{fee} mojos"
+      },
+      "inputs": {
+        "title": "消耗总额"
+      },
+      "detail": {
+        "title": "发送详情",
+        "showDetailHint": "想要检查接收者列表，点击“显示详情”",
+        "button": {
+          "hide": "隐藏详情",
+          "show": "显示详情"
+        },
+        "itemTo": " 发送至 {address}",
+        "span": {
+          "hint": "提示（原始地址）",
+          "memo": "备注"
+        }
+      }
+    },
+    "notification": {
+      "error": {
+        "unknownMod": "不支持此类交易的详情显示"
       }
     }
   }

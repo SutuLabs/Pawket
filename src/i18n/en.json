@@ -317,8 +317,7 @@
         "address": "Address",
         "amount": "Amount",
         "memo": "Memo",
-        "fee": "Fee",
-        "bundle": "Bundle"
+        "fee": "Fee"
       },
       "button": {
         "cancel": "Cancel",
@@ -349,6 +348,9 @@
       },
       "text": {
         "offlineOnlySupportXch": "Offline send only support XCH now."
+      },
+      "summary": {
+        "notification": "Are you sure you want to send?<br/>Please, review your transaction."
       }
     },
     "messages": {
@@ -604,6 +606,43 @@
     "message": {
       "error": {
         "accountPasswordExists": "An account with the same password already exists"
+      }
+    }
+  },
+  "bundleSummary": {
+    "ui": {
+      "bundle": {
+        "title": "Bundle",
+        "copy": "Copy",
+        "button": {
+          "show": "Show",
+          "hide": "Hide"
+        }
+      },
+      "fee": {
+        "title": "Fee",
+        "mojos": "{fee} mojos"
+      },
+      "inputs": {
+        "title": "Total Amount"
+      },
+      "detail": {
+        "title": "Details",
+        "showDetailHint": "To review recipient list click \"Show\".",
+        "button": {
+          "hide": "Hide",
+          "show": "Show"
+        },
+        "itemTo": "to {address}",
+        "span": {
+          "hint": "Hint(Corresponding Address)",
+          "memo": "Memo"
+        }
+      }
+    },
+    "notification": {
+      "error": {
+        "unknownMod": "Unknown bundle, cannot parse correctly."
       }
     }
   }

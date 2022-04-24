@@ -4,7 +4,17 @@ import store from "../../store";
 import { Bytes } from "clvm";
 import { PrivateKey } from "@chiamine/bls-signatures";
 import utility from "./utility";
-import { assemble } from "clvm_tools/clvm_tools/binutils";
+import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
+
+export interface ExecuteResultCondition {
+  op: number;
+  args: string[];
+}
+
+export interface ExecuteResult {
+  raw: string;
+  conditions: ExecuteResultCondition[];
+}
 
 export interface PuzzleDetail {
   privateKey: PrivateKey;
@@ -229,6 +239,15 @@ class PuzzleMaker {
     if (!store.state.app.bls) throw new Error("bls not initialized");
     const BLS = store.state.app.bls;
     return BLS.PrivateKey.from_bytes(new Uint8Array(32), false);
+  }
+
+  async executePuzzle(puz: string, solution: string): Promise<ExecuteResult> {
+    const solution_result = await this.calcPuzzleResult(puz, solution);
+
+    const conds = assemble(solution_result);
+    const argarr = Array.from(conds.as_iter()).map((_) => Array.from(_.as_iter()).map((_) => disassemble(_)));
+    const solution_results = argarr.map((_) => ({ op: Number(_[0]), args: _.slice(1) }));
+    return { raw: solution_result, conditions: solution_results };
   }
 }
 

@@ -5,59 +5,59 @@
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
-      <b-notification
-        v-if="notificationMessage"
-        :type="notificationType || 'is-success'"
-        has-icon
-        :icon="notificationIcon || 'heart'"
-        :closable="notificationClosable"
-      >
-        {{ notificationMessage }}
-      </b-notification>
-      <b-field :label="$t('send.ui.label.address')">
-        <b-input v-model="address" @input="reset()" expanded :disabled="!addressEditable"></b-input>
-        <p class="control">
-          <b-tooltip :label="$t('send.ui.tooltip.qr')">
-            <b-button @click="scanQrCode()" :disabled="!addressEditable">
-              <b-icon icon="scan-helper"></b-icon>
-            </b-button>
-          </b-tooltip>
-        </p>
-      </b-field>
-      <token-amount-field
-        v-model="amount"
-        :rate="rate"
-        :currency="currency"
-        :selectedToken="selectedToken"
-        :token-names="tokenNames"
-        :fee="fee"
-        :amount-editable="amountEditable"
-        :max-amount="maxAmount"
-        :total-amount="totalAmount"
-        :offline="offline"
-        @input="updateTokenAmount"
-        @change-token="changeToken"
-        @validity="changeValidity"
-        @set-max="setMax()"
-        @offline-scan="offlineScan()"
-      >
-      </token-amount-field>
-      <b-field :label="$t('send.ui.label.memo')">
-        <b-input maxlength="100" v-model="memo" type="text" @input="reset()" :disabled="selectedToken == 'XCH'"></b-input>
-      </b-field>
-      <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
-      <b-field v-if="bundle">
-        <template #label>
-          {{ $t("send.ui.label.bundle") }}
-          <key-box icon="checkbox-multiple-blank-outline" :value="JSON.stringify(bundle)" tooltip="Copy"></key-box>
-          <a href="javascript:void(0)" v-if="debugMode" @click="debugBundle()">🐞</a>
-        </template>
-        <b-input type="textarea" disabled :value="bundleJson"></b-input>
-      </b-field>
+      <template v-if="!bundle">
+        <b-notification
+          v-if="notificationMessage"
+          :type="notificationType || 'is-success'"
+          has-icon
+          :icon="notificationIcon || 'heart'"
+          :closable="notificationClosable"
+        >
+          {{ notificationMessage }}
+        </b-notification>
+        <b-field :label="$t('send.ui.label.address')">
+          <b-input v-model="address" @input="reset()" expanded :disabled="!addressEditable"></b-input>
+          <p class="control">
+            <b-tooltip :label="$t('send.ui.tooltip.qr')">
+              <b-button @click="scanQrCode()" :disabled="!addressEditable">
+                <b-icon icon="scan-helper"></b-icon>
+              </b-button>
+            </b-tooltip>
+          </p>
+        </b-field>
+        <token-amount-field
+          v-model="amount"
+          :rate="rate"
+          :currency="currency"
+          :selectedToken="selectedToken"
+          :token-names="tokenNames"
+          :fee="fee"
+          :amount-editable="amountEditable"
+          :max-amount="maxAmount"
+          :total-amount="totalAmount"
+          :offline="offline"
+          @input="updateTokenAmount"
+          @change-token="changeToken"
+          @validity="changeValidity"
+          @set-max="setMax()"
+          @offline-scan="offlineScan()"
+        >
+        </token-amount-field>
+        <b-field :label="$t('send.ui.label.memo')">
+          <b-input maxlength="100" v-model="memo" type="text" @input="reset()" :disabled="selectedToken == 'XCH'"></b-input>
+        </b-field>
+        <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
+      </template>
+      <template v-if="bundle">
+        <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
+          <span v-html="$t('send.ui.summary.notification')"></span>
+        </b-notification>
+        <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
+      </template>
     </section>
     <footer class="modal-card-foot is-justify-content-space-between">
       <div>
-        <b-button :label="$t('send.ui.button.cancel')" @click="close()"></b-button>
+        <b-button :label="$t('send.ui.button.cancel')" @click="cancel()"></b-button>
         <b-button
           :label="$t('send.ui.button.sign')"
           v-if="!bundle"
@@ -109,12 +109,14 @@ import FeeSelector from "@/components/FeeSelector.vue";
 import OfflineQrCode from "@/components/OfflineQrCode.vue";
 import OfflineSendShowBundle from "./OfflineSendShowBundle.vue";
 import { CurrencyType } from "@/services/exchange/currencyType";
+import BundleSummary from "./BundleSummary.vue";
 
 @Component({
   components: {
     KeyBox,
     FeeSelector,
     TokenAmountField,
+    BundleSummary,
   },
 })
 export default class Send extends Vue {
@@ -164,9 +166,7 @@ export default class Send extends Vue {
   }
 
   get tokenNames(): string[] {
-    return Object.keys(store.state.account.tokenInfo).concat(
-      this.account.cats.map((_) => _.name)
-    );
+    return Object.keys(store.state.account.tokenInfo).concat(this.account.cats.map((_) => _.name));
   }
 
   get bundleJson(): string {
@@ -179,6 +179,14 @@ export default class Send extends Vue {
 
   reset(): void {
     this.bundle = null;
+  }
+
+  cancel(): void {
+    if (this.bundle) {
+      this.reset();
+    } else {
+      this.close();
+    }
   }
 
   get tokenInfo(): TokenInfo {
