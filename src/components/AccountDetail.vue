@@ -79,16 +79,16 @@
     </div>
     <div class="box">
       <h2 class="has-text-weight-bold is-size-4 pb-5">{{ $t("accountDetail.ui.dApps.title") }}</h2>
-      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.donate')" multilined position="is-right">
+      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.donate')" position="is-right">
         <b-button @click="openDonation()" size="is-large">❤️</b-button>
       </b-tooltip>
-      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.takeOffer')" multilined position="is-right">
+      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.takeOffer')" position="is-right">
         <b-button v-if="experimentMode" @click="openTakeOffer()" size="is-large" class="ml-5">💱</b-button>
       </b-tooltip>
-      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.makeOffer')" multilined position="is-right">
+      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.makeOffer')" position="is-right">
         <b-button v-if="experimentMode" @click="openMakeOffer()" size="is-large" class="ml-5">💸</b-button>
       </b-tooltip>
-      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.batchSend')" multilined position="is-right">
+      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.batchSend')" position="is-right">
         <b-button v-if="experimentMode" @click="openBatchSend()" size="is-large" class="ml-5">🏘️</b-button>
       </b-tooltip>
     </div>
