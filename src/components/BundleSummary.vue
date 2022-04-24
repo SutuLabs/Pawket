@@ -93,7 +93,7 @@ import KeyBox from "@/components/KeyBox.vue";
 import { SpendBundle } from "@/models/wallet";
 import puzzle from "@/services/crypto/puzzle";
 import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
-import { getNumber } from "@/services/coin/condition";
+import { getNumber, unprefix0x } from "@/services/coin/condition";
 import { modsdict } from "@/services/coin/mods";
 import store from "@/store";
 import { debugBundle } from "@/services/view/bundle";
@@ -211,7 +211,8 @@ export default class BundleSummary extends Vue {
     }
 
     this.newCoins = new_coins;
-    this.fee = (this.coinTotals["XCH"] ?? 0n) - this.newCoins.filter((_) => _.unit == "XCH").reduce((t, cur) => t + cur.amount, 0n);
+    this.fee =
+      (this.coinTotals["XCH"] ?? 0n) - this.newCoins.filter((_) => _.unit == "XCH").reduce((t, cur) => t + cur.amount, 0n);
   }
 
   async executePuzzle(puz: string, solution: string): Promise<CoinType[]> {
@@ -226,11 +227,18 @@ export default class BundleSummary extends Vue {
       .map((_) => ({
         address: _.address,
         amount: _.amount,
-        hint: _.args[0],
+        hint: this.tryGetHintAddress(_.args[0]),
         memo: _.args[1],
         others: _.args.slice(2),
       }));
     return coins;
+  }
+
+  tryGetHintAddress(hex: string | undefined): string | undefined {
+    if (!hex) return hex;
+    if (!hex.startsWith("0x")) return hex;
+
+    return puzzle.getAddressFromPuzzleHash(unprefix0x(hex), "xch");
   }
 }
 </script>
