@@ -532,9 +532,6 @@
       },
       "confirmBundle": {
         "title": "Confirm",
-        "label": {
-          "bundle": "Bundle"
-        },
         "button": {
           "cancel": "Cancel",
           "submit": "Submit"
