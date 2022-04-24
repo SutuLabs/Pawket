@@ -141,7 +141,8 @@
         "tooltip": {
           "donate": "Donate to Support Development",
           "takeOffer": "Take Offer",
-          "makeOffer": "Make Offer"
+          "makeOffer": "Make Offer",
+          "batchSend": "Batch Send"
         }
       }
     },
@@ -317,8 +318,7 @@
         "address": "Address",
         "amount": "Amount",
         "memo": "Memo",
-        "fee": "Fee",
-        "bundle": "Bundle"
+        "fee": "Fee"
       },
       "button": {
         "cancel": "Cancel",
@@ -349,6 +349,9 @@
       },
       "text": {
         "offlineOnlySupportXch": "Offline send only support XCH now."
+      },
+      "summary": {
+        "notification": "Are you sure you want to send?<br/>Please, review your transaction."
       }
     },
     "messages": {
@@ -530,13 +533,11 @@
       },
       "confirmBundle": {
         "title": "Confirm",
-        "label": {
-          "bundle": "Bundle"
-        },
         "button": {
           "cancel": "Cancel",
           "submit": "Submit"
-        }
+        },
+        "notification": "Are you sure you want to send?<br/>Please, review your transaction."
       }
     },
     "client": {
@@ -604,6 +605,67 @@
     "message": {
       "error": {
         "accountPasswordExists": "An account with the same password already exists"
+      }
+    }
+  },
+  "bundleSummary": {
+    "ui": {
+      "bundle": {
+        "title": "Bundle",
+        "copy": "Copy",
+        "button": {
+          "show": "Show",
+          "hide": "Hide"
+        }
+      },
+      "fee": {
+        "title": "Fee",
+        "mojos": "{fee} mojos"
+      },
+      "inputs": {
+        "title": "Total Amount"
+      },
+      "detail": {
+        "title": "Details",
+        "showDetailHint": "To review recipient list click \"Show\".",
+        "button": {
+          "hide": "Hide",
+          "show": "Show"
+        },
+        "itemTo": "to {address}",
+        "span": {
+          "hint": "Hint(Corresponding Address)",
+          "memo": "Memo"
+        }
+      }
+    },
+    "notification": {
+      "error": {
+        "unknownMod": "Unknown bundle, cannot parse correctly."
+      }
+    }
+  },
+  "batchSend": {
+    "ui": {
+      "title": {
+        "send": "Batch Send"
+      },
+      "field": {
+        "csv": {
+          "title": "CSV Input",
+          "fillSample": "Fill Sample"
+        }
+      },
+      "summary": {
+        "notification": "Are you sure you want to send?<br/>Please, review your transaction."
+      },
+      "button": {
+        "cancel": "Cancel",
+        "sign": "Sign",
+        "submit": "Submit"
+      },
+      "messages": {
+        "failedToSign": "Failed to sign: "
       }
     }
   }

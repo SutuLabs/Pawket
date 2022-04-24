@@ -141,10 +141,9 @@ import KeyBox from "@/components/KeyBox.vue";
 import { SpendBundle } from "@/models/wallet";
 import puzzle from "@/services/crypto/puzzle";
 import transfer from "@/services/transfer/transfer";
-import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
 import { beautifyLisp } from "@/services/coin/lisp";
 import { Bytes } from "clvm";
-import { conditionDict, ConditionInfo, prefix0x } from "@/services/coin/condition";
+import { conditionDict, ConditionInfo, prefix0x, getNumber } from "@/services/coin/condition";
 import { modsdict, modsprog } from "@/services/coin/mods";
 import UncurryPuzzle from "@/components/DevHelper/UncurryPuzzle.vue";
 
@@ -222,11 +221,9 @@ export default class BundlePanel extends Vue {
   }
 
   async executePuzzle(puz: string, solution: string): Promise<void> {
-    this.solution_result = await puzzle.calcPuzzleResult(puz, solution);
-
-    const conds = assemble(this.solution_result);
-    const argarr = Array.from(conds.as_iter()).map((_) => Array.from(_.as_iter()).map((_) => disassemble(_)));
-    this.solution_results = argarr.map((_) => ({ op: Number(_[0]), args: _.slice(1) }));
+    const result = await puzzle.executePuzzle(puz, solution);
+    this.solution_result = result.raw;
+    this.solution_results = result.conditions;
   }
 
   async update(): Promise<void> {
@@ -250,16 +247,11 @@ export default class BundlePanel extends Vue {
   }
 
   public getNumber(arg: string): bigint {
-    try {
-      if (arg.startsWith("0x")) return BigInt(prefix0x(Bytes.from(arg, "hex").hex()));
-      else return BigInt(arg);
-    } catch {
-      return -1n;
-    }
+    return getNumber(arg);
   }
 }
 </script>
 
 <style scoped lang="scss">
-@import "@/styles/arguments.scss"
+@import "@/styles/arguments.scss";
 </style>
