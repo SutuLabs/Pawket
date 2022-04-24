@@ -211,7 +211,7 @@ export default class BundleSummary extends Vue {
     }
 
     this.newCoins = new_coins;
-    this.fee = this.coinTotals["XCH"] - this.newCoins.filter((_) => _.unit == "XCH").reduce((t, cur) => t + cur.amount, 0n);
+    this.fee = (this.coinTotals["XCH"] ?? 0n) - this.newCoins.filter((_) => _.unit == "XCH").reduce((t, cur) => t + cur.amount, 0n);
   }
 
   async executePuzzle(puz: string, solution: string): Promise<CoinType[]> {
