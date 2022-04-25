@@ -19,7 +19,7 @@
               {{ account.tokens["XCH"].amount | demojo(null, 6) }}
               <b-tooltip :label="$t('accountDetail.ui.tooltip.refresh')">
                 <a class="is-size-6" href="javascript:void(0)" @click="refresh()" :disabled="refreshing">
-                  <b-icon :icon="refreshing ? 'sync' : 'refresh'" :class="refreshing ? 'rotate' : 'has-color-pawket'"> </b-icon>
+                  <b-icon :icon="refreshing ? 'sync' : 'restore'" :class="refreshing ? 'rotate' : 'has-color-pawket'"> </b-icon>
                 </a>
               </b-tooltip>
             </span>
@@ -42,7 +42,7 @@
       </section>
     </div>
     <div class="p-2">
-      <b-tabs position="is-centered" class="block">
+      <b-tabs position="is-centered" class="block" expanded>
         <b-tab-item :label="$t('accountDetail.ui.tab.asset')">
           <a class="panel-block is-justify-content-space-between py-4" v-for="cat of tokenList" :key="cat.id">
             <span class="is-pulled-right" v-if="account.tokens && account.tokens.hasOwnProperty(cat.name)">
@@ -329,10 +329,10 @@ export default class AccountDetail extends Vue {
 
 @keyframes rotation {
   from {
-    transform: rotate(0deg);
+    transform: rotate(359deg);
   }
   to {
-    transform: rotate(359deg);
+    transform: rotate(0deg);
   }
 }
 
