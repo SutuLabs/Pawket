@@ -19,7 +19,8 @@
               {{ account.tokens["XCH"].amount | demojo(null, 6) }}
               <b-tooltip :label="$t('accountDetail.ui.tooltip.refresh')">
                 <a class="is-size-6" href="javascript:void(0)" @click="refresh()" :disabled="refreshing">
-                  <b-icon :icon="refreshing ? 'sync' : 'restore'" :class="refreshing ? 'rotate' : 'has-color-pawket'"> </b-icon>
+                  <b-icon :icon="refreshing ? 'autorenew' : 'refresh'" :class="refreshing ? 'rotate' : 'has-color-pawket'">
+                  </b-icon>
                 </a>
               </b-tooltip>
             </span>
@@ -29,7 +30,7 @@
         <div class="b-tooltip mr-5">
           <a @click="openLink(account.tokens['XCH'])" href="javascript:void(0)">
             <b-icon icon="download-circle" size="is-medium" class="has-color-pawket"> </b-icon>
-            <p class="has-color-pawket is-size-6">{{ $t("accountDetail.ui.button.receive") }}</p>
+            <p class="has-color-pawket is-size-6 w-3">{{ $t("accountDetail.ui.button.receive") }}</p>
           </a>
         </div>
         <div class="b-tooltip mr-5">
@@ -56,6 +57,13 @@
               >⚓</a
             >
           </a>
+          <div class="column is-full has-text-centered">
+            <a @click="addCat()"
+              ><span class="has-color-link"
+                ><b-icon icon="plus" size="is-small"></b-icon> {{ $t("accountDetail.ui.button.addToken") }}</span
+              ></a
+            >
+          </div>
         </b-tab-item>
         <b-tab-item :label="$t('accountDetail.ui.tab.utxos')">
           <a class="panel-block" v-for="(act, i) in account.activities" :key="i">
@@ -75,13 +83,6 @@
           </a>
         </b-tab-item>
       </b-tabs>
-    </div>
-    <div class="column is-full has-text-centered">
-      <a @click="addCat()"
-        ><span class="has-color-link"
-          ><b-icon icon="plus" size="is-small"></b-icon> {{ $t("accountDetail.ui.button.addToken") }}</span
-        ></a
-      >
     </div>
     <div class="box">
       <h2 class="has-text-weight-bold is-size-4 pb-5">{{ $t("accountDetail.ui.dApps.title") }}</h2>
@@ -323,16 +324,19 @@ export default class AccountDetail extends Vue {
 </script>
 
 <style scoped lang="scss">
+.w-3 {
+  width: 3rem;
+}
 .rotate {
   animation: rotation 2s infinite linear;
 }
 
 @keyframes rotation {
   from {
-    transform: rotate(359deg);
+    transform: rotate(0deg);
   }
   to {
-    transform: rotate(0deg);
+    transform: rotate(359deg);
   }
 }
 
