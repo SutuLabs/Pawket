@@ -32,6 +32,7 @@
           :selectedToken="selectedToken"
           :token-names="tokenNames"
           :fee="fee"
+          :label="$t('send.ui.lable.amount')"
           :amount-editable="amountEditable"
           :max-amount="maxAmount"
           :total-amount="totalAmount"
