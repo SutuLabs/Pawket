@@ -260,7 +260,7 @@
         "addBySerial": "按顺序创建派生的序列账户。",
         "addByPassword": "由【助记词+密码】保护的账户。输入相同的密码即可进入相同的账户。",
         "addByLegacy": "Chia 客户端钱包。",
-        "addByMnemonic": "支持 nucle、goby 12词账户导入"
+        "addByMnemonic": "支持 Nucle、Goby 12词账户导入"
       },
       "modal": {
         "addByLegacy": "导入 Chia 账户",

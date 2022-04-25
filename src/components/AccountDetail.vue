@@ -19,7 +19,11 @@
               {{ account.tokens["XCH"].amount | demojo(null, 6) }}
               <b-tooltip :label="$t('accountDetail.ui.tooltip.refresh')">
                 <a class="is-size-6" href="javascript:void(0)" @click="refresh()" :disabled="refreshing">
-                  <b-icon :icon="refreshing ? 'autorenew' : 'refresh'" :class="refreshing ? 'rotate' : 'has-color-pawket'">
+                  <b-icon
+                    :icon="refreshing ? 'autorenew' : 'refresh'"
+                    :class="refreshing ? 'rotate' : 'has-color-pawket'"
+                    custom-size="mdi-18px"
+                  >
                   </b-icon>
                 </a>
               </b-tooltip>
@@ -27,7 +31,7 @@
             <span v-else>- XCH</span>
           </h2>
         </div>
-        <div class="b-tooltip mr-5">
+        <div class="b-tooltip mx-5">
           <a @click="openLink(account.tokens['XCH'])" href="javascript:void(0)">
             <b-icon icon="download-circle" size="is-medium" class="has-color-pawket"> </b-icon>
             <p class="has-color-pawket is-size-6 w-3">{{ $t("accountDetail.ui.button.receive") }}</p>
@@ -36,7 +40,7 @@
         <div class="b-tooltip mr-5">
           <a @click="showSend()" href="javascript:void(0)">
             <b-icon icon="arrow-right-circle" size="is-medium" class="has-color-pawket"> </b-icon>
-            <p class="has-color-pawket is-size-6">{{ $t("accountDetail.ui.button.send") }}</p>
+            <p class="has-color-pawket is-size-6 w-3">{{ $t("accountDetail.ui.button.send") }}</p>
           </a>
         </div>
         <b-button v-if="debugMode" @click="showExport()">{{ $t("accountDetail.ui.button.export") }}</b-button>
