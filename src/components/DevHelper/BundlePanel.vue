@@ -217,6 +217,7 @@ export default class BundlePanel extends Vue {
     this.selectedCoin = idx;
     this.solution_result = "";
     this.puzzle_hash = "";
+    this.puzzle = "";
     await this.update();
   }
 
