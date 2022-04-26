@@ -1,19 +1,21 @@
 <template>
   <div id="app">
-    <b-navbar class="is-3-quarters">
-      <template #brand>
-        <b-navbar-item tag="router-link" :to="{ path: '/' }">
-          <img src="./assets/logo.svg" :alt="$t('verifyPassword.ui.alt.logoAlt')" />
-        </b-navbar-item>
-      </template>
-      <template #start> </template>
-      <template #end>
-        <b-navbar-dropdown :label="$t('app.ui.button.lang')">
-          <b-navbar-item @click="changeLang('en')" :active="$i18n.locale === 'en'"> English </b-navbar-item>
-          <b-navbar-item @click="changeLang('zhcn')" :active="$i18n.locale === 'zhcn'"> 简体中文 </b-navbar-item>
-        </b-navbar-dropdown>
-      </template>
-    </b-navbar>
+    <div class="column is-8 is-offset-2">
+      <b-navbar>
+        <template #brand>
+          <b-navbar-item tag="router-link" :to="{ path: '/' }">
+            <img src="./assets/logo.svg" :alt="$t('verifyPassword.ui.alt.logoAlt')" />
+          </b-navbar-item>
+        </template>
+        <template #start> </template>
+        <template #end>
+          <b-navbar-dropdown :label="$t('app.ui.button.lang')">
+            <b-navbar-item @click="changeLang('en')" :active="$i18n.locale === 'en'"> English </b-navbar-item>
+            <b-navbar-item @click="changeLang('zhcn')" :active="$i18n.locale === 'zhcn'"> 简体中文 </b-navbar-item>
+          </b-navbar-dropdown>
+        </template>
+      </b-navbar>
+    </div>
     <router-view />
     <footer class="footer">
       <div class="content has-text-centered">
@@ -110,6 +112,7 @@ export default class App extends Vue {
 </script>
 
 <style lang="scss">
+@import "@/styles/colors.scss";
 body,
 html {
   width: 100%;
@@ -123,28 +126,8 @@ html {
   height: 100%;
 }
 
-.has-color-pawket {
-  color: #39c0ae !important;
-}
-
-.has-color-link {
-  color: #617ea1 !important;
-}
-
 .tabs li.is-active a {
   color: #617ea1 !important;
   border-bottom-color: #617ea1 !important;
-}
-
-.is-3-quarters {
-  width: 75%;
-  margin: auto;
-}
-
-@media only screen and (max-width: 768px) {
-  /* For mobile phones: */
-  .is-3-quarters {
-    width: 100%;
-  }
 }
 </style>
