@@ -4,7 +4,6 @@ import "./registerServiceWorker";
 import router from "./router";
 import store from "./store";
 import Buefy from "buefy";
-import "buefy/dist/buefy.css";
 import i18n, { tc } from "./i18n/i18n";
 import "@mdi/font/css/materialdesignicons.css";
 import sanitizeHTML from 'sanitize-html'

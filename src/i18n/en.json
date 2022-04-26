@@ -119,7 +119,6 @@
   "accountDetail": {
     "ui": {
       "button": {
-        "refresh": "Refresh",
         "receive": "Receive",
         "send": "Send",
         "export": "Export",
@@ -129,12 +128,12 @@
       },
       "tab": {
         "asset": "Asset",
-        "activity": "Activity"
+        "utxos": "UTXOs"
       },
       "tooltip": {
         "setting": "Settings",
-        "address": "Addresses",
-        "lock": "Lock"
+        "lock": "Lock",
+        "refresh": "Refresh"
       },
       "dApps": {
         "title": "dApps",
@@ -251,8 +250,8 @@
         "showMnemonic": "Reveal Mnemonic",
         "addBySerial": "Add by Serial",
         "addByPassword": "Add by Password ( Advanced )",
-        "addByLegacy": "Import Chia Client 24 Mnemonic Words",
-        "addByMnemonic": "Import Other Accounts 12 Mnemonic Words"
+        "addByLegacy": "Import Chia Official Wallet（24-word）",
+        "addByMnemonic": "Import Nucle/Goby Wallet（12-word）"
       },
       "tooltip": {
         "delete": "Delete",
@@ -261,11 +260,11 @@
         "addBySerial": "Derived serial accounts are created in order.",
         "addByPassword": "Account protected by MNEMONIC and PASSWORD. Enter the same password to access the same account.",
         "addByLegacy": "Chia client wallet.",
-        "addByMnemonic": "Import nucle or goby 12 mnemonic words account."
+        "addByMnemonic": "Import Nucle or Goby 12 mnemonic words account."
       },
       "modal": {
-        "addByLegacy": "Import Chia Account",
-        "addByMnemonic": "Import Nucle/Goby Account"
+        "addByLegacy": "Import Chia Official Wallet",
+        "addByMnemonic": "Import Nucle/Goby Wallet"
       }
     },
     "message": {
@@ -565,8 +564,8 @@
   "addByMnemonic": {
     "ui": {
       "label": {
-        "name": "Input account name",
-        "mnemonic": "Input mnemonic words ({len}-word)"
+        "name": "Account name",
+        "mnemonic": "{len} mnemonic words"
       },
       "message": {
         "nameRequired": "Account name is required",

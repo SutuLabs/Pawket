@@ -29,7 +29,7 @@
         <b-button
           :label="$t('batchSend.ui.button.sign')"
           v-if="!bundle"
-          type="is-success"
+          type="is-primary"
           @click="sign()"
           :disabled="status == 'Loading' || submitting"
         ></b-button>

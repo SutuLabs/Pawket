@@ -41,7 +41,7 @@ export default class App extends Vue {
       store.state.app.debug = true;
       Notification.open({
         message: `Debug mode enabled`,
-        type: "is-success",
+        type: "is-primary",
       });
     }
   }
@@ -56,7 +56,7 @@ export default class App extends Vue {
     store.state.app.debug = false;
     Notification.open({
       message: `Debug mode disabled`,
-      type: "is-success",
+      type: "is-primary",
     });
   }
 

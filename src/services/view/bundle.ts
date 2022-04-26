@@ -35,7 +35,7 @@ export async function submitBundle(bundle: SpendBundle, setSubmitting: (state: b
     if (json.success) {
       Notification.open({
         message: tc("send.ui.messages.submitted"),
-        type: "is-success",
+        type: "is-primary",
       });
       success();
     } else {

@@ -1,19 +1,21 @@
 <template>
   <div id="app">
-    <b-navbar>
-      <template #brand>
-        <b-navbar-item tag="router-link" :to="{ path: '/' }">
-          <img src="./assets/logo.svg" :alt="$t('verifyPassword.ui.alt.logoAlt')" />
-        </b-navbar-item>
-      </template>
-      <template #start> </template>
-      <template #end>
-        <b-navbar-dropdown :label="$t('app.ui.button.lang')">
-          <b-navbar-item @click="changeLang('en')" :active="$i18n.locale === 'en'"> English </b-navbar-item>
-          <b-navbar-item @click="changeLang('zhcn')" :active="$i18n.locale === 'zhcn'"> 简体中文 </b-navbar-item>
-        </b-navbar-dropdown>
-      </template>
-    </b-navbar>
+    <div class="column is-8 is-offset-2">
+      <b-navbar>
+        <template #brand>
+          <b-navbar-item tag="router-link" :to="{ path: '/' }">
+            <img src="./assets/logo.svg" :alt="$t('verifyPassword.ui.alt.logoAlt')" />
+          </b-navbar-item>
+        </template>
+        <template #start> </template>
+        <template #end>
+          <b-navbar-dropdown :label="$t('app.ui.button.lang')">
+            <b-navbar-item @click="changeLang('en')" :active="$i18n.locale === 'en'"> English </b-navbar-item>
+            <b-navbar-item @click="changeLang('zhcn')" :active="$i18n.locale === 'zhcn'"> 简体中文 </b-navbar-item>
+          </b-navbar-dropdown>
+        </template>
+      </b-navbar>
+    </div>
     <router-view />
     <footer class="footer">
       <div class="content has-text-centered">
@@ -21,21 +23,21 @@
           <strong> {{ $t("footer.ui.productInfo.name") }}</strong>
           <span @click="versionClick()">[{{ version }}]</span><span v-if="debugMode" @click="disableDebug()">[DEBUG]</span> by
           <b-icon icon="github" size="is-small"></b-icon
-          ><a href="https://github.com/chiabee" target="_blank">{{ $t("footer.ui.productInfo.author") }}</a
+          ><a href="https://github.com/chiabee" target="_blank" class="has-color-link">{{ $t("footer.ui.productInfo.author") }}</a
           >.
           <br />
-          <a href="https://info.pawket.app/" target="_blank" size="is-small">
+          <a href="https://info.pawket.app/" target="_blank" size="is-small" class="has-color-link">
             <b-icon icon="home" size="is-small"></b-icon>
             {{ $t("footer.ui.button.home") }}
             <b-icon icon="open-in-new" size="is-small"></b-icon>
           </a>
           |
-          <a href="javascript:void(0)" size="is-small" @click="showDebugHelper()">
+          <a href="javascript:void(0)" size="is-small" @click="showDebugHelper()" class="has-color-link">
             <b-icon icon="developer-board" size="is-small"></b-icon>
             {{ $t("footer.ui.button.developer") }}
           </a>
           |
-          <a href="javascript:void(0)" size="is-small" @click="showProxy()">
+          <a href="javascript:void(0)" size="is-small" @click="showProxy()" class="has-color-link">
             <b-icon icon="router-network" size="is-small"></b-icon>
             {{ $t("footer.ui.button.proxy") }}
           </a>
@@ -68,7 +70,7 @@ export default class App extends Vue {
       store.state.app.debug = true;
       Notification.open({
         message: `Debug mode enabled`,
-        type: "is-success",
+        type: "is-primary",
       });
     }
   }
@@ -83,7 +85,7 @@ export default class App extends Vue {
     store.state.app.debug = false;
     Notification.open({
       message: `Debug mode disabled`,
-      type: "is-success",
+      type: "is-primary",
     });
   }
 
@@ -108,8 +110,8 @@ export default class App extends Vue {
   }
 }
 </script>
-
 <style lang="scss">
+@import "@/styles/colors.scss";
 body,
 html {
   width: 100%;

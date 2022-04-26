@@ -31,7 +31,7 @@
       </span>
       <span v-if="offline" class="is-size-6">
         <b-tooltip position="is-right" type="is-light" multilined :label="$t('send.ui.tooltip.offlineScan')">
-          <b-button tag="a" type="is-success is-light" size="is-small" @click="offlineScan()">
+          <b-button tag="a" type="is-primary is-light" size="is-small" @click="offlineScan()">
             <b-icon icon="qrcode-scan" size="is-small" class="px-4"></b-icon>
           </b-button>
         </b-tooltip>

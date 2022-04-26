@@ -1,96 +1,111 @@
 <template>
-  <div class="container">
-    <div class="box has-text-centered" v-if="account && account.key">
-      <section>
-        <b-tooltip :label="$t('accountDetail.ui.tooltip.setting')" class="is-pulled-left">
-          <b-button @click="configureAccount()">
-            <b-icon icon="cog" class="has-text-grey"> </b-icon>
-          </b-button>
-        </b-tooltip>
-        <b-tooltip :label="$t('accountDetail.ui.tooltip.lock')" class="is-pulled-right">
-          <b-button @click="lock()"><b-icon icon="lock" class="has-text-grey"> </b-icon></b-button>
-        </b-tooltip>
-        <b-button class="is-pulled-right" @click="selectAccount()">{{ account.name }}: {{ account.key.fingerprint }}</b-button>
-        <br />
-        <div>
-          <h2 class="is-size-3 py-5">
-            <span v-if="account.tokens && account.tokens.hasOwnProperty('XCH')">
-              {{ account.tokens["XCH"].amount | demojo(null, 6) }}
-              <b-tooltip :label="$t('accountDetail.ui.tooltip.address')">
-                <a class="is-size-6" href="javascript:void(0)" @click="openLink(account.tokens['XCH'])">
-                  <b-icon icon="qrcode"> </b-icon>
-                </a>
-              </b-tooltip>
-            </span>
-            <span v-else>- XCH</span>
-            <br />
-            <b-button size="is-small" @click="refresh()" :disabled="refreshing">
-              {{ $t("accountDetail.ui.button.refresh") }}
-              <b-loading :is-full-page="false" v-model="refreshing"></b-loading>
+  <div class="column is-8 is-offset-2">
+    <div class="container px-4">
+      <b-loading :is-full-page="true" :active="!account.tokens"></b-loading>
+      <div class="py-5 has-text-centered" v-if="account && account.key">
+        <section>
+          <b-tooltip :label="$t('accountDetail.ui.tooltip.setting')" class="is-pulled-left">
+            <b-button @click="configureAccount()">
+              <b-icon icon="cog" class="has-text-grey"> </b-icon>
             </b-button>
-          </h2>
-        </div>
-      </section>
-      <section>
-        <b-button @click="openLink(account.tokens['XCH'])">{{ $t("accountDetail.ui.button.receive") }}</b-button>
-        <b-button @click="showSend()">{{ $t("accountDetail.ui.button.send") }}</b-button>
-        <b-button v-if="debugMode" @click="showExport()">{{ $t("accountDetail.ui.button.export") }}</b-button>
-      </section>
-    </div>
-    <div class="box">
-      <b-tabs position="is-centered" class="block">
-        <b-tab-item :label="$t('accountDetail.ui.tab.asset')">
-          <a class="panel-block is-justify-content-space-between" v-for="cat of tokenList" :key="cat.id">
-            <span class="is-pulled-right" v-if="account.tokens && account.tokens.hasOwnProperty(cat.name)">
-              <span class="panel-icon"></span>
-              <span class="" v-if="tokenInfo[cat.name]">{{ account.tokens[cat.name].amount | demojo(tokenInfo[cat.name]) }}</span>
-              <span class="has-text-grey-light is-size-7 pl-3" v-if="cat.name === 'XCH'">{{
-                account.tokens[cat.name].amount | xchToCurrency(rate, currency)
-              }}</span>
-            </span>
-            <a v-if="debugMode" class="is-pulled-right" href="javascript:void(0)" @click="openLink(account.tokens[cat.name])"
-              >⚓</a
-            >
-          </a>
-        </b-tab-item>
-        <b-tab-item :label="$t('accountDetail.ui.tab.activity')">
-          <a class="panel-block" v-for="(act, i) in account.activities" :key="i">
-            <span class="panel-icon">🗒️</span>
-            <span class="" v-if="tokenInfo[act.symbol]">{{ act.coin.amount | demojo(tokenInfo[act.symbol]) }}</span>
-            <span class="has-text-grey-light is-size-7 pl-3">{{ act.coin.amount }} mojos</span>
-            <span class="has-text-grey-light" v-if="act.spent">☑️ Used on {{ act.spentBlockIndex }}</span>
-            <span class="has-text-grey-light" v-if="act.coinbase">🌰️ Coinbase</span>
-            <br />
-            <span class="has-text-grey-light">⚡ {{ act.confirmedBlockIndex }}</span>
-            <span class="has-text-grey-light">⏰ {{ new Date(act.timestamp * 1000).toISOString().slice(0, -5) }}</span>
-            <br />
-            <span>
-              <key-box :value="act.coin.parentCoinInfo" display="ParentCoinInfo"></key-box>
-              <key-box :value="act.coin.puzzleHash" display="PuzzleHash"></key-box>
-            </span>
-          </a>
-        </b-tab-item>
-      </b-tabs>
-    </div>
-    <div class="column is-full has-text-centered">
-      <a @click="addCat()"
-        ><span><b-icon icon="plus" size="is-small"></b-icon> {{ $t("accountDetail.ui.button.addToken") }}</span></a
-      >
-    </div>
-    <div class="box">
-      <h2 class="has-text-weight-bold is-size-4 pb-5">{{ $t("accountDetail.ui.dApps.title") }}</h2>
-      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.donate')" position="is-right">
-        <b-button @click="openDonation()" size="is-large">❤️</b-button>
-      </b-tooltip>
-      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.takeOffer')" position="is-right">
-        <b-button v-if="experimentMode" @click="openTakeOffer()" size="is-large" class="ml-5">💱</b-button>
-      </b-tooltip>
-      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.makeOffer')" position="is-right">
-        <b-button v-if="experimentMode" @click="openMakeOffer()" size="is-large" class="ml-5">💸</b-button>
-      </b-tooltip>
-      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.batchSend')" position="is-right">
-        <b-button v-if="experimentMode" @click="openBatchSend()" size="is-large" class="ml-5">🏘️</b-button>
-      </b-tooltip>
+          </b-tooltip>
+          <b-tooltip :label="$t('accountDetail.ui.tooltip.lock')" class="is-pulled-right">
+            <b-button @click="lock()"><b-icon icon="lock" class="has-text-grey"> </b-icon></b-button>
+          </b-tooltip>
+          <b-button class="is-pulled-right" @click="selectAccount()">{{ account.name }}: {{ account.key.fingerprint }}</b-button>
+          <br />
+          <div class="mt-5">
+            <h2 class="is-size-3 py-5">
+              <span v-if="account.tokens && account.tokens.hasOwnProperty('XCH')" class="pl-4">
+                {{ account.tokens["XCH"].amount | demojo(null, 6) }}
+                <b-tooltip :label="$t('accountDetail.ui.tooltip.refresh')">
+                  <a class="is-size-6" href="javascript:void(0)" @click="refresh()" :disabled="refreshing">
+                    <b-icon
+                      :icon="refreshing ? 'autorenew' : 'refresh'"
+                      :class="refreshing ? 'rotate' : 'has-text-primary'"
+                      custom-size="mdi-18px"
+                    >
+                    </b-icon>
+                  </a>
+                </b-tooltip>
+              </span>
+              <span v-else>- XCH</span>
+            </h2>
+          </div>
+          <div class="b-tooltip mx-5">
+            <a @click="openLink(account.tokens['XCH'])" href="javascript:void(0)" class="has-text-primary">
+              <b-icon icon="download-circle" size="is-medium"> </b-icon>
+              <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.receive") }}</p>
+            </a>
+          </div>
+          <div class="b-tooltip mr-5">
+            <a @click="showSend()" href="javascript:void(0)" class="has-text-primary">
+              <b-icon icon="arrow-right-circle" size="is-medium"> </b-icon>
+              <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.send") }}</p>
+            </a>
+          </div>
+          <b-button v-if="debugMode" @click="showExport()">{{ $t("accountDetail.ui.button.export") }}</b-button>
+        </section>
+      </div>
+      <div class="p-2">
+        <b-tabs position="is-centered" class="block" expanded>
+          <b-tab-item :label="$t('accountDetail.ui.tab.asset')">
+            <a class="panel-block is-justify-content-space-between py-4" v-for="cat of tokenList" :key="cat.id">
+              <span class="is-pulled-right" v-if="account.tokens && account.tokens.hasOwnProperty(cat.name)">
+                <span class="panel-icon"></span>
+                <span class="" v-if="tokenInfo[cat.name]">{{
+                  account.tokens[cat.name].amount | demojo(tokenInfo[cat.name])
+                }}</span>
+                <span class="has-text-grey-light is-size-7 pl-3" v-if="cat.name === 'XCH'">{{
+                  account.tokens[cat.name].amount | xchToCurrency(rate, currency)
+                }}</span>
+              </span>
+              <a v-if="debugMode" class="is-pulled-right" href="javascript:void(0)" @click="openLink(account.tokens[cat.name])"
+                >⚓</a
+              >
+            </a>
+            <div class="column is-full has-text-centered">
+              <a @click="addCat()"
+                ><span class="has-color-link"
+                  ><b-icon icon="plus" size="is-small"></b-icon> {{ $t("accountDetail.ui.button.addToken") }}</span
+                ></a
+              >
+            </div>
+          </b-tab-item>
+          <b-tab-item :label="$t('accountDetail.ui.tab.utxos')">
+            <a class="panel-block" v-for="(act, i) in account.activities" :key="i">
+              <span class="panel-icon">🗒️</span>
+              <span class="" v-if="tokenInfo[act.symbol]">{{ act.coin.amount | demojo(tokenInfo[act.symbol]) }}</span>
+              <span class="has-text-grey-light is-size-7 pl-3">{{ act.coin.amount }} mojos</span>
+              <span class="has-text-grey-light" v-if="act.spent">☑️ Used on {{ act.spentBlockIndex }}</span>
+              <span class="has-text-grey-light" v-if="act.coinbase">🌰️ Coinbase</span>
+              <br />
+              <span class="has-text-grey-light">⚡ {{ act.confirmedBlockIndex }}</span>
+              <span class="has-text-grey-light">⏰ {{ new Date(act.timestamp * 1000).toISOString().slice(0, -5) }}</span>
+              <br />
+              <span>
+                <key-box :value="act.coin.parentCoinInfo" display="ParentCoinInfo"></key-box>
+                <key-box :value="act.coin.puzzleHash" display="PuzzleHash"></key-box>
+              </span>
+            </a>
+          </b-tab-item>
+        </b-tabs>
+      </div>
+      <div class="box">
+        <h2 class="has-text-weight-bold is-size-4 pb-5">{{ $t("accountDetail.ui.dApps.title") }}</h2>
+        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.donate')" position="is-right">
+          <b-button @click="openDonation()" size="is-large">❤️</b-button>
+        </b-tooltip>
+        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.takeOffer')" position="is-right">
+          <b-button v-if="experimentMode" @click="openTakeOffer()" size="is-large" class="ml-5">💱</b-button>
+        </b-tooltip>
+        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.makeOffer')" position="is-right">
+          <b-button v-if="experimentMode" @click="openMakeOffer()" size="is-large" class="ml-5">💸</b-button>
+        </b-tooltip>
+        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.batchSend')" position="is-right">
+          <b-button v-if="experimentMode" @click="openBatchSend()" size="is-large" class="ml-5">🏘️</b-button>
+        </b-tooltip>
+      </div>
     </div>
   </div>
 </template>
@@ -265,7 +280,6 @@ export default class AccountDetail extends Vue {
         notificationMessage: this.$tc("accountDetail.message.notification.donate"),
         notificationIcon: "hand-heart",
         notificationClosable: false,
-        notificationType: "is-success",
       },
     });
   }
@@ -316,4 +330,20 @@ export default class AccountDetail extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.w-3 {
+  width: 3rem;
+}
+.rotate {
+  animation: rotation 2s infinite linear;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+</style>

@@ -66,7 +66,7 @@ store.registerModule<IAppState>('app', {
         document.execCommand("copy");
         Notification.open({
           message: tc('app.message.notification.copySuccess'),
-          type: "is-success",
+          type: "is-primary",
         });
       } catch (err) {
         Notification.open({
