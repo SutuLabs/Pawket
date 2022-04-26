@@ -8,7 +8,7 @@
       class="panel-block columns is-mobile"
     >
       <div class="column is-flex is-7">
-        <div class="mr-1">
+        <div class="mr-2">
           <b-icon v-if="activity.spent" icon="arrow-right-circle-outline" size="is-medium" class="has-text-primary"></b-icon>
           <b-icon v-else icon="arrow-left-circle-outline" size="is-medium" class="has-text-grey-light"></b-icon>
         </div>
