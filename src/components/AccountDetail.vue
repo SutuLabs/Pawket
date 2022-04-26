@@ -336,7 +336,6 @@ export default class AccountDetail extends Vue {
   width: 3rem;
 }
 .rotate {
-  color: #617ea1;
   animation: rotation 2s infinite linear;
 }
 
