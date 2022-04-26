@@ -667,5 +667,31 @@
         "failedToSign": "签名失败: "
       }
     }
+  },
+  "utxo": {
+    "ui": {
+      "label": {
+        "cost": "消费",
+        "receive": "收入"
+      }
+    }
+  },
+  "utxoDetail": {
+    "ui": {
+      "title": {
+        "cost": "消费",
+        "receive": "收入"
+      },
+      "label": {
+        "time": "时间",
+        "height": "金额",
+        "parentCoinInfo": "父硬币信息",
+        "puzzleHash": "问题哈希"
+      },
+      "tooltip": {
+        "copy": "复制",
+        "blockchainExplorer": "在区块链浏览器里查看"
+      }
+    }
   }
 }

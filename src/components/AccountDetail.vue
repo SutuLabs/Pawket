@@ -47,65 +47,49 @@
           <b-button v-if="debugMode" @click="showExport()">{{ $t("accountDetail.ui.button.export") }}</b-button>
         </section>
       </div>
-      <div class="p-2">
-        <b-tabs position="is-centered" class="block" expanded>
-          <b-tab-item :label="$t('accountDetail.ui.tab.asset')">
-            <a class="panel-block is-justify-content-space-between py-4" v-for="cat of tokenList" :key="cat.id">
-              <span class="is-pulled-right" v-if="account.tokens && account.tokens.hasOwnProperty(cat.name)">
-                <span class="panel-icon"></span>
-                <span class="" v-if="tokenInfo[cat.name]">{{
-                  account.tokens[cat.name].amount | demojo(tokenInfo[cat.name])
-                }}</span>
-                <span class="has-text-grey-light is-size-7 pl-3" v-if="cat.name === 'XCH'">{{
-                  account.tokens[cat.name].amount | xchToCurrency(rate, currency)
-                }}</span>
-              </span>
-              <a v-if="debugMode" class="is-pulled-right" href="javascript:void(0)" @click="openLink(account.tokens[cat.name])"
-                >⚓</a
-              >
-            </a>
-            <div class="column is-full has-text-centered">
-              <a @click="addCat()"
-                ><span class="has-color-link"
-                  ><b-icon icon="plus" size="is-small"></b-icon> {{ $t("accountDetail.ui.button.addToken") }}</span
-                ></a
-              >
-            </div>
-          </b-tab-item>
-          <b-tab-item :label="$t('accountDetail.ui.tab.utxos')">
-            <a class="panel-block" v-for="(act, i) in account.activities" :key="i">
-              <span class="panel-icon">🗒️</span>
-              <span class="" v-if="tokenInfo[act.symbol]">{{ act.coin.amount | demojo(tokenInfo[act.symbol]) }}</span>
-              <span class="has-text-grey-light is-size-7 pl-3">{{ act.coin.amount }} mojos</span>
-              <span class="has-text-grey-light" v-if="act.spent">☑️ Used on {{ act.spentBlockIndex }}</span>
-              <span class="has-text-grey-light" v-if="act.coinbase">🌰️ Coinbase</span>
-              <br />
-              <span class="has-text-grey-light">⚡ {{ act.confirmedBlockIndex }}</span>
-              <span class="has-text-grey-light">⏰ {{ new Date(act.timestamp * 1000).toISOString().slice(0, -5) }}</span>
-              <br />
-              <span>
-                <key-box :value="act.coin.parentCoinInfo" display="ParentCoinInfo"></key-box>
-                <key-box :value="act.coin.puzzleHash" display="PuzzleHash"></key-box>
-              </span>
-            </a>
-          </b-tab-item>
-        </b-tabs>
-      </div>
-      <div class="box">
-        <h2 class="has-text-weight-bold is-size-4 pb-5">{{ $t("accountDetail.ui.dApps.title") }}</h2>
-        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.donate')" position="is-right">
-          <b-button @click="openDonation()" size="is-large">❤️</b-button>
-        </b-tooltip>
-        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.takeOffer')" position="is-right">
-          <b-button v-if="experimentMode" @click="openTakeOffer()" size="is-large" class="ml-5">💱</b-button>
-        </b-tooltip>
-        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.makeOffer')" position="is-right">
-          <b-button v-if="experimentMode" @click="openMakeOffer()" size="is-large" class="ml-5">💸</b-button>
-        </b-tooltip>
-        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.batchSend')" position="is-right">
-          <b-button v-if="experimentMode" @click="openBatchSend()" size="is-large" class="ml-5">🏘️</b-button>
-        </b-tooltip>
-      </div>
+    </div>
+    <div class="p-2">
+      <b-tabs position="is-centered" class="block" expanded>
+        <b-tab-item :label="$t('accountDetail.ui.tab.asset')">
+          <a class="panel-block is-justify-content-space-between py-4" v-for="cat of tokenList" :key="cat.id">
+            <span class="is-pulled-right" v-if="account.tokens && account.tokens.hasOwnProperty(cat.name)">
+              <span class="panel-icon"></span>
+              <span class="" v-if="tokenInfo[cat.name]">{{ account.tokens[cat.name].amount | demojo(tokenInfo[cat.name]) }}</span>
+              <span class="has-text-grey-light is-size-7 pl-3" v-if="cat.name === 'XCH'">{{
+                account.tokens[cat.name].amount | xchToCurrency(rate, currency)
+              }}</span>
+            </span>
+            <a v-if="debugMode" class="is-pulled-right" href="javascript:void(0)" @click="openLink(account.tokens[cat.name])"
+              >⚓</a
+            >
+          </a>
+          <div class="column is-full has-text-centered">
+            <a @click="addCat()"
+              ><span class="has-color-link"
+                ><b-icon icon="plus" size="is-small"></b-icon> {{ $t("accountDetail.ui.button.addToken") }}</span
+              ></a
+            >
+          </div>
+        </b-tab-item>
+        <b-tab-item :label="$t('accountDetail.ui.tab.utxos')">
+          <utxo :tokenInfo="tokenInfo" v-model="account.activities"></utxo>
+        </b-tab-item>
+      </b-tabs>
+    </div>
+    <div class="box">
+      <h2 class="has-text-weight-bold is-size-4 pb-5">{{ $t("accountDetail.ui.dApps.title") }}</h2>
+      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.donate')" position="is-right">
+        <b-button @click="openDonation()" size="is-large">❤️</b-button>
+      </b-tooltip>
+      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.takeOffer')" position="is-right">
+        <b-button v-if="experimentMode" @click="openTakeOffer()" size="is-large" class="ml-5">💱</b-button>
+      </b-tooltip>
+      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.makeOffer')" position="is-right">
+        <b-button v-if="experimentMode" @click="openMakeOffer()" size="is-large" class="ml-5">💸</b-button>
+      </b-tooltip>
+      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.batchSend')" position="is-right">
+        <b-button v-if="experimentMode" @click="openBatchSend()" size="is-large" class="ml-5">🏘️</b-button>
+      </b-tooltip>
     </div>
   </div>
 </template>
@@ -129,6 +113,7 @@ import BatchSend from "./Transfer/BatchSend.vue";
 import { getTokenInfo } from "@/services/coin/cat";
 import { getExchangeRate } from "@/services/exchange/rates";
 import { CurrencyType } from "@/services/exchange/currencyType";
+import Utxo from "@/components/Utxo.vue";
 
 type Mode = "Verify" | "Create";
 
@@ -136,6 +121,7 @@ type Mode = "Verify" | "Create";
   components: {
     KeyBox,
     Send,
+    Utxo,
   },
   filters: { demojo, xchToCurrency },
 })

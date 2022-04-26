@@ -1,0 +1,80 @@
+<template>
+  <section>
+    <a
+      href="javascript:void(0)"
+      v-for="(activity, i) of currentActList"
+      :key="i"
+      @click="showUtxo(activity)"
+      class="panel-block columns is-mobile"
+    >
+      <div class="column is-flex is-7">
+        <div class="mr-1">
+          <b-icon v-if="activity.spent" icon="arrow-right-circle-outline" size="is-medium" class="has-text-primary"></b-icon>
+          <b-icon v-else icon="arrow-left-circle-outline" size="is-medium" class="has-text-grey-light"></b-icon>
+        </div>
+        <div>
+          <p v-if="activity.spent" class="has-text-dark is-size-6">{{ $t("utxo.ui.label.cost") }}</p>
+          <p v-else class="has-text-dark is-size-6">{{ $t("utxo.ui.label.receive") }}</p>
+          <p>
+            <b-tooltip :label="new Date(activity.timestamp * 1000).toISOString()">
+              <span class="is-size-7 has-text-info">{{ new Date(activity.timestamp * 1000).toISOString().slice(5, 10) }}</span>
+            </b-tooltip>
+            <span class="mx-2 is-size-7 has-text-grey-light">{{ activity.confirmedBlockIndex }}</span>
+          </p>
+        </div>
+      </div>
+      <div class="column has-text-right is-5">
+        <span v-if="tokenInfo[activity.symbol]">
+          {{ activity.spent ? "-" : "+" }}{{ activity.coin.amount | demojo(tokenInfo[activity.symbol]) }}</span
+        >
+      </div>
+    </a>
+    <b-pagination :total="total" v-model="current" :range-before="rangeBefore" :range-after="rangeAfter" :per-page="perPage">
+    </b-pagination>
+  </section>
+</template>
+<script lang="ts">
+import { demojo } from "@/filters/unitConversion";
+import { CoinRecord } from "@/models/wallet";
+import { TokenInfo } from "@/store/modules/account";
+import { Component, Prop, Vue } from "vue-property-decorator";
+import UtxoDetail from "@/components/UtxoDetail.vue";
+
+@Component({
+  filters: { demojo },
+})
+export default class Utxo extends Vue {
+  @Prop() private value!: CoinRecord[];
+  @Prop() private tokenInfo!: TokenInfo;
+  @Prop({ default: 10 }) private perPage!: number;
+  @Prop({ default: 1 }) private rangeBefore!: number;
+  @Prop({ default: 1 }) private rangeAfter!: number;
+  current = 1;
+
+  showUtxo(activity: CoinRecord): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: UtxoDetail,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: ["x"],
+      props: { activity: activity, tokenInfo: this.tokenInfo },
+    });
+  }
+
+  get total(): number {
+    return this.value.length;
+  }
+
+  get currentActList(): CoinRecord[] {
+    const start = this.perPage * (this.current - 1);
+    const end = start + this.perPage;
+    return this.value.slice(start, end);
+  }
+}
+</script>
+<style scoped lang="scss">
+.has-text-right {
+  text-align: right;
+}
+</style>
