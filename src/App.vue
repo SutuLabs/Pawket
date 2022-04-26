@@ -110,7 +110,6 @@ export default class App extends Vue {
   }
 }
 </script>
-
 <style lang="scss">
 @import "@/styles/colors.scss";
 body,
@@ -124,10 +123,5 @@ html {
 #app {
   width: 100%;
   height: 100%;
-}
-
-.tabs li.is-active a {
-  color: #617ea1 !important;
-  border-bottom-color: #617ea1 !important;
 }
 </style>
