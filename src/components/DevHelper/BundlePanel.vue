@@ -115,15 +115,15 @@
               <ul v-if="sol.args.length > 0" class="args_list ellipsis-item">
                 <li v-for="(arg, i) in sol.args" :key="i" :title="arg">{{ arg }}</li>
                 <li v-if="sol.op == 60">
-                  <b-tag type="is-success is-light">annoID:</b-tag>
+                  <b-tag type="is-primary is-light">annoID:</b-tag>
                   {{ sha256(used_coin_name, sol.args[0]) }}
                 </li>
                 <li v-if="sol.op == 62">
-                  <b-tag type="is-success is-light">annoID:</b-tag>
+                  <b-tag type="is-primary is-light">annoID:</b-tag>
                   {{ sha256(bundle.coin_spends[selectedCoin].coin.puzzle_hash, sol.args[0]) }}
                 </li>
                 <li v-if="sol.op == 51">
-                  <b-tag type="is-success is-light">amount:</b-tag>
+                  <b-tag type="is-primary is-light">amount:</b-tag>
                   {{ getNumber(sol.args[1]) }}
                 </li>
               </ul>

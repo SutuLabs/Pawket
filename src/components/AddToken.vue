@@ -28,7 +28,7 @@
           ></b-input>
         </b-field>
         <div class="has-text-centered">
-          <b-button :label="$t('addToken.ui.button.add')" type="is-success" class="mx-2" @click="add()"></b-button>
+          <b-button :label="$t('addToken.ui.button.add')" type="is-primary" class="mx-2" @click="add()"></b-button>
         </div>
         <hr />
         <div class="y-scroll pt-5" style="height: 40vh">
@@ -169,7 +169,7 @@ export default class AddToken extends Vue {
 
     Notification.open({
       message: this.$tc("addToken.message.notification.saved"),
-      type: "is-success",
+      type: "is-primary",
     });
 
     this.submitting = false;

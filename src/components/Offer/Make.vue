@@ -78,7 +78,7 @@
     <footer class="modal-card-foot is-justify-content-space-between">
       <div>
         <b-button :label="$t('offer.make.ui.button.cancel')" @click="close()"></b-button>
-        <b-button v-if="!bundle" type="is-success" @click="sign()">
+        <b-button v-if="!bundle" type="is-primary" @click="sign()">
           {{ $t("offer.make.ui.button.sign") }}
           <b-loading :is-full-page="false" :active="!tokenPuzzles || !availcoins || signing"></b-loading>
         </b-button>

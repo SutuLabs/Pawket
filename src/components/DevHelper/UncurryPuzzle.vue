@@ -23,7 +23,7 @@
       </li>
       <li v-for="(arg, i) in uncurried_args" :key="i">
         <b-tooltip v-if="params[i]" :label="params[i].desc ? params[i].desc : params[i].name" multilined>
-          <span class="tag is-success is-light is-small">{{ params[i].name }}</span>
+          <span class="tag is-primary is-light is-small">{{ params[i].name }}</span>
         </b-tooltip>
         <uncurry-puzzle :puzzle="arg"></uncurry-puzzle>
       </li>

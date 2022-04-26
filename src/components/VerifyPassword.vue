@@ -44,7 +44,7 @@
             ></b-input>
           </b-field>
           <p class="help is-danger" v-if="!isMatch">{{ $t("verifyPassword.message.error.passwordNotMatch") }}</p>
-          <b-button @click="create()" type="is-success" :disabled="!isMatch" expanded>{{
+          <b-button @click="create()" type="is-primary" :disabled="!isMatch" expanded>{{
             $t("verifyPassword.ui.button.create")
           }}</b-button>
         </section>
@@ -70,7 +70,7 @@ export default class VerifyPassword extends Vue {
   public isEmpty = false;
   public passwordStrength = 0;
   public strengthMsg = "";
-  public strengthClass: "is-danger" | "is-warning" | "is-success" = "is-danger";
+  public strengthClass: "is-danger" | "is-warning" | "is-primary" = "is-danger";
   public showStrength = false;
 
   get mode(): Mode {
@@ -173,7 +173,7 @@ export default class VerifyPassword extends Vue {
       this.strengthClass = "is-warning";
       return this.$tc("verifyPassword.message.tip.mediumPassword");
     }
-    this.strengthClass = "is-success";
+    this.strengthClass = "is-primary";
     return this.$tc("verifyPassword.message.tip.strongPassword");
   }
 

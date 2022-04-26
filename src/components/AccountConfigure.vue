@@ -99,7 +99,7 @@ export default class AccountConfigure extends Vue {
     store.dispatch("setCurrency", value);
     Notification.open({
       message: this.$tc("accountConfigure.message.notification.saved"),
-      type: "is-success",
+      type: "is-primary",
     });
   }
 

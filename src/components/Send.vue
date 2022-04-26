@@ -8,7 +8,7 @@
       <template v-if="!bundle">
         <b-notification
           v-if="notificationMessage"
-          :type="notificationType || 'is-success'"
+          :type="notificationType || 'is-primary'"
           has-icon
           :icon="notificationIcon || 'heart'"
           :closable="notificationClosable"
@@ -62,7 +62,7 @@
         <b-button
           :label="$t('send.ui.button.sign')"
           v-if="!bundle"
-          type="is-success"
+          type="is-primary"
           @click="sign()"
           :disabled="!validity || submitting"
         ></b-button>

@@ -35,7 +35,7 @@
         <b-button
           :label="$t('offline.client.button.finish')"
           v-if="mode == 'OFFLINE_CLIENT'"
-          type="is-success"
+          type="is-primary"
           @click="finish()"
           :disabled="!coins || coins.length == 0"
         ></b-button>

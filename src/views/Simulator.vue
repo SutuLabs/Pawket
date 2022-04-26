@@ -29,7 +29,7 @@
             </div>
             <div class="columns">
               <div class="column is-full">
-                <b-button type="is-success" @click="restart()">Analyze</b-button>
+                <b-button type="is-primary" @click="restart()">Analyze</b-button>
               </div>
             </div>
           </div>
@@ -48,7 +48,7 @@
         </div>
         <div class="column is-half">
           <b-button type="is-light" @click="prev_step()">previous</b-button>
-          <b-button type="is-success" @click="next_step()">next</b-button>
+          <b-button type="is-primary" @click="next_step()">next</b-button>
 
           <b-dropdown :triggers="['hover']">
             <template #trigger>
@@ -87,7 +87,7 @@
             >
               <b-taglist attached>
                 <b-tag type="is-primary is-light">{{ val.id }}</b-tag>
-                <b-tag type="is-success is-light">{{ value_stack.length - idx }}</b-tag>
+                <b-tag type="is-primary is-light">{{ value_stack.length - idx }}</b-tag>
               </b-taglist>
               <b-tag type="is-info is-light" size="is-small" v-if="idx < oppars.length">
                 {{ oppars[idx] }}

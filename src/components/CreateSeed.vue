@@ -46,7 +46,7 @@
         <b-field :type="isLegal ? '' : 'is-danger'" :message="isLegal ? '' : $t('createSeed.message.error.wrongSeed')">
           <b-input type="textarea" v-model="seedMnemonic" @input="clearErrorMsg()"></b-input>
         </b-field>
-        <b-button rounded type="is-success" @click="confirm()">{{ $t("createSeed.ui.button.confirm") }}</b-button>
+        <b-button rounded type="is-primary" @click="confirm()">{{ $t("createSeed.ui.button.confirm") }}</b-button>
       </div>
     </div>
     <div v-if="mode == 'Create'">
@@ -73,7 +73,7 @@
       </div>
       <div class="block buttons centered">
         <b-button v-if="debugMode" rounded @click="later()">{{ $t("createSeed.ui.button.later") }}</b-button>
-        <b-button icon-right="chevron-right" rounded type="is-success" @click="ready()">{{ $t("createSeed.ui.button.ready") }}</b-button>
+        <b-button icon-right="chevron-right" rounded type="is-primary" @click="ready()">{{ $t("createSeed.ui.button.ready") }}</b-button>
       </div>
     </div>
   </div>

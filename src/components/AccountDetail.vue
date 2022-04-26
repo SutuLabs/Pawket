@@ -280,7 +280,6 @@ export default class AccountDetail extends Vue {
         notificationMessage: this.$tc("accountDetail.message.notification.donate"),
         notificationIcon: "hand-heart",
         notificationClosable: false,
-        notificationType: "is-success",
       },
     });
   }
