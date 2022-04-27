@@ -249,7 +249,7 @@
       "button": {
         "showMnemonic": "Reveal Mnemonic",
         "addBySerial": "Add by Serial",
-        "addByPassword": "Add by Password ( Advanced )",
+        "addByPassword": "Add by Password",
         "addByLegacy": "Import Chia Official Wallet（24-word）",
         "addByMnemonic": "Import Nucle/Goby Wallet（12-word）"
       },
@@ -291,7 +291,7 @@
         "address": "Address[number of coins]"
       },
       "tooltip": {
-        "blockchainExplorer": "View on Blockchain Explorer"
+        "blockchainExplorer": "View on Block Explorer"
       }
     }
   },
