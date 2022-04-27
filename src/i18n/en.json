@@ -211,7 +211,7 @@
   "accountExport": {
     "ui": {
       "title": {
-        "export": "Account Export"
+        "export": "Account Information"
       },
       "label": {
         "name": "Name",
@@ -274,9 +274,9 @@
         "confirmText": "OK"
       },
       "prompt": {
-        "setAccountName": "Enter the new account name",
-        "setPassword": "Enter the password",
-        "setLegacyMnemonic": "Enter mnemonic words:",
+        "setAccountName": "Enter the New Account Name",
+        "setPassword": "Enter the Password",
+        "setLegacyMnemonic": "Enter Mnemonic Words:",
         "cancelText": "Cancel",
         "confirmText": "OK"
       }
@@ -495,7 +495,7 @@
         "add": "Add"
       },
       "tooltip": {
-        "removeToken": "Remove token",
+        "removeToken": "Remove the token",
         "drag": "Drag to sort"
       },
       "message": {
@@ -564,8 +564,8 @@
   "addByMnemonic": {
     "ui": {
       "label": {
-        "name": "Account name",
-        "mnemonic": "{len} mnemonic words"
+        "name": "Account Name",
+        "mnemonic": "{len} Mnemonic Words"
       },
       "message": {
         "nameRequired": "Account name is required",
@@ -672,7 +672,7 @@
     "ui": {
       "label": {
         "cost": "Send",
-        "receive": "Receive/Change"
+        "receive": "Receive"
       }
     }
   },
@@ -680,11 +680,11 @@
     "ui": {
       "title": {
         "cost": "Send",
-        "receive": "Receive/Change"
+        "receive": "Receive"
       },
       "label": {
-        "time": "Confirmed Time",
-        "height": "Confirmed/Spent Height",
+        "time": "Time",
+        "height": "Height",
         "parentCoinInfo": "ParentCoinInfo",
         "puzzleHash": "PuzzleHash"
       },
