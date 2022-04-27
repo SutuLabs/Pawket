@@ -72,7 +72,7 @@
           </div>
         </b-tab-item>
         <b-tab-item :label="$t('accountDetail.ui.tab.utxos')">
-          <utxo :tokenInfo="tokenInfo" v-model="account.activities"></utxo>
+          <utxo-panel :tokenInfo="tokenInfo" v-model="account.activities"></utxo-panel>
         </b-tab-item>
       </b-tabs>
     </div>

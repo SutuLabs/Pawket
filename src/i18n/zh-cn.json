@@ -684,7 +684,7 @@
       },
       "label": {
         "time": "时间",
-        "height": "金额",
+        "height": "区块高度",
         "parentCoinInfo": "父硬币信息",
         "puzzleHash": "问题哈希"
       },

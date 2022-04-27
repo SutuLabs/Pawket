@@ -19,7 +19,8 @@
             <b-tooltip :label="new Date(activity.timestamp * 1000).toISOString()">
               <span class="is-size-7 has-text-info">{{ new Date(activity.timestamp * 1000).toISOString().slice(5, 10) }}</span>
             </b-tooltip>
-            <span class="mx-2 is-size-7 has-text-grey-light">{{ activity.confirmedBlockIndex }}</span>
+            <span v-if="activity.spent" class="mx-2 is-size-7 has-text-grey-light">{{ activity.spentBlockIndex }}</span>
+            <span v-else class="mx-2 is-size-7 has-text-grey-light">{{ activity.confirmedBlockIndex }}</span>
           </p>
         </div>
       </div>
@@ -67,6 +68,7 @@ export default class UtxoPanel extends Vue {
   }
 
   get currentActList(): CoinRecord[] {
+    console.log(this.value);
     const start = this.perPage * (this.current - 1);
     const end = start + this.perPage;
     return this.value.slice(start, end);

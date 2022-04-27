@@ -21,6 +21,7 @@
           {{ $t("utxoDetail.ui.label.height") }}
         </template>
         <p class="has-text-grey">{{ activity.confirmedBlockIndex }}</p>
+        <p v-if="activity.spent" class="ml-3 has-text-grey">{{ activity.spentBlockIndex }}</p>
       </b-field>
       <b-field :label="$t('utxoDetail.ui.label.parentCoinInfo')" custom-class="is-medium">
         <p class="long-text-wrapper has-text-grey">
