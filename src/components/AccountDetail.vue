@@ -79,16 +79,36 @@
     <div class="box">
       <h2 class="has-text-weight-bold is-size-4 pb-5">{{ $t("accountDetail.ui.dApps.title") }}</h2>
       <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.donate')" position="is-right">
-        <b-button @click="openDonation()" size="is-large">❤️</b-button>
+        <a href="javascript:void(0)" @click="openDonation()">
+          <div class="has-text-centered has-text-grey">
+            <b-icon icon="hand-heart-outline" size="is-medium"></b-icon>
+            <p class="is-size-6">{{ $t("accountDetail.ui.dApps.button.donate") }}</p>
+          </div>
+        </a>
       </b-tooltip>
       <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.takeOffer')" position="is-right">
-        <b-button v-if="experimentMode" @click="openTakeOffer()" size="is-large" class="ml-5">💱</b-button>
+        <a v-if="experimentMode" href="javascript:void(0)" @click="openTakeOffer()">
+          <div class="ml-5 has-text-centered has-text-grey">
+            <b-icon icon="email-check-outline" size="is-medium"></b-icon>
+            <p class="is-size-6">{{ $t("accountDetail.ui.dApps.button.takeOffer") }}</p>
+          </div>
+        </a>
       </b-tooltip>
       <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.makeOffer')" position="is-right">
-        <b-button v-if="experimentMode" @click="openMakeOffer()" size="is-large" class="ml-5">💸</b-button>
+        <a v-if="experimentMode" href="javascript:void(0)" @click="openMakeOffer()">
+          <div class="ml-5 has-text-centered has-text-grey">
+            <b-icon icon="email-send-outline" size="is-medium"></b-icon>
+            <p class="is-size-6">{{ $t("accountDetail.ui.dApps.button.makeOffer") }}</p>
+          </div>
+        </a>
       </b-tooltip>
       <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.batchSend')" position="is-right">
-        <b-button v-if="experimentMode" @click="openBatchSend()" size="is-large" class="ml-5">🏘️</b-button>
+        <a v-if="experimentMode" href="javascript:void(0)" @click="openBatchSend()">
+          <div class="ml-5 has-text-centered has-text-grey">
+            <b-icon icon="share-all-outline" size="is-medium"></b-icon>
+            <p class="is-size-6">{{ $t("accountDetail.ui.dApps.button.batchSend") }}</p>
+          </div>
+        </a>
       </b-tooltip>
     </div>
   </div>
