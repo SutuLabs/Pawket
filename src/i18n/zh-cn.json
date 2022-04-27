@@ -683,7 +683,7 @@
         "receive": "接收"
       },
       "label": {
-        "time": "硬币创建时间",
+        "time": "时间",
         "height": "区块高度",
         "parentCoinInfo": "父硬币信息",
         "puzzleHash": "谜语哈希"
