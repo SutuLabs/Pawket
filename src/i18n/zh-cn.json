@@ -672,7 +672,7 @@
     "ui": {
       "label": {
         "cost": "发送",
-        "receive": "接收/找零"
+        "receive": "接收"
       }
     }
   },
