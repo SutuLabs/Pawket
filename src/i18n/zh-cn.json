@@ -49,7 +49,7 @@
       },
       "label": {
         "password": "密码",
-        "reEnter": "再次输入"
+        "reEnter": "确认密码"
       },
       "title": {
         "verifyPassword": "验证密码",
@@ -139,8 +139,8 @@
         "title": "应用",
         "tooltip": {
           "donate": "向开发者捐赠",
-          "takeOffer": "接受Offer",
-          "makeOffer": "发起Offer",
+          "takeOffer": "接受 Offer",
+          "makeOffer": "发起 Offer",
           "batchSend": "批量发送"
         }
       }
@@ -211,7 +211,7 @@
   "accountExport": {
     "ui": {
       "title": {
-        "export": "账户导出"
+        "export": "账户信息"
       },
       "label": {
         "name": "账户名称",
@@ -249,7 +249,7 @@
       "button": {
         "showMnemonic": "显示助记词",
         "addBySerial": "新增序列账户",
-        "addByPassword": "新增密码账户（专家功能）",
+        "addByPassword": "新增密码账户",
         "addByLegacy": "导入 Chia 客户端账户(24 词)",
         "addByMnemonic": "导入 Nucle/Goby 账户(12词)"
       },
@@ -495,8 +495,8 @@
         "add": "添加"
       },
       "tooltip": {
-        "removeToken": "删除 Token",
-        "drag": "拖动来排序"
+        "removeToken": "删除",
+        "drag": "拖动排序"
       },
       "message": {
         "nameRequired": "CAT 名称不能为空",
@@ -564,8 +564,8 @@
   "addByMnemonic": {
     "ui": {
       "label": {
-        "name": "输入账户名",
-        "mnemonic": "输入助记词 ({len}词)"
+        "name": "账户名",
+        "mnemonic": "助记词 ({len}词)"
       },
       "message": {
         "nameRequired": "账户名不能为空",
@@ -587,9 +587,9 @@
     "ui": {
       "title": "添加密码账户",
       "label": {
-        "name": "请输入账户名",
-        "password": "请输入密码",
-        "rePassword": "请确认密码"
+        "name": "账户名",
+        "password": "密码",
+        "rePassword": "确认密码"
       },
       "message": {
         "nameRequired": "账户名不能为空",
