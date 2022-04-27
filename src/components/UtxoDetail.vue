@@ -19,11 +19,6 @@
       <b-field custom-class="is-medium">
         <template #label>
           {{ $t("utxoDetail.ui.label.height") }}
-          <b-tooltip :label="$t('utxoDetail.ui.tooltip.blockchainExplorer')">
-            <a target="_blank" :href="externalExplorerPrefix + activity.confirmedBlockIndex">
-              <b-icon icon="open-in-new" size="is-small"> </b-icon>
-            </a>
-          </b-tooltip>
         </template>
         <p class="has-text-grey">{{ activity.confirmedBlockIndex }}</p>
       </b-field>
@@ -54,7 +49,6 @@
 <script lang="ts">
 import { demojo } from "@/filters/unitConversion";
 import { CoinRecord } from "@/models/wallet";
-import store from "@/store";
 import { TokenInfo } from "@/store/modules/account";
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import KeyBox from "./KeyBox.vue";
@@ -70,10 +64,6 @@ export default class UtxoDetail extends Vue {
   @Prop() private tokenInfo!: TokenInfo;
   public showDetail = false;
 
-  get externalExplorerPrefix(): string {
-    return store.state.app.externalExplorerPrefix;
-  }
-
   @Emit("close")
   close(): void {
     return;
@@ -82,7 +72,6 @@ export default class UtxoDetail extends Vue {
 </script>
 <style scoped lang="scss">
 .long-text-wrapper {
-  max-width: 20rem;
   overflow-wrap: break-word !important;
 }
 </style>

@@ -689,8 +689,7 @@
         "puzzleHash": "PuzzleHash"
       },
       "tooltip": {
-        "copy": "Copy",
-        "blockchainExplorer": "View on Blockchain Explorer"
+        "copy": "Copy"
       }
     }
   }
