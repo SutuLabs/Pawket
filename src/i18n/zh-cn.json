@@ -680,11 +680,11 @@
     "ui": {
       "title": {
         "cost": "发送",
-        "receive": "接收/找零"
+        "receive": "接收"
       },
       "label": {
         "time": "硬币创建时间",
-        "height": "区块高度（创建/花费）",
+        "height": "区块高度",
         "parentCoinInfo": "父硬币信息",
         "puzzleHash": "谜语哈希"
       },
