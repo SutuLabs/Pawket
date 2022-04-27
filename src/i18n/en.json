@@ -667,5 +667,30 @@
         "failedToSign": "Failed to sign: "
       }
     }
+  },
+  "utxo": {
+    "ui": {
+      "label": {
+        "cost": "Cost",
+        "receive": "Receive"
+      }
+    }
+  },
+  "utxoDetail": {
+    "ui": {
+      "title": {
+        "cost": "Cost",
+        "receive": "Receive"
+      },
+      "label": {
+        "time": "Time",
+        "height": "Height",
+        "parentCoinInfo": "ParentCoinInfo",
+        "puzzleHash": "PuzzleHash"
+      },
+      "tooltip": {
+        "copy": "Copy"
+      }
+    }
   }
 }
