@@ -43,7 +43,7 @@ import UtxoDetail from "@/components/UtxoDetail.vue";
 @Component({
   filters: { demojo },
 })
-export default class Utxo extends Vue {
+export default class UtxoPanel extends Vue {
   @Prop() private value!: CoinRecord[];
   @Prop() private tokenInfo!: TokenInfo;
   @Prop({ default: 10 }) private perPage!: number;

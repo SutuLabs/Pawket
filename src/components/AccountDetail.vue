@@ -113,7 +113,7 @@ import BatchSend from "./Transfer/BatchSend.vue";
 import { getTokenInfo } from "@/services/coin/cat";
 import { getExchangeRate } from "@/services/exchange/rates";
 import { CurrencyType } from "@/services/exchange/currencyType";
-import Utxo from "@/components/Utxo.vue";
+import UtxoPanel from "@/components/UtxoPanel.vue";
 
 type Mode = "Verify" | "Create";
 
@@ -121,7 +121,7 @@ type Mode = "Verify" | "Create";
   components: {
     KeyBox,
     Send,
-    Utxo,
+    UtxoPanel,
   },
   filters: { demojo, xchToCurrency },
 })
