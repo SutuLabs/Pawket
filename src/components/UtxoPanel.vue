@@ -13,19 +13,19 @@
           <b-icon v-else icon="arrow-left-circle-outline" size="is-medium" class="has-text-primary"></b-icon>
         </div>
         <div>
-          <p v-if="activity.spent" class="has-text-dark is-size-6">{{ $t("utxo.ui.label.cost") }}</p>
-          <p v-else class="has-text-dark is-size-6">{{ $t("utxo.ui.label.receive") }}</p>
+          <p v-if="activity.spent" class="has-text-grey-dark is-size-6">{{ $t("utxo.ui.label.cost") }}</p>
+          <p v-else class="has-text-grey-dark is-size-6">{{ $t("utxo.ui.label.receive") }}</p>
           <p>
-            <b-tooltip :label="new Date(activity.timestamp * 1000).toISOString()">
-              <span class="is-size-7 has-text-info">{{ new Date(activity.timestamp * 1000).toISOString().slice(5, 10) }}</span>
+            <b-tooltip v-if="!activity.spent" :label="new Date(activity.timestamp * 1000).toISOString()">
+              <span v-if="!activity.spent" class="mr-2 is-size-7 has-text-info">{{ new Date(activity.timestamp * 1000).toISOString().slice(5, 10) }}</span>
             </b-tooltip>
-            <span v-if="activity.spent" class="mx-2 is-size-7 has-text-grey-light">{{ activity.spentBlockIndex }}</span>
-            <span v-else class="mx-2 is-size-7 has-text-grey-light">{{ activity.confirmedBlockIndex }}</span>
+            <span v-if="activity.spent" class="is-size-7 has-text-grey-light">{{ activity.spentBlockIndex }}</span>
+            <span v-else class="is-size-7 has-text-grey-light">{{ activity.confirmedBlockIndex }}</span>
           </p>
         </div>
       </div>
-      <div class="column has-text-right is-5">
-        <span v-if="tokenInfo[activity.symbol]">
+      <div class="column has-text-right has-text-grey-dark is-5">
+        <span v-if="tokenInfo[activity.symbol]" :class="activity.spent ? '' : 'has-text-primary'">
           {{ activity.spent ? "-" : "+" }}{{ activity.coin.amount | demojo(tokenInfo[activity.symbol]) }}</span
         >
       </div>

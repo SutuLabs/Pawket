@@ -51,7 +51,7 @@
     <div class="p-2">
       <b-tabs position="is-centered" class="block" expanded>
         <b-tab-item :label="$t('accountDetail.ui.tab.asset')">
-          <a class="panel-block is-justify-content-space-between py-4" v-for="cat of tokenList" :key="cat.id">
+          <a class="panel-block is-justify-content-space-between py-4 has-text-grey-dark" v-for="cat of tokenList" :key="cat.id">
             <span class="is-pulled-right" v-if="account.tokens && account.tokens.hasOwnProperty(cat.name)">
               <span class="panel-icon"></span>
               <span class="" v-if="tokenInfo[cat.name]">{{ account.tokens[cat.name].amount | demojo(tokenInfo[cat.name]) }}</span>
