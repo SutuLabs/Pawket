@@ -251,7 +251,7 @@
         "addBySerial": "新增序列账户",
         "addByPassword": "新增密码账户（专家功能）",
         "addByLegacy": "导入 Chia 客户端账户(24 词)",
-        "addByMnemonic": "导入其他钱包账户(12词)"
+        "addByMnemonic": "导入 Nucle/Goby 账户(12词)"
       },
       "tooltip": {
         "delete": "删除",
@@ -488,19 +488,19 @@
       },
       "label": {
         "listingCats": "CATs 列表",
-        "name": "CAT名称",
+        "name": "CAT 名称",
         "assetID": "Asset ID"
       },
       "button": {
         "add": "添加"
       },
       "tooltip": {
-        "removeToken": "删除token",
+        "removeToken": "删除 Token",
         "drag": "拖动来排序"
       },
       "message": {
-        "nameRequired": "CAT名称不能为空",
-        "assetIdRequired": "Asset ID不能为空"
+        "nameRequired": "CAT 名称不能为空",
+        "assetIdRequired": "Asset ID 不能为空"
       }
     },
     "message": {
@@ -509,12 +509,12 @@
         "saved": "已保存"
       },
       "confirm": {
-        "removeToken": "确定要删除这个Token吗?"
+        "removeToken": "确定要删除这个 Token 吗?"
       },
       "alert": {
         "nameExists": "名称已存在!",
         "idExists": "Asset ID 已存在!",
-        "isDefaultCat": "Asset ID/名称 已存在于默认CAT列表中!"
+        "isDefaultCat": "Asset ID/名称 已存在于默认 CAT 列表中!"
       }
     }
   },
@@ -619,7 +619,7 @@
       },
       "fee": {
         "title": "交易费",
-        "mojos": "{fee} mojos"
+        "mojos": "{fee} mojo(s)"
       },
       "inputs": {
         "title": "消耗总额"
@@ -671,20 +671,20 @@
   "utxo": {
     "ui": {
       "label": {
-        "cost": "消费",
-        "receive": "收入"
+        "cost": "发送",
+        "receive": "接收/找零"
       }
     }
   },
   "utxoDetail": {
     "ui": {
       "title": {
-        "cost": "消费",
-        "receive": "收入"
+        "cost": "发送",
+        "receive": "接收/找零"
       },
       "label": {
-        "time": "时间",
-        "height": "区块高度",
+        "time": "硬币创建时间",
+        "height": "区块高度（创建/花费）",
         "parentCoinInfo": "父硬币信息",
         "puzzleHash": "谜语哈希"
       },
