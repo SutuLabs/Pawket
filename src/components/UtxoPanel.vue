@@ -9,8 +9,8 @@
     >
       <div class="column is-flex is-7">
         <div class="mr-2">
-          <b-icon v-if="activity.spent" icon="arrow-right-circle-outline" size="is-medium" class="has-text-primary"></b-icon>
-          <b-icon v-else icon="arrow-left-circle-outline" size="is-medium" class="has-text-grey-light"></b-icon>
+          <b-icon v-if="activity.spent" icon="arrow-right-circle-outline" size="is-medium" class="has-text-grey-light"></b-icon>
+          <b-icon v-else icon="arrow-left-circle-outline" size="is-medium" class="has-text-primary"></b-icon>
         </div>
         <div>
           <p v-if="activity.spent" class="has-text-dark is-size-6">{{ $t("utxo.ui.label.cost") }}</p>
@@ -63,15 +63,34 @@ export default class UtxoPanel extends Vue {
     });
   }
 
+  get actList(): CoinRecord[] {
+    const actList: CoinRecord[] = [];
+    for (let act of this.value) {
+      actList.push(act);
+      if (act.spent) {
+        // generate original receive record
+        const rAct: CoinRecord = JSON.parse(JSON.stringify(act));
+        rAct.spent = false;
+        rAct.spentBlockIndex = 0;
+        actList.push(rAct);
+      }
+    }
+    actList.sort((a, b) => {
+      const aIndex = Math.max(a.confirmedBlockIndex, a.spentBlockIndex);
+      const bIndex = Math.max(b.confirmedBlockIndex, b.spentBlockIndex);
+      return bIndex - aIndex;
+    });
+    return actList;
+  }
+
   get total(): number {
-    return this.value.length;
+    return this.actList.length;
   }
 
   get currentActList(): CoinRecord[] {
-    console.log(this.value);
     const start = this.perPage * (this.current - 1);
     const end = start + this.perPage;
-    return this.value.slice(start, end);
+    return this.actList.slice(start, end);
   }
 }
 </script>
