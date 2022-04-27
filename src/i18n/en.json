@@ -495,8 +495,8 @@
         "add": "Add"
       },
       "tooltip": {
-        "removeToken": "remove token",
-        "drag": "drag to sort"
+        "removeToken": "Remove token",
+        "drag": "Drag to sort"
       },
       "message": {
         "nameRequired": "Name is required",
@@ -587,9 +587,9 @@
     "ui": {
       "title": "Add Account By Password",
       "label": {
-        "name": "Please input account name",
-        "password": "Please input password",
-        "rePassword": "Please re-input your password"
+        "name": "Account Name",
+        "password": "Password",
+        "rePassword": "Re-Enter Password"
       },
       "message": {
         "nameRequired": "Account name is required",
@@ -619,7 +619,7 @@
       },
       "fee": {
         "title": "Fee",
-        "mojos": "{fee} mojos"
+        "mojos": "{fee} mojo(s)"
       },
       "inputs": {
         "title": "Total Amount"
@@ -671,20 +671,20 @@
   "utxo": {
     "ui": {
       "label": {
-        "cost": "Cost",
-        "receive": "Receive"
+        "cost": "Send",
+        "receive": "Receive/Change"
       }
     }
   },
   "utxoDetail": {
     "ui": {
       "title": {
-        "cost": "Cost",
-        "receive": "Receive"
+        "cost": "Send",
+        "receive": "Receive/Change"
       },
       "label": {
-        "time": "Time",
-        "height": "Height",
+        "time": "Confirmed Time",
+        "height": "Confirmed/Spent Height",
         "parentCoinInfo": "ParentCoinInfo",
         "puzzleHash": "PuzzleHash"
       },
