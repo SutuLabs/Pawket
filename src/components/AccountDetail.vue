@@ -77,12 +77,12 @@
       </b-tabs>
     </div>
     <div class="p-4 border-top-1">
-      <h2 class="has-text-weight-bold is-size-4 pb-5">
-        {{ $t("accountDetail.ui.dApps.title") }}
-        <a href="javascript:void(0)" @click="toggleDapp()">
-          <b-icon class="is-pulled-right" :icon="displayDapp ? 'menu-down' : 'menu-up'"></b-icon>
-        </a>
-      </h2>
+      <a href="javascript:void(0)" @click="toggleDapp()">
+        <p class="has-text-weight-bold is-size-5 pb-5">
+          {{ $t("accountDetail.ui.dApps.title") }}
+          <b-icon class="is-pulled-right" :icon="displayDapp ? 'menu-up' : 'menu-down'" size="is-medium"></b-icon>
+        </p>
+      </a>
       <div v-if="displayDapp">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.donate')" position="is-right">
           <a href="javascript:void(0)" @click="openDonation()" class="has-text-link">
