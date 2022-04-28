@@ -117,22 +117,11 @@ export async function generateOffer(
 
   for (let i = 0; i < offered.length; i++) {
     const off = offered[i];
+    const conds = getPuzzleAnnoConditions();
     if (off.id) {//CAT
-      for (let j = 0; j < off.plan.coins.length; j++) {
-        // const coin = off.plan.coins[j];
-        const conds = getPuzzleAnnoConditions();
-
-        const css = await catBundle.generateCoinSpends(off.plan, puzzles, conds, getPuzzle);
-        spends.push(...css);
-      }
+      spends.push(...await catBundle.generateCoinSpends(off.plan, puzzles, conds, getPuzzle));
     } else {
-      for (let j = 0; j < off.plan.coins.length; j++) {
-        // const coin = off.plan.coins[j];
-        const conds = getPuzzleAnnoConditions();
-
-        const css = await stdBundle.generateCoinSpends(off.plan, puzzles, conds);
-        spends.push(...css);
-      }
+      spends.push(...await stdBundle.generateCoinSpends(off.plan, puzzles, conds));
     }
   }
 
