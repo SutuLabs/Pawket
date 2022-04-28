@@ -77,39 +77,46 @@
       </b-tabs>
     </div>
     <div class="box">
-      <h2 class="has-text-weight-bold is-size-4 pb-5">{{ $t("accountDetail.ui.dApps.title") }}</h2>
-      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.donate')" position="is-right">
-        <a href="javascript:void(0)" @click="openDonation()">
-          <div class="has-text-centered has-text-grey">
-            <b-icon icon="hand-heart-outline" size="is-medium"></b-icon>
-            <p class="is-size-6">{{ $t("accountDetail.ui.dApps.button.donate") }}</p>
-          </div>
+      <h2 class="has-text-weight-bold is-size-4 pb-5">
+        {{ $t("accountDetail.ui.dApps.title") }}
+        <a href="javascript:void(0)" @click="toggleDapp()">
+          <b-icon class="is-pulled-right" :icon="displayDapp ? 'menu-down' : 'menu-up'"></b-icon>
         </a>
-      </b-tooltip>
-      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.takeOffer')" position="is-right">
-        <a v-if="experimentMode" href="javascript:void(0)" @click="openTakeOffer()">
-          <div class="ml-5 has-text-centered has-text-grey">
-            <b-icon icon="email-check-outline" size="is-medium"></b-icon>
-            <p class="is-size-6">{{ $t("accountDetail.ui.dApps.button.takeOffer") }}</p>
-          </div>
-        </a>
-      </b-tooltip>
-      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.makeOffer')" position="is-right">
-        <a v-if="experimentMode" href="javascript:void(0)" @click="openMakeOffer()">
-          <div class="ml-5 has-text-centered has-text-grey">
-            <b-icon icon="email-send-outline" size="is-medium"></b-icon>
-            <p class="is-size-6">{{ $t("accountDetail.ui.dApps.button.makeOffer") }}</p>
-          </div>
-        </a>
-      </b-tooltip>
-      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.batchSend')" position="is-right">
-        <a v-if="experimentMode" href="javascript:void(0)" @click="openBatchSend()">
-          <div class="ml-5 has-text-centered has-text-grey">
-            <b-icon icon="share-all-outline" size="is-medium"></b-icon>
-            <p class="is-size-6">{{ $t("accountDetail.ui.dApps.button.batchSend") }}</p>
-          </div>
-        </a>
-      </b-tooltip>
+      </h2>
+      <div v-if="displayDapp">
+        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.donate')" position="is-right">
+          <a href="javascript:void(0)" @click="openDonation()">
+            <div class="has-text-centered has-text-grey">
+              <b-icon icon="hand-heart-outline" size="is-medium"></b-icon>
+              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.donate") }}</p>
+            </div>
+          </a>
+        </b-tooltip>
+        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.takeOffer')" position="is-right">
+          <a v-if="experimentMode" href="javascript:void(0)" @click="openTakeOffer()">
+            <div class="ml-5 has-text-centered has-text-grey">
+              <b-icon icon="email-check-outline" size="is-medium"></b-icon>
+              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.takeOffer") }}</p>
+            </div>
+          </a>
+        </b-tooltip>
+        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.makeOffer')" position="is-right">
+          <a v-if="experimentMode" href="javascript:void(0)" @click="openMakeOffer()">
+            <div class="ml-5 has-text-centered has-text-grey">
+              <b-icon icon="email-send-outline" size="is-medium"></b-icon>
+              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.makeOffer") }}</p>
+            </div>
+          </a>
+        </b-tooltip>
+        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.batchSend')" position="is-right">
+          <a v-if="experimentMode" href="javascript:void(0)" @click="openBatchSend()">
+            <div class="ml-5 has-text-centered has-text-grey">
+              <b-icon icon="share-all-outline" size="is-medium"></b-icon>
+              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.batchSend") }}</p>
+            </div>
+          </a>
+        </b-tooltip>
+      </div>
     </div>
   </div>
 </template>
@@ -148,6 +155,7 @@ type Mode = "Verify" | "Create";
 export default class AccountDetail extends Vue {
   public mode: Mode = "Verify";
   private exchangeRate = -1;
+  public displayDapp = true;
 
   get refreshing(): boolean {
     return store.state.account.refreshing;
@@ -332,6 +340,10 @@ export default class AccountDetail extends Vue {
   async refresh(): Promise<void> {
     this.exchangeRate = await getExchangeRate("XCH", this.currencyName);
     store.dispatch("refreshBalance");
+  }
+
+  toggleDapp(): void {
+    this.displayDapp = !this.displayDapp;
   }
 }
 </script>
