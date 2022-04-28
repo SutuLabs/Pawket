@@ -1,5 +1,5 @@
 <template>
-  <div class="column is-8 is-offset-2">
+  <div class="column is-8 is-offset-2 box">
     <div class="container px-4">
       <b-loading :is-full-page="true" :active="!account.tokens"></b-loading>
       <div class="py-5 has-text-centered" v-if="account && account.key">
@@ -72,24 +72,51 @@
           </div>
         </b-tab-item>
         <b-tab-item :label="$t('accountDetail.ui.tab.utxos')">
-          <utxo-panel :tokenInfo="tokenInfo" v-model="account.activities"></utxo-panel>
+          <utxo-panel :tokenInfo="tokenInfo" v-model="activities"></utxo-panel>
         </b-tab-item>
       </b-tabs>
     </div>
-    <div class="box">
-      <h2 class="has-text-weight-bold is-size-4 pb-5">{{ $t("accountDetail.ui.dApps.title") }}</h2>
-      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.donate')" position="is-right">
-        <b-button @click="openDonation()" size="is-large">❤️</b-button>
-      </b-tooltip>
-      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.takeOffer')" position="is-right">
-        <b-button v-if="experimentMode" @click="openTakeOffer()" size="is-large" class="ml-5">💱</b-button>
-      </b-tooltip>
-      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.makeOffer')" position="is-right">
-        <b-button v-if="experimentMode" @click="openMakeOffer()" size="is-large" class="ml-5">💸</b-button>
-      </b-tooltip>
-      <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.batchSend')" position="is-right">
-        <b-button v-if="experimentMode" @click="openBatchSend()" size="is-large" class="ml-5">🏘️</b-button>
-      </b-tooltip>
+    <div class="p-4 border-top-1">
+      <a href="javascript:void(0)" @click="toggleDapp()">
+        <p class="has-text-weight-bold is-size-5 pb-5">
+          {{ $t("accountDetail.ui.dApps.title") }}
+          <b-icon class="is-pulled-right" :icon="displayDapp ? 'menu-up' : 'menu-down'" size="is-medium"></b-icon>
+        </p>
+      </a>
+      <div v-if="displayDapp">
+        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.donate')" position="is-right">
+          <a href="javascript:void(0)" @click="openDonation()" class="has-text-link">
+            <div class="has-text-centered">
+              <b-icon icon="hand-heart-outline" size="is-medium"></b-icon>
+              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.donate") }}</p>
+            </div>
+          </a>
+        </b-tooltip>
+        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.takeOffer')" position="is-right">
+          <a v-if="experimentMode" href="javascript:void(0)" @click="openTakeOffer()" class="has-text-link">
+            <div class="ml-5 has-text-centered">
+              <b-icon icon="email-check-outline" size="is-medium"></b-icon>
+              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.takeOffer") }}</p>
+            </div>
+          </a>
+        </b-tooltip>
+        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.makeOffer')" position="is-right">
+          <a v-if="experimentMode" href="javascript:void(0)" @click="openMakeOffer()" class="has-text-link">
+            <div class="ml-5 has-text-centered">
+              <b-icon icon="email-send-outline" size="is-medium"></b-icon>
+              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.makeOffer") }}</p>
+            </div>
+          </a>
+        </b-tooltip>
+        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.batchSend')" position="is-right">
+          <a v-if="experimentMode" href="javascript:void(0)" @click="openBatchSend()" class="has-text-link">
+            <div class="ml-5 has-text-centered">
+              <b-icon icon="share-all-outline" size="is-medium"></b-icon>
+              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.batchSend") }}</p>
+            </div>
+          </a>
+        </b-tooltip>
+      </div>
     </div>
   </div>
 </template>
@@ -114,6 +141,7 @@ import { getTokenInfo } from "@/services/coin/cat";
 import { getExchangeRate } from "@/services/exchange/rates";
 import { CurrencyType } from "@/services/exchange/currencyType";
 import UtxoPanel from "@/components/UtxoPanel.vue";
+import { CoinRecord } from "@/models/wallet";
 
 type Mode = "Verify" | "Create";
 
@@ -128,6 +156,7 @@ type Mode = "Verify" | "Create";
 export default class AccountDetail extends Vue {
   public mode: Mode = "Verify";
   private exchangeRate = -1;
+  public displayDapp = true;
 
   get refreshing(): boolean {
     return store.state.account.refreshing;
@@ -135,6 +164,10 @@ export default class AccountDetail extends Vue {
 
   get account(): AccountEntity {
     return store.state.account.accounts[store.state.account.selectedAccount] ?? {};
+  }
+
+  get activities(): CoinRecord[] {
+    return this.account.activities ?? [];
   }
 
   get tokenList(): CustomCat[] {
@@ -313,10 +346,16 @@ export default class AccountDetail extends Vue {
     this.exchangeRate = await getExchangeRate("XCH", this.currencyName);
     store.dispatch("refreshBalance");
   }
+
+  toggleDapp(): void {
+    this.displayDapp = !this.displayDapp;
+  }
 }
 </script>
 
 <style scoped lang="scss">
+@import "~bulma/sass/utilities/derived-variables";
+
 .w-3 {
   width: 3rem;
 }
@@ -331,5 +370,9 @@ export default class AccountDetail extends Vue {
   to {
     transform: rotate(359deg);
   }
+}
+
+.border-top-1 {
+  border-top: 1px solid $grey-lighter;
 }
 </style>
