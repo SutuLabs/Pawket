@@ -690,7 +690,8 @@
       },
       "label": {
         "time": "时间",
-        "height": "区块高度",
+        "spentHeight": "消费区块高度",
+        "confirmedHeight": "确认区块高度",
         "parentCoinInfo": "父硬币信息",
         "puzzleHash": "谜语哈希"
       },
