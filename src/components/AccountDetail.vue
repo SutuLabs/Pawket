@@ -72,7 +72,7 @@
           </div>
         </b-tab-item>
         <b-tab-item :label="$t('accountDetail.ui.tab.utxos')">
-          <utxo-panel :tokenInfo="tokenInfo" v-model="account.activities"></utxo-panel>
+          <utxo-panel :tokenInfo="tokenInfo" v-model="activities"></utxo-panel>
         </b-tab-item>
       </b-tabs>
     </div>
@@ -141,6 +141,7 @@ import { getTokenInfo } from "@/services/coin/cat";
 import { getExchangeRate } from "@/services/exchange/rates";
 import { CurrencyType } from "@/services/exchange/currencyType";
 import UtxoPanel from "@/components/UtxoPanel.vue";
+import { CoinRecord } from "@/models/wallet";
 
 type Mode = "Verify" | "Create";
 
@@ -163,6 +164,10 @@ export default class AccountDetail extends Vue {
 
   get account(): AccountEntity {
     return store.state.account.accounts[store.state.account.selectedAccount] ?? {};
+  }
+
+  get activities(): CoinRecord[] {
+    return this.account.activities ?? [];
   }
 
   get tokenList(): CustomCat[] {
