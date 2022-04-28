@@ -1,5 +1,5 @@
 <template>
-  <div class="column is-8 is-offset-2">
+  <div class="column is-8 is-offset-2 box">
     <div class="container px-4">
       <b-loading :is-full-page="true" :active="!account.tokens"></b-loading>
       <div class="py-5 has-text-centered" v-if="account && account.key">
@@ -76,7 +76,7 @@
         </b-tab-item>
       </b-tabs>
     </div>
-    <div class="box">
+    <div class="p-4">
       <h2 class="has-text-weight-bold is-size-4 pb-5">
         {{ $t("accountDetail.ui.dApps.title") }}
         <a href="javascript:void(0)" @click="toggleDapp()">
@@ -85,32 +85,32 @@
       </h2>
       <div v-if="displayDapp">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.donate')" position="is-right">
-          <a href="javascript:void(0)" @click="openDonation()">
-            <div class="has-text-centered has-text-grey">
+          <a href="javascript:void(0)" @click="openDonation()" class="has-text-link">
+            <div class="has-text-centered">
               <b-icon icon="hand-heart-outline" size="is-medium"></b-icon>
               <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.donate") }}</p>
             </div>
           </a>
         </b-tooltip>
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.takeOffer')" position="is-right">
-          <a v-if="experimentMode" href="javascript:void(0)" @click="openTakeOffer()">
-            <div class="ml-5 has-text-centered has-text-grey">
+          <a v-if="experimentMode" href="javascript:void(0)" @click="openTakeOffer()" class="has-text-link">
+            <div class="ml-5 has-text-centered">
               <b-icon icon="email-check-outline" size="is-medium"></b-icon>
               <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.takeOffer") }}</p>
             </div>
           </a>
         </b-tooltip>
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.makeOffer')" position="is-right">
-          <a v-if="experimentMode" href="javascript:void(0)" @click="openMakeOffer()">
-            <div class="ml-5 has-text-centered has-text-grey">
+          <a v-if="experimentMode" href="javascript:void(0)" @click="openMakeOffer()" class="has-text-link">
+            <div class="ml-5 has-text-centered">
               <b-icon icon="email-send-outline" size="is-medium"></b-icon>
               <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.makeOffer") }}</p>
             </div>
           </a>
         </b-tooltip>
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.batchSend')" position="is-right">
-          <a v-if="experimentMode" href="javascript:void(0)" @click="openBatchSend()">
-            <div class="ml-5 has-text-centered has-text-grey">
+          <a v-if="experimentMode" href="javascript:void(0)" @click="openBatchSend()" class="has-text-link">
+            <div class="ml-5 has-text-centered">
               <b-icon icon="share-all-outline" size="is-medium"></b-icon>
               <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.batchSend") }}</p>
             </div>
