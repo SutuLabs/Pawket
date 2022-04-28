@@ -98,21 +98,21 @@
         "create": {
           "title": "Mnemonic",
           "tip1": "Welcome! The following words are used for your wallet backup. Without them, you will lose access to your wallet, keep them safe! Write down each word along with the order number next to them. (Order is important)",
-          "tip2": "WARNING: Never disclose your Mnemonic Words. Anyone with this mnemonic can take your XCH forever."
+          "tip2": "WARNING: NEVER DISCLOSE YOUR MNEMONIC WORDS. ANYONE WITH THIS MNEMONIC CAN TAKE YOUR XCH FOREVER!"
         },
         "import12": {
           "title": "Import Pawket Mnemonic Words",
-          "tip": "Please enter your Pawket mnemonic words in order, using spaces between mnemonics."
+          "tip": "Please enter your Pawket Mnemonic Words in order, using spaces between mnemonics."
         },
         "import24": {
           "title": "Import Chia Official Mnemonic Words",
-          "tip": "Please enter your Chia official mnemonic words in order, using spaces between mnemonics."
+          "tip": "Please enter your Chia official Mnemonic Words in order, using spaces between mnemonics."
         }
       }
     },
     "message": {
       "error": {
-        "wrongSeed": "Import failed, please check your mnemonic words."
+        "wrongSeed": "Import failed, please check your Mnemonic Words."
       }
     }
   },
@@ -150,7 +150,7 @@
         "lock": "Lock?"
       },
       "notification": {
-        "donate": "You are donating to the developer."
+        "donate": "You are donating to the developers."
       }
     }
   },
@@ -179,7 +179,7 @@
         "experiment": "Experimental features are not stable and not fully tested yet, you can have a try and give us your feedback."
       },
       "notification": {
-        "saved": "Saved"
+        "saved": "Saved."
       }
     }
   },
@@ -204,7 +204,7 @@
         "passwordNotMatch": "Password does not match."
       },
       "alert": {
-        "passwordChanged": "Password has been changed, please Re-login."
+        "passwordChanged": "Password has been changed. Please Re-Login."
       }
     }
   },
@@ -228,7 +228,7 @@
         "mnemonicSeed": "Mnemonic seed (24 secret words)"
       },
       "button": {
-        "revealMnemonic": "Reveal Mnemonic",
+        "revealMnemonic": "Reveal Mnemonics",
         "confirm": "Confirm",
         "cancel": "Cancel"
       },
@@ -247,7 +247,7 @@
         "list": "Account List"
       },
       "button": {
-        "showMnemonic": "Reveal Mnemonic",
+        "showMnemonic": "Reveal Mnemonics",
         "addBySerial": "Add by Serial",
         "addByPassword": "Add by Password",
         "addByLegacy": "Import Chia Official Wallet（24-word）",
@@ -259,8 +259,8 @@
         "details": "Details",
         "addBySerial": "Derived serial accounts are created in order.",
         "addByPassword": "Account protected by MNEMONIC and PASSWORD. Enter the same password to access the same account.",
-        "addByLegacy": "Chia client wallet.",
-        "addByMnemonic": "Import Nucle or Goby 12 mnemonic words account."
+        "addByLegacy": "Import Chia official wallet.",
+        "addByMnemonic": "Import Nucle/Goby wallet."
       },
       "modal": {
         "addByLegacy": "Import Chia Official Wallet",
@@ -275,8 +275,8 @@
       },
       "prompt": {
         "setAccountName": "Enter the New Account Name",
-        "setPassword": "Enter the Password",
-        "setLegacyMnemonic": "Enter Mnemonic Words:",
+        "setPassword": "Enter Password",
+        "setLegacyMnemonic": "Enter Mnemonic Words",
         "cancelText": "Cancel",
         "confirmText": "OK"
       }
@@ -298,7 +298,7 @@
   "mnemonicExport": {
     "ui": {
       "title": {
-        "mnemonic": "Mnemonic"
+        "mnemonic": "Mnemonics"
       },
       "button": {
         "close": "Close"
@@ -338,47 +338,47 @@
         "submitted": "Submitted to memory pool."
       },
       "tooltip": {
-        "singleCoinExplanation": "Currently only support one coin mode, mixed-coin-sending is under development.",
+        "singleCoinExplanation": "Currently only support one coin mode, mix coin send is under development.",
         "qr": "Scan QR",
-        "offlineScan": "You are in offline mode, communicate with proxy via qr code to send transaction."
+        "offlineScan": "You are in offline mode, communicate with proxy via QR code to send transaction."
       },
       "span": {
         "loading": "Loading",
         "maxLeadingText": "Max:"
       },
       "text": {
-        "offlineOnlySupportXch": "Offline sending only support XCH now."
+        "offlineOnlySupportXch": "Offline send only support XCH now."
       },
       "summary": {
-        "notification": "Are you sure you want to send?<br/>Please, review your transaction."
+        "notification": "Are you sure to send?<br/>Please review your transaction."
       }
     },
     "messages": {
       "error": {
-        "DOUBLE_SPEND": "Doubel Spend",
+        "DOUBLE_SPEND": "Double Spend",
         "UNKNOWN_UNSPENT": "Unknown Unspent",
         "BAD_AGGREGATE_SIGNATURE": "Bad Aggregate Signature",
         "INVALID_CONDITION": "Invalid Condition",
         "COIN_AMOUNT_EXCEEDS_MAXIMUM": "Coin Amount Exceeds Maximum",
-        "INVALID_FEE_LOW_FEE": "Invalid Fee/Low fee",
+        "INVALID_FEE_LOW_FEE": "Invalid Fee/Low Fee",
         "MEMPOOL_NOT_INITIALIZED": "Mempool not Initialized",
         "ALREADY_INCLUDING_TRANSACTION": "Already Including Transaction",
         "INCOMPATIBLE_NETWORK_ID": "Incompatible Network ID",
         "NO_TRANSACTIONS_WHILE_SYNCING": "No Transaction While Syncing",
-        "INVALID_FEE_TOO_CLOSE_TO_ZERO": "Invalid Fee, Too Close to Zero",
-        "COIN_AMOUNT_NEGATIVE": "Coin Amount Negative"
+        "INVALID_FEE_TOO_CLOSE_TO_ZERO": "Invalid Fee, too Close to Zero",
+        "COIN_AMOUNT_NEGATIVE": "Coin Amount is Negative"
       }
     }
   },
   "scanQrCode": {
     "message": {
       "error": {
-        "NotAllowedError": "ERROR: You need to grant camera access permission",
-        "NotFoundError": "ERROR: No camera on this device",
-        "NotSupportedError": "ERROR: Secure context required (HTTPS, localhost)",
+        "NotAllowedError": "ERROR: You need to grant camera access permission.",
+        "NotFoundError": "ERROR: No camera on this device.",
+        "NotSupportedError": "ERROR: Secure context required (HTTPS, localhost).",
         "NotReadableError": "ERROR: Is the camera already in use?",
-        "OverconstrainedError": "ERROR: Installed cameras are not suitable",
-        "StreamApiNotSupportedError": "ERROR: Stream API is not supported in this browser",
+        "OverconstrainedError": "ERROR: Installed camera is not suitable.",
+        "StreamApiNotSupportedError": "ERROR: Stream API is not supported in this browser.",
         "InsecureContextError": "ERROR: Camera access is only permitted in secure context. Use HTTPS or localhost rather than HTTP."
       }
     }
@@ -389,7 +389,7 @@
         "roadmap": "Roadmap"
       },
       "blackquote": {
-        "slogan": "Manage your CATs in Pawket!"
+        "slogan": "Manage Your CATs in Pawket!"
       },
       "list": {
         "1": "Fully support offline scenario",
@@ -487,7 +487,7 @@
         "addToken": "Add Token"
       },
       "label": {
-        "listingCats": "Listing CATs",
+        "listingCats": "CATs List",
         "name": "Name",
         "assetID": "Asset ID"
       },
@@ -495,7 +495,7 @@
         "add": "Add"
       },
       "tooltip": {
-        "removeToken": "Remove the token",
+        "removeToken": "Remove token",
         "drag": "Drag to sort"
       },
       "message": {
@@ -505,16 +505,16 @@
     },
     "message": {
       "notification": {
-        "wrongAssetId": "Wrong asset Id, failed to add a new CAT!",
+        "wrongAssetId": "Wrong asset ID. Failed to add a new CAT!",
         "saved": "Saved."
       },
       "confirm": {
-        "removeToken": "Are you sure to remove this token?"
+        "removeToken": "Are you sure to remove the token?"
       },
       "alert": {
         "nameExists": "Name Already Exists!",
         "idExists": "Asset ID Already Exists!",
-        "isDefaultCat": "Asset ID/Name already exists in Default CATs List!"
+        "isDefaultCat": "Asset ID/Name Already Exists in Default CATs List!"
       }
     }
   },
@@ -536,7 +536,7 @@
           "cancel": "Cancel",
           "submit": "Submit"
         },
-        "notification": "Are you sure you want to send?<br/>Please, review your transaction."
+        "notification": "Are you sure to send?<br/>Please review your transaction."
       }
     },
     "client": {
@@ -544,7 +544,7 @@
         "status": "Retrieved {coin} coin(s)."
       },
       "scan": {
-        "title": "Scan",
+        "title": "Scan QR",
         "numberField": "Addresses",
         "numberMessage": "Use Proxy to scan these addresses."
       },
@@ -552,7 +552,7 @@
         "finish": "Finish"
       },
       "show": {
-        "hint": "Use Proxy to scan this to send your transaction."
+        "hint": "Use Proxy to scan QR to send your transaction."
       }
     },
     "ui": {
@@ -570,7 +570,7 @@
       "message": {
         "nameRequired": "Account name is required.",
         "mnemonicRequired": "Mnemonic is required.",
-        "invalidMnemonic": "Import failed, please check your mnemonic words."
+        "invalidMnemonic": "Import failed. Please check your mnemonic words."
       },
       "button": {
         "back": "Back",
@@ -585,7 +585,7 @@
   },
   "addByPassword": {
     "ui": {
-      "title": "Add Account By Password",
+      "title": "Add Account by Password",
       "label": {
         "name": "Account Name",
         "password": "Password",
@@ -651,12 +651,12 @@
       },
       "field": {
         "csv": {
-          "title": "CSV Input",
+          "title": "Input CSV",
           "fillSample": "Fill Sample"
         }
       },
       "summary": {
-        "notification": "Are you sure you want to send?<br/>Please, review your transaction."
+        "notification": "Are you sure to send?<br/>Please review your transaction."
       },
       "button": {
         "cancel": "Cancel",
