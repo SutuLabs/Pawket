@@ -76,7 +76,7 @@
         </b-tab-item>
       </b-tabs>
     </div>
-    <div class="p-4">
+    <div class="p-4 border-top-1">
       <h2 class="has-text-weight-bold is-size-4 pb-5">
         {{ $t("accountDetail.ui.dApps.title") }}
         <a href="javascript:void(0)" @click="toggleDapp()">
@@ -349,6 +349,8 @@ export default class AccountDetail extends Vue {
 </script>
 
 <style scoped lang="scss">
+@import "~bulma/sass/utilities/derived-variables";
+
 .w-3 {
   width: 3rem;
 }
@@ -363,5 +365,9 @@ export default class AccountDetail extends Vue {
   to {
     transform: rotate(359deg);
   }
+}
+
+.border-top-1 {
+  border-top: 1px solid $grey-lighter;
 }
 </style>
