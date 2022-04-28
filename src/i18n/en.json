@@ -15,8 +15,8 @@
     },
     "message": {
       "notification": {
-        "copySuccess": "Copy Successfully",
-        "copyFailed": "Copy Failed"
+        "copySuccess": "Copy successfully.",
+        "copyFailed": "Copy failed."
       }
     }
   },
@@ -49,7 +49,7 @@
       },
       "label": {
         "password": "Password",
-        "reEnter": "Re-Enter"
+        "reEnter": "Re-Enter Password"
       },
       "title": {
         "verifyPassword": "Verify Password",
@@ -66,9 +66,9 @@
         "cancelText": "Cancel"
       },
       "error": {
-        "passwordNotMatch": "Password does not match",
-        "incorrectPassword": "Incorrect password",
-        "passwordEmpty": "Password can not be empty"
+        "passwordNotMatch": "Password does not match.",
+        "incorrectPassword": "Incorrect password.",
+        "passwordEmpty": "Password can not be empty."
       },
       "tip": {
         "weakPassword": "Weak",
@@ -89,7 +89,7 @@
         "12word": "12 Words",
         "24word": "24 Words",
         "import12": "Import Pawket Mnemonic Words",
-        "import24": "Import Chia Client Mnemonic Words"
+        "import24": "Import Chia Official Mnemonic Words"
       },
       "text": {
         "importMenu": {
@@ -105,14 +105,14 @@
           "tip": "Please enter your Pawket mnemonic words in order, using spaces between mnemonics."
         },
         "import24": {
-          "title": "Import Chia Client Mnemonic Words",
-          "tip": "Please enter your Chia client mnemonic words in order, using spaces between mnemonics."
+          "title": "Import Chia Official Mnemonic Words",
+          "tip": "Please enter your Chia official mnemonic words in order, using spaces between mnemonics."
         }
       }
     },
     "message": {
       "error": {
-        "wrongSeed": "Import failed, please check your mnemonic words"
+        "wrongSeed": "Import failed, please check your mnemonic words."
       }
     }
   },
@@ -150,7 +150,7 @@
         "lock": "Lock?"
       },
       "notification": {
-        "donate": "You are donating to the developer"
+        "donate": "You are donating to the developer."
       }
     }
   },
@@ -200,11 +200,11 @@
     },
     "message": {
       "error": {
-        "passwordNotCorrect": "Incorrect password",
-        "passwordNotMatch": "Password does not match"
+        "passwordNotCorrect": "Incorrect password.",
+        "passwordNotMatch": "Password does not match."
       },
       "alert": {
-        "passwordChanged": "Password has been changed, please Re-login"
+        "passwordChanged": "Password has been changed, please Re-login."
       }
     }
   },
@@ -237,8 +237,8 @@
       }
     },
     "message": {
-      "inputPassword": "Please input your login password",
-      "passwordNotCorrect": "Incorrect Password"
+      "inputPassword": "Enter Login Password to Continue",
+      "passwordNotCorrect": "Incorrect password."
     }
   },
   "accountList": {
@@ -338,7 +338,7 @@
         "submitted": "Submitted to memory pool."
       },
       "tooltip": {
-        "singleCoinExplanation": "Currently only support one coin mode, mix coin send is under development.",
+        "singleCoinExplanation": "Currently only support one coin mode, mixed-coin-sending is under development.",
         "qr": "Scan QR",
         "offlineScan": "You are in offline mode, communicate with proxy via qr code to send transaction."
       },
@@ -347,7 +347,7 @@
         "maxLeadingText": "Max:"
       },
       "text": {
-        "offlineOnlySupportXch": "Offline send only support XCH now."
+        "offlineOnlySupportXch": "Offline sending only support XCH now."
       },
       "summary": {
         "notification": "Are you sure you want to send?<br/>Please, review your transaction."
@@ -423,7 +423,7 @@
         "panel": {
           "information": "Information",
           "hint": {
-            "thisIsYourOffer": "this is your offer text"
+            "thisIsYourOffer": "This is your offer text."
           }
         },
         "label": {
@@ -441,7 +441,7 @@
         }
       },
       "messages": {
-        "failedToSign": "Failed to make offer"
+        "failedToSign": "Failed to make offer."
       }
     },
     "symbol": {
@@ -455,7 +455,7 @@
       "ui": {
         "title": "Take Offer",
         "hint": {
-          "pasteOffer": "paste your offer here, e.g. offer1..."
+          "pasteOffer": "Paste your offer here, e.g. offer1..."
         },
         "panel": {
           "information": "Information"
@@ -477,7 +477,7 @@
         "offered": "You will receive"
       },
       "messages": {
-        "failedToSign": "Failed to take offer"
+        "failedToSign": "Failed to take offer."
       }
     }
   },
@@ -499,14 +499,14 @@
         "drag": "Drag to sort"
       },
       "message": {
-        "nameRequired": "Name is required",
-        "assetIdRequired": "Asset ID is required"
+        "nameRequired": "Name is required.",
+        "assetIdRequired": "Asset ID is required."
       }
     },
     "message": {
       "notification": {
         "wrongAssetId": "Wrong asset Id, failed to add a new CAT!",
-        "saved": "Saved"
+        "saved": "Saved."
       },
       "confirm": {
         "removeToken": "Are you sure to remove this token?"
@@ -527,7 +527,7 @@
       "scan": {
         "title": "Proxy Scan",
         "numberField": "Coins",
-        "numberMessage": "Use Offline device to scan these coins",
+        "numberMessage": "Use offline device to scan these coins.",
         "titleTooltip": "This is a gateway for your transaction send from an offline device, please start with an offline Pawket."
       },
       "confirmBundle": {
@@ -546,13 +546,13 @@
       "scan": {
         "title": "Scan",
         "numberField": "Addresses",
-        "numberMessage": "Use Proxy to scan these addresses"
+        "numberMessage": "Use Proxy to scan these addresses."
       },
       "button": {
         "finish": "Finish"
       },
       "show": {
-        "hint": "Use Proxy to scan this to send your transaction"
+        "hint": "Use Proxy to scan this to send your transaction."
       }
     },
     "ui": {
@@ -568,9 +568,9 @@
         "mnemonic": "{len} Mnemonic Words"
       },
       "message": {
-        "nameRequired": "Account name is required",
-        "mnemonicRequired": "Mnemonic is required",
-        "invalidMnemonic": "Import failed, please check your mnemonic words"
+        "nameRequired": "Account name is required.",
+        "mnemonicRequired": "Mnemonic is required.",
+        "invalidMnemonic": "Import failed, please check your mnemonic words."
       },
       "button": {
         "back": "Back",
@@ -579,7 +579,7 @@
     },
     "message": {
       "error": {
-        "accountMnemonicExists": "An account with the same mnemonic already exists"
+        "accountMnemonicExists": "An account with the same mnemonic already exists."
       }
     }
   },
@@ -592,9 +592,9 @@
         "rePassword": "Re-Enter Password"
       },
       "message": {
-        "nameRequired": "Account name is required",
-        "passwordRequired": "Password is required",
-        "invalidPassword": "Password does not match"
+        "nameRequired": "Account name is required.",
+        "passwordRequired": "Password is required.",
+        "invalidPassword": "Password does not match."
       },
       "button": {
         "back": "Back",
@@ -603,7 +603,7 @@
     },
     "message": {
       "error": {
-        "accountPasswordExists": "An account with the same password already exists"
+        "accountPasswordExists": "An account with the same password already exists."
       }
     }
   },
