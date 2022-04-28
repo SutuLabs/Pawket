@@ -15,8 +15,8 @@
     },
     "message": {
       "notification": {
-        "copySuccess": "Copy Successfully",
-        "copyFailed": "Copy Failed"
+        "copySuccess": "Copy successfully.",
+        "copyFailed": "Copy failed."
       }
     }
   },
@@ -49,7 +49,7 @@
       },
       "label": {
         "password": "Password",
-        "reEnter": "Re-Enter"
+        "reEnter": "Re-Enter Password"
       },
       "title": {
         "verifyPassword": "Verify Password",
@@ -66,9 +66,9 @@
         "cancelText": "Cancel"
       },
       "error": {
-        "passwordNotMatch": "Password does not match",
-        "incorrectPassword": "Incorrect password",
-        "passwordEmpty": "Password can not be empty"
+        "passwordNotMatch": "Password does not match.",
+        "incorrectPassword": "Incorrect password.",
+        "passwordEmpty": "Password can not be empty."
       },
       "tip": {
         "weakPassword": "Weak",
@@ -89,7 +89,7 @@
         "12word": "12 Words",
         "24word": "24 Words",
         "import12": "Import Pawket Mnemonic Words",
-        "import24": "Import Chia Client Mnemonic Words"
+        "import24": "Import Chia Official Mnemonic Words"
       },
       "text": {
         "importMenu": {
@@ -98,21 +98,21 @@
         "create": {
           "title": "Mnemonic",
           "tip1": "Welcome! The following words are used for your wallet backup. Without them, you will lose access to your wallet, keep them safe! Write down each word along with the order number next to them. (Order is important)",
-          "tip2": "WARNING: Never disclose your Mnemonic Words. Anyone with this mnemonic can take your XCH forever."
+          "tip2": "WARNING: NEVER DISCLOSE YOUR MNEMONIC WORDS. ANYONE WITH THIS MNEMONIC CAN TAKE YOUR XCH FOREVER!"
         },
         "import12": {
           "title": "Import Pawket Mnemonic Words",
-          "tip": "Please enter your Pawket mnemonic words in order, using spaces between mnemonics."
+          "tip": "Please enter your Pawket Mnemonic Words in order, using spaces between mnemonics."
         },
         "import24": {
-          "title": "Import Chia Client Mnemonic Words",
-          "tip": "Please enter your Chia client mnemonic words in order, using spaces between mnemonics."
+          "title": "Import Chia Official Mnemonic Words",
+          "tip": "Please enter your Chia official Mnemonic Words in order, using spaces between mnemonics."
         }
       }
     },
     "message": {
       "error": {
-        "wrongSeed": "Import failed, please check your mnemonic words"
+        "wrongSeed": "Import failed, please check your Mnemonic Words."
       }
     }
   },
@@ -156,7 +156,7 @@
         "lock": "Lock?"
       },
       "notification": {
-        "donate": "You are donating to the developer"
+        "donate": "You are donating to the developers."
       }
     }
   },
@@ -185,7 +185,7 @@
         "experiment": "Experimental features are not stable and not fully tested yet, you can have a try and give us your feedback."
       },
       "notification": {
-        "saved": "Saved"
+        "saved": "Saved."
       }
     }
   },
@@ -206,18 +206,18 @@
     },
     "message": {
       "error": {
-        "passwordNotCorrect": "Incorrect password",
-        "passwordNotMatch": "Password does not match"
+        "passwordNotCorrect": "Incorrect password.",
+        "passwordNotMatch": "Password does not match."
       },
       "alert": {
-        "passwordChanged": "Password has been changed, please Re-login"
+        "passwordChanged": "Password has been changed. Please Re-Login."
       }
     }
   },
   "accountExport": {
     "ui": {
       "title": {
-        "export": "Account Export"
+        "export": "Account Information"
       },
       "label": {
         "name": "Name",
@@ -234,7 +234,7 @@
         "mnemonicSeed": "Mnemonic seed (24 secret words)"
       },
       "button": {
-        "revealMnemonic": "Reveal Mnemonic",
+        "revealMnemonic": "Reveal Mnemonics",
         "confirm": "Confirm",
         "cancel": "Cancel"
       },
@@ -243,8 +243,8 @@
       }
     },
     "message": {
-      "inputPassword": "Please input your login password",
-      "passwordNotCorrect": "Incorrect Password"
+      "inputPassword": "Enter Login Password to Continue",
+      "passwordNotCorrect": "Incorrect password."
     }
   },
   "accountList": {
@@ -253,9 +253,9 @@
         "list": "Account List"
       },
       "button": {
-        "showMnemonic": "Reveal Mnemonic",
+        "showMnemonic": "Reveal Mnemonics",
         "addBySerial": "Add by Serial",
-        "addByPassword": "Add by Password ( Advanced )",
+        "addByPassword": "Add by Password",
         "addByLegacy": "Import Chia Official Wallet（24-word）",
         "addByMnemonic": "Import Nucle/Goby Wallet（12-word）"
       },
@@ -265,8 +265,8 @@
         "details": "Details",
         "addBySerial": "Derived serial accounts are created in order.",
         "addByPassword": "Account protected by MNEMONIC and PASSWORD. Enter the same password to access the same account.",
-        "addByLegacy": "Chia client wallet.",
-        "addByMnemonic": "Import Nucle or Goby 12 mnemonic words account."
+        "addByLegacy": "Import Chia official wallet.",
+        "addByMnemonic": "Import Nucle/Goby wallet."
       },
       "modal": {
         "addByLegacy": "Import Chia Official Wallet",
@@ -280,9 +280,9 @@
         "confirmText": "OK"
       },
       "prompt": {
-        "setAccountName": "Enter the new account name",
-        "setPassword": "Enter the password",
-        "setLegacyMnemonic": "Enter mnemonic words:",
+        "setAccountName": "Enter the New Account Name",
+        "setPassword": "Enter Password",
+        "setLegacyMnemonic": "Enter Mnemonic Words",
         "cancelText": "Cancel",
         "confirmText": "OK"
       }
@@ -297,14 +297,14 @@
         "address": "Address[number of coins]"
       },
       "tooltip": {
-        "blockchainExplorer": "View on Blockchain Explorer"
+        "blockchainExplorer": "View on Block Explorer"
       }
     }
   },
   "mnemonicExport": {
     "ui": {
       "title": {
-        "mnemonic": "Mnemonic"
+        "mnemonic": "Mnemonics"
       },
       "button": {
         "close": "Close"
@@ -346,7 +346,7 @@
       "tooltip": {
         "singleCoinExplanation": "Currently only support one coin mode, mix coin send is under development.",
         "qr": "Scan QR",
-        "offlineScan": "You are in offline mode, communicate with proxy via qr code to send transaction."
+        "offlineScan": "You are in offline mode, communicate with proxy via QR code to send transaction."
       },
       "span": {
         "loading": "Loading",
@@ -356,35 +356,35 @@
         "offlineOnlySupportXch": "Offline send only support XCH now."
       },
       "summary": {
-        "notification": "Are you sure you want to send?<br/>Please, review your transaction."
+        "notification": "Are you sure to send?<br/>Please review your transaction."
       }
     },
     "messages": {
       "error": {
-        "DOUBLE_SPEND": "Doubel Spend",
+        "DOUBLE_SPEND": "Double Spend",
         "UNKNOWN_UNSPENT": "Unknown Unspent",
         "BAD_AGGREGATE_SIGNATURE": "Bad Aggregate Signature",
         "INVALID_CONDITION": "Invalid Condition",
         "COIN_AMOUNT_EXCEEDS_MAXIMUM": "Coin Amount Exceeds Maximum",
-        "INVALID_FEE_LOW_FEE": "Invalid Fee/Low fee",
+        "INVALID_FEE_LOW_FEE": "Invalid Fee/Low Fee",
         "MEMPOOL_NOT_INITIALIZED": "Mempool not Initialized",
         "ALREADY_INCLUDING_TRANSACTION": "Already Including Transaction",
         "INCOMPATIBLE_NETWORK_ID": "Incompatible Network ID",
         "NO_TRANSACTIONS_WHILE_SYNCING": "No Transaction While Syncing",
-        "INVALID_FEE_TOO_CLOSE_TO_ZERO": "Invalid Fee, Too Close to Zero",
-        "COIN_AMOUNT_NEGATIVE": "Coin Amount Negative"
+        "INVALID_FEE_TOO_CLOSE_TO_ZERO": "Invalid Fee, too Close to Zero",
+        "COIN_AMOUNT_NEGATIVE": "Coin Amount is Negative"
       }
     }
   },
   "scanQrCode": {
     "message": {
       "error": {
-        "NotAllowedError": "ERROR: You need to grant camera access permission",
-        "NotFoundError": "ERROR: No camera on this device",
-        "NotSupportedError": "ERROR: Secure context required (HTTPS, localhost)",
+        "NotAllowedError": "ERROR: You need to grant camera access permission.",
+        "NotFoundError": "ERROR: No camera on this device.",
+        "NotSupportedError": "ERROR: Secure context required (HTTPS, localhost).",
         "NotReadableError": "ERROR: Is the camera already in use?",
-        "OverconstrainedError": "ERROR: Installed cameras are not suitable",
-        "StreamApiNotSupportedError": "ERROR: Stream API is not supported in this browser",
+        "OverconstrainedError": "ERROR: Installed camera is not suitable.",
+        "StreamApiNotSupportedError": "ERROR: Stream API is not supported in this browser.",
         "InsecureContextError": "ERROR: Camera access is only permitted in secure context. Use HTTPS or localhost rather than HTTP."
       }
     }
@@ -395,7 +395,7 @@
         "roadmap": "Roadmap"
       },
       "blackquote": {
-        "slogan": "Manage your CATs in Pawket!"
+        "slogan": "Manage Your CATs in Pawket!"
       },
       "list": {
         "1": "Fully support offline scenario",
@@ -429,7 +429,7 @@
         "panel": {
           "information": "Information",
           "hint": {
-            "thisIsYourOffer": "this is your offer text"
+            "thisIsYourOffer": "This is your offer text."
           }
         },
         "label": {
@@ -447,7 +447,7 @@
         }
       },
       "messages": {
-        "failedToSign": "Failed to make offer"
+        "failedToSign": "Failed to make offer."
       }
     },
     "symbol": {
@@ -461,7 +461,7 @@
       "ui": {
         "title": "Take Offer",
         "hint": {
-          "pasteOffer": "paste your offer here, e.g. offer1..."
+          "pasteOffer": "Paste your offer here, e.g. offer1..."
         },
         "panel": {
           "information": "Information"
@@ -483,7 +483,7 @@
         "offered": "You will receive"
       },
       "messages": {
-        "failedToSign": "Failed to take offer"
+        "failedToSign": "Failed to take offer."
       }
     }
   },
@@ -493,7 +493,7 @@
         "addToken": "Add Token"
       },
       "label": {
-        "listingCats": "Listing CATs",
+        "listingCats": "CATs List",
         "name": "Name",
         "assetID": "Asset ID"
       },
@@ -501,26 +501,26 @@
         "add": "Add"
       },
       "tooltip": {
-        "removeToken": "remove token",
-        "drag": "drag to sort"
+        "removeToken": "Remove token",
+        "drag": "Drag to sort"
       },
       "message": {
-        "nameRequired": "Name is required",
-        "assetIdRequired": "Asset ID is required"
+        "nameRequired": "Name is required.",
+        "assetIdRequired": "Asset ID is required."
       }
     },
     "message": {
       "notification": {
-        "wrongAssetId": "Wrong asset Id, failed to add a new CAT!",
-        "saved": "Saved"
+        "wrongAssetId": "Wrong asset ID. Failed to add a new CAT!",
+        "saved": "Saved."
       },
       "confirm": {
-        "removeToken": "Are you sure to remove this token?"
+        "removeToken": "Are you sure to remove the token?"
       },
       "alert": {
         "nameExists": "Name Already Exists!",
         "idExists": "Asset ID Already Exists!",
-        "isDefaultCat": "Asset ID/Name already exists in Default CATs List!"
+        "isDefaultCat": "Asset ID/Name Already Exists in Default CATs List!"
       }
     }
   },
@@ -533,7 +533,7 @@
       "scan": {
         "title": "Proxy Scan",
         "numberField": "Coins",
-        "numberMessage": "Use Offline device to scan these coins",
+        "numberMessage": "Use offline device to scan these coins.",
         "titleTooltip": "This is a gateway for your transaction send from an offline device, please start with an offline Pawket."
       },
       "confirmBundle": {
@@ -542,7 +542,7 @@
           "cancel": "Cancel",
           "submit": "Submit"
         },
-        "notification": "Are you sure you want to send?<br/>Please, review your transaction."
+        "notification": "Are you sure to send?<br/>Please review your transaction."
       }
     },
     "client": {
@@ -550,15 +550,15 @@
         "status": "Retrieved {coin} coin(s)."
       },
       "scan": {
-        "title": "Scan",
+        "title": "Scan QR",
         "numberField": "Addresses",
-        "numberMessage": "Use Proxy to scan these addresses"
+        "numberMessage": "Use Proxy to scan these addresses."
       },
       "button": {
         "finish": "Finish"
       },
       "show": {
-        "hint": "Use Proxy to scan this to send your transaction"
+        "hint": "Use Proxy to scan QR to send your transaction."
       }
     },
     "ui": {
@@ -570,13 +570,13 @@
   "addByMnemonic": {
     "ui": {
       "label": {
-        "name": "Account name",
-        "mnemonic": "{len} mnemonic words"
+        "name": "Account Name",
+        "mnemonic": "{len} Mnemonic Words"
       },
       "message": {
-        "nameRequired": "Account name is required",
-        "mnemonicRequired": "Mnemonic is required",
-        "invalidMnemonic": "Import failed, please check your mnemonic words"
+        "nameRequired": "Account name is required.",
+        "mnemonicRequired": "Mnemonic is required.",
+        "invalidMnemonic": "Import failed. Please check your mnemonic words."
       },
       "button": {
         "back": "Back",
@@ -585,22 +585,22 @@
     },
     "message": {
       "error": {
-        "accountMnemonicExists": "An account with the same mnemonic already exists"
+        "accountMnemonicExists": "An account with the same mnemonic already exists."
       }
     }
   },
   "addByPassword": {
     "ui": {
-      "title": "Add Account By Password",
+      "title": "Add Account by Password",
       "label": {
-        "name": "Please input account name",
-        "password": "Please input password",
-        "rePassword": "Please re-input your password"
+        "name": "Account Name",
+        "password": "Password",
+        "rePassword": "Re-Enter Password"
       },
       "message": {
-        "nameRequired": "Account name is required",
-        "passwordRequired": "Password is required",
-        "invalidPassword": "Password does not match"
+        "nameRequired": "Account name is required.",
+        "passwordRequired": "Password is required.",
+        "invalidPassword": "Password does not match."
       },
       "button": {
         "back": "Back",
@@ -609,7 +609,7 @@
     },
     "message": {
       "error": {
-        "accountPasswordExists": "An account with the same password already exists"
+        "accountPasswordExists": "An account with the same password already exists."
       }
     }
   },
@@ -625,7 +625,7 @@
       },
       "fee": {
         "title": "Fee",
-        "mojos": "{fee} mojos"
+        "mojos": "{fee} mojo(s)"
       },
       "inputs": {
         "title": "Total Amount"
@@ -657,12 +657,12 @@
       },
       "field": {
         "csv": {
-          "title": "CSV Input",
+          "title": "Input CSV",
           "fillSample": "Fill Sample"
         }
       },
       "summary": {
-        "notification": "Are you sure you want to send?<br/>Please, review your transaction."
+        "notification": "Are you sure to send?<br/>Please review your transaction."
       },
       "button": {
         "cancel": "Cancel",
@@ -677,7 +677,7 @@
   "utxo": {
     "ui": {
       "label": {
-        "cost": "Cost",
+        "cost": "Send",
         "receive": "Receive"
       }
     }
@@ -685,7 +685,7 @@
   "utxoDetail": {
     "ui": {
       "title": {
-        "cost": "Cost",
+        "cost": "Send",
         "receive": "Receive"
       },
       "label": {

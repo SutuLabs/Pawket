@@ -15,8 +15,8 @@
     },
     "message": {
       "notification": {
-        "copySuccess": "拷贝成功",
-        "copyFailed": "拷贝失败"
+        "copySuccess": "复制成功",
+        "copyFailed": "复制失败"
       }
     }
   },
@@ -49,7 +49,7 @@
       },
       "label": {
         "password": "密码",
-        "reEnter": "再次输入"
+        "reEnter": "确认密码"
       },
       "title": {
         "verifyPassword": "验证密码",
@@ -61,12 +61,12 @@
     },
     "message": {
       "confirmation": {
-        "clear": "重置钱包将会把所有钱包数据（含助记词、密码）从你的设备中永久删除。请确保你已经备份好了助记词，重置后可以通过助记词恢复钱包。确认重置吗？",
+        "clear": "重置钱包将会把所有钱包数据（含助记词、密码）从你的设备中永久删除。请确保你已经备份助记词，重置后可以通过助记词恢复钱包。确认重置吗？",
         "confirmText": "确认",
         "cancelText": "取消"
       },
       "error": {
-        "passwordNotMatch": "密码不匹配",
+        "passwordNotMatch": "密码不一致",
         "incorrectPassword": "密码不正确",
         "passwordEmpty": "密码不能为空"
       },
@@ -98,14 +98,14 @@
         "create": {
           "title": "助记词",
           "tip1": "欢迎使用薄荷钱包！以下是你的钱包助记词，用于备份和恢复你的钱包，请务必按照顺序记录在纸上。",
-          "tip2": "切勿向他人透露你的助记词，任何人一旦持有该助记词，即可控制你的账户。"
+          "tip2": "切勿向他人透露你的助记词，任何人一旦持有该助记词，即可控制你账户内的资产！"
         },
         "import12": {
-          "title": "Pawket 助记词导入",
+          "title": "导入 Pawket 助记词",
           "tip": "请按顺序输入 Pawket 助记词，并使用空格作为间隔。"
         },
         "import24": {
-          "title": "Chia 助记词导入",
+          "title": "导入 Chia 助记词",
           "tip": "请按顺序输入 Chia 客户端助记词，并使用空格作为间隔。"
         }
       }
@@ -139,8 +139,8 @@
         "title": "应用",
         "tooltip": {
           "donate": "向开发者捐赠",
-          "takeOffer": "接受Offer",
-          "makeOffer": "发起Offer",
+          "takeOffer": "接受 Offer",
+          "makeOffer": "发起 Offer",
           "batchSend": "批量发送"
         },
         "button": {
@@ -153,7 +153,7 @@
     },
     "message": {
       "confirmation": {
-        "lock": "锁定?"
+        "lock": "确认锁定钱包?"
       },
       "notification": {
         "donate": "你正在向开发者捐赠"
@@ -177,12 +177,12 @@
         "confirm": "确认"
       },
       "tooltip": {
-        "receiveAddress": "如果将该数值调大，则可检索到更多地址上的余额，但相应的钱包响应时间会变长。"
+        "receiveAddress": "如果将该数值调大，则可检索到更多地址和地址上的余额，但钱包响应时间会变长。"
       }
     },
     "message": {
       "confirmation": {
-        "experiment": "实验功能是还没有经过详细测试的功能，通常仅供内部人员及热心粉丝使用，您确定要启用吗？"
+        "experiment": "实验功能尚未经过详细测试，目前仅供内部人员及热心粉丝使用。确定要启用吗？"
       },
       "notification": {
         "saved": "已保存"
@@ -197,7 +197,7 @@
       "label": {
         "oldPassword": "旧密码",
         "newPassword": "新密码",
-        "rePassword": "确认密码"
+        "rePassword": "确认新密码"
       },
       "button": {
         "back": "返回",
@@ -207,7 +207,7 @@
     "message": {
       "error": {
         "passwordNotCorrect": "密码不正确",
-        "passwordNotMatch": "密码不匹配"
+        "passwordNotMatch": "密码不一致"
       },
       "alert": {
         "passwordChanged": "密码已更改，请重新登录"
@@ -217,11 +217,11 @@
   "accountExport": {
     "ui": {
       "title": {
-        "export": "账户导出"
+        "export": "账户信息"
       },
       "label": {
         "name": "账户名称",
-        "type": "类型",
+        "type": "账户类型",
         "fingerprint": "指纹",
         "masterPublicKey": "主节点公钥 (m)",
         "farmerPublicKey": "农夫节点公钥 (m/12381/8444/0/0)",
@@ -255,9 +255,9 @@
       "button": {
         "showMnemonic": "显示助记词",
         "addBySerial": "新增序列账户",
-        "addByPassword": "新增密码账户（专家功能）",
-        "addByLegacy": "导入 Chia 客户端账户(24 词)",
-        "addByMnemonic": "导入其他钱包账户(12词)"
+        "addByPassword": "新增密码账户",
+        "addByLegacy": "导入 Chia 客户端账户(24词)",
+        "addByMnemonic": "导入 Nucle/Goby 账户(12词)"
       },
       "tooltip": {
         "delete": "删除",
@@ -265,22 +265,22 @@
         "details": "查看详情",
         "addBySerial": "按顺序创建派生的序列账户。",
         "addByPassword": "由【助记词+密码】保护的账户。输入相同的密码即可进入相同的账户。",
-        "addByLegacy": "Chia 客户端钱包。",
-        "addByMnemonic": "支持 Nucle、Goby 12词账户导入"
+        "addByLegacy": "导入 Chia 客户端账户。",
+        "addByMnemonic": "导入 Nucle/Goby 账户。"
       },
       "modal": {
-        "addByLegacy": "导入 Chia 账户",
+        "addByLegacy": "导入 Chia 客户端账户",
         "addByMnemonic": "导入 Nucle/Goby 账户"
       }
     },
     "message": {
       "confirmation": {
-        "removeAccount": "确认删除账户吗？",
+        "removeAccount": "确认删除该账户吗？",
         "cancelText": "取消",
         "confirmText": "确认"
       },
       "prompt": {
-        "setAccountName": "输入账户名",
+        "setAccountName": "输入新账户名",
         "setPassword": "输入密码",
         "setLegacyMnemonic": "输入助记词",
         "cancelText": "取消",
@@ -341,22 +341,22 @@
         "getFailedResponse": "提交时发生错误: ",
         "failedToSubmit": "提交至交易池失败: ",
         "failedToSign": "签名失败: ",
-        "submitted": "已经提交进交易池，请等待确认"
+        "submitted": "已经提交至交易池，请等待确认。"
       },
       "tooltip": {
         "singleCoinExplanation": "当前仅支持单币模式",
         "qr": "扫描二维码",
-        "offlineScan": "您现在处于离线模式，通过二维码与在线设备沟通以发起交易"
+        "offlineScan": "你现在处于离线模式，可以通过二维码与在线设备沟通来发起交易。"
       },
       "span": {
         "loading": "载入中",
         "maxLeadingText": "最大:"
       },
       "text": {
-        "offlineOnlySupportXch": "目前离线发送仅支持XCH"
+        "offlineOnlySupportXch": "目前离线发送币种仅支持 XCH"
       },
       "summary": {
-        "notification": "确定要提交吗？<br/>请一定要检查一下您的交易内容。"
+        "notification": "确定要提交吗？<br/>请务必再次检查你的交易内容。"
       }
     },
     "messages": {
@@ -379,13 +379,13 @@
   "scanQrCode": {
     "message": {
       "error": {
-        "NotAllowedError": "错误：你需要授权相机访问权限",
-        "NotFoundError": "错误：此设备没有相机",
-        "NotSupportedError": "错误：需要安全传输协议（HTTPS，localhost）",
-        "NotReadableError": "错误：请检查相机是否在使用",
-        "OverconstrainedError": "错误：已安装的相机不适合",
-        "StreamApiNotSupportedError": "错误：浏览器不支持串流 API",
-        "InsecureContextError": "错误：相机访问只在安全连接下允许，使用 HTTPS 或 localhost 而不是 HTTP"
+        "NotAllowedError": "错误：你需要授权相机访问权限。",
+        "NotFoundError": "错误：此设备没有相机。",
+        "NotSupportedError": "错误：需要安全传输协议（HTTPS，localhost）。",
+        "NotReadableError": "错误：请检查相机是否在使用。",
+        "OverconstrainedError": "错误：已安装的相机不适合。",
+        "StreamApiNotSupportedError": "错误：浏览器不支持串流 API。",
+        "InsecureContextError": "错误：相机访问只在安全连接下允许。请使用 HTTPS 或 localhost，而不是 HTTP。"
       }
     }
   },
@@ -425,15 +425,15 @@
   "offer": {
     "make": {
       "ui": {
-        "title": "发起Offer",
+        "title": "发起 Offer",
         "panel": {
           "information": "信息",
           "hint": {
-            "thisIsYourOffer": "这就是你的Offer"
+            "thisIsYourOffer": "这是你的 Offer 信息"
           }
         },
         "label": {
-          "yourOfferTitle": "你的Offer",
+          "yourOfferTitle": "你的 Offer",
           "bundle": "数据包"
         },
         "button": {
@@ -447,21 +447,21 @@
         }
       },
       "messages": {
-        "failedToSign": "发起Offer失败"
+        "failedToSign": "发起 Offer 失败"
       }
     },
     "symbol": {
       "Cat": "CAT",
       "XCH": "XCH",
       "hint": {
-        "XCH": "原生代币XCH"
+        "XCH": "原生代币 XCH"
       }
     },
     "take": {
       "ui": {
-        "title": "接受Offer",
+        "title": "接受 Offer",
         "hint": {
-          "pasteOffer": "在此处粘贴Offer"
+          "pasteOffer": "在此处粘贴 Offer 信息"
         },
         "panel": {
           "information": "信息"
@@ -475,7 +475,7 @@
           "submit": "提交"
         },
         "field": {
-          "offer": "Offer信息"
+          "offer": "Offer 信息"
         }
       },
       "information": {
@@ -483,7 +483,7 @@
         "offered": "获得"
       },
       "messages": {
-        "failedToSign": "接受Offer失败"
+        "failedToSign": "接受 Offer 失败"
       }
     }
   },
@@ -494,19 +494,19 @@
       },
       "label": {
         "listingCats": "CATs 列表",
-        "name": "CAT名称",
+        "name": "CAT 名称",
         "assetID": "Asset ID"
       },
       "button": {
         "add": "添加"
       },
       "tooltip": {
-        "removeToken": "删除token",
-        "drag": "拖动来排序"
+        "removeToken": "删除",
+        "drag": "拖动排序"
       },
       "message": {
-        "nameRequired": "CAT名称不能为空",
-        "assetIdRequired": "Asset ID不能为空"
+        "nameRequired": "CAT 名称不能为空",
+        "assetIdRequired": "Asset ID 不能为空"
       }
     },
     "message": {
@@ -515,12 +515,12 @@
         "saved": "已保存"
       },
       "confirm": {
-        "removeToken": "确定要删除这个Token吗?"
+        "removeToken": "确定要删除这个 Token 吗?"
       },
       "alert": {
         "nameExists": "名称已存在!",
         "idExists": "Asset ID 已存在!",
-        "isDefaultCat": "Asset ID/名称 已存在于默认CAT列表中!"
+        "isDefaultCat": "Asset ID/名称已存在于默认 CATs 列表中!"
       }
     }
   },
@@ -533,8 +533,8 @@
       "scan": {
         "title": "扫描二维码",
         "numberField": "硬币",
-        "numberMessage": "用 离线设备 扫描以下二维码来获取硬币信息",
-        "titleTooltip": "该功能用于离线设备的交易发送功能，请从离线设备开始用起"
+        "numberMessage": "用离线设备扫描以下二维码来获取硬币信息",
+        "titleTooltip": "该功能用于离线设备上的交易发送，请从离线设备开始用起。"
       },
       "confirmBundle": {
         "title": "确认发送",
@@ -542,7 +542,7 @@
           "cancel": "取消",
           "submit": "提交"
         },
-        "notification": "确定要提交吗？<br/>请一定要检查一下您的交易内容。"
+        "notification": "确定要提交吗？<br/>请务必再次检查你的交易内容。"
       }
     },
     "client": {
@@ -552,13 +552,13 @@
       "scan": {
         "title": "扫描二维码",
         "numberField": "地址",
-        "numberMessage": "用 离线代理 扫描以下二维码来获取硬币信息"
+        "numberMessage": "用离线代理扫描以下二维码来获取硬币信息"
       },
       "button": {
         "finish": "完成"
       },
       "show": {
-        "hint": "用 离线代理 扫描该二维码来发送交易"
+        "hint": "用离线代理扫描该二维码来发送交易"
       }
     },
     "ui": {
@@ -570,8 +570,8 @@
   "addByMnemonic": {
     "ui": {
       "label": {
-        "name": "输入账户名",
-        "mnemonic": "输入助记词 ({len}词)"
+        "name": "账户名",
+        "mnemonic": "助记词 ({len}词)"
       },
       "message": {
         "nameRequired": "账户名不能为空",
@@ -593,14 +593,14 @@
     "ui": {
       "title": "添加密码账户",
       "label": {
-        "name": "请输入账户名",
-        "password": "请输入密码",
-        "rePassword": "请确认密码"
+        "name": "账户名",
+        "password": "密码",
+        "rePassword": "确认密码"
       },
       "message": {
         "nameRequired": "账户名不能为空",
         "passwordRequired": "密码不能为空",
-        "invalidPassword": "密码不匹配"
+        "invalidPassword": "密码不一致"
       },
       "button": {
         "back": "返回",
@@ -625,7 +625,7 @@
       },
       "fee": {
         "title": "交易费",
-        "mojos": "{fee} mojos"
+        "mojos": "{fee} mojo(s)"
       },
       "inputs": {
         "title": "消耗总额"
@@ -657,12 +657,12 @@
       },
       "field": {
         "csv": {
-          "title": "CSV输入",
+          "title": "输入 CSV",
           "fillSample": "填充示例"
         }
       },
       "summary": {
-        "notification": "确定要提交吗？<br/>请一定要检查一下您的交易内容。"
+        "notification": "确定要提交吗？<br/>请务必再次检查你的交易内容。"
       },
       "button": {
         "cancel": "取消",
@@ -677,16 +677,16 @@
   "utxo": {
     "ui": {
       "label": {
-        "cost": "消费",
-        "receive": "收入"
+        "cost": "发送",
+        "receive": "接收"
       }
     }
   },
   "utxoDetail": {
     "ui": {
       "title": {
-        "cost": "消费",
-        "receive": "收入"
+        "cost": "发送",
+        "receive": "接收"
       },
       "label": {
         "time": "时间",
