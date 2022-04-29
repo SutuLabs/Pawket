@@ -639,11 +639,6 @@
       },
       "detail": {
         "title": "发送详情",
-        "showDetailHint": "想要检查接收者列表，点击“显示详情”",
-        "button": {
-          "hide": "隐藏详情",
-          "show": "显示详情"
-        },
         "itemTo": " 发送至 {address}",
         "span": {
           "hint": "提示（原始地址）",

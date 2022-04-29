@@ -639,11 +639,6 @@
       },
       "detail": {
         "title": "Details",
-        "showDetailHint": "To review recipient list click \"Show\".",
-        "button": {
-          "hide": "Hide",
-          "show": "Show"
-        },
         "itemTo": "to {address}",
         "span": {
           "hint": "Hint(Corresponding Address)",
