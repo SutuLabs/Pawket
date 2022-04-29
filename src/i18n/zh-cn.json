@@ -231,10 +231,12 @@
         "firstWalletSecretKey": "第一个钱包私钥 (m/12381/8444/2/0)",
         "PrivateKey": "私钥",
         "firstWalletPublicKey": "第一个钱包公钥 (m/12381/8444/2/0)",
-        "mnemonicSeed": "助记词种子(24位助记词)"
+        "mnemonicSeed": "助记词种子(24词)",
+        "details": "显示详情"
       },
       "button": {
-        "revealMnemonic": "显示助记词",
+        "reveal": "显示助记词",
+        "hide": "隐藏助记词",
         "confirm": "确认",
         "cancel": "取消"
       },

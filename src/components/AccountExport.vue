@@ -6,42 +6,40 @@
     </header>
     <section class="modal-card-body">
       <ul>
-        <li>{{ $t("accountExport.ui.label.name") }}:{{ account.name }}</li>
-        <li>{{ $t("accountExport.ui.label.type") }}:{{ account.type }}</li>
-        <li>
-          {{ $t("accountExport.ui.label.fingerprint") }}:
-          <key-box :value="account.key.fingerprint.toString()" :showValue="true"></key-box>
+        <li class="pb-2">
+          <span class="is-size-6 has-text-weight-bold">{{ $t("accountExport.ui.label.name") }}:</span>
+          <span class="is-size-6 is-pulled-right">
+            {{ account.name }}
+          </span>
         </li>
-        <li>
-          {{ $t("accountExport.ui.label.masterPublicKey") }}:
-          <key-box :value="masterpubkey" :showValue="true"></key-box>
+        <li class="pb-2">
+          <span class="is-size-6 has-text-weight-bold">{{ $t("accountExport.ui.label.fingerprint") }}:</span>
+          <span class="is-size-6 is-pulled-right">
+            <key-box
+              icon="checkbox-multiple-blank-outline"
+              :tooltip="$t('accountExport.ui.tooltip.copy')"
+              :value="account.key.fingerprint"
+              :showValue="false"
+            ></key-box>
+            {{ account.key.fingerprint }}
+          </span>
         </li>
-        <li>
-          {{ $t("accountExport.ui.label.farmerPublicKey") }}:
-          <key-box :value="farmerpubkey" :showValue="true"></key-box>
+        <li class="pb-2">
+          <span class="is-size-6 has-text-weight-bold">{{ $t("accountExport.ui.label.type") }}:</span>
+          <span class="is-size-6 is-pulled-right">
+            {{ account.type }}
+          </span>
         </li>
-        <li>
-          {{ $t("accountExport.ui.label.poolPublicKey") }}:
-          <key-box :value="poolpubkey" :showValue="true"></key-box>
-        </li>
-        <li>
-          {{ $t("accountExport.ui.label.firstWalletAddress") }}:
-          <key-box :value="account.firstAddress" :showValue="true"></key-box>
-        </li>
-        <li>
-          {{ $t("accountExport.ui.label.masterPrivateKey") }}:
-          <key-box :value="masterprikey" :showValue="true"></key-box>
-        </li>
-        <li>
-          {{ $t("accountExport.ui.label.firstWalletSecretKey") }}: &lt;{{ $t("accountExport.ui.label.PrivateKey") }}
-          <key-box :value="walletprikey" :showValue="true"></key-box>&gt;
-        </li>
-        <li>
-          {{ $t("accountExport.ui.label.firstWalletPublicKey") }}:
-          <key-box :value="walletpubkey" :showValue="true"></key-box>
-        </li>
-        <li>
-          {{ $t("accountExport.ui.label.mnemonicSeed") }}:
+        <li class="pb-2">
+          <span class="is-size-6 has-text-weight-bold">{{ $t("accountExport.ui.label.mnemonicSeed") }}:</span>
+          <span class="is-pulled-right">
+            <b-button v-if="!showMnemonic" size="is-small" @click="show()" class="is-primary">{{
+              $t("accountExport.ui.button.reveal")
+            }}</b-button>
+            <b-button v-else size="is-small" @click="showMnemonic = false" class="is-link">
+              {{ $t("accountExport.ui.button.hide") }}
+            </b-button>
+          </span>
           <span v-if="showMnemonic">
             <br />
             {{ account.key.compatibleMnemonic }}
@@ -52,11 +50,43 @@
             ></key-box>
             <qrcode-vue v-if="debugMode" :value="account.key.compatibleMnemonic" size="300"></qrcode-vue>
           </span>
-          <span v-else>
-            <b-button size="is-small" @click="show()">{{ $t("accountExport.ui.button.revealMnemonic") }}</b-button>
-          </span>
         </li>
       </ul>
+      <div class="pt-4">
+        <a href="javascript:void(0)" @click="showDetail = !showDetail" class="is-size-6 has-text-weight-bold has-text-dark">
+          {{ $t("accountExport.ui.label.details") }}<b-icon :icon="showDetail ? 'menu-up' : 'menu-down'"></b-icon>
+        </a>
+        <ul v-if="showDetail">
+          <li>
+            {{ $t("accountExport.ui.label.masterPublicKey") }}:
+            <key-box :value="masterpubkey" :showValue="true"></key-box>
+          </li>
+          <li>
+            {{ $t("accountExport.ui.label.farmerPublicKey") }}:
+            <key-box :value="farmerpubkey" :showValue="true"></key-box>
+          </li>
+          <li>
+            {{ $t("accountExport.ui.label.poolPublicKey") }}:
+            <key-box :value="poolpubkey" :showValue="true"></key-box>
+          </li>
+          <li>
+            {{ $t("accountExport.ui.label.firstWalletAddress") }}:
+            <key-box :value="account.firstAddress" :showValue="true"></key-box>
+          </li>
+          <li>
+            {{ $t("accountExport.ui.label.masterPrivateKey") }}:
+            <key-box :value="masterprikey" :showValue="true"></key-box>
+          </li>
+          <li>
+            {{ $t("accountExport.ui.label.firstWalletSecretKey") }}: &lt;{{ $t("accountExport.ui.label.PrivateKey") }}
+            <key-box :value="walletprikey" :showValue="true"></key-box>&gt;
+          </li>
+          <li>
+            {{ $t("accountExport.ui.label.firstWalletPublicKey") }}:
+            <key-box :value="walletpubkey" :showValue="true"></key-box>
+          </li>
+        </ul>
+      </div>
     </section>
   </div>
 </template>
@@ -84,6 +114,7 @@ export default class AccountExport extends Vue {
   public walletprikey = "";
   public walletpubkey = "";
   public showMnemonic = false;
+  public showDetail = false;
 
   mounted(): void {
     var privkey = utility.fromHexString(this.account.key.privateKey);
