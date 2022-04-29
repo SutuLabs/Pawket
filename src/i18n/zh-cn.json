@@ -615,14 +615,6 @@
   },
   "bundleSummary": {
     "ui": {
-      "bundle": {
-        "title": "数据包",
-        "copy": "复制",
-        "button": {
-          "show": "显示详情",
-          "hide": "隐藏详情"
-        }
-      },
       "fee": {
         "title": "交易费",
         "mojos": "{fee} mojo(s)"
@@ -705,6 +697,16 @@
         "to": "至",
         "fee": "交易费",
         "total": "总计"
+      }
+    }
+  },
+  "bundleText": {
+    "ui": {
+      "title": "数据包",
+      "copy": "复制",
+      "button": {
+        "show": "显示详情",
+        "hide": "隐藏详情"
       }
     }
   }

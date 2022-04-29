@@ -615,14 +615,6 @@
   },
   "bundleSummary": {
     "ui": {
-      "bundle": {
-        "title": "Bundle",
-        "copy": "Copy",
-        "button": {
-          "show": "Show",
-          "hide": "Hide"
-        }
-      },
       "fee": {
         "title": "Fee",
         "mojos": "{fee} mojo(s)"
@@ -705,6 +697,16 @@
         "to": "To",
         "fee": "Fee",
         "total": "Total"
+      }
+    }
+  },
+  "bundleText": {
+    "ui": {
+      "title": "Bundle",
+      "copy": "Copy",
+      "button": {
+        "show": "Show",
+        "hide": "Hide"
       }
     }
   }

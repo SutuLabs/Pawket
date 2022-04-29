@@ -4,9 +4,7 @@
       <b-notification type="is-danger" has-icon icon="exclamation-thick" :closable="false">
         {{ errorText }}
       </b-notification>
-      <key-box icon="checkbox-multiple-blank-outline" :value="bundleText" :tooltip="$t('bundleSummary.ui.bundle.copy')"></key-box>
-      <a href="javascript:void(0)" v-if="debugMode" @click="debugBundle()">🐞</a>
-      <b-input type="textarea" :value="bundleText"></b-input>
+      <bundle-text v-model="bundleText" @debugBundle="debugBundle"></bundle-text>
     </template>
     <template v-else>
       <b-field>
@@ -17,7 +15,7 @@
           </a>
         </template>
         <template #message>
-          <div v-if="showDetail">
+          <div v-if="showDetail" class="send-detail-box p-2">
             <b-field>
               <template #label>{{ $t("bundleSummary.ui.fee.title") }}</template>
               <template #message>{{ $t("bundleSummary.ui.fee.mojos", { fee }) }}</template>
@@ -59,24 +57,7 @@
                 </li>
               </ul>
             </b-field>
-            <b-field>
-              <template #label>
-                {{ $t("bundleSummary.ui.bundle.title") }}
-                <key-box
-                  icon="checkbox-multiple-blank-outline"
-                  :value="bundleText"
-                  :tooltip="$t('bundleSummary.ui.bundle.copy')"
-                ></key-box>
-                <b-button tag="a" icon-left="eye" size="is-small" v-if="!showBundleText" @click="showBundleText = true">
-                  {{ $t("bundleSummary.ui.bundle.button.show") }}
-                </b-button>
-                <b-button tag="a" icon-left="eye-off" size="is-small" v-if="showBundleText" @click="showBundleText = false">
-                  {{ $t("bundleSummary.ui.bundle.button.hide") }}
-                </b-button>
-                <a href="javascript:void(0)" v-if="debugMode" @click="debugBundle()">🐞</a>
-              </template>
-              <b-input v-if="showBundleText" type="textarea" :value="bundleText"></b-input>
-            </b-field>
+            <bundle-text v-model="bundleText" @debugBundle="debugBundle"></bundle-text>
           </div>
         </template>
       </b-field>
@@ -100,6 +81,7 @@ import { SExp, Tuple } from "clvm";
 import { AccountEntity } from "@/store/modules/account";
 import { getCatNameDict } from "@/services/coin/cat";
 import { demojo } from "@/filters/unitConversion";
+import BundleText from "./BundelText.vue";
 
 interface CoinType {
   amount: bigint;
@@ -117,6 +99,7 @@ interface TotalCoinType {
 @Component({
   components: {
     KeyBox,
+    BundleText,
   },
   filters: { demojo },
 })
@@ -241,6 +224,8 @@ export default class BundleSummary extends Vue {
 </script>
 
 <style scoped lang="scss">
+@import "~bulma/sass/utilities/derived-variables";
+
 ul {
   list-style: inside square;
 }
@@ -257,5 +242,10 @@ ul.ellipsis-item > li {
 
 .field ::v-deep textarea {
   font-size: 0.8em;
+}
+
+.send-detail-box {
+  border: 1px solid $grey-lighter;
+  overflow-wrap: break-word;
 }
 </style>
