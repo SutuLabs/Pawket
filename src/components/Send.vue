@@ -53,7 +53,7 @@
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
           <span v-html="$sanitize($t('send.ui.summary.notification'))"></span>
         </b-notification>
-        <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
+        <bundle-summary :account="account" :bundle="bundle" :amount="numericAmount" :address="address" :unit="selectedToken"></bundle-summary>
       </template>
     </section>
     <footer class="modal-card-foot is-justify-content-space-between">
@@ -172,6 +172,11 @@ export default class Send extends Vue {
 
   get bundleJson(): string {
     return JSON.stringify(this.bundle, null, 4);
+  }
+
+  get numericAmount(): bigint {
+    const decimal = this.selectedToken == "XCH" ? 12 : 3;
+    return BigInt(bigDecimal.multiply(this.amount, Math.pow(10, decimal)));
   }
 
   get debugMode(): boolean {
