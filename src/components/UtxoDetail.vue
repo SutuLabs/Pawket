@@ -1,29 +1,28 @@
 <template>
   <div class="modal-card">
     <header class="modal-card-head">
-      <span v-if="activity.spent" class="modal-card-title has-text-dark is-size-5 has-text-weight-bold">{{
-        $t("utxoDetail.ui.title.cost")
-      }}</span>
-      <span v-else class="modal-card-title has-text-dark is-size-5 has-text-weight-bold">{{
-        $t("utxoDetail.ui.title.receive")
-      }}</span>
-      <span v-if="tokenInfo[activity.symbol]" class="has-text-dark is-size-5 has-text-weight-bold has-text-right">
+      <span v-if="activity.spent" class="modal-card-title has-text-dark is-size-5">{{ $t("utxoDetail.ui.title.cost") }}</span>
+      <span v-else class="modal-card-title has-text-dark is-size-5">{{ $t("utxoDetail.ui.title.receive") }}</span>
+      <span v-if="tokenInfo[activity.symbol]" class="has-text-dark is-size-5 has-text-right">
         {{ activity.spent ? "-" : "+" }}{{ activity.coin.amount | demojo(tokenInfo[activity.symbol]) }}
         <p class="has-text-grey is-size-7">{{ activity.coin.amount }} mojos</p>
       </span>
     </header>
     <section class="modal-card-body">
-      <b-field :label="$t('utxoDetail.ui.label.time')" custom-class="is-medium">
+      <b-field :label="$t('utxoDetail.ui.label.time')" custom-class="is-medium has-text-weight-normal">
         <p class="has-text-grey">{{ new Date(activity.timestamp * 1000).toISOString() }}</p>
       </b-field>
-      <b-field custom-class="is-medium">
-        <template #label>
-          {{ $t("utxoDetail.ui.label.height") }}
-        </template>
-        <p class="has-text-grey">{{ activity.confirmedBlockIndex }}</p>
-        <p v-if="activity.spent" class="ml-3 has-text-grey">{{ activity.spentBlockIndex }}</p>
+      <b-field
+        custom-class="is-medium has-text-weight-normal"
+        v-if="activity.spent"
+        :label="$t('utxoDetail.ui.label.spentHeight')"
+      >
+        <p class="has-text-grey">{{ activity.spentBlockIndex }}</p>
       </b-field>
-      <b-field :label="$t('utxoDetail.ui.label.parentCoinInfo')" custom-class="is-medium">
+      <b-field custom-class="is-medium has-text-weight-normal" :label="$t('utxoDetail.ui.label.confirmedHeight')">
+        <p class="has-text-grey">{{ activity.confirmedBlockIndex }}</p>
+      </b-field>
+      <b-field :label="$t('utxoDetail.ui.label.parentCoinInfo')" custom-class="is-medium has-text-weight-normal">
         <p class="long-text-wrapper has-text-grey">
           {{ activity.coin.parentCoinInfo }}
           <key-box
@@ -33,7 +32,7 @@
           ></key-box>
         </p>
       </b-field>
-      <b-field :label="$t('utxoDetail.ui.label.puzzleHash')" custom-class="is-medium">
+      <b-field :label="$t('utxoDetail.ui.label.puzzleHash')" custom-class="is-medium has-text-weight-normal">
         <p class="long-text-wrapper has-text-grey">
           {{ activity.coin.puzzleHash }}
           <key-box

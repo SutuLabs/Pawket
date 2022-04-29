@@ -690,7 +690,8 @@
       },
       "label": {
         "time": "Time",
-        "height": "Height",
+        "spentHeight": "Spent Height",
+        "confirmedHeight": "Confirmed Height",
         "parentCoinInfo": "ParentCoinInfo",
         "puzzleHash": "PuzzleHash"
       },
