@@ -63,7 +63,7 @@
               >⚓</a
             >
           </a>
-          <div class="column is-full has-text-centered">
+          <div class="column is-full has-text-centered pt-5 mt-2">
             <a @click="addCat()"
               ><span class="has-color-link"
                 ><b-icon icon="plus" size="is-small"></b-icon> {{ $t("accountDetail.ui.button.addToken") }}</span
