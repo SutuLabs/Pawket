@@ -4,54 +4,26 @@
       <b-notification type="is-danger" has-icon icon="exclamation-thick" :closable="false">
         {{ errorText }}
       </b-notification>
+      <b-field>
+        <template #label>
+          {{ $t("bundleSummary.ui.bundle.title") }}
+          <key-box
+            icon="checkbox-multiple-blank-outline"
+            :value="bundleText"
+            :tooltip="$t('bundleSummary.ui.bundle.copy')"
+          ></key-box>
+          <b-button tag="a" icon-left="eye" size="is-small" v-if="!showBundleText" @click="showBundleText = true">
+            {{ $t("bundleSummary.ui.bundle.button.show") }}
+          </b-button>
+          <b-button tag="a" icon-left="eye-off" size="is-small" v-if="showBundleText" @click="showBundleText = false">
+            {{ $t("bundleSummary.ui.bundle.button.hide") }}
+          </b-button>
+          <a href="javascript:void(0)" v-if="debugMode" @click="debugBundle()">🐞</a>
+        </template>
+        <b-input v-if="showBundleText" type="textarea" :value="bundleText"></b-input>
+      </b-field>
     </template>
     <template v-else>
-      <b-field>
-        <template #label>
-          <span class="is-size-6">{{ $t("bundleSummary.ui.label.sending") }}</span>
-          <span class="is-pulled-right">
-            <span v-if="unit == 'XCH'">
-              {{ amount | demojo }}
-            </span>
-            <span v-else>
-              {{ amount | demojo({ unit: unit, decimal: 3 }) }}
-            </span>
-          </span>
-        </template>
-      </b-field>
-      <b-field>
-        <template #label>
-          <span class="is-size-6">{{ $t("bundleSummary.ui.label.to") }}</span>
-          <span class="is-size-6 is-pulled-right">
-            <b-tooltip :label="address" multilined class="break-string" position="is-left">
-              {{ address | shorten }}
-            </b-tooltip>
-          </span>
-        </template>
-      </b-field>
-      <b-field>
-        <template #label>
-          <span class="is-size-6 has-text-grey">{{ $t("bundleSummary.ui.label.fee") }}</span>
-          <span class="is-size-6 is-pulled-right has-text-grey">
-            {{ fee | demojo }}
-          </span>
-        </template>
-      </b-field>
-      <b-field class="py-4">
-        <template #label>
-          <span class="is-size-5">{{ $t("bundleSummary.ui.label.total") }}</span>
-          <span class="is-pulled-right is-size-5 has-text-primary">
-            <span v-if="unit == 'XCH'">
-              {{ (amount + fee) | demojo }}
-            </span>
-            <span v-else>
-              {{ amount | demojo({ unit: unit, decimal: 3 }) }}
-              <span v-if="fee > 0"> + {{ fee | demojo }} </span>
-            </span>
-          </span>
-        </template>
-      </b-field>
-
       <b-field>
         <template #label>
           <a href="javascript:void(0)" @click="showDetail = !showDetail" class="has-text-dark">
@@ -167,9 +139,6 @@ interface TotalCoinType {
 export default class BundleSummary extends Vue {
   @Prop() private bundle!: string | SpendBundle | null;
   @Prop({ default: null }) private account!: AccountEntity | undefined;
-  @Prop() private address!: string;
-  @Prop() private amount!: bigint;
-  @Prop() private unit!: string;
 
   public showDetail = false;
   public bundleText = "";

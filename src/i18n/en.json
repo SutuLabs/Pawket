@@ -623,19 +623,15 @@
           "hide": "Hide"
         }
       },
-      "label": {
-        "sending": "Sending",
-        "to": "To",
-        "fee": "Fee",
-        "total": "Total",
-        "details": "Details"
-      },
       "fee": {
         "title": "Fee",
         "mojos": "{fee} mojo(s)"
       },
       "inputs": {
         "title": "Total Amount"
+      },
+      "label": {
+        "details": "Details"
       },
       "detail": {
         "title": "Details",
@@ -699,6 +695,16 @@
       },
       "tooltip": {
         "copy": "Copy"
+      }
+    }
+  },
+  "sendSummary": {
+    "ui": {
+      "label": {
+        "sending": "Sending",
+        "to": "To",
+        "fee": "Fee",
+        "total": "Total"
       }
     }
   }

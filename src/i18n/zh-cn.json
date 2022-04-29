@@ -623,19 +623,15 @@
           "hide": "隐藏详情"
         }
       },
-      "label": {
-        "sending": "即将发送",
-        "to": "至",
-        "fee": "交易费",
-        "total": "总计",
-        "details": "发送情况"
-      },
       "fee": {
         "title": "交易费",
         "mojos": "{fee} mojo(s)"
       },
       "inputs": {
         "title": "消耗硬币总额"
+      },
+      "label": {
+        "details": "发送情况"
       },
       "detail": {
         "title": "发送详情",
@@ -699,6 +695,16 @@
       },
       "tooltip": {
         "copy": "复制"
+      }
+    }
+  },
+  "sendSummary": {
+    "ui": {
+      "label": {
+        "sending": "即将发送",
+        "to": "至",
+        "fee": "交易费",
+        "total": "总计"
       }
     }
   }

@@ -53,7 +53,8 @@
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
           <span v-html="$sanitize($t('send.ui.summary.notification'))"></span>
         </b-notification>
-        <bundle-summary :account="account" :bundle="bundle" :amount="numericAmount" :address="address" :unit="selectedToken"></bundle-summary>
+        <send-summary :amount="numericAmount" :unit="selectedToken" :fee="feeBigInt" :address="address"></send-summary>
+        <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
       </template>
     </section>
     <footer class="modal-card-foot is-justify-content-space-between">
@@ -111,6 +112,7 @@ import OfflineQrCode from "@/components/OfflineQrCode.vue";
 import OfflineSendShowBundle from "./OfflineSendShowBundle.vue";
 import { CurrencyType } from "@/services/exchange/currencyType";
 import BundleSummary from "./BundleSummary.vue";
+import SendSummary from "./SendSummary.vue";
 
 @Component({
   components: {
@@ -118,6 +120,7 @@ import BundleSummary from "./BundleSummary.vue";
     FeeSelector,
     TokenAmountField,
     BundleSummary,
+    SendSummary,
   },
 })
 export default class Send extends Vue {
@@ -177,6 +180,10 @@ export default class Send extends Vue {
   get numericAmount(): bigint {
     const decimal = this.selectedToken == "XCH" ? 12 : 3;
     return BigInt(bigDecimal.multiply(this.amount, Math.pow(10, decimal)));
+  }
+
+  get feeBigInt(): bigint {
+    return BigInt(this.fee);
   }
 
   get debugMode(): boolean {
