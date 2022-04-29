@@ -4,24 +4,9 @@
       <b-notification type="is-danger" has-icon icon="exclamation-thick" :closable="false">
         {{ errorText }}
       </b-notification>
-      <b-field>
-        <template #label>
-          {{ $t("bundleSummary.ui.bundle.title") }}
-          <key-box
-            icon="checkbox-multiple-blank-outline"
-            :value="bundleText"
-            :tooltip="$t('bundleSummary.ui.bundle.copy')"
-          ></key-box>
-          <b-button tag="a" icon-left="eye" size="is-small" v-if="!showBundleText" @click="showBundleText = true">
-            {{ $t("bundleSummary.ui.bundle.button.show") }}
-          </b-button>
-          <b-button tag="a" icon-left="eye-off" size="is-small" v-if="showBundleText" @click="showBundleText = false">
-            {{ $t("bundleSummary.ui.bundle.button.hide") }}
-          </b-button>
-          <a href="javascript:void(0)" v-if="debugMode" @click="debugBundle()">🐞</a>
-        </template>
-        <b-input v-if="showBundleText" type="textarea" :value="bundleText"></b-input>
-      </b-field>
+      <key-box icon="checkbox-multiple-blank-outline" :value="bundleText" :tooltip="$t('bundleSummary.ui.bundle.copy')"></key-box>
+      <a href="javascript:void(0)" v-if="debugMode" @click="debugBundle()">🐞</a>
+      <b-input type="textarea" :value="bundleText"></b-input>
     </template>
     <template v-else>
       <b-field>
