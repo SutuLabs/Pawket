@@ -100,7 +100,6 @@ import { SExp, Tuple } from "clvm";
 import { AccountEntity } from "@/store/modules/account";
 import { getCatNameDict } from "@/services/coin/cat";
 import { demojo } from "@/filters/unitConversion";
-import { shorten } from "@/filters/addressConversion";
 
 interface CoinType {
   amount: bigint;
@@ -119,7 +118,7 @@ interface TotalCoinType {
   components: {
     KeyBox,
   },
-  filters: { demojo, shorten },
+  filters: { demojo },
 })
 export default class BundleSummary extends Vue {
   @Prop() private bundle!: string | SpendBundle | null;
@@ -258,9 +257,5 @@ ul.ellipsis-item > li {
 
 .field ::v-deep textarea {
   font-size: 0.8em;
-}
-
-.break-string {
-  word-break: break-word;
 }
 </style>
