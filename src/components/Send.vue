@@ -237,6 +237,9 @@ export default class Send extends Vue {
 
   changeToken(token: string): void {
     this.selectedToken = token;
+    if (this.selectedToken == "XCH") {
+      this.memo = "";
+    }
     this.reset();
     this.loadCoins();
   }
