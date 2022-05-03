@@ -205,6 +205,13 @@ export default class AccountDetail extends Vue {
   mounted(): void {
     this.mode = store.state.vault.passwordHash ? "Verify" : "Create";
     this.refresh();
+    this.autoRefresh();
+  }
+
+  autoRefresh(min = 1, sec = 0): void {
+    setInterval(() => {
+      this.refresh();
+    }, 1000 * 60 * min + 1000 * sec);
   }
 
   lock(): void {
