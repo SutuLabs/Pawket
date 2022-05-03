@@ -1,85 +1,63 @@
 <template>
   <div>
-    <b-field>
-      <template #label>
-        {{ $t("bundleSummary.ui.bundle.title") }}
-        <key-box
-          icon="checkbox-multiple-blank-outline"
-          :value="bundleText"
-          :tooltip="$t('bundleSummary.ui.bundle.copy')"
-        ></key-box>
-        <b-button tag="a" icon-left="eye" size="is-small" v-if="!showBundleText" @click="showBundleText = true">
-          {{ $t("bundleSummary.ui.bundle.button.show") }}
-        </b-button>
-        <b-button tag="a" icon-left="eye-off" size="is-small" v-if="showBundleText" @click="showBundleText = false">
-          {{ $t("bundleSummary.ui.bundle.button.hide") }}
-        </b-button>
-        <a href="javascript:void(0)" v-if="debugMode" @click="debugBundle()">🐞</a>
-      </template>
-      <b-input v-if="showBundleText" type="textarea" :value="bundleText"></b-input>
-    </b-field>
-
     <template v-if="errorText">
       <b-notification type="is-danger" has-icon icon="exclamation-thick" :closable="false">
         {{ errorText }}
       </b-notification>
+      <bundle-text v-model="bundleText" @debugBundle="debugBundle"></bundle-text>
     </template>
     <template v-else>
       <b-field>
-        <template #label>{{ $t("bundleSummary.ui.fee.title") }}</template>
-        <template #message>{{ $t("bundleSummary.ui.fee.mojos", { fee }) }}</template>
-      </b-field>
-
-      <b-field>
-        <template #label>{{ $t("bundleSummary.ui.inputs.title") }}</template>
-        <template #message>
-          <ul>
-            <li v-for="(amount, unit) in coinTotals" :key="unit">
-              <span v-if="unit == 'XCH'">
-                {{ amount | demojo }}
-              </span>
-              <span v-else>
-                {{ amount | demojo({ unit: unit, decimal: 3 }) }}
-              </span>
-              <span class="has-text-grey">
-                <small>({{ amount }} mojos)</small>
-              </span>
-            </li>
-          </ul>
-        </template>
-      </b-field>
-
-      <b-field>
         <template #label>
-          <span v-if="showDetail">{{ $t("bundleSummary.ui.detail.title") }}</span>
-          <span v-else>
-            <small>{{ $t("bundleSummary.ui.detail.showDetailHint") }}</small>
-            <b-button
-              :label="showDetail ? $t('bundleSummary.ui.detail.button.hide') : $t('bundleSummary.ui.detail.button.show')"
-              v-if="bundle"
-              type="is-info"
-              @click="showDetail = !showDetail"
-            ></b-button>
-          </span>
+          <a href="javascript:void(0)" @click="showDetail = !showDetail" class="has-text-dark">
+            <span>{{ $t("bundleSummary.ui.detail.title") }}</span>
+            <b-icon :icon="showDetail ? 'menu-up' : 'menu-down'"></b-icon>
+          </a>
         </template>
         <template #message>
-          <div v-if="showDetail">
-            <ul>
-              <li v-for="(coin, id) in newCoins" :key="id">
-                <span v-if="coin.unit == 'XCH'">
-                  {{ coin.amount | demojo }}
-                </span>
-                <span v-else>
-                  {{ coin.amount | demojo({ unit: coin.unit, decimal: 3 }) }}
-                </span>
-                <span class="has-text-grey">
-                  <small>({{ coin.amount }} mojos)</small>
-                </span>
-                {{ $t("bundleSummary.ui.detail.itemTo", { address: coin.address }) }}
-                <span v-if="coin.hint" :title="$t('bundleSummary.ui.detail.span.hint')">({{ coin.hint }})</span>
-                <span v-if="coin.memo" :title="$t('bundleSummary.ui.detail.span.memo')">[{{ coin.memo }}]</span>
-              </li>
-            </ul>
+          <div v-if="showDetail" class="send-detail-box p-2">
+            <b-field>
+              <template #label>{{ $t("bundleSummary.ui.fee.title") }}</template>
+              <template #message>{{ $t("bundleSummary.ui.fee.mojos", { fee }) }}</template>
+            </b-field>
+            <b-field>
+              <template #label>{{ $t("bundleSummary.ui.inputs.title") }}</template>
+              <template #message>
+                <ul>
+                  <li v-for="(amount, unit) in coinTotals" :key="unit">
+                    <span v-if="unit == 'XCH'">
+                      {{ amount | demojo }}
+                    </span>
+                    <span v-else>
+                      {{ amount | demojo({ unit: unit, decimal: 3 }) }}
+                    </span>
+                    <span class="has-text-grey">
+                      <small>({{ amount }} mojos)</small>
+                    </span>
+                  </li>
+                </ul>
+              </template>
+            </b-field>
+            <b-field>
+              <template #label> {{ $t("bundleSummary.ui.label.details") }} </template>
+              <ul>
+                <li v-for="(coin, id) in newCoins" :key="id">
+                  <span v-if="coin.unit == 'XCH'">
+                    {{ coin.amount | demojo }}
+                  </span>
+                  <span v-else>
+                    {{ coin.amount | demojo({ unit: coin.unit, decimal: 3 }) }}
+                  </span>
+                  <span class="has-text-grey">
+                    <small>({{ coin.amount }} mojos)</small>
+                  </span>
+                  {{ $t("bundleSummary.ui.detail.itemTo", { address: coin.address }) }}
+                  <span v-if="coin.hint" :title="$t('bundleSummary.ui.detail.span.hint')">({{ coin.hint }})</span>
+                  <span v-if="coin.memo" :title="$t('bundleSummary.ui.detail.span.memo')">[{{ coin.memo }}]</span>
+                </li>
+              </ul>
+            </b-field>
+            <bundle-text v-model="bundleText" @debugBundle="debugBundle"></bundle-text>
           </div>
         </template>
       </b-field>
@@ -103,6 +81,7 @@ import { SExp, Tuple } from "clvm";
 import { AccountEntity } from "@/store/modules/account";
 import { getCatNameDict } from "@/services/coin/cat";
 import { demojo } from "@/filters/unitConversion";
+import BundleText from "./BundelText.vue";
 
 interface CoinType {
   amount: bigint;
@@ -120,6 +99,7 @@ interface TotalCoinType {
 @Component({
   components: {
     KeyBox,
+    BundleText,
   },
   filters: { demojo },
 })
@@ -127,7 +107,7 @@ export default class BundleSummary extends Vue {
   @Prop() private bundle!: string | SpendBundle | null;
   @Prop({ default: null }) private account!: AccountEntity | undefined;
 
-  public showDetail = true;
+  public showDetail = false;
   public bundleText = "";
   public showBundleText = false;
   public fee = -1n;
@@ -244,6 +224,8 @@ export default class BundleSummary extends Vue {
 </script>
 
 <style scoped lang="scss">
+@import "~bulma/sass/utilities/derived-variables";
+
 ul {
   list-style: inside square;
 }
@@ -260,5 +242,10 @@ ul.ellipsis-item > li {
 
 .field ::v-deep textarea {
   font-size: 0.8em;
+}
+
+.send-detail-box {
+  border: 1px solid $grey-lighter;
+  overflow-wrap: break-word;
 }
 </style>

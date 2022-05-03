@@ -617,28 +617,18 @@
   },
   "bundleSummary": {
     "ui": {
-      "bundle": {
-        "title": "数据包",
-        "copy": "复制",
-        "button": {
-          "show": "显示详情",
-          "hide": "隐藏详情"
-        }
-      },
       "fee": {
         "title": "交易费",
         "mojos": "{fee} mojo(s)"
       },
       "inputs": {
-        "title": "消耗总额"
+        "title": "消耗硬币总额"
+      },
+      "label": {
+        "details": "发送情况"
       },
       "detail": {
         "title": "发送详情",
-        "showDetailHint": "想要检查接收者列表，点击“显示详情”",
-        "button": {
-          "hide": "隐藏详情",
-          "show": "显示详情"
-        },
         "itemTo": " 发送至 {address}",
         "span": {
           "hint": "提示（原始地址）",
@@ -699,6 +689,26 @@
       },
       "tooltip": {
         "copy": "复制"
+      }
+    }
+  },
+  "sendSummary": {
+    "ui": {
+      "label": {
+        "sending": "即将发送",
+        "to": "至",
+        "fee": "交易费",
+        "total": "总计"
+      }
+    }
+  },
+  "bundleText": {
+    "ui": {
+      "title": "数据包",
+      "copy": "复制",
+      "button": {
+        "show": "显示详情",
+        "hide": "隐藏详情"
       }
     }
   }
