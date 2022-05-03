@@ -231,10 +231,12 @@
         "firstWalletSecretKey": "First wallet secret key (m/12381/8444/2/0)",
         "PrivateKey": "Private key",
         "firstWalletPublicKey": "First wallet public key (m/12381/8444/2/0)",
-        "mnemonicSeed": "Mnemonic seed (24 secret words)"
+        "mnemonicSeed": "Mnemonic seed (24-word)",
+        "details": "Details"
       },
       "button": {
-        "revealMnemonic": "Reveal Mnemonics",
+        "reveal": "Reveal Mnemonics",
+        "hide": "Hide Mnemonics",
         "confirm": "Confirm",
         "cancel": "Cancel"
       },
