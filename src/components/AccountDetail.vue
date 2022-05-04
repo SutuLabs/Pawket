@@ -157,6 +157,7 @@ export default class AccountDetail extends Vue {
   public mode: Mode = "Verify";
   private exchangeRate = -1;
   public displayDapp = true;
+  public timeoutId?: ReturnType<typeof setTimeout>;
 
   get refreshing(): boolean {
     return store.state.account.refreshing;
@@ -204,7 +205,18 @@ export default class AccountDetail extends Vue {
 
   mounted(): void {
     this.mode = store.state.vault.passwordHash ? "Verify" : "Create";
+    this.autoRefresh(60);
+  }
+
+  unmounted(): void {
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
+    }
+  }
+
+  autoRefresh(sec = 60): void {
     this.refresh();
+    this.timeoutId = setTimeout(() => this.autoRefresh(sec), 1000 * sec);
   }
 
   lock(): void {
