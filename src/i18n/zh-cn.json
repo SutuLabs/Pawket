@@ -173,6 +173,7 @@
       "button": {
         "cancel": "取消",
         "changePassword": "修改登录密码",
+        "showMnemonic": "显示助记词",
         "experimental": "实验模式",
         "confirm": "确认"
       },
@@ -186,6 +187,9 @@
       },
       "notification": {
         "saved": "已保存"
+      },
+      "error": {
+        "passwordNotCorrect": "密码不正确"
       }
     }
   },
@@ -255,7 +259,6 @@
         "list": "账户列表"
       },
       "button": {
-        "showMnemonic": "显示助记词",
         "addBySerial": "新增序列账户",
         "addByPassword": "新增密码账户",
         "addByLegacy": "导入 Chia 客户端账户(24词)",

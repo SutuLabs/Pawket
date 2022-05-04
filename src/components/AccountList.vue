@@ -2,9 +2,6 @@
   <div class="modal-card">
     <header class="modal-card-head">
       <p class="modal-card-title">{{ $t("accountList.ui.title.list") }}</p>
-      <b-button class="is-pulled-right mr-5" type="is-small" @click="showMnemonic()">{{
-        $t("accountList.ui.button.showMnemonic")
-      }}</b-button>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
@@ -68,8 +65,6 @@ import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import store from "@/store";
 import { AccountEntity } from "@/store/modules/account";
 import AccountExport from "@/components/AccountExport.vue";
-import MnemonicExport from "@/components/MnemonicExport.vue";
-import utility from "@/services/crypto/utility";
 import AddByMnemonic from "./AddAccount/AddByMnemonic.vue";
 import AddByPassword from "./AddAccount/AddByPassword.vue";
 
@@ -211,39 +206,6 @@ export default class AccountList extends Vue {
       hasModalCard: true,
       trapFocus: true,
       props: { account },
-    });
-  }
-
-  showMnemonic(): void {
-    this.$buefy.dialog.prompt({
-      message: this.$tc("accountExport.message.inputPassword"),
-      inputAttrs: {
-        type: "password",
-      },
-      trapFocus: true,
-      closeOnConfirm: false,
-      canCancel: ["button"],
-      cancelText: this.$tc("accountExport.ui.button.cancel"),
-      confirmText: this.$tc("accountExport.ui.button.confirm"),
-      onConfirm: async (password, { close }) => {
-        const pswhash = await utility.hash(password);
-        if (pswhash != store.state.vault.passwordHash) {
-          this.$buefy.toast.open({
-            message: this.$tc("accountExport.message.passwordNotCorrect"),
-            type: "is-danger",
-          });
-          return;
-        }
-        close();
-        this.$buefy.modal.open({
-          parent: this,
-          component: MnemonicExport,
-          hasModalCard: true,
-          trapFocus: true,
-          canCancel: ["x"],
-          props: { mnemonic: store.state.vault.seedMnemonic },
-        });
-      },
     });
   }
 }

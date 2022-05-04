@@ -39,6 +39,12 @@
             {{ $t("accountConfigure.ui.button.changePassword") }}
           </div>
         </a>
+        <a href="javascript:void(0)" class="panel-block" @click="showMnemonic()">
+          <div class="column is-full">
+            <b-icon icon="order-alphabetical-ascending" size="is-small" class="mr-2"></b-icon>
+            {{ $t("accountConfigure.ui.button.showMnemonic") }}
+          </div>
+        </a>
         <a class="panel-block">
           <div class="column is-full">
             <b-icon icon="flask" size="is-small" class="mr-2"></b-icon>
@@ -69,6 +75,8 @@ import KeyBox from "@/components/KeyBox.vue";
 import { AccountEntity } from "@/store/modules/account";
 import ChangePassword from "./ChangePassword.vue";
 import { CurrencyType } from "@/services/exchange/currencyType";
+import MnemonicExport from "./MnemonicExport.vue";
+import utility from "@/services/crypto/utility";
 
 @Component({
   components: {
@@ -146,6 +154,39 @@ export default class AccountConfigure extends Vue {
       store.state.vault.experiment = false;
       await store.dispatch("persistent");
     }
+  }
+
+  showMnemonic(): void {
+    this.$buefy.dialog.prompt({
+      message: this.$tc("accountExport.message.inputPassword"),
+      inputAttrs: {
+        type: "password",
+      },
+      trapFocus: true,
+      closeOnConfirm: false,
+      canCancel: ["button"],
+      cancelText: this.$tc("accountConfigure.ui.button.cancel"),
+      confirmText: this.$tc("accountConfigure.ui.button.confirm"),
+      onConfirm: async (password, { close }) => {
+        const pswhash = await utility.hash(password);
+        if (pswhash != store.state.vault.passwordHash) {
+          this.$buefy.toast.open({
+            message: this.$tc("accountConfigure.message.error.passwordNotCorrect"),
+            type: "is-danger",
+          });
+          return;
+        }
+        close();
+        this.$buefy.modal.open({
+          parent: this,
+          component: MnemonicExport,
+          hasModalCard: true,
+          trapFocus: true,
+          canCancel: ["x"],
+          props: { mnemonic: store.state.vault.seedMnemonic },
+        });
+      },
+    });
   }
 }
 </script>

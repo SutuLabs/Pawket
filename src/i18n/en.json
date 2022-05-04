@@ -173,6 +173,7 @@
       "button": {
         "cancel": "Cancel",
         "changePassword": "Change Login Password",
+        "showMnemonic": "Reveal Mnemonics",
         "experimental": "Experimental",
         "confirm": "Confirm"
       },
@@ -186,6 +187,9 @@
       },
       "notification": {
         "saved": "Saved."
+      },
+      "error": {
+        "passwordNotCorrect": "Incorrect password."
       }
     }
   },
@@ -255,7 +259,6 @@
         "list": "Account List"
       },
       "button": {
-        "showMnemonic": "Reveal Mnemonics",
         "addBySerial": "Add by Serial",
         "addByPassword": "Add by Password",
         "addByLegacy": "Import Chia Official Wallet（24-word）",
