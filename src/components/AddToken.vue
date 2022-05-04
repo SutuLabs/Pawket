@@ -14,6 +14,7 @@
             v-model="name"
             type="text"
             required
+            maxlength="36"
             :validation-message="$t('addToken.ui.message.nameRequired')"
             ref="name"
           ></b-input>

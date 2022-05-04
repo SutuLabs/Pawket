@@ -9,7 +9,9 @@
         <span class="panel-icon">
           <b-icon icon="account" class="has-text-gray"></b-icon>
         </span>
-        <span @click="select(idx)" class="mx-2">{{ account.name }}: {{ account.key.fingerprint }} [{{ account.type }}]</span>
+        <span @click="select(idx)" class="mx-2"
+          >{{ account.name | nameOmit }}: {{ account.key.fingerprint }} [{{ account.type }}]</span
+        >
         <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.edit')">
           <span @click="rename(idx)"> <b-icon icon="square-edit-outline" class="has-text-grey hover-primary mr-1"></b-icon></span>
         </b-tooltip>
@@ -67,8 +69,11 @@ import { AccountEntity } from "@/store/modules/account";
 import AccountExport from "@/components/AccountExport.vue";
 import AddByMnemonic from "./AddAccount/AddByMnemonic.vue";
 import AddByPassword from "./AddAccount/AddByPassword.vue";
+import { nameOmit } from "@/filters/nameConversion";
 
-@Component
+@Component({
+  filters: { nameOmit },
+})
 export default class AccountList extends Vue {
   @Prop() private account!: AccountEntity;
 
@@ -158,6 +163,9 @@ export default class AccountList extends Vue {
         message: this.$tc("accountList.message.prompt.setAccountName"),
         confirmText: this.$tc("accountList.message.prompt.confirmText"),
         cancelText: this.$tc("accountList.message.prompt.cancelText"),
+        inputAttrs: {
+          maxlength: 36,
+        },
         trapFocus: true,
         onConfirm: (name) => {
           resolve(name);

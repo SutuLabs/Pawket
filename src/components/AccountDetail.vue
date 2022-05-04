@@ -12,7 +12,9 @@
           <b-tooltip :label="$t('accountDetail.ui.tooltip.lock')" class="is-pulled-right">
             <b-button @click="lock()"><b-icon icon="lock" class="has-text-grey"> </b-icon></b-button>
           </b-tooltip>
-          <b-button class="is-pulled-right" @click="selectAccount()">{{ account.name }}: {{ account.key.fingerprint }}</b-button>
+          <b-button class="is-pulled-right" @click="selectAccount()"
+            >{{ account.name | nameOmit }}: {{ account.key.fingerprint }}</b-button
+          >
           <br />
           <div class="mt-5">
             <h2 class="is-size-3 py-5">
@@ -142,6 +144,7 @@ import { getExchangeRate } from "@/services/exchange/rates";
 import { CurrencyType } from "@/services/exchange/currencyType";
 import UtxoPanel from "@/components/UtxoPanel.vue";
 import { CoinRecord } from "@/models/wallet";
+import { nameOmit } from "@/filters/nameConversion";
 
 type Mode = "Verify" | "Create";
 
@@ -151,7 +154,7 @@ type Mode = "Verify" | "Create";
     Send,
     UtxoPanel,
   },
-  filters: { demojo, xchToCurrency },
+  filters: { demojo, xchToCurrency, nameOmit },
 })
 export default class AccountDetail extends Vue {
   public mode: Mode = "Verify";

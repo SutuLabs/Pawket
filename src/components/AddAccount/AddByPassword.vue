@@ -12,6 +12,7 @@
           v-model="name"
           type="text"
           required
+          maxlength="36"
           :validation-message="$t('addByPassword.ui.message.nameRequired')"
         ></b-input>
       </b-field>

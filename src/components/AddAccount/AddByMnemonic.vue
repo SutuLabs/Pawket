@@ -12,6 +12,7 @@
           v-model="name"
           type="text"
           required
+          maxlength="36"
           :validation-message="$t('addByMnemonic.ui.message.nameRequired')"
         ></b-input>
       </b-field>
