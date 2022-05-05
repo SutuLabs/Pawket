@@ -5,7 +5,7 @@
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
-      <template v-if="!bundle">
+      <div v-show="!bundle">
         <b-notification
           v-if="notificationMessage"
           :type="notificationType || 'is-primary'"
@@ -48,7 +48,7 @@
           <b-input maxlength="100" v-model="memo" type="text" @input="reset()" :disabled="selectedToken == 'XCH'"></b-input>
         </b-field>
         <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
-      </template>
+      </div>
       <template v-if="bundle">
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
           <span v-html="$sanitize($t('send.ui.summary.notification'))"></span>
