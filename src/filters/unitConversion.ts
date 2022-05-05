@@ -1,11 +1,12 @@
 import { OneTokenInfo } from "@/store/modules/account";
 import bigDecimal from "js-big-decimal";
+import { nameOmit } from "./nameConversion";
 
 export function demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null, digits = -1): string {
   let unit = "XCH";
   let decimal = 12;
   if (token != null && typeof token == "object") {
-    unit = token.unit;
+    unit = nameOmit(token.unit);
     decimal = token.decimal;
     digits = digits == -1 ? token.decimal : digits;
   }
