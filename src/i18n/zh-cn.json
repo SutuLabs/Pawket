@@ -618,6 +618,21 @@
       }
     }
   },
+  "addBySerial": {
+    "ui": {
+      "title": "添加助记词账户",
+      "label": {
+        "name": "账户名"
+      },
+      "message": {
+        "nameRequired": "账户名不能为空."
+      },
+      "button": {
+        "back": "返回",
+        "submit": "提交"
+      }
+    }
+  },
   "bundleSummary": {
     "ui": {
       "fee": {
