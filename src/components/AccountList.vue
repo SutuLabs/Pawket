@@ -70,6 +70,7 @@ import AccountExport from "@/components/AccountExport.vue";
 import AddByMnemonic from "./AddAccount/AddByMnemonic.vue";
 import AddByPassword from "./AddAccount/AddByPassword.vue";
 import { nameOmit } from "@/filters/nameConversion";
+import AddBySerial from "@/components/AddAccount/AddBySerial.vue";
 
 @Component({
   filters: { nameOmit },
@@ -129,8 +130,12 @@ export default class AccountList extends Vue {
   }
 
   addBySerial(): void {
-    this.getAccountName().then((name) => {
-      store.dispatch("createAccountBySerial", name);
+    this.$buefy.modal.open({
+      parent: this,
+      component: AddBySerial,
+      hasModalCard: true,
+      canCancel: ["x"],
+      trapFocus: true,
     });
   }
 

@@ -619,6 +619,21 @@
       }
     }
   },
+  "addBySerial": {
+    "ui": {
+      "title": "Add Account by Serial",
+      "label": {
+        "name": "Account Name"
+      },
+      "message": {
+        "nameRequired": "Account name is required."
+      },
+      "button": {
+        "back": "Back",
+        "submit": "Submit"
+      }
+    }
+  },
   "bundleSummary": {
     "ui": {
       "fee": {
