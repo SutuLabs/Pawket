@@ -9,6 +9,7 @@
         <b-tooltip :label="asset.id" multilined style="word-break: break-all">
           <div>{{ asset.id | shorten }}</div>
         </b-tooltip>
+        <key-box icon="checkbox-multiple-blank-outline" :value="asset.id" :tooltip="$t('addToken.ui.tooltip.copy')"></key-box>
       </div>
       <div class="column is-3">
         <b-tooltip :label="$t('addToken.ui.tooltip.removeToken')">
@@ -24,8 +25,12 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { shorten } from "@/filters/addressConversion";
 import { CustomCat } from "@/store/modules/account";
 import { nameOmit } from "@/filters/nameConversion";
+import KeyBox from "@/components/KeyBox.vue";
 
 @Component({
+  components: {
+    KeyBox,
+  },
   filters: { shorten, nameOmit },
 })
 export default class TokenItem extends Vue {

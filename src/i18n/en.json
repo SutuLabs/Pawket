@@ -507,7 +507,8 @@
       },
       "tooltip": {
         "removeToken": "Remove token",
-        "drag": "Drag to sort"
+        "drag": "Drag to sort",
+        "copy": "Copy"
       },
       "message": {
         "nameRequired": "Name is required.",
