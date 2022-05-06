@@ -57,7 +57,7 @@
         <h4 class="is-size-4">{{ $t("createSeed.ui.text.create.title") }}</h4>
         <div class="is-size-6">
           <p>{{ $t("createSeed.ui.text.create.tip1") }}</p>
-          <p class="has-text-danger has-text-weight-bold pb-4">{{ $t("createSeed.ui.text.create.tip2") }}</p>
+          <p class="has-text-danger has-text-weight-bold pb-5">{{ $t("createSeed.ui.text.create.tip2") }}</p>
         </div>
       </div>
       <div class="block centered mb-4">
