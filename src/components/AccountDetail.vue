@@ -1,7 +1,7 @@
 <template>
   <div class="column is-8 is-offset-2 box">
     <div class="container px-4">
-      <b-loading :is-full-page="true" :active="!account.tokens"></b-loading>
+      <b-loading :is-full-page="true" :active="!account.tokens || !account.tokens.hasOwnProperty('XCH')"></b-loading>
       <div class="py-5 has-text-centered" v-if="account && account.key">
         <section>
           <b-tooltip :label="$t('accountDetail.ui.tooltip.setting')" class="is-pulled-left">
