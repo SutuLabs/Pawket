@@ -620,7 +620,7 @@
   },
   "addBySerial": {
     "ui": {
-      "title": "添加助记词账户",
+      "title": "添加序列账户",
       "label": {
         "name": "账户名"
       },
