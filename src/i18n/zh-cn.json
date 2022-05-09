@@ -587,6 +587,9 @@
       "button": {
         "back": "返回",
         "submit": "提交"
+      },
+      "tooltip": {
+        "mnemonic": "请按顺序输入 Pawket 助记词，并使用空格作为间隔。"
       }
     },
     "message": {

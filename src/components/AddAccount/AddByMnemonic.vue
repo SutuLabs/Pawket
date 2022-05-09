@@ -16,7 +16,13 @@
           :validation-message="$t('addByMnemonic.ui.message.nameRequired')"
         ></b-input>
       </b-field>
-      <b-field :label="$t('addByMnemonic.ui.label.mnemonic', { len: mnemonicLen })" :type="errorMessage ? 'is-danger' : ''">
+      <b-field :type="errorMessage ? 'is-danger' : ''">
+        <template #label>
+          {{ $t("addByMnemonic.ui.label.mnemonic", { len: mnemonicLen }) }}
+          <b-tooltip :label="$t('addByMnemonic.ui.tooltip.mnemonic')" position="is-bottom" multilined>
+            <b-icon icon="help-circle" size="is-small"> </b-icon>
+          </b-tooltip>
+        </template>
         <b-input
           ref="mnemonic"
           v-model="mnemonic"
