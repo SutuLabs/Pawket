@@ -1,4 +1,4 @@
-export function nameOmit(name: string, ellipsis = "...", length = 10, uppercase = true): string {
+export function nameOmit(name: string, uppercase = false, ellipsis = "...", length = 10): string {
   let nameRes = "";
   if (!name) return nameRes;
   if (name.length <= length + ellipsis.length) {

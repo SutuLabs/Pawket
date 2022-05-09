@@ -4,7 +4,7 @@
       <b-tooltip :label="$t('addToken.ui.tooltip.drag')">
         <b-button class="drag-handle" type="is-text"><b-icon icon="format-line-spacing" size="is-small"></b-icon></b-button>
       </b-tooltip>
-      <div class="column is-3">{{ asset.name | nameOmit }}</div>
+      <div class="column is-3">{{ asset.name | nameOmit(true) }}</div>
       <div class="column is-6">
         <b-tooltip :label="asset.id" multilined style="word-break: break-all">
           <div>{{ asset.id | shorten }}</div>
