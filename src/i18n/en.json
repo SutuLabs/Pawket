@@ -587,6 +587,9 @@
       "button": {
         "back": "Back",
         "submit": "Submit"
+      },
+      "tooltip": {
+        "mnemonic": "Please enter your Mnemonic Words in order, using spaces between mnemonics."
       }
     },
     "message": {
