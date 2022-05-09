@@ -106,7 +106,7 @@ export default class AddToken extends Vue {
       });
       return;
     }
-    const idx = this.assetIds.findIndex((a) => a.name == this.name);
+    const idx = this.assetIds.findIndex((a) => a.name.toUpperCase() == this.name.toUpperCase());
     if (idx > -1) {
       this.$buefy.dialog.alert({
         message: this.$tc("addToken.message.alert.nameExists"),
@@ -131,7 +131,7 @@ export default class AddToken extends Vue {
       });
       return;
     }
-    this.assetIds.push({ name: this.name, id: this.assetId });
+    this.assetIds.push({ name: this.name.toUpperCase(), id: this.assetId });
     this.submit();
     this.reset();
   }

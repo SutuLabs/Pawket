@@ -13,7 +13,7 @@
             <b-button @click="lock()"><b-icon icon="lock" class="has-text-grey"> </b-icon></b-button>
           </b-tooltip>
           <b-button class="is-pulled-right" @click="selectAccount()"
-            >{{ account.name | nameOmit }}: {{ account.key.fingerprint }}</b-button
+            >{{ account.name | nameOmit(true) }}: {{ account.key.fingerprint }}</b-button
           >
           <br />
           <div class="mt-5">

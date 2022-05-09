@@ -6,7 +6,7 @@ export function demojo(mojo: null | number | bigint, token: OneTokenInfo | null 
   let unit = "XCH";
   let decimal = 12;
   if (token != null && typeof token == "object") {
-    unit = nameOmit(token.unit);
+    unit = nameOmit(token.unit, true);
     decimal = token.decimal;
     digits = digits == -1 ? token.decimal : digits;
   }
