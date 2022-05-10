@@ -10,7 +10,7 @@
           <b-icon icon="account" class="has-text-gray"></b-icon>
         </span>
         <span @click="select(idx)" class="mx-2"
-          >{{ account.name | nameOmit(true) }}: {{ account.key.fingerprint }} [{{ account.type }}]</span
+          >{{ account.name | nameOmit }}: {{ account.key.fingerprint }} [{{ account.type }}]</span
         >
         <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.edit')">
           <span @click="rename(idx)"> <b-icon icon="square-edit-outline" class="has-text-grey hover-primary mr-1"></b-icon></span>
