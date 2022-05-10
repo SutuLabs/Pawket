@@ -246,8 +246,8 @@
       },
       "tooltip": {
         "copy": "Copy",
-        "fingerprintTip": "Compatible with chia official wallet",
-        "mnemonicTip": "Compatible with chia official wallet"
+        "fingerprintTip": "Compatible with Chia official wallet",
+        "mnemonicTip": "Compatible with Chia official wallet"
       }
     },
     "message": {
