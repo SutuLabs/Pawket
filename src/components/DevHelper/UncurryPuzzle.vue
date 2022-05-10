@@ -43,6 +43,7 @@ import { ModParameter, modsdict, modsparams, modsprog } from "@/services/coin/mo
   components: {
     KeyBox,
   },
+  name: "UncurryPuzzle",
 })
 export default class UncurryPuzzle extends Vue {
   @Prop() private puzzle!: string;

@@ -54,6 +54,7 @@ import { SExpWithId } from "@/services/simulator/opVm";
     AtomBox,
     Breakpoint,
   },
+  name: "SExpBox",
 })
 export default class SExpBox extends Vue {
   @Prop() private value!: SExpWithId;
