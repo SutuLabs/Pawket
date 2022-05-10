@@ -19,8 +19,8 @@
         >
           <b-icon icon="comment-question" size="is-small" type="is-info" class="px-4"></b-icon>
         </b-tooltip>
-        <b-button v-if="maxAmount > -1" tag="a" type="is-info is-light" size="is-small" @click="setMax()">
-          <span v-if="maxAmount == -1"> {{ $t("send.ui.span.loading") }} {{ selectedToken }}</span>
+        <b-button v-if="maxAmount >= -1" tag="a" type="is-info is-light" size="is-small" @click="setMax()">
+          <span v-if="maxAmount == -1"> {{ $t("send.ui.span.loading") }}</span>
           <span v-else>
             <span v-if="totalAmount >= 0">
               {{ $t("send.ui.span.maxLeadingText") }} {{ maxAmount }} / {{ totalAmount }} {{ selectedToken }}

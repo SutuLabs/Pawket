@@ -13,7 +13,12 @@
           </span>
         </li>
         <li class="pb-2">
-          <span class="is-size-6 has-text-weight-bold">{{ $t("accountExport.ui.label.fingerprint") }}:</span>
+          <span class="is-size-6 has-text-weight-bold"
+            >{{ $t("accountExport.ui.label.fingerprint") }}
+            :
+            <b-tooltip :label="$t('accountExport.ui.tooltip.fingerprintTip')" position="is-top">
+              <b-icon icon="help-circle" size="is-small"> </b-icon> </b-tooltip
+          ></span>
           <span class="is-size-6 is-pulled-right">
             <key-box
               icon="checkbox-multiple-blank-outline"
@@ -31,7 +36,11 @@
           </span>
         </li>
         <li class="pb-2">
-          <span class="is-size-6 has-text-weight-bold">{{ $t("accountExport.ui.label.mnemonicSeed") }}:</span>
+          <span class="is-size-6 has-text-weight-bold"
+            >{{ $t("accountExport.ui.label.mnemonicSeed") }}:
+            <b-tooltip :label="$t('accountExport.ui.tooltip.mnemonicTip')" position="is-top">
+              <b-icon icon="help-circle" size="is-small"> </b-icon> </b-tooltip
+          ></span>
           <span class="is-pulled-right">
             <b-button v-if="!showMnemonic" size="is-small" @click="show()" class="is-primary">{{
               $t("accountExport.ui.button.reveal")
