@@ -44,7 +44,7 @@ export default class ChangePassword extends Vue {
   newPwd = "";
   rePwd = "";
   close(): void {
-    this.$emit("close")
+    this.$emit("back")
   }
 
   back(): void {

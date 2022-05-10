@@ -13,7 +13,7 @@
             <b-button @click="lock()"><b-icon icon="lock" class="has-text-grey"> </b-icon></b-button>
           </b-tooltip>
           <b-button class="is-pulled-right" @click="selectAccount()"
-            >{{ account.name | nameOmit(true) }}: {{ account.key.fingerprint }}</b-button
+            >{{ account.name | nameOmit }}: {{ account.key.fingerprint }}</b-button
           >
           <br />
           <div class="mt-5">
@@ -208,6 +208,7 @@ export default class AccountDetail extends Vue {
 
   mounted(): void {
     this.mode = store.state.vault.passwordHash ? "Verify" : "Create";
+    this.displayDapp = localStorage.getItem("DISPLAY_DAPP") ? localStorage.getItem("DISPLAY_DAPP") === "true" : false;
     this.autoRefresh(60);
   }
 
@@ -364,6 +365,7 @@ export default class AccountDetail extends Vue {
 
   toggleDapp(): void {
     this.displayDapp = !this.displayDapp;
+    localStorage.setItem("DISPLAY_DAPP", this.displayDapp.toString());
   }
 }
 </script>
