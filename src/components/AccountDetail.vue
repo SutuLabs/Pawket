@@ -46,7 +46,7 @@
               <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.send") }}</p>
             </a>
           </div>
-           <div v-if="debugMode" class="b-tooltip mr-5">
+          <div v-if="debugMode" class="b-tooltip mr-5">
             <a @click="showExport()" href="javascript:void(0)" class="has-text-primary">
               <b-icon icon="alpha-e-circle" size="is-medium"> </b-icon>
               <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.export") }}</p>
