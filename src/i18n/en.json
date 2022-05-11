@@ -563,7 +563,8 @@
       "scan": {
         "title": "Scan QR",
         "numberField": "Addresses",
-        "numberMessage": "Use Proxy to scan these addresses."
+        "numberMessage": "Use Proxy to scan these addresses.",
+        "scrollDown": "Scroll down the page to scan the QR code."
       },
       "button": {
         "finish": "Finish"

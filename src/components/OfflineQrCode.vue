@@ -25,6 +25,12 @@
           </center>
         </div>
         <div class="column">
+          <div
+            v-if="mode === 'OFFLINE_CLIENT' && cameraInited"
+            class="pb-5 is-size-6 has-text-primary has-text-weight-bold has-text-centered is-hidden-tablet"
+          >
+            {{ $t("offline.client.scan.scrollDown") }}
+          </div>
           <qrcode-stream v-if="cameraStatus != 'off'" :camera="cameraStatus" @decode="onDecode" @init="onInit" />
         </div>
       </div>
@@ -85,6 +91,7 @@ export default class OfflineQrCode extends Vue {
 
   error = "";
   cameraStatus = "auto";
+  cameraInited = false;
   selectedQr = 0;
   looping = true;
   coins: OriginCoin[] = [];
@@ -228,6 +235,7 @@ export default class OfflineQrCode extends Vue {
   }
 
   async onInit(promise: Promise<void>): Promise<void> {
+    promise.then(() => (this.cameraInited = true));
     await initCameraHandleError(promise, async (err) => {
       this.error = err;
     });
