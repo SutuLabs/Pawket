@@ -25,6 +25,9 @@
           </center>
         </div>
         <div class="column">
+          <div class="pb-5 is-size-6 has-text-primary has-text-weight-bold has-text-centered is-hidden-tablet">
+            {{ $t("offline.client.scan.scrollDown") }}
+          </div>
           <qrcode-stream v-if="cameraStatus != 'off'" :camera="cameraStatus" @decode="onDecode" @init="onInit" />
         </div>
       </div>

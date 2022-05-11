@@ -563,7 +563,8 @@
       "scan": {
         "title": "扫描二维码",
         "numberField": "地址",
-        "numberMessage": "用离线代理扫描以下二维码来获取硬币信息"
+        "numberMessage": "用离线代理扫描以下二维码来获取硬币信息",
+        "scrollDown": "下滑页面扫描二维码。"
       },
       "button": {
         "finish": "完成"
