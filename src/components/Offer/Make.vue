@@ -14,6 +14,7 @@
               :selectedToken="offer.token"
               :token-names="tokenNames"
               :fee="0"
+              :showMaxAmount="false"
               label=""
               @change-token="(token) => (offer.token = token)"
             >
@@ -28,6 +29,7 @@
               :selectedToken="request.token"
               :token-names="tokenNames"
               :fee="0"
+              :showMaxAmount="false"
               label=""
               @change-token="(token) => (request.token = token)"
             >
@@ -163,9 +165,7 @@ export default class MakeOffer extends Vue {
   }
 
   get tokenNames(): string[] {
-    return Object.keys(store.state.account.tokenInfo).concat(
-      this.account.cats.map((_) => _.name)
-    );
+    return Object.keys(store.state.account.tokenInfo).concat(this.account.cats.map((_) => _.name));
   }
 
   async mounted(): Promise<void> {
