@@ -35,7 +35,7 @@ export interface ConditionEntity {
   args: ConditionArgs[];
 }
 
-const catClvmTreehash = "0x72dec062874cd4d3aab892a0906688a1ae412b0109982e1797a170add88bdcdc";
+export const catClvmTreehash = "0x72dec062874cd4d3aab892a0906688a1ae412b0109982e1797a170add88bdcdc";
 
 class PuzzleMaker {
 

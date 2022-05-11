@@ -2,7 +2,7 @@ import { SpendBundle } from "@/models/wallet";
 import store from "@/store";
 import { testCatTransfer, testCatTransfer2 } from "./catTransferTest";
 import { testCoinName, testCryptography, testPuzzleAssemble } from "./cryptoTest";
-import { testMakeOffer2, testMakeOffer1, testOfferEncoding, testTakeOffer } from "./offerTest";
+import { testMakeOffer2, testMakeOffer1, testOfferEncoding, testTakeOfferXchForCat, testTakeOfferCatForXch } from "./offerTest";
 import { testStandardTransfer } from "./stdTransferTest";
 
 class TestRunner {
@@ -31,7 +31,8 @@ class TestRunner {
         await this.runTest(testOfferEncoding);
         await this.runTest(testMakeOffer1);
         await this.runTest(testMakeOffer2);
-        await this.runTest(testTakeOffer);
+        await this.runTest(testTakeOfferXchForCat);
+        await this.runTest(testTakeOfferCatForXch);
 
         console.log("self-test passed");
       }

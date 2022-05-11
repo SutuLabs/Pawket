@@ -39,6 +39,7 @@
             </ul>
           </template>
         </b-field>
+        <fee-selector v-if="summary" v-model="fee"></fee-selector>
       </template>
       <template v-if="step == 'Confirmation'">
         <b-field v-if="bundle">
@@ -84,7 +85,7 @@ import { demojo } from "@/filters/unitConversion";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import { TokenPuzzleDetail } from "@/services/crypto/receive";
 import coinHandler from "@/services/transfer/coin";
-import { getOfferSummary, OfferEntity, OfferSummary } from "@/services/offer/summary";
+import { getOfferSummary, OfferSummary } from "@/services/offer/summary";
 import { decodeOffer } from "@/services/offer/encoding";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { combineSpendBundle, generateOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
@@ -92,10 +93,12 @@ import { prefix0x } from "@/services/coin/condition";
 import puzzle from "@/services/crypto/puzzle";
 import store from "@/store";
 import { debugBundle, submitBundle } from "@/services/view/bundle";
+import FeeSelector from "@/components/FeeSelector.vue";
 
 @Component({
   components: {
     KeyBox,
+    FeeSelector,
   },
   filters: { demojo },
 })
@@ -113,6 +116,7 @@ export default class TakeOffer extends Vue {
   public tokenPuzzles: TokenPuzzleDetail[] = [];
   public signing = false;
   public step: "Input" | "Confirmation" = "Input";
+  public fee = 0;
 
   @Emit("close")
   close(): void {
@@ -152,6 +156,7 @@ export default class TakeOffer extends Vue {
     this.makerBundle = await decodeOffer(this.offerText);
     this.summary = null;
     this.summary = await getOfferSummary(this.makerBundle);
+    this.fee = 0;
   }
 
   async loadCoins(): Promise<void> {
@@ -171,10 +176,20 @@ export default class TakeOffer extends Vue {
 
     try {
       this.signing = true;
+      const isReceivingCat = !this.summary.requested[0].id;
 
       const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
       const revSummary = getReversePlan(this.summary, change_hex, this.cats);
-      const offplan = await generateOfferPlan(revSummary.offered, change_hex, this.availcoins, 0n);
+      if (!isReceivingCat) {
+        const reqamt = revSummary.requested[0].amount;
+        const fee = BigInt(this.fee);
+        if (reqamt < fee) {
+          throw new Error("Not enough XCH for fee");
+        }
+        revSummary.requested[0].amount -= fee;
+      }
+      const fee = isReceivingCat ? BigInt(this.fee) : 0n;
+      const offplan = await generateOfferPlan(revSummary.offered, change_hex, this.availcoins, fee);
       const takerBundle = await generateOffer(offplan, revSummary.requested, this.tokenPuzzles);
       const combined = await combineSpendBundle([this.makerBundle, takerBundle]);
       // for creating unit test

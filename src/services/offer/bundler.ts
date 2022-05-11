@@ -1,7 +1,7 @@
 import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
 import { Bytes } from "clvm";
 import { CoinConditions, ConditionType, prefix0x } from '@/services/coin/condition';
-import puzzle from "../crypto/puzzle";
+import puzzle, { catClvmTreehash } from "../crypto/puzzle";
 import { ConditionOpcode } from "../coin/opcode";
 import transfer, { GetPuzzleApiCallback, SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { TokenPuzzleDetail } from "../crypto/receive";
@@ -10,6 +10,8 @@ import stdBundle from "../transfer/stdBundle";
 import { getOfferSummary, OfferEntity, OfferPlan, OfferSummary } from "./summary";
 import store from "@/store";
 import { GetParentPuzzleResponse } from "@/models/api";
+import { assemble, curry, disassemble } from "clvm_tools/browser";
+import { modsprog } from "../coin/mods";
 
 export async function generateOffer(
   offered: OfferPlan[],
@@ -22,7 +24,6 @@ export async function generateOffer(
   if (offered[0].id && offered[0].plan.coins.length != 1) throw new Error("currently, only support single coin for CAT");
 
   const settlement_tgt = "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79";
-  const cat_settlement_tgt = "0x54164c700ed2fd4349227e4e346d0d22c92b694bf1ef9ce10fe9b0686390ca87";
   const spends: CoinSpend[] = [];
   const puz_anno_ids: string[] = [];
   const getNonce = () => {
@@ -75,6 +76,11 @@ export async function generateOffer(
     }
     else {
       if (!req.symbol) throw new Error("symbol cannot be empty.");
+
+      const assetId = req.id;
+      const cat_mod = await curryMod(modsprog["cat"], catClvmTreehash, prefix0x(assetId), modsprog["settlement_payments"]);
+      if (!cat_mod) throw new Error("cannot curry cat");
+      const cat_settlement_tgt = prefix0x(await puzzle.getPuzzleHashFromPuzzle(cat_mod));
 
       const coin = {
         parent_coin_info: "0x0000000000000000000000000000000000000000000000000000000000000000",
@@ -231,5 +237,20 @@ export async function combineSpendBundle(
   return {
     aggregated_signature: sig,
     coin_spends: spends,
+  }
+}
+
+export async function curryMod(mod: string, ...args: string[]): Promise<string | null> {
+  try {
+    const m = assemble(mod);
+    const astr = "(" + args.join(" ") + ")";
+    const as = assemble(astr);
+    const [, prog] = curry(m, as);
+
+    const mods = disassemble(prog);
+    return mods;
+  } catch (err) {
+    console.warn("failed to curry", err)
+    return null;
   }
 }
