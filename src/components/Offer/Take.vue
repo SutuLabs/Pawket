@@ -39,7 +39,7 @@
             </ul>
           </template>
         </b-field>
-        <fee-selector v-if="summary && !summary.requested[0].id" v-model="fee"></fee-selector>
+        <fee-selector v-if="summary" v-model="fee"></fee-selector>
       </template>
       <template v-if="step == 'Confirmation'">
         <b-field v-if="bundle">
@@ -176,10 +176,20 @@ export default class TakeOffer extends Vue {
 
     try {
       this.signing = true;
+      const isReceivingCat = !this.summary.requested[0].id;
 
       const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
       const revSummary = getReversePlan(this.summary, change_hex, this.cats);
-      const offplan = await generateOfferPlan(revSummary.offered, change_hex, this.availcoins, BigInt(this.fee));
+      if (!isReceivingCat) {
+        const reqamt = revSummary.requested[0].amount;
+        const fee = BigInt(this.fee);
+        if (reqamt < fee) {
+          throw new Error("Not enough XCH for fee");
+        }
+        revSummary.requested[0].amount -= fee;
+      }
+      const fee = isReceivingCat ? BigInt(this.fee) : 0n;
+      const offplan = await generateOfferPlan(revSummary.offered, change_hex, this.availcoins, fee);
       const takerBundle = await generateOffer(offplan, revSummary.requested, this.tokenPuzzles);
       const combined = await combineSpendBundle([this.makerBundle, takerBundle]);
       // for creating unit test
