@@ -64,6 +64,10 @@ export default class App extends Vue {
     return store.state.app.debug;
   }
 
+  mounted(): void {
+    store.state.app.debug = localStorage.getItem("DEBUG_MODE") ? localStorage.getItem("DEBUG_MODE") === "true" : false;
+  }
+
   versionClick(): void {
     this.debugClick--;
     if (this.debugClick == 0) {
@@ -72,6 +76,7 @@ export default class App extends Vue {
         message: `Debug mode enabled`,
         type: "is-primary",
       });
+      localStorage.setItem("DEBUG_MODE", "true");
     }
   }
 
@@ -87,6 +92,7 @@ export default class App extends Vue {
       message: `Debug mode disabled`,
       type: "is-primary",
     });
+    localStorage.setItem("DEBUG_MODE", "false");
   }
 
   showDebugHelper(): void {

@@ -5,23 +5,23 @@
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
-      <a class="panel-block" v-for="(account, idx) in accounts" :key="idx">
+      <a class="panel-block" v-for="(account, idx) in accounts" :key="idx" @click="select(idx)">
         <span class="panel-icon">
           <b-icon icon="account" class="has-text-gray"></b-icon>
         </span>
-        <span @click="select(idx)" class="mx-2"
-          >{{ account.name | nameOmit }}: {{ account.key.fingerprint }} [{{ account.type }}]</span
-        >
+        <span class="mx-2">{{ account.name | nameOmit }}: {{ account.key.fingerprint }} [{{ account.type }}]</span>
         <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.edit')">
-          <span @click="rename(idx)"> <b-icon icon="square-edit-outline" class="has-text-grey hover-primary mr-1"></b-icon></span>
+          <span @click.stop="rename(idx)">
+            <b-icon icon="square-edit-outline" class="has-text-grey hover-primary mr-1"></b-icon
+          ></span>
         </b-tooltip>
         <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.details')">
-          <span @click="showExport(account)"
+          <span @click.stop="showExport(account)"
             ><b-icon icon="text-box-search-outline" class="has-text-grey hover-primary mr-1"></b-icon
           ></span>
         </b-tooltip>
         <b-tooltip position="is-bottom" :label="$t('accountList.ui.tooltip.delete')">
-          <span @click="remove(idx)" v-if="idx > 0"
+          <span @click.stop="remove(idx)" v-if="idx > 0"
             ><b-icon icon="trash-can-outline" class="has-text-grey hover-danger"></b-icon
           ></span>
         </b-tooltip>
@@ -118,7 +118,7 @@ export default class AccountList extends Vue {
   async rename(idx: number): Promise<void> {
     const name = await this.getAccountName();
     store.dispatch("renameAccount", { idx, name });
-    notifyPrimary(this.$tc("accountList.message.notification.saved"),);
+    notifyPrimary(this.$tc("accountList.message.notification.saved"));
   }
 
   async addByPassword(): Promise<void> {
