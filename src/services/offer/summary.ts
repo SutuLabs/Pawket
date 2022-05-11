@@ -53,7 +53,7 @@ export async function getOfferSummary(bundle: SpendBundle): Promise<OfferSummary
       const cond = conds[j];
       if (cond.code == ConditionOpcode.CREATE_COIN) {
         const tgt = prefix0x(Bytes.from(((cond.args[2] && cond.args[2]?.length > 0) ? cond.args[2][0] : cond.args[0]) as Uint8Array).hex());
-        const cattgt = (cond.args[2] && cond.args[2]?.length > 0) ? prefix0x(Bytes.from(cond.args[0] as Uint8Array).hex()) : undefined;
+        const cattgt = assetId ? prefix0x(Bytes.from(cond.args[0] as Uint8Array).hex()) : undefined;
         entities.push({
           id: assetId,
           amount: BigInt(prefix0x(Bytes.from(cond.args[1] as Uint8Array).hex())),
