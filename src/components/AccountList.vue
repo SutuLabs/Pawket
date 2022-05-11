@@ -71,6 +71,7 @@ import AddByMnemonic from "./AddAccount/AddByMnemonic.vue";
 import AddByPassword from "./AddAccount/AddByPassword.vue";
 import { nameOmit } from "@/filters/nameConversion";
 import AddBySerial from "@/components/AddAccount/AddBySerial.vue";
+import { notifyPrimary } from "@/notification/notification";
 
 @Component({
   filters: { nameOmit },
@@ -117,6 +118,7 @@ export default class AccountList extends Vue {
   async rename(idx: number): Promise<void> {
     const name = await this.getAccountName();
     store.dispatch("renameAccount", { idx, name });
+    notifyPrimary(this.$tc("accountList.message.notification.saved"),);
   }
 
   async addByPassword(): Promise<void> {

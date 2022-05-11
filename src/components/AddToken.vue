@@ -17,6 +17,7 @@
             maxlength="36"
             :validation-message="$t('addToken.ui.message.nameRequired')"
             ref="name"
+            title=""
           ></b-input>
         </b-field>
         <b-field :label="$t('addToken.ui.label.assetID')">
@@ -25,6 +26,7 @@
             type="text"
             required
             ref="assetId"
+            title=""
             :validation-message="$t('addToken.ui.message.assetIdRequired')"
           ></b-input>
         </b-field>

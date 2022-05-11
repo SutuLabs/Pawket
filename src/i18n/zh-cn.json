@@ -245,7 +245,9 @@
         "cancel": "取消"
       },
       "tooltip": {
-        "copy": "复制"
+        "copy": "复制",
+        "fingerprintTip": "与 Chia 客户端兼容",
+        "mnemonicTip": "与 Chia 客户端兼容"
       }
     },
     "message": {
@@ -290,6 +292,9 @@
         "setLegacyMnemonic": "输入助记词",
         "cancelText": "取消",
         "confirmText": "确认"
+      },
+      "notification": {
+        "saved": "已保存"
       }
     }
   },

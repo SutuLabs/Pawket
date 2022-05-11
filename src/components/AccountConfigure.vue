@@ -68,7 +68,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Emit } from "vue-property-decorator";
+import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
 import { NotificationProgrammatic as Notification } from "buefy";
 import store from "@/store/index";
 import KeyBox from "@/components/KeyBox.vue";
@@ -77,6 +77,7 @@ import ChangePassword from "./ChangePassword.vue";
 import { CurrencyType } from "@/services/exchange/currencyType";
 import MnemonicExport from "./MnemonicExport.vue";
 import utility from "@/services/crypto/utility";
+import { notifyPrimary } from "@/notification/notification";
 
 @Component({
   components: {
@@ -147,11 +148,13 @@ export default class AccountConfigure extends Vue {
         trapFocus: true,
         onConfirm: async () => {
           store.state.vault.experiment = true;
+          notifyPrimary(this.$tc("accountConfigure.message.notification.saved"));
           await store.dispatch("persistent");
         },
       });
     } else {
       store.state.vault.experiment = false;
+      notifyPrimary(this.$tc("accountConfigure.message.notification.saved"));
       await store.dispatch("persistent");
     }
   }
@@ -187,6 +190,14 @@ export default class AccountConfigure extends Vue {
         });
       },
     });
+  }
+
+  @Watch("maxAddress")
+  onMaxAddressChange(): void {
+    if (this.maxAddress && this.displayMaxAddressSlider) {
+      this.account.addressRetrievalCount = this.maxAddress;
+      notifyPrimary(this.$tc("accountConfigure.message.notification.saved"));
+    }
   }
 }
 </script>

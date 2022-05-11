@@ -245,7 +245,9 @@
         "cancel": "Cancel"
       },
       "tooltip": {
-        "copy": "Copy"
+        "copy": "Copy",
+        "fingerprintTip": "Compatible with Chia official wallet",
+        "mnemonicTip": "Compatible with Chia official wallet"
       }
     },
     "message": {
@@ -290,6 +292,9 @@
         "setLegacyMnemonic": "Enter Mnemonic Words",
         "cancelText": "Cancel",
         "confirmText": "OK"
+      },
+      "notification": {
+        "saved": "Saved"
       }
     }
   },
