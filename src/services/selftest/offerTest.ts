@@ -223,7 +223,7 @@ export async function testMakeOffer2(): Promise<void> {
   assert(expectOfferText, encoded);
 }
 
-export async function testTakeOffer(): Promise<void> {
+export async function testTakeOfferXchForCat(): Promise<void> {
   const expect: SpendBundle = {
     "aggregated_signature": "8519b6590745c2643cd51e84d4807a08ac512b6e3febdd7fe549146096c19eae2138edfddbc0c775eeb55f24684ba0f419f44615fc039e6fa822de9387466f93d405490b1fa4e46ed94aa80ba1519606711af4ca8e86b16ff07357f2a217f71d",
     "coin_spends": [
@@ -302,6 +302,55 @@ export async function testTakeOffer(): Promise<void> {
   const offplan = await generateOfferPlan(revSummary.offered, change_hex, availcoins, 0n);
   const takerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, nonce, localPuzzleApiCall);
   const combined = await combineSpendBundle([makerBundle, takerBundle]);
+
+  assertBundle(expect, combined);
+}
+
+export async function testTakeOfferCatForXch(): Promise<void> {
+  const expect: SpendBundle = {
+    "aggregated_signature": "",
+    "coin_spends": [
+    ]
+  };
+  const offerText = "offer1qqp83w76wzru6cmqvpsxygqqwc7hynr6hum6e0mnf72sn7uvvkpt68eyumkhelprk0adeg42nlelk2mpafrgx923m0l4lupujuu7m6vvmjxy042f2esn0hm4nalt3ym0dhrf29e0h9nxc6y69h2s54rzkly49yh8a9k2lr60zg662fakned6dx6s7nt4eqj492v0l3s2chhqxsy0sqkdqvxdamm7ywnp0t098yzel2449djcf3dhtq6gg8wd53e3ua8ms99je6e2hxqedeet94hulx27n8zdejp9tyh8le7ael208halsp8m8r6hnv5smpga6pytnlghvzr2uj8mvs6xmvs68mvs69mq30py53dnkpzuaskj3wnhyz5ame72u42nkf3dnzgddvtsnk3nvgl8ps7lr6gtp0tda697wvr65tz0gt6fmu2tul6tcflxfw6xh9087pe2sn2sd9u89wzzl6wmw5vawsmtgyz99mjgwumlrfk0pp4dc7pkwa9v3l7vdwy0dlgahw6xq7ep5ms638em6ztata27vu86arnw433r4fkjujhnfc5jk6tkehlzqvgltfagqrtdsz6y4l30yr2vqqwxaxtllpy4s8xrgf4z2eh49hs8235l7l6p60c5ted08ll85ffk7xyl499vhy0au6j0hvl2jepfsas2k72rm9hv8jus6nuhlsv67fe4w8p4mkp69cackca8k7n3h4neat94hwswgh0n56nqlmuj4ehj93jwxk8cdlcteg4najd5n22477rkjmalpggsh8qwqu84a6hadwtkf0tufzffkhxycpx6gk5trutlqxs7d3hlym256r2yn9zd34fqj0q2njjpvmh89l6tpdwt9f3wfr77c7eq9cua47hge0sg8w40svjl4lajpw7dltassqm79h8j4aeye7m0ukjr8vcuhhenhllknlavj0sttaj6kwawlhllct7h08aav3lv0skez9gzpk936semac0meg8ldxkmmchj3kre07grqpnwkstyz9uhlz";
+
+  const account: AccountEntity = {
+    addressRetrievalCount: 4,
+    key: {
+      privateKey: "029f493caf194d4a67a6a5bad588c12ff1f2512f5db7118fd4005492b9dafbb5",
+      fingerprint: 0,
+      compatibleMnemonic: "",
+    },
+    name: "",
+    type: "Legacy",
+    tokens: {},
+    cats: [],
+  }
+
+  const makerBundle = await decodeOffer(offerText);
+  const summary = await getOfferSummary(makerBundle);
+  const change_hex = "0xb379a659194799dfa9171f7770f6935b1644fe48fd6fb596d5df0ac2abff2bda";
+  const nonce = "c616dec58b3c9a898b167f4ea26adb27b464c7e28d2656eeb845a525b9f5786c";
+  const tokenPuzzles = await coinHandler.getAssetsRequestDetail(account);
+  // const availcoins = await coinHandler.getAvailableCoins(tokenPuzzles, coinHandler.getTokenNames(account));
+  const availcoins: SymbolCoins = {
+    "XCH": [
+      {
+        amount: 7n,
+        parent_coin_info: "0x4eb49d82f126a408914ab23552b8aba955dd19c329d1489a0275556c7012b7e7",
+        puzzle_hash: "0xb379a659194799dfa9171f7770f6935b1644fe48fd6fb596d5df0ac2abff2bda",
+      }
+    ]
+  };
+
+  const cats = getCatNameDict(account);
+  
+  const revSummary = getReversePlan(summary, change_hex, cats);
+  const offplan = await generateOfferPlan(revSummary.offered, change_hex, availcoins, 0n);
+  const takerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, nonce, localPuzzleApiCall);
+  console.log("bundle",makerBundle,takerBundle)
+  const combined = await combineSpendBundle([makerBundle, takerBundle]);
+  console.log("combined", combined)
 
   assertBundle(expect, combined);
 }
