@@ -26,7 +26,7 @@
         </div>
         <div class="column">
           <div
-            v-if="cameraInited"
+            v-if="mode === 'OFFLINE_CLIENT' && cameraInited"
             class="pb-5 is-size-6 has-text-primary has-text-weight-bold has-text-centered is-hidden-tablet"
           >
             {{ $t("offline.client.scan.scrollDown") }}
@@ -235,11 +235,9 @@ export default class OfflineQrCode extends Vue {
   }
 
   async onInit(promise: Promise<void>): Promise<void> {
+    promise.then(() => (this.cameraInited = true));
     await initCameraHandleError(promise, async (err) => {
       this.error = err;
-    });
-    promise.then(() => {
-      this.cameraInited = true;
     });
   }
 }
