@@ -146,6 +146,7 @@ import { Bytes } from "clvm";
 import { conditionDict, ConditionInfo, prefix0x, getNumber } from "@/services/coin/condition";
 import { modsdict, modsprog } from "@/services/coin/mods";
 import UncurryPuzzle from "@/components/DevHelper/UncurryPuzzle.vue";
+import { decodeOffer } from "@/services/offer/encoding";
 
 @Component({
   components: {
@@ -171,9 +172,14 @@ export default class BundlePanel extends Vue {
 
   public readonly conditionsdict: { [id: number]: ConditionInfo } = conditionDict;
 
-  updateBundle(): void {
+  async updateBundle(): Promise<void> {
     try {
-      this.bundle = JSON.parse(this.bundleText.replace(/'/g, '"'));
+      if (this.bundleText.startsWith("bundle1")) {
+        this.bundle = await decodeOffer(this.bundleText);
+        this.bundleText = JSON.stringify(this.bundle);
+      } else {
+        this.bundle = JSON.parse(this.bundleText.replace(/'/g, '"'));
+      }
     } catch (error) {
       this.bundle = null;
     }
