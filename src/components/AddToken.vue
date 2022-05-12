@@ -67,6 +67,8 @@ import { shorten } from "@/filters/addressConversion";
 })
 export default class AddToken extends Vue {
   @Prop() private account!: AccountEntity;
+  @Prop({ default: "" }) name!: string;
+  @Prop({ default: "" }) assetId!: string;
 
   sortableOptions = {
     chosenClass: "box",
@@ -74,8 +76,6 @@ export default class AddToken extends Vue {
     handle: ".drag-handle",
   };
   assetIds: CustomCat[] = [];
-  name = "";
-  assetId = "";
   submitting = false;
 
   mounted(): void {
