@@ -21,17 +21,20 @@
                       <b-tag v-if="ent.id && cats[ent.id]" type="is-info" :title="cats[ent.id] + ' (' + ent.id + ')'">{{
                         cats[ent.id]
                       }}</b-tag>
-                      <b-tag v-else-if="ent.id" type="is-info" :title="ent.id"
-                        >{{ $t("offer.symbol.Cat") }} {{ ent.id.slice(0, 7) + "..." }}</b-tag
-                      >
+                      <a v-else-if="ent.id" @click="addCat(ent.id)">
+                        <b-tag type="is-info" :title="ent.id">
+                          {{ $t("offer.symbol.Cat") }} {{ ent.id.slice(0, 7) + "..." }}</b-tag
+                        >
+                      </a>
+
                       <b-tag v-else type="is-info" :title="$t('offer.symbol.hint.XCH')">{{ $t("offer.symbol.XCH") }}</b-tag>
 
                       <b-tag class="" :title="ent.amount + ' mojos'">{{
                         ent.amount | demojo(ent.id && tokenInfo[cats[ent.id]])
                       }}</b-tag>
-                      <b-tag v-if="sumkey == 'requested'" type="is-info is-light" :title="ent.target">{{
-                        ent.target.slice(0, 10) + "..."
-                      }}</b-tag>
+                      <b-tag v-if="sumkey == 'requested'" type="is-info is-light" :title="ent.target">
+                        <key-box :value="ent.target" :showValue="true"></key-box>
+                      </b-tag>
                     </b-taglist>
                   </li>
                 </ol>
@@ -94,6 +97,7 @@ import puzzle from "@/services/crypto/puzzle";
 import store from "@/store";
 import { debugBundle, submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/FeeSelector.vue";
+import AddToken from "@/components/AddToken.vue";
 
 @Component({
   components: {
@@ -219,6 +223,17 @@ export default class TakeOffer extends Vue {
   debugBundle(): void {
     if (!this.bundle) return;
     debugBundle(this, this.bundle);
+  }
+
+  addCat(id: string): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: AddToken,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: ["x"],
+      props: { account: this.account, assetId: id },
+    });
   }
 }
 </script>
