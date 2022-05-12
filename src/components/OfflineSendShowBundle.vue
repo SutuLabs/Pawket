@@ -5,6 +5,13 @@
         <qrcode-vue :value="qrcode" size="300"></qrcode-vue>
         {{ $t("offline.client.show.hint") }}
       </center>
+      <b-field>
+        <template #label>
+          {{ $t("offline.client.show.bundle") }}
+          <key-box icon="checkbox-multiple-blank-outline" :value="qrcode" :tooltip="$t('offline.client.show.copy')"></key-box>
+        </template>
+        <b-input type="textarea" disabled :value="qrcode"></b-input>
+      </b-field>
     </section>
   </div>
 </template>

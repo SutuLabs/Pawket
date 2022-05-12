@@ -49,6 +49,7 @@
           <template #label>
             {{ $t("offer.take.ui.label.bundle") }}
             <key-box icon="checkbox-multiple-blank-outline" :value="JSON.stringify(bundle)" tooltip="Copy"></key-box>
+            <b-button tag="a" class="mr-2" icon-left="qrcode" size="is-small" @click="showQrCode()"> </b-button>
             <a href="javascript:void(0)" v-if="debugMode" @click="debugBundle()">🐞</a>
           </template>
           <b-input type="textarea" disabled :value="bundleJson"></b-input>
@@ -98,6 +99,7 @@ import store from "@/store";
 import { debugBundle, submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/FeeSelector.vue";
 import AddToken from "@/components/AddToken.vue";
+import OfflineSendShowBundle from "../OfflineSendShowBundle.vue";
 
 @Component({
   components: {
@@ -233,6 +235,16 @@ export default class TakeOffer extends Vue {
       trapFocus: true,
       canCancel: ["x"],
       props: { account: this.account, assetId: id },
+    });
+  }
+
+  showQrCode(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: OfflineSendShowBundle,
+      hasModalCard: true,
+      trapFocus: false,
+      props: { bundle: this.bundle },
     });
   }
 }

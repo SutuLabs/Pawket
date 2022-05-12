@@ -3,6 +3,7 @@
     <template #label>
       {{ $t("bundleText.ui.title") }}
       <key-box icon="checkbox-multiple-blank-outline" :value="bundleText" :tooltip="$t('bundleText.ui.copy')"></key-box>
+      <b-button tag="a" class="mr-2" icon-left="qrcode" size="is-small" @click="showQrCode()"> </b-button>
       <b-button tag="a" icon-left="eye" size="is-small" v-if="!showBundleText" @click="showBundleText = true">
         {{ $t("bundleText.ui.button.show") }}
       </b-button>
@@ -19,6 +20,8 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
 import store from "@/store";
+import OfflineSendShowBundle from "./OfflineSendShowBundle.vue";
+import { SpendBundle } from "@/models/wallet";
 
 @Component({
   components: {
@@ -27,6 +30,8 @@ import store from "@/store";
 })
 export default class BundleText extends Vue {
   @Prop() private value!: string;
+  @Prop() public bundleObject!: SpendBundle;
+
   public showBundleText = false;
 
   get debugMode(): boolean {
@@ -39,6 +44,16 @@ export default class BundleText extends Vue {
 
   debugBundle(): void {
     this.$emit("debugBundle");
+  }
+
+  showQrCode(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: OfflineSendShowBundle,
+      hasModalCard: true,
+      trapFocus: false,
+      props: { bundle: this.bundleObject },
+    });
   }
 }
 </script>
