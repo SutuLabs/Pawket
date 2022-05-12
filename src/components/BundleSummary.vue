@@ -57,7 +57,7 @@
                 </li>
               </ul>
             </b-field>
-            <bundle-text v-model="bundleText" @debugBundle="debugBundle"></bundle-text>
+            <bundle-text v-model="bundleText" :bundleObject="bundleObject" @debugBundle="debugBundle"></bundle-text>
           </div>
         </template>
       </b-field>

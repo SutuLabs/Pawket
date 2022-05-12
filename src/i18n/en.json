@@ -570,7 +570,9 @@
         "finish": "Finish"
       },
       "show": {
-        "hint": "Use Proxy to scan QR to send your transaction."
+        "hint": "Use Proxy to scan QR to send your transaction.",
+        "bundle": "Bundle",
+        "copy": "Copy"
       }
     },
     "ui": {
