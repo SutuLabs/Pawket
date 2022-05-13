@@ -210,6 +210,7 @@
     },
     "message": {
       "error": {
+        "passwordRequired":"Password is required.",
         "passwordNotCorrect": "Incorrect password.",
         "passwordNotMatch": "Password does not match."
       },

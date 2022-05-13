@@ -210,6 +210,7 @@
     },
     "message": {
       "error": {
+        "passwordRequired":"密码不能为空",
         "passwordNotCorrect": "密码不正确",
         "passwordNotMatch": "密码不一致"
       },
