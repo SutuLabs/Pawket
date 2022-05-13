@@ -2,18 +2,36 @@
   <div>
     <header class="modal-card-head">
       <p class="modal-card-title">{{ $t("changePassword.ui.title.changePassword") }}</p>
-      <button type="button" class="delete" @click="close()"></button>
+      <button type="button" class="delete" @click="back()"></button>
     </header>
     <section class="modal-card-body">
       <b-field :label="$t('changePassword.ui.label.oldPassword')" :type="isCorrect ? '' : 'is-danger'">
-        <b-input v-model="oldPwd" type="password"></b-input>
+        <b-input
+          v-model="oldPwd"
+          type="password"
+          ref="oldPwd"
+          required
+          :validation-message="$t('changePassword.message.error.passwordRequired')"
+        ></b-input>
       </b-field>
       <p class="help is-danger" v-if="!isCorrect">{{ $t("changePassword.message.error.passwordNotCorrect") }}</p>
       <b-field :label="$t('changePassword.ui.label.newPassword')">
-        <b-input v-model="newPwd" type="password"></b-input>
+        <b-input
+          v-model="newPwd"
+          type="password"
+          ref="newPwd"
+          required
+          :validation-message="$t('changePassword.message.error.passwordRequired')"
+        ></b-input>
       </b-field>
       <b-field :label="$t('changePassword.ui.label.rePassword')" :type="isMatch ? '' : 'is-danger'">
-        <b-input v-model="rePwd" type="password"></b-input>
+        <b-input
+          v-model="rePwd"
+          type="password"
+          ref="rePwd"
+          required
+          :validation-message="$t('changePassword.message.error.passwordRequired')"
+        ></b-input>
       </b-field>
       <p class="help is-danger" v-if="!isMatch">{{ $t("changePassword.message.error.passwordNotMatch") }}</p>
     </section>
@@ -44,17 +62,28 @@ export default class ChangePassword extends Vue {
   newPwd = "";
   rePwd = "";
   close(): void {
-    this.$emit("back")
+    this.$emit("close");
   }
 
   back(): void {
-    this.$emit("back")
+    this.$emit("back");
+  }
+
+  validate(): void {
+    (this.$refs.oldPwd as Vue & { checkHtml5Validity: () => boolean }).checkHtml5Validity();
+    (this.$refs.newPwd as Vue & { checkHtml5Validity: () => boolean }).checkHtml5Validity();
+    (this.$refs.rePwd as Vue & { checkHtml5Validity: () => boolean }).checkHtml5Validity();
   }
 
   async submitChangePassword(): Promise<void> {
+    this.validate();
+    if (!this.oldPwd.length || !this.newPwd.length || !this.rePwd.length) {
+      return;
+    }
+
     this.isCorrect = true;
-    this.isMatch = true;
     this.isProcessing = true;
+    this.isMatch = true;
 
     const pswhash = await utility.hash(this.oldPwd);
     if (pswhash != store.state.vault.passwordHash) {
@@ -69,7 +98,7 @@ export default class ChangePassword extends Vue {
     }
     const oldPwd = this.oldPwd;
     const newPwd = this.newPwd;
-    await store.dispatch("changePassword", {oldPassword: oldPwd, newPassword: newPwd});
+    await store.dispatch("changePassword", { oldPassword: oldPwd, newPassword: newPwd });
     Dialog.alert(this.$tc("changePassword.message.alert.passwordChanged"));
     this.close();
     store.dispatch("lock");
