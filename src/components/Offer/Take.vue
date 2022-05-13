@@ -157,6 +157,12 @@ export default class TakeOffer extends Vue {
     await this.loadCoins();
   }
 
+  async refresh(): Promise<void> {
+    this.tokenPuzzles = [];
+    this.availcoins = null;
+    await this.loadCoins();
+  }
+
   async updateOffer(): Promise<void> {
     this.makerBundle = null;
     this.makerBundle = await decodeOffer(this.offerText);
@@ -234,7 +240,8 @@ export default class TakeOffer extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: ["x"],
-      props: { account: this.account, assetId: id },
+      props: { account: this.account, defaultAssetId: id },
+      events: { refresh: this.refresh },
     });
   }
 

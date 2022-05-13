@@ -67,8 +67,11 @@ import { shorten } from "@/filters/addressConversion";
 })
 export default class AddToken extends Vue {
   @Prop() private account!: AccountEntity;
-  @Prop({ default: "" }) name!: string;
-  @Prop({ default: "" }) assetId!: string;
+  @Prop({ default: "" }) defaultName!: string;
+  @Prop({ default: "" }) defaultAssetId!: string;
+
+  public name = this.defaultName;
+  public assetId = this.defaultAssetId;
 
   sortableOptions = {
     chosenClass: "box",
