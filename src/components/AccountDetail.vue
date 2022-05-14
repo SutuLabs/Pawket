@@ -123,11 +123,11 @@
             </div>
           </a>
         </b-tooltip>
-        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.batchSend')" position="is-right">
+        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.mintCat')" position="is-right">
           <a v-if="experimentMode" href="javascript:void(0)" @click="openMintCat()" class="has-text-link">
             <div class="ml-5 has-text-centered">
               <b-icon icon="cat" size="is-medium"></b-icon>
-              <p class="is-size-7">Mint CAT</p>
+              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.mintCat") }}</p>
             </div>
           </a>
         </b-tooltip>

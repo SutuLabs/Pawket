@@ -141,13 +141,15 @@
           "donate": "向开发者捐赠",
           "takeOffer": "接受 Offer",
           "makeOffer": "发起 Offer",
-          "batchSend": "批量发送"
+          "batchSend": "批量发送",
+          "mintCat": "发行CAT"
         },
         "button": {
           "donate": "捐赠",
           "takeOffer": "接受Offer",
           "makeOffer": "发起Offer",
-          "batchSend": "批量发送"
+          "batchSend": "批量发送",
+          "mintCat": "发行CAT"
         }
       }
     },
@@ -210,7 +212,7 @@
     },
     "message": {
       "error": {
-        "passwordRequired":"密码不能为空",
+        "passwordRequired": "密码不能为空",
         "passwordNotCorrect": "密码不正确",
         "passwordNotMatch": "密码不一致"
       },
@@ -729,7 +731,8 @@
         "sending": "即将发送",
         "to": "至",
         "fee": "交易费",
-        "total": "总计"
+        "total": "总计",
+        "assetId": "Asset ID"
       }
     }
   },
@@ -740,6 +743,34 @@
       "button": {
         "show": "显示详情",
         "hide": "隐藏详情"
+      }
+    }
+  },
+  "mintCat": {
+    "ui": {
+      "title": "发行CAT",
+      "label": {
+        "address": "地址",
+        "amount": "金额",
+        "memo": "备注",
+        "symbolName": "Token名称（可更改）"
+      },
+      "tooltip": {
+        "qr": "扫描二维码"
+      },
+      "summary": {
+        "notification": "确定要发行CAT吗？<br/>请务必再次检查你的交易内容。",
+        "label": {
+          "leadingText": "发行CAT"
+        }
+      },
+      "button": {
+        "cancel": "取消",
+        "sign": "签名",
+        "submit": "提交"
+      },
+      "messages": {
+        "failedToSign": "签名失败: "
       }
     }
   }

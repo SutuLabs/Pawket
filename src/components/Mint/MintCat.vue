@@ -1,16 +1,15 @@
 <template>
   <div class="modal-card">
     <header class="modal-card-head">
-      <!-- <p class="modal-card-title">{{ $t("send.ui.title.send") }}</p> -->
-      <p class="modal-card-title">Mint CAT</p>
+      <p class="modal-card-title">{{ $t("mintCat.ui.title") }}</p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
       <div v-show="!bundle">
-        <b-field :label="$t('send.ui.label.address')">
+        <b-field :label="$t('mintCat.ui.label.address')">
           <b-input v-model="address" @input="reset()" expanded :disabled="!addressEditable"></b-input>
           <p class="control">
-            <b-tooltip :label="$t('send.ui.tooltip.qr')">
+            <b-tooltip :label="$t('mintCat.ui.tooltip.qr')">
               <b-button @click="scanQrCode()" :disabled="!addressEditable">
                 <b-icon icon="scan-helper"></b-icon>
               </b-button>
@@ -22,7 +21,7 @@
           :selectedToken="selectedToken"
           :token-names="tokenNames"
           :fee="fee"
-          :label="$t('send.ui.label.amount')"
+          :label="$t('mintCat.ui.label.amount')"
           :max-amount="maxAmount"
           :total-amount="totalAmount"
           @input="updateTokenAmount"
@@ -31,27 +30,35 @@
           @set-max="setMax()"
         >
         </token-amount-field>
-        <b-field :label="$t('send.ui.label.memo')">
+        <b-field :label="$t('mintCat.ui.label.memo')">
           <b-input maxlength="100" v-model="memo" type="text" @input="reset()"></b-input>
         </b-field>
-        <b-field :label="'Symbol Name'">
+        <b-field :label="$t('mintCat.ui.label.symbolName')">
           <b-input maxlength="12" v-model="symbol" type="text" @input="reset()"></b-input>
         </b-field>
         <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
       </div>
       <template v-if="bundle">
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($t('send.ui.summary.notification'))"></span>
+          <span v-html="$sanitize($t('mintCat.ui.summary.notification'))"></span>
         </b-notification>
-        <!-- <send-summary :amount="numericAmount" :unit="selectedToken" :fee="feeBigInt" :address="address"></send-summary> -->
+        <send-summary
+          :amount="numericAmount"
+          :unit="symbol.toUpperCase()"
+          :fee="feeBigInt"
+          :address="address"
+          :asset-id="assetId"
+          :leadingText="$t('mintCat.ui.summary.label.leadingText')"
+          :total="total"
+        ></send-summary>
         <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
       </template>
     </section>
     <footer class="modal-card-foot is-justify-content-space-between">
       <div>
-        <b-button :label="$t('send.ui.button.cancel')" @click="cancel()"></b-button>
+        <b-button :label="$t('mintCat.ui.button.cancel')" @click="cancel()"></b-button>
         <b-button
-          :label="$t('send.ui.button.sign')"
+          :label="$t('mintCat.ui.button.sign')"
           v-if="!bundle"
           type="is-primary"
           @click="sign()"
@@ -60,7 +67,7 @@
       </div>
       <div>
         <b-button
-          :label="$t('send.ui.button.submit')"
+          :label="$t('mintCat.ui.button.submit')"
           v-if="bundle"
           type="is-primary"
           class="is-pulled-right"
@@ -107,9 +114,7 @@ export default class MintCat extends Vue {
   public addressEditable = true;
   public submitting = false;
   public fee = 0;
-  // public address = "";
-  // public memo = "";
-  public address = "xch1qqltywgepnjekjh3u3sjjxu3sh82vttqwt7nwxq9rffslk9gyx9uqg8lqru";
+  public address = "";
   public memo = "";
   public bundle: SpendBundle | null = null;
   public availcoins: SymbolCoins | null = null;
@@ -117,9 +122,8 @@ export default class MintCat extends Vue {
   public totalAmount = "-1";
   public maxStatus: "Loading" | "Loaded" = "Loading";
   public selectMax = false;
-  // public amount = "";
-  public amount = "0.00000000001";
-  public symbol = "TEMP";
+  public amount = "";
+  public symbol = "NEWTOKEN";
   public selectedToken = "XCH";
   public validity = false;
   public assetId = "";
@@ -128,6 +132,7 @@ export default class MintCat extends Vue {
 
   mounted(): void {
     this.loadCoins();
+    this.address = this.account.firstAddress ?? "";
   }
 
   @Emit("close")
@@ -148,12 +153,16 @@ export default class MintCat extends Vue {
   }
 
   get numericAmount(): bigint {
-    const decimal = this.selectedToken == "XCH" ? 12 : 3;
+    const decimal = 12;
     return BigInt(bigDecimal.multiply(this.amount, Math.pow(10, decimal)));
   }
 
   get feeBigInt(): bigint {
     return BigInt(this.fee);
+  }
+
+  get total(): bigint {
+    return this.feeBigInt + this.numericAmount;
   }
 
   get debugMode(): boolean {
@@ -223,7 +232,7 @@ export default class MintCat extends Vue {
     this.bundle = null;
     this.maxAmount = "-1";
     this.totalAmount = "-1";
-    // this.amount = "0";
+    this.amount = "0";
     this.selectMax = false;
     this.maxStatus = "Loading";
 
@@ -293,7 +302,7 @@ export default class MintCat extends Vue {
       this.assetId = assetId;
     } catch (error) {
       Notification.open({
-        message: this.$tc("send.ui.messages.failedToSign") + error,
+        message: this.$tc("mintCat.ui.messages.failedToSign") + error,
         type: "is-danger",
         autoClose: false,
       });
@@ -340,8 +349,4 @@ export default class MintCat extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-// .field ::v-deep textarea {
-//   font-size: 0.6em;
-// }
-</style>
+<style scoped lang="scss"></style>
