@@ -191,6 +191,14 @@ class PuzzleMaker {
     return details;
   }
 
+  public getPrivateKeyFromHex(sk_hex: string): PrivateKey {
+    const privateKey = utility.fromHexString(sk_hex);
+    const BLS = store.state.app.bls;
+    if (!BLS) throw "BLS not initialized";
+    const sk = BLS.PrivateKey.from_bytes(privateKey, false);
+    return sk;
+  }
+
   public async getCatPuzzleHashes(privateKey: Uint8Array, assetId: string, startIndex = 0, endIndex = 10): Promise<string[]> {
     return (await this.getCatPuzzleDetails(privateKey, assetId, startIndex, endIndex)).map(_ => _.hash);
   }

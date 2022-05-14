@@ -176,6 +176,36 @@ export const mods: ModDetail[] = [
       },
     ],
   },
+  {
+    name: "genesis_by_coin_id",
+    mod: "(a (i 47 (q 8) (q 2 (i (= 45 2) () (q 8)) 1)) 1)",
+    parameters: [
+      {
+        name: "GENESIS_ID",
+        desc: "The genesis_id is curried in, making this lineage_check program unique and giving the CAT it's uniqueness",
+      },
+      {
+        name: "Truths",
+        desc: "",
+      },
+      {
+        name: "parent_is_cat",
+        desc: "",
+      },
+      {
+        name: "lineage_proof",
+        desc: "",
+      },
+      {
+        name: "delta",
+        desc: "",
+      },
+      {
+        name: "_",
+        desc: "",
+      },
+    ],
+  },
 ]
 export const modsdict: { [mod: string]: string } = mods.reduce((acc, cur) => ({ ...acc, [cur.mod]: cur.name }), {});
 export const modsprog: { [mod: string]: string } = mods.reduce((acc, cur) => ({ ...acc, [cur.name]: cur.mod }), {});

@@ -141,13 +141,15 @@
           "donate": "Donate to Support Development",
           "takeOffer": "Take Offer",
           "makeOffer": "Make Offer",
-          "batchSend": "Batch Send"
+          "batchSend": "Batch Send",
+          "mintCat": "Issue CAT"
         },
         "button": {
           "donate": "Donate",
           "takeOffer": "Take Offer",
           "makeOffer": "Make Offer",
-          "batchSend": "Batch Send"
+          "batchSend": "Batch Send",
+          "mintCat": "Issue CAT"
         }
       }
     },
@@ -210,7 +212,7 @@
     },
     "message": {
       "error": {
-        "passwordRequired":"Password is required.",
+        "passwordRequired": "Password is required.",
         "passwordNotCorrect": "Incorrect password.",
         "passwordNotMatch": "Password does not match."
       },
@@ -729,7 +731,8 @@
         "sending": "Sending",
         "to": "To",
         "fee": "Fee",
-        "total": "Total"
+        "total": "Total",
+        "assetId": "Asset ID"
       }
     }
   },
@@ -740,6 +743,34 @@
       "button": {
         "show": "Show",
         "hide": "Hide"
+      }
+    }
+  },
+  "mintCat": {
+    "ui": {
+      "title": "Issue CAT",
+      "label": {
+        "address": "Address",
+        "amount": "Amount",
+        "memo": "Memo",
+        "symbolName": "Token Name(Modifiable)"
+      },
+      "tooltip": {
+        "qr": "Scan QR"
+      },
+      "summary": {
+        "notification": "Are you sure to issue the CAT?<br/>Please review your transaction.",
+        "label": {
+          "leadingText": "Issuing CAT"
+        }
+      },
+      "button": {
+        "cancel": "Cancel",
+        "sign": "Sign",
+        "submit": "Submit"
+      },
+      "messages": {
+        "failedToSign": "Failed to sign: "
       }
     }
   }

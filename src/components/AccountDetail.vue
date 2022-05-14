@@ -123,6 +123,14 @@
             </div>
           </a>
         </b-tooltip>
+        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.mintCat')" position="is-right">
+          <a v-if="experimentMode" href="javascript:void(0)" @click="openMintCat()" class="has-text-link">
+            <div class="ml-5 has-text-centered">
+              <b-icon icon="cat" size="is-medium"></b-icon>
+              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.mintCat") }}</p>
+            </div>
+          </a>
+        </b-tooltip>
       </div>
     </div>
   </div>
@@ -150,6 +158,7 @@ import { CurrencyType } from "@/services/exchange/currencyType";
 import UtxoPanel from "@/components/UtxoPanel.vue";
 import { CoinRecord } from "@/models/wallet";
 import { nameOmit } from "@/filters/nameConversion";
+import MintCat from "./Mint/MintCat.vue";
 
 type Mode = "Verify" | "Create";
 
@@ -354,6 +363,19 @@ export default class AccountDetail extends Vue {
     this.$buefy.modal.open({
       parent: this,
       component: BatchSend,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: ["x"],
+      props: {
+        account: this.account,
+      },
+    });
+  }
+
+  openMintCat(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: MintCat,
       hasModalCard: true,
       trapFocus: true,
       canCancel: ["x"],
