@@ -126,6 +126,10 @@
                   <b-tag type="is-primary is-light">amount:</b-tag>
                   {{ getNumber(sol.args[1]) }}
                 </li>
+                <li v-if="sol.op == 51">
+                  <b-tag type="is-primary is-light">coin name:</b-tag>
+                  {{ getCoinName(...sol.args) }}
+                </li>
               </ul>
             </li>
           </ul>
@@ -138,7 +142,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
-import { SpendBundle } from "@/models/wallet";
+import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
 import puzzle from "@/services/crypto/puzzle";
 import transfer from "@/services/transfer/transfer";
 import { beautifyLisp } from "@/services/coin/lisp";
@@ -179,6 +183,11 @@ export default class BundlePanel extends Vue {
         this.bundleText = JSON.stringify(this.bundle);
       } else {
         this.bundle = JSON.parse(this.bundleText.replace(/'/g, '"'));
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const cs = (this.bundle as any)?.coin_solutions as CoinSpend[];
+        if (this.bundle && cs && !this.bundle.coin_spends) {
+          this.bundle.coin_spends = cs;
+        }
       }
     } catch (error) {
       this.bundle = null;
@@ -255,6 +264,16 @@ export default class BundlePanel extends Vue {
 
   public getNumber(arg: string): bigint {
     return getNumber(arg);
+  }
+
+  public getCoinName(...args: string[]): string {
+    if (!this.bundle) return "";
+    const coin: OriginCoin = {
+      puzzle_hash: args[0],
+      amount: this.getNumber(args[1]),
+      parent_coin_info: this.used_coin_name,
+    };
+    return transfer.getCoinName(coin).hex();
   }
 }
 </script>
