@@ -177,12 +177,12 @@ export default class MakeOffer extends Vue {
   }
 
   getTotalAmount(token: string): string {
-    if (!this.availcoins || !this.availcoins[token]) {
+    if (!this.availcoins || !this.availcoins[token] || token == "XCH") {
       return "-1";
     }
 
     const availcoins = this.availcoins[token].map((_) => _.amount);
-    const decimal = token == "XCH" ? 12 : 3;
+    const decimal = 3;
     const totalAmount = bigDecimal.divide(
       availcoins.reduce((a, b) => a + b, 0n),
       Math.pow(10, decimal),
