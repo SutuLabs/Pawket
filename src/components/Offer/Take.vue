@@ -17,11 +17,11 @@
               <li>
                 <ol class="token-list">
                   <li class="pt-1" v-for="(ent, idx) in arr" :key="idx">
-                    <b-taglist attached>
+                    <b-taglist attached class="mb-0">
                       <b-tag v-if="ent.id && cats[ent.id]" type="is-info" :title="cats[ent.id] + ' (' + ent.id + ')'">{{
                         cats[ent.id]
                       }}</b-tag>
-                      <a v-else-if="ent.id" @click="addCat(ent.id)">
+                      <a v-else-if="ent.id" @click="ManageCats(ent.id)">
                         <b-tag type="is-info" :title="ent.id">
                           {{ $t("offer.symbol.Cat") }} {{ ent.id.slice(0, 7) + "..." }}</b-tag
                         >
@@ -36,13 +36,16 @@
                         <key-box :value="ent.target" :showValue="true"></key-box>
                       </b-tag>
                     </b-taglist>
+                    <p v-if="ent.id && !cats[ent.id]" class="pl-1 pt-0 is-size-8 has-text-danger is-block">
+                      {{ $t("offer.take.information.addCat") }}
+                    </p>
                   </li>
                 </ol>
               </li>
             </ul>
           </template>
         </b-field>
-        <fee-selector v-if="summary" v-model="fee"></fee-selector>
+        <fee-selector v-if="debugMode && summary" v-model="fee"></fee-selector>
       </template>
       <template v-if="step == 'Confirmation'">
         <b-field v-if="bundle">
@@ -98,7 +101,7 @@ import puzzle from "@/services/crypto/puzzle";
 import store from "@/store";
 import { debugBundle, submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/FeeSelector.vue";
-import AddToken from "@/components/AddToken.vue";
+import ManageCats from "@/components/ManageCats.vue";
 import OfflineSendShowBundle from "../OfflineSendShowBundle.vue";
 
 @Component({
@@ -233,10 +236,10 @@ export default class TakeOffer extends Vue {
     debugBundle(this, this.bundle);
   }
 
-  addCat(id: string): void {
+  ManageCats(id: string): void {
     this.$buefy.modal.open({
       parent: this,
-      component: AddToken,
+      component: ManageCats,
       hasModalCard: true,
       trapFocus: true,
       canCancel: ["x"],

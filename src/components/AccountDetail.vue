@@ -71,10 +71,8 @@
             >
           </a>
           <div class="column is-full has-text-centered pt-5 mt-2">
-            <a @click="addCat()"
-              ><span class="has-color-link"
-                ><b-icon icon="plus" size="is-small"></b-icon> {{ $t("accountDetail.ui.button.addToken") }}</span
-              ></a
+            <a @click="ManageCats()"
+              ><span class="has-color-link">{{ $t("accountDetail.ui.button.manageCats") }}</span></a
             >
           </div>
         </b-tab-item>
@@ -90,47 +88,57 @@
           <b-icon class="is-pulled-right" :icon="displayDapp ? 'menu-up' : 'menu-down'" size="is-medium"></b-icon>
         </p>
       </a>
-      <div v-if="displayDapp">
-        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.donate')" position="is-right">
-          <a href="javascript:void(0)" @click="openDonation()" class="has-text-link">
-            <div class="has-text-centered">
-              <b-icon icon="hand-heart-outline" size="is-medium"></b-icon>
-              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.donate") }}</p>
-            </div>
-          </a>
-        </b-tooltip>
-        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.takeOffer')" position="is-right">
-          <a v-if="experimentMode" href="javascript:void(0)" @click="openTakeOffer()" class="has-text-link">
-            <div class="ml-5 has-text-centered">
-              <b-icon icon="email-check-outline" size="is-medium"></b-icon>
-              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.takeOffer") }}</p>
-            </div>
-          </a>
-        </b-tooltip>
-        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.makeOffer')" position="is-right">
-          <a v-if="experimentMode" href="javascript:void(0)" @click="openMakeOffer()" class="has-text-link">
-            <div class="ml-5 has-text-centered">
-              <b-icon icon="email-send-outline" size="is-medium"></b-icon>
-              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.makeOffer") }}</p>
-            </div>
-          </a>
-        </b-tooltip>
-        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.batchSend')" position="is-right">
-          <a v-if="experimentMode" href="javascript:void(0)" @click="openBatchSend()" class="has-text-link">
-            <div class="ml-5 has-text-centered">
-              <b-icon icon="share-all-outline" size="is-medium"></b-icon>
-              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.batchSend") }}</p>
-            </div>
-          </a>
-        </b-tooltip>
-        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.mintCat')" position="is-right">
-          <a v-if="experimentMode" href="javascript:void(0)" @click="openMintCat()" class="has-text-link">
-            <div class="ml-5 has-text-centered">
-              <b-icon icon="cat" size="is-medium"></b-icon>
-              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.mintCat") }}</p>
-            </div>
-          </a>
-        </b-tooltip>
+      <div v-if="displayDapp" class="columns is-mobile is-multiline">
+        <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+          <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.donate')" position="is-right">
+            <a href="javascript:void(0)" @click="openDonation()" class="has-text-link">
+              <div class="has-text-centered">
+                <b-icon icon="hand-heart-outline" size="is-medium"></b-icon>
+                <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.donate") }}</p>
+              </div>
+            </a>
+          </b-tooltip>
+        </div>
+        <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+          <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.takeOffer')" position="is-right">
+            <a v-if="experimentMode" href="javascript:void(0)" @click="openTakeOffer()" class="has-text-link">
+              <div class="has-text-centered">
+                <b-icon icon="email-check-outline" size="is-medium"></b-icon>
+                <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.takeOffer") }}</p>
+              </div>
+            </a>
+          </b-tooltip>
+        </div>
+        <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+          <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.makeOffer')" position="is-right">
+            <a v-if="experimentMode" href="javascript:void(0)" @click="openMakeOffer()" class="has-text-link">
+              <div class="has-text-centered">
+                <b-icon icon="email-send-outline" size="is-medium"></b-icon>
+                <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.makeOffer") }}</p>
+              </div>
+            </a>
+          </b-tooltip>
+        </div>
+        <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+          <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.batchSend')" position="is-right">
+            <a v-if="experimentMode" href="javascript:void(0)" @click="openBatchSend()" class="has-text-link">
+              <div class="has-text-centered">
+                <b-icon icon="share-all-outline" size="is-medium"></b-icon>
+                <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.batchSend") }}</p>
+              </div>
+            </a>
+          </b-tooltip>
+        </div>
+        <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+          <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.mintCat')" position="is-right">
+            <a v-if="experimentMode" href="javascript:void(0)" @click="openMintCat()" class="has-text-link">
+              <div class="has-text-centered">
+                <b-icon icon="cat" size="is-medium"></b-icon>
+                <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.mintCat") }}</p>
+              </div>
+            </a>
+          </b-tooltip>
+        </div>
       </div>
     </div>
   </div>
@@ -142,7 +150,7 @@ import store from "@/store";
 import AccountExport from "@/components/AccountExport.vue";
 import AccountList from "@/components/AccountList.vue";
 import AccountConfigure from "@/components/AccountConfigure.vue";
-import AddToken from "@/components/AddToken.vue";
+import ManageCats from "@/components/ManageCats.vue";
 import ExplorerLink from "@/components/ExplorerLink.vue";
 import KeyBox from "@/components/KeyBox.vue";
 import Send from "./Send.vue";
@@ -271,10 +279,10 @@ export default class AccountDetail extends Vue {
     });
   }
 
-  addCat(): void {
+  ManageCats(): void {
     this.$buefy.modal.open({
       parent: this,
-      component: AddToken,
+      component: ManageCats,
       hasModalCard: true,
       trapFocus: true,
       canCancel: ["x"],

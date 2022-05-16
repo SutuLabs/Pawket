@@ -124,7 +124,7 @@
         "export": "Export",
         "confirm": "Confirm",
         "cancel": "Cancel",
-        "addToken": "Add Token"
+        "manageCats": "Manage CATs"
       },
       "tab": {
         "asset": "Asset",
@@ -493,17 +493,18 @@
       },
       "information": {
         "requested": "In exchange for",
-        "offered": "You will receive"
+        "offered": "You will receive",
+        "addCat": "Add to CATs List, First."
       },
       "messages": {
         "failedToSign": "Failed to take offer."
       }
     }
   },
-  "addToken": {
+  "ManageCats": {
     "ui": {
       "title": {
-        "addToken": "Add Token"
+        "ManageCats": "Manage Cats"
       },
       "label": {
         "listingCats": "CATs List",
