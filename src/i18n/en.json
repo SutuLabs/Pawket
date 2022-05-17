@@ -494,7 +494,7 @@
       "information": {
         "requested": "In exchange for",
         "offered": "You will receive",
-        "addCat": "Add to CATs List, First."
+        "addCat": "Add to CATs List."
       },
       "messages": {
         "failedToSign": "Failed to take offer."

@@ -36,9 +36,11 @@
                         <key-box :value="ent.target" :showValue="true"></key-box>
                       </b-tag>
                     </b-taglist>
-                    <p v-if="ent.id && !cats[ent.id]" class="pl-1 pt-0 is-size-8 has-text-danger is-block">
-                      {{ $t("offer.take.information.addCat") }}
-                    </p>
+                    <a v-if="ent.id && !cats[ent.id]" @click="ManageCats(ent.id)">
+                      <span v-if="ent.id && !cats[ent.id]" class="pl-1 pt-0 is-size-8 has-text-danger is-inline-block">
+                        {{ $t("offer.take.information.addCat") }}
+                      </span>
+                    </a>
                   </li>
                 </ol>
               </li>

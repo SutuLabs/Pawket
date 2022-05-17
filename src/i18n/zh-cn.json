@@ -494,7 +494,7 @@
       "information": {
         "requested": "付出",
         "offered": "获得",
-        "addCat": "请先将 CAT 添加至 CATs 列表。"
+        "addCat": "点击添加至 CATs 列表。"
       },
       "messages": {
         "failedToSign": "接受 Offer 失败"
