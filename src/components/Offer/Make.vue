@@ -14,7 +14,10 @@
               :selectedToken="offer.token"
               :token-names="tokenNames"
               :fee="0"
-              :showMaxAmount="false"
+              :showMaxAmount="true"
+              :max-amount="getMaxAmount(offer.token)"
+              :total-amount="getTotalAmount(offer.token)"
+              @set-max="setMax(offer)"
               label=""
               @change-token="(token) => (offer.token = token)"
             >
@@ -116,6 +119,7 @@ import { getOfferEntities, getOfferSummary, OfferEntity, OfferSummary, OfferToke
 import { getCatIdDict, getCatNameDict } from "@/services/coin/cat";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
 import { generateOffer, generateOfferPlan } from "@/services/offer/bundler";
+import bigDecimal from "js-big-decimal";
 
 @Component({
   components: {
@@ -170,6 +174,50 @@ export default class MakeOffer extends Vue {
 
   async mounted(): Promise<void> {
     await this.loadCoins();
+  }
+
+  getTotalAmount(token: string): string {
+    if (!this.availcoins || !this.availcoins[token] || token == "XCH") {
+      return "-1";
+    }
+
+    const availcoins = this.availcoins[token].map((_) => _.amount);
+    const decimal = 3;
+    const totalAmount = bigDecimal.divide(
+      availcoins.reduce((a, b) => a + b, 0n),
+      Math.pow(10, decimal),
+      decimal
+    );
+    return totalAmount;
+  }
+
+  getMaxAmount(token: string): string {
+    if (!this.availcoins || !this.availcoins[token]) {
+      return "-1";
+    }
+
+    const availcoins = this.availcoins[token].map((_) => _.amount);
+    const decimal = token == "XCH" ? 12 : 3;
+    const singleMax = bigDecimal.divide(
+      availcoins.reduce((a, b) => (a > b ? a : b), 0n),
+      Math.pow(10, decimal),
+      decimal
+    );
+    const totalAmount = bigDecimal.divide(
+      availcoins.reduce((a, b) => a + b, 0n),
+      Math.pow(10, decimal),
+      decimal
+    );
+    if (token == "XCH") {
+      return totalAmount;
+    } else {
+      return singleMax;
+    }
+  }
+
+  setMax(offer: OfferTokenAmount): void {
+    const newAmount = this.getMaxAmount(offer.token);
+    offer.amount = newAmount;
   }
 
   async loadCoins(): Promise<void> {

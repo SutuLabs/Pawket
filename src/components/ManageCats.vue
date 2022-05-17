@@ -4,38 +4,38 @@
     <section>
       <header class="modal-card-head">
         <p class="modal-card-title">
-          {{ $t("addToken.ui.title.addToken") }}
+          {{ $t("ManageCats.ui.title.ManageCats") }}
         </p>
         <button type="button" class="delete" @click="close()"></button>
       </header>
       <section class="modal-card-body">
-        <b-field :label="$t('addToken.ui.label.name')">
+        <b-field :label="$t('ManageCats.ui.label.name')">
           <b-input
             v-model="name"
             type="text"
             required
             maxlength="36"
-            :validation-message="$t('addToken.ui.message.nameRequired')"
+            :validation-message="$t('ManageCats.ui.message.nameRequired')"
             ref="name"
             title=""
           ></b-input>
         </b-field>
-        <b-field :label="$t('addToken.ui.label.assetID')">
+        <b-field :label="$t('ManageCats.ui.label.assetID')">
           <b-input
             v-model="assetId"
             type="text"
             required
             ref="assetId"
             title=""
-            :validation-message="$t('addToken.ui.message.assetIdRequired')"
+            :validation-message="$t('ManageCats.ui.message.assetIdRequired')"
           ></b-input>
         </b-field>
         <div class="has-text-centered">
-          <b-button :label="$t('addToken.ui.button.add')" type="is-primary" class="mx-2" @click="add()"></b-button>
+          <b-button :label="$t('ManageCats.ui.button.add')" type="is-primary" class="mx-2" @click="add()"></b-button>
         </div>
         <hr />
         <div class="y-scroll pt-5" style="height: 40vh">
-          <b-field :label="$t('addToken.ui.label.listingCats')">
+          <b-field :label="$t('ManageCats.ui.label.listingCats')">
             <token-item :catList="assetIds" @remove="remove" v-sortable="sortableOptions" @updateOrder="updateOrder"></token-item>
           </b-field>
         </div>
@@ -65,7 +65,7 @@ import { shorten } from "@/filters/addressConversion";
     TokenItem,
   },
 })
-export default class AddToken extends Vue {
+export default class ManageCats extends Vue {
   @Prop() private account!: AccountEntity;
   @Prop({ default: "" }) defaultName!: string;
   @Prop({ default: "" }) defaultAssetId!: string;
@@ -106,7 +106,7 @@ export default class AddToken extends Vue {
     }
     if (!this.isAssetId(this.assetId)) {
       Notification.open({
-        message: this.$tc("addToken.message.notification.wrongAssetId"),
+        message: this.$tc("ManageCats.message.notification.wrongAssetId"),
         type: "is-danger",
       });
       return;
@@ -114,14 +114,14 @@ export default class AddToken extends Vue {
     const idx = this.assetIds.findIndex((a) => a.name.toUpperCase() == this.name.toUpperCase());
     if (idx > -1) {
       this.$buefy.dialog.alert({
-        message: this.$tc("addToken.message.alert.nameExists"),
+        message: this.$tc("ManageCats.message.alert.nameExists"),
       });
       return;
     }
     const eidx = this.assetIds.findIndex((_) => _.id == this.assetId);
     if (eidx > -1) {
       this.$buefy.dialog.alert({
-        message: this.$tc("addToken.message.alert.idExists"),
+        message: this.$tc("ManageCats.message.alert.idExists"),
       });
       return;
     }
@@ -132,7 +132,7 @@ export default class AddToken extends Vue {
     const dname = defaultCats.findIndex((_) => _.name == this.name);
     if (didx > -1 || dname > -1) {
       this.$buefy.dialog.alert({
-        message: this.$tc("addToken.message.alert.isDefaultCat"),
+        message: this.$tc("ManageCats.message.alert.isDefaultCat"),
       });
       return;
     }
@@ -143,7 +143,7 @@ export default class AddToken extends Vue {
 
   remove(id: string): void {
     this.$buefy.dialog.confirm({
-      message: this.$tc("addToken.message.confirm.removeToken"),
+      message: this.$tc("ManageCats.message.confirm.removeToken"),
       onConfirm: () => {
         const aid = this.assetIds.findIndex((a) => a.id == id);
         if (aid > -1) {
@@ -174,7 +174,7 @@ export default class AddToken extends Vue {
     this.$emit("refresh");
 
     Notification.open({
-      message: this.$tc("addToken.message.notification.saved"),
+      message: this.$tc("ManageCats.message.notification.saved"),
       type: "is-primary",
     });
 

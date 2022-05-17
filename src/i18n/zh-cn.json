@@ -124,7 +124,7 @@
         "export": "导出",
         "confirm": "确认",
         "cancel": "取消",
-        "addToken": "添加 Token"
+        "manageCats": "管理CATs"
       },
       "tab": {
         "asset": "资产",
@@ -493,17 +493,18 @@
       },
       "information": {
         "requested": "付出",
-        "offered": "获得"
+        "offered": "获得",
+        "addCat": "点击添加至 CATs 列表。"
       },
       "messages": {
         "failedToSign": "接受 Offer 失败"
       }
     }
   },
-  "addToken": {
+  "ManageCats": {
     "ui": {
       "title": {
-        "addToken": "添加 Token"
+        "ManageCats": "管理CATs"
       },
       "label": {
         "listingCats": "CATs 列表",
