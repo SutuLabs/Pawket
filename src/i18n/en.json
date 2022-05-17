@@ -175,6 +175,7 @@
       "button": {
         "cancel": "Cancel",
         "changePassword": "Change Login Password",
+        "addressBook": "Address Book",
         "showMnemonic": "Reveal Mnemonics",
         "experimental": "Experimental",
         "confirm": "Confirm"
@@ -359,11 +360,13 @@
       "tooltip": {
         "singleCoinExplanation": "Currently only support one coin mode, mix coin send is under development.",
         "qr": "Scan QR",
+        "addressBook": "Open Address Book",
         "offlineScan": "You are in offline mode, communicate with proxy via QR code to send transaction."
       },
       "span": {
         "loading": "Loading",
-        "maxLeadingText": "Max:"
+        "maxLeadingText": "Max:",
+        "newAddress": "New Address Found, Click to Add to Address Book."
       },
       "text": {
         "offlineOnlySupportXch": "Offline send only support XCH now."
@@ -772,6 +775,72 @@
         "failedToSign": "Failed to sign: ",
         "tokenNameUnavailable": "Token Name is not available"
       }
+    }
+  },
+  "addressBook": {
+    "ui": {
+      "title": {
+        "list": "Address Book",
+        "add": "Add New Address"
+      },
+      "button": {
+        "add": "Add",
+        "cancel": "Cancel",
+        "save": "Save",
+        "addContact": "Add Contact"
+      },
+      "text": {
+        "createYourAddressBook": "Create Your Address Book"
+      }
+    },
+    "messages": {
+      "notification": {
+        "contactAdded": "Contact Added",
+        "contactRemoved": "Contact Removed",
+        "saved": "Saved!"
+      },
+      "alert": {
+        "addressExists":"The address already exists in the address book."
+      }
+    }
+  },
+  "addressDetail": {
+    "ui": {
+      "title": {
+        "detail": "Detail",
+        "edit": "Edit"
+      },
+      "label": {
+        "name": "Name",
+        "address": "*Address"
+      },
+      "tooltip": {
+        "copy": "Copy"
+      },
+      "button": {
+        "edit": "Edit"
+      }
+    }
+  },
+  "addressBookField": {
+    "ui": {
+      "label": {
+        "name": "Name",
+        "address": "*Address"
+      },
+      "messages": {
+        "emptyAddress": "Enter the address.",
+        "illegalAddress": "Incorrect address."
+      },
+      "button": {
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "save": "Save",
+        "delete": "Delete"
+      }
+    },
+    "messages": {
+      "removeConfirm": "Are you sure you want to delete this contact?"
     }
   }
 }

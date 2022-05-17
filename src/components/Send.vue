@@ -15,9 +15,22 @@
         >
           {{ notificationMessage }}
         </b-notification>
-        <b-field :label="$t('send.ui.label.address')">
+        <b-field>
+          <template #label>
+            {{ $t("send.ui.label.address") }}
+            <b-button v-if="isNewAddress" tag="a" type="is-primary is-light" size="is-small" @click="addAddress()">
+              <span>
+                {{ $t("send.ui.span.newAddress") }}
+              </span>
+            </b-button>
+          </template>
           <b-input v-model="address" @input="reset()" expanded :disabled="!addressEditable"></b-input>
           <p class="control">
+            <b-tooltip :label="$t('send.ui.tooltip.addressBook')">
+              <b-button @click="openAddressBook()" :disabled="!addressEditable">
+                <b-icon icon="account"></b-icon>
+              </b-button>
+            </b-tooltip>
             <b-tooltip :label="$t('send.ui.tooltip.qr')">
               <b-button @click="scanQrCode()" :disabled="!addressEditable">
                 <b-icon icon="scan-helper"></b-icon>
@@ -113,6 +126,7 @@ import OfflineSendShowBundle from "./OfflineSendShowBundle.vue";
 import { CurrencyType } from "@/services/exchange/currencyType";
 import BundleSummary from "./BundleSummary.vue";
 import SendSummary from "./SendSummary.vue";
+import AddressBook, { Contact } from "./AddressBook.vue";
 
 @Component({
   components: {
@@ -153,11 +167,13 @@ export default class Send extends Vue {
   public offline = false;
 
   public requests: TokenPuzzleDetail[] = [];
+  public contacts: Contact[] = [];
 
   mounted(): void {
     if (this.inputAddress) this.address = this.inputAddress;
     if (this.inputAmount) this.amount = this.inputAmount;
     this.loadCoins();
+    this.updateContacts();
   }
 
   @Emit("close")
@@ -167,6 +183,24 @@ export default class Send extends Vue {
 
   get decimal(): number {
     return this.selectedToken == "XCH" ? 12 : 3;
+  }
+
+  get isNewAddress(): boolean {
+    if (this.address.length < 32) {
+      return false;
+    }
+    for (let c of this.contacts) {
+      if (c.address === this.address) return false;
+    }
+    return true;
+  }
+
+  updateContacts(): void {
+    const contactsJson = localStorage.getItem("CONTACTS");
+    if (contactsJson == null) {
+      return;
+    }
+    this.contacts = JSON.parse(contactsJson);
   }
 
   get tokenNames(): string[] {
@@ -354,6 +388,34 @@ export default class Send extends Vue {
         },
       },
     });
+  }
+
+  openAddressBook(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: AddressBook,
+      hasModalCard: true,
+      trapFocus: true,
+      props: { parent: "Send" },
+      events: {
+        selected: (value: string): void => {
+          this.reset();
+          this.address = value;
+        },
+      },
+    });
+  }
+
+  addAddress(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: AddressBook,
+      hasModalCard: true,
+      trapFocus: true,
+      props: { parent: "Send", defaultMode: "Add", defaultAddress: this.address },
+      events: { added: this.updateContacts },
+    });
+    return;
   }
 
   changeFee(): void {
