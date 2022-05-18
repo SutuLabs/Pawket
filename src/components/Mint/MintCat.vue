@@ -34,7 +34,7 @@
           <b-input maxlength="100" v-model="memo" type="text" @input="reset()"></b-input>
         </b-field>
         <b-field :label="$t('mintCat.ui.label.symbolName')">
-          <b-input maxlength="12" v-model="symbol" type="text" @input="reset()"></b-input>
+          <b-input maxlength="12" v-model="symbol" type="text" @input="reset()" required></b-input>
         </b-field>
         <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
       </div>
@@ -82,7 +82,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
-import { AccountEntity, TokenInfo } from "@/store/modules/account";
+import { AccountEntity, CustomCat, TokenInfo } from "@/store/modules/account";
 import KeyBox from "@/components/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { TokenPuzzleDetail } from "@/services/crypto/receive";
@@ -110,7 +110,7 @@ import { generateMintCatBundle } from "@/services/mint/cat";
 })
 export default class MintCat extends Vue {
   @Prop() private account!: AccountEntity;
-
+  @Prop() private tokenList!: CustomCat[];
   public addressEditable = true;
   public submitting = false;
   public fee = 0;
@@ -138,6 +138,15 @@ export default class MintCat extends Vue {
   @Emit("close")
   close(): void {
     return;
+  }
+
+  get isLegalSymbol(): boolean {
+    for (let t of this.tokenList) {
+      if (t.name.toUpperCase() === this.symbol.toUpperCase()) {
+        return false;
+      }
+    }
+    return true;
   }
 
   get decimal(): number {
@@ -276,6 +285,15 @@ export default class MintCat extends Vue {
     try {
       if (!this.account.firstAddress) {
         this.submitting = false;
+        return;
+      }
+
+      if (!this.isLegalSymbol) {
+        this.submitting = false;
+        Notification.open({
+          message: this.$tc("mintCat.ui.messages.tokenNameUnavailable"),
+          type: "is-danger",
+        });
         return;
       }
 

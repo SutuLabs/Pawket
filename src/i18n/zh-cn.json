@@ -533,9 +533,7 @@
         "removeToken": "确定要删除这个 Token 吗?"
       },
       "alert": {
-        "nameExists": "名称已存在!",
-        "idExists": "Asset ID 已存在!",
-        "isDefaultCat": "Asset ID/名称已存在于默认 CATs 列表中!"
+        "isExisted": "Asset ID/名称已存在于默认列表中!"
       }
     }
   },
@@ -771,7 +769,8 @@
         "submit": "提交"
       },
       "messages": {
-        "failedToSign": "签名失败: "
+        "failedToSign": "签名失败: ",
+        "tokenNameUnavailable": "Token名不可用！"
       }
     }
   }

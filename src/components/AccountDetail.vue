@@ -286,7 +286,7 @@ export default class AccountDetail extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: ["x"],
-      props: { account: this.account },
+      props: { account: this.account, tokenList: this.tokenList},
       events: { refresh: this.refresh },
     });
   }
@@ -389,6 +389,7 @@ export default class AccountDetail extends Vue {
       canCancel: ["x"],
       props: {
         account: this.account,
+        tokenList: this.tokenList
       },
     });
   }

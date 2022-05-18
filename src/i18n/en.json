@@ -533,9 +533,7 @@
         "removeToken": "Are you sure to remove the token?"
       },
       "alert": {
-        "nameExists": "Name Already Exists!",
-        "idExists": "Asset ID Already Exists!",
-        "isDefaultCat": "Asset ID/Name Already Exists in Default CATs List!"
+        "isExisted": "Asset ID/Name Already Exists in CATs List!"
       }
     }
   },
@@ -771,7 +769,8 @@
         "submit": "Submit"
       },
       "messages": {
-        "failedToSign": "Failed to sign: "
+        "failedToSign": "Failed to sign: ",
+        "tokenNameUnavailable": "Token Name is not available"
       }
     }
   }
