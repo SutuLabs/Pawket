@@ -533,7 +533,7 @@
         "removeToken": "确定要删除这个 Token 吗?"
       },
       "alert": {
-        "isExsited": "Asset ID/名称已存在于默认列表中!"
+        "isExisted": "Asset ID/名称已存在于默认列表中!"
       }
     }
   },
