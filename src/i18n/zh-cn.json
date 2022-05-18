@@ -770,7 +770,7 @@
       },
       "messages": {
         "failedToSign": "签名失败: ",
-        "tokenNameUnavailabel": "Token名不可用！"
+        "tokenNameUnavailable": "Token名不可用！"
       }
     }
   }

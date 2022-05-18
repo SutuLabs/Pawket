@@ -770,7 +770,7 @@
       },
       "messages": {
         "failedToSign": "Failed to sign: ",
-        "tokenNameUnavailabel": "Token Name is not available"
+        "tokenNameUnavailable": "Token Name is not available"
       }
     }
   }

@@ -291,7 +291,7 @@ export default class MintCat extends Vue {
       if (!this.isLegalSymbol) {
         this.submitting = false;
         Notification.open({
-          message: this.$tc("mintCat.ui.messages.tokenNameUnavailabel"),
+          message: this.$tc("mintCat.ui.messages.tokenNameUnavailable"),
           type: "is-danger",
         });
         return;
