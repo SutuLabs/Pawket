@@ -69,6 +69,7 @@ export default class ManageCats extends Vue {
   @Prop() private account!: AccountEntity;
   @Prop({ default: "" }) defaultName!: string;
   @Prop({ default: "" }) defaultAssetId!: string;
+  @Prop() tokenList!: CustomCat[];
 
   public name = this.defaultName;
   public assetId = this.defaultAssetId;
@@ -99,6 +100,18 @@ export default class ManageCats extends Vue {
     (this.$refs.assetId as Vue & { checkHtml5Validity: () => boolean }).checkHtml5Validity();
   }
 
+  isExisted(name: string, id: string): boolean {
+    if (!this.tokenList) {
+      return false;
+    }
+    for (let t of this.tokenList) {
+      if (t.id === id || t.name.toUpperCase() === name.toUpperCase()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   async add(): Promise<void> {
     this.validate();
     if (this.name.length == 0 || this.assetId.length == 0) {
@@ -111,28 +124,10 @@ export default class ManageCats extends Vue {
       });
       return;
     }
-    const idx = this.assetIds.findIndex((a) => a.name.toUpperCase() == this.name.toUpperCase());
-    if (idx > -1) {
-      this.$buefy.dialog.alert({
-        message: this.$tc("ManageCats.message.alert.nameExists"),
-      });
-      return;
-    }
-    const eidx = this.assetIds.findIndex((_) => _.id == this.assetId);
-    if (eidx > -1) {
-      this.$buefy.dialog.alert({
-        message: this.$tc("ManageCats.message.alert.idExists"),
-      });
-      return;
-    }
-    const defaultCats = Object.values(store.state.account.tokenInfo)
-      .map((_) => ({ name: _.symbol, id: _.id }))
-      .filter((_) => _.id);
-    const didx = defaultCats.findIndex((_) => _.id == this.assetId);
-    const dname = defaultCats.findIndex((_) => _.name == this.name);
-    if (didx > -1 || dname > -1) {
-      this.$buefy.dialog.alert({
-        message: this.$tc("ManageCats.message.alert.isDefaultCat"),
+    if (this.isExisted(this.name, this.assetId)) {
+      Notification.open({
+        message: this.$tc("ManageCats.message.alert.isExisted"),
+        type: "is-danger",
       });
       return;
     }
