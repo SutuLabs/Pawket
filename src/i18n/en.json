@@ -785,8 +785,6 @@
       },
       "button": {
         "add": "Add",
-        "cancel": "Cancel",
-        "save": "Save",
         "addContact": "Add Contact"
       },
       "text": {
