@@ -33,6 +33,12 @@
           </div>
         </a>
         <b-slider v-model="maxAddress" :max="12" :min="1" v-if="displayMaxAddressSlider" indicator></b-slider>
+        <a href="javascript:void(0)" class="panel-block" @click="openAddressBook()">
+          <div class="column is-full">
+            <b-icon icon="account-box-multiple-outline" size="is-small" class="mr-2"></b-icon>
+            {{ $t("accountConfigure.ui.button.addressBook") }}
+          </div>
+        </a>
         <a href="javascript:void(0)" class="panel-block" @click="changePassword()">
           <div class="column is-full">
             <b-icon icon="key" size="is-small" class="mr-2"></b-icon>
@@ -64,6 +70,9 @@
     <section v-if="configureOption === 'Password'">
       <change-password @close="close()" @back="back()"></change-password>
     </section>
+    <section v-if="configureOption === 'AddressBook'">
+      <address-book @back="back()"></address-book>
+    </section>
   </div>
 </template>
 
@@ -74,6 +83,7 @@ import store from "@/store/index";
 import KeyBox from "@/components/KeyBox.vue";
 import { AccountEntity } from "@/store/modules/account";
 import ChangePassword from "./ChangePassword.vue";
+import AddressBook from "./AddressBook.vue";
 import { CurrencyType } from "@/services/exchange/currencyType";
 import MnemonicExport from "./MnemonicExport.vue";
 import utility from "@/services/crypto/utility";
@@ -83,6 +93,7 @@ import { notifyPrimary } from "@/notification/notification";
   components: {
     KeyBox,
     ChangePassword,
+    AddressBook,
   },
 })
 export default class AccountConfigure extends Vue {
@@ -90,7 +101,7 @@ export default class AccountConfigure extends Vue {
   public maxAddress: number | null = null;
   public displayMaxAddressSlider = false;
 
-  configureOption: "Default" | "Password" = "Default";
+  configureOption: "Default" | "Password" | "AddressBook" = "Default";
   currencyList: Map<string, CurrencyType> = new Map<string, CurrencyType>([
     ["USD", CurrencyType.USDT],
     ["CNY", CurrencyType.CNY],
@@ -133,6 +144,10 @@ export default class AccountConfigure extends Vue {
 
   changePassword(): void {
     this.configureOption = "Password";
+  }
+
+  openAddressBook(): void {
+    this.configureOption = "AddressBook";
   }
 
   toggleChangeAddress(): void {

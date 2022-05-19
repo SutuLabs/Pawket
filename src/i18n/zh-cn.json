@@ -175,6 +175,7 @@
       "button": {
         "cancel": "取消",
         "changePassword": "修改登录密码",
+        "addressBook": "地址薄",
         "showMnemonic": "显示助记词",
         "experimental": "实验模式",
         "confirm": "确认"
@@ -359,11 +360,13 @@
       "tooltip": {
         "singleCoinExplanation": "当前仅支持单币模式",
         "qr": "扫描二维码",
+        "addressBook": "Open Address Book",
         "offlineScan": "你现在处于离线模式，可以通过二维码与在线设备沟通来发起交易。"
       },
       "span": {
         "loading": "载入中",
-        "maxLeadingText": "最大:"
+        "maxLeadingText": "最大:",
+        "newAddress": "检测到新地址， 点击添加至地址薄。"
       },
       "text": {
         "offlineOnlySupportXch": "目前离线发送币种仅支持 XCH"
@@ -772,6 +775,70 @@
         "failedToSign": "签名失败: ",
         "tokenNameUnavailable": "Token名不可用！"
       }
+    }
+  },
+  "addressBook": {
+    "ui": {
+      "title": {
+        "list": "地址薄",
+        "add": "添加新地址"
+      },
+      "button": {
+        "add": "添加",
+        "addContact": "添加联系人"
+      },
+      "text": {
+        "createYourAddressBook": "建立你的地址薄"
+      }
+    },
+    "messages": {
+      "notification": {
+        "contactAdded": "联系人已添加！",
+        "contactRemoved": "联系人已删除！",
+        "saved": "已保存！"
+      },
+      "alert": {
+        "addressExists": "该地址已存在于地址簿。"
+      }
+    }
+  },
+  "addressDetail": {
+    "ui": {
+      "title": {
+        "detail": "详情",
+        "edit": "编辑"
+      },
+      "label": {
+        "name": "姓名",
+        "address": "*地址"
+      },
+      "tooltip": {
+        "copy": "复制"
+      },
+      "button": {
+        "edit": "编辑"
+      }
+    }
+  },
+  "addressBookField": {
+    "ui": {
+      "label": {
+        "name": "姓名",
+        "address": "*地址"
+      },
+      "messages": {
+        "emptyAddress": "地址不能为空。",
+        "illegalAddress": "地址不正确。"
+      },
+      "button": {
+        "cancel": "取消",
+        "confirm": "确认",
+        "save": "保存",
+        "delete": "删除"
+      }
+    },
+    "messages": {
+      "removeConfirm": "确定要删除该联系人吗？"
     }
   }
 }
