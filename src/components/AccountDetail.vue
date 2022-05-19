@@ -1,6 +1,5 @@
 <template>
   <div class="column is-8 is-offset-2 box">
-    <div id="top"></div>
     <div class="container px-4">
       <b-loading :is-full-page="true" :active="!account.tokens || !account.tokens.hasOwnProperty('XCH')"></b-loading>
       <div class="py-5 has-text-centered" v-if="account && account.key">
@@ -56,6 +55,7 @@
         </section>
       </div>
     </div>
+    <div id="tab"></div>
     <div class="p-2">
       <b-tabs position="is-centered" class="block" expanded>
         <b-tab-item :label="$t('accountDetail.ui.tab.asset')">
@@ -406,7 +406,7 @@ export default class AccountDetail extends Vue {
   }
 
   changePage(): void {
-    document.getElementById("top")?.scrollIntoView();
+    document.getElementById("tab")?.scrollIntoView();
   }
 }
 </script>
