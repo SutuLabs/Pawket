@@ -1,5 +1,6 @@
 <template>
   <div class="column is-8 is-offset-2 box">
+    <div id="top"></div>
     <div class="container px-4">
       <b-loading :is-full-page="true" :active="!account.tokens || !account.tokens.hasOwnProperty('XCH')"></b-loading>
       <div class="py-5 has-text-centered" v-if="account && account.key">
@@ -77,7 +78,7 @@
           </div>
         </b-tab-item>
         <b-tab-item :label="$t('accountDetail.ui.tab.utxos')">
-          <utxo-panel :tokenInfo="tokenInfo" v-model="activities"></utxo-panel>
+          <utxo-panel :tokenInfo="tokenInfo" v-model="activities" @changePage="changePage"></utxo-panel>
         </b-tab-item>
       </b-tabs>
     </div>
@@ -402,6 +403,10 @@ export default class AccountDetail extends Vue {
   toggleDapp(): void {
     this.displayDapp = !this.displayDapp;
     localStorage.setItem("DISPLAY_DAPP", this.displayDapp.toString());
+  }
+
+  changePage(): void {
+    document.getElementById("top")?.scrollIntoView();
   }
 }
 </script>
