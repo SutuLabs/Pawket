@@ -21,14 +21,14 @@
           @click="showDetail(contact, i)"
           class="panel-block columns is-mobile"
         >
-          <div class="column is-flex is-7">
+          <div class="column is-flex is-full">
             <div class="mr-2">
               <b-icon icon="account-circle" size="is-medium" class="has-text-primary"></b-icon>
             </div>
             <div>
               <p class="has-text-grey-dark is-size-6">{{ contact.name }}</p>
               <p>
-                <span class="is-size-7 has-text-grey-light">{{ contact.address }}</span>
+                <span class="is-size-7 has-text-grey-light word-break">{{ contact.address }}</span>
               </p>
             </div>
           </div>
@@ -93,7 +93,7 @@ export default class AddressBook extends Vue {
 
   back(): void {
     if (this.parent === "Configure") {
-      this.$emit("back");
+      this.mode === "Add" ? (this.mode = "List") : this.$emit("back");
     } else {
       this.$emit("close");
     }
@@ -175,3 +175,8 @@ export default class AddressBook extends Vue {
   }
 }
 </script>
+<style lang="scss">
+.word-break {
+  word-break: break-all;
+}
+</style>

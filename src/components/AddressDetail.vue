@@ -10,13 +10,15 @@
         <span>{{ name }}</span>
       </b-field>
       <b-field :label="$t('addressDetail.ui.label.address')">
-        <span>{{ address }}</span>
-        <key-box
-          icon="checkbox-multiple-blank-outline"
-          :tooltip="$t('addressDetail.ui.tooltip.copy')"
-          :value="address"
-          :showValue="false"
-        ></key-box>
+        <span class="word-break"
+          >{{ address }}
+          <key-box
+            icon="checkbox-multiple-blank-outline"
+            :tooltip="$t('addressDetail.ui.tooltip.copy')"
+            :value="address"
+            :showValue="false"
+          ></key-box
+        ></span>
       </b-field>
       <div class="has-text-centered">
         <b-button type="is-primary" @click="edit()">{{ $t("addressDetail.ui.button.edit") }}</b-button>
@@ -92,5 +94,8 @@ export default class AddressDetail extends Vue {
   }
 }
 </script>
-
-function Props() { throw new Error("Function not implemented."); }
+<style type="text/scss">
+.word-break {
+  word-break: break-all;
+}
+</style>
