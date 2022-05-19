@@ -55,6 +55,7 @@
         </section>
       </div>
     </div>
+    <div id="tab"></div>
     <div class="p-2">
       <b-tabs position="is-centered" class="block" expanded>
         <b-tab-item :label="$t('accountDetail.ui.tab.asset')">
@@ -77,7 +78,7 @@
           </div>
         </b-tab-item>
         <b-tab-item :label="$t('accountDetail.ui.tab.utxos')">
-          <utxo-panel :tokenInfo="tokenInfo" v-model="activities"></utxo-panel>
+          <utxo-panel :tokenInfo="tokenInfo" v-model="activities" @changePage="changePage"></utxo-panel>
         </b-tab-item>
       </b-tabs>
     </div>
@@ -402,6 +403,10 @@ export default class AccountDetail extends Vue {
   toggleDapp(): void {
     this.displayDapp = !this.displayDapp;
     localStorage.setItem("DISPLAY_DAPP", this.displayDapp.toString());
+  }
+
+  changePage(): void {
+    document.getElementById("tab")?.scrollIntoView();
   }
 }
 </script>

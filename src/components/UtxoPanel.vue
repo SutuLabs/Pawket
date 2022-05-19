@@ -30,7 +30,7 @@
         >
       </div>
     </a>
-    <b-pagination :total="total" v-model="current" :range-before="rangeBefore" :range-after="rangeAfter" :per-page="perPage">
+    <b-pagination :total="total" v-model="current" :range-before="rangeBefore" :range-after="rangeAfter" :per-page="perPage" @change="changePage">
     </b-pagination>
   </section>
 </template>
@@ -91,6 +91,10 @@ export default class UtxoPanel extends Vue {
     const start = this.perPage * (this.current - 1);
     const end = start + this.perPage;
     return this.actList.slice(start, end);
+  }
+
+  changePage(value: number): void {
+    this.$emit('changePage')
   }
 }
 </script>
