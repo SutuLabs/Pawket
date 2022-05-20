@@ -160,7 +160,7 @@ export default class AddressBook extends Vue {
       component: AddressDetail,
       hasModalCard: true,
       trapFocus: true,
-      canCancel: ["x"],
+      canCancel: ["x", "outside"],
       props: { contact: contact, index: index },
       events: { remove: this.remove, edit: this.edit },
     });

@@ -58,7 +58,7 @@ export default class UtxoPanel extends Vue {
       component: UtxoDetail,
       hasModalCard: true,
       trapFocus: true,
-      canCancel: ["x"],
+      canCancel: ["x", "outside"],
       props: { activity: activity, tokenInfo: this.tokenInfo },
     });
   }
@@ -93,8 +93,9 @@ export default class UtxoPanel extends Vue {
     return this.actList.slice(start, end);
   }
 
+  // eslint-disable-next-line
   changePage(value: number): void {
-    this.$emit('changePage')
+    this.$emit("changePage");
   }
 }
 </script>
