@@ -180,6 +180,7 @@ export default class AccountList extends Vue {
           maxlength: 36,
           value: this.accounts[idx].name,
         },
+        canCancel: ["button"],
         trapFocus: true,
         onConfirm: (name) => {
           resolve(name);
