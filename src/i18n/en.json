@@ -174,7 +174,7 @@
       },
       "button": {
         "cancel": "Cancel",
-        "changePassword": "Change Login Password",
+        "changePassword": "Change Password",
         "addressBook": "Address Book",
         "showMnemonic": "Reveal Mnemonics",
         "experimental": "Experimental",
@@ -199,7 +199,7 @@
   "changePassword": {
     "ui": {
       "title": {
-        "changePassword": "Change Login Password"
+        "changePassword": "Change Password"
       },
       "label": {
         "oldPassword": "Old Password",
@@ -255,7 +255,7 @@
       }
     },
     "message": {
-      "inputPassword": "Enter Login Password to Continue",
+      "inputPassword": "Enter Password to Continue",
       "passwordNotCorrect": "Incorrect password."
     }
   },
@@ -266,7 +266,7 @@
       },
       "button": {
         "addBySerial": "Add by Serial",
-        "addByPassword": "Add by Password",
+        "addByPassword": "Add Shadow Wallet",
         "addByLegacy": "Import Chia Official Wallet（24-word）",
         "addByMnemonic": "Import Nucle/Goby Wallet（12-word）"
       },
@@ -275,7 +275,7 @@
         "edit": "Edit",
         "details": "Details",
         "addBySerial": "Derived serial accounts are created in order.",
-        "addByPassword": "Account protected by MNEMONIC and PASSWORD. Enter the same password to access the same account.",
+        "addByPassword": "Account protected by MNEMONIC and PASSPHRASE. Enter the same PASSPHRASE to access the same account.",
         "addByLegacy": "Import Chia official wallet.",
         "addByMnemonic": "Import Nucle/Goby wallet."
       },
@@ -294,7 +294,7 @@
         "confirmText": "OK"
       },
       "prompt": {
-        "setAccountName": "Enter the New Account Name",
+        "setAccountName": "Enter New Name",
         "setPassword": "Enter Password",
         "setLegacyMnemonic": "Enter Mnemonic Words",
         "cancelText": "Cancel",
@@ -308,7 +308,7 @@
   "explorerLink": {
     "ui": {
       "title": {
-        "link": "Receive Address"
+        "link": "Receive Addresses"
       },
       "label": {
         "address": "Address[number of coins]"
@@ -359,7 +359,7 @@
         "failedToSubmit": "Failed to submit to memory pool: ",
         "failedToSign": "Failed to sign: ",
         "submitted": "Submitted to memory pool.",
-        "invalidAmount":  "Invalid amount",
+        "invalidAmount":  "Invalid amount.",
         "insufficientFunds": "Insufficient funds."
       },
       "tooltip": {
@@ -523,7 +523,7 @@
         "add": "Add"
       },
       "tooltip": {
-        "removeToken": "Remove token",
+        "removeToken": "Remove CAT",
         "drag": "Drag to sort",
         "copy": "Copy"
       },
@@ -538,7 +538,7 @@
         "saved": "Saved."
       },
       "confirmation": {
-        "removeToken": "Are you sure to remove the token?",
+        "removeToken": "Are you sure to remove the CAT?",
         "closeWithContent": "You have unsaved changes made to this page which will be lost if you navigate away. Are you sure you want to close?",
         "confirm": "Confirm",
         "cancel": "Cancel"
@@ -621,16 +621,16 @@
   },
   "addByPassword": {
     "ui": {
-      "title": "Add Account by Password",
+      "title": "Add Shadow Wallet",
       "label": {
         "name": "Account Name",
-        "password": "Password",
-        "rePassword": "Re-Enter Password"
+        "password": "Passphrase",
+        "rePassword": "Re-Enter Passphrase"
       },
       "message": {
         "nameRequired": "Account name is required.",
-        "passwordRequired": "Password is required.",
-        "invalidPassword": "Password does not match."
+        "passwordRequired": "Passphrase is required.",
+        "invalidPassword": "Passphrase does not match."
       },
       "button": {
         "back": "Back",
@@ -639,7 +639,7 @@
     },
     "message": {
       "error": {
-        "accountPasswordExists": "An account with the same password already exists."
+        "accountPasswordExists": "An account with the same passphrase already exists."
       }
     }
   },
@@ -766,7 +766,7 @@
         "address": "Address",
         "amount": "Amount",
         "memo": "Memo",
-        "symbolName": "Token Name(Modifiable)"
+        "symbolName": "CAT Name(Modifiable)"
       },
       "tooltip": {
         "qr": "Scan QR"
@@ -784,7 +784,7 @@
       },
       "messages": {
         "failedToSign": "Failed to sign: ",
-        "tokenNameUnavailable": "Token Name is not available"
+        "tokenNameUnavailable": "CAT name is not available."
       }
     }
   },
@@ -804,12 +804,12 @@
     },
     "messages": {
       "notification": {
-        "contactAdded": "Contact Added",
-        "contactRemoved": "Contact Removed",
-        "saved": "Saved!"
+        "contactAdded": "Added.",
+        "contactRemoved": "Removed.",
+        "saved": "Saved."
       },
       "alert": {
-        "addressExists":"The address already exists in the address book."
+        "addressExists":"The address already exists in Address Book."
       }
     }
   },
@@ -821,7 +821,7 @@
       },
       "label": {
         "name": "Name",
-        "address": "*Address"
+        "address": "Address"
       },
       "tooltip": {
         "copy": "Copy"
@@ -845,11 +845,11 @@
         "cancel": "Cancel",
         "confirm": "Confirm",
         "save": "Save",
-        "delete": "Delete"
+        "delete": "Remove"
       }
     },
     "messages": {
-      "removeConfirm": "Are you sure you want to delete this contact?"
+      "removeConfirm": "Are you sure you want to remove this address from your Address Book?"
     }
   }
 }
