@@ -142,14 +142,14 @@
           "takeOffer": "接受 Offer",
           "makeOffer": "发起 Offer",
           "batchSend": "批量发送",
-          "mintCat": "发行CAT"
+          "mintCat": "发行 CAT"
         },
         "button": {
           "donate": "捐赠",
-          "takeOffer": "接受Offer",
-          "makeOffer": "发起Offer",
+          "takeOffer": "接受 Offer",
+          "makeOffer": "发起 Offer",
           "batchSend": "批量发送",
-          "mintCat": "发行CAT"
+          "mintCat": "发行 CAT"
         }
       }
     },
@@ -174,8 +174,8 @@
       },
       "button": {
         "cancel": "取消",
-        "changePassword": "修改登录密码",
-        "addressBook": "地址薄",
+        "changePassword": "修改密码",
+        "addressBook": "地址簿",
         "showMnemonic": "显示助记词",
         "experimental": "实验模式",
         "confirm": "确认"
@@ -199,7 +199,7 @@
   "changePassword": {
     "ui": {
       "title": {
-        "changePassword": "修改登录密码"
+        "changePassword": "修改密码"
       },
       "label": {
         "oldPassword": "旧密码",
@@ -255,7 +255,7 @@
       }
     },
     "message": {
-      "inputPassword": "请输入登录密码",
+      "inputPassword": "请输入密码",
       "passwordNotCorrect": "密码不正确"
     }
   },
@@ -266,7 +266,7 @@
       },
       "button": {
         "addBySerial": "新增序列账户",
-        "addByPassword": "新增密码账户",
+        "addByPassword": "新增影子钱包",
         "addByLegacy": "导入 Chia 客户端账户(24词)",
         "addByMnemonic": "导入 Nucle/Goby 账户(12词)"
       },
@@ -359,19 +359,19 @@
         "failedToSubmit": "提交至交易池失败: ",
         "failedToSign": "签名失败: ",
         "submitted": "已经提交至交易池，请等待确认。",
-        "invalidAmount": "金额不合法",
-        "insufficientFunds": "余额不足。"
+        "invalidAmount": "无效金额",
+        "insufficientFunds": "余额不足"
       },
       "tooltip": {
         "singleCoinExplanation": "当前仅支持单币模式",
         "qr": "扫描二维码",
-        "addressBook": "Open Address Book",
+        "addressBook": "打开地址簿",
         "offlineScan": "你现在处于离线模式，可以通过二维码与在线设备沟通来发起交易。"
       },
       "span": {
         "loading": "载入中",
         "maxLeadingText": "最大:",
-        "newAddress": "检测到新地址， 点击添加至地址薄。"
+        "newAddress": "检测到新地址，点击添加至地址薄。"
       },
       "text": {
         "offlineOnlySupportXch": "目前离线发送币种仅支持 XCH"
@@ -512,7 +512,7 @@
   "ManageCats": {
     "ui": {
       "title": {
-        "ManageCats": "管理CATs"
+        "ManageCats": "管理 CATs"
       },
       "label": {
         "listingCats": "CATs 列表",
@@ -538,7 +538,7 @@
         "saved": "已保存"
       },
       "confirmation": {
-        "removeToken": "确定要删除这个 Token 吗?",
+        "removeToken": "确定要删除这个 CAT 吗?",
         "closeWithContent": "该页面有内容尚未保存，如果您关闭页面，这些更改将会丢失。确定要关闭吗？",
         "confirm": "确定",
         "cancel": "取消"
@@ -621,7 +621,7 @@
   },
   "addByPassword": {
     "ui": {
-      "title": "添加密码账户",
+      "title": "添加影子钱包",
       "label": {
         "name": "账户名",
         "password": "密码",
@@ -639,7 +639,7 @@
     },
     "message": {
       "error": {
-        "accountPasswordExists": "该密码账户已存在于账户列表中。"
+        "accountPasswordExists": "该影子钱包已存在于账户列表中。"
       }
     }
   },
@@ -761,20 +761,20 @@
   },
   "mintCat": {
     "ui": {
-      "title": "发行CAT",
+      "title": "发行 CAT",
       "label": {
         "address": "地址",
         "amount": "金额",
         "memo": "备注",
-        "symbolName": "Token名称（可更改）"
+        "symbolName": "CAT 名称（可更改）"
       },
       "tooltip": {
         "qr": "扫描二维码"
       },
       "summary": {
-        "notification": "确定要发行CAT吗？<br/>请务必再次检查你的交易内容。",
+        "notification": "确定要发行 CAT 吗？<br/>请务必再次检查你的交易内容。",
         "label": {
-          "leadingText": "发行CAT"
+          "leadingText": "发行 CAT"
         }
       },
       "button": {
@@ -784,14 +784,14 @@
       },
       "messages": {
         "failedToSign": "签名失败: ",
-        "tokenNameUnavailable": "Token名不可用！"
+        "tokenNameUnavailable": "CAT 名称不可用！"
       }
     }
   },
   "addressBook": {
     "ui": {
       "title": {
-        "list": "地址薄",
+        "list": "地址簿",
         "add": "添加新地址"
       },
       "button": {
@@ -799,13 +799,13 @@
         "addContact": "添加联系人"
       },
       "text": {
-        "createYourAddressBook": "建立你的地址薄"
+        "createYourAddressBook": "建立你的地址簿"
       }
     },
     "messages": {
       "notification": {
-        "contactAdded": "联系人已添加！",
-        "contactRemoved": "联系人已删除！",
+        "contactAdded": "已添加！",
+        "contactRemoved": "已删除！",
         "saved": "已保存！"
       },
       "alert": {
@@ -820,8 +820,8 @@
         "edit": "编辑"
       },
       "label": {
-        "name": "姓名",
-        "address": "*地址"
+        "name": "名称",
+        "address": "地址"
       },
       "tooltip": {
         "copy": "复制"
@@ -834,7 +834,7 @@
   "addressBookField": {
     "ui": {
       "label": {
-        "name": "姓名",
+        "name": "名称",
         "address": "*地址"
       },
       "messages": {
@@ -849,7 +849,7 @@
       }
     },
     "messages": {
-      "removeConfirm": "确定要删除该联系人吗？"
+      "removeConfirm": "确定要将该地址从地址簿中删除吗？"
     }
   }
 }
