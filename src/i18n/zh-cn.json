@@ -124,7 +124,7 @@
         "export": "导出",
         "confirm": "确认",
         "cancel": "取消",
-        "manageCats": "管理CATs"
+        "manageCats": "管理 CATs"
       },
       "tab": {
         "asset": "资产",
@@ -804,9 +804,9 @@
     },
     "messages": {
       "notification": {
-        "contactAdded": "已添加！",
-        "contactRemoved": "已删除！",
-        "saved": "已保存！"
+        "contactAdded": "已添加",
+        "contactRemoved": "已删除",
+        "saved": "已保存"
       },
       "alert": {
         "addressExists": "该地址已存在于地址簿。"
