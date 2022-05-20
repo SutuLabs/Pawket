@@ -9,7 +9,6 @@
       <b-field :label="$t('addBySerial.ui.label.name')">
         <b-input
           ref="name"
-          id="name"
           v-model="name"
           type="text"
           required
@@ -36,8 +35,11 @@ export default class AddBySerial extends Vue {
   public submitting = false;
 
   mounted(): void {
-    (this.$refs.name as Vue & { focus: () => void }).focus();
-    (document.getElementById("name") as HTMLInputElement).select();
+    const accNameInput = this.$refs.name as HTMLInputElement | undefined;
+    if (accNameInput) {
+      accNameInput.focus();
+      accNameInput.select();
+    }
   }
 
   close(): void {
