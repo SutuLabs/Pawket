@@ -809,7 +809,7 @@
         "saved": "Saved."
       },
       "alert": {
-        "addressExists":"The address already exists in address book."
+        "addressExists":"The address already exists in Address Book."
       }
     }
   },
