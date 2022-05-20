@@ -358,7 +358,9 @@
         "getFailedResponse": "Get error response: ",
         "failedToSubmit": "Failed to submit to memory pool: ",
         "failedToSign": "Failed to sign: ",
-        "submitted": "Submitted to memory pool."
+        "submitted": "Submitted to memory pool.",
+        "invalidAmount":  "Invalid amount",
+        "insufficientFunds": "Insufficient funds."
       },
       "tooltip": {
         "singleCoinExplanation": "Currently only support one coin mode, mix coin send is under development.",
@@ -535,8 +537,11 @@
         "wrongAssetId": "Wrong asset ID. Failed to add a new CAT!",
         "saved": "Saved."
       },
-      "confirm": {
-        "removeToken": "Are you sure to remove the token?"
+      "confirmation": {
+        "removeToken": "Are you sure to remove the token?",
+        "closeWithContent": "You have unsaved changes made to this page which will be lost if you navigate away. Are you sure you want to close?",
+        "confirm": "Confirm",
+        "cancel": "Cancel"
       },
       "alert": {
         "isExisted": "Asset ID/Name Already Exists in CATs List!"
@@ -684,6 +689,9 @@
     "ui": {
       "title": {
         "send": "Batch Send"
+      },
+      "tooltip": {
+        "unit": "Amount is in mojo(s)."
       },
       "field": {
         "csv": {

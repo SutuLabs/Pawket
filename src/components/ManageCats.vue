@@ -90,9 +90,17 @@ export default class ManageCats extends Vue {
     this.assetIds = [...(this.account.cats ?? [])];
   }
 
-  @Emit("close")
   close(): void {
-    return;
+    if (this.name.length || this.assetId.length) {
+      this.$buefy.dialog.confirm({
+        message: this.$tc("ManageCats.message.confirmation.closeWithContent"),
+        confirmText: this.$tc("ManageCats.message.confirmation.confirm"),
+        cancelText: this.$tc("ManageCats.message.confirmation.cancel"),
+        onConfirm: () => this.$emit("close"),
+      });
+    } else {
+      this.$emit("close");
+    }
   }
 
   validate(): void {
@@ -138,7 +146,7 @@ export default class ManageCats extends Vue {
 
   remove(id: string): void {
     this.$buefy.dialog.confirm({
-      message: this.$tc("ManageCats.message.confirm.removeToken"),
+      message: this.$tc("ManageCats.message.confirmation.removeToken"),
       onConfirm: () => {
         const aid = this.assetIds.findIndex((a) => a.id == id);
         if (aid > -1) {

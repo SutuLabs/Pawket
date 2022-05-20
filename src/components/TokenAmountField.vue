@@ -77,7 +77,8 @@ export default class TotalAmountField extends Vue {
   @Prop({ default: tc("send.ui.label.amount") }) private label!: string;
   @Prop({ default: false }) private offline!: boolean;
 
-  public INVALID_AMOUNT_MESSAGE = "Invalid amount";
+  public INVALID_AMOUNT_MESSAGE = tc("send.ui.messages.invalidAmount");
+  public INSUFFICIENT_FUNDS = tc("send.ui.messages.insufficientFunds");
   public selectMax = false;
 
   input(val: string): void {
@@ -110,16 +111,16 @@ export default class TotalAmountField extends Vue {
     }
     if (Number(this.amount) == 0) return "";
 
-    if (Number(this.maxAmount) > -1 && bigDecimal.compareTo(this.amount, this.maxAmount) > 0) return this.INVALID_AMOUNT_MESSAGE;
+    if (Number(this.maxAmount) > -1 && bigDecimal.compareTo(this.amount, this.maxAmount) > 0) return this.INSUFFICIENT_FUNDS;
 
     const mojo = bigDecimal.multiply(this.amount, Math.pow(10, this.decimal));
-    if (Number(mojo) < 1) return this.INVALID_AMOUNT_MESSAGE;
+    if (Number(mojo) < 1 || Number(mojo) % 1) return this.INVALID_AMOUNT_MESSAGE;
     return bigDecimal.getPrettyValue(mojo, 3, ",") + " mojos";
   }
 
   get usdtValue(): string {
     if (this.selectedToken !== "XCH") return "";
-    if (this.amountMessage === this.INVALID_AMOUNT_MESSAGE) return "";
+    if (this.amountMessage === this.INVALID_AMOUNT_MESSAGE || this.amountMessage === this.INSUFFICIENT_FUNDS) return "";
     if (this.amountMessage === "") return "";
     if (this.rate == -1) return "";
     const mojo = bigDecimal.multiply(this.amount, Math.pow(10, this.decimal));
