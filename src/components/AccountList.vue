@@ -83,6 +83,11 @@ export default class AccountList extends Vue {
     return store.state.account.accounts;
   }
 
+  get accountNum(): string {
+    const n = this.accounts.filter((a) => a.type === "Serial").length;
+    return (n + 1).toString();
+  }
+
   get accountIndex(): number {
     return store.state.account.selectedAccount;
   }
@@ -116,7 +121,7 @@ export default class AccountList extends Vue {
   }
 
   async rename(idx: number): Promise<void> {
-    const name = await this.getAccountName();
+    const name = await this.getAccountName(idx);
     store.dispatch("renameAccount", { idx, name });
     notifyPrimary(this.$tc("accountList.message.notification.saved"));
   }
@@ -138,6 +143,7 @@ export default class AccountList extends Vue {
       hasModalCard: true,
       canCancel: ["x"],
       trapFocus: true,
+      props: { defaultName: this.$t("accountList.ui.value.defaultName", { n: this.accountNum }) },
     });
   }
 
@@ -163,7 +169,7 @@ export default class AccountList extends Vue {
     });
   }
 
-  getAccountName(): Promise<string> {
+  getAccountName(idx: number): Promise<string> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return new Promise((resolve, reject) => {
       this.$buefy.dialog.prompt({
@@ -172,6 +178,7 @@ export default class AccountList extends Vue {
         cancelText: this.$tc("accountList.message.prompt.cancelText"),
         inputAttrs: {
           maxlength: 36,
+          value: this.accounts[idx].name,
         },
         trapFocus: true,
         onConfirm: (name) => {

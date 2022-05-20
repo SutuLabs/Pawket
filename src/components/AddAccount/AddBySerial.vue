@@ -25,13 +25,22 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
 import store from "@/store/index";
 
 @Component
 export default class AddBySerial extends Vue {
-  public name = "";
+  @Prop({ default: "" }) private defaultName!: string;
+  public name = this.defaultName;
   public submitting = false;
+
+  mounted(): void {
+    const accNameInput = this.$refs.name as HTMLInputElement | undefined;
+    if (accNameInput) {
+      accNameInput.focus();
+      accNameInput.select();
+    }
+  }
 
   close(): void {
     this.$emit("close");
