@@ -281,6 +281,9 @@
       "modal": {
         "addByLegacy": "Import Chia Official Wallet",
         "addByMnemonic": "Import Nucle/Goby Wallet"
+      },
+      "value": {
+        "defaultName": "Account{n}"
       }
     },
     "message": {

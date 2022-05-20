@@ -9,6 +9,7 @@
       <b-field :label="$t('addBySerial.ui.label.name')">
         <b-input
           ref="name"
+          id="name"
           v-model="name"
           type="text"
           required
@@ -25,13 +26,19 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
 import store from "@/store/index";
 
 @Component
 export default class AddBySerial extends Vue {
-  public name = "";
+  @Prop({ default: "" }) private defaultName!: string;
+  public name = this.defaultName;
   public submitting = false;
+
+  mounted(): void {
+    (this.$refs.name as Vue & { focus: () => void }).focus();
+    (document.getElementById("name") as HTMLInputElement).select();
+  }
 
   close(): void {
     this.$emit("close");

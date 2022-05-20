@@ -281,6 +281,9 @@
       "modal": {
         "addByLegacy": "导入 Chia 客户端账户",
         "addByMnemonic": "导入 Nucle/Goby 账户"
+      },
+      "value": {
+        "defaultName": "账户{n}"
       }
     },
     "message": {
