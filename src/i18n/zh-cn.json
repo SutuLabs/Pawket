@@ -358,7 +358,9 @@
         "getFailedResponse": "提交时发生错误: ",
         "failedToSubmit": "提交至交易池失败: ",
         "failedToSign": "签名失败: ",
-        "submitted": "已经提交至交易池，请等待确认。"
+        "submitted": "已经提交至交易池，请等待确认。",
+        "invalidAmount": "金额不合法",
+        "insufficientFunds": "余额不足。"
       },
       "tooltip": {
         "singleCoinExplanation": "当前仅支持单币模式",
@@ -535,8 +537,11 @@
         "wrongAssetId": "CAT 的 Asset ID 不正确，添加失败！",
         "saved": "已保存"
       },
-      "confirm": {
-        "removeToken": "确定要删除这个 Token 吗?"
+      "confirmation": {
+        "removeToken": "确定要删除这个 Token 吗?",
+        "closeWithContent": "该页面有内容尚未保存，如果您关闭页面，这些更改将会丢失。确定要关闭吗？",
+        "confirm": "确定",
+        "cancel": "取消"
       },
       "alert": {
         "isExisted": "Asset ID/名称已存在于默认列表中!"
@@ -684,6 +689,9 @@
     "ui": {
       "title": {
         "send": "批量发送"
+      },
+      "tooltip": {
+        "unit": "金额单位为 mojo(s)。"
       },
       "field": {
         "csv": {

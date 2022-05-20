@@ -9,6 +9,9 @@
         <b-field>
           <template #label>
             {{ $t("batchSend.ui.field.csv.title") }}
+            <b-tooltip :label="$t('batchSend.ui.tooltip.unit')" position="is-bottom" multilined>
+              <b-icon icon="help-circle" size="is-small"> </b-icon>
+            </b-tooltip>
             <b-button size="is-small" tag="a" @click="fillSample()">{{ $t("batchSend.ui.field.csv.fillSample") }}</b-button>
           </template>
           <b-input type="textarea" v-model="csv"></b-input>
