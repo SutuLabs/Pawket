@@ -206,6 +206,62 @@ export const mods: ModDetail[] = [
       },
     ],
   },
+  {
+    name: "singleton_top_layer_v1_1",
+    mod: "(a (q 2 (i (logand 47 60) (q 4 (c 16 (c 47 ())) (c (a 62 (c 2 (c 5 (c (sha256 39 (a (i 119 (q 2 54 (c 2 (c 9 (c 87 (c (a 46 (c 2 (c 5 ()))) ()))))) (q . 29)) 1) (a (i 119 (q . -73) (q . 87)) 1)) (c 119 ()))))) (a 38 (c 2 (c 5 (c (a 11 95) (q ()))))))) (q 8)) 1) (c (q ((73 71 . 2) 51 4 . 1) (q 2 2 (i 5 (q 2 58 (c 2 (c 13 (c (sha256 42 (sha256 60 44) (sha256 42 (sha256 42 (sha256 60 18) 9) (sha256 42 11 (sha256 60 ())))) ())))) (q . 11)) 1) ((a (i 11 (q 2 (i (a (i (= 35 20) (q 2 (i (logand -77 60) (q 1 . 1) ()) 1) ()) 1) (q 2 (i (not 23) (q 2 (i (= -77 (q . -113)) (q 2 38 (c 2 (c 5 (c 27 (c 60 ()))))) (q 4 (c 35 (c (a 54 (c 2 (c 9 (c 83 (c (a 46 (c 2 (c 5 ()))) ()))))) 115)) (a 38 (c 2 (c 5 (c 27 (c 60 ()))))))) 1) (q 8)) 1) (q 4 19 (a 38 (c 2 (c 5 (c 27 (c 23 ()))))))) 1) (q 2 (i 23 () (q 8)) 1)) 1) 11 42 (sha256 60 56) (sha256 42 (sha256 42 (sha256 60 18) 5) (sha256 42 (a 58 (c 2 (c 7 (c (sha256 60 60) ())))) (sha256 60 ())))) (a (i (l 5) (q 11 (q . 2) (a 46 (c 2 (c 9 ()))) (a 46 (c 2 (c 13 ())))) (q 11 60 5)) 1) 2 (i (any 23 (= 11 21)) (q 4 40 (c 11 ())) (q 8)) 1) 1))",
+    parameters: [
+      {
+        name: "SINGLETON_STRUCT",
+        desc: "(MOD_HASH . (LAUNCHER_ID . LAUNCHER_PUZZLE_HASH))",
+      },
+      {
+        name: "INNER_PUZZLE",
+        desc: "",
+      },
+      {
+        name: "lineage_proof",
+        desc: "",
+      },
+      {
+        name: "delta",
+        desc: "",
+      },
+      {
+        name: "inner_solution",
+        desc: "",
+      },
+    ],
+  },
+  {
+    name: "nft_state_layer",
+    mod: "(a (q 4 (c 16 (c -65 ())) (a 62 (c 2 (c 5 (c (a 58 (c 2 (c 23 (c 11 (c (a 47 95) ()))))) (c -65 (q ()))))))) (c (q ((73 2 . 51) (c . 1) 1 . 2) (((a (i 5 (q 2 34 (c 2 (c 13 (c (sha256 60 (sha256 52 36) (sha256 60 (sha256 60 (sha256 52 44) 9) (sha256 60 11 (sha256 52 ())))) ())))) (q . 11)) 1) 2 (i 23 (q 2 (i (= 71 (q . -24)) (q 2 (i (= (a 46 (c 2 (c -89 ()))) 5) (q 2 -89 (c 11 (c 5 (c 359 ())))) (q 8)) 1) (q 2 50 (c 2 (c 5 (c 11 (c 55 ())))))) 1) (q 4 (c 11 (c 5 ())) (q ()))) 1) (a (i 5 (q 4 9 (a 42 (c 2 (c 13 (c 11 ()))))) (q . 11)) 1) 2 38 (c 2 (c (a 50 (c 2 (c 5 (c 11 (c 23 ()))))) (c 23 ())))) ((c 9 (c (a 42 (c 2 (c 21 (c 11 ())))) ())) 11 60 (sha256 52 40) (sha256 60 (sha256 60 (sha256 52 44) 5) (sha256 60 (a 34 (c 2 (c 7 (c (sha256 52 52) ())))) (sha256 52 ())))) (a (i (l 5) (q 11 (q . 2) (a 46 (c 2 (c 9 ()))) (a 46 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 2 (i 43 (q 2 (i (= -117 56) (q 2 (i (logand 715 52) (q 2 62 (c 2 (c 5 (c (c (c 35 (c 83 ())) (c 107 ())) (c 23 (c 75 ())))))) (q 4 75 (a 62 (c 2 (c 5 (c (c (c 35 (c 83 ())) (c 107 ())) (c 23 (c 47 ())))))))) 1) (q 2 (i (> -117 ()) (q 4 75 (a 62 (c 2 (c 5 (c (c (c 35 (c 83 ())) (c 107 ())) (c 23 (c 47 ()))))))) (q 2 62 (c 2 (c 5 (c (c (c 35 (c 83 ())) (c 107 ())) (c 23 (c 47 ()))))))) 1)) 1) (q 2 (i 47 (q 4 (c 56 (c (a 54 (c 2 (c 5 (c -81 (c (sha256 52 83) (c (a 46 (c 2 (c 35 ()))) (c (sha256 52 5) ()))))))) (c 23 495))) ()) (q 8)) 1)) 1) 1))",
+    parameters: [
+      {
+        name: "NFT_STATE_LAYER_MOD_HASH",
+        desc: "",
+      },
+      {
+        name: "METADATA",
+        desc: "117: `u` for uri\n104: `h` for hash",
+      },
+      {
+        name: "METADATA_UPDATER_PUZZLE_HASH",
+        desc: "",
+      },
+      {
+        name: "INNER_PUZZLE",
+        desc: "",
+      },
+      {
+        name: "solution",
+        desc: "either to inner puzzle or metadata updater",
+      },
+      {
+        name: "my_amount",
+        desc: "",
+      },
+    ],
+  },
 ]
 export const modsdict: { [mod: string]: string } = mods.reduce((acc, cur) => ({ ...acc, [cur.mod]: cur.name }), {});
 export const modsprog: { [mod: string]: string } = mods.reduce((acc, cur) => ({ ...acc, [cur.name]: cur.mod }), {});
