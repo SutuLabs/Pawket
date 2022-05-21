@@ -473,9 +473,8 @@
     },
     "symbol": {
       "Cat": "CAT",
-      "XCH": "XCH",
       "hint": {
-        "XCH": "Original XCH"
+        "XCH": "Original Symbol"
       }
     },
     "take": {

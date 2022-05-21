@@ -11,6 +11,7 @@ import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
 import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from "vue-qrcode-reader";
 import { decodeAddress, initCameraHandleError } from "@/services/view/camera";
+import { xchPrefix } from "@/store/modules/network";
 
 @Component({
   components: {
@@ -21,7 +22,7 @@ import { decodeAddress, initCameraHandleError } from "@/services/view/camera";
   },
 })
 export default class ScanQrCode extends Vue {
-  @Prop({ default: "xch" }) public prefix!: string;
+  @Prop({ default: xchPrefix() }) public prefix!: string;
   public result = "";
   public error = "";
   public cameraStatus = "auto";

@@ -68,6 +68,7 @@ import { submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/FeeSelector.vue";
 import BundleSummary from "@/components/BundleSummary.vue";
 import { csvToArray } from "@/services/util/csv";
+import { xchSymbol } from "@/store/modules/network";
 
 @Component({
   components: {
@@ -179,7 +180,7 @@ export default class BatchSend extends Vue {
 
   fillSample(): void {
     this.csv = `xch1kjllpsx4mz9gh36clzmzr69kze965almufz7vrch5xq3jymlsjjsysq7uh,BSH,150,hello_memo
-xch1kjllpsx4mz9gh36clzmzr69kze965almufz7vrch5xq3jymlsjjsysq7uh,XCH,150,`;
+xch1kjllpsx4mz9gh36clzmzr69kze965almufz7vrch5xq3jymlsjjsysq7uh,${xchSymbol()},150,`;
   }
 }
 </script>

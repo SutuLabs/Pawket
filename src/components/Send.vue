@@ -58,7 +58,7 @@
         >
         </token-amount-field>
         <b-field :label="$t('send.ui.label.memo')">
-          <b-input maxlength="100" v-model="memo" type="text" @input="reset()" :disabled="selectedToken == 'XCH'"></b-input>
+          <b-input maxlength="100" v-model="memo" type="text" @input="reset()" :disabled="selectedToken == xchSymbol"></b-input>
         </b-field>
         <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
       </div>
@@ -127,6 +127,7 @@ import { CurrencyType } from "@/services/exchange/currencyType";
 import BundleSummary from "./BundleSummary.vue";
 import SendSummary from "./SendSummary.vue";
 import AddressBook, { Contact } from "./AddressBook.vue";
+import { xchSymbol } from "@/store/modules/network";
 
 @Component({
   components: {
@@ -162,7 +163,7 @@ export default class Send extends Vue {
   public maxStatus: "Loading" | "Loaded" = "Loading";
   public selectMax = false;
   public amount = "";
-  public selectedToken = "XCH";
+  public selectedToken = xchSymbol();
   public validity = false;
   public offline = false;
 
@@ -182,7 +183,7 @@ export default class Send extends Vue {
   }
 
   get decimal(): number {
-    return this.selectedToken == "XCH" ? 12 : 3;
+    return this.selectedToken == xchSymbol() ? 12 : 3;
   }
 
   get isNewAddress(): boolean {
@@ -212,7 +213,7 @@ export default class Send extends Vue {
   }
 
   get numericAmount(): bigint {
-    const decimal = this.selectedToken == "XCH" ? 12 : 3;
+    const decimal = this.selectedToken == xchSymbol() ? 12 : 3;
     return BigInt(bigDecimal.multiply(this.amount, Math.pow(10, decimal)));
   }
 
@@ -222,6 +223,10 @@ export default class Send extends Vue {
 
   get debugMode(): boolean {
     return store.state.app.debug;
+  }
+
+  get xchSymbol(): string {
+    return xchSymbol();
   }
 
   reset(): void {
@@ -255,7 +260,7 @@ export default class Send extends Vue {
 
   setMax(excludingFee = false): void {
     this.reset();
-    excludingFee = this.selectedToken != "XCH" ? true : excludingFee;
+    excludingFee = this.selectedToken != xchSymbol() ? true : excludingFee;
     const newAmount = excludingFee
       ? this.maxAmount
       : bigDecimal.subtract(this.maxAmount, bigDecimal.divide(this.fee, Math.pow(10, this.decimal), this.decimal));
@@ -271,7 +276,7 @@ export default class Send extends Vue {
 
   changeToken(token: string): void {
     this.selectedToken = token;
-    if (this.selectedToken == "XCH") {
+    if (this.selectedToken == xchSymbol()) {
       this.memo = "";
     }
     this.reset();
@@ -319,7 +324,7 @@ export default class Send extends Vue {
       Math.pow(10, this.decimal),
       this.decimal
     );
-    if (this.selectedToken == "XCH") {
+    if (this.selectedToken == xchSymbol()) {
       this.maxAmount = this.totalAmount;
       this.totalAmount = "-1";
     } else {
@@ -336,7 +341,7 @@ export default class Send extends Vue {
         return;
       }
 
-      const decimal = this.selectedToken == "XCH" ? 12 : 3;
+      const decimal = this.selectedToken == xchSymbol() ? 12 : 3;
       const amount = BigInt(bigDecimal.multiply(this.amount, Math.pow(10, decimal)));
 
       if (this.availcoins == null) {
@@ -433,7 +438,7 @@ export default class Send extends Vue {
       events: {
         scanned: (coins: OriginCoin[]): void => {
           this.availcoins = {
-            XCH: coins,
+            [xchSymbol()]: coins,
           };
           this.loadCoins();
         },
