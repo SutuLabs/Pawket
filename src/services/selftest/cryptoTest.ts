@@ -2,6 +2,7 @@ import puzzle from "../crypto/puzzle";
 import utility from "../crypto/utility";
 import transfer from "../transfer/transfer";
 import { assert } from "./runner";
+import { xchPrefix } from "@/store/modules/network";
 
 export async function testCryptography(): Promise<void> {
   const hash = await utility.hash("test");
@@ -34,7 +35,7 @@ export async function testCryptography(): Promise<void> {
     walletpubkey
   );
   // });
-  const adr = await puzzle.getAddress(walletpubkey, "xch");
+  const adr = await puzzle.getAddress(walletpubkey, xchPrefix());
   assert("xch13akv0y3er0qvdjwzks2gm4ljj7qpynrh6rcsnwc6y0hyfgzdj89sr43zcp", adr);
 }
 

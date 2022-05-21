@@ -4,6 +4,7 @@ import puzzle from "../crypto/puzzle";
 import utility from "../crypto/utility";
 import transfer from "../transfer/transfer";
 import { assert } from "./runner";
+import { xchPrefix, xchSymbol } from "@/store/modules/network";
 
 export async function testStandardTransfer(): Promise<void> {
   const coin: OriginCoin = {
@@ -14,17 +15,17 @@ export async function testStandardTransfer(): Promise<void> {
   const sk_hex = "5c3b9b1062eaefd843d79d2b53856da31521ed7d1fe2a3ec48c71e654c4530e5";
   const tgt_addr = await puzzle.getAddressFromPuzzleHash(
     "0x87908e3f85bf4b55c7e7709915c2ce97a1e6ec1d227e54a04dbfee6862d546a5",
-    "xch"
+    xchPrefix()
   );
   const change_addr = await puzzle.getAddressFromPuzzleHash(
     "0x4f45877796d7a64e192bcc9f899afeedae391f71af3afd7e15a0792c049d23d3",
-    "xch"
+    xchPrefix()
   );
   const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(tgt_addr));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(change_addr));
   const puzzles = await puzzle.getPuzzleDetails(utility.fromHexString(sk_hex), 0, 5);
-  const plan = await transfer.generateSpendPlan({ "XCH": [coin] }, [{ symbol: "XCH", address: tgt_hex, amount: 1_000_000n, }], change_hex, 0n);
-  const bundle = await transfer.generateSpendBundle(plan, [{ symbol: "XCH", puzzles }], []);
+  const plan = await transfer.generateSpendPlan({ [xchSymbol()]: [coin] }, [{ symbol: xchSymbol(), address: tgt_hex, amount: 1_000_000n, }], change_hex, 0n);
+  const bundle = await transfer.generateSpendBundle(plan, [{ symbol: xchSymbol(), puzzles }], []);
   assert(
     "0x81198e68402824e0585fac43d79edf3efe19e4651747f4e9b8d28f6a8a5c319dac67d4a0c03ad957cbb7d7c3c955605d03d6c5750e0aa44baf73ddaa5fcfbe74e3cb922034b72656f0df410ff6ef8e81b56b1a6a0c9bddd9331b7a9c90f897ce",
     bundle?.aggregated_signature

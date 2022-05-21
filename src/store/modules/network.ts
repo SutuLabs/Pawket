@@ -1,6 +1,9 @@
 import store from '@/store'
 import { TokenInfo } from './account';
 
+export function xchPrefix(): string { return store.state.network.prefix; };
+export function xchSymbol(): string { return store.state.network.symbol; };
+
 export interface NetworkDetail {
   name: string;
   rpcUrl: string;

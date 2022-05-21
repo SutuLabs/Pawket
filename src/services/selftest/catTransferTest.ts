@@ -5,6 +5,7 @@ import puzzle from "../crypto/puzzle";
 import utility from "../crypto/utility";
 import transfer from "../transfer/transfer";
 import { assert } from "./runner";
+import { xchPrefix } from "@/store/modules/network";
 
 export async function testCatTransfer(): Promise<void> {
   const coin: OriginCoin = {
@@ -15,11 +16,11 @@ export async function testCatTransfer(): Promise<void> {
   const sk_hex = "40fbb0dad159776ed05afbaeac4f4fe1b975e93bf5e9dda9fbf4e375346d12a0";
   const tgt_addr = await puzzle.getAddressFromPuzzleHash(
     "0x3eb239190ce59b4af1e461291b9185cea62d6072fd3718051a530fd8a8218bc0",
-    "xch"
+    xchPrefix()
   );
   const change_addr = await puzzle.getAddressFromPuzzleHash(
     "0x1cf63b7cc60279a1b0745e8f426585ee81d8da0cd2d92dd9b44e6efbd88d40ce",
-    "xch"
+    xchPrefix()
   );
   const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(tgt_addr));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(change_addr));
@@ -62,11 +63,11 @@ export async function testCatTransfer2(): Promise<void> {
   const sk_hex = "40fbb0dad159776ed05afbaeac4f4fe1b975e93bf5e9dda9fbf4e375346d12a0";
   const tgt_addr = await puzzle.getAddressFromPuzzleHash(
     "0x1cf63b7cc60279a1b0745e8f426585ee81d8da0cd2d92dd9b44e6efbd88d40ce",
-    "xch"
+    xchPrefix()
   );
   const change_addr = await puzzle.getAddressFromPuzzleHash(
     "0xc467280169dfc93e7a14b98475641996966d4d3800f814a2baaeab14a96e3b40",
-    "xch"
+    xchPrefix()
   );
 
   const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(tgt_addr));
