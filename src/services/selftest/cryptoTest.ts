@@ -35,8 +35,10 @@ export async function testCryptography(): Promise<void> {
     walletpubkey
   );
   // });
-  const adr = await puzzle.getAddress(walletpubkey, xchPrefix());
-  assert("xch13akv0y3er0qvdjwzks2gm4ljj7qpynrh6rcsnwc6y0hyfgzdj89sr43zcp", adr);
+  if (xchPrefix() == "xch") {
+    const adr = await puzzle.getAddress(walletpubkey, xchPrefix());
+    assert("xch13akv0y3er0qvdjwzks2gm4ljj7qpynrh6rcsnwc6y0hyfgzdj89sr43zcp", adr);
+  }
 }
 
 export async function testPuzzleAssemble(): Promise<void> {

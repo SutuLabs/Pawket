@@ -1,5 +1,6 @@
 import { SpendBundle } from "@/models/wallet";
 import store from "@/store";
+import { xchPrefix } from "@/store/modules/network";
 import { testMintCat } from "./catMintTest";
 import { testCatTransfer, testCatTransfer2 } from "./catTransferTest";
 import { testCoinName, testCryptography, testPuzzleAssemble } from "./cryptoTest";
@@ -26,15 +27,20 @@ class TestRunner {
 
       // make extra tests not in production
       if (process.env.NODE_ENV !== "production") {
-        await this.runTest(testStandardTransfer);
-        await this.runTest(testCatTransfer);
-        await this.runTest(testCatTransfer2);
-        await this.runTest(testOfferEncoding);
-        await this.runTest(testMakeOffer1);
-        await this.runTest(testMakeOffer2);
-        await this.runTest(testTakeOfferXchForCat);
-        await this.runTest(testTakeOfferCatForXch);
-        await this.runTest(testMintCat);
+        if (xchPrefix() == "xch") {
+          // test only on mainnet
+          await this.runTest(testStandardTransfer);
+          await this.runTest(testCatTransfer);
+          await this.runTest(testCatTransfer2);
+          await this.runTest(testOfferEncoding);
+          await this.runTest(testMakeOffer1);
+          await this.runTest(testMakeOffer2);
+          await this.runTest(testTakeOfferXchForCat);
+          await this.runTest(testTakeOfferCatForXch);
+          await this.runTest(testMintCat);
+        } else {
+          console.log("self-test partially ignored");
+        }
 
         console.log("self-test passed");
       }
