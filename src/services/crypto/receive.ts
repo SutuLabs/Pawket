@@ -4,7 +4,7 @@ import puzzle, { PuzzleAddress } from "./puzzle";
 import { PuzzleDetail } from "./puzzle";
 import utility from "./utility";
 import { CustomCat } from "@/store/modules/account";
-import { xchSymbol } from "@/store/modules/network";
+import { rpcUrl, xchSymbol } from "@/store/modules/network";
 
 export interface TokenPuzzleDetail {
   symbol: string;
@@ -49,7 +49,7 @@ class Receive {
 
     const hashes = tokens.reduce((acc, token) => acc.concat(token.puzzles.map(_ => _.hash)), ([] as string[]));
 
-    const resp = await fetch(process.env.VUE_APP_API_URL + "Wallet/records", {
+    const resp = await fetch(rpcUrl() + "Wallet/records", {
       method: "POST",
       headers: {
         Accept: "application/json",

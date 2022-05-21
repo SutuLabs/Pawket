@@ -9,6 +9,11 @@
         </template>
         <template #start> </template>
         <template #end>
+          <b-navbar-dropdown :label="networkId">
+            <b-navbar-item @click="switchNetwork(net.name)" v-for="net in networks" :key="net.name">
+              {{ net.name }}
+            </b-navbar-item>
+          </b-navbar-dropdown>
           <b-navbar-dropdown :label="$t('app.ui.button.lang')">
             <b-navbar-item @click="changeLang('en')" :active="$i18n.locale === 'en'"> English </b-navbar-item>
             <b-navbar-item @click="changeLang('zhcn')" :active="$i18n.locale === 'zhcn'"> 简体中文 </b-navbar-item>
@@ -52,6 +57,7 @@ import { NotificationProgrammatic as Notification } from "buefy";
 import store from "./store";
 import DevHelper from "@/components/DevHelper.vue";
 import OfflineQrCode from "./components/OfflineQrCode.vue";
+import { NetworkInfo } from "./store/modules/network";
 
 @Component
 export default class App extends Vue {
@@ -62,6 +68,14 @@ export default class App extends Vue {
 
   get debugMode(): boolean {
     return store.state.app.debug;
+  }
+
+  get networks():  NetworkInfo {
+    return store.state.network.networks;
+  }
+
+  get networkId():  string {
+    return store.state.network.networkId;
   }
 
   mounted(): void {
@@ -83,6 +97,10 @@ export default class App extends Vue {
   changeLang(lang: string): void {
     this.$i18n.locale = lang;
     localStorage.setItem("Locale", lang);
+  }
+
+  async switchNetwork(networkId: string): Promise<void> {
+    await store.dispatch("switchNetwork", networkId);
   }
 
   disableDebug(): void {

@@ -8,6 +8,7 @@ import { ConditionType, formatAmount, prefix0x } from "../coin/condition";
 import puzzle, { PuzzleDetail } from "../crypto/puzzle";
 import transfer, { GetPuzzleApiCallback, TokenSpendPlan } from "./transfer";
 import { TokenPuzzleDetail } from "../crypto/receive";
+import { rpcUrl } from "@/store/modules/network";
 
 export interface LineageProof {
   coinId: string;
@@ -57,7 +58,7 @@ class CatBundle {
   }
 
   private async getLineageProofPuzzle(parentCoinId: string): Promise<GetParentPuzzleResponse> {
-    const resp = await fetch(process.env.VUE_APP_API_URL + "Wallet/get-puzzle", {
+    const resp = await fetch(rpcUrl() + "Wallet/get-puzzle", {
       method: "POST",
       headers: {
         Accept: "application/json",

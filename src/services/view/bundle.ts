@@ -4,6 +4,7 @@ import { SpendBundle } from "@/models/wallet";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { ModalProgrammatic as Modal } from "buefy";
 import DevHelper from "@/components/DevHelper.vue";
+import { rpcUrl } from "@/store/modules/network";
 export async function submitBundle(bundle: SpendBundle, setSubmitting: (state: boolean) => void, success: () => void): Promise<void> {
   setSubmitting(true);
   /** 
@@ -22,7 +23,7 @@ export async function submitBundle(bundle: SpendBundle, setSubmitting: (state: b
       tc("send.messages.error.COIN_AMOUNT_NEGATIVE")
    */
   try {
-    const resp = await fetch(process.env.VUE_APP_API_URL + "Wallet/pushtx", {
+    const resp = await fetch(rpcUrl() + "Wallet/pushtx", {
       method: "POST",
       headers: {
         Accept: "application/json",

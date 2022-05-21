@@ -3,6 +3,7 @@ import { TokenInfo } from './account';
 
 export function xchPrefix(): string { return store.state.network.prefix; };
 export function xchSymbol(): string { return store.state.network.symbol; };
+export function rpcUrl(): string { return store.state.network.network.rpcUrl; };
 
 export interface NetworkDetail {
   name: string;
@@ -87,8 +88,8 @@ store.registerModule<INetworkState>('network', {
     async switchNetwork({ state, rootState }, networkId: string | null) {
       networkId = networkId || localStorage.getItem(NETWORK_ID_KEY) || "mainnet";
       const network = state.networks[networkId] || state.networks.mainnet;
+      state.networkId = network.name;
       state.network = network;
-      state.networkId = network.chainId;
       state.symbol = network.symbol;
       state.prefix = network.prefix;
       rootState.account.tokenInfo = network.tokenInfo;
