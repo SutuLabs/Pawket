@@ -68,7 +68,7 @@ export default class CoinPanel extends Vue {
   }
 
   async searchCoinId(coinId: string): Promise<void> {
-    if (coinId) this.coinId = coinId;
+    if (coinId) this.coinId = coinId.trim();
     this.coinSpend = null;
     this.coinSearchList = [];
     this.coinSpend = await debug.getCoinSolution(this.coinId);
