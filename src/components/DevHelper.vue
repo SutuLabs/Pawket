@@ -1,7 +1,10 @@
 <template>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">Debug</p>
+      <p class="modal-card-title">
+        Debug
+        <span class="tag is-info">{{ networkId }}</span>
+      </p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
@@ -37,7 +40,7 @@ import CoinPanel from "@/components/DevHelper/CoinPanel.vue";
 import HashPanel from "@/components/DevHelper/HashPanel.vue";
 import ClvmPanel from "@/components/DevHelper/ClvmPanel.vue";
 import OfferPanel from "@/components/DevHelper/OfferPanel.vue";
-import store from '@/store';
+import store from "@/store";
 
 @Component({
   components: {
@@ -53,6 +56,10 @@ export default class DevHelper extends Vue {
   @Prop() private inputBundleText!: string;
   @Prop() private inputOfferText!: string;
   public selectedTab = 0;
+
+  get networkId(): string {
+    return store.state.network.networkId;
+  }
 
   mounted(): void {
     if (this.inputBundleText) {
@@ -71,9 +78,7 @@ export default class DevHelper extends Vue {
   close(): void {
     return;
   }
-
 }
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>
