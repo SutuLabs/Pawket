@@ -38,6 +38,7 @@ store.registerModule<IVaultState>('vault', {
     async initState({ state, rootState }) {
       const ustore = UniStorage.create();
 
+      await store.dispatch("switchNetwork");
       await store.dispatch("initializeBls");
       await store.dispatch("initializeClvm");
 
@@ -104,7 +105,7 @@ store.registerModule<IVaultState>('vault', {
         const firstWalletAddressPubkey = utility.toHexString(
           derive([12381, 8444, 2, 0]).get_g1().serialize()
         );
-        Vue.set(account, "firstAddress", await puzzle.getAddress(firstWalletAddressPubkey, rootState.network.networks[rootState.network.network].prefix));
+        Vue.set(account, "firstAddress", await puzzle.getAddress(firstWalletAddressPubkey, rootState.network.network.prefix));
       }
     },
     async unlock({ state, dispatch, rootState }, password) {
@@ -161,7 +162,6 @@ store.registerModule<IVaultState>('vault', {
           encryptedSeed: encryptedSeed,
           passwordHash: state.passwordHash,
           encryptedAccounts: encryptedAccounts,
-          network: rootState.network.network,
           experiment: state.experiment,
           currency: state.currency,
         })
