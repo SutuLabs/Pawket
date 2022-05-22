@@ -3,7 +3,6 @@ import account, { AccountKey } from "@/services/crypto/account";
 import { CoinRecord } from "@/models/wallet";
 import Vue from 'vue';
 import receive from '@/services/crypto/receive';
-import { prefix0x } from '@/services/coin/condition';
 
 type AccountType = "Serial" | "Password" | "Legacy";
 
@@ -13,7 +12,7 @@ export interface AccountTokenAddress {
 }
 
 export interface AccountToken {
-  amount: number;
+  amount: bigint;
   addresses: AccountTokenAddress[];
 }
 export interface AccountTokens {
@@ -171,31 +170,9 @@ store.registerModule<IAccountState>('account', {
       const requests = await receive.getAssetsRequestDetail(account.key.privateKey, maxId, account.cats ?? []);
 
       try {
-        const activities = (await receive.getCoinRecords(requests, true))
-          .sort((a, b) => b.timestamp - a.timestamp);
-
-        const balances = requests.map(token => ({
-          symbol: token.symbol,
-          records: activities.filter(act => act.symbol == token.symbol),
-          amount: activities
-            .filter(act => act.symbol == token.symbol)
-            .reduce((recacc, rec) => recacc + ((!rec.coin || rec.spent) ? 0 : rec.coin.amount), 0),
-
-        }))
-        const tokenBalances: AccountTokens = {};
-        for (let i = 0; i < balances.length; i++) {
-          const b = balances[i];
-          const token = requests.find(_ => _.symbol == b.symbol);
-          if (!token) continue;
-          tokenBalances[b.symbol] = {
-            amount: b.amount,
-            addresses: token.puzzles
-              .map<AccountTokenAddress>(_ => ({
-                address: _.address,
-                coins: b.records.filter(r => r.coin?.puzzleHash == prefix0x(_.hash)),
-              })),
-          };
-        }
+        const records = (await receive.getCoinRecords(requests, true));
+        const activities = receive.convertActivities(requests, records);
+        const tokenBalances = receive.getTokenBalance(requests, records);
 
         Vue.set(account, "activities", activities);
         Vue.set(account, "tokens", tokenBalances);
@@ -206,7 +183,7 @@ store.registerModule<IAccountState>('account', {
         for (let i = 0; i < requests.length; i++) {
           const token = requests[i];
           tokenBalances[token.symbol] = {
-            amount: -1,
+            amount: -1n,
             addresses: token.puzzles.map(_ => ({ address: _.address, coins: [] })),
           }
         }

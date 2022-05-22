@@ -16,7 +16,7 @@ class CoinHandler {
   }
 
   public async getAvailableCoins(requests: TokenPuzzleAddress[], tokenNames: string[]): Promise<SymbolCoins> {
-    const coins = (await receive.getCoinRecords(requests, false))
+    const coins = (await receive.getActivities(requests, false))
       .filter((_) => _.coin)
       .map((_) => _.coin as CoinItem)
       .map((_) => ({
