@@ -6,11 +6,11 @@
     <b-field v-if="summary" label="Information">
       <template #message>
         <ul v-for="(arr, sumkey) in summary" :key="sumkey" :class="sumkey">
-          <li>{{sumkey}}</li>
+          <li>{{ sumkey }}</li>
           <li class="pt-1" v-for="(ent, idx) in arr" :key="idx">
             <b-taglist attached>
               <b-tag v-if="ent.id" type="is-info" :title="ent.id">CAT {{ ent.id.slice(0, 7) + "..." }}</b-tag>
-              <b-tag v-else type="is-info">XCH</b-tag>
+              <b-tag v-else type="is-info">{{ xchSymbol }}</b-tag>
 
               <b-tag type="">{{ ent.amount }}</b-tag>
               <b-tag type="is-info is-light" :title="ent.target">{{ ent.target.slice(0, 7) + "..." }}</b-tag>
@@ -28,10 +28,11 @@
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
-import { SpendBundle } from '@/models/wallet';
+import { SpendBundle } from "@/models/wallet";
 import BundlePanel from "@/components/DevHelper/BundlePanel.vue";
 import { getOfferSummary, OfferSummary } from "@/services/offer/summary";
 import { decodeOffer } from "@/services/offer/encoding";
+import { xchSymbol } from "@/store/modules/network";
 
 @Component({
   components: {
@@ -40,7 +41,6 @@ import { decodeOffer } from "@/services/offer/encoding";
   },
 })
 export default class OfferPanel extends Vue {
-
   @Prop() private inputOfferText!: string;
   public offerText = "";
   public bundle: SpendBundle | null = null;
@@ -50,12 +50,15 @@ export default class OfferPanel extends Vue {
     return this.bundle == null ? "" : JSON.stringify(this.bundle);
   }
 
+  get xchSymbol(): string {
+    return xchSymbol();
+  }
+
   mounted(): void {
     if (this.inputOfferText) {
       this.offerText = this.inputOfferText;
       this.updateOffer();
-    }
-    else {
+    } else {
       this.load();
     }
   }
@@ -83,5 +86,4 @@ export default class OfferPanel extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

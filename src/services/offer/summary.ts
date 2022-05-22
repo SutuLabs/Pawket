@@ -8,6 +8,7 @@ import { uncurry } from 'clvm_tools/clvm_tools/curry';
 import { ConditionOpcode } from "../coin/opcode";
 import { TokenSpendPlan } from "../transfer/transfer";
 import bigDecimal from "js-big-decimal";
+import { xchSymbol } from "@/store/modules/network";
 
 export async function getOfferSummary(bundle: SpendBundle): Promise<OfferSummary> {
 
@@ -98,7 +99,7 @@ function getRequestedCoins(bundle: SpendBundle): CoinSpend[] {
 
 export function getOfferEntities(ents: OfferTokenAmount[], target: string, catIds: { [name: string]: string }): OfferEntity[] {
   return ents.map((_) => ({
-    id: _.token == "XCH" ? "" : catIds[_.token],
+    id: _.token == xchSymbol() ? "" : catIds[_.token],
     symbol: _.token,
     amount: getAmount(_.token, _.amount),
     target: target,
@@ -106,7 +107,7 @@ export function getOfferEntities(ents: OfferTokenAmount[], target: string, catId
 }
 
 function getAmount(symbol: string, amount: string): bigint {
-  const decimal = symbol == "XCH" ? 12 : 3;
+  const decimal = symbol == xchSymbol() ? 12 : 3;
   return BigInt(bigDecimal.multiply(amount, Math.pow(10, decimal)));
 }
 

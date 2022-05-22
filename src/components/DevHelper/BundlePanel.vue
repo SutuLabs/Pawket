@@ -151,6 +151,7 @@ import { conditionDict, ConditionInfo, prefix0x, getNumber } from "@/services/co
 import { modsdict, modsprog } from "@/services/coin/mods";
 import UncurryPuzzle from "@/components/DevHelper/UncurryPuzzle.vue";
 import { decodeOffer } from "@/services/offer/encoding";
+import { xchPrefix } from "@/store/modules/network";
 
 @Component({
   components: {
@@ -251,7 +252,7 @@ export default class BundlePanel extends Vue {
       this.solution = await puzzle.disassemblePuzzle(c.solution);
     }
     this.used_coin_name = transfer.getCoinName(c.coin).hex();
-    this.used_coin_tgt_address = puzzle.getAddressFromPuzzleHash(c.coin.puzzle_hash, "xch");
+    this.used_coin_tgt_address = puzzle.getAddressFromPuzzleHash(c.coin.puzzle_hash, xchPrefix());
   }
 
   public sha256(...args: string[]): string {

@@ -27,7 +27,7 @@
                         >
                       </a>
 
-                      <b-tag v-else type="is-info" :title="$t('offer.symbol.hint.XCH')">{{ $t("offer.symbol.XCH") }}</b-tag>
+                      <b-tag v-else type="is-info" :title="$t('offer.symbol.hint.XCH')">{{ xchSymbol }}</b-tag>
 
                       <b-tag class="" :title="ent.amount + ' mojos'">{{
                         ent.amount | demojo(ent.id && tokenInfo[cats[ent.id]])
@@ -105,6 +105,7 @@ import { debugBundle, submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/FeeSelector.vue";
 import ManageCats from "@/components/ManageCats.vue";
 import OfflineSendShowBundle from "../OfflineSendShowBundle.vue";
+import { xchSymbol } from "@/store/modules/network";
 
 @Component({
   components: {
@@ -154,6 +155,10 @@ export default class TakeOffer extends Vue {
     return store.state.app.debug;
   }
 
+  get xchSymbol(): string {
+    return xchSymbol();
+  }
+
   async mounted(): Promise<void> {
     if (this.inputOfferText) {
       this.offerText = this.inputOfferText;
@@ -201,7 +206,7 @@ export default class TakeOffer extends Vue {
         const reqamt = revSummary.requested[0].amount;
         const fee = BigInt(this.fee);
         if (reqamt < fee) {
-          throw new Error("Not enough XCH for fee");
+          throw new Error(`Not enough ${xchSymbol} for fee`);
         }
         revSummary.requested[0].amount -= fee;
       }

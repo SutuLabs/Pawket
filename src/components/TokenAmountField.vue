@@ -3,7 +3,7 @@
     <template #message>
       {{ amountMessage || "0 mojos" }}
       {{ usdtValue }}
-      <span v-if="offline && selectedToken != 'XCH'" class="is-pulled-right has-text-danger">
+      <span v-if="offline && selectedToken != xchSymbol" class="is-pulled-right has-text-danger">
         {{ $t("send.ui.text.offlineOnlySupportXch") }}
       </span>
     </template>
@@ -56,6 +56,7 @@ import bigDecimal from "js-big-decimal";
 import { tc } from "@/i18n/i18n";
 import { xchToCurrency } from "@/filters/usdtConversion";
 import { CurrencyType } from "@/services/exchange/currencyType";
+import { xchSymbol } from "@/store/modules/network";
 
 @Component({
   components: {
@@ -73,7 +74,7 @@ export default class TotalAmountField extends Vue {
   @Prop({ default: true }) private showMaxAmount!: boolean;
   @Prop({ default: "-1" }) private maxAmount!: string;
   @Prop({ default: "-1" }) private totalAmount!: string;
-  @Prop({ default: "XCH" }) private selectedToken!: string;
+  @Prop({ default: xchSymbol() }) private selectedToken!: string;
   @Prop({ default: tc("send.ui.label.amount") }) private label!: string;
   @Prop({ default: false }) private offline!: boolean;
 
@@ -119,7 +120,7 @@ export default class TotalAmountField extends Vue {
   }
 
   get usdtValue(): string {
-    if (this.selectedToken !== "XCH") return "";
+    if (this.selectedToken !== xchSymbol()) return "";
     if (this.amountMessage === this.INVALID_AMOUNT_MESSAGE || this.amountMessage === this.INSUFFICIENT_FUNDS) return "";
     if (this.amountMessage === "") return "";
     if (this.rate == -1) return "";
@@ -128,7 +129,11 @@ export default class TotalAmountField extends Vue {
   }
 
   get decimal(): number {
-    return this.selectedToken == "XCH" ? 12 : 3;
+    return this.selectedToken == xchSymbol() ? 12 : 3;
+  }
+
+  get xchSymbol(): string {
+    return xchSymbol();
   }
 
   setMax(): void {

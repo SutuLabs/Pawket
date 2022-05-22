@@ -25,7 +25,7 @@
               <template #message>
                 <ul>
                   <li v-for="(amount, unit) in coinTotals" :key="unit">
-                    <span v-if="unit == 'XCH'">
+                    <span v-if="unit == xchSymbol">
                       {{ amount | demojo }}
                     </span>
                     <span v-else>
@@ -42,7 +42,7 @@
               <template #label> {{ $t("bundleSummary.ui.label.details") }} </template>
               <ul>
                 <li v-for="(coin, id) in newCoins" :key="id">
-                  <span v-if="coin.unit == 'XCH'">
+                  <span v-if="coin.unit == xchSymbol">
                     {{ coin.amount | demojo }}
                   </span>
                   <span v-else>
@@ -82,6 +82,7 @@ import { AccountEntity } from "@/store/modules/account";
 import { getCatNameDict } from "@/services/coin/cat";
 import { demojo } from "@/filters/unitConversion";
 import BundleText from "./BundelText.vue";
+import { xchPrefix, xchSymbol } from "@/store/modules/network";
 
 interface CoinType {
   amount: bigint;
@@ -129,6 +130,10 @@ export default class BundleSummary extends Vue {
 
   get cats(): { [id: string]: string } {
     return getCatNameDict(this.account);
+  }
+
+  get xchSymbol(): string {
+    return xchSymbol();
   }
 
   async mounted(): Promise<void> {
@@ -180,7 +185,7 @@ export default class BundleSummary extends Vue {
         return;
       }
 
-      const catid = modname == "cat" ? argarr[1] : "XCH";
+      const catid = modname == "cat" ? argarr[1] : xchSymbol();
       const unit = this.cats[catid] ?? catid;
 
       const coins = await this.executePuzzle(puz, sln);
@@ -192,7 +197,7 @@ export default class BundleSummary extends Vue {
 
     this.newCoins = new_coins;
     this.fee =
-      (this.coinTotals["XCH"] ?? 0n) - this.newCoins.filter((_) => _.unit == "XCH").reduce((t, cur) => t + cur.amount, 0n);
+      (this.coinTotals[xchSymbol()] ?? 0n) - this.newCoins.filter((_) => _.unit == xchSymbol()).reduce((t, cur) => t + cur.amount, 0n);
   }
 
   async executePuzzle(puz: string, solution: string): Promise<CoinType[]> {
@@ -200,7 +205,7 @@ export default class BundleSummary extends Vue {
     const coins: CoinType[] = result.conditions
       .filter((_) => _.op == ConditionOpcode.CREATE_COIN)
       .map((_) => ({
-        address: puzzle.getAddressFromPuzzleHash(_.args[0], "xch"),
+        address: puzzle.getAddressFromPuzzleHash(_.args[0], xchPrefix()),
         amount: getNumber(_.args[1]),
         args: _.args[2] ? Array.from(assemble(_.args[2]).as_iter()).map((_) => disassemble(_ as SExp)) : [],
       }))
@@ -218,7 +223,7 @@ export default class BundleSummary extends Vue {
     if (!hex) return hex;
     if (!hex.startsWith("0x")) return hex;
 
-    return puzzle.getAddressFromPuzzleHash(unprefix0x(hex), "xch");
+    return puzzle.getAddressFromPuzzleHash(unprefix0x(hex), xchPrefix());
   }
 }
 </script>

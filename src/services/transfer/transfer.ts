@@ -3,13 +3,14 @@ import { Bytes, bigint_from_bytes, bigint_to_bytes } from "clvm";
 import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
 import store from "@/store";
 import { GetParentPuzzleResponse } from "@/models/api";
-import { AGG_SIG_ME_ADDITIONAL_DATA, DEFAULT_HIDDEN_PUZZLE_HASH, GROUP_ORDER } from "../coin/consts";
+import { DEFAULT_HIDDEN_PUZZLE_HASH, GROUP_ORDER } from "../coin/consts";
 import { CoinConditions, ConditionType, prefix0x } from "../coin/condition";
 import puzzle, { PuzzleDetail } from "../crypto/puzzle";
 import { TokenPuzzleDetail } from "../crypto/receive";
 import stdBundle from "./stdBundle";
 import { ConditionOpcode } from "../coin/opcode";
 import catBundle from "./catBundle";
+import { xchSymbol } from "@/store/modules/network";
 
 export type GetPuzzleApiCallback = (parentCoinId: string) => Promise<GetParentPuzzleResponse | undefined>;
 
@@ -28,9 +29,9 @@ class Transfer {
       const coins = availcoins[symbol];
       const tgts = targets.filter(_ => _.symbol == symbol);
 
-      const outgoingExtra = (symbol.toLocaleLowerCase() == "xch") ? fee : 0n;
+      const outgoingExtra = (symbol == xchSymbol()) ? fee : 0n;
       const outgoingTotal = tgts.reduce((acc, cur) => acc + cur.amount, 0n) + outgoingExtra;
-      const incomingCoins = (symbol.toLocaleLowerCase() == "xch")
+      const incomingCoins = (symbol == xchSymbol())
         ? this.findCoins(coins, outgoingTotal)
         : this.findPossibleSmallest(coins, outgoingTotal);
 
@@ -64,7 +65,7 @@ class Transfer {
       if (!Object.prototype.hasOwnProperty.call(plan, symbol)) continue;
 
       const tp = plan[symbol];
-      const css = symbol.toLocaleLowerCase() == "xch"
+      const css = symbol == xchSymbol()
         ? await stdBundle.generateCoinSpends(tp, puzzles)
         : await catBundle.generateCoinSpends(tp, puzzles, catAdditionalConditions, getPuzzle);
       coin_spends.push(...css);
@@ -171,6 +172,7 @@ class Transfer {
       else if (cond.code == ConditionOpcode.AGG_SIG_ME) {
         if (!cond.args || cond.args.length != 2) throw "wrong args"
         const args = cond.args as Uint8Array[];
+        const AGG_SIG_ME_ADDITIONAL_DATA = Bytes.from(store.state.network.network.chainId, "hex");
         const msg = Uint8Array.from([...args[1], ...coinname.raw(), ...AGG_SIG_ME_ADDITIONAL_DATA.raw()]);
         const pk_hex = Bytes.from(args[0]).hex();
         if (pk_hex != synthetic_pk_hex) throw "wrong args due to pk != synthetic_pk";

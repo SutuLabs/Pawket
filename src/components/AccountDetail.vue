@@ -1,7 +1,7 @@
 <template>
   <div class="column is-8 is-offset-2 box">
     <div class="container px-4">
-      <b-loading :is-full-page="true" :active="!account.tokens || !account.tokens.hasOwnProperty('XCH')"></b-loading>
+      <b-loading :is-full-page="true" :active="!account.tokens || !account.tokens.hasOwnProperty(xchSymbol)"></b-loading>
       <div class="py-5 has-text-centered" v-if="account && account.key">
         <section>
           <b-tooltip :label="$t('accountDetail.ui.tooltip.setting')" class="is-pulled-left">
@@ -18,8 +18,8 @@
           <br />
           <div class="mt-5">
             <h2 class="is-size-3 py-5">
-              <span v-if="account.tokens && account.tokens.hasOwnProperty('XCH')" class="pl-4">
-                {{ account.tokens["XCH"].amount | demojo(null, 6) }}
+              <span v-if="account.tokens && account.tokens.hasOwnProperty(xchSymbol)" class="pl-4">
+                {{ account.tokens[xchSymbol].amount | demojo(null, 6) }}
                 <b-tooltip :label="$t('accountDetail.ui.tooltip.refresh')">
                   <a class="is-size-6" href="javascript:void(0)" @click="refresh()" :disabled="refreshing">
                     <b-icon
@@ -31,11 +31,11 @@
                   </a>
                 </b-tooltip>
               </span>
-              <span v-else>- XCH</span>
+              <span v-else>- {{xchSymbol}}</span>
             </h2>
           </div>
           <div class="b-tooltip mx-5">
-            <a @click="openLink(account.tokens['XCH'])" href="javascript:void(0)" class="has-text-primary">
+            <a @click="openLink(account.tokens[xchSymbol])" href="javascript:void(0)" class="has-text-primary">
               <b-icon icon="download-circle" size="is-medium"> </b-icon>
               <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.receive") }}</p>
             </a>
@@ -63,7 +63,7 @@
             <span class="is-pulled-right" v-if="account.tokens && account.tokens.hasOwnProperty(cat.name)">
               <span class="panel-icon"></span>
               <span class="" v-if="tokenInfo[cat.name]">{{ account.tokens[cat.name].amount | demojo(tokenInfo[cat.name]) }}</span>
-              <span class="has-text-grey-light is-size-7 pl-3" v-if="cat.name === 'XCH'">{{
+              <span class="has-text-grey-light is-size-7 pl-3" v-if="cat.name === xchSymbol">{{
                 account.tokens[cat.name].amount | xchToCurrency(rate, currency)
               }}</span>
             </span>
@@ -168,6 +168,7 @@ import UtxoPanel from "@/components/UtxoPanel.vue";
 import { CoinRecord } from "@/models/wallet";
 import { nameOmit } from "@/filters/nameConversion";
 import MintCat from "./Mint/MintCat.vue";
+import { xchSymbol } from "@/store/modules/network";
 
 type Mode = "Verify" | "Create";
 
@@ -200,7 +201,7 @@ export default class AccountDetail extends Vue {
   get tokenList(): CustomCat[] {
     let list: CustomCat[] = [];
     for (let key in store.state.account.tokenInfo) {
-      list.push({ name: store.state.account.tokenInfo[key].symbol, id: store.state.account.tokenInfo[key].id ?? "XCH" });
+      list.push({ name: store.state.account.tokenInfo[key].symbol, id: store.state.account.tokenInfo[key].id ?? xchSymbol() });
     }
     return list.concat(this.account.cats);
   }
@@ -227,6 +228,10 @@ export default class AccountDetail extends Vue {
 
   get rate(): number {
     return this.exchangeRate;
+  }
+
+  get xchSymbol(): string {
+    return xchSymbol();
   }
 
   mounted(): void {
@@ -287,7 +292,7 @@ export default class AccountDetail extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: ["x"],
-      props: { account: this.account, tokenList: this.tokenList},
+      props: { account: this.account, tokenList: this.tokenList },
       events: { refresh: this.refresh },
     });
   }
@@ -390,13 +395,13 @@ export default class AccountDetail extends Vue {
       canCancel: ["x"],
       props: {
         account: this.account,
-        tokenList: this.tokenList
+        tokenList: this.tokenList,
       },
     });
   }
 
   async refresh(): Promise<void> {
-    this.exchangeRate = await getExchangeRate("XCH", this.currencyName);
+    this.exchangeRate = await getExchangeRate(xchSymbol(), this.currencyName);
     store.dispatch("refreshBalance");
   }
 

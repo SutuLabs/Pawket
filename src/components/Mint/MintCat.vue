@@ -98,6 +98,7 @@ import FeeSelector from "@/components/FeeSelector.vue";
 import BundleSummary from "../BundleSummary.vue";
 import SendSummary from "../SendSummary.vue";
 import { generateMintCatBundle } from "@/services/mint/cat";
+import { xchSymbol } from "@/store/modules/network";
 
 @Component({
   components: {
@@ -124,7 +125,7 @@ export default class MintCat extends Vue {
   public selectMax = false;
   public amount = "";
   public symbol = "NEWTOKEN";
-  public selectedToken = "XCH";
+  public selectedToken = xchSymbol();
   public validity = false;
   public assetId = "";
 
@@ -150,11 +151,11 @@ export default class MintCat extends Vue {
   }
 
   get decimal(): number {
-    return this.selectedToken == "XCH" ? 12 : 3;
+    return this.selectedToken == xchSymbol() ? 12 : 3;
   }
 
   get tokenNames(): string[] {
-    return ["XCH"];
+    return [xchSymbol()];
   }
 
   get bundleJson(): string {
@@ -209,7 +210,7 @@ export default class MintCat extends Vue {
 
   setMax(excludingFee = false): void {
     this.reset();
-    excludingFee = this.selectedToken != "XCH" ? true : excludingFee;
+    excludingFee = this.selectedToken != xchSymbol() ? true : excludingFee;
     const newAmount = excludingFee
       ? this.maxAmount
       : bigDecimal.subtract(this.maxAmount, bigDecimal.divide(this.fee, Math.pow(10, this.decimal), this.decimal));
@@ -225,7 +226,7 @@ export default class MintCat extends Vue {
 
   changeToken(token: string): void {
     this.selectedToken = token;
-    if (this.selectedToken == "XCH") {
+    if (this.selectedToken == xchSymbol()) {
       this.memo = "";
     }
     this.reset();
@@ -269,7 +270,7 @@ export default class MintCat extends Vue {
       Math.pow(10, this.decimal),
       this.decimal
     );
-    if (this.selectedToken == "XCH") {
+    if (this.selectedToken == xchSymbol()) {
       this.maxAmount = this.totalAmount;
       this.totalAmount = "-1";
     } else {
@@ -297,7 +298,7 @@ export default class MintCat extends Vue {
         return;
       }
 
-      const decimal = this.selectedToken == "XCH" ? 12 : 3;
+      const decimal = this.selectedToken == xchSymbol() ? 12 : 3;
       const amount = BigInt(bigDecimal.multiply(this.amount, Math.pow(10, decimal)));
 
       if (this.availcoins == null) {

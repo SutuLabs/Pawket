@@ -12,6 +12,7 @@ import store from "@/store";
 import { GetParentPuzzleResponse } from "@/models/api";
 import { assemble, curry, disassemble } from "clvm_tools/browser";
 import { modsprog } from "../coin/mods";
+import { xchSymbol } from "@/store/modules/network";
 
 export async function generateOffer(
   offered: OfferPlan[],
@@ -58,7 +59,7 @@ export async function generateOffer(
       const puzzle_reveal_text = puzzle.getSettlementPaymentsPuzzle();
 
       // put special target into puzzle reverse dict
-      puzzles.filter(_ => _.symbol == "XCH")[0].puzzles.push({
+      puzzles.filter(_ => _.symbol == xchSymbol())[0].puzzles.push({
         privateKey: puzzle.getEmptyPrivateKey(), // this private key will not really calculated due to no AGG_SIG_ME exist in this spend
         puzzle: puzzle_reveal_text,
         hash: settlement_tgt,
@@ -158,8 +159,8 @@ export async function generateOfferPlan(
     const tgt: TransferTarget = {
       address: settlement_tgt,
       amount: off.amount,
-      symbol: off.symbol ?? "XCH",
-      memos: off.symbol == "XCH" ? undefined : [settlement_tgt],
+      symbol: off.symbol ?? xchSymbol(),
+      memos: off.symbol == xchSymbol() ? undefined : [settlement_tgt],
     };
 
     const plan = transfer.generateSpendPlan(availcoins, [tgt], change_hex, fee);

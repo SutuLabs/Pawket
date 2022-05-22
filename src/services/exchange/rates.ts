@@ -1,8 +1,9 @@
 import { GetExchangeRateResponse } from "@/models/api";
+import { rpcUrl } from "@/store/modules/network";
 
 export async function getExchangeRate(from: string, to: string): Promise<number> {
   try {
-    const resp = await fetch(process.env.VUE_APP_API_URL + "misc/prices", {
+    const resp = await fetch(rpcUrl() + "misc/prices", {
       method: "GET",
       headers: {
         Accept: "application/json",

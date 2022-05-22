@@ -4,6 +4,7 @@ import puzzle, { PuzzleAddress } from "./puzzle";
 import { PuzzleDetail } from "./puzzle";
 import utility from "./utility";
 import { CustomCat } from "@/store/modules/account";
+import { rpcUrl, xchSymbol } from "@/store/modules/network";
 
 export interface TokenPuzzleDetail {
   symbol: string;
@@ -19,7 +20,7 @@ class Receive {
   async getAssetsRequestDetail(sk_hex: string, maxId: number, customCats: CustomCat[]): Promise<TokenPuzzleDetail[]> {
 
     const privkey = utility.fromHexString(sk_hex);
-    const xchToken = { symbol: "XCH", puzzles: await puzzle.getPuzzleDetails(privkey, 0, maxId) };
+    const xchToken = { symbol: xchSymbol(), puzzles: await puzzle.getPuzzleDetails(privkey, 0, maxId) };
     const tokens: TokenPuzzleDetail[] = [xchToken];
     const standardAssets = Object.values(store.state.account.tokenInfo)
       .filter(_ => _.id)
@@ -48,7 +49,7 @@ class Receive {
 
     const hashes = tokens.reduce((acc, token) => acc.concat(token.puzzles.map(_ => _.hash)), ([] as string[]));
 
-    const resp = await fetch(process.env.VUE_APP_API_URL + "Wallet/records", {
+    const resp = await fetch(rpcUrl() + "Wallet/records", {
       method: "POST",
       headers: {
         Accept: "application/json",

@@ -5,6 +5,7 @@ import { Bytes } from "clvm";
 import { PrivateKey } from "@chiamine/bls-signatures";
 import utility from "./utility";
 import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
+import { xchPrefix } from "@/store/modules/network";
 
 export interface ExecuteResultCondition {
   op: number;
@@ -167,7 +168,7 @@ class PuzzleMaker {
     startIndex: number,
     endIndex: number,
     includeUnhardened = false,
-    prefix = "xch"): Promise<PuzzleDetail[]> {
+    prefix = xchPrefix()): Promise<PuzzleDetail[]> {
     const derive = await utility.derive(privateKey, true);
     const deriveUnhardened = await utility.derive(privateKey, false);
     const details: PuzzleDetail[] = [];

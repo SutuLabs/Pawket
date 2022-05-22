@@ -4,7 +4,7 @@
       <template #label>
         <span class="is-size-6">{{ leadingText || $t("sendSummary.ui.label.sending") }}</span>
         <span class="is-pulled-right">
-          <span v-if="unit == 'XCH'">
+          <span v-if="unit == xchSymbol">
             {{ amount | demojo }}
           </span>
           <span v-else>
@@ -55,7 +55,7 @@
       <template #label>
         <span class="is-size-5">{{ $t("sendSummary.ui.label.total") }}</span>
         <span class="is-pulled-right is-size-5 has-text-primary">
-          <span v-if="unit == 'XCH'">
+          <span v-if="unit == xchSymbol">
             {{ (amount + fee) | demojo }}
           </span>
           <span v-else>
@@ -70,6 +70,7 @@
 <script lang="ts">
 import { shorten } from "@/filters/addressConversion";
 import { demojo } from "@/filters/unitConversion";
+import { xchSymbol } from "@/store/modules/network";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component({
@@ -83,6 +84,10 @@ export default class SendSummary extends Vue {
   @Prop() private address!: string;
   @Prop() private assetId!: string;
   @Prop() private total!: bigint;
+
+  get xchSymbol(): string {
+    return xchSymbol();
+  }
 }
 </script>
 

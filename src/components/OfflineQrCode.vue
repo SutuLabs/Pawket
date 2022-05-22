@@ -74,6 +74,7 @@ import { OriginCoin } from "@/models/wallet";
 import coinHandler, { compareOriginCoin } from "@/services/transfer/coin";
 import { decodeOffer } from "@/services/offer/encoding";
 import OfflineSendConfirmBundle from "./OfflineSendConfirmBundle.vue";
+import { xchPrefix } from "@/store/modules/network";
 
 @Component({
   components: {
@@ -85,7 +86,7 @@ import OfflineSendConfirmBundle from "./OfflineSendConfirmBundle.vue";
   },
 })
 export default class OfflineQrCode extends Vue {
-  @Prop({ default: "xch" }) public prefix!: string;
+  @Prop({ default: xchPrefix() }) public prefix!: string;
   @Prop({ default: () => [] }) public puzzles!: PuzzleAddress[];
   @Prop({ default: "OFFLINE_CLIENT" }) public mode!: "OFFLINE_CLIENT" | "PROXY";
 

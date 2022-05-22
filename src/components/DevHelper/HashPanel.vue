@@ -13,6 +13,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
 import puzzle from '@/services/crypto/puzzle';
+import { xchPrefix } from "@/store/modules/network";
 
 @Component({
   components: {
@@ -29,7 +30,7 @@ export default class HashPanel extends Vue {
     this.address_hash = puzzle.getPuzzleHashFromAddress(this.origin_address);
   }
   changeHash(): void {
-    this.hash_address = puzzle.getAddressFromPuzzleHash(this.origin_hash, "xch");
+    this.hash_address = puzzle.getAddressFromPuzzleHash(this.origin_hash, xchPrefix());
   }
 }
 </script>

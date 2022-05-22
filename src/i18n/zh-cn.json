@@ -473,9 +473,8 @@
     },
     "symbol": {
       "Cat": "CAT",
-      "XCH": "XCH",
       "hint": {
-        "XCH": "原生代币 XCH"
+        "XCH": "原生代币"
       }
     },
     "take": {

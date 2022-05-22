@@ -69,25 +69,7 @@ export interface IAccountState {
 store.registerModule<IAccountState>('account', {
   state() {
     return {
-      tokenInfo: {
-        "XCH": {
-          symbol: "XCH",
-          decimal: 12,
-          unit: "XCH",
-        },
-        "USDS": {
-          symbol: "USDS",
-          decimal: 3,
-          unit: "USDS",
-          id: "6d95dae356e32a71db5ddcb42224754a02524c615c5fc35f568c2af04774e589",
-        },
-        "BSH": {
-          symbol: "BSH",
-          decimal: 3,
-          unit: "BSH",
-          id: "6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b"
-        },
-      },
+      tokenInfo: {},
       accounts: [],
       selectedAccount: 0,
       refreshing: false,

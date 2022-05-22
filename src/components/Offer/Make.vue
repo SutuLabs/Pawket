@@ -53,7 +53,7 @@
                   <b-tag v-else-if="ent.id" type="is-info" :title="ent.id"
                     >{{ $t("offer.symbol.Cat") }} {{ ent.id.slice(0, 7) + "..." }}</b-tag
                   >
-                  <b-tag v-else type="is-info">{{ $t("offer.symbol.XCH") }}</b-tag>
+                  <b-tag v-else type="is-info">{{ xchSymbol }}</b-tag>
 
                   <b-tag type="">{{ ent.amount }}</b-tag>
                   <b-tag type="is-info is-light" :title="ent.target">{{ ent.target.slice(0, 7) + "..." }}</b-tag>
@@ -120,6 +120,7 @@ import { getCatIdDict, getCatNameDict } from "@/services/coin/cat";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
 import { generateOffer, generateOfferPlan } from "@/services/offer/bundler";
 import bigDecimal from "js-big-decimal";
+import { xchSymbol } from "@/store/modules/network";
 
 @Component({
   components: {
@@ -138,10 +139,10 @@ export default class MakeOffer extends Vue {
   public tokenPuzzles: TokenPuzzleDetail[] = [];
   public signing = false;
 
-  public requests: OfferTokenAmount[] = [{ token: "XCH", amount: "0" }];
-  public offers: OfferTokenAmount[] = [{ token: "XCH", amount: "0" }];
+  public requests: OfferTokenAmount[] = [{ token: xchSymbol(), amount: "0" }];
+  public offers: OfferTokenAmount[] = [{ token: xchSymbol(), amount: "0" }];
   // public requests: OfferTokenAmount[] = [{ token: "BSH", amount: "0.011" }];
-  // public offers: OfferTokenAmount[] = [{ token: "XCH", amount: "0.000000000009" }];
+  // public offers: OfferTokenAmount[] = [{ token: xchSymbol(), amount: "0.000000000009" }];
 
   get bundleText(): string {
     return this.offerBundle == null ? "" : JSON.stringify(this.offerBundle);
@@ -176,8 +177,12 @@ export default class MakeOffer extends Vue {
     await this.loadCoins();
   }
 
+  get xchSymbol(): string {
+    return xchSymbol();
+  }
+
   getTotalAmount(token: string): string {
-    if (!this.availcoins || !this.availcoins[token] || token == "XCH") {
+    if (!this.availcoins || !this.availcoins[token] || token == xchSymbol()) {
       return "-1";
     }
 
@@ -197,7 +202,7 @@ export default class MakeOffer extends Vue {
     }
 
     const availcoins = this.availcoins[token].map((_) => _.amount);
-    const decimal = token == "XCH" ? 12 : 3;
+    const decimal = token == xchSymbol() ? 12 : 3;
     const singleMax = bigDecimal.divide(
       availcoins.reduce((a, b) => (a > b ? a : b), 0n),
       Math.pow(10, decimal),
@@ -208,7 +213,7 @@ export default class MakeOffer extends Vue {
       Math.pow(10, decimal),
       decimal
     );
-    if (token == "XCH") {
+    if (token == xchSymbol()) {
       return totalAmount;
     } else {
       return singleMax;
