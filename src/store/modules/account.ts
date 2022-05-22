@@ -2,7 +2,7 @@ import store from '@/store'
 import account, { AccountKey } from "@/services/crypto/account";
 import { CoinRecord } from "@/models/wallet";
 import Vue from 'vue';
-import receive from '@/services/crypto/receive';
+import receive, { NftDetail } from '@/services/crypto/receive';
 
 type AccountType = "Serial" | "Password" | "Legacy";
 
@@ -29,6 +29,7 @@ export interface AccountEntity {
   tokens: AccountTokens;
   addressRetrievalCount: number;
   cats: CustomCat[];
+  nfts: NftDetail[];
 }
 
 export interface CustomCat {
@@ -91,6 +92,7 @@ store.registerModule<IAccountState>('account', {
         tokens: {},
         addressRetrievalCount: DEFAULT_ADDRESS_RETRIEVAL_COUNT,
         cats: [],
+        nfts: [],
       });
       await dispatch("initWalletAddress");
       await dispatch("persistent");
@@ -110,6 +112,7 @@ store.registerModule<IAccountState>('account', {
         tokens: {},
         addressRetrievalCount: DEFAULT_ADDRESS_RETRIEVAL_COUNT,
         cats: [],
+        nfts: [],
       });
       await dispatch("initWalletAddress");
       await dispatch("persistent");
@@ -126,6 +129,7 @@ store.registerModule<IAccountState>('account', {
         tokens: {},
         addressRetrievalCount: DEFAULT_ADDRESS_RETRIEVAL_COUNT,
         cats: [],
+        nfts: [],
       });
       await dispatch("initWalletAddress");
       await dispatch("persistent");
@@ -191,6 +195,20 @@ store.registerModule<IAccountState>('account', {
       }
 
       resetState();
+    },
+    async refreshNfts({ state }, parameters: { idx: number, maxId: number }) {
+      if (!parameters) parameters = { idx: state.selectedAccount, maxId: -1 };
+      let { idx, maxId } = parameters;
+      if (typeof idx !== 'number' || idx <= 0) idx = state.selectedAccount;
+      const account = state.accounts[idx];
+      if (!account) return;
+      if (typeof maxId !== 'number' || maxId <= 0) maxId = account.addressRetrievalCount;
+      if (typeof maxId !== 'number' || maxId <= 0) DEFAULT_ADDRESS_RETRIEVAL_COUNT;
+
+      const requests = await receive.getAssetsRequestDetail(account.key.privateKey, maxId, []);
+      const hintRecords = (await receive.getCoinRecords(requests, false, true));
+      const nfts = await receive.getNfts(hintRecords);
+      Vue.set(account, "nfts", nfts);
     },
   },
 });
