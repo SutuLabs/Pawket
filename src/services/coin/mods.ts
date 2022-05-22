@@ -262,6 +262,24 @@ export const mods: ModDetail[] = [
       },
     ],
   },
+  {
+    name: "nft_metadata_updater_default",
+    mod: "(a (q 4 (c (a (i 23 (q 2 2 (c 2 (c 5 (c 23 ())))) (q . 5)) 1) (c 11 ())) (q ())) (c (q 2 (i 5 (q 2 (i (= 17 (q . 117)) (q 4 (c (q . 117) (c 11 25)) 13) (q 4 9 (a 2 (c 2 (c 13 (c 11 ())))))) 1) ()) 1) 1))",
+    parameters: [
+      {
+        name: "CURRENT_METADATA",
+        desc: "METADATA and METADATA_UPDATER_PUZZLE_HASH are passed in as truths from the layer above",
+      },
+      {
+        name: "METADATA_UPDATER_PUZZLE_HASH ",
+        desc: "METADATA and METADATA_UPDATER_PUZZLE_HASH are passed in as truths from the layer above",
+      },
+      {
+        name: "solution",
+        desc: "",
+      },
+    ],
+  },
 ]
 export const modsdict: { [mod: string]: string } = mods.reduce((acc, cur) => ({ ...acc, [cur.mod]: cur.name }), {});
 export const modsprog: { [mod: string]: string } = mods.reduce((acc, cur) => ({ ...acc, [cur.name]: cur.mod }), {});
