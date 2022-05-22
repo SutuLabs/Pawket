@@ -81,6 +81,9 @@
         <b-tab-item :label="$t('accountDetail.ui.tab.utxos')">
           <utxo-panel :tokenInfo="tokenInfo" v-model="activities" @changePage="changePage"></utxo-panel>
         </b-tab-item>
+        <b-tab-item :label="'NFT'">
+          <nft-panel :account="account" @changePage="changePage"></nft-panel>
+        </b-tab-item>
       </b-tabs>
     </div>
     <div class="p-4 border-top-1">
@@ -170,6 +173,7 @@ import { CoinRecord } from "@/models/wallet";
 import { nameOmit } from "@/filters/nameConversion";
 import MintCat from "./Mint/MintCat.vue";
 import { xchSymbol } from "@/store/modules/network";
+import NftPanel from "@/components/Detail/NftPanel.vue";
 
 type Mode = "Verify" | "Create";
 
@@ -178,6 +182,7 @@ type Mode = "Verify" | "Create";
     KeyBox,
     Send,
     UtxoPanel,
+    NftPanel,
   },
   filters: { demojo, xchToCurrency, nameOmit },
 })
