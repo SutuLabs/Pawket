@@ -13,6 +13,7 @@ export interface GetRecordsResponse {
 export interface CoinRecordInfo {
     puzzleHash: string;
     records: CoinRecord[];
+    balance: string;
 }
 
 export interface CoinRecord {

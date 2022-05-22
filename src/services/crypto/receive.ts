@@ -3,8 +3,9 @@ import store from "@/store";
 import puzzle, { PuzzleAddress } from "./puzzle";
 import { PuzzleDetail } from "./puzzle";
 import utility from "./utility";
-import { CustomCat } from "@/store/modules/account";
+import { AccountTokenAddress, AccountTokens, CustomCat } from "@/store/modules/account";
 import { rpcUrl, xchSymbol } from "@/store/modules/network";
+import { prefix0x } from "../coin/condition";
 
 export interface TokenPuzzleDetail {
   symbol: string;
@@ -37,16 +38,7 @@ class Receive {
     return tokens;
   }
 
-  async getCoinRecords(tokens: TokenPuzzleAddress[], includeSpentCoins: boolean): Promise<CoinRecord[]> {
-    const dictAssets: { [key: string]: string } = {};
-    for (let i = 0; i < tokens.length; i++) {
-      const t = tokens[i];
-      for (let j = 0; j < t.puzzles.length; j++) {
-        const p = t.puzzles[j];
-        dictAssets[p.hash] = t.symbol
-      }
-    }
-
+  async getCoinRecords(tokens: TokenPuzzleAddress[], includeSpentCoins: boolean): Promise<GetRecordsResponse> {
     const hashes = tokens.reduce((acc, token) => acc.concat(token.puzzles.map(_ => _.hash)), ([] as string[]));
 
     const resp = await fetch(rpcUrl() + "Wallet/records", {
@@ -61,13 +53,57 @@ class Receive {
       }),
     });
     const json = (await resp.json()) as GetRecordsResponse;
-    const activities = json.coins.reduce(
+    return json;
+  }
+
+  getAssetsDict(requests: TokenPuzzleAddress[]): { [key: string]: string } {
+    const dictAssets: { [key: string]: string } = {};
+    for (let i = 0; i < requests.length; i++) {
+      const t = requests[i];
+      for (let j = 0; j < t.puzzles.length; j++) {
+        const p = t.puzzles[j];
+        dictAssets[p.hash] = t.symbol
+      }
+    }
+    return dictAssets;
+  }
+
+  async getActivities(tokens: TokenPuzzleAddress[], includeSpentCoins: boolean): Promise<CoinRecord[]> {
+    const records = (await this.getCoinRecords(tokens, includeSpentCoins));
+    const activities = this.convertActivities(tokens, records);
+    return activities;
+  }
+
+  convertActivities(tokens: TokenPuzzleAddress[], records: GetRecordsResponse): CoinRecord[] {
+    const dictAssets = this.getAssetsDict(tokens);
+
+    const activities = records.coins.reduce(
       (acc, puzzle) => acc.concat(puzzle.records
         .reduce<CoinRecord[]>((recacc, rec) => recacc.concat(rec), [])
         .map(rec => Object.assign({}, rec, { symbol: dictAssets[puzzle.puzzleHash] }))),
-      ([] as CoinRecord[]));
-
+      ([] as CoinRecord[]))
+      .sort((a, b) => b.timestamp - a.timestamp);
     return activities;
+  }
+
+  getTokenBalance(tokens: TokenPuzzleAddress[], records: GetRecordsResponse): AccountTokens {
+    const dictAssets = this.getAssetsDict(tokens);
+
+    const tokenBalances: AccountTokens = {};
+
+    for (let i = 0; i < tokens.length; i++) {
+      const symbol = tokens[i].symbol;
+      tokenBalances[symbol] = {
+        amount: records.coins.filter(_ => dictAssets[_.puzzleHash] == symbol).reduce((pv, cur) => pv + BigInt(cur.balance), 0n),
+        addresses: tokens[i].puzzles
+          .map<AccountTokenAddress>(_ => ({
+            address: _.address,
+            coins: (records.coins.find(c => prefix0x(_.hash) == c.puzzleHash) || { records: [] }).records,
+          })),
+      };
+    }
+
+    return tokenBalances;
   }
 }
 
