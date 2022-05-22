@@ -90,20 +90,17 @@ class Receive {
     const dictAssets = this.getAssetsDict(tokens);
 
     const tokenBalances: AccountTokens = {};
-    for (let i = 0; i < records.coins.length; i++) {
-      const b = records.coins[i];
-      const symbol = dictAssets[b.puzzleHash];
-      const token = tokens.find(_ => _.symbol == symbol);
-      if (!token) continue;
-      if (!tokenBalances[symbol]) tokenBalances[symbol] = {
-        amount: 0n,
-        addresses: token.puzzles
+
+    for (let i = 0; i < tokens.length; i++) {
+      const symbol = tokens[i].symbol;
+      tokenBalances[symbol] = {
+        amount: records.coins.filter(_ => dictAssets[_.puzzleHash] == symbol).reduce((pv, cur) => pv + BigInt(cur.balance), 0n),
+        addresses: tokens[i].puzzles
           .map<AccountTokenAddress>(_ => ({
             address: _.address,
-            coins: b.records.filter(r => r.coin?.puzzleHash == prefix0x(_.hash)),
+            coins: (records.coins.find(c => prefix0x(_.hash) == c.puzzleHash) || { records: [] }).records,
           })),
       };
-      tokenBalances[symbol].amount = tokenBalances[symbol].amount + BigInt(b.balance);
     }
 
     return tokenBalances;
