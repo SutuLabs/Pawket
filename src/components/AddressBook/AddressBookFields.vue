@@ -1,7 +1,7 @@
 <template>
   <section>
     <b-field :label="$t('addressBookField.ui.label.name')">
-      <b-input v-model="name" max-length="36"></b-input>
+      <b-input v-model="name" maxlength="36"></b-input>
     </b-field>
     <b-field :label="$t('addressBookField.ui.label.address')" type="is-danger" :message="errorMessage">
       <b-input

@@ -26,7 +26,7 @@
               <b-icon icon="account-circle" size="is-medium" class="has-text-primary"></b-icon>
             </div>
             <div>
-              <p class="has-text-grey-dark is-size-6">{{ contact.name }}</p>
+              <p class="has-text-grey-dark is-size-6">{{ contact.name | nameOmit }}</p>
               <p>
                 <span class="is-size-7 has-text-grey-light word-break">{{ contact.address }}</span>
               </p>
@@ -50,6 +50,7 @@
 </template>
 
 <script lang="ts">
+import { nameOmit } from "@/filters/nameConversion";
 import { notifyPrimary } from "@/notification/notification";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import AddressBookField from "./AddressBook/AddressBookFields.vue";
@@ -63,6 +64,7 @@ export type Contact = {
   address: string;
 };
 @Component({
+  filters: { nameOmit },
   components: { AddressBookField },
 })
 export default class AddressBook extends Vue {
