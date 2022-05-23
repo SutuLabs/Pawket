@@ -80,7 +80,7 @@ export async function getOfferSummary(bundle: SpendBundle): Promise<OfferSummary
   return { requested, offered };
 }
 
-async function internalUncurry(puz: string): Promise<UncurriedPuzzle> {
+export async function internalUncurry(puz: string): Promise<UncurriedPuzzle> {
   const curried = assemble(puz);
   const [mod, args] = uncurry(curried) as Tuple<SExp, SExp>;
   const mods = disassemble(mod);

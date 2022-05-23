@@ -119,6 +119,7 @@ export async function testMakeOffer1(): Promise<void> {
     name: "",
     type: "Legacy",
     tokens: {},
+    nfts: [],
     cats: [],
   }
   const tokenPuzzles = await coinHandler.getAssetsRequestDetail(account);
@@ -212,6 +213,7 @@ export async function testMakeOffer2(): Promise<void> {
     name: "",
     type: "Legacy",
     tokens: {},
+    nfts: [],
     cats: [],
   }
   const tokenPuzzles = await coinHandler.getAssetsRequestDetail(account);
@@ -278,6 +280,7 @@ export async function testTakeOfferXchForCat(): Promise<void> {
     name: "",
     type: "Legacy",
     tokens: {},
+    nfts: [],
     cats: [],
   }
 
@@ -361,6 +364,7 @@ export async function testTakeOfferCatForXch(): Promise<void> {
     name: "",
     type: "Legacy",
     tokens: {},
+    nfts: [],
     cats: [],
   }
 

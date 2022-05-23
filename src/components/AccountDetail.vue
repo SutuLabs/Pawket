@@ -81,6 +81,9 @@
         <b-tab-item :label="$t('accountDetail.ui.tab.utxos')">
           <utxo-panel :tokenInfo="tokenInfo" v-model="activities" @changePage="changePage"></utxo-panel>
         </b-tab-item>
+        <b-tab-item :label="'NFT'" :visible="debugMode">
+          <nft-panel :account="account" @changePage="changePage"></nft-panel>
+        </b-tab-item>
       </b-tabs>
     </div>
     <div class="p-4 border-top-1">
@@ -141,6 +144,16 @@
             </a>
           </b-tooltip>
         </div>
+        <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+          <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.mintCat')" position="is-right">
+            <a v-if="debugMode" href="javascript:void(0)" @click="openMintNft()" class="has-text-link">
+              <div class="has-text-centered">
+                <b-icon icon="tag-faces" size="is-medium"></b-icon>
+                <p class="is-size-7">Mint NFT</p>
+              </div>
+            </a>
+          </b-tooltip>
+        </div>
       </div>
     </div>
   </div>
@@ -170,6 +183,8 @@ import { CoinRecord } from "@/models/wallet";
 import { nameOmit } from "@/filters/nameConversion";
 import MintCat from "./Mint/MintCat.vue";
 import { xchSymbol } from "@/store/modules/network";
+import NftPanel from "@/components/Detail/NftPanel.vue";
+import MintNft from "./Mint/MintNft.vue";
 
 type Mode = "Verify" | "Create";
 
@@ -178,6 +193,7 @@ type Mode = "Verify" | "Create";
     KeyBox,
     Send,
     UtxoPanel,
+    NftPanel,
   },
   filters: { demojo, xchToCurrency, nameOmit },
 })
@@ -397,6 +413,19 @@ export default class AccountDetail extends Vue {
       props: {
         account: this.account,
         tokenList: this.tokenList,
+      },
+    });
+  }
+
+  openMintNft(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: MintNft,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: ["x"],
+      props: {
+        account: this.account,
       },
     });
   }
