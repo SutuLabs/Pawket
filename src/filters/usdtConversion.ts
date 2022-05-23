@@ -10,7 +10,7 @@ export function xchToCurrency(mojo: null | number | bigint, rate = -1, currency:
   const symbol = CurrencySymbol.get(currency);
   const decimal = 12;
   if (rate == -1) {
-    return "-1";
+    return "";
   }
   const digits = 2;
 
