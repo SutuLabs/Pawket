@@ -160,7 +160,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import store from "@/store";
 import AccountExport from "@/components/AccountExport.vue";
 import AccountList from "@/components/AccountList.vue";
@@ -261,6 +261,15 @@ export default class AccountDetail extends Vue {
     if (this.timeoutId) {
       clearTimeout(this.timeoutId);
     }
+  }
+
+  @Watch("xchSymbol")
+  onNetworkChange(): void {
+    this.refresh();
+  }
+
+  async refreshRate(): Promise<void> {
+    this.exchangeRate = await getExchangeRate(xchSymbol(), this.currencyName);
   }
 
   autoRefresh(sec = 60): void {
@@ -431,7 +440,7 @@ export default class AccountDetail extends Vue {
   }
 
   async refresh(): Promise<void> {
-    this.exchangeRate = await getExchangeRate(xchSymbol(), this.currencyName);
+    this.refreshRate();
     store.dispatch("refreshBalance");
   }
 

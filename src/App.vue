@@ -70,11 +70,11 @@ export default class App extends Vue {
     return store.state.app.debug;
   }
 
-  get networks():  NetworkInfo {
+  get networks(): NetworkInfo {
     return store.state.network.networks;
   }
 
-  get networkId():  string {
+  get networkId(): string {
     return store.state.network.networkId;
   }
 
