@@ -185,8 +185,13 @@ store.registerModule<IVaultState>('vault', {
     },
     async clear() {
       const ustore = UniStorage.create();
-      await ustore.removeItem("SETTINGS")
-      await ustore.removeItem("MEMORY_STATE")
+      await ustore.removeItem("SETTINGS");
+      await ustore.removeItem("MEMORY_STATE");
+      await ustore.removeItem("DEBUG_MODE");
+      await ustore.removeItem("NETWORK_ID");
+      await ustore.removeItem("DISPLAY_DAPP");
+      await ustore.removeItem("Locale");
+      await ustore.removeItem("CONTACTS");
       location.reload();
     },
 
