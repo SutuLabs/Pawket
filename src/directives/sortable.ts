@@ -1,7 +1,7 @@
-import { CustomCat } from '@/store/modules/account';
-import Sortable from 'sortablejs'
-import { VNode } from 'vue';
-import { DirectiveBinding } from 'vue/types/options';
+import { CustomCat } from "@/store/modules/account";
+import Sortable from "sortablejs";
+import { VNode } from "vue";
+import { DirectiveBinding } from "vue/types/options";
 
 const createSortable = (el: HTMLElement, options: Sortable.Options, vnode: VNode) => {
   return Sortable.create(el, {
@@ -23,7 +23,7 @@ const createSortable = (el: HTMLElement, options: Sortable.Options, vnode: VNode
       data[evt.newIndex] = item;
       const newOrder: CustomCat[] = [];
       for (let i = 0; i < data.length; i++) {
-        newOrder.push({ name: data[i].name, id: data[i].id });
+        newOrder.push({ name: data[i].name, id: data[i].id, network: data[i].network });
       }
       const updateOrder = new CustomEvent("updateOrder", { detail: newOrder });
       el.dispatchEvent(updateOrder);
@@ -32,7 +32,7 @@ const createSortable = (el: HTMLElement, options: Sortable.Options, vnode: VNode
 };
 
 interface SortableHTMLElement extends HTMLElement {
-    _sortable: Sortable;
+  _sortable: Sortable;
 }
 
 /**
@@ -40,25 +40,25 @@ interface SortableHTMLElement extends HTMLElement {
  * is bound or updated, and destroy it when it's unbound.
  */
 const sortable = {
-    name: 'sortable',
-    bind(el: HTMLElement, binding: DirectiveBinding, vnode: VNode): void {
-        const container = el as SortableHTMLElement;
-        if (!container) return;
-        container._sortable = createSortable(container, binding.value, vnode);
-    },
-    update(el: HTMLElement, binding: DirectiveBinding, vnode: VNode): void {
-        const container = el as SortableHTMLElement;
-        const sortable = container?._sortable;
-        if (!sortable) return;
-        sortable.destroy();
-        container._sortable = createSortable(container, binding.value, vnode);
-    },
-    unbind(el: HTMLElement): void {
-        const container = el as SortableHTMLElement;
-        const sortable = container?._sortable;
-        if (!sortable) return;
-        sortable.destroy();
-    }
-}
+  name: "sortable",
+  bind(el: HTMLElement, binding: DirectiveBinding, vnode: VNode): void {
+    const container = el as SortableHTMLElement;
+    if (!container) return;
+    container._sortable = createSortable(container, binding.value, vnode);
+  },
+  update(el: HTMLElement, binding: DirectiveBinding, vnode: VNode): void {
+    const container = el as SortableHTMLElement;
+    const sortable = container?._sortable;
+    if (!sortable) return;
+    sortable.destroy();
+    container._sortable = createSortable(container, binding.value, vnode);
+  },
+  unbind(el: HTMLElement): void {
+    const container = el as SortableHTMLElement;
+    const sortable = container?._sortable;
+    if (!sortable) return;
+    sortable.destroy();
+  },
+};
 
 export { sortable };

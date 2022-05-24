@@ -35,6 +35,7 @@ export interface AccountEntity {
 export interface CustomCat {
   name: string;
   id: string;
+  network: string;
 }
 
 const DEFAULT_ADDRESS_RETRIEVAL_COUNT = 4;

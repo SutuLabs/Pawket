@@ -175,6 +175,10 @@ export default class MintCat extends Vue {
     return this.feeBigInt + this.numericAmount;
   }
 
+  get network(): string {
+    return store.state.network.networkId;
+  }
+
   get debugMode(): boolean {
     return store.state.app.debug;
   }
@@ -335,7 +339,7 @@ export default class MintCat extends Vue {
     if (!this.bundle) return;
     submitBundle(this.bundle, (_) => (this.submitting = _), this.close);
 
-    this.account.cats.push({ name: this.symbol.toUpperCase(), id: this.assetId });
+    this.account.cats.push({ name: this.symbol.toUpperCase(), id: this.assetId, network: this.network });
     await store.dispatch("persistent");
     await store.dispatch("refreshBalance");
   }
