@@ -3,20 +3,17 @@
     <header class="modal-card-head">
       <p v-if="mode == 'List'" class="modal-card-title">{{ $t("addressBook.ui.title.list") }}</p>
       <p v-if="mode == 'Add'" class="modal-card-title">{{ $t("addressBook.ui.title.add") }}</p>
-      <button
-        v-if="mode == 'List' && contacts.length"
-        class="button is-primary is-outlined is-rounded mx-2"
-        @click="addContact()"
-      >
+      <button v-if="mode == 'List' && isNotEmpty" class="button is-primary is-outlined is-rounded mx-2" @click="addContact()">
         {{ $t("addressBook.ui.button.add") }}
       </button>
       <button type="button" class="delete" @click="back()"></button>
     </header>
     <section v-if="mode == 'List'" class="modal-card-body">
-      <div v-if="contacts.length">
+      <div v-if="isNotEmpty">
         <a
           href="javascript:void(0)"
           v-for="(contact, i) of contacts"
+          v-show="contact.network && contact.network == network"
           :key="i"
           @click="showDetail(contact, i)"
           class="panel-block columns is-mobile"
@@ -51,6 +48,7 @@
 
 <script lang="ts">
 import { notifyPrimary } from "@/notification/notification";
+import store from "@/store";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import AddressBookField from "./AddressBook/AddressBookFields.vue";
 import AddressDetail from "./AddressDetail.vue";
@@ -61,6 +59,7 @@ type Parent = "Send" | "Configure";
 export type Contact = {
   name: string;
   address: string;
+  network?: string;
 };
 @Component({
   components: { AddressBookField },
@@ -73,13 +72,23 @@ export default class AddressBook extends Vue {
   public name = "";
   public address = this.defaultAddress;
   public contacts: Contact[] = [];
+  public isNotEmpty = false;
+
+  get network(): string {
+    return store.state.network.networkId;
+  }
 
   updateContacts(): void {
     const contactsJson = localStorage.getItem("CONTACTS");
     if (contactsJson == null) {
       return;
     }
-    this.contacts = JSON.parse(contactsJson);
+    let contacts = JSON.parse(contactsJson);
+    for (let c of contacts) {
+      let contact = { name: c.name, address: c.address, network: c.network ? c.network : "mainnet" };
+      this.contacts.push(contact);
+      if (!this.isNotEmpty) this.isNotEmpty = contact.network === this.network;
+    }
   }
 
   mounted(): void {
@@ -108,12 +117,12 @@ export default class AddressBook extends Vue {
   }
 
   save(name: string, address: string): void {
-    const idx = this.contacts.findIndex((c) => c.address === address);
+    const idx = this.contacts.findIndex((c) => c.network == this.network && c.address === address);
     if (idx > -1) {
       this.$buefy.dialog.alert(this.$tc("addressBook.messages.alert.addressExists"));
       return;
     }
-    this.contacts.push({ name: name, address: address });
+    this.contacts.push({ name: name, address: address, network: this.network });
     localStorage.setItem("CONTACTS", JSON.stringify(this.contacts));
     notifyPrimary(this.$tc("addressBook.messages.notification.contactAdded"));
     this.mode = "List";
