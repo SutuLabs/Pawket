@@ -72,10 +72,16 @@ export default class AddressBook extends Vue {
   public name = "";
   public address = this.defaultAddress;
   public contacts: Contact[] = [];
-  public isNotEmpty = false;
 
   get network(): string {
     return store.state.network.networkId;
+  }
+
+  get isNotEmpty(): boolean {
+    for (let c of this.contacts) {
+      if (c.network === this.network) return true;
+    }
+    return false;
   }
 
   updateContacts(): void {
@@ -85,9 +91,7 @@ export default class AddressBook extends Vue {
     }
     let contacts = JSON.parse(contactsJson);
     for (let c of contacts) {
-      let contact = { name: c.name, address: c.address, network: c.network ? c.network : "mainnet" };
-      this.contacts.push(contact);
-      if (!this.isNotEmpty) this.isNotEmpty = contact.network === this.network;
+      this.contacts.push({ name: c.name, address: c.address, network: c.network ? c.network : "mainnet" });
     }
   }
 
