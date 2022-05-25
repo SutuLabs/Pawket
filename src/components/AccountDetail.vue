@@ -404,6 +404,7 @@ export default class AccountDetail extends Vue {
       canCancel: ["x"],
       props: {
         account: this.account,
+        tokenList: this.tokenList,
       },
     });
   }
