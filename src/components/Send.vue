@@ -127,7 +127,7 @@ import { CurrencyType } from "@/services/exchange/currencyType";
 import BundleSummary from "./BundleSummary.vue";
 import SendSummary from "./SendSummary.vue";
 import AddressBook, { Contact } from "./AddressBook.vue";
-import { xchSymbol } from "@/store/modules/network";
+import { xchPrefix, xchSymbol } from "@/store/modules/network";
 
 @Component({
   components: {
@@ -352,6 +352,15 @@ export default class Send extends Vue {
       const amount = BigInt(bigDecimal.multiply(this.amount, Math.pow(10, decimal)));
 
       if (this.availcoins == null) {
+        this.submitting = false;
+        return;
+      }
+      if (!this.address.startsWith(xchPrefix())) {
+        Notification.open({
+          message: this.$tc("send.messages.error.ADDRESS_NOT_MATCH_NETWORK"),
+          type: "is-danger",
+          duration: 5000,
+        });
         this.submitting = false;
         return;
       }
