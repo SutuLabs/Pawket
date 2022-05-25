@@ -46,7 +46,6 @@ export default class TokenItem extends Vue {
   }
 
   updateOrder(newOrder: CustomCat[]): void {
-    console.log(newOrder);
     this.$emit("updateOrder", newOrder);
   }
 }
