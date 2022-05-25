@@ -139,6 +139,10 @@ export default class TakeOffer extends Vue {
     return getCatNameDict(this.account);
   }
 
+  get network(): string {
+    return store.state.network.networkId;
+  }
+
   get catIds(): { [name: string]: string } {
     return getCatIdDict(this.account);
   }
@@ -250,7 +254,7 @@ export default class TakeOffer extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: ["x"],
-      props: { account: this.account, defaultAssetId: id },
+      props: { account: this.account, defaultAssetId: id, network: this.network},
       events: { refresh: this.refresh },
     });
   }

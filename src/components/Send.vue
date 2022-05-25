@@ -186,6 +186,10 @@ export default class Send extends Vue {
     return this.selectedToken == xchSymbol() ? 12 : 3;
   }
 
+  get network(): string {
+    return store.state.network.networkId;
+  }
+
   get isNewAddress(): boolean {
     if (this.address.length < 32) {
       return false;
@@ -201,7 +205,10 @@ export default class Send extends Vue {
     if (contactsJson == null) {
       return;
     }
-    this.contacts = JSON.parse(contactsJson);
+    let contacts = JSON.parse(contactsJson);
+    for (let c of contacts) {
+      this.contacts.push({ name: c.name, address: c.address, network: c.network ? c.network : "mainnet" });
+    }
   }
 
   get tokenNames(): string[] {

@@ -36,7 +36,13 @@
         <hr />
         <div class="y-scroll pt-5" style="height: 40vh">
           <b-field :label="$t('ManageCats.ui.label.listingCats')">
-            <token-item :catList="assetIds" @remove="remove" v-sortable="sortableOptions" @updateOrder="updateOrder"></token-item>
+            <token-item
+              :catList="assetIds"
+              :network="network"
+              @remove="remove"
+              v-sortable="sortableOptions"
+              @updateOrder="updateOrder"
+            ></token-item>
           </b-field>
         </div>
       </section>
@@ -45,7 +51,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
 import store from "@/store/index";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { sortable } from "@/directives/sortable";
@@ -69,17 +75,18 @@ export default class ManageCats extends Vue {
   @Prop() private account!: AccountEntity;
   @Prop({ default: "" }) defaultName!: string;
   @Prop({ default: "" }) defaultAssetId!: string;
+  @Prop({ default: "mainnet" }) network!: string;
   @Prop() tokenList!: CustomCat[];
 
   public name = this.defaultName;
   public assetId = this.defaultAssetId;
+  public assetIds: CustomCat[] = [];
 
   sortableOptions = {
     chosenClass: "box",
-    draggable: ".panel-block",
+    draggable: ".list-item",
     handle: ".drag-handle",
   };
-  assetIds: CustomCat[] = [];
   submitting = false;
 
   mounted(): void {
@@ -87,7 +94,9 @@ export default class ManageCats extends Vue {
       console.error("account is empty, cannot get settings");
       return;
     }
-    this.assetIds = [...(this.account.cats ?? [])];
+    for (let cat of this.account.cats) {
+      this.assetIds.push({ name: cat.name, id: cat.id, network: cat.network ? cat.network : 'mainnet'})
+    }
   }
 
   close(): void {
@@ -113,6 +122,7 @@ export default class ManageCats extends Vue {
       return false;
     }
     for (let t of this.tokenList) {
+      if (t.network != this.network) continue;
       if (t.id === id || t.name.toUpperCase() === name.toUpperCase()) {
         return true;
       }
@@ -139,7 +149,7 @@ export default class ManageCats extends Vue {
       });
       return;
     }
-    this.assetIds.push({ name: this.name.toUpperCase(), id: this.assetId });
+    this.assetIds.push({ name: this.name.toUpperCase(), id: this.assetId, network: this.network });
     this.submit();
     this.reset();
   }

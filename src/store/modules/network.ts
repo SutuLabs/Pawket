@@ -1,9 +1,15 @@
-import store from '@/store'
-import { TokenInfo } from './account';
+import store from "@/store";
+import { TokenInfo } from "./account";
 
-export function xchPrefix(): string { return store.state.network.prefix; };
-export function xchSymbol(): string { return store.state.network.symbol; };
-export function rpcUrl(): string { return store.state.network.network.rpcUrl; };
+export function xchPrefix(): string {
+  return store.state.network.prefix;
+}
+export function xchSymbol(): string {
+  return store.state.network.symbol;
+}
+export function rpcUrl(): string {
+  return store.state.network.network.rpcUrl;
+}
 
 export interface NetworkDetail {
   name: string;
@@ -16,7 +22,7 @@ export interface NetworkDetail {
 }
 
 export interface NetworkInfo {
-  [key: string]: NetworkDetail
+  [key: string]: NetworkDetail;
 }
 
 export interface INetworkState {
@@ -28,24 +34,9 @@ export interface INetworkState {
 }
 const NETWORK_ID_KEY = "NETWORK_ID";
 
-store.registerModule<INetworkState>('network', {
+store.registerModule<INetworkState>("network", {
   state() {
     const networks: NetworkInfo = {
-      testnet10: {
-        name: "testnet10",
-        rpcUrl: process.env.VUE_APP_API_URL_TESTNET ?? "",
-        prefix: "txch",
-        symbol: "TXCH",
-        chainId: "ae83525ba8d1dd3f09b277de18ca3e43fc0af20d20c4b3e92ef2a48bd291ccb2",
-        explorerUrl: "https://chia.tt/",
-        tokenInfo: {
-          "TXCH": {
-            symbol: "TXCH",
-            decimal: 12,
-            unit: "TXCH",
-          },
-        },
-      },
       mainnet: {
         name: "mainnet",
         rpcUrl: process.env.VUE_APP_API_URL ?? "",
@@ -54,22 +45,37 @@ store.registerModule<INetworkState>('network', {
         chainId: "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb",
         explorerUrl: "https://chia.tt/",
         tokenInfo: {
-          "XCH": {
+          XCH: {
             symbol: "XCH",
             decimal: 12,
             unit: "XCH",
           },
-          "USDS": {
+          USDS: {
             symbol: "USDS",
             decimal: 3,
             unit: "USDS",
             id: "6d95dae356e32a71db5ddcb42224754a02524c615c5fc35f568c2af04774e589",
           },
-          "BSH": {
+          BSH: {
             symbol: "BSH",
             decimal: 3,
             unit: "BSH",
-            id: "6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b"
+            id: "6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b",
+          },
+        },
+      },
+      testnet10: {
+        name: "testnet10",
+        rpcUrl: process.env.VUE_APP_API_URL_TESTNET ?? "",
+        prefix: "txch",
+        symbol: "TXCH",
+        chainId: "ae83525ba8d1dd3f09b277de18ca3e43fc0af20d20c4b3e92ef2a48bd291ccb2",
+        explorerUrl: "https://chia.tt/",
+        tokenInfo: {
+          TXCH: {
+            symbol: "TXCH",
+            decimal: 12,
+            unit: "TXCH",
           },
         },
       },
@@ -82,7 +88,7 @@ store.registerModule<INetworkState>('network', {
       network,
       symbol: network.symbol,
       prefix: network.prefix,
-    }
+    };
   },
   actions: {
     async switchNetwork({ state, rootState }, networkId: string | null) {

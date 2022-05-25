@@ -83,7 +83,7 @@ export default class AddressDetail extends Vue {
   save(name: string, address: string): void {
     this.name = name;
     this.address = address;
-    const newContact: Contact = { name: name, address: address };
+    const newContact: Contact = { name: name, address: address, network: this.contact?.network};
     this.$emit("edit", this.index, newContact);
     this.mode = "Detail";
     return;
