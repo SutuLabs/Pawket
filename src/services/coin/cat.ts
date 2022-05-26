@@ -8,7 +8,7 @@ function getCatsOfCurrentNetwork(account?: AccountEntity): CustomCat[] {
   }
   const cats: CustomCat[] = [];
   for (const c of account.cats) {
-    const network = c.network ? c.network : "mainet";
+    const network = c.network ?? "mainnet";
     if (network !== store.state.network.networkId) continue;
     cats.push(c);
   }
@@ -38,7 +38,7 @@ export function getTokenInfo(account?: AccountEntity): TokenInfo {
   if (account?.cats) {
     for (let i = 0; i < account.cats.length; i++) {
       const cat = account.cats[i];
-      const network = cat.network ? cat.network : "mainet";
+      const network = cat.network ?? "mainnet";
       if (network !== store.state.network.networkId) continue;
       tokenInfo[cat.name] = {
         id: cat.id,
