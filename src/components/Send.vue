@@ -24,7 +24,13 @@
               </span>
             </b-button>
           </template>
-          <b-input v-model="address" @input="reset()" expanded :disabled="!addressEditable"></b-input>
+          <b-input
+            v-model="address"
+            @input="reset()"
+            expanded
+            :disabled="!addressEditable"
+            :custom-class="validAddress ? '' : 'is-danger'"
+          ></b-input>
           <p class="control">
             <b-tooltip :label="$t('send.ui.tooltip.addressBook')">
               <b-button @click="openAddressBook()" :disabled="!addressEditable">
@@ -127,7 +133,7 @@ import { CurrencyType } from "@/services/exchange/currencyType";
 import BundleSummary from "./BundleSummary.vue";
 import SendSummary from "./SendSummary.vue";
 import AddressBook, { Contact } from "./AddressBook.vue";
-import { xchSymbol } from "@/store/modules/network";
+import { xchPrefix, xchSymbol } from "@/store/modules/network";
 
 @Component({
   components: {
@@ -152,6 +158,7 @@ export default class Send extends Vue {
   @Prop() private notificationClosable!: boolean;
 
   public submitting = false;
+  public validAddress = true;
   public fee = 0;
   public address = "";
   public memo = "";
@@ -237,6 +244,7 @@ export default class Send extends Vue {
   }
 
   reset(): void {
+    this.validAddress = true;
     this.bundle = null;
   }
 
@@ -352,6 +360,16 @@ export default class Send extends Vue {
       const amount = BigInt(bigDecimal.multiply(this.amount, Math.pow(10, decimal)));
 
       if (this.availcoins == null) {
+        this.submitting = false;
+        return;
+      }
+      if (!this.address.startsWith(xchPrefix())) {
+        Notification.open({
+          message: this.$tc("send.messages.error.ADDRESS_NOT_MATCH_NETWORK"),
+          type: "is-danger",
+          duration: 5000,
+        });
+        this.validAddress = false;
         this.submitting = false;
         return;
       }

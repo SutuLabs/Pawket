@@ -378,6 +378,7 @@ export default class AccountDetail extends Vue {
   }
 
   openDonation(): void {
+    const donationAddress = this.network == "mainnet" ? "xch1kjllpsx4mz9gh36clzmzr69kze965almufz7vrch5xq3jymlsjjsysq7uh" : "txch1kjllpsx4mz9gh36clzmzr69kze965almufz7vrch5xq3jymlsjjsfh8gay"
     this.$buefy.modal.open({
       parent: this,
       component: Send,
@@ -386,7 +387,7 @@ export default class AccountDetail extends Vue {
       canCancel: ["x"],
       props: {
         account: this.account,
-        inputAddress: "xch1kjllpsx4mz9gh36clzmzr69kze965almufz7vrch5xq3jymlsjjsysq7uh",
+        inputAddress: donationAddress,
         addressEditable: false,
         notificationMessage: this.$tc("accountDetail.message.notification.donate"),
         notificationIcon: "hand-heart",
@@ -431,6 +432,7 @@ export default class AccountDetail extends Vue {
       canCancel: ["x"],
       props: {
         account: this.account,
+        network: this.network,
       },
     });
   }
