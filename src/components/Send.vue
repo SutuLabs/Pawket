@@ -24,7 +24,13 @@
               </span>
             </b-button>
           </template>
-          <b-input v-model="address" @input="reset()" expanded :disabled="!addressEditable" :custom-class="validAddress ?'':'is-danger'"></b-input>
+          <b-input
+            v-model="address"
+            @input="reset()"
+            expanded
+            :disabled="!addressEditable"
+            :custom-class="validAddress ? '' : 'is-danger'"
+          ></b-input>
           <p class="control">
             <b-tooltip :label="$t('send.ui.tooltip.addressBook')">
               <b-button @click="openAddressBook()" :disabled="!addressEditable">
