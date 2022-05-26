@@ -359,7 +359,7 @@
         "failedToSubmit": "Failed to submit to memory pool: ",
         "failedToSign": "Failed to sign: ",
         "submitted": "Submitted to memory pool.",
-        "invalidAmount":  "Invalid amount.",
+        "invalidAmount": "Invalid amount.",
         "insufficientFunds": "Insufficient funds."
       },
       "tooltip": {
@@ -394,7 +394,7 @@
         "NO_TRANSACTIONS_WHILE_SYNCING": "No Transaction While Syncing",
         "INVALID_FEE_TOO_CLOSE_TO_ZERO": "Invalid Fee, too Close to Zero",
         "COIN_AMOUNT_NEGATIVE": "Coin Amount is Negative",
-        "ADDRESS_NOT_MATCH_NETWORK":"The filled address does not match the current network. Please fill in a valid address."
+        "ADDRESS_NOT_MATCH_NETWORK": "The filled address does not match the current network. Please fill in a valid address."
       }
     }
   },
@@ -710,6 +710,11 @@
       "messages": {
         "failedToSign": "Failed to sign: "
       }
+    },
+    "messages": {
+      "error": {
+        "ADDRESS_NOT_MATCH_NETWORK": "The filled address does not match the current network. Please fill in a valid address."
+      }
     }
   },
   "utxo": {
@@ -809,7 +814,7 @@
         "saved": "Saved."
       },
       "alert": {
-        "addressExists":"The address already exists in Address Book."
+        "addressExists": "The address already exists in Address Book."
       }
     }
   },

@@ -24,7 +24,7 @@
               </span>
             </b-button>
           </template>
-          <b-input v-model="address" @input="reset()" expanded :disabled="!addressEditable"></b-input>
+          <b-input v-model="address" @input="reset()" expanded :disabled="!addressEditable" :custom-class="validAddress ?'':'is-danger'"></b-input>
           <p class="control">
             <b-tooltip :label="$t('send.ui.tooltip.addressBook')">
               <b-button @click="openAddressBook()" :disabled="!addressEditable">
@@ -152,6 +152,7 @@ export default class Send extends Vue {
   @Prop() private notificationClosable!: boolean;
 
   public submitting = false;
+  public validAddress = true;
   public fee = 0;
   public address = "";
   public memo = "";
@@ -237,6 +238,7 @@ export default class Send extends Vue {
   }
 
   reset(): void {
+    this.validAddress = true;
     this.bundle = null;
   }
 
@@ -361,6 +363,7 @@ export default class Send extends Vue {
           type: "is-danger",
           duration: 5000,
         });
+        this.validAddress = false;
         this.submitting = false;
         return;
       }

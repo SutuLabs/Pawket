@@ -68,7 +68,7 @@ import { submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/FeeSelector.vue";
 import BundleSummary from "@/components/BundleSummary.vue";
 import { csvToArray } from "@/services/util/csv";
-import { xchSymbol } from "@/store/modules/network";
+import { xchPrefix, xchSymbol } from "@/store/modules/network";
 
 @Component({
   components: {
@@ -80,7 +80,7 @@ import { xchSymbol } from "@/store/modules/network";
 })
 export default class BatchSend extends Vue {
   @Prop() private account!: AccountEntity;
-
+  @Prop({ default: "mainnet" }) private network!: string;
   public submitting = false;
   public fee = 0;
   public bundle: SpendBundle | null = null;
@@ -147,10 +147,18 @@ export default class BatchSend extends Vue {
         const line = inputs[i];
 
         const address = line[0];
+        if (!address.startsWith(xchPrefix())) {
+          Notification.open({
+            message: this.$tc("batchSend.messages.error.ADDRESS_NOT_MATCH_NETWORK"),
+            type: "is-danger",
+            duration: 5000,
+          });
+          this.submitting = false;
+          return;
+        }
         const symbol = line[1];
         const amount = BigInt(line[2]);
         const memo = line[3];
-
         // there is error in checking this regular expression
         // eslint-disable-next-line no-useless-escape
         const std_memo = memo.replace(/[&/\\#,+()$~%.'":*?<>{}\[\] ]/g, "_");
@@ -179,8 +187,12 @@ export default class BatchSend extends Vue {
   }
 
   fillSample(): void {
-    this.csv = `xch1kjllpsx4mz9gh36clzmzr69kze965almufz7vrch5xq3jymlsjjsysq7uh,BSH,150,hello_memo
-xch1kjllpsx4mz9gh36clzmzr69kze965almufz7vrch5xq3jymlsjjsysq7uh,${xchSymbol()},150,`;
+    const address =
+      this.network == "mainnet"
+        ? "xch1kjllpsx4mz9gh36clzmzr69kze965almufz7vrch5xq3jymlsjjsysq7uh"
+        : "txch1kjllpsx4mz9gh36clzmzr69kze965almufz7vrch5xq3jymlsjjsfh8gay";
+    this.csv = `${address},BSH,150,hello_memo
+${address},${xchSymbol()},150,`;
   }
 }
 </script>

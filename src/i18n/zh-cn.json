@@ -394,7 +394,7 @@
         "NO_TRANSACTIONS_WHILE_SYNCING": "同步时没有交易",
         "INVALID_FEE_TOO_CLOSE_TO_ZERO": "无效的费用，太接近于零",
         "COIN_AMOUNT_NEGATIVE": "币值为负数",
-        "ADDRESS_NOT_MATCH_NETWORK":"所填写地址与当前网络不符，请填写正确的地址。"
+        "ADDRESS_NOT_MATCH_NETWORK": "所填写地址与当前网络不符，请填写正确的地址。"
       }
     }
   },
@@ -709,6 +709,11 @@
       },
       "messages": {
         "failedToSign": "签名失败: "
+      }
+    },
+    "messages": {
+      "error": {
+        "ADDRESS_NOT_MATCH_NETWORK": "所填写地址与当前网络不符，请填写正确的地址。"
       }
     }
   },
