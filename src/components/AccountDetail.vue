@@ -275,7 +275,7 @@ export default class AccountDetail extends Vue {
 
   mounted(): void {
     this.mode = store.state.vault.passwordHash ? "Verify" : "Create";
-    this.displayDapp = localStorage.getItem("DISPLAY_DAPP") ? localStorage.getItem("DISPLAY_DAPP") === "true" : false;
+    this.displayDapp = localStorage.getItem("DISPLAY_DAPP") ? localStorage.getItem("DISPLAY_DAPP") === "true" : true;
     this.autoRefresh(60);
   }
 

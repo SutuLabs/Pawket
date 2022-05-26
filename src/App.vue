@@ -57,7 +57,7 @@ import { NotificationProgrammatic as Notification } from "buefy";
 import store from "./store";
 import DevHelper from "@/components/DevHelper.vue";
 import OfflineQrCode from "./components/OfflineQrCode.vue";
-import { NetworkInfo } from "./store/modules/network";
+import { NetworkInfo, xchPrefix } from "./store/modules/network";
 
 @Component
 export default class App extends Vue {
@@ -130,7 +130,7 @@ export default class App extends Vue {
       component: OfflineQrCode,
       hasModalCard: true,
       trapFocus: true,
-      props: { mode: "PROXY" },
+      props: { mode: "PROXY", prefix: xchPrefix() },
     });
   }
 }
