@@ -172,7 +172,8 @@ store.registerModule<IAccountState>('account', {
       if (typeof maxId !== 'number' || maxId <= 0) maxId = account.addressRetrievalCount;
       if (typeof maxId !== 'number' || maxId <= 0) DEFAULT_ADDRESS_RETRIEVAL_COUNT;
 
-      const requests = await receive.getAssetsRequestDetail(account.key.privateKey, maxId, account.cats ?? []);
+      const cats = account.cats.filter(c => c.network == store.state.network.networkId);
+      const requests = await receive.getAssetsRequestDetail(account.key.privateKey, maxId, cats);
 
       try {
         const records = (await receive.getCoinRecords(requests, true));
