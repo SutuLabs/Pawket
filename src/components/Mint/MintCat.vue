@@ -337,8 +337,11 @@ export default class MintCat extends Vue {
 
   async submit(): Promise<void> {
     if (!this.bundle) return;
-    submitBundle(this.bundle, (_) => (this.submitting = _), this.close);
+    submitBundle(this.bundle, (_) => (this.submitting = _), this.success);
+  }
 
+  async success(): Promise<void> {
+    this.close();
     this.account.cats.push({ name: this.symbol.toUpperCase(), id: this.assetId, network: this.network });
     await store.dispatch("persistent");
     await store.dispatch("refreshBalance");
