@@ -3,13 +3,19 @@
     <header class="modal-card-head">
       <p v-if="mode == 'List'" class="modal-card-title">{{ $t("addressBook.ui.title.list") }}</p>
       <p v-if="mode == 'Add'" class="modal-card-title">{{ $t("addressBook.ui.title.add") }}</p>
-      <button v-if="mode == 'List' && isNotEmpty" class="button is-primary is-outlined is-rounded mx-2" @click="addContact()">
-        {{ $t("addressBook.ui.button.add") }}
-      </button>
       <button type="button" class="delete" @click="back()"></button>
     </header>
     <section v-if="mode == 'List'" class="modal-card-body">
-      <div v-if="isNotEmpty">
+      <div v-if="!isNotEmpty">
+        <p class="is-size-5 p-2">{{ $t("addressBook.ui.text.createYourAddressBook") }}</p>
+      </div>
+      <div>
+        <div class="mb-3">
+          <a @click="addContact()" class="button is-fullwidth is-primary is-outlined is-size-6">
+            <b-icon icon="plus" size="is-small" class="mr-1"></b-icon>
+            {{ $t("addressBook.ui.button.addContact") }}
+          </a>
+        </div>
         <a
           href="javascript:void(0)"
           v-for="(contact, i) of contacts"
@@ -30,14 +36,6 @@
             </div>
           </div>
         </a>
-      </div>
-      <div v-else>
-        <p class="is-size-5 p-2">{{ $t("addressBook.ui.text.createYourAddressBook") }}</p>
-        <a @click="addContact()"
-          ><span class="has-text-primary is-size-6"
-            ><b-icon icon="plus" size="is-small"></b-icon> {{ $t("addressBook.ui.button.addContact") }}</span
-          ></a
-        >
       </div>
     </section>
     <section v-if="mode == 'Add'" class="modal-card-body">

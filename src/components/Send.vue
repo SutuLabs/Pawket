@@ -23,6 +23,9 @@
                 {{ $t("send.ui.span.newAddress") }}
               </span>
             </b-button>
+            <span v-if="contactName" class="tag is-primary is-light">
+              {{ contactName }}
+            </span>
           </template>
           <b-input
             v-model="address"
@@ -205,6 +208,14 @@ export default class Send extends Vue {
       if (c.address === this.address) return false;
     }
     return true;
+  }
+
+  get contactName(): string {
+    for (let c of this.contacts) {
+      if (c.address === this.address) return c.name;
+    }
+
+    return "";
   }
 
   updateContacts(): void {

@@ -21,7 +21,10 @@
         ></span>
       </b-field>
       <div class="has-text-centered">
-        <b-button type="is-primary" @click="edit()">{{ $t("addressDetail.ui.button.edit") }}</b-button>
+        <b-button type="is-primary is-pulled-left" @click="edit()">{{ $t("addressDetail.ui.button.edit") }}</b-button>
+        <b-button type="is-danger is-pulled-right" @click="removeConfirm()" outlined>{{
+          $t("addressBookField.ui.button.delete")
+        }}</b-button>
       </div>
     </section>
     <section class="modal-card-body" v-if="mode == 'Edit'">
@@ -31,7 +34,6 @@
         :isEdit="true"
         @save="save"
         @cancel="cancel"
-        @remove="remove"
       ></address-book-field>
     </section>
   </div>
@@ -74,6 +76,15 @@ export default class AddressDetail extends Vue {
     this.back();
   }
 
+  removeConfirm(): void {
+    this.$buefy.dialog.confirm({
+      message: this.$tc("addressBookField.messages.removeConfirm"),
+      confirmText: this.$tc("addressBookField.ui.button.confirm"),
+      cancelText: this.$tc("addressBookField.ui.button.cancel"),
+      onConfirm: () => this.remove(),
+    });
+  }
+
   cancel(): void {
     this.mode = "Detail";
     this.setValue();
@@ -83,7 +94,7 @@ export default class AddressDetail extends Vue {
   save(name: string, address: string): void {
     this.name = name;
     this.address = address;
-    const newContact: Contact = { name: name, address: address, network: this.contact?.network};
+    const newContact: Contact = { name: name, address: address, network: this.contact?.network };
     this.$emit("edit", this.index, newContact);
     this.mode = "Detail";
     return;
