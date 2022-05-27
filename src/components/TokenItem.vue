@@ -1,6 +1,6 @@
 <template>
   <ul class="list-group px-2" @updateOrder="updateOrder($event.detail)">
-    <li class="list-item" v-for="asset of catList" :key="asset.id" v-show="asset.network && asset.network == network">
+    <li class="list-item" v-for="asset of catList" :key="asset.id">
       <div class="panel-block" >
         <b-tooltip :label="$t('ManageCats.ui.tooltip.drag')">
           <b-button class="drag-handle" type="is-text"><b-icon icon="format-line-spacing" size="is-small"></b-icon></b-button>
@@ -39,7 +39,6 @@ import KeyBox from "@/components/KeyBox.vue";
 })
 export default class TokenItem extends Vue {
   @Prop() private catList!: CustomCat[];
-  @Prop({ default: "mainnet" }) public network!: string;
 
   remove(id: string): void {
     this.$emit("remove", id);

@@ -31,6 +31,7 @@ export interface INetworkState {
   networks: NetworkInfo;
   symbol: string;
   prefix: string;
+  defaultNetworkId: string;
 }
 const NETWORK_ID_KEY = "NETWORK_ID";
 
@@ -80,7 +81,8 @@ store.registerModule<INetworkState>("network", {
         },
       },
     };
-    const networkId = localStorage.getItem(NETWORK_ID_KEY) || "mainnet";
+    const defaultNetworkId = networks.mainnet.name;
+    const networkId = localStorage.getItem(NETWORK_ID_KEY) || defaultNetworkId;
     const network = networks[networkId] || networks.mainnet;
     return {
       networkId,
@@ -88,11 +90,12 @@ store.registerModule<INetworkState>("network", {
       network,
       symbol: network.symbol,
       prefix: network.prefix,
+      defaultNetworkId,
     };
   },
   actions: {
     async switchNetwork({ state, rootState }, networkId: string | null) {
-      networkId = networkId || localStorage.getItem(NETWORK_ID_KEY) || "mainnet";
+      networkId = networkId || localStorage.getItem(NETWORK_ID_KEY) || state.defaultNetworkId;
       const network = state.networks[networkId] || state.networks.mainnet;
       state.networkId = network.name;
       state.network = network;

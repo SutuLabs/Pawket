@@ -38,7 +38,6 @@
           <b-field :label="$t('ManageCats.ui.label.listingCats')">
             <token-item
               :catList="assetIds"
-              :network="network"
               @remove="remove"
               v-sortable="sortableOptions"
               @updateOrder="updateOrder"
@@ -55,7 +54,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import store from "@/store/index";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { sortable } from "@/directives/sortable";
-import { AccountEntity, CustomCat } from "@/store/modules/account";
+import { AccountEntity, CustomCat, getAccountCats } from "@/store/modules/account";
 import TokenItem from "@/components/TokenItem.vue";
 import { Bytes } from "clvm";
 import { shorten } from "@/filters/addressConversion";
@@ -75,7 +74,6 @@ export default class ManageCats extends Vue {
   @Prop() private account!: AccountEntity;
   @Prop({ default: "" }) defaultName!: string;
   @Prop({ default: "" }) defaultAssetId!: string;
-  @Prop({ default: "mainnet" }) network!: string;
   @Prop() tokenList!: CustomCat[];
 
   public name = this.defaultName;
@@ -94,9 +92,7 @@ export default class ManageCats extends Vue {
       console.error("account is empty, cannot get settings");
       return;
     }
-    for (let cat of this.account.cats) {
-      this.assetIds.push({ name: cat.name, id: cat.id, network: cat.network ? cat.network : 'mainnet'})
-    }
+    this.assetIds = getAccountCats(this.account);
   }
 
   close(): void {
@@ -122,7 +118,6 @@ export default class ManageCats extends Vue {
       return false;
     }
     for (let t of this.tokenList) {
-      if (t.network != this.network) continue;
       if (t.id === id || t.name.toUpperCase() === name.toUpperCase()) {
         return true;
       }
@@ -149,7 +144,7 @@ export default class ManageCats extends Vue {
       });
       return;
     }
-    this.assetIds.push({ name: this.name.toUpperCase(), id: this.assetId, network: this.network });
+    this.assetIds.push({ name: this.name.toUpperCase(), id: this.assetId });
     this.submit();
     this.reset();
   }
@@ -182,7 +177,10 @@ export default class ManageCats extends Vue {
 
   async submit(): Promise<void> {
     this.submitting = true;
-    this.account.cats = this.assetIds;
+    const network = store.state.network.networkId;
+    this.account.allCats = this.account.allCats
+      .filter((_) => _.network != network)
+      .concat(this.assetIds.map((_) => ({ name: _.name, id: _.id, network })));
     await store.dispatch("persistent");
     this.$emit("refresh");
 

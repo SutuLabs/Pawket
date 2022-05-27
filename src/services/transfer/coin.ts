@@ -2,7 +2,7 @@ import { CoinItem, OriginCoin } from "@/models/wallet";
 import store from "@/store";
 import { prefix0x } from "../coin/condition";
 import receive, { TokenPuzzleAddress, TokenPuzzleDetail } from "../crypto/receive";
-import { AccountEntity } from "@/store/modules/account";
+import { AccountEntity, getAccountCats } from "@/store/modules/account";
 import { SymbolCoins } from "./transfer";
 
 
@@ -11,7 +11,7 @@ class CoinHandler {
   public async getAssetsRequestDetail(account: AccountEntity): Promise<TokenPuzzleDetail[]> {
     const maxId = account.addressRetrievalCount;
     const sk_hex = account.key.privateKey;
-    const requests = await receive.getAssetsRequestDetail(sk_hex, maxId, account.cats ?? []);
+    const requests = await receive.getAssetsRequestDetail(sk_hex, maxId, getAccountCats(account));
     return requests;
   }
 
@@ -37,7 +37,7 @@ class CoinHandler {
 
   getTokenNames(account: AccountEntity): string[] {
     return Object.keys(store.state.account.tokenInfo).concat(
-      account.cats.map((_) => _.name)
+      getAccountCats(account).map((_) => _.name)
     );
   }
 }

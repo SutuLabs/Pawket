@@ -99,6 +99,7 @@ import BundleSummary from "../BundleSummary.vue";
 import SendSummary from "../SendSummary.vue";
 import { generateMintCatBundle } from "@/services/mint/cat";
 import { xchSymbol } from "@/store/modules/network";
+import { getTokenInfo } from "@/services/coin/cat";
 
 @Component({
   components: {
@@ -196,20 +197,7 @@ export default class MintCat extends Vue {
   }
 
   get tokenInfo(): TokenInfo {
-    const tokenInfo = Object.assign({}, store.state.account.tokenInfo);
-    if (this.account.cats) {
-      for (let i = 0; i < this.account.cats.length; i++) {
-        const cat = this.account.cats[i];
-        tokenInfo[cat.name] = {
-          id: cat.id,
-          symbol: cat.name,
-          decimal: 3,
-          unit: cat.name,
-        };
-      }
-    }
-
-    return tokenInfo;
+    return getTokenInfo(this.account);
   }
 
   setMax(excludingFee = false): void {
@@ -342,7 +330,7 @@ export default class MintCat extends Vue {
 
   async success(): Promise<void> {
     this.close();
-    this.account.cats.push({ name: this.symbol.toUpperCase(), id: this.assetId, network: this.network });
+    this.account.allCats.push({ name: this.symbol.toUpperCase(), id: this.assetId, network: this.network });
     await store.dispatch("persistent");
     await store.dispatch("refreshBalance");
   }

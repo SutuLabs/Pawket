@@ -60,20 +60,22 @@
     <div class="p-2">
       <b-tabs position="is-centered" class="block" expanded>
         <b-tab-item :label="$t('accountDetail.ui.tab.asset')">
-            <a v-for="cat of tokenList" :key="cat.id" class="panel-block is-justify-content-space-between py-4 has-text-grey-dark" v-show="cat.network && cat.network == network">
-              <span class="is-pulled-right" v-if="account.tokens && account.tokens.hasOwnProperty(cat.name)">
-                <span class="panel-icon"></span>
-                <span class="" v-if="tokenInfo[cat.name]">{{
-                  account.tokens[cat.name].amount | demojo(tokenInfo[cat.name])
-                }}</span>
-                <span class="has-text-grey-light is-size-7 pl-3" v-if="cat.name === xchSymbol">{{
-                  account.tokens[cat.name].amount | xchToCurrency(rate, currency)
-                }}</span>
-              </span>
-              <a v-if="debugMode" class="is-pulled-right" href="javascript:void(0)" @click="openLink(account.tokens[cat.name])"
-                >⚓</a
-              >
-            </a>
+          <a
+            v-for="cat of tokenList"
+            :key="cat.id"
+            class="panel-block is-justify-content-space-between py-4 has-text-grey-dark"
+          >
+            <span class="is-pulled-right" v-if="account.tokens && account.tokens.hasOwnProperty(cat.name)">
+              <span class="panel-icon"></span>
+              <span class="" v-if="tokenInfo[cat.name]">{{ account.tokens[cat.name].amount | demojo(tokenInfo[cat.name]) }}</span>
+              <span class="has-text-grey-light is-size-7 pl-3" v-if="cat.name === xchSymbol">{{
+                account.tokens[cat.name].amount | xchToCurrency(rate, currency)
+              }}</span>
+            </span>
+            <a v-if="debugMode" class="is-pulled-right" href="javascript:void(0)" @click="openLink(account.tokens[cat.name])"
+              >⚓</a
+            >
+          </a>
           <div class="column is-full has-text-centered pt-5 mt-2">
             <a @click="ManageCats()"
               ><span class="has-color-link">{{ $t("accountDetail.ui.button.manageCats") }}</span></a
@@ -173,7 +175,7 @@ import KeyBox from "@/components/KeyBox.vue";
 import Send from "./Send.vue";
 import { demojo } from "@/filters/unitConversion";
 import { xchToCurrency } from "@/filters/usdtConversion";
-import { TokenInfo, AccountEntity, AccountToken, CustomCat } from "@/store/modules/account";
+import { TokenInfo, AccountEntity, AccountToken, CustomCat, getAccountCats } from "@/store/modules/account";
 import TakeOffer from "./Offer/Take.vue";
 import MakeOffer from "./Offer/Make.vue";
 import BatchSend from "./Transfer/BatchSend.vue";
@@ -184,9 +186,10 @@ import UtxoPanel from "@/components/UtxoPanel.vue";
 import { CoinRecord } from "@/models/wallet";
 import { nameOmit } from "@/filters/nameConversion";
 import MintCat from "./Mint/MintCat.vue";
-import { xchSymbol } from "@/store/modules/network";
+import { xchPrefix, xchSymbol } from "@/store/modules/network";
 import NftPanel from "@/components/Detail/NftPanel.vue";
 import MintNft from "./Mint/MintNft.vue";
+import puzzle from "@/services/crypto/puzzle";
 
 type Mode = "Verify" | "Create";
 
@@ -217,32 +220,15 @@ export default class AccountDetail extends Vue {
     return this.account.activities ?? [];
   }
 
-  get network(): string {
-    return store.state.network.networkId;
-  }
-
-  get customCat(): CustomCat[] {
-    let list: CustomCat[] = [];
-    for (let cat of this.account.cats) {
-      list.push({
-        name: cat.name,
-        id: cat.id,
-        network: cat.network ? cat.network : "mainnet",
-      });
-    }
-    return list;
-  }
-
   get tokenList(): CustomCat[] {
     let list: CustomCat[] = [];
     for (let key in store.state.account.tokenInfo) {
       list.push({
         name: store.state.account.tokenInfo[key].symbol,
         id: store.state.account.tokenInfo[key].id ?? xchSymbol(),
-        network: this.network,
       });
     }
-    return list.concat(this.customCat);
+    return list.concat(getAccountCats(this.account));
   }
 
   get debugMode(): boolean {
@@ -340,7 +326,7 @@ export default class AccountDetail extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: ["x"],
-      props: { account: this.account, tokenList: this.tokenList, network: this.network },
+      props: { account: this.account, tokenList: this.tokenList },
       events: { refresh: this.refresh },
     });
   }
@@ -378,7 +364,10 @@ export default class AccountDetail extends Vue {
   }
 
   openDonation(): void {
-    const donationAddress = this.network == "mainnet" ? "xch1kjllpsx4mz9gh36clzmzr69kze965almufz7vrch5xq3jymlsjjsysq7uh" : "txch1kjllpsx4mz9gh36clzmzr69kze965almufz7vrch5xq3jymlsjjsfh8gay"
+    const donationAddress = puzzle.getAddressFromPuzzleHash(
+      "b4bff0c0d5d88a8bc758f8b621e8b6164baa77fbe245e60f17a18119137f84a5",
+      xchPrefix()
+    );
     this.$buefy.modal.open({
       parent: this,
       component: Send,
@@ -432,7 +421,6 @@ export default class AccountDetail extends Vue {
       canCancel: ["x"],
       props: {
         account: this.account,
-        network: this.network,
       },
     });
   }

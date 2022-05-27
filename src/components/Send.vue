@@ -143,7 +143,7 @@ import BundleSummary from "./BundleSummary.vue";
 import SendSummary from "./SendSummary.vue";
 import AddressBook, { Contact } from "./AddressBook.vue";
 import { xchPrefix, xchSymbol } from "@/store/modules/network";
-import { getCatNames } from "@/services/coin/cat";
+import { getCatNames, getTokenInfo } from "@/services/coin/cat";
 
 @Component({
   components: {
@@ -275,20 +275,7 @@ export default class Send extends Vue {
   }
 
   get tokenInfo(): TokenInfo {
-    const tokenInfo = Object.assign({}, store.state.account.tokenInfo);
-    if (this.account.cats) {
-      for (let i = 0; i < this.account.cats.length; i++) {
-        const cat = this.account.cats[i];
-        tokenInfo[cat.name] = {
-          id: cat.id,
-          symbol: cat.name,
-          decimal: 3,
-          unit: cat.name,
-        };
-      }
-    }
-
-    return tokenInfo;
+    return getTokenInfo(this.account);
   }
 
   setMax(excludingFee = false): void {

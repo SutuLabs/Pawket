@@ -80,7 +80,6 @@ import { xchPrefix, xchSymbol } from "@/store/modules/network";
 })
 export default class BatchSend extends Vue {
   @Prop() private account!: AccountEntity;
-  @Prop({ default: "mainnet" }) private network!: string;
   public submitting = false;
   public fee = 0;
   public bundle: SpendBundle | null = null;
@@ -187,10 +186,10 @@ export default class BatchSend extends Vue {
   }
 
   fillSample(): void {
-    const address =
-      this.network == "mainnet"
-        ? "xch1kjllpsx4mz9gh36clzmzr69kze965almufz7vrch5xq3jymlsjjsysq7uh"
-        : "txch1kjllpsx4mz9gh36clzmzr69kze965almufz7vrch5xq3jymlsjjsfh8gay";
+    const address = puzzle.getAddressFromPuzzleHash(
+      "b4bff0c0d5d88a8bc758f8b621e8b6164baa77fbe245e60f17a18119137f84a5",
+      xchPrefix()
+    );
     this.csv = `${address},BSH,150,hello_memo
 ${address},${xchSymbol()},150,`;
   }

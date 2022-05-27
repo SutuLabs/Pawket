@@ -4,6 +4,10 @@ import { CoinRecord } from "@/models/wallet";
 import Vue from 'vue';
 import receive, { NftDetail } from '@/services/crypto/receive';
 
+export function getAccountCats(account: AccountEntity): CustomCat[] {
+  return account.allCats.filter(c => c.network == store.state.network.networkId);
+}
+
 type AccountType = "Serial" | "Password" | "Legacy";
 
 export interface AccountTokenAddress {
@@ -28,13 +32,16 @@ export interface AccountEntity {
   activities?: CoinRecord[];
   tokens: AccountTokens;
   addressRetrievalCount: number;
-  cats: CustomCat[];
+  allCats: PersistentCustomCat[];
   nfts: NftDetail[];
 }
 
 export interface CustomCat {
   name: string;
   id: string;
+}
+
+export interface PersistentCustomCat extends CustomCat {
   network: string;
 }
 
@@ -57,7 +64,7 @@ export interface PersistentAccount {
   type: AccountType;
   serial?: number;
   addressRetrievalCount: number;
-  cats: CustomCat[];
+  allCats: PersistentCustomCat[];
 }
 
 export interface IAccountState {
@@ -92,7 +99,7 @@ store.registerModule<IAccountState>('account', {
         type: "Password",
         tokens: {},
         addressRetrievalCount: DEFAULT_ADDRESS_RETRIEVAL_COUNT,
-        cats: [],
+        allCats: [],
         nfts: [],
       });
       await dispatch("initWalletAddress");
@@ -112,7 +119,7 @@ store.registerModule<IAccountState>('account', {
         serial: serial,
         tokens: {},
         addressRetrievalCount: DEFAULT_ADDRESS_RETRIEVAL_COUNT,
-        cats: [],
+        allCats: [],
         nfts: [],
       });
       await dispatch("initWalletAddress");
@@ -129,7 +136,7 @@ store.registerModule<IAccountState>('account', {
         type: "Legacy",
         tokens: {},
         addressRetrievalCount: DEFAULT_ADDRESS_RETRIEVAL_COUNT,
-        cats: [],
+        allCats: [],
         nfts: [],
       });
       await dispatch("initWalletAddress");
@@ -172,8 +179,7 @@ store.registerModule<IAccountState>('account', {
       if (typeof maxId !== 'number' || maxId <= 0) maxId = account.addressRetrievalCount;
       if (typeof maxId !== 'number' || maxId <= 0) DEFAULT_ADDRESS_RETRIEVAL_COUNT;
 
-      const cats = account.cats.filter(c => c.network == store.state.network.networkId);
-      const requests = await receive.getAssetsRequestDetail(account.key.privateKey, maxId, cats);
+      const requests = await receive.getAssetsRequestDetail(account.key.privateKey, maxId, getAccountCats(account));
 
       try {
         const records = (await receive.getCoinRecords(requests, true));

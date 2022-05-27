@@ -114,6 +114,7 @@ store.registerModule<IVaultState>('vault', {
       rootState.account.accounts = JSON.parse(
         (await encryption.decrypt(state.encryptedAccounts, password)) || "[]"
       );
+      ensureState(rootState);
       rootState.account.accounts.forEach(_ => {
         Vue.set(_, "balance", -1);
         Vue.set(_, "activities", []);
@@ -150,7 +151,7 @@ store.registerModule<IVaultState>('vault', {
           type: _.type,
           serial: _.serial,
           addressRetrievalCount: _.addressRetrievalCount,
-          cats: _.cats,
+          allCats: _.allCats,
         }))), state.password
       )
       state.encryptedAccounts = encryptedAccounts;
@@ -197,3 +198,15 @@ store.registerModule<IVaultState>('vault', {
 
   },
 });
+
+function ensureState(state: IRootState) {
+  for (let i = 0; i < state.account.accounts.length; i++) {
+    const account = state.account.accounts[i];
+    account.allCats ??= [];
+    for (let j = 0; j < account.allCats.length; j++) {
+      const cat = account.allCats[j];
+      cat.network ??= store.state.network.defaultNetworkId;
+      cat.name ??= "CAT";
+    }
+  }
+}
