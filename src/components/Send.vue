@@ -75,7 +75,13 @@
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
           <span v-html="$sanitize($t('send.ui.summary.notification'))"></span>
         </b-notification>
-        <send-summary :amount="numericAmount" :unit="selectedToken" :fee="feeBigInt" :address="address" :contactName="contactName"></send-summary>
+        <send-summary
+          :amount="numericAmount"
+          :unit="selectedToken"
+          :fee="feeBigInt"
+          :address="address"
+          :contactName="contactName"
+        ></send-summary>
         <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
       </template>
     </section>
@@ -137,6 +143,7 @@ import BundleSummary from "./BundleSummary.vue";
 import SendSummary from "./SendSummary.vue";
 import AddressBook, { Contact } from "./AddressBook.vue";
 import { xchPrefix, xchSymbol } from "@/store/modules/network";
+import { getCatNames } from "@/services/coin/cat";
 
 @Component({
   components: {
@@ -230,9 +237,7 @@ export default class Send extends Vue {
   }
 
   get tokenNames(): string[] {
-    return Object.keys(store.state.account.tokenInfo).concat(
-      this.account.cats.filter((c) => c.network == this.network).map((_) => _.name)
-    );
+    return getCatNames(this.account);
   }
 
   get bundleJson(): string {

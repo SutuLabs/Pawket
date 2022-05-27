@@ -14,7 +14,14 @@ function getCatsOfCurrentNetwork(account?: AccountEntity): CustomCat[] {
   }
   return cats;
 }
-
+export function getCatNames(account?: AccountEntity): string[] {
+  if (!account) {
+    return [];
+  }
+  return Object.keys(store.state.account.tokenInfo).concat(
+    account.cats.filter((c) => c.network == store.state.network.networkId).map((_) => _.name)
+  );
+}
 export function getCatNameDict(account?: AccountEntity): { [id: string]: string } {
   const cats = getCatsOfCurrentNetwork(account);
   return Object.assign(
