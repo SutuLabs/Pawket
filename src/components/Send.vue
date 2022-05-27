@@ -219,7 +219,9 @@ export default class Send extends Vue {
   }
 
   get tokenNames(): string[] {
-    return Object.keys(store.state.account.tokenInfo).concat(this.account.cats.map((_) => _.name));
+    return Object.keys(store.state.account.tokenInfo).concat(
+      this.account.cats.filter((c) => c.network == this.network).map((_) => _.name)
+    );
   }
 
   get bundleJson(): string {

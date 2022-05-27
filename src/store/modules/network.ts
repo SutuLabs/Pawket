@@ -70,7 +70,7 @@ store.registerModule<INetworkState>("network", {
         prefix: "txch",
         symbol: "TXCH",
         chainId: "ae83525ba8d1dd3f09b277de18ca3e43fc0af20d20c4b3e92ef2a48bd291ccb2",
-        explorerUrl: "https://chia.tt/",
+        explorerUrl: "",
         tokenInfo: {
           TXCH: {
             symbol: "TXCH",
