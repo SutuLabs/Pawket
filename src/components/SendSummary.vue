@@ -27,7 +27,7 @@
       <template #label>
         <span class="is-size-6">{{ $t("sendSummary.ui.label.to") }}</span>
         <span class="is-size-6 is-pulled-right">
-          <span v-if="true" class="tag is-primary is-light">{{ contactName }}</span>
+          <span v-if="contactName" class="tag is-primary is-light">{{ contactName }}</span>
           <b-tooltip :label="address" multilined class="break-string" position="is-left">
             {{ address | shorten }}
           </b-tooltip>
