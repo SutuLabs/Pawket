@@ -34,7 +34,7 @@
           ></qrcode-vue>
           <qrcode-vue class="is-hidden-tablet" :value="externalExplorerPrefix + address" size="100"></qrcode-vue>
           <key-box icon="checkbox-multiple-blank-outline" :value="address" :showValue="true"></key-box>
-          <b-tooltip :label="$t('explorerLink.ui.tooltip.blockchainExplorer')" v-if="network == 'mainnet'">
+          <b-tooltip :label="$t('explorerLink.ui.tooltip.blockchainExplorer')" v-if="explorerUrl">
             <a target="_blank" :href="externalExplorerPrefix + address">
               <b-icon icon="web" size="is-small"></b-icon>
             </a>
@@ -69,8 +69,8 @@ export default class ExplorerLink extends Vue {
     return store.state.app.externalExplorerPrefix;
   }
 
-  get network(): string {
-    return store.state.network.networkId;
+  get explorerUrl(): string {
+    return store.state.network.network.explorerUrl;
   }
 
   mounted(): void {
