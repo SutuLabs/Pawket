@@ -157,7 +157,7 @@ export default class AddressBook extends Vue {
 
   edit(index: number, contact: Contact): void {
     const idx = this.contacts.findIndex((c) => c.network == contact.network && c.address === contact.address);
-    if (idx > -1) {
+    if (idx > -1 && idx !== index) {
       this.$buefy.dialog.alert(this.$tc("addressBook.messages.alert.addressExists"));
       return;
     }
