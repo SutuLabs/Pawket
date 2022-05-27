@@ -3,13 +3,19 @@
     <header class="modal-card-head">
       <p v-if="mode == 'List'" class="modal-card-title">{{ $t("addressBook.ui.title.list") }}</p>
       <p v-if="mode == 'Add'" class="modal-card-title">{{ $t("addressBook.ui.title.add") }}</p>
-      <button v-if="mode == 'List' && isNotEmpty" class="button is-primary is-outlined is-rounded mx-2" @click="addContact()">
-        {{ $t("addressBook.ui.button.add") }}
-      </button>
       <button type="button" class="delete" @click="back()"></button>
     </header>
     <section v-if="mode == 'List'" class="modal-card-body">
-      <div v-if="isNotEmpty">
+      <div v-if="!isNotEmpty">
+        <p class="is-size-5 p-2">{{ $t("addressBook.ui.text.createYourAddressBook") }}</p>
+      </div>
+      <div>
+        <div class="mb-3">
+          <a @click="addContact()" class="button is-fullwidth is-primary is-outlined is-size-6">
+            <b-icon icon="plus" size="is-small" class="mr-1"></b-icon>
+            {{ $t("addressBook.ui.button.addContact") }}
+          </a>
+        </div>
         <a
           href="javascript:void(0)"
           v-for="(contact, i) of contacts"
@@ -18,7 +24,7 @@
           @click="showDetail(contact, i)"
           class="panel-block columns is-mobile"
         >
-          <div class="column is-flex is-full">
+          <div class="column is-flex is-11">
             <div class="mr-2">
               <b-icon icon="account-circle" size="is-medium" class="has-text-primary"></b-icon>
             </div>
@@ -29,15 +35,12 @@
               </p>
             </div>
           </div>
+          <div class="column is-flex is-1">
+            <b-tooltip :label="$t('addressBook.ui.tooltip.remove')">
+              <b-button @click.stop="removeConfirm(i)" type="is-text"><b-icon icon="trash-can-outline"></b-icon></b-button>
+            </b-tooltip>
+          </div>
         </a>
-      </div>
-      <div v-else>
-        <p class="is-size-5 p-2">{{ $t("addressBook.ui.text.createYourAddressBook") }}</p>
-        <a @click="addContact()"
-          ><span class="has-text-primary is-size-6"
-            ><b-icon icon="plus" size="is-small"></b-icon> {{ $t("addressBook.ui.button.addContact") }}</span
-          ></a
-        >
       </div>
     </section>
     <section v-if="mode == 'Add'" class="modal-card-body">
@@ -86,11 +89,21 @@ export default class AddressBook extends Vue {
     return false;
   }
 
+  removeConfirm(idx: number): void {
+    this.$buefy.dialog.confirm({
+      message: this.$tc("addressBook.messages.confirmation.removeConfirm"),
+      confirmText: this.$tc("addressBook.ui.button.confirm"),
+      cancelText: this.$tc("addressBook.ui.button.cancel"),
+      onConfirm: () => this.remove(idx),
+    });
+  }
+
   updateContacts(): void {
     const contactsJson = localStorage.getItem("CONTACTS");
     if (contactsJson == null) {
       return;
     }
+    this.contacts = [];
     let contacts = JSON.parse(contactsJson);
     for (let c of contacts) {
       this.contacts.push({ name: c.name, address: c.address, network: c.network ? c.network : "mainnet" });
@@ -143,6 +156,11 @@ export default class AddressBook extends Vue {
   }
 
   edit(index: number, contact: Contact): void {
+    const idx = this.contacts.findIndex((c) => c.network == contact.network && c.address === contact.address);
+    if (idx > -1 && idx !== index) {
+      this.$buefy.dialog.alert(this.$tc("addressBook.messages.alert.addressExists"));
+      return;
+    }
     this.contacts[index] = contact;
     localStorage.setItem("CONTACTS", JSON.stringify(this.contacts));
     notifyPrimary(this.$tc("addressBook.messages.notification.saved"));
@@ -177,7 +195,7 @@ export default class AddressBook extends Vue {
       trapFocus: true,
       canCancel: ["x", "outside"],
       props: { contact: contact, index: index },
-      events: { remove: this.remove, edit: this.edit },
+      events: { edit: this.edit },
     });
   }
 

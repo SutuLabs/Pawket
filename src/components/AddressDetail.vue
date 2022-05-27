@@ -31,7 +31,6 @@
         :isEdit="true"
         @save="save"
         @cancel="cancel"
-        @remove="remove"
       ></address-book-field>
     </section>
   </div>
@@ -69,11 +68,6 @@ export default class AddressDetail extends Vue {
     this.$emit("close");
   }
 
-  remove(): void {
-    this.$emit("remove", this.index);
-    this.back();
-  }
-
   cancel(): void {
     this.mode = "Detail";
     this.setValue();
@@ -83,7 +77,7 @@ export default class AddressDetail extends Vue {
   save(name: string, address: string): void {
     this.name = name;
     this.address = address;
-    const newContact: Contact = { name: name, address: address, network: this.contact?.network};
+    const newContact: Contact = { name: name, address: address, network: this.contact?.network };
     this.$emit("edit", this.index, newContact);
     this.mode = "Detail";
     return;

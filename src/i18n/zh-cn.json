@@ -797,14 +797,18 @@
     "ui": {
       "title": {
         "list": "地址簿",
-        "add": "添加新地址"
+        "add": "Add"
       },
       "button": {
-        "add": "添加",
+        "cancel": "取消",
+        "confirm": "确认",
         "addContact": "添加联系人"
       },
       "text": {
         "createYourAddressBook": "建立你的地址簿"
+      },
+      "tooltip": {
+        "remove": "删除"
       }
     },
     "messages": {
@@ -815,6 +819,9 @@
       },
       "alert": {
         "addressExists": "该地址已存在于地址簿。"
+      },
+      "confirmation": {
+        "removeConfirm": "确定要将该地址从地址簿中删除吗？"
       }
     }
   },
@@ -848,13 +855,8 @@
       },
       "button": {
         "cancel": "取消",
-        "confirm": "确认",
-        "save": "保存",
-        "delete": "删除"
+        "save": "保存"
       }
-    },
-    "messages": {
-      "removeConfirm": "确定要将该地址从地址簿中删除吗？"
     }
   }
 }

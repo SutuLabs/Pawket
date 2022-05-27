@@ -20,9 +20,6 @@
     <div>
       <b-button @click="cancel()">{{ $t("addressBookField.ui.button.cancel") }}</b-button>
       <div class="is-pulled-right">
-        <b-button v-if="isEdit" type="is-danger mx-2" @click="remove()" outlined>{{
-          $t("addressBookField.ui.button.delete")
-        }}</b-button>
         <b-button type="is-primary" @click="save()">{{ $t("addressBookField.ui.button.save") }}</b-button>
       </div>
     </div>
@@ -69,15 +66,6 @@ export default class AddressBookField extends Vue {
 
   cancel(): void {
     this.$emit("cancel");
-  }
-
-  remove(): void {
-    this.$buefy.dialog.confirm({
-      message: this.$tc("addressBookField.messages.removeConfirm"),
-      confirmText: this.$tc("addressBookField.ui.button.confirm"),
-      cancelText: this.$tc("addressBookField.ui.button.cancel"),
-      onConfirm: () => this.$emit("remove"),
-    });
   }
 
   scanQrCode(): void {

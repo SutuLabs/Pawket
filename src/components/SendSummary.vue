@@ -27,6 +27,7 @@
       <template #label>
         <span class="is-size-6">{{ $t("sendSummary.ui.label.to") }}</span>
         <span class="is-size-6 is-pulled-right">
+          <span v-if="contactName" class="tag is-primary is-light">{{ contactName }}</span>
           <b-tooltip :label="address" multilined class="break-string" position="is-left">
             {{ address | shorten }}
           </b-tooltip>
@@ -78,6 +79,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 })
 export default class SendSummary extends Vue {
   @Prop() private leadingText!: string;
+  @Prop() private contactName!: string;
   @Prop() private amount!: number;
   @Prop() private fee!: bigint;
   @Prop() private unit!: string;

@@ -797,14 +797,18 @@
     "ui": {
       "title": {
         "list": "Address Book",
-        "add": "Add New Address"
+        "add": "Add"
       },
       "button": {
-        "add": "Add",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
         "addContact": "Add Contact"
       },
       "text": {
         "createYourAddressBook": "Create Your Address Book"
+      },
+      "tooltip": {
+        "remove": "Remove"
       }
     },
     "messages": {
@@ -815,6 +819,9 @@
       },
       "alert": {
         "addressExists": "The address already exists in Address Book."
+      },
+      "confirmation": {
+        "removeConfirm": "Are you sure you want to remove this address from your Address Book?"
       }
     }
   },
@@ -848,13 +855,8 @@
       },
       "button": {
         "cancel": "Cancel",
-        "confirm": "Confirm",
-        "save": "Save",
-        "delete": "Remove"
+        "save": "Save"
       }
-    },
-    "messages": {
-      "removeConfirm": "Are you sure you want to remove this address from your Address Book?"
     }
   }
 }
