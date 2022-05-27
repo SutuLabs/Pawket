@@ -79,7 +79,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 })
 export default class SendSummary extends Vue {
   @Prop() private leadingText!: string;
-  @Prop() private contactName!: bigint;
+  @Prop() private contactName!: string;
   @Prop() private amount!: number;
   @Prop() private fee!: bigint;
   @Prop() private unit!: string;
