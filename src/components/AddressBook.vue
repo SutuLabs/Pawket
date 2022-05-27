@@ -24,7 +24,7 @@
           @click="showDetail(contact, i)"
           class="panel-block columns is-mobile"
         >
-          <div class="column is-flex is-full">
+          <div class="column is-flex is-11">
             <div class="mr-2">
               <b-icon icon="account-circle" size="is-medium" class="has-text-primary"></b-icon>
             </div>
@@ -34,6 +34,13 @@
                 <span class="is-size-7 has-text-grey-light word-break">{{ contact.address }}</span>
               </p>
             </div>
+          </div>
+          <div class="column is-flex is-1">
+            <b-tooltip :label="$t('addressBook.ui.tooltip.remove')">
+              <b-button @click.stop="removeConfirm(i)" type="is-text"
+                ><b-icon icon="trash-can-outline"></b-icon
+              ></b-button>
+            </b-tooltip>
           </div>
         </a>
       </div>
@@ -82,6 +89,15 @@ export default class AddressBook extends Vue {
       if (c.network === this.network) return true;
     }
     return false;
+  }
+
+  removeConfirm(idx: number): void {
+    this.$buefy.dialog.confirm({
+      message: this.$tc("addressBook.messages.confirmation.removeConfirm"),
+      confirmText: this.$tc("addressBook.ui.button.confirm"),
+      cancelText: this.$tc("addressBook.ui.button.cancel"),
+      onConfirm: () => this.remove(idx),
+    });
   }
 
   updateContacts(): void {
@@ -175,7 +191,7 @@ export default class AddressBook extends Vue {
       trapFocus: true,
       canCancel: ["x", "outside"],
       props: { contact: contact, index: index },
-      events: { remove: this.remove, edit: this.edit },
+      events: { edit: this.edit },
     });
   }
 

@@ -75,7 +75,7 @@
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
           <span v-html="$sanitize($t('send.ui.summary.notification'))"></span>
         </b-notification>
-        <send-summary :amount="numericAmount" :unit="selectedToken" :fee="feeBigInt" :address="address"></send-summary>
+        <send-summary :amount="numericAmount" :unit="selectedToken" :fee="feeBigInt" :address="address" :contactName="contactName"></send-summary>
         <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
       </template>
     </section>

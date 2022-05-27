@@ -21,10 +21,7 @@
         ></span>
       </b-field>
       <div class="has-text-centered">
-        <b-button type="is-primary is-pulled-left" @click="edit()">{{ $t("addressDetail.ui.button.edit") }}</b-button>
-        <b-button type="is-danger is-pulled-right" @click="removeConfirm()" outlined>{{
-          $t("addressBookField.ui.button.delete")
-        }}</b-button>
+        <b-button type="is-primary" @click="edit()">{{ $t("addressDetail.ui.button.edit") }}</b-button>
       </div>
     </section>
     <section class="modal-card-body" v-if="mode == 'Edit'">
@@ -69,20 +66,6 @@ export default class AddressDetail extends Vue {
 
   back(): void {
     this.$emit("close");
-  }
-
-  remove(): void {
-    this.$emit("remove", this.index);
-    this.back();
-  }
-
-  removeConfirm(): void {
-    this.$buefy.dialog.confirm({
-      message: this.$tc("addressBookField.messages.removeConfirm"),
-      confirmText: this.$tc("addressBookField.ui.button.confirm"),
-      cancelText: this.$tc("addressBookField.ui.button.cancel"),
-      onConfirm: () => this.remove(),
-    });
   }
 
   cancel(): void {
