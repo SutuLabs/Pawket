@@ -116,7 +116,7 @@ import puzzle from "@/services/crypto/puzzle";
 import DevHelper from "../DevHelper.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { getOfferEntities, getOfferSummary, OfferEntity, OfferSummary, OfferTokenAmount } from "@/services/offer/summary";
-import { getCatIdDict, getCatNameDict } from "@/services/coin/cat";
+import { getCatIdDict, getCatNameDict, getCatNames } from "@/services/coin/cat";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
 import { generateOffer, generateOfferPlan } from "@/services/offer/bundler";
 import bigDecimal from "js-big-decimal";
@@ -170,7 +170,7 @@ export default class MakeOffer extends Vue {
   }
 
   get tokenNames(): string[] {
-    return Object.keys(store.state.account.tokenInfo).concat(this.account.cats.map((_) => _.name));
+    return getCatNames(this.account);
   }
 
   async mounted(): Promise<void> {
