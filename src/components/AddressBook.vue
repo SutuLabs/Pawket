@@ -37,9 +37,7 @@
           </div>
           <div class="column is-flex is-1">
             <b-tooltip :label="$t('addressBook.ui.tooltip.remove')">
-              <b-button @click.stop="removeConfirm(i)" type="is-text"
-                ><b-icon icon="trash-can-outline"></b-icon
-              ></b-button>
+              <b-button @click.stop="removeConfirm(i)" type="is-text"><b-icon icon="trash-can-outline"></b-icon></b-button>
             </b-tooltip>
           </div>
         </a>
@@ -105,6 +103,7 @@ export default class AddressBook extends Vue {
     if (contactsJson == null) {
       return;
     }
+    this.contacts = [];
     let contacts = JSON.parse(contactsJson);
     for (let c of contacts) {
       this.contacts.push({ name: c.name, address: c.address, network: c.network ? c.network : "mainnet" });
@@ -157,6 +156,11 @@ export default class AddressBook extends Vue {
   }
 
   edit(index: number, contact: Contact): void {
+    const idx = this.contacts.findIndex((c) => c.network == contact.network && c.address === contact.address);
+    if (idx > -1) {
+      this.$buefy.dialog.alert(this.$tc("addressBook.messages.alert.addressExists"));
+      return;
+    }
     this.contacts[index] = contact;
     localStorage.setItem("CONTACTS", JSON.stringify(this.contacts));
     notifyPrimary(this.$tc("addressBook.messages.notification.saved"));
