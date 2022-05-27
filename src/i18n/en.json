@@ -796,8 +796,7 @@
   "addressBook": {
     "ui": {
       "title": {
-        "list": "Address Book",
-        "add": "Add New Address"
+        "list": "Address Book"
       },
       "button": {
         "add": "Add",

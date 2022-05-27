@@ -796,8 +796,7 @@
   "addressBook": {
     "ui": {
       "title": {
-        "list": "地址簿",
-        "add": "添加新地址"
+        "list": "地址簿"
       },
       "button": {
         "add": "添加",
