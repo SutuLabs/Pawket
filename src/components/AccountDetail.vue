@@ -60,11 +60,7 @@
     <div class="p-2">
       <b-tabs position="is-centered" class="block" expanded>
         <b-tab-item :label="$t('accountDetail.ui.tab.asset')">
-          <a
-            v-for="cat of tokenList"
-            :key="cat.id"
-            class="panel-block is-justify-content-space-between py-4 has-text-grey-dark"
-          >
+          <a v-for="cat of tokenList" :key="cat.id" class="panel-block is-justify-content-space-between py-4 has-text-grey-dark">
             <span class="is-pulled-right" v-if="account.tokens && account.tokens.hasOwnProperty(cat.name)">
               <span class="panel-icon"></span>
               <span class="" v-if="tokenInfo[cat.name]">{{ account.tokens[cat.name].amount | demojo(tokenInfo[cat.name]) }}</span>
@@ -149,11 +145,11 @@
           </b-tooltip>
         </div>
         <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
-          <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.mintCat')" position="is-right">
-            <a v-if="debugMode" href="javascript:void(0)" @click="openMintNft()" class="has-text-link">
+          <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.mintNft')" position="is-right">
+            <a v-if="experimentMode && testnet" href="javascript:void(0)" @click="openMintNft()" class="has-text-link">
               <div class="has-text-centered">
                 <b-icon icon="tag-faces" size="is-medium"></b-icon>
-                <p class="is-size-7">Mint NFT</p>
+                <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.mintNft") }}</p>
               </div>
             </a>
           </b-tooltip>
@@ -237,6 +233,10 @@ export default class AccountDetail extends Vue {
 
   get experimentMode(): boolean {
     return store.state.vault.experiment;
+  }
+
+  get testnet(): boolean {
+    return store.state.network.networkId == "testnet10";
   }
 
   get currency(): CurrencyType {

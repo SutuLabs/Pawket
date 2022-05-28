@@ -1,26 +1,25 @@
 <template>
   <div class="modal-card">
     <header class="modal-card-head">
-      <!-- <p class="modal-card-title">{{ $t("mintCat.ui.title") }}</p> -->
-      <p class="modal-card-title">Mint Nft</p>
+      <p class="modal-card-title">{{ $t("mintNft.ui.title") }}</p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
       <div v-show="!bundle">
-        <b-field :label="$t('mintCat.ui.label.address')">
+        <b-field :label="$t('mintNft.ui.label.address')">
           <b-input v-model="address" @input="reset()" expanded :disabled="!addressEditable"></b-input>
           <p class="control">
-            <b-tooltip :label="$t('mintCat.ui.tooltip.qr')">
+            <b-tooltip :label="$t('mintNft.ui.tooltip.qr')">
               <b-button @click="scanQrCode()" :disabled="!addressEditable">
                 <b-icon icon="scan-helper"></b-icon>
               </b-button>
             </b-tooltip>
           </p>
         </b-field>
-        <b-field v-if="false" :label="$t('mintCat.ui.label.memo')">
+        <b-field v-if="false" :label="$t('mintNft.ui.label.memo')">
           <b-input maxlength="100" v-model="memo" type="text" @input="reset()" disabled></b-input>
         </b-field>
-        <b-field :label="'uri'">
+        <b-field :label="$t('mintNft.ui.label.uri')">
           <template #message>
             <a :href="uri" target="_blank">
               <img v-if="uri" :src="uri" class="image-preview" />
@@ -28,21 +27,21 @@
           </template>
           <b-input maxlength="1024" v-model="uri" type="text" @input="reset()" required></b-input>
         </b-field>
-        <b-field :label="'hash'">
+        <b-field :label="$t('mintNft.ui.label.hash')">
           <b-input maxlength="64" v-model="hash" type="text" @input="reset()" required></b-input>
         </b-field>
         <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
       </div>
       <template v-if="bundle">
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($t('mintCat.ui.summary.notification'))"></span>
+          <span v-html="$sanitize($t('mintNft.ui.summary.notification'))"></span>
         </b-notification>
         <send-summary
           :nftUri="uri"
           :nftHash="hash"
           :fee="feeBigInt"
           :address="address"
-          :leadingText="$t('mintCat.ui.summary.label.leadingText')"
+          :leadingText="$t('mintNft.ui.summary.label.leadingText')"
           :total="total"
         ></send-summary>
         <bundle-summary :account="account" :bundle="bundle" :ignoreError="true"></bundle-summary>
@@ -50,9 +49,9 @@
     </section>
     <footer class="modal-card-foot is-justify-content-space-between">
       <div>
-        <b-button :label="$t('mintCat.ui.button.cancel')" @click="cancel()"></b-button>
+        <b-button :label="$t('mintNft.ui.button.cancel')" @click="cancel()"></b-button>
         <b-button
-          :label="$t('mintCat.ui.button.sign')"
+          :label="$t('mintNft.ui.button.sign')"
           v-if="!bundle"
           type="is-primary"
           @click="sign()"
@@ -61,7 +60,7 @@
       </div>
       <div>
         <b-button
-          :label="$t('mintCat.ui.button.submit')"
+          :label="$t('mintNft.ui.button.submit')"
           v-if="bundle"
           type="is-primary"
           class="is-pulled-right"
@@ -255,7 +254,7 @@ export default class MintNft extends Vue {
       this.bundle = spendBundle;
     } catch (error) {
       Notification.open({
-        message: this.$tc("mintCat.ui.messages.failedToSign") + error,
+        message: this.$tc("mintNft.ui.messages.failedToSign") + error,
         type: "is-danger",
         autoClose: false,
       });

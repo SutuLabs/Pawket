@@ -2,7 +2,7 @@
   <div>
     <b-field v-if="nftUri">
       <template #label>
-        <span class="is-size-6">NFT</span>
+        <span class="is-size-6">{{ $t("sendSummary.ui.label.NftUri") }}</span>
         <span class="is-pulled-right">
           <a :href="nftUri" target="_blank">
             <b-tooltip :label="nftUri" multilined class="break-string" position="is-left">
