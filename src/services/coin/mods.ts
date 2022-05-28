@@ -1,3 +1,6 @@
+import puzzle from "../crypto/puzzle";
+import { prefix0x } from "./condition";
+
 export interface ModParameter {
   name: string;
   desc?: string;
@@ -282,5 +285,12 @@ export const mods: ModDetail[] = [
   },
 ]
 export const modsdict: { [mod: string]: string } = mods.reduce((acc, cur) => ({ ...acc, [cur.mod]: cur.name }), {});
-export const modsprog: { [mod: string]: string } = mods.reduce((acc, cur) => ({ ...acc, [cur.name]: cur.mod }), {});
-export const modsparams: { [mod: string]: ModParameter[] } = mods.reduce((acc, cur) => ({ ...acc, [cur.name]: cur.parameters }), {});
+export const modsprog: { [name: string]: string } = mods.reduce((acc, cur) => ({ ...acc, [cur.name]: cur.mod }), {});
+export const modsparams: { [name: string]: ModParameter[] } = mods.reduce((acc, cur) => ({ ...acc, [cur.name]: cur.parameters }), {});
+
+export async function modshash(name: string): Promise<string> {
+  return prefix0x(await puzzle.getPuzzleHashFromPuzzle(modsprog[name]));
+}
+export async function modspuz(name: string): Promise<string> {
+  return prefix0x(await puzzle.encodePuzzle(modsprog[name]));
+}

@@ -1,6 +1,18 @@
 <template>
   <div>
-    <b-field>
+    <b-field v-if="nftUri">
+      <template #label>
+        <span class="is-size-6">NFT</span>
+        <span class="is-pulled-right">
+          <a :href="nftUri" target="_blank">
+            <b-tooltip :label="nftUri" multilined class="break-string" position="is-left">
+              <img :src="nftUri" class="nft-image" />
+            </b-tooltip>
+          </a>
+        </span>
+      </template>
+    </b-field>
+    <b-field v-if="!nftUri">
       <template #label>
         <span class="is-size-6">{{ leadingText || $t("sendSummary.ui.label.sending") }}</span>
         <span class="is-pulled-right">
@@ -86,6 +98,8 @@ export default class SendSummary extends Vue {
   @Prop() private address!: string;
   @Prop() private assetId!: string;
   @Prop() private total!: bigint;
+  @Prop() private nftUri!: string;
+  @Prop() private nftHash!: string;
 
   get xchSymbol(): string {
     return xchSymbol();
@@ -96,5 +110,11 @@ export default class SendSummary extends Vue {
 <style scoped lang="scss">
 .break-string {
   word-break: break-word;
+}
+img.nft-image {
+  width: 100px;
+  height: 1.5rem;
+  object-fit: cover;
+  border: 1px solid;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <template v-if="errorText">
-      <b-notification type="is-danger" has-icon icon="exclamation-thick" :closable="false">
+      <b-notification v-if="!ignoreError" type="is-danger" has-icon icon="exclamation-thick" :closable="false">
         {{ errorText }}
       </b-notification>
       <bundle-text v-model="bundleText" @debugBundle="debugBundle"></bundle-text>
@@ -107,6 +107,7 @@ interface TotalCoinType {
 export default class BundleSummary extends Vue {
   @Prop() private bundle!: string | SpendBundle | null;
   @Prop({ default: null }) private account!: AccountEntity | undefined;
+  @Prop({ default: false }) private ignoreError!: boolean;
 
   public showDetail = false;
   public bundleText = "";
@@ -197,7 +198,8 @@ export default class BundleSummary extends Vue {
 
     this.newCoins = new_coins;
     this.fee =
-      (this.coinTotals[xchSymbol()] ?? 0n) - this.newCoins.filter((_) => _.unit == xchSymbol()).reduce((t, cur) => t + cur.amount, 0n);
+      (this.coinTotals[xchSymbol()] ?? 0n) -
+      this.newCoins.filter((_) => _.unit == xchSymbol()).reduce((t, cur) => t + cur.amount, 0n);
   }
 
   async executePuzzle(puz: string, solution: string): Promise<CoinType[]> {
