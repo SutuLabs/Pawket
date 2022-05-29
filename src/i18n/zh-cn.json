@@ -128,7 +128,8 @@
       },
       "tab": {
         "asset": "资产",
-        "utxos": "UTXOs"
+        "utxos": "UTXOs",
+        "nft": "NFT"
       },
       "tooltip": {
         "setting": "设置",

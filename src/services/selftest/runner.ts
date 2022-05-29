@@ -40,10 +40,10 @@ class TestRunner {
           await this.runTest(testTakeOfferCatForXch);
           await this.runTest(testMintCat);
         } else {
+          await this.runTest(testNftMint);
+
           console.log("self-test partially ignored");
         }
-
-        await this.runTest(testNftMint);
 
         console.log("self-test passed");
       }
@@ -86,13 +86,20 @@ export function assert<T>(expect: T, actual: T, desc: string | undefined = undef
 }
 
 export function assertBundle(expect: SpendBundle, actual: SpendBundle): void {
-  assert(expect.aggregated_signature, actual.aggregated_signature);
-  assert(expect.coin_spends.length, actual.coin_spends.length);
-  for (let i = 0; i < expect.coin_spends.length; i++) {
-    assert(expect.coin_spends[i].puzzle_reveal, actual.coin_spends[i].puzzle_reveal);
-    assert(expect.coin_spends[i].solution, actual.coin_spends[i].solution);
-    assert(expect.coin_spends[i].coin.amount, actual.coin_spends[i].coin.amount);
-    assert(expect.coin_spends[i].coin.parent_coin_info, actual.coin_spends[i].coin.parent_coin_info);
-    assert(expect.coin_spends[i].coin.puzzle_hash, actual.coin_spends[i].coin.puzzle_hash);
+  try {
+    assert(expect.aggregated_signature, actual.aggregated_signature);
+    assert(expect.coin_spends.length, actual.coin_spends.length);
+    for (let i = 0; i < expect.coin_spends.length; i++) {
+      assert(expect.coin_spends[i].puzzle_reveal, actual.coin_spends[i].puzzle_reveal);
+      assert(expect.coin_spends[i].solution, actual.coin_spends[i].solution);
+      assert(expect.coin_spends[i].coin.amount, actual.coin_spends[i].coin.amount);
+      assert(expect.coin_spends[i].coin.parent_coin_info, actual.coin_spends[i].coin.parent_coin_info);
+      assert(expect.coin_spends[i].coin.puzzle_hash, actual.coin_spends[i].coin.puzzle_hash);
+    }
+  }
+  catch (err) {
+    console.warn("expect bundle:", expect);
+    console.warn("actual bundle:", actual);
+    throw err;
   }
 }

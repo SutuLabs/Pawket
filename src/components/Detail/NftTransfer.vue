@@ -1,7 +1,8 @@
 <template>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">{{ $t("mintNft.ui.title") }}</p>
+      <!-- <p class="modal-card-title">{{ $t("mintNft.ui.title") }}</p> -->
+      <p class="modal-card-title">Transfer</p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
@@ -16,21 +17,12 @@
             </b-tooltip>
           </p>
         </b-field>
-        <b-field v-if="false" :label="$t('mintNft.ui.label.memo')">
-          <b-input maxlength="100" v-model="memo" type="text" @input="reset()" disabled></b-input>
-        </b-field>
         <b-field :label="$t('mintNft.ui.label.uri')">
-          <template #message>
-            <a v-if="uri" :href="uri" target="_blank">
-              <img :src="uri" class="image-preview" />
-            </a>
-          </template>
-          <b-input maxlength="1024" v-model="uri" type="text" @input="reset()" required></b-input>
+          <a v-if="uri" :href="uri" target="_blank">
+            <img :src="uri" class="image-preview" />
+          </a>
         </b-field>
-        <b-field :label="$t('mintNft.ui.label.hash')">
-          <b-input maxlength="64" v-model="hash" type="text" @input="reset()" required></b-input>
-        </b-field>
-        <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
+        <fee-selector v-if="false" v-model="fee" @input="changeFee()"></fee-selector>
       </div>
       <template v-if="bundle">
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
@@ -78,7 +70,7 @@ import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import { AccountEntity, TokenInfo } from "@/store/modules/account";
 import KeyBox from "@/components/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { TokenPuzzleDetail } from "@/services/crypto/receive";
+import { NftDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
 import store from "@/store";
 import { SpendBundle } from "@/models/wallet";
 import bigDecimal from "js-big-decimal";
@@ -92,7 +84,7 @@ import BundleSummary from "../BundleSummary.vue";
 import SendSummary from "../SendSummary.vue";
 import { xchSymbol } from "@/store/modules/network";
 import { getTokenInfo } from "@/services/coin/cat";
-import { generateMintNftBundle } from "@/services/coin/nft";
+import { generateTransferNftBundle } from "@/services/coin/nft";
 
 @Component({
   components: {
@@ -103,8 +95,10 @@ import { generateMintNftBundle } from "@/services/coin/nft";
     SendSummary,
   },
 })
-export default class MintNft extends Vue {
+export default class NftTransfer extends Vue {
   @Prop() private account!: AccountEntity;
+  @Prop() private nft!: NftDetail;
+
   public addressEditable = true;
   public submitting = false;
   public fee = 0;
@@ -115,10 +109,6 @@ export default class MintNft extends Vue {
   public maxAmount = "-1";
   public totalAmount = "-1";
   public maxStatus: "Loading" | "Loaded" = "Loading";
-  // public uri = "https://aws1.discourse-cdn.com/business4/uploads/chia/original/1X/682754dfb596e0b4ec08dc23442cc5a9192418e3.png";
-  // public hash = "76a1900b6931f7bf5f07ab310733270838b040385f285423f49e2f5518867335";
-  public uri = "";
-  public hash = "";
   public selectedToken = xchSymbol();
   public validity = false;
 
@@ -172,6 +162,14 @@ export default class MintNft extends Vue {
 
   get tokenInfo(): TokenInfo {
     return getTokenInfo(this.account);
+  }
+
+  get hash(): string | undefined {
+    return this.nft?.metadata.hash;
+  }
+
+  get uri(): string | undefined {
+    return this.nft?.metadata.uri;
   }
 
   changeToken(token: string): void {
@@ -242,13 +240,14 @@ export default class MintNft extends Vue {
         return;
       }
 
-      const { spendBundle } = await generateMintNftBundle(
+      const  spendBundle  = await generateTransferNftBundle(
         this.address,
         this.account.firstAddress,
         BigInt(this.fee),
-        { uri: this.uri, hash: this.hash },
+        this.nft.coin,
+        this.nft.analysis,
         this.availcoins,
-        this.requests
+        this.requests,
       );
 
       this.bundle = spendBundle;
@@ -301,9 +300,21 @@ export default class MintNft extends Vue {
 
 <style scoped lang="scss">
 img.image-preview {
-  width: 50%;
-  height: 3rem;
+  width: 100%;
+  max-height: 40vh;
   object-fit: cover;
   border: 1px solid;
 }
 </style>
+
+function generateTransferNftBundle(address: string, firstAddress: string, arg2: bigint, arg3: { uri: string|undefined; hash: string|undefined; }, availcoins: SymbolCoins, requests: TokenPuzzleDetail[]) {
+  throw new Error("Function not implemented.");
+}
+
+function generateTransferNftBundle(address: string, firstAddress: string, arg2: bigint, coin: OriginCoin, analysis: any, availcoins: SymbolCoins, requests: TokenPuzzleDetail[]) {
+  throw new Error("Function not implemented.");
+}
+
+function generateTransferNftBundle(address: string, firstAddress: string, arg2: bigint, coin: OriginCoin, analysis: any, availcoins: SymbolCoins, requests: TokenPuzzleDetail[]) {
+  throw new Error("Function not implemented.");
+}

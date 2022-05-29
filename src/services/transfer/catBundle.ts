@@ -75,6 +75,7 @@ class CatBundle {
 
   public async getLineageProof(parentCoinId: string,
     api: GetPuzzleApiCallback | null = null,
+    argnum = 3,
   ): Promise<LineageProof> {
     if (!api) api = this.getLineageProofPuzzle;
     // console.log("parentCoinId", parentCoinId)
@@ -83,10 +84,12 @@ class CatBundle {
       const curriedPuzzle = await puzzle.disassemblePuzzle(puzzleReveal);
       const curried = assemble(curriedPuzzle);
       const [, args] = uncurry(curried) as Tuple<SExp, SExp>;
-      const thirdarg = disassemble(args.rest().rest());
-      const trickarg = thirdarg.slice(1, -1);
-      // console.log("api puzzle", trickarg);
-      const hash = await puzzle.getPuzzleHashFromPuzzle(trickarg);
+      let effectiveArg = args;
+      for (let i = 0; i < argnum - 1; i++) {
+        effectiveArg = effectiveArg.rest();
+      }
+      const trickarg = disassemble(effectiveArg).slice(1, -1);
+      const hash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(trickarg));
       return hash;
     }
 

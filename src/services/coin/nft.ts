@@ -1,22 +1,44 @@
 import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
 import { xchSymbol } from "@/store/modules/network";
+import { assemble } from "clvm_tools/clvm_tools/binutils";
+import debug from "../api/debug";
 import puzzle, { PuzzleDetail } from "../crypto/puzzle";
 import { TokenPuzzleDetail } from "../crypto/receive";
 import { combineSpendBundlePure } from "../mint/cat";
 import { curryMod } from "../offer/bundler";
-import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
+import { internalUncurry } from "../offer/summary";
+import transfer, { GetPuzzleApiCallback, SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { prefix0x } from "./condition";
-import { modshash, modsprog, modspuz } from "./mods";
+import { modsdict, modshash, modsprog, modspuz } from "./mods";
+import { Bytes } from "clvm";
+import { bytesToHex0x } from "../crypto/utility";
+import catBundle from "../transfer/catBundle";
 
 export interface MintNftInfo {
   spendBundle: SpendBundle;
+}
+
+export interface NftMetadata {
+  uri: string;
+  hash: string;
+}
+
+export interface NftCoinAnalysisResult {
+  singletonModHash: string;
+  launcherId: string;
+  launcherPuzzleHash: string;
+  nftStateModHash: string;
+  metadataUpdaterPuzzleHash: string;
+  p2InnerPuzzle: string;
+  hintPuzzle: string;
+  metadata: NftMetadata;
 }
 
 export async function generateMintNftBundle(
   targetAddress: string,
   changeAddress: string,
   fee: bigint,
-  metadata: { uri: string; hash: string },
+  metadata: NftMetadata,
   availcoins: SymbolCoins,
   requests: TokenPuzzleDetail[]
 ): Promise<MintNftInfo> {
@@ -85,6 +107,121 @@ export async function generateMintNftBundle(
   };
 }
 
+export async function generateTransferNftBundle(
+  targetAddress: string,
+  changeAddress: string,
+  fee: bigint,
+  nftCoin: OriginCoin,
+  analysis: NftCoinAnalysisResult,
+  availcoins: SymbolCoins,
+  requests: TokenPuzzleDetail[],
+  api: GetPuzzleApiCallback | null = null,
+): Promise<SpendBundle> {
+
+  const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
+  const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(changeAddress));
+  const inner_p2_puzzle = getPuzzleDetail(analysis.hintPuzzle, requests);
+  const baseSymbol = xchSymbol();
+
+  const amount = 1n;
+  const nftStatePuzzle = await constructNftStatePuzzle(analysis.metadata, inner_p2_puzzle.puzzle);
+  const proof = await catBundle.getLineageProof(nftCoin.parent_coin_info, api, 2);
+
+  const nftSolution = `((${proof.coinId} ${proof.proof} ${proof.amount}) ${amount} ((() (q (51 ${tgt_hex} ${amount} (${tgt_hex}))) ()) ${amount} ()))`;
+  const nftPuzzle = await constructNftTopLayerPuzzle(
+    analysis.launcherId,
+    await modshash("singleton_launcher"),
+    nftStatePuzzle
+  );
+  const nftPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(nftPuzzle));
+  if (nftPuzzleHash != nftCoin.puzzle_hash) {
+    if (process.env.NODE_ENV !== "production") {
+      console.warn("failed to construct puzzle", nftPuzzle, nftCoin.puzzle_hash, nftPuzzleHash)
+    }
+    throw new Error("failed to construct puzzle, different hash encountered")
+  }
+
+  const nftCoinSpend: CoinSpend = {
+    coin: nftCoin,
+    puzzle_reveal: prefix0x(await puzzle.encodePuzzle(nftPuzzle)),
+    solution: prefix0x(await puzzle.encodePuzzle(nftSolution)),
+  };
+
+  const extreqs = cloneAndChangeRequestPuzzleTemporary(baseSymbol, requests, inner_p2_puzzle.hash, nftPuzzle, nftPuzzleHash);
+
+  const bundle = await transfer.getSpendBundle([nftCoinSpend], extreqs);
+
+
+  if (fee > 0n) {
+    // not tested so far
+    // throw new Error("fee is not supported in transfer");
+    const feeTgts: TransferTarget[] = [{ address: "0x0000000000000000000000000000000000000000000000000000000000000000", amount: 0n, symbol: baseSymbol }];
+    const feeSpendPlan = transfer.generateSpendPlan(availcoins, feeTgts, change_hex, fee);
+    const feeSpendBundle = await transfer.generateSpendBundle(feeSpendPlan, requests, []);
+    const feeBundle = await combineSpendBundlePure(feeSpendBundle, bundle);
+
+    return feeBundle;
+  }
+
+  return bundle;
+}
+
+export async function analyzeNftCoin(parent_coin_info: string, hintPuzzle: string): Promise<NftCoinAnalysisResult | null> {
+  const scoin = await debug.getCoinSolution(parent_coin_info);
+  const puz = await puzzle.disassemblePuzzle(scoin.puzzle_reveal);
+  const { module, args } = await internalUncurry(puz);
+
+  if (modsdict[module] != "singleton_top_layer_v1_1" || args.length != 2) return null;
+  const { module: smodule, args: sargs } = await internalUncurry(args[1]);
+  const sgnStructProg = assemble(args[0]);
+  const sgnStructlist: [Bytes, [Bytes, Bytes]] = (sgnStructProg.as_javascript() as [Bytes, [Bytes, Bytes]])
+
+  const singletonModHash = bytesToHex0x(sgnStructlist[0]);
+  const launcherId = bytesToHex0x(sgnStructlist[1][0]);
+  const launcherPuzzleHash = bytesToHex0x(sgnStructlist[1][1]);
+
+  if (modsdict[smodule] != "nft_state_layer" || sargs.length != 4) return null;
+  const nftStateModHash = sargs[0];
+  const metadataUpdaterPuzzleHash = sargs[2];
+  const p2InnerPuzzle = sargs[3];
+
+  const rawmeta = sargs[1];
+  const metaprog = assemble(rawmeta);
+  const metalist: string[][] = (metaprog.as_javascript() as Bytes[][])
+    .map(_ => Array.from(_))
+    .map(_ => _.map(it => it.hex()));
+  const hex2asc = function (hex: string | undefined): string | undefined {
+    if (!hex) return hex;
+    return Buffer.from(hex, "hex").toString();
+  }
+
+  const uri = hex2asc(metalist.find(_ => _[0] == "75")?.[1]);// 75_hex = 117_dec for u
+  const hash = metalist.find(_ => _[0] == "68")?.[1];// 68_hex = 104_dec for h
+  if (!uri
+    || !hash
+    || !singletonModHash
+    || !launcherId
+    || !launcherPuzzleHash
+    || !nftStateModHash
+    || !metadataUpdaterPuzzleHash
+    || !p2InnerPuzzle
+  ) return null;
+
+  return {
+    metadata: {
+      uri,
+      hash,
+    },
+    singletonModHash,
+    launcherId,
+    launcherPuzzleHash,
+    nftStateModHash,
+    metadataUpdaterPuzzleHash,
+    p2InnerPuzzle,
+    hintPuzzle: prefix0x(hintPuzzle),
+  };
+}
+
 async function constructNftStatePuzzle(metadata: { uri: string; hash: string }, inner_p2_puzzle: string): Promise<string> {
   const md = `((117 "${metadata.uri.replaceAll('"', "")}") (104 . ${prefix0x(metadata.hash)}))`;
   const curried_tail = await curryMod(
@@ -113,6 +250,10 @@ async function constructNftTopLayerPuzzle(
 
 export function getCoinName0x(coin: OriginCoin): string {
   return prefix0x(transfer.getCoinName(coin).hex());
+}
+
+export function getCoinName(coin: OriginCoin): string {
+  return transfer.getCoinName(coin).hex();
 }
 
 function getPuzzleDetail(

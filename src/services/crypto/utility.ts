@@ -1,5 +1,7 @@
 import store from "@/store";
 import { PrivateKey, ModuleInstance } from "@chiamine/bls-signatures";
+import { prefix0x, unprefix0x } from "../coin/condition";
+import { Bytes } from "clvm";
 
 type deriveCallback = (path: number[]) => PrivateKey;
 
@@ -12,6 +14,7 @@ class Utility {
   }
 
   fromHexString(hexString: string): Uint8Array {
+    hexString = unprefix0x(hexString);
     if (!hexString) return new Uint8Array();
     return new Uint8Array(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -56,3 +59,7 @@ class Utility {
 }
 
 export default new Utility();
+
+export function bytesToHex0x(bytes: Bytes): string {
+  return prefix0x(bytes.hex());
+}
