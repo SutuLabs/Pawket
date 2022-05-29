@@ -5,7 +5,7 @@ import Vue from 'vue';
 import receive, { NftDetail } from '@/services/crypto/receive';
 
 export function getAccountCats(account: AccountEntity): CustomCat[] {
-  return account.allCats.filter(c => c.network == store.state.network.networkId);
+  return account.allCats?.filter(c => c.network == store.state.network.networkId) ?? [];
 }
 
 type AccountType = "Serial" | "Password" | "Legacy";
