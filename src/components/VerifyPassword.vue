@@ -56,8 +56,8 @@
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
 import store from "@/store";
-import utility from "@/services/crypto/utility";
 import { CurrencyType } from "@/services/exchange/currencyType";
+import { isPasswordCorrect } from "@/store/modules/vault";
 
 type Mode = "Verify" | "Create";
 
@@ -94,8 +94,7 @@ export default class VerifyPassword extends Vue {
   }
 
   async confirm(): Promise<void> {
-    const pswhash = await utility.hash(this.password);
-    if (pswhash != store.state.vault.passwordHash) {
+    if (!await isPasswordCorrect(this.password)) {
       this.isCorrect = false;
       return;
     }
