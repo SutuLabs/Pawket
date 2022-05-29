@@ -36,12 +36,7 @@
         <hr />
         <div class="y-scroll pt-5" style="height: 40vh">
           <b-field :label="$t('ManageCats.ui.label.listingCats')">
-            <token-item
-              :catList="assetIds"
-              @remove="remove"
-              v-sortable="sortableOptions"
-              @updateOrder="updateOrder"
-            ></token-item>
+            <token-item :catList="assetIds" @remove="remove" v-sortable="sortableOptions" @updateOrder="updateOrder"></token-item>
           </b-field>
         </div>
       </section>
@@ -181,6 +176,7 @@ export default class ManageCats extends Vue {
     this.account.allCats = this.account.allCats
       .filter((_) => _.network != network)
       .concat(this.assetIds.map((_) => ({ name: _.name, id: _.id, network })));
+    this.account.addressGenerated = 0;
     await store.dispatch("persistent");
     this.$emit("refresh");
 

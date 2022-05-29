@@ -105,7 +105,6 @@ store.registerModule<INetworkState>("network", {
       for (let i = 0; i < rootState.account.accounts.length; i++) {
         const account = rootState.account.accounts[i];
         account.addressGenerated = 0;
-        account.addressPuzzles = [];
       }
       localStorage.setItem(NETWORK_ID_KEY, state.networkId);
     },
