@@ -306,15 +306,3 @@ img.image-preview {
   border: 1px solid;
 }
 </style>
-
-function generateTransferNftBundle(address: string, firstAddress: string, arg2: bigint, arg3: { uri: string|undefined; hash: string|undefined; }, availcoins: SymbolCoins, requests: TokenPuzzleDetail[]) {
-  throw new Error("Function not implemented.");
-}
-
-function generateTransferNftBundle(address: string, firstAddress: string, arg2: bigint, coin: OriginCoin, analysis: any, availcoins: SymbolCoins, requests: TokenPuzzleDetail[]) {
-  throw new Error("Function not implemented.");
-}
-
-function generateTransferNftBundle(address: string, firstAddress: string, arg2: bigint, coin: OriginCoin, analysis: any, availcoins: SymbolCoins, requests: TokenPuzzleDetail[]) {
-  throw new Error("Function not implemented.");
-}

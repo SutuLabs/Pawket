@@ -5,7 +5,6 @@ import { PuzzleDetail } from "./puzzle";
 import utility from "./utility";
 import { AccountTokenAddress, AccountTokens, CustomCat } from "@/store/modules/account";
 import { rpcUrl, xchSymbol } from "@/store/modules/network";
-import { prefix0x } from "../coin/condition";
 import { analyzeNftCoin, NftCoinAnalysisResult } from "../coin/nft";
 
 export interface TokenPuzzleDetail {
