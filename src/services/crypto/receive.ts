@@ -69,7 +69,7 @@ class Receive {
   }
 
   getAssetsDict(requests: TokenPuzzleAddress[]): { [key: string]: { symbol: string, puzzle: PuzzleAddress } } {
-    const dictAssets: { [key: string]: { symbol: string, puzzle: PuzzleAddress} } = {};
+    const dictAssets: { [key: string]: { symbol: string, puzzle: PuzzleAddress } } = {};
     for (let i = 0; i < requests.length; i++) {
       const t = requests[i];
       for (let j = 0; j < t.puzzles.length; j++) {
@@ -111,7 +111,7 @@ class Receive {
           .map<AccountTokenAddress>(_ => ({
             address: _.address,
             type: dictAssets[_.hash].puzzle.type,
-            coins: (records.coins.find(c => prefix0x(_.hash) == c.puzzleHash) || { records: [] }).records,
+            coins: (records.coins.find(c => _.hash == c.puzzleHash) || { records: [] }).records,
           })),
       };
     }
