@@ -1,8 +1,7 @@
 import { GetParentPuzzleResponse } from "@/models/api";
 import { SpendBundle } from "@/models/wallet";
-import { AccountEntity } from "@/store/modules/account";
+import { AccountEntity, getAccountAddressDetails } from "@/store/modules/account";
 import { assert, assertBundle } from "./runner";
-import coinHandler from "@/services/transfer/coin";
 import { decodeOffer, encodeOffer } from "../offer/encoding";
 import { getOfferSummary, OfferEntity, OfferPlan } from "../offer/summary";
 import { combineSpendBundle, generateOffer, generateOfferPlan, getReversePlan } from "../offer/bundler";
@@ -109,20 +108,8 @@ export async function testMakeOffer1(): Promise<void> {
       "target": "0x907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96"
     }
   ];
-  const account: AccountEntity = {
-    addressRetrievalCount: 4,
-    key: {
-      privateKey: "46815978e90da660427161c265b400831ee59f9aae9a40b449fbcd67ca140590",
-      fingerprint: 0,
-      compatibleMnemonic: "",
-    },
-    name: "",
-    type: "Legacy",
-    tokens: {},
-    nfts: [],
-    allCats: [],
-  }
-  const tokenPuzzles = await coinHandler.getAssetsRequestDetail(account);
+  const account = getTestAccount("46815978e90da660427161c265b400831ee59f9aae9a40b449fbcd67ca140590");
+  const tokenPuzzles = await getAccountAddressDetails(account);
 
   const nonce = "71bdf5d923a48956a8d26a36c6ea4a9959de221ff2ee986bce4827e5f037ceb8";
   const bundle = await generateOffer(offplan, reqs, tokenPuzzles, nonce, null);
@@ -203,20 +190,8 @@ export async function testMakeOffer2(): Promise<void> {
       "target": "0x907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96"
     }
   ];
-  const account: AccountEntity = {
-    addressRetrievalCount: 4,
-    key: {
-      privateKey: "46815978e90da660427161c265b400831ee59f9aae9a40b449fbcd67ca140590",
-      fingerprint: 0,
-      compatibleMnemonic: "",
-    },
-    name: "",
-    type: "Legacy",
-    tokens: {},
-    nfts: [],
-    allCats: [],
-  }
-  const tokenPuzzles = await coinHandler.getAssetsRequestDetail(account);
+  const account = getTestAccount("46815978e90da660427161c265b400831ee59f9aae9a40b449fbcd67ca140590");
+  const tokenPuzzles = await getAccountAddressDetails(account);
 
   const nonce = "741f8564b6637aee92dd68548cfe7df8ec35b20029235565244944febd68bf8d";
   const bundle = await generateOffer(offplan, reqs, tokenPuzzles, nonce, localPuzzleApiCall);
@@ -270,25 +245,13 @@ export async function testTakeOfferXchForCat(): Promise<void> {
   };
   const offerText = "offer1qqp83w76wzru6cmqvpsxygqqgtz8czhc9m7htaj54ten8j0925a2n80flhclm8y8lshnwepyfuud2rjnqu9ad5t6d66fuxaduarwhww30fh2p6eewzcm0g8gm6q6ga5l9wt40mvck3syykk8cf6cak5vnself3989uk9s7arl08pm29j8syaza7x97wa8uu7nqhartj4nmpuhgfkgxj7rj0pptuh0hjxwhfdn5zzwj6waprhayvzzvstkmhwy96gnrhrww0ucvdnhjde2deavetuka6gmuztlmthuse576dwgh4qjgyh2e7vrmzamxujwerhvymlmwxlgm40cqhw0s9dgxljtaeflny45vcdvsuyz3fqawhwf3ahfx7evh8uh7nh5al39tc7jh6m3h6hdwqemvrycwn7uaudgfckgfnyp6m2062v573c77auzpn0mpl23glattdra2279yjer8kl8u6g8kx6wluvetxdmtpvruhh6tfhxmzezkhgtzjt6t8mj7xdk25wkew6pttd5qzf68l30mr6ujv0gln0tpl70832z0mpnjcy0vl53nxml8uyweh4h9z420l87atcyyaqxygmrnqx23nl7l7pa2587lm5xkkkxe8zskwy64lytcywja2l5a4a25q66swvhl2gdm0qwuqg44l0s23zj9v5ful0s97xvfgh3w2795awuch4rkrnvd04t9hgm8ha6vtte57m6tececa4jytujlc5zc7z86c4tfv74jnz2764ze8wmxml9jlnnva7ap80nxmd8xpwmyla77kdsgv5y5tevmwnyreag7z9wlfwefjfwyqrug4c2cuc00dv";
 
-  const account: AccountEntity = {
-    addressRetrievalCount: 4,
-    key: {
-      privateKey: "46815978e90da660427161c265b400831ee59f9aae9a40b449fbcd67ca140590",
-      fingerprint: 0,
-      compatibleMnemonic: "",
-    },
-    name: "",
-    type: "Legacy",
-    tokens: {},
-    nfts: [],
-    allCats: [],
-  }
+  const account = getTestAccount("46815978e90da660427161c265b400831ee59f9aae9a40b449fbcd67ca140590");
 
   const makerBundle = await decodeOffer(offerText);
   const summary = await getOfferSummary(makerBundle);
   const change_hex = "0x907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96";
   const nonce = "c616dec58b3c9a898b167f4ea26adb27b464c7e28d2656eeb845a525b9f5786c";
-  const tokenPuzzles = await coinHandler.getAssetsRequestDetail(account);
+  const tokenPuzzles = await getAccountAddressDetails(account);
   // const availcoins = await coinHandler.getAvailableCoins(tokenPuzzles, coinHandler.getTokenNames(account));
   const availcoins: SymbolCoins = {
     "BSH": [
@@ -354,25 +317,13 @@ export async function testTakeOfferCatForXch(): Promise<void> {
   };
   const offerText = "offer1qqp83w76wzru6cmqvpsxygqqwc7hynr6hum6e0mnf72sn7uvvkpt68eyumkhelprk0adeg42nlelk2mpafrgx923m0l4lupujuu7m6vvmjxy042f2esn0hm4nalt3ym0dhrf29e0h9nxc6y69h2s54rzkly49yh8a9k2lr60zg662fakned6dx6s7nt4eqj492v0l3s2chhqxsy0sqkdqvxdamm7ywnp0t098yzel2449djcf3dhtq6gg8wd53e3ua8ms99je6e2hxqedeet94hulx27n8zdejp9tyh8le7ael208halsp8m8r6hnv5smpga6pytnlghvzr2uj8mvs6xmvs68mvs69mq30py53dnkpzuaskj3wnhyz5ame72u42nkf3dnzgddvtsnk3nvgl8ps7lr6gtp0tda697wvr65tz0gt6fmu2tul6tcflxfw6xh9087pe2sn2sd9u89wzzl6wmw5vawsmtgyz99mjgwumlrfk0pp4dc7pkwa9v3l7vdwy0dlgahw6xq7ep5ms638em6ztata27vu86arnw433r4fkjujhnfc5jk6tkehlzqvgltfagqrtdsz6y4l30yr2vqqwxaxtllpy4s8xrgf4z2eh49hs8235l7l6p60c5ted08ll85ffk7xyl499vhy0au6j0hvl2jepfsas2k72rm9hv8jus6nuhlsv67fe4w8p4mkp69cackca8k7n3h4neat94hwswgh0n56nqlmuj4ehj93jwxk8cdlcteg4najd5n22477rkjmalpggsh8qwqu84a6hadwtkf0tufzffkhxycpx6gk5trutlqxs7d3hlym256r2yn9zd34fqj0q2njjpvmh89l6tpdwt9f3wfr77c7eq9cua47hge0sg8w40svjl4lajpw7dltassqm79h8j4aeye7m0ukjr8vcuhhenhllknlavj0sttaj6kwawlhllct7h08aav3lv0skez9gzpk936semac0meg8ldxkmmchj3kre07grqpnwkstyz9uhlz";
 
-  const account: AccountEntity = {
-    addressRetrievalCount: 4,
-    key: {
-      privateKey: "029f493caf194d4a67a6a5bad588c12ff1f2512f5db7118fd4005492b9dafbb5",
-      fingerprint: 0,
-      compatibleMnemonic: "",
-    },
-    name: "",
-    type: "Legacy",
-    tokens: {},
-    nfts: [],
-    allCats: [],
-  }
+  const account = getTestAccount("029f493caf194d4a67a6a5bad588c12ff1f2512f5db7118fd4005492b9dafbb5");
 
   const makerBundle = await decodeOffer(offerText);
   const summary = await getOfferSummary(makerBundle);
   const change_hex = "0xb379a659194799dfa9171f7770f6935b1644fe48fd6fb596d5df0ac2abff2bda";
   const nonce = "c616dec58b3c9a898b167f4ea26adb27b464c7e28d2656eeb845a525b9f5786c";
-  const tokenPuzzles = await coinHandler.getAssetsRequestDetail(account);
+  const tokenPuzzles = await getAccountAddressDetails(account);
   // const availcoins = await coinHandler.getAvailableCoins(tokenPuzzles, coinHandler.getTokenNames(account));
   const availcoins: SymbolCoins = {
     [xchSymbol()]: [
@@ -394,4 +345,22 @@ export async function testTakeOfferCatForXch(): Promise<void> {
   // console.log("combined", combined)
 
   assertBundle(expect, combined);
+}
+
+export function getTestAccount(privateKey: string): AccountEntity {
+  return {
+    addressRetrievalCount: 4,
+    key: {
+      privateKey: privateKey,
+      fingerprint: 0,
+      compatibleMnemonic: "",
+    },
+    name: "",
+    type: "Legacy",
+    tokens: {},
+    nfts: [],
+    allCats: [],
+    addressGenerated: 0,
+    addressPuzzles: [],
+  }
 }

@@ -1,11 +1,11 @@
 import { SpendBundle } from "@/models/wallet";
-import { AccountEntity } from "@/store/modules/account";
 import { assertBundle } from "./runner";
-import coinHandler from "@/services/transfer/coin";
 import { SymbolCoins } from "../transfer/transfer";
 import { xchPrefix, xchSymbol } from "@/store/modules/network";
 import { generateMintNftBundle } from "../coin/nft";
 import puzzle from "../crypto/puzzle";
+import { getTestAccount } from "./offerTest";
+import { getAccountAddressDetails } from "@/store/modules/account";
 
 export async function testNftMint(): Promise<void> {
   const expect: SpendBundle = {
@@ -41,19 +41,7 @@ export async function testNftMint(): Promise<void> {
     ]
   };
 
-  const account: AccountEntity = {
-    addressRetrievalCount: 4,
-    key: {
-      privateKey: "4a3666e148799c0f23d5644f7dceabe2b97c689dddad68929c2ec7686d2e33fd",
-      fingerprint: 0,
-      compatibleMnemonic: "",
-    },
-    name: "",
-    type: "Legacy",
-    tokens: {},
-    nfts: [],
-    allCats: [],
-  }
+  const account = getTestAccount("4a3666e148799c0f23d5644f7dceabe2b97c689dddad68929c2ec7686d2e33fd");
 
   const change_hex = "0x8ade79ac76f8943283001758b659f83916e9a8b179b33b894d3d4bd65fd90fbe";
   const target_hex = "0x8ade79ac76f8943283001758b659f83916e9a8b179b33b894d3d4bd65fd90fbe";
@@ -61,7 +49,7 @@ export async function testNftMint(): Promise<void> {
   const changeAddress = puzzle.getAddressFromPuzzleHash(change_hex, xchPrefix());
   const targetAddress = puzzle.getAddressFromPuzzleHash(target_hex, xchPrefix());
 
-  const tokenPuzzles = await coinHandler.getAssetsRequestDetail(account);
+  const tokenPuzzles = await getAccountAddressDetails(account);
   const availcoins: SymbolCoins = {
     [xchSymbol()]: [
       {
