@@ -1,7 +1,7 @@
 <template>
   <div class="modal-card">
     <section class="modal-card-body">
-      <center>
+      <center v-if="qrcode">
         <qrcode-vue :value="qrcode" size="300"></qrcode-vue>
         {{ $t("offline.client.show.hint") }}
       </center>
@@ -36,7 +36,15 @@ export default class OfflineSendShowBundle extends Vue {
   public qrcode = "";
 
   async mounted(): Promise<void> {
-    this.qrcode = await encodeOffer(this.bundle, "bundle");
+    setTimeout(async () => {
+      try {
+        console.log(this.bundle)
+        this.qrcode = await encodeOffer(this.bundle, "bundle");
+      } catch (err) {
+        console.warn("failed to encode bundle", err);
+        this.qrcode = "";
+      }
+    }, 1000);
   }
 }
 </script>

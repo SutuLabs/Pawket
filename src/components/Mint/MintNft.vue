@@ -1,54 +1,57 @@
 <template>
   <div class="modal-card">
     <header class="modal-card-head">
-      <!-- <p class="modal-card-title">{{ $t("mintCat.ui.title") }}</p> -->
-      <p class="modal-card-title">Mint Nft</p>
+      <p class="modal-card-title">{{ $t("mintNft.ui.title") }}</p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
       <div v-show="!bundle">
-        <b-field :label="$t('mintCat.ui.label.address')">
+        <b-field :label="$t('mintNft.ui.label.address')">
           <b-input v-model="address" @input="reset()" expanded :disabled="!addressEditable"></b-input>
           <p class="control">
-            <b-tooltip :label="$t('mintCat.ui.tooltip.qr')">
+            <b-tooltip :label="$t('mintNft.ui.tooltip.qr')">
               <b-button @click="scanQrCode()" :disabled="!addressEditable">
                 <b-icon icon="scan-helper"></b-icon>
               </b-button>
             </b-tooltip>
           </p>
         </b-field>
-        <b-field :label="$t('mintCat.ui.label.memo')">
+        <b-field v-if="false" :label="$t('mintNft.ui.label.memo')">
           <b-input maxlength="100" v-model="memo" type="text" @input="reset()" disabled></b-input>
         </b-field>
-        <b-field :label="'uri'">
-          <b-input maxlength="12" v-model="uri" type="text" @input="reset()" required></b-input>
+        <b-field :label="$t('mintNft.ui.label.uri')">
+          <template #message>
+            <a v-if="uri" :href="uri" target="_blank">
+              <img :src="uri" class="image-preview" />
+            </a>
+          </template>
+          <b-input maxlength="1024" v-model="uri" type="text" @input="reset()" required></b-input>
         </b-field>
-        <b-field :label="'hash'">
-          <b-input maxlength="12" v-model="hash" type="text" @input="reset()" required></b-input>
+        <b-field :label="$t('mintNft.ui.label.hash')">
+          <b-input maxlength="64" v-model="hash" type="text" @input="reset()" required></b-input>
         </b-field>
         <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
       </div>
       <template v-if="bundle">
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($t('mintCat.ui.summary.notification'))"></span>
+          <span v-html="$sanitize($t('mintNft.ui.summary.notification'))"></span>
         </b-notification>
         <send-summary
-          :amount="numericAmount"
-          :unit="symbol.toUpperCase()"
+          :nftUri="uri"
+          :nftHash="hash"
           :fee="feeBigInt"
           :address="address"
-          :asset-id="assetId"
-          :leadingText="$t('mintCat.ui.summary.label.leadingText')"
+          :leadingText="$t('mintNft.ui.summary.label.leadingText')"
           :total="total"
         ></send-summary>
-        <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
+        <bundle-summary :account="account" :bundle="bundle" :ignoreError="true"></bundle-summary>
       </template>
     </section>
     <footer class="modal-card-foot is-justify-content-space-between">
       <div>
-        <b-button :label="$t('mintCat.ui.button.cancel')" @click="cancel()"></b-button>
+        <b-button :label="$t('mintNft.ui.button.cancel')" @click="cancel()"></b-button>
         <b-button
-          :label="$t('mintCat.ui.button.sign')"
+          :label="$t('mintNft.ui.button.sign')"
           v-if="!bundle"
           type="is-primary"
           @click="sign()"
@@ -57,7 +60,7 @@
       </div>
       <div>
         <b-button
-          :label="$t('mintCat.ui.button.submit')"
+          :label="$t('mintNft.ui.button.submit')"
           v-if="bundle"
           type="is-primary"
           class="is-pulled-right"
@@ -87,8 +90,9 @@ import { debugBundle, submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/FeeSelector.vue";
 import BundleSummary from "../BundleSummary.vue";
 import SendSummary from "../SendSummary.vue";
-import { generateMintCatBundle } from "@/services/mint/cat";
 import { xchSymbol } from "@/store/modules/network";
+import { getTokenInfo } from "@/services/coin/cat";
+import { generateMintNftBundle } from "@/services/coin/nft";
 
 @Component({
   components: {
@@ -111,13 +115,12 @@ export default class MintNft extends Vue {
   public maxAmount = "-1";
   public totalAmount = "-1";
   public maxStatus: "Loading" | "Loaded" = "Loading";
-  public selectMax = false;
-  public amount = "";
+  // public uri = "https://aws1.discourse-cdn.com/business4/uploads/chia/original/1X/682754dfb596e0b4ec08dc23442cc5a9192418e3.png";
+  // public hash = "76a1900b6931f7bf5f07ab310733270838b040385f285423f49e2f5518867335";
   public uri = "";
   public hash = "";
   public selectedToken = xchSymbol();
   public validity = false;
-  public assetId = "";
 
   public requests: TokenPuzzleDetail[] = [];
 
@@ -139,13 +142,8 @@ export default class MintNft extends Vue {
     return [xchSymbol()];
   }
 
-  get bundleJson(): string {
-    return JSON.stringify(this.bundle, null, 4);
-  }
-
-  get numericAmount(): bigint {
-    const decimal = 12;
-    return BigInt(bigDecimal.multiply(this.amount, Math.pow(10, decimal)));
+  get symbol(): string {
+    return xchSymbol();
   }
 
   get feeBigInt(): bigint {
@@ -153,7 +151,7 @@ export default class MintNft extends Vue {
   }
 
   get total(): bigint {
-    return this.feeBigInt + this.numericAmount;
+    return this.feeBigInt + 1n;
   }
 
   get debugMode(): boolean {
@@ -173,36 +171,7 @@ export default class MintNft extends Vue {
   }
 
   get tokenInfo(): TokenInfo {
-    const tokenInfo = Object.assign({}, store.state.account.tokenInfo);
-    if (this.account.cats) {
-      for (let i = 0; i < this.account.cats.length; i++) {
-        const cat = this.account.cats[i];
-        tokenInfo[cat.name] = {
-          id: cat.id,
-          symbol: cat.name,
-          decimal: 3,
-          unit: cat.name,
-        };
-      }
-    }
-
-    return tokenInfo;
-  }
-
-  setMax(excludingFee = false): void {
-    this.reset();
-    excludingFee = this.selectedToken != xchSymbol() ? true : excludingFee;
-    const newAmount = excludingFee
-      ? this.maxAmount
-      : bigDecimal.subtract(this.maxAmount, bigDecimal.divide(this.fee, Math.pow(10, this.decimal), this.decimal));
-    this.amount = newAmount;
-    this.selectMax = true;
-  }
-
-  updateTokenAmount(value: string): void {
-    this.amount = value;
-    this.reset();
-    this.selectMax = false;
+    return getTokenInfo(this.account);
   }
 
   changeToken(token: string): void {
@@ -223,8 +192,6 @@ export default class MintNft extends Vue {
     this.bundle = null;
     this.maxAmount = "-1";
     this.totalAmount = "-1";
-    this.amount = "0";
-    this.selectMax = false;
     this.maxStatus = "Loading";
 
     if (!this.requests || this.requests.length == 0) {
@@ -270,30 +237,24 @@ export default class MintNft extends Vue {
         return;
       }
 
-      const decimal = this.selectedToken == xchSymbol() ? 12 : 3;
-      const amount = BigInt(bigDecimal.multiply(this.amount, Math.pow(10, decimal)));
-
       if (this.availcoins == null) {
         this.submitting = false;
         return;
       }
 
-      const { spendBundle, assetId } = await generateMintCatBundle(
+      const { spendBundle } = await generateMintNftBundle(
         this.address,
         this.account.firstAddress,
-        amount,
         BigInt(this.fee),
-        this.memo,
+        { uri: this.uri, hash: this.hash },
         this.availcoins,
-        this.account.key.privateKey,
         this.requests
       );
 
       this.bundle = spendBundle;
-      this.assetId = assetId;
     } catch (error) {
       Notification.open({
-        message: this.$tc("mintCat.ui.messages.failedToSign") + error,
+        message: this.$tc("mintNft.ui.messages.failedToSign") + error,
         type: "is-danger",
         autoClose: false,
       });
@@ -334,9 +295,15 @@ export default class MintNft extends Vue {
 
   changeFee(): void {
     this.reset();
-    if (this.selectMax) this.setMax();
   }
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+img.image-preview {
+  width: 50%;
+  height: 3rem;
+  object-fit: cover;
+  border: 1px solid;
+}
+</style>

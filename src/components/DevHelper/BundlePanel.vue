@@ -187,7 +187,7 @@ export default class BundlePanel extends Vue {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const cs = (this.bundle as any)?.coin_solutions as CoinSpend[];
         if (this.bundle && cs && !this.bundle.coin_spends) {
-          this.bundle.coin_spends = cs;
+          Vue.set(this.bundle, "coin_spends", cs);
         }
       }
     } catch (error) {

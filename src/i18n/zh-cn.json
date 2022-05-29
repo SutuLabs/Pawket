@@ -128,7 +128,8 @@
       },
       "tab": {
         "asset": "资产",
-        "utxos": "UTXOs"
+        "utxos": "UTXOs",
+        "nft": "NFT"
       },
       "tooltip": {
         "setting": "设置",
@@ -142,14 +143,16 @@
           "takeOffer": "接受 Offer",
           "makeOffer": "发起 Offer",
           "batchSend": "批量发送",
-          "mintCat": "发行 CAT"
+          "mintCat": "发行 CAT",
+          "mintNft": "发行 NFT"
         },
         "button": {
           "donate": "捐赠",
           "takeOffer": "接受 Offer",
           "makeOffer": "发起 Offer",
           "batchSend": "批量发送",
-          "mintCat": "发行 CAT"
+          "mintCat": "发行 CAT",
+          "mintNft": "发行 NFT"
         }
       }
     },
@@ -750,7 +753,8 @@
         "to": "至",
         "fee": "交易费",
         "total": "总计",
-        "assetId": "Asset ID"
+        "assetId": "Asset ID",
+        "NftUri": "NFT"
       }
     }
   },
@@ -856,6 +860,34 @@
       "button": {
         "cancel": "取消",
         "save": "保存"
+      }
+    }
+  },
+  "mintNft": {
+    "ui": {
+      "title": "发行 NFT",
+      "label": {
+        "address": "地址",
+        "memo": "备注",
+        "uri": "媒体文件地址",
+        "hash": "哈希值"
+      },
+      "tooltip": {
+        "qr": "扫描二维码"
+      },
+      "summary": {
+        "notification": "确定要发行 NFT 吗？<br/>请务必再次检查你的交易内容。",
+        "label": {
+          "leadingText": "发行 NFT"
+        }
+      },
+      "button": {
+        "cancel": "取消",
+        "sign": "签名",
+        "submit": "提交"
+      },
+      "messages": {
+        "failedToSign": "签名失败: "
       }
     }
   }

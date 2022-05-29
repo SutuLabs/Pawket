@@ -128,7 +128,8 @@
       },
       "tab": {
         "asset": "Asset",
-        "utxos": "UTXOs"
+        "utxos": "UTXOs",
+        "nft": "NFT"
       },
       "tooltip": {
         "setting": "Settings",
@@ -142,14 +143,16 @@
           "takeOffer": "Take Offer",
           "makeOffer": "Make Offer",
           "batchSend": "Batch Send",
-          "mintCat": "Issue CAT"
+          "mintCat": "Issue CAT",
+          "mintNft": "Mint NFT"
         },
         "button": {
           "donate": "Donate",
           "takeOffer": "Take Offer",
           "makeOffer": "Make Offer",
           "batchSend": "Batch Send",
-          "mintCat": "Issue CAT"
+          "mintCat": "Issue CAT",
+          "mintNft": "Mint NFT"
         }
       }
     },
@@ -750,7 +753,8 @@
         "to": "To",
         "fee": "Fee",
         "total": "Total",
-        "assetId": "Asset ID"
+        "assetId": "Asset ID",
+        "NftUri": "NFT"
       }
     }
   },
@@ -856,6 +860,34 @@
       "button": {
         "cancel": "Cancel",
         "save": "Save"
+      }
+    }
+  },
+  "mintNft": {
+    "ui": {
+      "title": "Mint NFT",
+      "label": {
+        "address": "Address",
+        "memo": "Memo",
+        "uri": "URI",
+        "hash": "Hash"
+      },
+      "tooltip": {
+        "qr": "Scan QR"
+      },
+      "summary": {
+        "notification": "Are you sure to mint the NFT?<br/>Please review your transaction.",
+        "label": {
+          "leadingText": "Minting NFT"
+        }
+      },
+      "button": {
+        "cancel": "Cancel",
+        "sign": "Sign",
+        "submit": "Submit"
+      },
+      "messages": {
+        "failedToSign": "Failed to sign: "
       }
     }
   }

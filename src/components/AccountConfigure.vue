@@ -86,8 +86,8 @@ import ChangePassword from "./ChangePassword.vue";
 import AddressBook from "./AddressBook.vue";
 import { CurrencyType } from "@/services/exchange/currencyType";
 import MnemonicExport from "./MnemonicExport.vue";
-import utility from "@/services/crypto/utility";
 import { notifyPrimary } from "@/notification/notification";
+import { isPasswordCorrect } from "@/store/modules/vault";
 
 @Component({
   components: {
@@ -186,8 +186,7 @@ export default class AccountConfigure extends Vue {
       cancelText: this.$tc("accountConfigure.ui.button.cancel"),
       confirmText: this.$tc("accountConfigure.ui.button.confirm"),
       onConfirm: async (password, { close }) => {
-        const pswhash = await utility.hash(password);
-        if (pswhash != store.state.vault.passwordHash) {
+        if (!await isPasswordCorrect(password)) {
           this.$buefy.toast.open({
             message: this.$tc("accountConfigure.message.error.passwordNotCorrect"),
             type: "is-danger",

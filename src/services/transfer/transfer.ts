@@ -81,21 +81,18 @@ class Transfer {
     if (!store.state.app.bls) throw new Error("bls not initialized");
     const BLS = store.state.app.bls;
     const puzzleDict: { [key: string]: PuzzleDetail } = Object.assign({}, ...puzzles.flatMap(_ => _.puzzles).map((x) => ({ [prefix0x(x.hash)]: x })));
-    const getPuzDetail = (hash: string) => {
-      const puz = puzzleDict[hash];
-      if (!puz) throw new Error("cannot find puzzle");
-      return puz;
-    }
+    const getPuzDetail = (hash: string): PuzzleDetail | undefined => { return puzzleDict[hash]; }
 
     const sigs: G2Element[] = [];
     for (let i = 0; i < css.length; i++) {
       const coin_spend = css[i];
       if (coin_spend.coin.parent_coin_info == "0x0000000000000000000000000000000000000000000000000000000000000000") continue;
       const puz = getPuzDetail(coin_spend.coin.puzzle_hash);
+      const puzzle_reveal = await puzzle.disassemblePuzzle(coin_spend.puzzle_reveal);
 
-      const puzzle_reveal = puz.puzzle;
-
-      const synthetic_sk = this.calculate_synthetic_secret_key(BLS, puz.privateKey, DEFAULT_HIDDEN_PUZZLE_HASH.raw());
+      const synthetic_sk = puz
+        ? this.calculate_synthetic_secret_key(BLS, puz.privateKey, DEFAULT_HIDDEN_PUZZLE_HASH.raw())
+        : undefined;
       const coinname = this.getCoinName(coin_spend.coin);
 
       const result = await puzzle.calcPuzzleResult(puzzle_reveal, await puzzle.disassemblePuzzle(coin_spend.solution));
@@ -156,13 +153,9 @@ class Transfer {
     return synthetic_secret_key;
   }
 
-  private async signSolution(BLS: ModuleInstance, solution_executed_result: string, synthetic_sk: PrivateKey, coinname: Bytes): Promise<G2Element> {
-
-
+  private async signSolution(BLS: ModuleInstance, solution_executed_result: string, synthetic_sk: PrivateKey | undefined, coinname: Bytes): Promise<G2Element> {
     const conds = puzzle.parseConditions(solution_executed_result);
-
     const sigs: G2Element[] = [];
-    const synthetic_pk_hex = Bytes.from(synthetic_sk.get_g1().serialize()).hex();
 
     for (let i = 0; i < conds.length; i++) {
       const cond = conds[i];
@@ -175,6 +168,8 @@ class Transfer {
         const AGG_SIG_ME_ADDITIONAL_DATA = Bytes.from(store.state.network.network.chainId, "hex");
         const msg = Uint8Array.from([...args[1], ...coinname.raw(), ...AGG_SIG_ME_ADDITIONAL_DATA.raw()]);
         const pk_hex = Bytes.from(args[0]).hex();
+        if (!synthetic_sk) throw new Error("synthetic_sk is required. maybe puzzle is not find.");
+        const synthetic_pk_hex = Bytes.from(synthetic_sk.get_g1().serialize()).hex();
         if (pk_hex != synthetic_pk_hex) throw "wrong args due to pk != synthetic_pk";
         const sig = BLS.AugSchemeMPL.sign(synthetic_sk, msg);
         sigs.push(sig);

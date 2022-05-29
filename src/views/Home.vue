@@ -30,8 +30,8 @@ export default class Home extends Vue {
   get mnemonic(): string {
     return store.state.vault.seedMnemonic;
   }
-  get password(): string {
-    return store.state.vault.password;
+  get password(): boolean {
+    return !!store.state.vault.encryptKey;
   }
   get unlocked(): boolean {
     return store.state.vault.unlocked;

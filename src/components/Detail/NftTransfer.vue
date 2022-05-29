@@ -1,64 +1,49 @@
 <template>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">{{ $t("mintCat.ui.title") }}</p>
+      <!-- <p class="modal-card-title">{{ $t("mintNft.ui.title") }}</p> -->
+      <p class="modal-card-title">Transfer</p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
       <div v-show="!bundle">
-        <b-field :label="$t('mintCat.ui.label.address')">
+        <b-field :label="$t('mintNft.ui.label.address')">
           <b-input v-model="address" @input="reset()" expanded :disabled="!addressEditable"></b-input>
           <p class="control">
-            <b-tooltip :label="$t('mintCat.ui.tooltip.qr')">
+            <b-tooltip :label="$t('mintNft.ui.tooltip.qr')">
               <b-button @click="scanQrCode()" :disabled="!addressEditable">
                 <b-icon icon="scan-helper"></b-icon>
               </b-button>
             </b-tooltip>
           </p>
         </b-field>
-        <token-amount-field
-          v-model="amount"
-          :selectedToken="selectedToken"
-          :token-names="tokenNames"
-          :fee="fee"
-          :label="$t('mintCat.ui.label.amount')"
-          :max-amount="maxAmount"
-          :total-amount="totalAmount"
-          @input="updateTokenAmount"
-          @change-token="changeToken"
-          @validity="changeValidity"
-          @set-max="setMax()"
-        >
-        </token-amount-field>
-        <b-field :label="$t('mintCat.ui.label.memo')">
-          <b-input maxlength="100" v-model="memo" type="text" @input="reset()"></b-input>
+        <b-field :label="$t('mintNft.ui.label.uri')">
+          <a v-if="uri" :href="uri" target="_blank">
+            <img :src="uri" class="image-preview" />
+          </a>
         </b-field>
-        <b-field :label="$t('mintCat.ui.label.symbolName')">
-          <b-input maxlength="12" v-model="symbol" type="text" @input="reset()" required></b-input>
-        </b-field>
-        <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
+        <fee-selector v-if="false" v-model="fee" @input="changeFee()"></fee-selector>
       </div>
       <template v-if="bundle">
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($t('mintCat.ui.summary.notification'))"></span>
+          <span v-html="$sanitize($t('mintNft.ui.summary.notification'))"></span>
         </b-notification>
         <send-summary
-          :amount="numericAmount"
-          :unit="symbol.toUpperCase()"
+          :nftUri="uri"
+          :nftHash="hash"
           :fee="feeBigInt"
           :address="address"
-          :asset-id="assetId"
-          :leadingText="$t('mintCat.ui.summary.label.leadingText')"
+          :leadingText="$t('mintNft.ui.summary.label.leadingText')"
           :total="total"
         ></send-summary>
-        <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
+        <bundle-summary :account="account" :bundle="bundle" :ignoreError="true"></bundle-summary>
       </template>
     </section>
     <footer class="modal-card-foot is-justify-content-space-between">
       <div>
-        <b-button :label="$t('mintCat.ui.button.cancel')" @click="cancel()"></b-button>
+        <b-button :label="$t('mintNft.ui.button.cancel')" @click="cancel()"></b-button>
         <b-button
-          :label="$t('mintCat.ui.button.sign')"
+          :label="$t('mintNft.ui.button.sign')"
           v-if="!bundle"
           type="is-primary"
           @click="sign()"
@@ -67,7 +52,7 @@
       </div>
       <div>
         <b-button
-          :label="$t('mintCat.ui.button.submit')"
+          :label="$t('mintNft.ui.button.submit')"
           v-if="bundle"
           type="is-primary"
           class="is-pulled-right"
@@ -82,10 +67,10 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
-import { AccountEntity, CustomCat, TokenInfo } from "@/store/modules/account";
+import { AccountEntity, TokenInfo } from "@/store/modules/account";
 import KeyBox from "@/components/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { TokenPuzzleDetail } from "@/services/crypto/receive";
+import { NftDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
 import store from "@/store";
 import { SpendBundle } from "@/models/wallet";
 import bigDecimal from "js-big-decimal";
@@ -97,9 +82,9 @@ import { debugBundle, submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/FeeSelector.vue";
 import BundleSummary from "../BundleSummary.vue";
 import SendSummary from "../SendSummary.vue";
-import { generateMintCatBundle } from "@/services/mint/cat";
 import { xchSymbol } from "@/store/modules/network";
 import { getTokenInfo } from "@/services/coin/cat";
+import { generateTransferNftBundle } from "@/services/coin/nft";
 
 @Component({
   components: {
@@ -110,9 +95,10 @@ import { getTokenInfo } from "@/services/coin/cat";
     SendSummary,
   },
 })
-export default class MintCat extends Vue {
+export default class NftTransfer extends Vue {
   @Prop() private account!: AccountEntity;
-  @Prop() private tokenList!: CustomCat[];
+  @Prop() private nft!: NftDetail;
+
   public addressEditable = true;
   public submitting = false;
   public fee = 0;
@@ -123,12 +109,8 @@ export default class MintCat extends Vue {
   public maxAmount = "-1";
   public totalAmount = "-1";
   public maxStatus: "Loading" | "Loaded" = "Loading";
-  public selectMax = false;
-  public amount = "";
-  public symbol = "NEWTOKEN";
   public selectedToken = xchSymbol();
   public validity = false;
-  public assetId = "";
 
   public requests: TokenPuzzleDetail[] = [];
 
@@ -142,15 +124,6 @@ export default class MintCat extends Vue {
     return;
   }
 
-  get isLegalSymbol(): boolean {
-    for (let t of this.tokenList) {
-      if (t.name.toUpperCase() === this.symbol.toUpperCase()) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   get decimal(): number {
     return this.selectedToken == xchSymbol() ? 12 : 3;
   }
@@ -159,13 +132,8 @@ export default class MintCat extends Vue {
     return [xchSymbol()];
   }
 
-  get bundleJson(): string {
-    return JSON.stringify(this.bundle, null, 4);
-  }
-
-  get numericAmount(): bigint {
-    const decimal = 12;
-    return BigInt(bigDecimal.multiply(this.amount, Math.pow(10, decimal)));
+  get symbol(): string {
+    return xchSymbol();
   }
 
   get feeBigInt(): bigint {
@@ -173,11 +141,7 @@ export default class MintCat extends Vue {
   }
 
   get total(): bigint {
-    return this.feeBigInt + this.numericAmount;
-  }
-
-  get network(): string {
-    return store.state.network.networkId;
+    return this.feeBigInt + 1n;
   }
 
   get debugMode(): boolean {
@@ -200,20 +164,12 @@ export default class MintCat extends Vue {
     return getTokenInfo(this.account);
   }
 
-  setMax(excludingFee = false): void {
-    this.reset();
-    excludingFee = this.selectedToken != xchSymbol() ? true : excludingFee;
-    const newAmount = excludingFee
-      ? this.maxAmount
-      : bigDecimal.subtract(this.maxAmount, bigDecimal.divide(this.fee, Math.pow(10, this.decimal), this.decimal));
-    this.amount = newAmount;
-    this.selectMax = true;
+  get hash(): string | undefined {
+    return this.nft?.metadata.hash;
   }
 
-  updateTokenAmount(value: string): void {
-    this.amount = value;
-    this.reset();
-    this.selectMax = false;
+  get uri(): string | undefined {
+    return this.nft?.metadata.uri;
   }
 
   changeToken(token: string): void {
@@ -234,8 +190,6 @@ export default class MintCat extends Vue {
     this.bundle = null;
     this.maxAmount = "-1";
     this.totalAmount = "-1";
-    this.amount = "0";
-    this.selectMax = false;
     this.maxStatus = "Loading";
 
     if (!this.requests || this.requests.length == 0) {
@@ -281,39 +235,25 @@ export default class MintCat extends Vue {
         return;
       }
 
-      if (!this.isLegalSymbol) {
-        this.submitting = false;
-        Notification.open({
-          message: this.$tc("mintCat.ui.messages.tokenNameUnavailable"),
-          type: "is-danger",
-        });
-        return;
-      }
-
-      const decimal = this.selectedToken == xchSymbol() ? 12 : 3;
-      const amount = BigInt(bigDecimal.multiply(this.amount, Math.pow(10, decimal)));
-
       if (this.availcoins == null) {
         this.submitting = false;
         return;
       }
 
-      const { spendBundle, assetId } = await generateMintCatBundle(
+      const  spendBundle  = await generateTransferNftBundle(
         this.address,
         this.account.firstAddress,
-        amount,
         BigInt(this.fee),
-        this.memo,
+        this.nft.coin,
+        this.nft.analysis,
         this.availcoins,
-        this.account.key.privateKey,
-        this.requests
+        this.requests,
       );
 
       this.bundle = spendBundle;
-      this.assetId = assetId;
     } catch (error) {
       Notification.open({
-        message: this.$tc("mintCat.ui.messages.failedToSign") + error,
+        message: this.$tc("mintNft.ui.messages.failedToSign") + error,
         type: "is-danger",
         autoClose: false,
       });
@@ -325,13 +265,8 @@ export default class MintCat extends Vue {
 
   async submit(): Promise<void> {
     if (!this.bundle) return;
-    submitBundle(this.bundle, (_) => (this.submitting = _), this.success);
-  }
+    submitBundle(this.bundle, (_) => (this.submitting = _), this.close);
 
-  async success(): Promise<void> {
-    this.close();
-    this.account.allCats.push({ name: this.symbol.toUpperCase(), id: this.assetId, network: this.network });
-    this.account.addressGenerated = 0;
     await store.dispatch("persistent");
     await store.dispatch("refreshBalance");
   }
@@ -359,9 +294,15 @@ export default class MintCat extends Vue {
 
   changeFee(): void {
     this.reset();
-    if (this.selectMax) this.setMax();
   }
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+img.image-preview {
+  width: 100%;
+  max-height: 40vh;
+  object-fit: cover;
+  border: 1px solid;
+}
+</style>

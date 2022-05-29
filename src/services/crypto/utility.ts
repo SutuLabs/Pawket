@@ -1,5 +1,7 @@
 import store from "@/store";
 import { PrivateKey, ModuleInstance } from "@chiamine/bls-signatures";
+import { prefix0x, unprefix0x } from "../coin/condition";
+import { Bytes } from "clvm";
 
 type deriveCallback = (path: number[]) => PrivateKey;
 
@@ -11,7 +13,8 @@ class Utility {
     }).join("");
   }
 
-  fromHexString(hexString: string): Uint8Array {
+  fromHexString(hexString: string | undefined): Uint8Array {
+    hexString = unprefix0x(hexString);
     if (!hexString) return new Uint8Array();
     return new Uint8Array(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -53,6 +56,22 @@ class Utility {
   public async hash(data: string): Promise<string> {
     return this.toHexString(await this.purehash(data));
   }
+
+  public async strongHash(data: string, salt: string, iteration = 1024): Promise<string> {
+    // const start = performance.now();
+    const enc = new TextEncoder();
+    let d = Uint8Array.from([...enc.encode(data), ...enc.encode(salt)]).buffer;
+    for (let i = 0; i < iteration; i++) {
+      d = await crypto.subtle.digest("SHA-256", d);
+    }
+    // const end = performance.now();
+    // console.warn(`elapsed ${end - start}ms for ${iteration} iterations.`);
+    return this.toHexString(new Uint8Array(d));
+  }
 }
 
 export default new Utility();
+
+export function bytesToHex0x(bytes: Bytes): string {
+  return prefix0x(bytes.hex());
+}

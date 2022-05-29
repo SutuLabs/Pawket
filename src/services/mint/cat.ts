@@ -138,7 +138,7 @@ async function constructExternalBundle(
   return bundle;
 }
 
-async function combineSpendBundlePure(
+export async function combineSpendBundlePure(
   ...spendbundles: SpendBundle[]
 ): Promise<SpendBundle> {
   if (!store.state.app.bls) throw new Error("bls not initialized");

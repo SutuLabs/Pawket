@@ -1,16 +1,11 @@
-import { CoinRecord, GetRecordsResponse } from "@/models/wallet";
+import { CoinRecord, convertToOriginCoin, GetRecordsResponse, OriginCoin } from "@/models/wallet";
 import store from "@/store";
 import puzzle, { PuzzleAddress } from "./puzzle";
 import { PuzzleDetail } from "./puzzle";
 import utility from "./utility";
 import { AccountTokenAddress, AccountTokens, CustomCat } from "@/store/modules/account";
 import { rpcUrl, xchSymbol } from "@/store/modules/network";
-import { prefix0x, unprefix0x } from "../coin/condition";
-import debug from "../api/debug";
-import { internalUncurry } from "../offer/summary";
-import { modsdict } from "../coin/mods";
-import { assemble } from 'clvm_tools/clvm_tools/binutils';
-import { Bytes } from "clvm";
+import { analyzeNftCoin, NftCoinAnalysisResult } from "../coin/nft";
 
 export interface TokenPuzzleDetail {
   symbol: string;
@@ -28,7 +23,8 @@ export interface NftDetail {
     hash: string;
   }
   hintPuzzle: string;
-  realPuzzle: string;
+  coin: OriginCoin;
+  analysis: NftCoinAnalysisResult;
 }
 
 class Receive {
@@ -71,13 +67,13 @@ class Receive {
     return json;
   }
 
-  getAssetsDict(requests: TokenPuzzleAddress[]): { [key: string]: string } {
-    const dictAssets: { [key: string]: string } = {};
+  getAssetsDict(requests: TokenPuzzleAddress[]): { [key: string]: { symbol: string, puzzle: PuzzleAddress } } {
+    const dictAssets: { [key: string]: { symbol: string, puzzle: PuzzleAddress } } = {};
     for (let i = 0; i < requests.length; i++) {
       const t = requests[i];
       for (let j = 0; j < t.puzzles.length; j++) {
         const p = t.puzzles[j];
-        dictAssets[p.hash] = t.symbol
+        dictAssets[p.hash] = { symbol: t.symbol, puzzle: p };
       }
     }
     return dictAssets;
@@ -109,11 +105,12 @@ class Receive {
     for (let i = 0; i < tokens.length; i++) {
       const symbol = tokens[i].symbol;
       tokenBalances[symbol] = {
-        amount: records.coins.filter(_ => dictAssets[_.puzzleHash] == symbol).reduce((pv, cur) => pv + BigInt(cur.balance), 0n),
+        amount: records.coins.filter(_ => dictAssets[_.puzzleHash].symbol == symbol).reduce((pv, cur) => pv + BigInt(cur.balance), 0n),
         addresses: tokens[i].puzzles
           .map<AccountTokenAddress>(_ => ({
             address: _.address,
-            coins: (records.coins.find(c => prefix0x(_.hash) == c.puzzleHash) || { records: [] }).records,
+            type: dictAssets[_.hash].puzzle.type,
+            coins: (records.coins.find(c => _.hash == c.puzzleHash) || { records: [] }).records,
           })),
       };
     }
@@ -134,34 +131,14 @@ class Receive {
           continue;
         }
 
-        const scoin = await debug.getCoinSolution(coinRecord.coin.parentCoinInfo);
-        const puz = await puzzle.disassemblePuzzle(scoin.puzzle_reveal);
-        const { module, args } = await internalUncurry(puz);
-
-        if (modsdict[module] == "singleton_top_layer_v1_1" && args.length == 2) {
-          const { module: smodule, args: sargs } = await internalUncurry(args[1]);
-          if (modsdict[smodule] == "nft_state_layer" && sargs.length == 4) {
-            const rawmeta = sargs[1];
-            const metaprog = assemble(rawmeta);
-            const metalist: string[][] = (metaprog.as_javascript() as Bytes[][])
-              .map(_ => Array.from(_))
-              .map(_ => _.map(it => it.hex()));
-            const hex2asc = function (hex: string | undefined): string | undefined {
-              if (!hex) return hex;
-              return Buffer.from(hex, "hex").toString();
-            }
-            const uri = hex2asc(metalist.find(_ => _[0] == "75")?.[1]);// 75_hex = 117_dec for u
-            const hash = metalist.find(_ => _[0] == "68")?.[1];// 68_hex = 104_dec for h
-            if (!uri || !hash) continue;
-            nftList.push({
-              metadata: {
-                uri,
-                hash,
-              },
-              hintPuzzle: coinRecords.puzzleHash,
-              realPuzzle: unprefix0x(coinRecord.coin.puzzleHash),
-            })
-          }
+        const result = await analyzeNftCoin(coinRecord.coin.parentCoinInfo, coinRecords.puzzleHash);
+        if (result) {
+          nftList.push({
+            metadata: result.metadata,
+            hintPuzzle: coinRecords.puzzleHash,
+            coin: convertToOriginCoin(coinRecord.coin),
+            analysis: result,
+          });
         }
       }
     }

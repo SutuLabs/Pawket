@@ -107,6 +107,7 @@ import { AccountEntity } from "@/store/modules/account";
 import KeyBox from "@/components/KeyBox.vue";
 import QrcodeVue from "qrcode.vue";
 import utility from "@/services/crypto/utility";
+import { isPasswordCorrect } from "@/store/modules/vault";
 
 @Component({
   components: {
@@ -160,8 +161,7 @@ export default class AccountExport extends Vue {
       cancelText: this.$tc("accountExport.ui.button.cancel"),
       confirmText: this.$tc("accountExport.ui.button.confirm"),
       onConfirm: async (password, { close }) => {
-        const pswhash = await utility.hash(password);
-        if (pswhash != store.state.vault.passwordHash) {
+        if (!await isPasswordCorrect(password)) {
           this.$buefy.toast.open({
             message: this.$tc("accountExport.message.passwordNotCorrect"),
             type: "is-danger",

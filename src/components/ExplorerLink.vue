@@ -11,7 +11,7 @@
             <b-menu-list :label="$t('explorerLink.ui.label.address')">
               <b-menu-item
                 v-for="addr in token.addresses"
-                icon="map-marker"
+                :icon="!addr.type ? 'map-marker-outline' : addr.type == 'Observed' ? 'eye-check-outline' : 'security'"
                 :key="addr.address"
                 :active="address == addr.address"
                 @click="address = addr.address"

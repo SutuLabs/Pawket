@@ -51,7 +51,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import { DialogProgrammatic as Dialog } from "buefy";
 import store from "@/store/index";
-import utility from "@/services/crypto/utility";
+import { isPasswordCorrect } from "@/store/modules/vault";
 
 @Component
 export default class ChangePassword extends Vue {
@@ -85,8 +85,7 @@ export default class ChangePassword extends Vue {
     this.isProcessing = true;
     this.isMatch = true;
 
-    const pswhash = await utility.hash(this.oldPwd);
-    if (pswhash != store.state.vault.passwordHash) {
+    if (!await isPasswordCorrect(this.oldPwd)) {
       this.isCorrect = false;
       this.isProcessing = false;
       return;

@@ -48,3 +48,11 @@ export interface SpendBundle {
     aggregated_signature: string;
     coin_spends: CoinSpend[];
 }
+
+export function convertToOriginCoin(coin: CoinItem): OriginCoin {
+    return {
+        amount: BigInt(coin.amount),
+        parent_coin_info: coin.parentCoinInfo,
+        puzzle_hash: coin.puzzleHash,
+    };
+}
