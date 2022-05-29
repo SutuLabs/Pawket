@@ -4,7 +4,7 @@ import { xchPrefix } from "@/store/modules/network";
 import { testMintCat } from "./catMintTest";
 import { testCatTransfer, testCatTransfer2 } from "./catTransferTest";
 import { testCoinName, testCryptography, testPuzzleAssemble } from "./cryptoTest";
-import { testNftMint } from "./nftTest";
+import { testNftMint, testNftTransfer } from "./nftTest";
 import { testMakeOffer2, testMakeOffer1, testOfferEncoding, testTakeOfferXchForCat, testTakeOfferCatForXch } from "./offerTest";
 import { testStandardTransfer } from "./stdTransferTest";
 
@@ -41,6 +41,7 @@ class TestRunner {
           await this.runTest(testMintCat);
         } else {
           await this.runTest(testNftMint);
+          await this.runTest(testNftTransfer);
 
           console.log("self-test partially ignored");
         }
