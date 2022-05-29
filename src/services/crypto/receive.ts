@@ -68,13 +68,13 @@ class Receive {
     return json;
   }
 
-  getAssetsDict(requests: TokenPuzzleAddress[]): { [key: string]: string } {
-    const dictAssets: { [key: string]: string } = {};
+  getAssetsDict(requests: TokenPuzzleAddress[]): { [key: string]: { symbol: string, puzzle: PuzzleAddress } } {
+    const dictAssets: { [key: string]: { symbol: string, puzzle: PuzzleAddress} } = {};
     for (let i = 0; i < requests.length; i++) {
       const t = requests[i];
       for (let j = 0; j < t.puzzles.length; j++) {
         const p = t.puzzles[j];
-        dictAssets[p.hash] = t.symbol
+        dictAssets[p.hash] = { symbol: t.symbol, puzzle: p };
       }
     }
     return dictAssets;
@@ -106,10 +106,11 @@ class Receive {
     for (let i = 0; i < tokens.length; i++) {
       const symbol = tokens[i].symbol;
       tokenBalances[symbol] = {
-        amount: records.coins.filter(_ => dictAssets[_.puzzleHash] == symbol).reduce((pv, cur) => pv + BigInt(cur.balance), 0n),
+        amount: records.coins.filter(_ => dictAssets[_.puzzleHash].symbol == symbol).reduce((pv, cur) => pv + BigInt(cur.balance), 0n),
         addresses: tokens[i].puzzles
           .map<AccountTokenAddress>(_ => ({
             address: _.address,
+            type: dictAssets[_.hash].puzzle.type,
             coins: (records.coins.find(c => prefix0x(_.hash) == c.puzzleHash) || { records: [] }).records,
           })),
       };
@@ -134,7 +135,7 @@ class Receive {
         const result = await analyzeNftCoin(coinRecord.coin.parentCoinInfo, coinRecords.puzzleHash);
         if (result) {
           nftList.push({
-            metadata:result.metadata,
+            metadata: result.metadata,
             hintPuzzle: coinRecords.puzzleHash,
             coin: convertToOriginCoin(coinRecord.coin),
             analysis: result,

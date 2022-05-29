@@ -3,6 +3,7 @@ import account, { AccountKey } from "@/services/crypto/account";
 import { CoinRecord } from "@/models/wallet";
 import Vue from 'vue';
 import receive, { NftDetail, TokenPuzzleDetail } from '@/services/crypto/receive';
+import { AddressType } from '@/services/crypto/puzzle';
 
 export function getAccountCats(account: AccountEntity): CustomCat[] {
   return account.allCats?.filter(c => c.network == store.state.network.networkId) ?? [];
@@ -12,6 +13,7 @@ type AccountType = "Serial" | "Password" | "Legacy";
 
 export interface AccountTokenAddress {
   address: string;
+  type?: AddressType;
   coins: CoinRecord[];
 }
 

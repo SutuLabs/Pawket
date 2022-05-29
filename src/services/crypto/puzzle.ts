@@ -17,16 +17,17 @@ export interface ExecuteResult {
   conditions: ExecuteResultCondition[];
 }
 
-export interface PuzzleDetail {
+export type AddressType = "Observed" | "Hardened";
+
+export interface PuzzleDetail extends PuzzleAddress {
   privateKey: PrivateKey;
   puzzle: string;
-  hash: string;
-  address: string;
 }
 
 export interface PuzzleAddress {
   hash: string;
   address: string;
+  type?: AddressType;
 }
 
 export type ConditionArgs = (Uint8Array | undefined | ConditionArgs[]);
@@ -172,20 +173,20 @@ class PuzzleMaker {
     const derive = await utility.derive(privateKey, true);
     const deriveUnhardened = await utility.derive(privateKey, false);
     const details: PuzzleDetail[] = [];
-    const add = async (privkey: PrivateKey) => {
+    const add = async (privkey: PrivateKey, hardened: boolean) => {
       const pubkey = utility.toHexString(privkey.get_g1().serialize());
       const synpubkey = await this.getSyntheticKey(pubkey);
       const puzzle = await getPuzzle(synpubkey);
       const hash = await this.getPuzzleHashFromPuzzle(puzzle);
       const address = this.getAddressFromPuzzleHash(hash, prefix);
-      details.push({ privateKey: privkey, hash, address, puzzle });
+      details.push({ privateKey: privkey, hash, address, puzzle, type: hardened ? "Hardened" : "Observed" });
     }
     for (let i = startIndex; i < endIndex; i++) {
       const privkey = derive([12381, 8444, 2, i]);
-      await add(privkey);
+      await add(privkey, true);
       if (includeUnhardened) {
         const privkey = deriveUnhardened([12381, 8444, 2, i]);
-        await add(privkey);
+        await add(privkey, false);
       }
     }
 
