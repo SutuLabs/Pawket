@@ -340,7 +340,6 @@
         "send": "Send"
       },
       "label": {
-        "address": "Address",
         "amount": "Amount",
         "memo": "Memo",
         "fee": "Fee"
@@ -367,14 +366,11 @@
       },
       "tooltip": {
         "singleCoinExplanation": "Currently only support one coin mode, mix coin send is under development.",
-        "qr": "Scan QR",
-        "addressBook": "Open Address Book",
         "offlineScan": "You are in offline mode, communicate with proxy via QR code to send transaction."
       },
       "span": {
         "loading": "Loading",
-        "maxLeadingText": "Max:",
-        "newAddress": "New Address Found, Click to Add to Address Book."
+        "maxLeadingText": "Max:"
       },
       "text": {
         "offlineOnlySupportXch": "Offline send only support XCH now."
@@ -772,13 +768,9 @@
     "ui": {
       "title": "Issue CAT",
       "label": {
-        "address": "Address",
         "amount": "Amount",
         "memo": "Memo",
         "symbolName": "CAT Name(Modifiable)"
-      },
-      "tooltip": {
-        "qr": "Scan QR"
       },
       "summary": {
         "notification": "Are you sure to issue the CAT?<br/>Please review your transaction.",
@@ -867,13 +859,9 @@
     "ui": {
       "title": "Mint NFT",
       "label": {
-        "address": "Address",
         "memo": "Memo",
         "uri": "URI",
         "hash": "Hash"
-      },
-      "tooltip": {
-        "qr": "Scan QR"
       },
       "summary": {
         "notification": "Are you sure to mint the NFT?<br/>Please review your transaction.",
@@ -888,6 +876,20 @@
       },
       "messages": {
         "failedToSign": "Failed to sign: "
+      }
+    }
+  },
+  "addressField": {
+    "ui": {
+      "label": {
+        "address": "Address"
+      },
+      "tooltip": {
+        "qr": "Scan QR",
+        "addressBook": "Open Address Book"
+      },
+      "span": {
+        "newAddress": "New Address Found, Click to Add to Address Book."
       }
     }
   }

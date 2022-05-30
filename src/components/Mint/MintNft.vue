@@ -6,16 +6,7 @@
     </header>
     <section class="modal-card-body">
       <div v-show="!bundle">
-        <b-field :label="$t('mintNft.ui.label.address')">
-          <b-input v-model="address" @input="reset()" expanded :disabled="!addressEditable"></b-input>
-          <p class="control">
-            <b-tooltip :label="$t('mintNft.ui.tooltip.qr')">
-              <b-button @click="scanQrCode()" :disabled="!addressEditable">
-                <b-icon icon="scan-helper"></b-icon>
-              </b-button>
-            </b-tooltip>
-          </p>
-        </b-field>
+        <address-field :inputAddress="address" :addressEditable="addressEditable" @update="updateAddress"></address-field>
         <b-field v-if="false" :label="$t('mintNft.ui.label.memo')">
           <b-input maxlength="100" v-model="memo" type="text" @input="reset()" disabled></b-input>
         </b-field>
@@ -93,6 +84,7 @@ import SendSummary from "../SendSummary.vue";
 import { xchSymbol } from "@/store/modules/network";
 import { getTokenInfo } from "@/services/coin/cat";
 import { generateMintNftBundle } from "@/services/coin/nft";
+import AddressField from "../AddressField.vue";
 
 @Component({
   components: {
@@ -101,6 +93,7 @@ import { generateMintNftBundle } from "@/services/coin/nft";
     TokenAmountField,
     BundleSummary,
     SendSummary,
+    AddressField,
   },
 })
 export default class MintNft extends Vue {
@@ -160,6 +153,11 @@ export default class MintNft extends Vue {
 
   reset(): void {
     this.bundle = null;
+  }
+
+  updateAddress(value: string): void {
+    this.address = value;
+    this.reset();
   }
 
   cancel(): void {
