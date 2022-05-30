@@ -91,7 +91,7 @@ class Receive {
     const activities = records.coins.reduce(
       (acc, puzzle) => acc.concat(puzzle.records
         .reduce<CoinRecord[]>((recacc, rec) => recacc.concat(rec), [])
-        .map(rec => Object.assign({}, rec, { symbol: dictAssets[puzzle.puzzleHash] }))),
+        .map(rec => Object.assign({}, rec, { symbol: dictAssets[puzzle.puzzleHash].symbol }))),
       ([] as CoinRecord[]))
       .sort((a, b) => b.timestamp - a.timestamp);
     return activities;
