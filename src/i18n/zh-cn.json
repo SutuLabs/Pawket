@@ -340,7 +340,6 @@
         "send": "发送"
       },
       "label": {
-        "address": "地址",
         "amount": "金额",
         "memo": "备注",
         "fee": "交易费"
@@ -367,14 +366,11 @@
       },
       "tooltip": {
         "singleCoinExplanation": "当前仅支持单币模式",
-        "qr": "扫描二维码",
-        "addressBook": "打开地址簿",
         "offlineScan": "你现在处于离线模式，可以通过二维码与在线设备沟通来发起交易。"
       },
       "span": {
         "loading": "载入中",
-        "maxLeadingText": "最大:",
-        "newAddress": "检测到新地址，点击添加至地址薄。"
+        "maxLeadingText": "最大:"
       },
       "text": {
         "offlineOnlySupportXch": "目前离线发送币种仅支持 XCH"
@@ -772,13 +768,9 @@
     "ui": {
       "title": "发行 CAT",
       "label": {
-        "address": "地址",
         "amount": "金额",
         "memo": "备注",
         "symbolName": "CAT 名称（可更改）"
-      },
-      "tooltip": {
-        "qr": "扫描二维码"
       },
       "summary": {
         "notification": "确定要发行 CAT 吗？<br/>请务必再次检查你的交易内容。",
@@ -867,13 +859,9 @@
     "ui": {
       "title": "发行 NFT",
       "label": {
-        "address": "地址",
         "memo": "备注",
         "uri": "媒体文件地址",
         "hash": "哈希值"
-      },
-      "tooltip": {
-        "qr": "扫描二维码"
       },
       "summary": {
         "notification": "确定要发行 NFT 吗？<br/>请务必再次检查你的交易内容。",
@@ -888,6 +876,20 @@
       },
       "messages": {
         "failedToSign": "签名失败: "
+      }
+    }
+  },
+  "addressField": {
+    "ui": {
+      "label": {
+        "address": "地址"
+      },
+      "tooltip": {
+        "qr": "扫描二维码",
+        "addressBook": "打开地址簿"
+      },
+      "span": {
+        "newAddress": "检测到新地址，点击添加至地址薄。"
       }
     }
   }

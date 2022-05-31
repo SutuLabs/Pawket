@@ -15,38 +15,12 @@
         >
           {{ notificationMessage }}
         </b-notification>
-        <b-field>
-          <template #label>
-            {{ $t("send.ui.label.address") }}
-            <b-button v-if="isNewAddress" tag="a" type="is-primary is-light" size="is-small" @click="addAddress()">
-              <span>
-                {{ $t("send.ui.span.newAddress") }}
-              </span>
-            </b-button>
-            <span v-if="contactName" class="tag is-primary is-light">
-              {{ contactName }}
-            </span>
-          </template>
-          <b-input
-            v-model="address"
-            @input="reset()"
-            expanded
-            :disabled="!addressEditable"
-            :custom-class="validAddress ? '' : 'is-danger'"
-          ></b-input>
-          <p class="control">
-            <b-tooltip :label="$t('send.ui.tooltip.addressBook')">
-              <b-button @click="openAddressBook()" :disabled="!addressEditable">
-                <b-icon icon="account"></b-icon>
-              </b-button>
-            </b-tooltip>
-            <b-tooltip :label="$t('send.ui.tooltip.qr')">
-              <b-button @click="scanQrCode()" :disabled="!addressEditable">
-                <b-icon icon="scan-helper"></b-icon>
-              </b-button>
-            </b-tooltip>
-          </p>
-        </b-field>
+        <address-field
+          :inputAddress="address"
+          :validAddress="validAddress"
+          :addressEditable="addressEditable"
+          @update="updateAddress"
+        ></address-field>
         <token-amount-field
           v-model="amount"
           :rate="rate"
@@ -144,6 +118,7 @@ import SendSummary from "./SendSummary.vue";
 import AddressBook, { Contact } from "./AddressBook.vue";
 import { xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getCatNames, getTokenInfo } from "@/services/coin/cat";
+import AddressField from "./AddressField.vue";
 
 @Component({
   components: {
@@ -152,6 +127,7 @@ import { getCatNames, getTokenInfo } from "@/services/coin/cat";
     TokenAmountField,
     BundleSummary,
     SendSummary,
+    AddressField,
   },
 })
 export default class Send extends Vue {
@@ -292,6 +268,11 @@ export default class Send extends Vue {
     this.amount = value;
     this.reset();
     this.selectMax = false;
+  }
+
+  updateAddress(value: string): void {
+    this.address = value;
+    this.reset();
   }
 
   changeToken(token: string): void {

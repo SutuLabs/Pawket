@@ -6,16 +6,7 @@
     </header>
     <section class="modal-card-body">
       <div v-show="!bundle">
-        <b-field :label="$t('mintCat.ui.label.address')">
-          <b-input v-model="address" @input="reset()" expanded :disabled="!addressEditable"></b-input>
-          <p class="control">
-            <b-tooltip :label="$t('mintCat.ui.tooltip.qr')">
-              <b-button @click="scanQrCode()" :disabled="!addressEditable">
-                <b-icon icon="scan-helper"></b-icon>
-              </b-button>
-            </b-tooltip>
-          </p>
-        </b-field>
+        <address-field :inputAddress="address" :addressEditable="addressEditable" @update="updateAddress"></address-field>
         <token-amount-field
           v-model="amount"
           :selectedToken="selectedToken"
@@ -100,6 +91,7 @@ import SendSummary from "../SendSummary.vue";
 import { generateMintCatBundle } from "@/services/mint/cat";
 import { xchSymbol } from "@/store/modules/network";
 import { getTokenInfo } from "@/services/coin/cat";
+import AddressField from "../AddressField.vue";
 
 @Component({
   components: {
@@ -108,6 +100,7 @@ import { getTokenInfo } from "@/services/coin/cat";
     TokenAmountField,
     BundleSummary,
     SendSummary,
+    AddressField,
   },
 })
 export default class MintCat extends Vue {
@@ -129,7 +122,6 @@ export default class MintCat extends Vue {
   public selectedToken = xchSymbol();
   public validity = false;
   public assetId = "";
-
   public requests: TokenPuzzleDetail[] = [];
 
   mounted(): void {
@@ -186,6 +178,11 @@ export default class MintCat extends Vue {
 
   reset(): void {
     this.bundle = null;
+  }
+
+  updateAddress(value: string): void {
+    this.address = value;
+    this.reset();
   }
 
   cancel(): void {

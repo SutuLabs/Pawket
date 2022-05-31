@@ -7,16 +7,7 @@
     </header>
     <section class="modal-card-body">
       <div v-show="!bundle">
-        <b-field :label="$t('mintNft.ui.label.address')">
-          <b-input v-model="address" @input="reset()" expanded :disabled="!addressEditable"></b-input>
-          <p class="control">
-            <b-tooltip :label="$t('mintNft.ui.tooltip.qr')">
-              <b-button @click="scanQrCode()" :disabled="!addressEditable">
-                <b-icon icon="scan-helper"></b-icon>
-              </b-button>
-            </b-tooltip>
-          </p>
-        </b-field>
+        <address-field :inputAddress="address" :addressEditable="addressEditable" @update="updateAddress"></address-field>
         <b-field :label="$t('mintNft.ui.label.uri')">
           <a v-if="uri" :href="uri" target="_blank">
             <img :src="uri" class="image-preview" />
@@ -116,7 +107,6 @@ export default class NftTransfer extends Vue {
 
   mounted(): void {
     this.loadCoins();
-    this.address = this.account.firstAddress ?? "";
   }
 
   @Emit("close")
@@ -150,6 +140,11 @@ export default class NftTransfer extends Vue {
 
   reset(): void {
     this.bundle = null;
+  }
+
+  updateAddress(value: string): void {
+    this.address = value;
+    this.reset();
   }
 
   cancel(): void {
@@ -240,14 +235,14 @@ export default class NftTransfer extends Vue {
         return;
       }
 
-      const  spendBundle  = await generateTransferNftBundle(
+      const spendBundle = await generateTransferNftBundle(
         this.address,
         this.account.firstAddress,
         BigInt(this.fee),
         this.nft.coin,
         this.nft.analysis,
         this.availcoins,
-        this.requests,
+        this.requests
       );
 
       this.bundle = spendBundle;
