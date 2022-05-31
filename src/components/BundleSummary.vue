@@ -4,7 +4,7 @@
       <b-notification v-if="!ignoreError" type="is-danger" has-icon icon="exclamation-thick" :closable="false">
         {{ errorText }}
       </b-notification>
-      <bundle-text v-model="bundleText" @debugBundle="debugBundle"></bundle-text>
+      <bundle-text v-model="bundleText" @debugBundle="debugBundle" :bundleObject="bundleObject"></bundle-text>
     </template>
     <template v-else>
       <b-field>
