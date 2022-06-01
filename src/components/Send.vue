@@ -19,7 +19,8 @@
           :inputAddress="address"
           :validAddress="validAddress"
           :addressEditable="addressEditable"
-          @update="updateAddress"
+          @updateAddress="updateAddress"
+          @updateContactName="updateContactName"
         ></address-field>
         <token-amount-field
           v-model="amount"
@@ -147,6 +148,7 @@ export default class Send extends Vue {
   public validAddress = true;
   public fee = 0;
   public address = "";
+  public contactName = "";
   public memo = "";
   public bundle: SpendBundle | null = null;
   public availcoins: SymbolCoins | null = null;
@@ -181,24 +183,6 @@ export default class Send extends Vue {
 
   get network(): string {
     return store.state.network.networkId;
-  }
-
-  get isNewAddress(): boolean {
-    if (this.address.length < 32) {
-      return false;
-    }
-    for (let c of this.contacts) {
-      if (c.address === this.address) return false;
-    }
-    return true;
-  }
-
-  get contactName(): string {
-    for (let c of this.contacts) {
-      if (c.address === this.address) return c.name;
-    }
-
-    return "";
   }
 
   updateContacts(): void {
@@ -273,6 +257,10 @@ export default class Send extends Vue {
   updateAddress(value: string): void {
     this.address = value;
     this.reset();
+  }
+
+  updateContactName(value: string): void {
+    this.contactName = value;
   }
 
   changeToken(token: string): void {

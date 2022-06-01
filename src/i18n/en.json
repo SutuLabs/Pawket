@@ -798,7 +798,8 @@
       "button": {
         "cancel": "Cancel",
         "confirm": "Confirm",
-        "addContact": "Add Contact"
+        "addContact": "Add Contact",
+        "showInnerAcc": "My accounts"
       },
       "text": {
         "createYourAddressBook": "Create Your Address Book"
