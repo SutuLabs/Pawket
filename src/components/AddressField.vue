@@ -67,18 +67,29 @@ export default class AddressField extends Vue {
   }
 
   get isNewAddress(): boolean {
-    if (this.address.length < 32) {
-      return false;
-    }
-    for (let c of this.contacts) {
-      if (c.address === this.address) return false;
-    }
-    return true;
+    return this.contactName == "";
+  }
+
+  get accountFinger(): number {
+    return store.state.account.accounts[store.state.account.selectedAccount].key.fingerprint;
+  }
+
+  get innerAccs(): Contact[] {
+    const innerAccs: Contact[] = [];
+    console.log(store.state.account.accounts);
+    store.state.account.accounts.forEach((acc) => {
+      if (acc.key.fingerprint !== this.accountFinger) innerAccs.push({ name: acc.name, address: acc.firstAddress ?? "" });
+    });
+    return innerAccs;
   }
 
   get contactName(): string {
     for (let c of this.contacts) {
       if (c.address === this.address) return c.name;
+    }
+
+    for (let ia of this.innerAccs) {
+      if (ia.address === this.address) return ia.name;
     }
 
     return "";

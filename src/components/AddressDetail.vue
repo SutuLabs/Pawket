@@ -21,7 +21,7 @@
         ></span>
       </b-field>
       <div class="has-text-centered">
-        <b-button type="is-primary" @click="edit()">{{ $t("addressDetail.ui.button.edit") }}</b-button>
+        <b-button v-if="isEditable" type="is-primary" @click="edit()">{{ $t("addressDetail.ui.button.edit") }}</b-button>
       </div>
     </section>
     <section class="modal-card-body" v-if="mode == 'Edit'">
@@ -49,6 +49,8 @@ type Mode = "Detail" | "Edit";
 export default class AddressDetail extends Vue {
   @Prop() contact?: Contact;
   @Prop() index?: number;
+  @Prop({default: true}) isEditable?: boolean;
+
   public mode: Mode = "Detail";
   public name = "";
   public address = "";

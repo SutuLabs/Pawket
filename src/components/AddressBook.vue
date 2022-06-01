@@ -33,7 +33,7 @@
             href="javascript:void(0)"
             v-for="(contact, i) of innerAccs"
             :key="i"
-            @click="selected(contact.address)"
+            @click="showDetail(contact, i, false)"
             class="ml-4 mb-2 panel-block columns is-mobile"
           >
             <div class="column is-flex is-11">
@@ -231,7 +231,7 @@ export default class AddressBook extends Vue {
     });
   }
 
-  showDetail(contact: Contact, index: number): void {
+  showDetail(contact: Contact, index: number, editable = true): void {
     if (this.parent === "Send") {
       this.selected(contact.address);
       return;
@@ -242,7 +242,7 @@ export default class AddressBook extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: ["x", "outside"],
-      props: { contact: contact, index: index },
+      props: { contact: contact, index: index, isEditable: editable },
       events: { edit: this.edit },
     });
   }
