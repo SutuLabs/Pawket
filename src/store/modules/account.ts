@@ -31,6 +31,7 @@ export interface PersistentAccount {
   type: AccountType;
   serial?: number;
   addressRetrievalCount: number;
+  cats: CustomCat[];
   allCats: PersistentCustomCat[];
 }
 
@@ -198,6 +199,7 @@ function getAccountEntity(account: AccountKey, name: string, type: AccountType, 
     tokens: {},
     addressRetrievalCount: DEFAULT_ADDRESS_RETRIEVAL_COUNT,
     allCats: [],
+    cats: [],
     nfts: [],
     addressGenerated: 0,
     addressPuzzles: [],
