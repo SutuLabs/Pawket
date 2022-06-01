@@ -16,6 +16,33 @@
             {{ $t("addressBook.ui.button.addContact") }}
           </a>
         </div>
+        <a href="javascript:void(0)" @click="showInnerAcc = !showInnerAcc">
+          <p :class="showInnerAcc ? 'py-2 has-background-primary has-text-white	is-size-5 border-bottom' : 'py-2 has-text-primary is-size-5 border-bottom'">
+            <span class="pl-4">{{ $t("addressBook.ui.button.showInnerAcc") }}</span>
+            <b-icon class="is-pulled-right" :icon="showInnerAcc ? 'menu-up' : 'menu-down'" size="is-medium"></b-icon>
+          </p>
+        </a>
+        <div v-if="showInnerAcc" class="mt-4 border-bottom">
+          <a
+            href="javascript:void(0)"
+            v-for="(contact, i) of innerAccs"
+            :key="i"
+            @click="selected(contact.address)"
+            class="ml-4 panel-block columns is-mobile"
+          >
+            <div class="column is-flex is-11">
+              <div class="mr-2">
+                <b-icon icon="account-circle" size="is-medium" class="has-text-primary"></b-icon>
+              </div>
+              <div>
+                <p class="has-text-grey-dark is-size-6">{{ contact.name | nameOmit }}</p>
+                <p>
+                  <span class="is-size-7 has-text-grey-light word-break">{{ contact.address }}</span>
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
         <a
           href="javascript:void(0)"
           v-for="(contact, i) of contacts"
@@ -77,9 +104,23 @@ export default class AddressBook extends Vue {
   public name = "";
   public address = this.defaultAddress;
   public contacts: Contact[] = [];
+  public showInnerAcc = false;
 
   get network(): string {
     return store.state.network.networkId;
+  }
+
+  get accountFinger(): number {
+    return store.state.account.accounts[store.state.account.selectedAccount].key.fingerprint;
+  }
+
+  get innerAccs(): Contact[] {
+    const innerAccs: Contact[] = [];
+    console.log(store.state.account.accounts);
+    store.state.account.accounts.forEach((acc) => {
+      if (acc.key.fingerprint !== this.accountFinger) innerAccs.push({ name: acc.name, address: acc.firstAddress ?? "" });
+    });
+    return innerAccs;
   }
 
   get isNotEmpty(): boolean {
@@ -184,8 +225,7 @@ export default class AddressBook extends Vue {
 
   showDetail(contact: Contact, index: number): void {
     if (this.parent === "Send") {
-      this.$emit("selected", contact.address);
-      this.$emit("close");
+      this.selected(contact.address);
       return;
     }
     this.$buefy.modal.open({
@@ -197,6 +237,11 @@ export default class AddressBook extends Vue {
       props: { contact: contact, index: index },
       events: { edit: this.edit },
     });
+  }
+
+  selected(address: string): void {
+    this.$emit("selected", address);
+    this.$emit("close");
   }
 
   setName(value: string): void {
@@ -211,5 +256,9 @@ export default class AddressBook extends Vue {
 <style lang="scss">
 .word-break {
   word-break: break-all;
+}
+
+.border-bottom {
+  border-bottom: 1px solid #ededed
 }
 </style>
