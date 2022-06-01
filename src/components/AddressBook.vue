@@ -20,7 +20,7 @@
           <p
             :class="
               showInnerAcc
-                ? 'py-2 has-background-primary has-text-white	is-size-5 border-bottom'
+                ? 'py-2 has-background-primary has-text-white is-size-5 border-bottom'
                 : 'py-2 has-text-primary is-size-5 border-bottom'
             "
           >
@@ -124,7 +124,6 @@ export default class AddressBook extends Vue {
 
   get innerAccs(): Contact[] {
     const innerAccs: Contact[] = [];
-    console.log(store.state.account.accounts);
     store.state.account.accounts.forEach((acc) => {
       if (acc.key.fingerprint !== this.accountFinger) innerAccs.push({ name: acc.name, address: acc.firstAddress ?? "" });
     });

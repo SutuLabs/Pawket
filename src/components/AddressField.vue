@@ -59,7 +59,12 @@ export default class AddressField extends Vue {
 
   @Watch("address")
   onAddressChanged(): void {
-    this.$emit("update", this.address);
+    this.$emit("updateAddress", this.address);
+  }
+
+  @Watch("contactName")
+  onContactNameChanged(): void {
+    this.$emit("updateContactName", this.contactName);
   }
 
   get network(): string {
@@ -77,7 +82,6 @@ export default class AddressField extends Vue {
 
   get innerAccs(): Contact[] {
     const innerAccs: Contact[] = [];
-    console.log(store.state.account.accounts);
     store.state.account.accounts.forEach((acc) => {
       if (acc.key.fingerprint !== this.accountFinger) innerAccs.push({ name: acc.name, address: acc.firstAddress ?? "" });
     });
