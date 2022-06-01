@@ -67,6 +67,7 @@ export default class AddressField extends Vue {
   }
 
   get isNewAddress(): boolean {
+    if (this.address.length < 32) return false;
     return this.contactName == "";
   }
 
