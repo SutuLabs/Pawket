@@ -17,18 +17,24 @@
           </a>
         </div>
         <a href="javascript:void(0)" @click="showInnerAcc = !showInnerAcc">
-          <p :class="showInnerAcc ? 'py-2 has-background-primary has-text-white	is-size-5 border-bottom' : 'py-2 has-text-primary is-size-5 border-bottom'">
+          <p
+            :class="
+              showInnerAcc
+                ? 'py-2 has-background-primary has-text-white	is-size-5 border-bottom'
+                : 'py-2 has-text-primary is-size-5 border-bottom'
+            "
+          >
             <span class="pl-4">{{ $t("addressBook.ui.button.showInnerAcc") }}</span>
             <b-icon class="is-pulled-right" :icon="showInnerAcc ? 'menu-up' : 'menu-down'" size="is-medium"></b-icon>
           </p>
         </a>
-        <div v-if="showInnerAcc" class="mt-4 border-bottom">
+        <div v-if="showInnerAcc" class="my-4 border-bottom">
           <a
             href="javascript:void(0)"
             v-for="(contact, i) of innerAccs"
             :key="i"
             @click="selected(contact.address)"
-            class="ml-4 panel-block columns is-mobile"
+            class="ml-4 mb-2 panel-block columns is-mobile"
           >
             <div class="column is-flex is-11">
               <div class="mr-2">
@@ -43,31 +49,33 @@
             </div>
           </a>
         </div>
-        <a
-          href="javascript:void(0)"
-          v-for="(contact, i) of contacts"
-          v-show="contact.network && contact.network == network"
-          :key="i"
-          @click="showDetail(contact, i)"
-          class="panel-block columns is-mobile"
-        >
-          <div class="column is-flex is-11">
-            <div class="mr-2">
-              <b-icon icon="account-circle" size="is-medium" class="has-text-primary"></b-icon>
+        <div class="mt-4">
+          <a
+            href="javascript:void(0)"
+            v-for="(contact, i) of contacts"
+            v-show="contact.network && contact.network == network"
+            :key="i"
+            @click="showDetail(contact, i)"
+            class="panel-block columns is-mobile"
+          >
+            <div class="column is-flex is-11">
+              <div class="mr-2">
+                <b-icon icon="account-circle" size="is-medium" class="has-text-primary"></b-icon>
+              </div>
+              <div>
+                <p class="has-text-grey-dark is-size-6">{{ contact.name | nameOmit }}</p>
+                <p>
+                  <span class="is-size-7 has-text-grey-light word-break">{{ contact.address }}</span>
+                </p>
+              </div>
             </div>
-            <div>
-              <p class="has-text-grey-dark is-size-6">{{ contact.name | nameOmit }}</p>
-              <p>
-                <span class="is-size-7 has-text-grey-light word-break">{{ contact.address }}</span>
-              </p>
+            <div class="column is-flex is-1">
+              <b-tooltip :label="$t('addressBook.ui.tooltip.remove')">
+                <b-button @click.stop="removeConfirm(i)" type="is-text"><b-icon icon="trash-can-outline"></b-icon></b-button>
+              </b-tooltip>
             </div>
-          </div>
-          <div class="column is-flex is-1">
-            <b-tooltip :label="$t('addressBook.ui.tooltip.remove')">
-              <b-button @click.stop="removeConfirm(i)" type="is-text"><b-icon icon="trash-can-outline"></b-icon></b-button>
-            </b-tooltip>
-          </div>
-        </a>
+          </a>
+        </div>
       </div>
     </section>
     <section v-if="mode == 'Add'" class="modal-card-body">
@@ -259,6 +267,6 @@ export default class AddressBook extends Vue {
 }
 
 .border-bottom {
-  border-bottom: 1px solid #ededed
+  border-bottom: 1px solid #ededed;
 }
 </style>
