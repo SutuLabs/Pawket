@@ -712,7 +712,8 @@
     },
     "messages": {
       "error": {
-        "ADDRESS_NOT_MATCH_NETWORK": "The filled address does not match the current network. Please fill in a valid address."
+        "ADDRESS_NOT_MATCH_NETWORK": "The filled address does not match the current network. Please fill in a valid address.",
+        "COIN_NOT_EXIST": "The {symbol} coin does not exist!"
       }
     }
   },

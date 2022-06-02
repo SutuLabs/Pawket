@@ -712,7 +712,8 @@
     },
     "messages": {
       "error": {
-        "ADDRESS_NOT_MATCH_NETWORK": "所填写地址与当前网络不符，请填写正确的地址。"
+        "ADDRESS_NOT_MATCH_NETWORK": "所填写地址与当前网络不符，请填写正确的地址。",
+        "COIN_NOT_EXIST": "{symbol}不存在!"
       }
     }
   },
