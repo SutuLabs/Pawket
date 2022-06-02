@@ -156,6 +156,15 @@ export default class BatchSend extends Vue {
           return;
         }
         const symbol = line[1];
+        if (this.availcoins[symbol] == undefined) {
+          Notification.open({
+            message: this.$tc("batchSend.messages.error.COIN_NOT_EXIST", 0, { symbol: symbol }),
+            type: "is-danger",
+            duration: 5000,
+          });
+          this.submitting = false;
+          return;
+        }
         const amount = BigInt(line[2]);
         const memo = line[3];
         // there is error in checking this regular expression
