@@ -92,6 +92,7 @@ export default class TotalAmountField extends Vue {
   }
 
   changeToken(token: string): void {
+    this.$emit("input", "0");
     this.$emit("change-token", token);
   }
 
