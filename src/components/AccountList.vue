@@ -42,6 +42,14 @@
           <span class="mx-2">{{ $t("accountList.ui.button.addByPassword") }}</span>
         </b-tooltip>
       </a>
+      <a v-if="debugMode" href="javascript:void(0)" class="panel-block" @click="addByAddress()">
+        <b-tooltip :label="'Add by Address'" multilined size="is-small">
+          <span class="panel-icon">
+            <b-icon icon="plus-thick" class="has-text-grey"></b-icon>
+          </span>
+          <span class="mx-2">Add by Address</span>
+        </b-tooltip>
+      </a>
       <a href="javascript:void(0)" class="panel-block" @click="addByLegacy()">
         <b-tooltip :label="$t('accountList.ui.tooltip.addByLegacy')" multilined size="is-small">
           <span class="panel-icon">
@@ -72,6 +80,7 @@ import AddByPassword from "./AddAccount/AddByPassword.vue";
 import { nameOmit } from "@/filters/nameConversion";
 import AddBySerial from "@/components/AddAccount/AddBySerial.vue";
 import { notifyPrimary } from "@/notification/notification";
+import AddByAddress from "./AddAccount/AddByAddress.vue";
 
 @Component({
   filters: { nameOmit },
@@ -94,6 +103,10 @@ export default class AccountList extends Vue {
 
   get experimentMode(): boolean {
     return store.state.vault.experiment;
+  }
+
+  get debugMode(): boolean {
+    return store.state.app.debug;
   }
 
   @Emit("close")
@@ -166,6 +179,17 @@ export default class AccountList extends Vue {
       trapFocus: true,
       canCancel: ["x"],
       props: { title: this.$t("accountList.ui.modal.addByMnemonic"), mnemonicLen: 12 },
+    });
+  }
+
+  async addByAddress(): Promise<void> {
+    this.$buefy.modal.open({
+      parent: this,
+      component: AddByAddress,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: ["x"],
+      props: { title: this.$t("accountList.ui.modal.addByMnemonic") },
     });
   }
 

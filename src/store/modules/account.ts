@@ -2,14 +2,15 @@ import store from '@/store'
 import account, { AccountKey } from "@/services/crypto/account";
 import { CoinRecord } from "@/models/wallet";
 import Vue from 'vue';
-import receive, { NftDetail, TokenPuzzleDetail } from '@/services/crypto/receive';
+import receive, { NftDetail, TokenPuzzleAddress, TokenPuzzleDetail } from '@/services/crypto/receive';
 import { AddressType } from '@/services/crypto/puzzle';
+import { xchSymbol } from './network';
 
 export function getAccountCats(account: AccountEntity): CustomCat[] {
   return account.allCats?.filter(c => c.network == store.state.network.networkId) ?? [];
 }
 
-type AccountType = "Serial" | "Password" | "Legacy";
+type AccountType = "Serial" | "Password" | "Legacy" | "Address";
 
 export interface AccountTokenAddress {
   address: string;
@@ -30,6 +31,7 @@ export interface PersistentAccount {
   name: string;
   type: AccountType;
   serial?: number;
+  puzzleHash?: string;
   addressRetrievalCount: number;
   allCats: PersistentCustomCat[];
 }
@@ -115,6 +117,11 @@ store.registerModule<IAccountState>('account', {
       await dispatch("initWalletAddress");
       await dispatch("persistent");
     },
+    async createAccountByAddress({ state, dispatch }, { name, puzzleHash }: { name: string, puzzleHash: string }) {
+      state.accounts.push(getAccountEntity({ compatibleMnemonic: "", fingerprint: -1, privateKey: "", }, name, "Address", undefined, puzzleHash));
+      await dispatch("initWalletAddress");
+      await dispatch("persistent");
+    },
     renameAccount(
       { state, dispatch },
       { idx, name }: { idx: number; name: string }
@@ -149,7 +156,9 @@ store.registerModule<IAccountState>('account', {
         resetState();
         return;
       }
-      const requests = await getAccountAddressDetails(account, parameters.maxId);
+      const requests: TokenPuzzleAddress[] = account.type == "Address"
+        ? <TokenPuzzleAddress[]>([{ symbol: xchSymbol(), puzzles: [{ hash: account.puzzleHash, type: "Unknown", address: account.firstAddress }] }])
+        : (await getAccountAddressDetails(account, parameters.maxId));
 
       try {
         const records = (await receive.getCoinRecords(requests, true));
@@ -189,8 +198,15 @@ store.registerModule<IAccountState>('account', {
   },
 });
 
-function getAccountEntity(account: AccountKey, name: string, type: AccountType, serial: number | undefined = undefined): AccountEntity {
+function getAccountEntity(
+  account: AccountKey,
+  name: string,
+  type: AccountType,
+  serial: number | undefined = undefined,
+  puzzleHash: string | undefined = undefined,
+): AccountEntity {
   return {
+    puzzleHash,
     key: account,
     name: name,
     type: type,
