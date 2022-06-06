@@ -19,7 +19,7 @@
             <b-tooltip :label="$t('accountExport.ui.tooltip.fingerprintTip')" position="is-top">
               <b-icon icon="help-circle" size="is-small"> </b-icon> </b-tooltip
           ></span>
-          <span class="is-size-6 is-pulled-right">
+          <span v-if="!observeMode" class="is-size-6 is-pulled-right">
             <key-box
               icon="checkbox-multiple-blank-outline"
               :tooltip="$t('accountExport.ui.tooltip.copy')"
@@ -41,7 +41,7 @@
             <b-tooltip :label="$t('accountExport.ui.tooltip.mnemonicTip')" position="is-top">
               <b-icon icon="help-circle" size="is-small"> </b-icon> </b-tooltip
           ></span>
-          <span class="is-pulled-right">
+          <span class="is-pulled-right" v-if="!observeMode">
             <b-button v-if="!showMnemonic" size="is-small" @click="show()" class="is-primary">{{
               $t("accountExport.ui.button.reveal")
             }}</b-button>
@@ -140,6 +140,10 @@ export default class AccountExport extends Vue {
     });
   }
 
+  get observeMode(): boolean {
+    return this.account.type == "Address";
+  }
+
   get debugMode(): boolean {
     return store.state.app.debug;
   }
@@ -161,7 +165,7 @@ export default class AccountExport extends Vue {
       cancelText: this.$tc("accountExport.ui.button.cancel"),
       confirmText: this.$tc("accountExport.ui.button.confirm"),
       onConfirm: async (password, { close }) => {
-        if (!await isPasswordCorrect(password)) {
+        if (!(await isPasswordCorrect(password))) {
           this.$buefy.toast.open({
             message: this.$tc("accountExport.message.passwordNotCorrect"),
             type: "is-danger",

@@ -1,12 +1,13 @@
 import store, { IRootState } from '@/store'
 import utility from '../../services/crypto/utility';
-import { AccountEntity } from './account';
+import { PersistentAccount } from './account';
 import Vue from 'vue';
 import encryption from '@/services/crypto/encryption';
 import puzzle from '@/services/crypto/puzzle';
 import i18n, { tc } from '@/i18n/i18n';
 import UniStorage from '@/services/storage';
 import { CurrencyType } from '@/services/exchange/currencyType';
+import { xchPrefix } from './network';
 
 export interface IVaultState {
   passwordHash: string;
@@ -103,12 +104,21 @@ store.registerModule<IVaultState>('vault', {
     async initWalletAddress({ rootState }) {
       for (let i = 0; i < rootState.account.accounts.length; i++) {
         const account = rootState.account.accounts[i];
+        if (account.type == "Address") {
+          if (!account.puzzleHash) {
+            console.warn(`Found malformat 'Address' account [${account.name}]`)
+            continue;
+          }
+          Vue.set(account, "firstAddress", puzzle.getAddressFromPuzzleHash(account.puzzleHash, xchPrefix()));
+          continue;
+        }
+
         const privkey = utility.fromHexString(account.key.privateKey);
         const derive = await utility.derive(privkey, true);
         const firstWalletAddressPubkey = utility.toHexString(
           derive([12381, 8444, 2, 0]).get_g1().serialize()
         );
-        Vue.set(account, "firstAddress", await puzzle.getAddress(firstWalletAddressPubkey, rootState.network.network.prefix));
+        Vue.set(account, "firstAddress", await puzzle.getAddress(firstWalletAddressPubkey, xchPrefix()));
       }
     },
     async unlock({ state, dispatch, rootState }, password) {
@@ -164,13 +174,14 @@ store.registerModule<IVaultState>('vault', {
         state.encryptKey
       )
       const encryptedAccounts = await encryption.encrypt(
-        JSON.stringify(rootState.account.accounts.map(_ => (<AccountEntity>{
+        JSON.stringify(rootState.account.accounts.map(_ => (<PersistentAccount>{
           key: _.key,
           name: _.name,
           type: _.type,
           serial: _.serial,
           addressRetrievalCount: _.addressRetrievalCount,
           allCats: _.allCats,
+          puzzleHash: _.puzzleHash,
         }))), state.encryptKey
       )
       state.encryptedAccounts = encryptedAccounts;

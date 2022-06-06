@@ -82,6 +82,7 @@ import MakeOffer from "./Offer/Make.vue";
 import TakeOffer from "./Offer/Take.vue";
 import Send from "./Send.vue";
 import BatchSend from "./Transfer/BatchSend.vue";
+import { NotificationProgrammatic as Notification } from "buefy";
 
 @Component
 export default class Dapp extends Vue {
@@ -102,6 +103,10 @@ export default class Dapp extends Vue {
     return store.state.network.networkId == "testnet10";
   }
 
+  get observeMode(): boolean {
+    return this.account.type == "Address";
+  }
+
   mounted(): void {
     this.displayDapp = localStorage.getItem("DISPLAY_DAPP") ? localStorage.getItem("DISPLAY_DAPP") === "true" : true;
   }
@@ -111,7 +116,18 @@ export default class Dapp extends Vue {
     localStorage.setItem("DISPLAY_DAPP", this.displayDapp.toString());
   }
 
+  checkObserveMode(): void {
+    if (this.observeMode) {
+      Notification.open({
+        message: this.$tc('accountDetail.message.notification.observeMode'),
+        type: "is-warning",
+      });
+      throw new Error("Interaction function disabled in Observe Mode");
+    }
+  }
+
   openDonation(): void {
+    this.checkObserveMode();
     const donationAddress = puzzle.getAddressFromPuzzleHash(
       "b4bff0c0d5d88a8bc758f8b621e8b6164baa77fbe245e60f17a18119137f84a5",
       xchPrefix()
@@ -134,6 +150,7 @@ export default class Dapp extends Vue {
   }
 
   openTakeOffer(): void {
+    this.checkObserveMode();
     this.$buefy.modal.open({
       parent: this,
       component: TakeOffer,
@@ -148,6 +165,7 @@ export default class Dapp extends Vue {
   }
 
   openMakeOffer(): void {
+    this.checkObserveMode();
     this.$buefy.modal.open({
       parent: this,
       component: MakeOffer,
@@ -161,6 +179,7 @@ export default class Dapp extends Vue {
   }
 
   openBatchSend(): void {
+    this.checkObserveMode();
     this.$buefy.modal.open({
       parent: this,
       component: BatchSend,
@@ -174,6 +193,7 @@ export default class Dapp extends Vue {
   }
 
   openMintCat(): void {
+    this.checkObserveMode();
     this.$buefy.modal.open({
       parent: this,
       component: MintCat,
@@ -188,6 +208,7 @@ export default class Dapp extends Vue {
   }
 
   openMintNft(): void {
+    this.checkObserveMode();
     this.$buefy.modal.open({
       parent: this,
       component: MintNft,

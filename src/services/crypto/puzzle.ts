@@ -17,7 +17,7 @@ export interface ExecuteResult {
   conditions: ExecuteResultCondition[];
 }
 
-export type AddressType = "Observed" | "Hardened";
+export type AddressType = "Observed" | "Hardened" | "Unknown";
 
 export interface PuzzleDetail extends PuzzleAddress {
   privateKey: PrivateKey;

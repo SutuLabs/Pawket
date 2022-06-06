@@ -161,7 +161,8 @@
         "lock": "Lock?"
       },
       "notification": {
-        "donate": "You are donating to the developers."
+        "donate": "You are donating to the developers.",
+        "observeMode": "Interaction function disabled in Observe Mode"
       }
     }
   },
@@ -271,7 +272,8 @@
         "addBySerial": "Add by Serial",
         "addByPassword": "Add Shadow Wallet",
         "addByLegacy": "Import Chia Official Wallet（24-word）",
-        "addByMnemonic": "Import Nucle/Goby Wallet（12-word）"
+        "addByMnemonic": "Import Nucle/Goby Wallet（12-word）",
+        "addByAddress": "Add by Address(Observation Mode)"
       },
       "tooltip": {
         "delete": "Delete",
@@ -280,7 +282,8 @@
         "addBySerial": "Derived serial accounts are created in order.",
         "addByPassword": "Account protected by MNEMONIC and PASSPHRASE. Enter the same PASSPHRASE to access the same account.",
         "addByLegacy": "Import Chia official wallet.",
-        "addByMnemonic": "Import Nucle/Goby wallet."
+        "addByMnemonic": "Import Nucle/Goby wallet.",
+        "addByAddress": "Only reading is supported in this mode."
       },
       "modal": {
         "addByLegacy": "Import Chia Official Wallet",
@@ -615,6 +618,25 @@
     "message": {
       "error": {
         "accountMnemonicExists": "An account with the same mnemonic already exists."
+      }
+    }
+  },
+  "addByAddress": {
+    "ui": {
+      "title": "Add By Address",
+      "label": {
+        "name": "Account Name",
+        "address": "Address"
+      },
+      "message": {
+        "nameRequired": "Account name is required.",
+        "addressRequired": "Address is required.",
+        "illegalAddress": "Incorrect address.",
+        "duplicateAddress": "Duplicate Address"
+      },
+      "button": {
+        "back": "Back",
+        "submit": "Submit"
       }
     }
   },
