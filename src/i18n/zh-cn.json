@@ -161,7 +161,8 @@
         "lock": "确认锁定钱包?"
       },
       "notification": {
-        "donate": "你正在向开发者捐赠"
+        "donate": "你正在向开发者捐赠",
+        "observeMode": "观察模式下无法使用交互功能。"
       }
     }
   },
@@ -272,7 +273,7 @@
         "addByPassword": "新增影子钱包",
         "addByLegacy": "导入 Chia 客户端账户(24词)",
         "addByMnemonic": "导入 Nucle/Goby 账户(12词)",
-        "addByAddress": "添加地址钱包"
+        "addByAddress": "新增地址账户（观察模式）"
       },
       "tooltip": {
         "delete": "删除",
@@ -282,7 +283,7 @@
         "addByPassword": "由【助记词+密码】保护的账户。输入相同的密码即可进入相同的账户。",
         "addByLegacy": "导入 Chia 客户端账户。",
         "addByMnemonic": "导入 Nucle/Goby 账户。",
-        "addByAddress": "添加地址钱包"
+        "addByAddress": "该模式下仅支持阅读。"
       },
       "modal": {
         "addByLegacy": "导入 Chia 客户端账户",
@@ -630,7 +631,8 @@
       "message": {
         "nameRequired": "账户名不能为空",
         "addressRequired": "地址不能为空",
-        "illegalAddress": "地址不正确"
+        "illegalAddress": "地址不正确",
+        "duplicateAddress": "重复地址"
       },
       "button": {
         "back": "返回",

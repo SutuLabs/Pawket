@@ -111,6 +111,7 @@ import { CurrencyType } from "@/services/exchange/currencyType";
 import UtxoPanel from "@/components/UtxoPanel.vue";
 import { CoinRecord } from "@/models/wallet";
 import { nameOmit } from "@/filters/nameConversion";
+import { NotificationProgrammatic as Notification } from "buefy";
 import { xchSymbol } from "@/store/modules/network";
 import NftPanel from "@/components/Detail/NftPanel.vue";
 import Dapp from "./Dapp.vue";
@@ -161,6 +162,20 @@ export default class AccountDetail extends Vue {
 
   get experimentMode(): boolean {
     return store.state.vault.experiment;
+  }
+
+  get observeMode(): boolean {
+    return this.account.type == "Address";
+  }
+
+  checkObserveMode(): void {
+    if (this.observeMode) {
+      Notification.open({
+        message: this.$tc('accountDetail.message.notification.observeMode'),
+        type: "is-warning",
+      });
+      throw new Error("Interaction function disabled in Observe Mode");
+    }
   }
 
   get testnet(): boolean {
@@ -247,6 +262,7 @@ export default class AccountDetail extends Vue {
   }
 
   ManageCats(): void {
+    this.checkObserveMode();
     this.$buefy.modal.open({
       parent: this,
       component: ManageCats,
@@ -270,6 +286,7 @@ export default class AccountDetail extends Vue {
   }
 
   showSend(): void {
+    this.checkObserveMode();
     this.$buefy.modal.open({
       parent: this,
       component: Send,

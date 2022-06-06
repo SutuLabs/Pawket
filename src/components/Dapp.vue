@@ -119,7 +119,7 @@ export default class Dapp extends Vue {
   checkObserveMode(): void {
     if (this.observeMode) {
       Notification.open({
-        message: `Interaction function disabled in Observe Mode`,
+        message: this.$tc('accountDetail.message.notification.observeMode'),
         type: "is-warning",
       });
       throw new Error("Interaction function disabled in Observe Mode");

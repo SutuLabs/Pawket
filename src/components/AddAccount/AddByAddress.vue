@@ -81,6 +81,13 @@ export default class AddByAddress extends Vue {
       this.errorMessage = this.$tc("addByAddress.ui.message.illegalAddress");
       return;
     }
+    for (const acc of store.state.account.accounts) {
+      if (acc.type === "Address" && acc.firstAddress === this.address) {
+        this.isLegalAddress = false;
+        this.errorMessage = this.$tc("addByAddress.ui.message.duplicateAddress");
+        return;
+      }
+    }
     this.submitting = true;
     var puzzleHash = puzzle.getPuzzleHashFromAddress(this.address);
 

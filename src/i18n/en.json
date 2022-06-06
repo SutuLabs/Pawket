@@ -161,7 +161,8 @@
         "lock": "Lock?"
       },
       "notification": {
-        "donate": "You are donating to the developers."
+        "donate": "You are donating to the developers.",
+        "observeMode": "Interaction function disabled in Observe Mode"
       }
     }
   },
@@ -272,7 +273,7 @@
         "addByPassword": "Add Shadow Wallet",
         "addByLegacy": "Import Chia Official Wallet（24-word）",
         "addByMnemonic": "Import Nucle/Goby Wallet（12-word）",
-        "addByAddress": "Add Account by Address"
+        "addByAddress": "Add by Address(Observation Mode)"
       },
       "tooltip": {
         "delete": "Delete",
@@ -282,7 +283,7 @@
         "addByPassword": "Account protected by MNEMONIC and PASSPHRASE. Enter the same PASSPHRASE to access the same account.",
         "addByLegacy": "Import Chia official wallet.",
         "addByMnemonic": "Import Nucle/Goby wallet.",
-        "addByAddress": "Add Account by Address"
+        "addByAddress": "Only reading is supported in this mode."
       },
       "modal": {
         "addByLegacy": "Import Chia Official Wallet",
@@ -630,7 +631,8 @@
       "message": {
         "nameRequired": "Account name is required.",
         "addressRequired": "Address is required.",
-        "illegalAddress": "Incorrect address."
+        "illegalAddress": "Incorrect address.",
+        "duplicateAddress": "Duplicate Address"
       },
       "button": {
         "back": "Back",
