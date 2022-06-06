@@ -125,7 +125,7 @@ export default class AddressBook extends Vue {
   get innerAccs(): Contact[] {
     const innerAccs: Contact[] = [];
     store.state.account.accounts.forEach((acc) => {
-      if (acc.key.fingerprint !== this.accountFinger) innerAccs.push({ name: acc.name, address: acc.firstAddress ?? "" });
+      innerAccs.push({ name: acc.name, address: acc.firstAddress ?? "" });
     });
     return innerAccs;
   }
