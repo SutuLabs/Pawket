@@ -47,7 +47,7 @@
           <span class="panel-icon">
             <b-icon icon="plus-thick" class="has-text-grey"></b-icon>
           </span>
-          <span class="mx-2">{{$t('accountList.ui.tooltip.addByAddress') }}</span>
+          <span class="mx-2">{{$t('accountList.ui.button.addByAddress') }}</span>
         </b-tooltip>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addByLegacy()">
