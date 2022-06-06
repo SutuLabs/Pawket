@@ -271,7 +271,8 @@
         "addBySerial": "新增序列账户",
         "addByPassword": "新增影子钱包",
         "addByLegacy": "导入 Chia 客户端账户(24词)",
-        "addByMnemonic": "导入 Nucle/Goby 账户(12词)"
+        "addByMnemonic": "导入 Nucle/Goby 账户(12词)",
+        "addByAddress": "添加地址钱包"
       },
       "tooltip": {
         "delete": "删除",
@@ -280,7 +281,8 @@
         "addBySerial": "按顺序创建派生的序列账户。",
         "addByPassword": "由【助记词+密码】保护的账户。输入相同的密码即可进入相同的账户。",
         "addByLegacy": "导入 Chia 客户端账户。",
-        "addByMnemonic": "导入 Nucle/Goby 账户。"
+        "addByMnemonic": "导入 Nucle/Goby 账户。",
+        "addByAddress": "添加地址钱包"
       },
       "modal": {
         "addByLegacy": "导入 Chia 客户端账户",
@@ -615,6 +617,24 @@
     "message": {
       "error": {
         "accountMnemonicExists": "该助记词账户已存在于账户列表中。"
+      }
+    }
+  },
+  "addByAddress": {
+    "ui": {
+      "title": "添加地址钱包",
+      "label": {
+        "name": "账户名",
+        "address": "地址"
+      },
+      "message": {
+        "nameRequired": "账户名不能为空",
+        "addressRequired": "地址不能为空",
+        "illegalAddress": "地址不正确"
+      },
+      "button": {
+        "back": "返回",
+        "submit": "提交"
       }
     }
   },

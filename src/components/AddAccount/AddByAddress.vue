@@ -2,43 +2,38 @@
   <div class="modal-card">
     <b-loading :is-full-page="true" v-model="submitting"></b-loading>
     <header class="modal-card-head">
-      <p class="modal-card-title">{{ title }}</p>
+      <p class="modal-card-title">{{ $t("addByAddress.ui.title") }}</p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
-      <b-field :label="$t('addByMnemonic.ui.label.name')">
+      <b-field :label="$t('addByAddress.ui.label.name')">
         <b-input
           ref="name"
           v-model="name"
           type="text"
           required
           maxlength="36"
-          :validation-message="$t('addByMnemonic.ui.message.nameRequired')"
+          :validation-message="$t('addByAddress.ui.message.nameRequired')"
         ></b-input>
       </b-field>
-      <b-field :type="errorMessage ? 'is-danger' : ''">
+      <b-field :type="errorMessage ? 'is-danger' : ''" :message="errorMessage">
         <template #label>
-          {{ $t("addByMnemonic.ui.label.mnemonic", { len: mnemonicLen }) }}
-          <b-tooltip :label="$t('addByMnemonic.ui.tooltip.mnemonic')" position="is-bottom" multilined>
-            <b-icon icon="help-circle" size="is-small"> </b-icon>
-          </b-tooltip>
+          {{ $t("addByAddress.ui.label.address") }}
         </template>
         <b-input
-          ref="mnemonic"
+          ref="address"
           v-model="address"
-          type="textarea"
+          type="text"
           required
-          :validation-message="$t('addByMnemonic.ui.message.mnemonicRequired')"
+          :custom-class="isLegalAddress ? '' : 'is-danger'"
+          :validation-message="$t('addByAddress.ui.message.addressRequired')"
           @input.native.enter="clearErrorMsg()"
         ></b-input>
       </b-field>
-      <p class="help is-danger">
-        {{ errorMessage }}
-      </p>
     </section>
     <footer class="modal-card-foot is-justify-content-space-between">
-      <b-button :label="$t('addByMnemonic.ui.button.back')" @click="close()"></b-button>
-      <b-button :label="$t('addByMnemonic.ui.button.submit')" type="is-primary" @click="submit()"></b-button>
+      <b-button :label="$t('addByAddress.ui.button.back')" @click="close()"></b-button>
+      <b-button :label="$t('addByAddress.ui.button.submit')" type="is-primary" @click="submit()"></b-button>
     </footer>
   </div>
 </template>
@@ -47,6 +42,8 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import store from "@/store/index";
 import puzzle from "@/services/crypto/puzzle";
+import { Bytes } from "clvm";
+import { bech32m } from "@scure/base";
 
 @Component
 export default class AddByAddress extends Vue {
@@ -56,6 +53,7 @@ export default class AddByAddress extends Vue {
   public address = "";
   public errorMessage = "";
   public submitting = false;
+  isLegalAddress = true;
 
   close(): void {
     this.$emit("close");
@@ -63,16 +61,24 @@ export default class AddByAddress extends Vue {
 
   clearErrorMsg(): void {
     this.errorMessage = "";
+    this.isLegalAddress = true;
   }
 
   validate(): void {
     (this.$refs.name as Vue & { checkHtml5Validity: () => boolean }).checkHtml5Validity();
-    (this.$refs.mnemonic as Vue & { checkHtml5Validity: () => boolean }).checkHtml5Validity();
+    (this.$refs.address as Vue & { checkHtml5Validity: () => boolean }).checkHtml5Validity();
   }
 
   async addAccount(): Promise<void> {
     this.validate();
     if (this.name === "" || this.address === "") {
+      return;
+    }
+    try {
+      Bytes.from(bech32m.decodeToBytes(this.address).bytes).hex();
+    } catch (error) {
+      this.isLegalAddress = false;
+      this.errorMessage = this.$tc("addByAddress.ui.message.illegalAddress");
       return;
     }
     this.submitting = true;

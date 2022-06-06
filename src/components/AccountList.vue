@@ -43,11 +43,11 @@
         </b-tooltip>
       </a>
       <a v-if="debugMode" href="javascript:void(0)" class="panel-block" @click="addByAddress()">
-        <b-tooltip :label="'Add by Address'" multilined size="is-small">
+        <b-tooltip :label="$t('accountList.ui.tooltip.addByAddress')" multilined size="is-small">
           <span class="panel-icon">
             <b-icon icon="plus-thick" class="has-text-grey"></b-icon>
           </span>
-          <span class="mx-2">Add by Address</span>
+          <span class="mx-2">{{$t('accountList.ui.tooltip.addByAddress') }}</span>
         </b-tooltip>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addByLegacy()">
@@ -189,7 +189,6 @@ export default class AccountList extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: ["x"],
-      props: { title: this.$t("accountList.ui.modal.addByMnemonic") },
     });
   }
 
