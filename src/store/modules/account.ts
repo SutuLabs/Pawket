@@ -4,9 +4,26 @@ import { CoinRecord } from "@/models/wallet";
 import Vue from 'vue';
 import receive, { NftDetail, TokenPuzzleDetail } from '@/services/crypto/receive';
 import { AddressType } from '@/services/crypto/puzzle';
+import { xchSymbol } from './network';
 
 export function getAccountCats(account: AccountEntity): CustomCat[] {
-  return account.allCats?.filter(c => c.network == store.state.network.networkId) ?? [];
+  return account.allCats?.filter((c) => c.network == store.state.network.networkId) ?? [];
+}
+
+export function getDefaultCats(): CustomCat[] {
+  const list: CustomCat[] = [];
+  for (const key in store.state.account.tokenInfo) {
+    list.push({
+      name: store.state.account.tokenInfo[key].symbol,
+      id: store.state.account.tokenInfo[key].id ?? xchSymbol(),
+    });
+  }
+  return list;
+}
+
+export function getAllCats(account: AccountEntity): CustomCat[] {
+  const defaultCats = getDefaultCats();
+  return defaultCats.concat(getAccountCats(account));
 }
 
 type AccountType = "Serial" | "Password" | "Legacy";

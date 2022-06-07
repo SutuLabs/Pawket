@@ -49,7 +49,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import store from "@/store/index";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { sortable } from "@/directives/sortable";
-import { AccountEntity, CustomCat, getAccountCats } from "@/store/modules/account";
+import { AccountEntity, CustomCat, getAccountCats, getDefaultCats } from "@/store/modules/account";
 import TokenItem from "@/components/TokenItem.vue";
 import { Bytes } from "clvm";
 import { shorten } from "@/filters/addressConversion";
@@ -69,11 +69,11 @@ export default class ManageCats extends Vue {
   @Prop() private account!: AccountEntity;
   @Prop({ default: "" }) defaultName!: string;
   @Prop({ default: "" }) defaultAssetId!: string;
-  @Prop() tokenList!: CustomCat[];
 
   public name = this.defaultName;
   public assetId = this.defaultAssetId;
   public assetIds: CustomCat[] = [];
+  public defaultCats: CustomCat[] = [];
 
   sortableOptions = {
     chosenClass: "box",
@@ -88,6 +88,7 @@ export default class ManageCats extends Vue {
       return;
     }
     this.assetIds = getAccountCats(this.account);
+    this.defaultCats = getDefaultCats();
   }
 
   close(): void {
@@ -109,10 +110,8 @@ export default class ManageCats extends Vue {
   }
 
   isExisted(name: string, id: string): boolean {
-    if (!this.tokenList) {
-      return false;
-    }
-    for (let t of this.tokenList) {
+    const allCats = this.defaultCats.concat(this.assetIds);
+    for (let t of allCats) {
       if (t.id === id || t.name.toUpperCase() === name.toUpperCase()) {
         return true;
       }
