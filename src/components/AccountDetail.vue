@@ -109,7 +109,7 @@ import KeyBox from "@/components/KeyBox.vue";
 import Send from "./Send.vue";
 import { demojo } from "@/filters/unitConversion";
 import { xchToCurrency } from "@/filters/usdtConversion";
-import { TokenInfo, AccountEntity, AccountToken, CustomCat, getAccountCats } from "@/store/modules/account";
+import { TokenInfo, AccountEntity, AccountToken, CustomCat, getAllCats } from "@/store/modules/account";
 import { getTokenInfo } from "@/services/coin/cat";
 import { getExchangeRate } from "@/services/exchange/rates";
 import { CurrencyType } from "@/services/exchange/currencyType";
@@ -151,14 +151,7 @@ export default class AccountDetail extends Vue {
   }
 
   get tokenList(): CustomCat[] {
-    let list: CustomCat[] = [];
-    for (let key in store.state.account.tokenInfo) {
-      list.push({
-        name: store.state.account.tokenInfo[key].symbol,
-        id: store.state.account.tokenInfo[key].id ?? xchSymbol(),
-      });
-    }
-    return list.concat(getAccountCats(this.account));
+    return getAllCats(this.account);
   }
 
   get debugMode(): boolean {
@@ -274,7 +267,7 @@ export default class AccountDetail extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: ["x"],
-      props: { account: this.account, tokenList: this.tokenList },
+      props: { account: this.account },
       events: { refresh: this.refresh },
     });
   }
