@@ -11,6 +11,9 @@
           <b-tooltip :label="$t('accountDetail.ui.tooltip.lock')" class="is-pulled-right">
             <b-button @click="lock()"><b-icon icon="lock" class="has-text-grey"> </b-icon></b-button>
           </b-tooltip>
+          <b-tooltip :label="$t('accountDetail.ui.tooltip.errorLog')" class="is-pulled-right">
+            <b-button @click="openErrorLog()"><b-icon icon="bug" class="has-text-grey"> </b-icon></b-button>
+          </b-tooltip>
           <b-button class="is-pulled-right" @click="selectAccount()"
             >{{ account.name | nameOmit }}: {{ account.key.fingerprint }}</b-button
           >
@@ -114,6 +117,7 @@ import { nameOmit } from "@/filters/nameConversion";
 import { xchSymbol } from "@/store/modules/network";
 import NftPanel from "@/components/Detail/NftPanel.vue";
 import Dapp from "./Dapp.vue";
+import ErrorLog from "./ErrorLog.vue";
 
 type Mode = "Verify" | "Create";
 
@@ -231,6 +235,16 @@ export default class AccountDetail extends Vue {
       hasModalCard: true,
       trapFocus: true,
       props: { account: this.account },
+    });
+  }
+
+  openErrorLog(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: ErrorLog,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: ["outside"],
     });
   }
 

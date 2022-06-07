@@ -134,6 +134,7 @@
       "tooltip": {
         "setting": "设置",
         "lock": "锁定",
+        "errorLog": "错误日志",
         "refresh": "刷新"
       },
       "dApps": {
@@ -892,6 +893,24 @@
       },
       "span": {
         "newAddress": "检测到新地址，点击添加至地址薄。"
+      }
+    }
+  },
+  "errorLog": {
+    "ui": {
+      "title": "错误日志",
+      "label": {
+        "message": "信息",
+        "stack": "栈"
+      },
+      "field": {
+        "msg": "消息",
+        "info": "信息",
+        "url": "链接",
+        "empty": "没有记录"
+      },
+      "button": {
+        "clearAll": "清空"
       }
     }
   }

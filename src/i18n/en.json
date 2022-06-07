@@ -134,6 +134,7 @@
       "tooltip": {
         "setting": "Settings",
         "lock": "Lock",
+        "errorLog": "Error Log",
         "refresh": "Refresh"
       },
       "dApps": {
@@ -892,6 +893,24 @@
       },
       "span": {
         "newAddress": "New Address Found, Click to Add to Address Book."
+      }
+    }
+  },
+  "errorLog": {
+    "ui": {
+      "title": "Error Log",
+      "label": {
+        "message": "Message",
+        "stack": "Stack"
+      },
+      "field": {
+        "msg": "Message",
+        "info": "Info",
+        "url": "Url",
+        "empty": "No Records"
+      },
+      "button": {
+        "clearAll": "Clear All"
       }
     }
   }

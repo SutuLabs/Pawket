@@ -26,6 +26,7 @@ import "./store/modules/app";
 import "./store/modules/account";
 import "./store/modules/vault";
 import "./store/modules/network";
+import "./store/modules/error";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (BigInt.prototype as any).toJSON = function () {
