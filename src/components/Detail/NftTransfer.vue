@@ -250,9 +250,11 @@ export default class NftTransfer extends Vue {
         return;
       }
 
-      if (!this.address.startsWith(xchPrefix())) {
+      try {
+        Bytes.from(bech32m.decodeToBytes(this.address).bytes).hex();
+      } catch (error) {
         Notification.open({
-          message: this.$tc("send.messages.error.ADDRESS_NOT_MATCH_NETWORK"),
+          message: this.$tc("send.messages.error.INVALID_ADDRESS"),
           type: "is-danger",
           duration: 5000,
         });
@@ -260,11 +262,9 @@ export default class NftTransfer extends Vue {
         return;
       }
 
-      try {
-        Bytes.from(bech32m.decodeToBytes(this.address).bytes).hex();
-      } catch (error) {
+      if (!this.address.startsWith(xchPrefix())) {
         Notification.open({
-          message: this.$tc("send.messages.error.INVALID_ADDRESS"),
+          message: this.$tc("send.messages.error.ADDRESS_NOT_MATCH_NETWORK"),
           type: "is-danger",
           duration: 5000,
         });

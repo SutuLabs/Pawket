@@ -9,7 +9,7 @@
         <address-field
           :inputAddress="address"
           :addressEditable="addressEditable"
-          @update="updateAddress"
+          @updateAddress="updateAddress"
           @updateContactName="updateContactName"
         ></address-field>
         <token-amount-field
@@ -95,7 +95,9 @@ import FeeSelector from "@/components/FeeSelector.vue";
 import BundleSummary from "../BundleSummary.vue";
 import SendSummary from "../SendSummary.vue";
 import { generateMintCatBundle } from "@/services/mint/cat";
-import { xchSymbol } from "@/store/modules/network";
+import { xchPrefix, xchSymbol } from "@/store/modules/network";
+import { bech32m } from "@scure/base";
+import { Bytes } from "clvm";
 import { getTokenInfo } from "@/services/coin/cat";
 import AddressField from "../AddressField.vue";
 
@@ -302,6 +304,28 @@ export default class MintCat extends Vue {
       const amount = BigInt(bigDecimal.multiply(this.amount, Math.pow(10, decimal)));
 
       if (this.availcoins == null) {
+        this.submitting = false;
+        return;
+      }
+
+      try {
+        Bytes.from(bech32m.decodeToBytes(this.address).bytes).hex();
+      } catch (error) {
+        Notification.open({
+          message: this.$tc("send.messages.error.INVALID_ADDRESS"),
+          type: "is-danger",
+          duration: 5000,
+        });
+        this.submitting = false;
+        return;
+      }
+
+      if (!this.address.startsWith(xchPrefix())) {
+        Notification.open({
+          message: this.$tc("send.messages.error.ADDRESS_NOT_MATCH_NETWORK"),
+          type: "is-danger",
+          duration: 5000,
+        });
         this.submitting = false;
         return;
       }

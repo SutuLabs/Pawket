@@ -337,16 +337,6 @@ export default class Send extends Vue {
         this.submitting = false;
         return;
       }
-      if (!this.address.startsWith(xchPrefix())) {
-        Notification.open({
-          message: this.$tc("send.messages.error.ADDRESS_NOT_MATCH_NETWORK"),
-          type: "is-danger",
-          duration: 5000,
-        });
-        this.validAddress = false;
-        this.submitting = false;
-        return;
-      }
       let tgt_hex = "";
       let change_hex = "";
       try {
@@ -355,6 +345,16 @@ export default class Send extends Vue {
       } catch (err) {
         Notification.open({
           message: this.$tc("send.messages.error.INVALID_ADDRESS"),
+          type: "is-danger",
+          duration: 5000,
+        });
+        this.validAddress = false;
+        this.submitting = false;
+        return;
+      }
+      if (!this.address.startsWith(xchPrefix())) {
+        Notification.open({
+          message: this.$tc("send.messages.error.ADDRESS_NOT_MATCH_NETWORK"),
           type: "is-danger",
           duration: 5000,
         });

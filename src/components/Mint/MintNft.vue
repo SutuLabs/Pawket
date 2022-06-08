@@ -9,7 +9,7 @@
         <address-field
           :inputAddress="address"
           :addressEditable="addressEditable"
-          @update="updateAddress"
+          @updateAddress="updateAddress"
           @updateContactName="updateContactName"
         ></address-field>
         <b-field v-if="false" :label="$t('mintNft.ui.label.memo')">
@@ -87,10 +87,12 @@ import { debugBundle, submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/FeeSelector.vue";
 import BundleSummary from "../BundleSummary.vue";
 import SendSummary from "../SendSummary.vue";
-import { xchSymbol } from "@/store/modules/network";
+import { xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getTokenInfo } from "@/services/coin/cat";
 import { generateMintNftBundle } from "@/services/coin/nft";
 import AddressField from "../AddressField.vue";
+import { bech32m } from "@scure/base";
+import { Bytes } from "clvm";
 
 @Component({
   components: {
@@ -247,6 +249,28 @@ export default class MintNft extends Vue {
       }
 
       if (this.availcoins == null) {
+        this.submitting = false;
+        return;
+      }
+
+      try {
+        Bytes.from(bech32m.decodeToBytes(this.address).bytes).hex();
+      } catch (error) {
+        Notification.open({
+          message: this.$tc("send.messages.error.INVALID_ADDRESS"),
+          type: "is-danger",
+          duration: 5000,
+        });
+        this.submitting = false;
+        return;
+      }
+
+      if (!this.address.startsWith(xchPrefix())) {
+        Notification.open({
+          message: this.$tc("send.messages.error.ADDRESS_NOT_MATCH_NETWORK"),
+          type: "is-danger",
+          duration: 5000,
+        });
         this.submitting = false;
         return;
       }
