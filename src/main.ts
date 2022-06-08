@@ -6,12 +6,13 @@ import store from "./store";
 import Buefy from "buefy";
 import i18n, { tc } from "./i18n/i18n";
 import "@mdi/font/css/materialdesignicons.css";
-import sanitizeHTML from 'sanitize-html'
+import sanitizeHTML from "sanitize-html";
+import "./services/errorLog/errorLog";
 
 Vue.config.productionTip = false;
 Vue.use(Buefy);
 
-Vue.prototype.$sanitize = sanitizeHTML
+Vue.prototype.$sanitize = sanitizeHTML;
 
 document.title = tc("html.document.title");
 

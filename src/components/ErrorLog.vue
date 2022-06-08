@@ -43,7 +43,7 @@ export default class ErrorLog extends Vue {
 
   clearAll(): void {
     this.$emit("close");
-    store.dispatch("clearErrorMsg");
+    store.dispatch("clearErrorLog");
   }
 
   close(): void {
