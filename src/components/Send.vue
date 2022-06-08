@@ -347,9 +347,21 @@ export default class Send extends Vue {
         this.submitting = false;
         return;
       }
-
-      const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.address));
-      const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
+      let tgt_hex = "";
+      let change_hex = "";
+      try {
+        tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.address));
+        change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
+      } catch (err) {
+        Notification.open({
+          message: this.$tc("send.messages.error.INVALID_ADDRESS"),
+          type: "is-danger",
+          duration: 5000,
+        });
+        this.validAddress = false;
+        this.submitting = false;
+        return;
+      }
       // there is error in checking this regular expression
       // eslint-disable-next-line no-useless-escape
       const memo = this.memo.replace(/[&/\\#,+()$~%.'":*?<>{}\[\] ]/g, "_");

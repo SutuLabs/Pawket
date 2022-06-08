@@ -396,6 +396,7 @@
         "NO_TRANSACTIONS_WHILE_SYNCING": "No Transaction While Syncing",
         "INVALID_FEE_TOO_CLOSE_TO_ZERO": "Invalid Fee, too Close to Zero",
         "COIN_AMOUNT_NEGATIVE": "Coin Amount is Negative",
+        "INVALID_ADDRESS": "Invalid Address",
         "ADDRESS_NOT_MATCH_NETWORK": "The filled address does not match the current network. Please fill in a valid address."
       }
     }
