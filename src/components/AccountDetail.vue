@@ -12,7 +12,9 @@
             <b-button @click="lock()"><b-icon icon="lock" class="has-text-grey"> </b-icon></b-button>
           </b-tooltip>
           <b-tooltip :label="$t('accountDetail.ui.tooltip.errorLog')" class="is-pulled-right">
-            <b-button @click="openErrorLog()"><b-icon icon="bug" class="has-text-grey"> </b-icon></b-button>
+            <b-button v-if="debugMode && hasError" @click="openErrorLog()"
+              ><b-icon icon="bug" class="has-text-grey"> </b-icon
+            ></b-button>
           </b-tooltip>
           <b-button class="is-pulled-right" @click="selectAccount()"
             >{{ account.name | nameOmit }}: {{ account.key.fingerprint }}</b-button
@@ -161,6 +163,10 @@ export default class AccountDetail extends Vue {
 
   get debugMode(): boolean {
     return store.state.app.debug;
+  }
+
+  get hasError(): boolean {
+    return store.state.error.errorLogs.length > 0;
   }
 
   get experimentMode(): boolean {
