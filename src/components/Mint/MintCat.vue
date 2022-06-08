@@ -6,7 +6,12 @@
     </header>
     <section class="modal-card-body">
       <div v-show="!bundle">
-        <address-field :inputAddress="address" :addressEditable="addressEditable" @update="updateAddress"></address-field>
+        <address-field
+          :inputAddress="address"
+          :addressEditable="addressEditable"
+          @update="updateAddress"
+          @updateContactName="updateContactName"
+        ></address-field>
         <token-amount-field
           v-model="amount"
           :selectedToken="selectedToken"
@@ -41,6 +46,7 @@
           :asset-id="assetId"
           :leadingText="$t('mintCat.ui.summary.label.leadingText')"
           :total="total"
+          :contactName="contactName"
         ></send-summary>
         <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
       </template>
@@ -111,6 +117,7 @@ export default class MintCat extends Vue {
   public fee = 0;
   public address = "";
   public memo = "";
+  public contactName = "";
   public bundle: SpendBundle | null = null;
   public availcoins: SymbolCoins | null = null;
   public maxAmount = "-1";
@@ -183,6 +190,10 @@ export default class MintCat extends Vue {
   updateAddress(value: string): void {
     this.address = value;
     this.reset();
+  }
+
+  updateContactName(value: string): void {
+    this.contactName = value;
   }
 
   cancel(): void {

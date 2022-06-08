@@ -6,7 +6,12 @@
     </header>
     <section class="modal-card-body">
       <div v-show="!bundle">
-        <address-field :inputAddress="address" :addressEditable="addressEditable" @update="updateAddress"></address-field>
+        <address-field
+          :inputAddress="address"
+          :addressEditable="addressEditable"
+          @update="updateAddress"
+          @updateContactName="updateContactName"
+        ></address-field>
         <b-field v-if="false" :label="$t('mintNft.ui.label.memo')">
           <b-input maxlength="100" v-model="memo" type="text" @input="reset()" disabled></b-input>
         </b-field>
@@ -34,6 +39,7 @@
           :address="address"
           :leadingText="$t('mintNft.ui.summary.label.leadingText')"
           :total="total"
+          :contactName="contactName"
         ></send-summary>
         <bundle-summary :account="account" :bundle="bundle" :ignoreError="true"></bundle-summary>
       </template>
@@ -102,6 +108,7 @@ export default class MintNft extends Vue {
   public submitting = false;
   public fee = 0;
   public address = "";
+  public contactName = "";
   public memo = "";
   public bundle: SpendBundle | null = null;
   public availcoins: SymbolCoins | null = null;
@@ -158,6 +165,10 @@ export default class MintNft extends Vue {
   updateAddress(value: string): void {
     this.address = value;
     this.reset();
+  }
+
+  updateContactName(value: string): void {
+    this.contactName = value;
   }
 
   cancel(): void {

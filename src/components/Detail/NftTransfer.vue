@@ -7,7 +7,12 @@
     </header>
     <section class="modal-card-body">
       <div v-show="!bundle">
-        <address-field :inputAddress="address" :addressEditable="addressEditable" @update="updateAddress"></address-field>
+        <address-field
+          :inputAddress="address"
+          :addressEditable="addressEditable"
+          @update="updateAddress"
+          @updateContactName="updateContactName"
+        ></address-field>
         <b-field :label="$t('mintNft.ui.label.uri')">
           <a v-if="uri" :href="uri" target="_blank">
             <img :src="uri" class="image-preview" />
@@ -26,6 +31,7 @@
           :address="address"
           :leadingText="$t('mintNft.ui.summary.label.leadingText')"
           :total="total"
+          :contactName="contactName"
         ></send-summary>
         <bundle-summary :account="account" :bundle="bundle" :ignoreError="true"></bundle-summary>
       </template>
@@ -76,6 +82,7 @@ import SendSummary from "../SendSummary.vue";
 import { xchSymbol } from "@/store/modules/network";
 import { getTokenInfo } from "@/services/coin/cat";
 import { generateTransferNftBundle } from "@/services/coin/nft";
+import AddressField from "../AddressField.vue";
 
 @Component({
   components: {
@@ -84,6 +91,7 @@ import { generateTransferNftBundle } from "@/services/coin/nft";
     TokenAmountField,
     BundleSummary,
     SendSummary,
+    AddressField,
   },
 })
 export default class NftTransfer extends Vue {
@@ -94,6 +102,7 @@ export default class NftTransfer extends Vue {
   public submitting = false;
   public fee = 0;
   public address = "";
+  public contactName = "";
   public memo = "";
   public bundle: SpendBundle | null = null;
   public availcoins: SymbolCoins | null = null;
@@ -145,6 +154,10 @@ export default class NftTransfer extends Vue {
   updateAddress(value: string): void {
     this.address = value;
     this.reset();
+  }
+
+  updateContactName(value: string): void {
+    this.contactName = value;
   }
 
   cancel(): void {
