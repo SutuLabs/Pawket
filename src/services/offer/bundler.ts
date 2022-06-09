@@ -46,6 +46,17 @@ export async function generateOffer(
     const puz_anno_id = sha256(coin_puzzle_hash, puz_anno_msg);
     return puz_anno_id;
   }
+
+  const puzzleCopy: TokenPuzzleDetail[] = puzzles.map((_) => ({
+    symbol: _.symbol,
+    puzzles: _.puzzles.map((puzz) => ({
+      privateKey: puzz.privateKey,
+      hash: puzz.hash,
+      address: puzz.address,
+      puzzle: puzz.puzzle,
+      type: puzz.type,
+    })),
+  }));
   // generate requested
   for (let i = 0; i < requested.length; i++) {
     const req = requested[i];
@@ -59,7 +70,7 @@ export async function generateOffer(
       const puzzle_reveal_text = puzzle.getSettlementPaymentsPuzzle();
 
       // put special target into puzzle reverse dict
-      puzzles.filter(_ => _.symbol == xchSymbol())[0].puzzles.push({
+      puzzleCopy.filter(_ => _.symbol == xchSymbol())[0].puzzles.push({
         privateKey: puzzle.getEmptyPrivateKey(), // this private key will not really calculated due to no AGG_SIG_ME exist in this spend
         puzzle: puzzle_reveal_text,
         hash: settlement_tgt,
@@ -92,7 +103,7 @@ export async function generateOffer(
       const puzzle_reveal_text = puzzle.getCatSettlementPuzzle(req.id);
 
       // put special target into puzzle reverse dict
-      puzzles.filter(_ => _.symbol == req.symbol)[0].puzzles.push({
+      puzzleCopy.filter(_ => _.symbol == req.symbol)[0].puzzles.push({
         privateKey: puzzle.getEmptyPrivateKey(), // this private key will not really calculated due to no AGG_SIG_ME exist in this spend
         puzzle: puzzle_reveal_text,
         hash: cat_settlement_tgt,
@@ -126,14 +137,14 @@ export async function generateOffer(
     const off = offered[i];
     const conds = getPuzzleAnnoConditions();
     if (off.id) {//CAT
-      spends.push(...await catBundle.generateCoinSpends(off.plan, puzzles, conds, getPuzzle));
+      spends.push(...await catBundle.generateCoinSpends(off.plan, puzzleCopy, conds, getPuzzle));
     } else {
-      spends.push(...await stdBundle.generateCoinSpends(off.plan, puzzles, conds));
+      spends.push(...await stdBundle.generateCoinSpends(off.plan, puzzleCopy, conds));
     }
   }
 
   // combine into one spendbundle
-  return transfer.getSpendBundle(spends, puzzles);
+  return transfer.getSpendBundle(spends, puzzleCopy);
 }
 
 export function sha256(...args: (string | Uint8Array)[]): string {
