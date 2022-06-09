@@ -47,12 +47,16 @@ export async function generateOffer(
     return puz_anno_id;
   }
 
-  const puzzleCopy: TokenPuzzleDetail[] = JSON.parse(JSON.stringify(puzzles));
-  for (let i = 0; i < puzzles.length; i++) {
-    for (let j = 0; j < puzzles[i].puzzles.length; j++) {
-      puzzleCopy[i].puzzles[j].privateKey = puzzles[i].puzzles[j].privateKey;
-    }
-  }
+  const puzzleCopy: TokenPuzzleDetail[] = puzzles.map((_) => ({
+    symbol: _.symbol,
+    puzzles: _.puzzles.map((puzz) => ({
+      privateKey: puzz.privateKey,
+      hash: puzz.hash,
+      address: puzz.address,
+      puzzle: puzz.puzzle,
+      type: puzz.type,
+    })),
+  }));
   // generate requested
   for (let i = 0; i < requested.length; i++) {
     const req = requested[i];
