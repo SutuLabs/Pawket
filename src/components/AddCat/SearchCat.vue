@@ -1,9 +1,16 @@
 <template>
   <div>
     <b-field>
-      <b-input :placeholder="$t('searchCat.ui.placeholder')" type="search" icon="magnify" v-model="searchInput"> </b-input>
+      <b-input
+        :placeholder="$t('searchCat.ui.placeholder')"
+        type="search"
+        icon="magnify"
+        v-model="searchInput"
+        @input.native.enter="scrollTop"
+      >
+      </b-input>
     </b-field>
-    <div class="tail-list">
+    <div class="tail-list" id="tail-list">
       <div v-for="item of filteredData" :key="item.code" aria-role="listitem">
         <div class="panel-block columns" v-if="isImported(item.code)">
           <div class="column is-2">
@@ -24,13 +31,13 @@
         </div>
       </div>
     </div>
-    <hr />
     <div class="has-text-centered">
       <b-button
         :label="$t('ManageCats.ui.button.add')"
         type="is-primary"
         rounded
         outlined
+        :aria-disabled="checkedCat.length"
         class="mx-2"
         @click="addCat()"
       ></b-button>
@@ -69,6 +76,11 @@ export default class SearchCat extends Vue {
     return this.allCats.findIndex((a) => a.name.toUpperCase() === symbol) > -1;
   }
 
+  scrollTop(): void {
+    const tailList = document.getElementById("tail-list");
+    if (tailList) tailList.scrollTop = 0;
+  }
+
   async mounted(): Promise<void> {
     this.tails = await TailDb.getTails();
   }
@@ -76,7 +88,7 @@ export default class SearchCat extends Vue {
 </script>
 <style scoped lang="scss">
 .tail-list {
-  max-height: 25vh;
+  max-height: 20vh;
   overflow-y: scroll;
 }
 </style>

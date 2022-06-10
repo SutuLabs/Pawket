@@ -56,13 +56,15 @@ class TailDb {
       code: tail.code,
       logo_url: tail.logo_url,
     }));
+    tails.sort((a, b) => a.code.localeCompare(b.code));
     this.ustore.setItem(this.storageKey, JSON.stringify(tails));
     this.ustore.setItem(this.lastUpdateKey, Date.now().toString());
   }
 
   private async checkAndUpdate(): Promise<void> {
     const lastUpdate = await this.ustore.getItem(this.lastUpdateKey);
-    if (!lastUpdate) {
+    const t = await this.ustore.getItem(this.storageKey);
+    if (!lastUpdate || !t) {
       await this.getCatFromTailDb();
       return;
     }
