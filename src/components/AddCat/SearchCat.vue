@@ -1,34 +1,30 @@
 <template>
   <div>
     <b-field>
-      <b-dropdown append-to-body scrollable max-height="200" trap-focus expanded :close-on-click="false">
-        <template #trigger>
-          <b-input :placeholder="$t('searchCat.ui.placeholder')" type="search" icon="magnify" v-model="searchInput"> </b-input>
-        </template>
-        <b-dropdown-item v-for="item of filteredData" :key="item.code" aria-role="listitem">
-          <div class="panel-block columns" v-if="isImported(item.code)">
-            <div class="column is-2">
-              <b-checkbox :value="true" disabled>
-                {{ item.code }}
-              </b-checkbox>
-            </div>
-            <div class="column is-offset-6 is-4">
-              <b-tag rounded class="is-pulled-right">{{ $t("searchCat.ui.tag.imported") }}</b-tag>
-            </div>
-          </div>
-          <div class="panel-block columns" v-else>
-            <div class="column is-2">
-              <b-checkbox v-model="checkedCat" :native-value="item">
-                {{ item.code }}
-              </b-checkbox>
-            </div>
-          </div>
-        </b-dropdown-item>
-      </b-dropdown>
+      <b-input :placeholder="$t('searchCat.ui.placeholder')" type="search" icon="magnify" v-model="searchInput"> </b-input>
     </b-field>
-    <b-field v-for="cat of checkedCat" :key="cat.code" aria-role="list">
-      <b-tag rounded>{{ cat.code }}</b-tag>
-    </b-field>
+    <div class="tail-list">
+      <div v-for="item of filteredData" :key="item.code" aria-role="listitem">
+        <div class="panel-block columns" v-if="isImported(item.code)">
+          <div class="column is-2">
+            <b-checkbox :value="true" disabled>
+              {{ item.code }}
+            </b-checkbox>
+          </div>
+          <div class="column is-offset-6 is-4">
+            <b-tag rounded class="is-pulled-right">{{ $t("searchCat.ui.tag.imported") }}</b-tag>
+          </div>
+        </div>
+        <div class="panel-block columns" v-else>
+          <div class="column is-2">
+            <b-checkbox v-model="checkedCat" :native-value="item">
+              {{ item.code }}
+            </b-checkbox>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr />
     <div class="has-text-centered">
       <b-button
         :label="$t('ManageCats.ui.button.add')"
@@ -78,3 +74,9 @@ export default class SearchCat extends Vue {
   }
 }
 </script>
+<style scoped lang="scss">
+.tail-list {
+  max-height: 25vh;
+  overflow-y: scroll;
+}
+</style>

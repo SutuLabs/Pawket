@@ -48,11 +48,12 @@
           </b-tab-item>
         </b-tabs>
         <hr />
-        <div class="y-scroll pt-5" style="height: 40vh">
-          <b-field :label="$t('ManageCats.ui.label.listingCats')">
+
+        <b-field :label="$t('ManageCats.ui.label.listingCats')">
+          <div class="y-scroll pt-5" style="max-height: 20vh">
             <token-item :catList="assetIds" @remove="remove" v-sortable="sortableOptions" @updateOrder="updateOrder"></token-item>
-          </b-field>
-        </div>
+          </div>
+        </b-field>
       </section>
     </section>
   </div>
