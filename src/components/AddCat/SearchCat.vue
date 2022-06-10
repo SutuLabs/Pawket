@@ -37,8 +37,8 @@
         type="is-primary"
         rounded
         outlined
-        :aria-disabled="checkedCat.length"
         class="mx-2"
+        :disabled="!checkedCat.length"
         @click="addCat()"
       ></b-button>
     </div>
