@@ -936,5 +936,13 @@
         "clearAll": "Clear All"
       }
     }
+  },
+  "searchCat": {
+    "ui": {
+      "placeholder": "CAT name",
+      "tag": {
+        "imported": "Imported"
+      }
+    }
   }
 }

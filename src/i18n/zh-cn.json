@@ -936,5 +936,13 @@
         "clearAll": "清空"
       }
     }
+  },
+  "searchCat": {
+    "ui": {
+      "placeholder": "输入CAT名称",
+      "tag": {
+        "imported": "已导入"
+      }
+    }
   }
 }
