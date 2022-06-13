@@ -31,7 +31,7 @@
         </div>
       </div>
     </div>
-    <div class="has-text-centered">
+    <div class="mt-2 has-text-centered">
       <b-button
         :label="$t('ManageCats.ui.button.add')"
         type="is-primary"
@@ -48,18 +48,18 @@
 <script lang="ts">
 import { CustomCat } from "@/store/modules/account";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import TailDb, { TailStorage } from "../../services/api/tailDb";
+import TailDb, { TailInfo } from "../../services/api/tailDb";
 @Component
 export default class SearchCat extends Vue {
   @Prop({ default: [] }) private allCats!: CustomCat[];
 
   public searchInput = "";
-  public checkedCat: TailStorage[] = [];
-  private tails: TailStorage[] = [];
+  public checkedCat: TailInfo[] = [];
+  private tails: TailInfo[] = [];
 
-  get filteredData(): TailStorage[] {
+  get filteredData(): TailInfo[] {
     if (!this.searchInput.length) return this.tails;
-    let res: TailStorage[] = [];
+    let res: TailInfo[] = [];
     this.tails.map((t) => {
       if (t.code.startsWith(this.searchInput.toUpperCase())) res.push(t);
     });

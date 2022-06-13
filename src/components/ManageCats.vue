@@ -69,7 +69,7 @@ import TokenItem from "@/components/TokenItem.vue";
 import { Bytes } from "clvm";
 import { shorten } from "@/filters/addressConversion";
 import SearchCat from "./AddCat/SearchCat.vue";
-import { TailStorage } from "@/services/api/tailDb";
+import { TailInfo } from "@/services/api/tailDb";
 
 @Component({
   directives: {
@@ -165,7 +165,7 @@ export default class ManageCats extends Vue {
     this.reset();
   }
 
-  addCats(tails: TailStorage[]): void {
+  addCats(tails: TailInfo[]): void {
     tails.map((_) => {
       this.assetIds.push({ name: _.code, id: _.hash });
     });

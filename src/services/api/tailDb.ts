@@ -26,7 +26,7 @@ interface TailDbResponse {
   tails: Tail[];
 }
 
-export interface TailStorage {
+export interface TailInfo {
   hash: string;
   code: string;
   logo_url: string;
@@ -51,7 +51,7 @@ class TailDb {
       throw new Error(await resp.text());
     }
     const p = (await resp.json()) as TailDbResponse;
-    const tails: TailStorage[] = p.tails.map((tail) => ({
+    const tails: TailInfo[] = p.tails.map((tail) => ({
       hash: tail.hash,
       code: tail.code,
       logo_url: tail.logo_url,
@@ -75,12 +75,12 @@ class TailDb {
     }
   }
 
-  public async getTails(): Promise<TailStorage[]> {
-    let tails: TailStorage[] = [];
+  public async getTails(): Promise<TailInfo[]> {
+    let tails: TailInfo[] = [];
     await this.checkAndUpdate();
     const t = await this.ustore.getItem(this.storageKey);
     if (t == null || t.length === 0) return tails;
-    tails = JSON.parse(t) as TailStorage[];
+    tails = JSON.parse(t) as TailInfo[];
     return tails;
   }
 }
