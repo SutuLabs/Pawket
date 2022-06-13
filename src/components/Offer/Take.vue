@@ -254,7 +254,7 @@ export default class TakeOffer extends Vue {
       component: ManageCats,
       hasModalCard: true,
       trapFocus: true,
-      canCancel: ["x"],
+      canCancel: [""],
       props: { account: this.account, defaultAssetId: id },
       events: { refresh: this.refresh },
     });

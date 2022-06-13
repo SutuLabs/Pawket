@@ -119,7 +119,7 @@ export default class App extends Vue {
       component: DevHelper,
       hasModalCard: true,
       trapFocus: true,
-      canCancel: ["x"],
+      canCancel: [""],
       props: {},
     });
   }

@@ -412,6 +412,7 @@ export default class Send extends Vue {
       component: AddressBook,
       hasModalCard: true,
       trapFocus: true,
+      canCancel: [""],
       props: { parent: "Send" },
       events: {
         selected: (value: string): void => {
@@ -428,6 +429,7 @@ export default class Send extends Vue {
       component: AddressBook,
       hasModalCard: true,
       trapFocus: true,
+      canCancel: [""],
       props: { parent: "Send", defaultMode: "Add", defaultAddress: this.address },
       events: { added: this.updateContacts },
     });
@@ -445,6 +447,7 @@ export default class Send extends Vue {
       component: OfflineQrCode,
       hasModalCard: true,
       trapFocus: true,
+      canCancel: [""],
       props: { puzzles: this.requests.find((_) => _.symbol == this.selectedToken)?.puzzles },
       events: {
         scanned: (coins: OriginCoin[]): void => {
@@ -463,6 +466,7 @@ export default class Send extends Vue {
       component: OfflineSendShowBundle,
       hasModalCard: true,
       trapFocus: false,
+      canCancel: [""],
       props: { bundle: this.bundle },
     });
   }

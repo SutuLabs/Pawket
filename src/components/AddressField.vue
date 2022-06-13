@@ -137,6 +137,7 @@ export default class AddressField extends Vue {
       component: AddressBook,
       hasModalCard: true,
       trapFocus: true,
+      canCancel: [""],
       props: { parent: "Send" },
       events: {
         selected: (value: string): void => {
@@ -153,6 +154,7 @@ export default class AddressField extends Vue {
       component: AddressBook,
       hasModalCard: true,
       trapFocus: true,
+      canCancel: [""],
       props: { parent: "Send", defaultMode: "Add", defaultAddress: this.address },
       events: { added: this.updateContacts },
     });

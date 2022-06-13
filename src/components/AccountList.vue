@@ -144,7 +144,7 @@ export default class AccountList extends Vue {
       parent: this,
       component: AddByPassword,
       hasModalCard: true,
-      canCancel: ["x"],
+      canCancel: [""],
       trapFocus: true,
     });
   }
@@ -154,7 +154,7 @@ export default class AccountList extends Vue {
       parent: this,
       component: AddBySerial,
       hasModalCard: true,
-      canCancel: ["x"],
+      canCancel: [""],
       trapFocus: true,
       props: { defaultName: this.$t("accountList.ui.value.defaultName", { n: this.accountNum }) },
     });
@@ -166,7 +166,7 @@ export default class AccountList extends Vue {
       component: AddByMnemonic,
       hasModalCard: true,
       trapFocus: true,
-      canCancel: ["x"],
+      canCancel: [""],
       props: { title: this.$t("accountList.ui.modal.addByLegacy"), mnemonicLen: 24 },
     });
   }
@@ -177,7 +177,7 @@ export default class AccountList extends Vue {
       component: AddByMnemonic,
       hasModalCard: true,
       trapFocus: true,
-      canCancel: ["x"],
+      canCancel: [""],
       props: { title: this.$t("accountList.ui.modal.addByMnemonic"), mnemonicLen: 12 },
     });
   }
@@ -188,7 +188,7 @@ export default class AccountList extends Vue {
       component: AddByAddress,
       hasModalCard: true,
       trapFocus: true,
-      canCancel: ["x"],
+      canCancel: [""],
     });
   }
 
@@ -251,6 +251,7 @@ export default class AccountList extends Vue {
       component: AccountExport,
       hasModalCard: true,
       trapFocus: true,
+      canCancel: [""],
       props: { account },
     });
   }

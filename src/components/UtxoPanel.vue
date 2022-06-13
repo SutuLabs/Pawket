@@ -58,7 +58,7 @@ export default class UtxoPanel extends Vue {
       component: UtxoDetail,
       hasModalCard: true,
       trapFocus: true,
-      canCancel: ["x", "outside"],
+      canCancel: ["outside"],
       props: { activity: activity, tokenInfo: this.tokenInfo },
     });
   }

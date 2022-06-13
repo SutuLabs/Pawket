@@ -253,6 +253,7 @@ export default class AccountDetail extends Vue {
       component: AccountExport,
       hasModalCard: true,
       trapFocus: true,
+      canCancel: [""],
       props: { account: this.account },
     });
   }
@@ -286,7 +287,7 @@ export default class AccountDetail extends Vue {
       component: ManageCats,
       hasModalCard: true,
       trapFocus: true,
-      canCancel: ["x"],
+      canCancel: [""],
       props: { account: this.account },
       events: { refresh: this.refresh },
     });
@@ -298,7 +299,7 @@ export default class AccountDetail extends Vue {
       component: AccountList,
       hasModalCard: true,
       trapFocus: true,
-      canCancel: ["x"],
+      canCancel: [""],
       props: {},
     });
   }
@@ -310,7 +311,7 @@ export default class AccountDetail extends Vue {
       component: Send,
       hasModalCard: true,
       trapFocus: true,
-      canCancel: ["x"],
+      canCancel: [""],
       props: { account: this.account, rate: this.rate, currency: this.currency },
     });
   }
@@ -321,6 +322,7 @@ export default class AccountDetail extends Vue {
       component: ExplorerLink,
       hasModalCard: true,
       trapFocus: true,
+      canCancel: ["outside"],
       props: { account: this.account, token: token },
     });
   }
