@@ -137,7 +137,7 @@ export default class Dapp extends Vue {
       component: Send,
       hasModalCard: true,
       trapFocus: true,
-      canCancel: ["x"],
+      canCancel: [""],
       props: {
         account: this.account,
         inputAddress: donationAddress,
@@ -156,7 +156,7 @@ export default class Dapp extends Vue {
       component: TakeOffer,
       hasModalCard: true,
       trapFocus: true,
-      canCancel: ["x"],
+      canCancel: [""],
       props: {
         account: this.account,
         tokenList: this.tokenList,
@@ -171,7 +171,7 @@ export default class Dapp extends Vue {
       component: MakeOffer,
       hasModalCard: true,
       trapFocus: true,
-      canCancel: ["x"],
+      canCancel: [""],
       props: {
         account: this.account,
       },
@@ -185,7 +185,7 @@ export default class Dapp extends Vue {
       component: BatchSend,
       hasModalCard: true,
       trapFocus: true,
-      canCancel: ["x"],
+      canCancel: [""],
       props: {
         account: this.account,
       },
@@ -199,7 +199,7 @@ export default class Dapp extends Vue {
       component: MintCat,
       hasModalCard: true,
       trapFocus: true,
-      canCancel: ["x"],
+      canCancel: [""],
       props: {
         account: this.account,
         tokenList: this.tokenList,
@@ -214,7 +214,7 @@ export default class Dapp extends Vue {
       component: MintNft,
       hasModalCard: true,
       trapFocus: true,
-      canCancel: ["x"],
+      canCancel: [""],
       props: {
         account: this.account,
       },

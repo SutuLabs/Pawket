@@ -199,7 +199,7 @@ export default class AccountConfigure extends Vue {
           component: MnemonicExport,
           hasModalCard: true,
           trapFocus: true,
-          canCancel: ["x"],
+          canCancel: [""],
           props: { mnemonic: store.state.vault.seedMnemonic },
         });
       },

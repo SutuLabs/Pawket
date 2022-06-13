@@ -46,7 +46,7 @@ export default class NftPanel extends Vue {
       component: NftDetailPanel,
       hasModalCard: true,
       trapFocus: true,
-      canCancel: ["x", "outside"],
+      canCancel: ["outside"],
       props: { nft: nft, account: this.account },
     });
   }

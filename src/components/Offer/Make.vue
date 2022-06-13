@@ -284,6 +284,7 @@ export default class MakeOffer extends Vue {
       component: DevHelper,
       hasModalCard: true,
       trapFocus: true,
+      canCancel: [""],
       props: { inputOfferText: this.offerText },
     });
   }
@@ -298,6 +299,7 @@ export default class MakeOffer extends Vue {
       component: DevHelper,
       hasModalCard: true,
       trapFocus: true,
+      canCancel: [""],
       props: { inputBundleText: this.bundleJson },
     });
   }
