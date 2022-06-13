@@ -756,6 +756,7 @@
         "receive": "接收"
       },
       "label": {
+        "amount": "金额",
         "time": "时间",
         "spentHeight": "消费区块高度",
         "confirmedHeight": "确认区块高度",

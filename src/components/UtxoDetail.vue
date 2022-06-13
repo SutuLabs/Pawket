@@ -3,12 +3,15 @@
     <header class="modal-card-head">
       <span v-if="activity.spent" class="modal-card-title has-text-dark is-size-5">{{ $t("utxoDetail.ui.title.cost") }}</span>
       <span v-else class="modal-card-title has-text-dark is-size-5">{{ $t("utxoDetail.ui.title.receive") }}</span>
-      <span v-if="tokenInfo[activity.symbol]" class="has-text-dark is-size-5 has-text-right">
-        {{ activity.spent ? "-" : "+" }}{{ activity.coin.amount | demojo(tokenInfo[activity.symbol]) }}
-        <p class="has-text-grey is-size-7">{{ activity.coin.amount }} mojos</p>
-      </span>
+      <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
+      <b-field :label="$t('utxoDetail.ui.label.amount')" custom-class="is-medium has-text-weight-normal">
+        <span v-if="tokenInfo[activity.symbol]" class="has-text-dark is-size-5 has-text-right">
+          {{ activity.spent ? "-" : "+" }}{{ activity.coin.amount | demojo(tokenInfo[activity.symbol]) }}
+          <span class="has-text-grey is-size-7">{{ activity.coin.amount }} mojos</span>
+        </span>
+      </b-field>
       <b-field :label="$t('utxoDetail.ui.label.time')" custom-class="is-medium has-text-weight-normal">
         <p class="has-text-grey">{{ new Date(activity.timestamp * 1000).toISOString() }}</p>
       </b-field>

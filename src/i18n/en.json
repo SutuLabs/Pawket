@@ -756,6 +756,7 @@
         "receive": "Receive"
       },
       "label": {
+        "amount": "Amount",
         "time": "Time",
         "spentHeight": "Spent Height",
         "confirmedHeight": "Confirmed Height",
