@@ -9,36 +9,51 @@
         <button type="button" class="delete" @click="close()"></button>
       </header>
       <section class="modal-card-body">
-        <b-field :label="$t('ManageCats.ui.label.name')">
-          <b-input
-            v-model="name"
-            type="text"
-            required
-            maxlength="36"
-            :validation-message="$t('ManageCats.ui.message.nameRequired')"
-            ref="name"
-            title=""
-          ></b-input>
-        </b-field>
-        <b-field :label="$t('ManageCats.ui.label.assetID')">
-          <b-input
-            v-model="assetId"
-            type="text"
-            required
-            ref="assetId"
-            title=""
-            :validation-message="$t('ManageCats.ui.message.assetIdRequired')"
-          ></b-input>
-        </b-field>
-        <div class="has-text-centered">
-          <b-button :label="$t('ManageCats.ui.button.add')" type="is-primary" class="mx-2" @click="add()"></b-button>
-        </div>
+        <b-tabs position="is-centered" class="block" expanded>
+          <b-tab-item label="Search">
+            <search-cat :allCats="allCats" @addCats="addCats"></search-cat>
+          </b-tab-item>
+          <b-tab-item label="Custom">
+            <b-field :label="$t('ManageCats.ui.label.name')">
+              <b-input
+                v-model="name"
+                type="text"
+                required
+                maxlength="36"
+                :validation-message="$t('ManageCats.ui.message.nameRequired')"
+                ref="name"
+                title=""
+              ></b-input>
+            </b-field>
+            <b-field :label="$t('ManageCats.ui.label.assetID')">
+              <b-input
+                v-model="assetId"
+                type="text"
+                required
+                ref="assetId"
+                title=""
+                :validation-message="$t('ManageCats.ui.message.assetIdRequired')"
+              ></b-input>
+            </b-field>
+            <div class="has-text-centered">
+              <b-button
+                :label="$t('ManageCats.ui.button.add')"
+                type="is-primary"
+                rounded
+                outlined
+                class="mx-2"
+                @click="add()"
+              ></b-button>
+            </div>
+          </b-tab-item>
+        </b-tabs>
         <hr />
-        <div class="y-scroll pt-5" style="height: 40vh">
-          <b-field :label="$t('ManageCats.ui.label.listingCats')">
+
+        <b-field :label="$t('ManageCats.ui.label.listingCats')">
+          <div class="y-scroll pt-5" style="max-height: 30vh">
             <token-item :catList="assetIds" @remove="remove" v-sortable="sortableOptions" @updateOrder="updateOrder"></token-item>
-          </b-field>
-        </div>
+          </div>
+        </b-field>
       </section>
     </section>
   </div>
@@ -53,6 +68,8 @@ import { AccountEntity, CustomCat, getAccountCats, getDefaultCats } from "@/stor
 import TokenItem from "@/components/TokenItem.vue";
 import { Bytes } from "clvm";
 import { shorten } from "@/filters/addressConversion";
+import SearchCat from "./AddCat/SearchCat.vue";
+import { TailInfo } from "@/services/api/tailDb";
 
 @Component({
   directives: {
@@ -63,6 +80,7 @@ import { shorten } from "@/filters/addressConversion";
   },
   components: {
     TokenItem,
+    SearchCat,
   },
 })
 export default class ManageCats extends Vue {
@@ -89,6 +107,10 @@ export default class ManageCats extends Vue {
     }
     this.assetIds = getAccountCats(this.account);
     this.defaultCats = getDefaultCats();
+  }
+
+  get allCats(): CustomCat[] {
+    return this.defaultCats.concat(this.assetIds);
   }
 
   close(): void {
@@ -141,6 +163,13 @@ export default class ManageCats extends Vue {
     this.assetIds.push({ name: this.name.toUpperCase(), id: this.assetId });
     this.submit();
     this.reset();
+  }
+
+  addCats(tails: TailInfo[]): void {
+    tails.map((_) => {
+      this.assetIds.push({ name: _.code, id: _.hash });
+    });
+    this.submit();
   }
 
   remove(id: string): void {
