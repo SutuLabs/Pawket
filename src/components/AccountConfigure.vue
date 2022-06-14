@@ -32,7 +32,16 @@
             </b-tooltip>
           </div>
         </a>
-        <b-slider v-model="maxAddress" :max="12" :min="1" v-if="displayMaxAddressSlider" indicator></b-slider>
+        <b-slider
+          v-model="maxAddress"
+          :max="12"
+          :min="1"
+          v-if="displayMaxAddressSlider"
+          indicator
+          ticks
+          lazy
+          @change="changeMaxAddress"
+        ></b-slider>
         <a href="javascript:void(0)" class="panel-block" @click="openAddressBook()">
           <div class="column is-full">
             <b-icon icon="account-box-multiple-outline" size="is-small" class="mr-2"></b-icon>
@@ -77,7 +86,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
+import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import { NotificationProgrammatic as Notification } from "buefy";
 import store from "@/store/index";
 import KeyBox from "@/components/KeyBox.vue";
@@ -133,7 +142,7 @@ export default class AccountConfigure extends Vue {
 
   @Emit("close")
   async close(): Promise<void> {
-    if (this.maxAddress) this.account.addressRetrievalCount = this.maxAddress;
+    if (this.maxAddress != null) this.account.addressRetrievalCount = this.maxAddress;
     await store.dispatch("persistent");
     this.$emit("refresh");
   }
@@ -186,7 +195,7 @@ export default class AccountConfigure extends Vue {
       cancelText: this.$tc("accountConfigure.ui.button.cancel"),
       confirmText: this.$tc("accountConfigure.ui.button.confirm"),
       onConfirm: async (password, { close }) => {
-        if (!await isPasswordCorrect(password)) {
+        if (!(await isPasswordCorrect(password))) {
           this.$buefy.toast.open({
             message: this.$tc("accountConfigure.message.error.passwordNotCorrect"),
             type: "is-danger",
@@ -206,9 +215,8 @@ export default class AccountConfigure extends Vue {
     });
   }
 
-  @Watch("maxAddress")
-  onMaxAddressChange(): void {
-    if (this.maxAddress && this.displayMaxAddressSlider) {
+  changeMaxAddress(): void {
+    if (this.maxAddress) {
       this.account.addressRetrievalCount = this.maxAddress;
       notifyPrimary(this.$tc("accountConfigure.message.notification.saved"));
     }
