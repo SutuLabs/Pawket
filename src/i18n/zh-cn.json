@@ -714,12 +714,12 @@
         "send": "批量发送"
       },
       "tooltip": {
-        "unit": "金额单位为 mojo(s)。"
+        "help": "支持同时发送多笔交易。下载 CSV 示例文件填好后上传。",
+        "upload": "上传“.csv”格式文件。"
       },
       "field": {
         "csv": {
-          "title": "输入 CSV",
-          "fillSample": "填充示例"
+          "downloadSample": "点击此处下载 CSV 示例文件。"
         }
       },
       "summary": {
@@ -728,7 +728,8 @@
       "button": {
         "cancel": "取消",
         "sign": "签名",
-        "submit": "提交"
+        "submit": "提交",
+        "upload": "上传CSV"
       },
       "messages": {
         "failedToSign": "签名失败: "
@@ -739,6 +740,12 @@
         "ADDRESS_NOT_MATCH_NETWORK": "所填写地址与当前网络不符，请填写正确的地址。",
         "COIN_NOT_EXIST": "{symbol}不存在!"
       }
+    },
+    "sample": {
+      "address": "地址",
+      "coin": "硬币种类",
+      "amount": "金额(mojo)",
+      "memo": "备注(如果你的硬币种类填写了 XCH则不能填写备注内容。)"
     }
   },
   "utxo": {

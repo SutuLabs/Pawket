@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-card">
+  <div class="modal-card" @dragover="dragHandle">
     <header class="modal-card-head">
       <p class="modal-card-title">{{ $t("batchSend.ui.title.send") }}</p>
       <button type="button" class="delete" @click="close()"></button>
@@ -8,13 +8,36 @@
       <template v-if="!bundle">
         <b-field>
           <template #label>
-            {{ $t("batchSend.ui.field.csv.title") }}
-            <b-tooltip :label="$t('batchSend.ui.tooltip.unit')" position="is-bottom" multilined>
+            <b-tooltip :label="$t('batchSend.ui.tooltip.upload')" position="is-right">
+              <b-upload v-model="file" accept=".csv" class="file-label" @input="afterUploadCsv" @click="beforeUploadCsv">
+                <b-tag icon="tray-arrow-up" size="is-small">{{ $t("batchSend.ui.button.upload") }}</b-tag>
+              </b-upload>
+            </b-tooltip>
+            <b-tooltip :label="$t('batchSend.ui.tooltip.help')" position="is-bottom" multilined>
               <b-icon icon="help-circle" size="is-small"> </b-icon>
             </b-tooltip>
-            <b-button size="is-small" tag="a" @click="fillSample()">{{ $t("batchSend.ui.field.csv.fillSample") }}</b-button>
+            <a :href="csvSampleUri" download="sample.csv"
+              ><span class="is-size-7 is-underlined">{{ $t("batchSend.ui.field.csv.downloadSample") }}</span></a
+            >
           </template>
-          <b-input type="textarea" v-model="csv"></b-input>
+          <b-input type="textarea" v-model="csv" v-show="!isDragging"></b-input>
+        </b-field>
+        <b-field v-show="isDragging">
+          <b-upload v-model="file" accept=".csv" drag-drop expanded @input="afterUploadCsv">
+            <section class="section">
+              <div class="content has-text-centered">
+                <p>
+                  <b-icon icon="upload" size="is-large"> </b-icon>
+                </p>
+                <p>Drop your files here or click to upload</p>
+              </div>
+            </section>
+          </b-upload>
+        </b-field>
+        <b-field>
+          <b-tag v-if="file" icon="paperclip" size="is-small" closable aria-close-label="Close tag" @close="deleteFile">
+            {{ file.name }}
+          </b-tag>
         </b-field>
 
         <fee-selector v-model="fee"></fee-selector>
@@ -86,6 +109,8 @@ export default class BatchSend extends Vue {
   public availcoins: SymbolCoins | null = null;
   public status: "Loading" | "Loaded" = "Loading";
   public csv = "";
+  public file: File | null = null;
+  public isDragging = false;
 
   public requests: TokenPuzzleDetail[] = [];
 
@@ -194,13 +219,42 @@ export default class BatchSend extends Vue {
     submitBundle(this.bundle, (_) => (this.submitting = _), this.close);
   }
 
-  fillSample(): void {
+  get csvSampleUri(): string {
     const address = puzzle.getAddressFromPuzzleHash(
       "b4bff0c0d5d88a8bc758f8b621e8b6164baa77fbe245e60f17a18119137f84a5",
       xchPrefix()
     );
-    this.csv = `${address},BSH,150,hello_memo
-${address},${xchSymbol()},150,`;
+    const dataPrefix = "data:text/csv;charset=utf-8";
+    const fields = `${this.$tc("batchSend.sample.address")},${this.$tc("batchSend.sample.coin")},${this.$tc(
+      "batchSend.sample.amount"
+    )},${this.$tc("batchSend.sample.memo")}\n`;
+    const content = `${dataPrefix},${fields}${address},BSH,150,hello_memo\n${address},${xchSymbol()},150,`;
+    return encodeURI(content);
+  }
+
+  beforeUploadCsv(event: Event): void {
+    event.preventDefault();
+    this.$buefy.dialog.confirm({
+      message: "Continue on this task?",
+      onConfirm: () => console.log("xxx"),
+    });
+  }
+
+  async afterUploadCsv(f: File): Promise<void> {
+    this.isDragging = false;
+    const csvText = await f.text();
+    const idx = csvText.search("\n");
+    this.csv = csvText.substring(idx + 1);
+  }
+
+  deleteFile(): void {
+    this.file = null;
+    this.csv = "";
+  }
+
+  dragHandle(event: Event): void {
+    this.isDragging = true;
+    event.preventDefault();
   }
 }
 </script>
