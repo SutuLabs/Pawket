@@ -260,7 +260,6 @@ export default class BatchSend extends Vue {
 
   afterDragged(f: File[]): void {
     this.isDragging = false;
-    console.log(f);
     if (f.length > 1) {
       Notification.open({
         message: this.$tc("batchSend.ui.messages.onlyOneFile"),
