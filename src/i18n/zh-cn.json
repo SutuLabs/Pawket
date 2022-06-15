@@ -719,7 +719,9 @@
       },
       "field": {
         "csv": {
-          "downloadSample": "点击此处下载 CSV 示例文件。"
+          "downloadSample": "点击此处下载 CSV 示例文件。",
+          "drag": "拖放到此区域可直接上传。",
+          "sampleName": "示例文件"
         }
       },
       "summary": {
@@ -732,7 +734,9 @@
         "upload": "上传CSV"
       },
       "messages": {
-        "failedToSign": "签名失败: "
+        "failedToSign": "签名失败: ",
+        "wrongFileType": "请上传.csv 格式文件。",
+        "onlyOneFile": "仅支持上传单个文件。"
       }
     },
     "messages": {

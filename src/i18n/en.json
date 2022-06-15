@@ -719,7 +719,9 @@
       },
       "field": {
         "csv": {
-          "downloadSample": "Click here to download a sample CSV file."
+          "downloadSample": "Click here to download a sample CSV file.",
+          "drag": "Drag and drop to this area to upload directly.",
+          "sampleName": "Sample"
         }
       },
       "summary": {
@@ -732,7 +734,9 @@
         "upload": "Upload CSV"
       },
       "messages": {
-        "failedToSign": "Failed to sign: "
+        "failedToSign": "Failed to sign: ",
+        "wrongFileType": "Please upload the file in .csv format.",
+        "onlyOneFile": "Only one file upload is supported."
       }
     },
     "messages": {
