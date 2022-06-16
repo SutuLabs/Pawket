@@ -1,20 +1,43 @@
 <template>
-  <div class="modal-card">
+  <div class="modal-card" @dragenter="dragenter" @dragleave="dragleave">
     <header class="modal-card-head">
       <p class="modal-card-title">{{ $t("batchSend.ui.title.send") }}</p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
       <template v-if="!bundle">
+        <span class="label">
+          <b-tooltip :label="$t('batchSend.ui.tooltip.upload')" position="is-right">
+            <b-upload v-model="file" accept=".csv" class="file-label" @input="afterUploadCsv">
+              <b-tag icon="tray-arrow-up" size="is-small">{{ $t("batchSend.ui.button.upload") }}</b-tag>
+            </b-upload>
+          </b-tooltip>
+          <b-tooltip :label="$t('batchSend.ui.tooltip.help')" position="is-bottom" multilined>
+            <b-icon icon="help-circle" size="is-small"> </b-icon>
+          </b-tooltip>
+          <a :href="csvSampleUri" :download="$t('batchSend.ui.field.csv.sampleName') + '.csv'"
+            ><span class="is-size-7 is-underlined">{{ $t("batchSend.ui.field.csv.downloadSample") }}</span></a
+          >
+        </span>
         <b-field>
-          <template #label>
-            {{ $t("batchSend.ui.field.csv.title") }}
-            <b-tooltip :label="$t('batchSend.ui.tooltip.unit')" position="is-bottom" multilined>
-              <b-icon icon="help-circle" size="is-small"> </b-icon>
-            </b-tooltip>
-            <b-button size="is-small" tag="a" @click="fillSample()">{{ $t("batchSend.ui.field.csv.fillSample") }}</b-button>
-          </template>
-          <b-input type="textarea" v-model="csv"></b-input>
+          <b-input type="textarea" v-model="csv" v-show="!isDragging"></b-input>
+        </b-field>
+        <b-field v-show="isDragging">
+          <b-upload v-model="dragfile" drag-drop expanded multiple @input="afterDragged">
+            <section class="section">
+              <div class="content has-text-centered">
+                <p>
+                  <b-icon icon="upload" size="is-large"> </b-icon>
+                </p>
+                <p>{{ $t("batchSend.ui.field.csv.drag") }}</p>
+              </div>
+            </section>
+          </b-upload>
+        </b-field>
+        <b-field>
+          <b-tag v-if="file" icon="paperclip" size="is-small" closable aria-close-label="Close tag" @close="deleteFile">
+            {{ file.name }}
+          </b-tag>
         </b-field>
 
         <fee-selector v-model="fee"></fee-selector>
@@ -86,6 +109,10 @@ export default class BatchSend extends Vue {
   public availcoins: SymbolCoins | null = null;
   public status: "Loading" | "Loaded" = "Loading";
   public csv = "";
+  public file: File | null = null;
+  public dragfile: File[] = [];
+  public isDragging = false;
+  public transitioning = false;
 
   public requests: TokenPuzzleDetail[] = [];
 
@@ -194,13 +221,66 @@ export default class BatchSend extends Vue {
     submitBundle(this.bundle, (_) => (this.submitting = _), this.close);
   }
 
-  fillSample(): void {
+  get csvSampleUri(): string {
     const address = puzzle.getAddressFromPuzzleHash(
       "b4bff0c0d5d88a8bc758f8b621e8b6164baa77fbe245e60f17a18119137f84a5",
       xchPrefix()
     );
-    this.csv = `${address},BSH,150,hello_memo
-${address},${xchSymbol()},150,`;
+    const dataPrefix = "data:text/csv;charset=utf-8";
+    const fields = `${this.$tc("batchSend.sample.address")},${this.$tc("batchSend.sample.coin")},${this.$tc(
+      "batchSend.sample.amount"
+    )},${this.$tc("batchSend.sample.memo")}\n`;
+    const content = `${dataPrefix},${fields}${address},BSH,150,hello_memo\n${address},${xchSymbol()},150,`;
+    return encodeURI(content);
+  }
+
+  async afterUploadCsv(f: File): Promise<void> {
+    this.isDragging = false;
+    const csvText = await f.text();
+    const idx = csvText.search("\n");
+    this.csv = csvText.substring(idx + 1);
+  }
+
+  deleteFile(): void {
+    this.file = null;
+    this.csv = "";
+  }
+
+  dragenter(event: Event): void {
+    event.preventDefault();
+    this.isDragging = true;
+    this.transitioning = true;
+    setTimeout(() => (this.transitioning = false), 1);
+  }
+
+  dragleave(event: Event): void {
+    event.preventDefault();
+    if (!this.transitioning) this.isDragging = false;
+  }
+
+  afterDragged(f: File[]): void {
+    this.isDragging = false;
+    if (f.length > 1) {
+      Notification.open({
+        message: this.$tc("batchSend.ui.messages.onlyOneFile"),
+        type: "is-danger",
+        autoClose: false,
+      });
+      this.dragfile = [];
+      return;
+    }
+    if (f[0].type !== "text/csv") {
+      Notification.open({
+        message: this.$tc("batchSend.ui.messages.wrongFileType"),
+        type: "is-danger",
+        autoClose: false,
+      });
+      this.dragfile = [];
+      return;
+    }
+    this.file = f[0];
+    this.afterUploadCsv(f[0]);
+    this.dragfile = [];
   }
 }
 </script>
