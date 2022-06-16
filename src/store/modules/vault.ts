@@ -20,6 +20,7 @@ export interface IVaultState {
   loading: boolean;
   experiment: boolean;
   currency: CurrencyType;
+  selectedAccount: number;
 }
 
 const PasswordHashIteration = 6000;
@@ -38,6 +39,7 @@ store.registerModule<IVaultState>('vault', {
       loading: true,
       experiment: false,
       currency: CurrencyType.USDT,
+      selectedAccount: 0,
     };
   },
   actions: {
@@ -74,6 +76,7 @@ store.registerModule<IVaultState>('vault', {
         state.encryptedAccounts = sts.encryptedAccounts;
         state.experiment = sts.experiment;
         state.currency = sts.currency;
+        state.selectedAccount = sts.selectedAccount ?? 0;
         state.loading = false;
       }
 
@@ -93,6 +96,10 @@ store.registerModule<IVaultState>('vault', {
     },
     setCurrency({ state, dispatch }, currency: CurrencyType) {
       state.currency = currency;
+      dispatch("persistent");
+    },
+    selectAccount({ state, dispatch }, account: number) {
+      state.selectedAccount = account;
       dispatch("persistent");
     },
     async changePassword({ dispatch }, { oldPassword, newPassword }: { oldPassword: string, newPassword: string }) {
@@ -131,6 +138,7 @@ store.registerModule<IVaultState>('vault', {
       rootState.account.accounts = JSON.parse(
         (await encryption.decrypt(state.encryptedAccounts, encryptKey)) || "[]"
       );
+      rootState.account.selectedAccount = state.selectedAccount;
       ensureState(rootState);
       rootState.account.accounts.forEach(_ => {
         Vue.set(_, "balance", -1);
@@ -196,6 +204,7 @@ store.registerModule<IVaultState>('vault', {
           encryptedAccounts: encryptedAccounts,
           experiment: state.experiment,
           currency: state.currency,
+          selectedAccount: state.selectedAccount,
         })
       );
 
