@@ -907,7 +907,11 @@
           "leadingText": "Minting NFT"
         }
       },
+      "tooltip": {
+        "upload": "Select an image in .png format to generate a unique hash."
+      },
       "button": {
+        "upload": "Get Image Hash",
         "cancel": "Cancel",
         "sign": "Sign",
         "submit": "Submit"

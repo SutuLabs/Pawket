@@ -907,7 +907,11 @@
           "leadingText": "发行 NFT"
         }
       },
+      "tooltip": {
+        "upload": "选择一张.png格式的图片生成专属哈希。"
+      },
       "button": {
+        "upload": "获取图片哈希",
         "cancel": "取消",
         "sign": "签名",
         "submit": "提交"

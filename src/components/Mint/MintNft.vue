@@ -23,13 +23,15 @@
           </template>
           <b-input maxlength="1024" v-model="uri" type="text" @input="reset()" required></b-input>
         </b-field>
-        <b-field>
-          <template #label>
-            {{ $t("mintNft.ui.label.hash") }}
+        <span class="label">
+          {{ $t("mintNft.ui.label.hash") }}
+          <b-tooltip :label="$t('mintNft.ui.tooltip.upload')" position="is-bottom" multilined>
             <b-upload v-model="imageFile" accept=".png" class="file-label" @input="afterUploadImg">
-              <b-tag icon="tray-arrow-up" size="is-small">Get Image Hash</b-tag>
+              <b-tag icon="tray-arrow-up" size="is-small">{{ $t("mintNft.ui.button.upload") }}</b-tag>
             </b-upload>
-          </template>
+          </b-tooltip>
+        </span>
+        <b-field>
           <b-input maxlength="64" v-model="hash" type="text" @input="reset()" required></b-input>
         </b-field>
         <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
