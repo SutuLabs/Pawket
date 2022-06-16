@@ -23,7 +23,13 @@
           </template>
           <b-input maxlength="1024" v-model="uri" type="text" @input="reset()" required></b-input>
         </b-field>
-        <b-field :label="$t('mintNft.ui.label.hash')">
+        <b-field>
+          <template #label>
+            {{ $t("mintNft.ui.label.hash") }}
+            <b-upload v-model="imageFile" accept=".png" class="file-label" @input="afterUploadImg">
+              <b-tag icon="tray-arrow-up" size="is-small">Get Image Hash</b-tag>
+            </b-upload>
+          </template>
           <b-input maxlength="64" v-model="hash" type="text" @input="reset()" required></b-input>
         </b-field>
         <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
@@ -91,8 +97,9 @@ import { xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getTokenInfo } from "@/services/coin/cat";
 import { generateMintNftBundle } from "@/services/coin/nft";
 import AddressField from "../AddressField.vue";
-import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
+import { bech32m } from "@scure/base";
+import { getFileHash } from "@/services/crypto/fileHash";
 
 @Component({
   components: {
@@ -123,6 +130,7 @@ export default class MintNft extends Vue {
   public hash = "";
   public selectedToken = xchSymbol();
   public validity = false;
+  public imageFile: File | null = null;
 
   public requests: TokenPuzzleDetail[] = [];
 
@@ -158,6 +166,11 @@ export default class MintNft extends Vue {
 
   get debugMode(): boolean {
     return store.state.app.debug;
+  }
+
+  async afterUploadImg(f: File): Promise<void> {
+    const hash = await getFileHash(f);
+    this.hash = hash;
   }
 
   reset(): void {
