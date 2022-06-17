@@ -908,7 +908,7 @@
         }
       },
       "tooltip": {
-        "upload": "Upload file to generate a unique hash."
+        "upload": "Upload a file to generate a hash for your NFT."
       },
       "button": {
         "upload": "Get Image Hash",

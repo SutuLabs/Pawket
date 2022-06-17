@@ -908,7 +908,7 @@
         }
       },
       "tooltip": {
-        "upload": "上传图片以生成哈希。"
+        "upload": "上传文件生成该 NFT 哈希。"
       },
       "button": {
         "upload": "获取图片哈希",
