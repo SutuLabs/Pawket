@@ -26,7 +26,7 @@
         <span class="label">
           {{ $t("mintNft.ui.label.hash") }}
           <b-tooltip :label="$t('mintNft.ui.tooltip.upload')" position="is-bottom" multilined>
-            <b-upload v-model="imageFile" accept=".png" class="file-label" @input="afterUploadImg">
+            <b-upload v-model="imageFile" class="file-label" @input="afterUploadImg">
               <b-tag icon="tray-arrow-up" size="is-small">{{ $t("mintNft.ui.button.upload") }}</b-tag>
             </b-upload>
           </b-tooltip>
@@ -101,7 +101,7 @@ import { generateMintNftBundle } from "@/services/coin/nft";
 import AddressField from "../AddressField.vue";
 import { Bytes } from "clvm";
 import { bech32m } from "@scure/base";
-import { getFileHash } from "@/services/crypto/fileHash";
+import utility from "@/services/crypto/utility";
 
 @Component({
   components: {
@@ -171,7 +171,7 @@ export default class MintNft extends Vue {
   }
 
   async afterUploadImg(f: File): Promise<void> {
-    const hash = await getFileHash(f);
+    const hash = await utility.getFileHash(f);
     this.hash = hash;
   }
 
