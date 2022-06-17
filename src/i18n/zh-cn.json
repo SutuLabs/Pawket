@@ -908,7 +908,7 @@
         }
       },
       "tooltip": {
-        "upload": "选择一张.png格式的图片生成专属哈希。"
+        "upload": "选择一个文件生成该 NFT 的哈希值。"
       },
       "button": {
         "upload": "获取图片哈希",
