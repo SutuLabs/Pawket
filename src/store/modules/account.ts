@@ -49,6 +49,7 @@ export interface PersistentAccount {
   serial?: number;
   puzzleHash?: string;
   addressRetrievalCount: number;
+  cats?: CustomCat[];
   allCats: PersistentCustomCat[];
 }
 

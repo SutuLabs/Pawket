@@ -141,6 +141,7 @@ store.registerModule<IVaultState>('vault', {
       rootState.account.selectedAccount = state.selectedAccount;
       ensureState(rootState);
       rootState.account.accounts.forEach(_ => {
+        _.cats?.forEach(c => _.allCats.push({ name: c.name, id: c.id, network: "mainnet"}));
         Vue.set(_, "balance", -1);
         Vue.set(_, "activities", []);
       });
