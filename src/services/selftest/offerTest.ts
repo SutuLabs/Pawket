@@ -359,7 +359,6 @@ export function getTestAccount(privateKey: string): AccountEntity {
     type: "Legacy",
     tokens: {},
     nfts: [],
-    cats: [],
     allCats: [],
     addressGenerated: 0,
     addressPuzzles: [],
