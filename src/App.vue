@@ -10,7 +10,7 @@
         <template #start> </template>
         <template #end>
           <b-navbar-dropdown :label="networkId">
-            <b-navbar-item @click="switchNetwork(net.name)" v-for="net in networks" :key="net.name">
+            <b-navbar-item @click="switchNetwork(net.name)" v-for="net in networks" :key="net.name" :active="networkId === net.name">
               {{ net.name }}
             </b-navbar-item>
           </b-navbar-dropdown>
@@ -58,6 +58,7 @@ import store from "./store";
 import DevHelper from "@/components/DevHelper.vue";
 import OfflineQrCode from "./components/OfflineQrCode.vue";
 import { NetworkInfo, xchPrefix } from "./store/modules/network";
+import { tc } from "./i18n/i18n";
 
 @Component
 export default class App extends Vue {
@@ -101,6 +102,14 @@ export default class App extends Vue {
 
   async switchNetwork(networkId: string): Promise<void> {
     await store.dispatch("switchNetwork", networkId);
+    this.$buefy.dialog.confirm({
+      message: tc("app.switchNetwork.message"),
+      confirmText: tc("app.switchNetwork.confirm"),
+      cancelText: tc("app.switchNetwork.cancel"),
+      type: "is-primary",
+      hasIcon: true,
+      onConfirm: () => store.dispatch("lock"),
+    });
   }
 
   disableDebug(): void {

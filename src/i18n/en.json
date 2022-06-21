@@ -18,6 +18,11 @@
         "copySuccess": "Copy successfully.",
         "copyFailed": "Copy failed."
       }
+    },
+    "switchNetwork": {
+      "message": "After switching the network, you need to log in again in order to ensure that all functions can be used normally.",
+      "confirm": "OK",
+      "cancel": "Later"
     }
   },
   "footer": {
@@ -958,6 +963,9 @@
       "placeholder": "CAT name",
       "tag": {
         "imported": "Imported"
+      },
+      "text": {
+        "emptyList": "Empty Result"
       }
     }
   }
