@@ -18,6 +18,11 @@
         "copySuccess": "复制成功",
         "copyFailed": "复制失败"
       }
+    },
+    "switchNetwork": {
+      "message": "切换网络后，为保证一切功能正常使用，需重新登入。",
+      "confirm": "确认",
+      "cancel": "稍后"
     }
   },
   "footer": {
@@ -958,6 +963,9 @@
       "placeholder": "输入CAT名称",
       "tag": {
         "imported": "已导入"
+      },
+      "text": {
+        "emptyList": "结果为空"
       }
     }
   }

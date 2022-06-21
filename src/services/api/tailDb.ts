@@ -1,3 +1,4 @@
+import store from "@/store";
 import UniStorage from "../storage";
 
 interface Tail {
@@ -76,6 +77,7 @@ class TailDb {
   }
 
   public async getTails(): Promise<TailInfo[]> {
+    if (store.state.network.networkId !== "mainnet") return [];
     let tails: TailInfo[] = [];
     await this.checkAndUpdate();
     const t = await this.ustore.getItem(this.storageKey);

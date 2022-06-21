@@ -30,6 +30,9 @@
           </div>
         </div>
       </div>
+      <div v-if="!filteredData.length" class="has-text-centered has-text-grey mb-2">
+        {{ $t("searchCat.ui.text.emptyList") }}
+      </div>
     </div>
     <div class="mt-2 has-text-centered">
       <b-button
