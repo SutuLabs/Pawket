@@ -965,7 +965,8 @@
         "imported": "Imported"
       },
       "text": {
-        "emptyList": "Empty Result"
+        "emptyList": "Empty Result",
+        "ascription": "Powered by TailDatabase"
       }
     }
   }

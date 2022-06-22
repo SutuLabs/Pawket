@@ -965,7 +965,8 @@
         "imported": "已导入"
       },
       "text": {
-        "emptyList": "结果为空"
+        "emptyList": "结果为空",
+        "ascription": "由 TailDatabase 提供支持"
       }
     }
   }
