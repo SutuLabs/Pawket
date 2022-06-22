@@ -13,20 +13,32 @@
     <div class="tail-list" id="tail-list">
       <div v-for="item of filteredData" :key="item.code" aria-role="listitem">
         <div class="panel-block columns" v-if="isImported(item.code)">
-          <div class="column is-2">
-            <b-checkbox :value="true" disabled>
-              {{ item.code }}
-            </b-checkbox>
+          <div class="column is-1">
+            <b-checkbox :value="true" disabled> </b-checkbox>
           </div>
-          <div class="column is-offset-6 is-4">
+          <div class="column is-1">
+            <span class="image is-32x32">
+              <img class="is-rounded" :src="item.logo_url" />
+            </span>
+          </div>
+          <div class="column is-2">
+            {{ item.code }}
+          </div>
+          <div class="column is-offset-4 is-4">
             <b-tag rounded class="is-pulled-right">{{ $t("searchCat.ui.tag.imported") }}</b-tag>
           </div>
         </div>
         <div class="panel-block columns" v-else>
+          <div class="column is-1">
+            <b-checkbox v-model="checkedCat" :native-value="item"> </b-checkbox>
+          </div>
+          <div class="column is-1">
+            <span class="image is-32x32">
+              <img class="is-rounded" :src="item.logo_url" />
+            </span>
+          </div>
           <div class="column is-2">
-            <b-checkbox v-model="checkedCat" :native-value="item">
-              {{ item.code }}
-            </b-checkbox>
+            {{ item.code }}
           </div>
         </div>
       </div>
@@ -94,5 +106,6 @@ export default class SearchCat extends Vue {
 .tail-list {
   max-height: 20vh;
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 </style>

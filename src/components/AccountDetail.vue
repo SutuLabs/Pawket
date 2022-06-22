@@ -71,16 +71,25 @@
             class="panel-block is-justify-content-space-between py-4 has-text-grey-dark"
             v-show="account.tokens && account.tokens.hasOwnProperty(cat.name)"
           >
-            <span class="is-pulled-right" v-if="account.tokens && account.tokens.hasOwnProperty(cat.name)">
-              <span class="panel-icon"></span>
-              <span class="" v-if="tokenInfo[cat.name]">{{ account.tokens[cat.name].amount | demojo(tokenInfo[cat.name]) }}</span>
-              <span class="has-text-grey-light is-size-7 pl-3" v-if="cat.name === xchSymbol">{{
-                account.tokens[cat.name].amount | xchToCurrency(rate, currency)
-              }}</span>
-            </span>
-            <a v-if="debugMode" class="is-pulled-right" href="javascript:void(0)" @click="openLink(account.tokens[cat.name])"
-              >⚓</a
-            >
+            <div class="column is-flex is-7" v-if="account.tokens && account.tokens.hasOwnProperty(cat.name)">
+              <div class="mr-2">
+                <span class="image is-64x64">
+                  <img v-if="cat.img" class="is-rounded" :src="cat.img" />
+                  <img v-else-if="cat.name === xchSymbol" src="@/assets/chia-logo.svg" />
+                  <jazzicon v-else :diameter="64"></jazzicon>
+                </span>
+              </div>
+              <div class="py-4">
+                <p class="has-text-grey-dark is-size-6" v-if="tokenInfo[cat.name]">
+                  {{ account.tokens[cat.name].amount | demojo(tokenInfo[cat.name]) }}
+                </p>
+                <p>
+                  <span class="mr-2 is-size-7 has-text-grey" v-if="cat.name === xchSymbol">{{
+                    account.tokens[cat.name].amount | xchToCurrency(rate, currency)
+                  }}</span>
+                </p>
+              </div>
+            </div>
           </a>
           <div class="column is-full has-text-centered pt-5 mt-2">
             <a @click="ManageCats()"
@@ -111,6 +120,7 @@ import AccountConfigure from "@/components/AccountConfigure.vue";
 import ManageCats from "@/components/ManageCats.vue";
 import ExplorerLink from "@/components/ExplorerLink.vue";
 import KeyBox from "@/components/KeyBox.vue";
+import Jazzicon from 'vue3-jazzicon/src/components/Jazzicon.vue';
 import Send from "./Send.vue";
 import { demojo } from "@/filters/unitConversion";
 import { xchToCurrency } from "@/filters/usdtConversion";
@@ -136,6 +146,7 @@ type Mode = "Verify" | "Create";
     UtxoPanel,
     NftPanel,
     Dapp,
+    Jazzicon,
   },
   filters: { demojo, xchToCurrency, nameOmit },
 })

@@ -168,7 +168,7 @@ export default class ManageCats extends Vue {
 
   addCats(tails: TailInfo[]): void {
     tails.map((_) => {
-      this.assetIds.push({ name: _.code, id: _.hash });
+      this.assetIds.push({ name: _.code, id: _.hash, img: _.logo_url });
     });
     this.submit();
   }
@@ -204,7 +204,7 @@ export default class ManageCats extends Vue {
     const network = store.state.network.networkId;
     this.account.allCats = this.account.allCats
       .filter((_) => _.network != network)
-      .concat(this.assetIds.map((_) => ({ name: _.name, id: _.id, network })));
+      .concat(this.assetIds.map((_) => ({ name: _.name, id: _.id, img: _.img, network })));
     this.account.addressGenerated = 0;
     await store.dispatch("persistent");
     this.$emit("refresh");
