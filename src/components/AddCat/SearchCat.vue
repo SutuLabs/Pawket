@@ -45,6 +45,7 @@
         @click="addCat()"
       ></b-button>
     </div>
+    <p class="has-text-centered has-text-grey mt-2 is-size-7">{{ $t("searchCat.ui.text.ascription") }}</p>
   </div>
 </template>
 

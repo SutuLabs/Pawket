@@ -9,7 +9,7 @@
         <button type="button" class="delete" @click="close()"></button>
       </header>
       <section class="modal-card-body">
-        <b-tabs position="is-centered" class="block" expanded>
+        <b-tabs position="is-centered" class="block" expanded v-model="activeTab">
           <b-tab-item label="Search">
             <search-cat :allCats="allCats" @addCats="addCats"></search-cat>
           </b-tab-item>
@@ -87,6 +87,7 @@ export default class ManageCats extends Vue {
   @Prop() private account!: AccountEntity;
   @Prop({ default: "" }) defaultName!: string;
   @Prop({ default: "" }) defaultAssetId!: string;
+  @Prop({ default: 0 }) activeTab!: number;
 
   public name = this.defaultName;
   public assetId = this.defaultAssetId;
