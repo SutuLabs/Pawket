@@ -129,7 +129,7 @@ export default class Dapp extends Vue {
   openDonation(): void {
     this.checkObserveMode();
     const donationAddress = puzzle.getAddressFromPuzzleHash(
-      "b4bff0c0d5d88a8bc758f8b621e8b6164baa77fbe245e60f17a18119137f84a5",
+      "d19c05a54dacbf2b40ff4843534c47976de90246c3fc42ac1f42ea81b434b8ea",
       xchPrefix()
     );
     this.$buefy.modal.open({
