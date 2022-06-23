@@ -35,7 +35,7 @@
                 :validation-message="$t('ManageCats.ui.message.assetIdRequired')"
               ></b-input>
             </b-field>
-            <div class="has-text-centered">
+            <div class="mt-5 pt-3 has-text-centered">
               <b-button
                 :label="$t('ManageCats.ui.button.add')"
                 type="is-primary"
@@ -47,10 +47,9 @@
             </div>
           </b-tab-item>
         </b-tabs>
-        <hr />
-
+        <hr class="mt-0 pt-0" />
         <b-field :label="$t('ManageCats.ui.label.listingCats')">
-          <div class="y-scroll pt-5" style="max-height: 30vh">
+          <div class="y-scroll pt-5" style="max-height: 25vh">
             <token-item :catList="assetIds" @remove="remove" v-sortable="sortableOptions" @updateOrder="updateOrder"></token-item>
           </div>
         </b-field>
@@ -227,5 +226,6 @@ export default class ManageCats extends Vue {
 <style scoped lang="scss">
 .y-scroll {
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 </style>
