@@ -76,7 +76,7 @@
                 <span class="image is-32x32">
                   <img v-if="cat.img" class="is-rounded" :src="cat.img" />
                   <img v-else-if="cat.name === xchSymbol" src="@/assets/chia-logo.svg" />
-                  <jazzicon v-else :diameter="32" :seed="Math.round(Math.random() * 10000000)"></jazzicon>
+                  <jazzicon v-else :diameter="32" :address="cat.id"></jazzicon>
                 </span>
               </div>
               <div class="py-1">

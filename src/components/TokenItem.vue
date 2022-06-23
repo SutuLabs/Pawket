@@ -8,7 +8,7 @@
         <div class="column is-1">
           <span class="image is-32x32">
             <img v-if="asset.img" class="is-rounded" :src="asset.img" />
-            <jazzicon v-else :diameter="32" :seed="Math.round(Math.random() * 10000000)"></jazzicon>
+            <jazzicon v-else :diameter="32" :address="asset.id"></jazzicon>
           </span>
         </div>
         <div class="column is-3">{{ asset.name | nameOmit(true) }}</div>
