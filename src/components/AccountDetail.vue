@@ -72,11 +72,11 @@
             v-show="account.tokens && account.tokens.hasOwnProperty(cat.name)"
           >
             <div class="column is-flex is-7" v-if="account.tokens && account.tokens.hasOwnProperty(cat.name)">
-              <div class="mr-2">
+              <div class="mr-3">
                 <span class="image is-32x32">
                   <img v-if="cat.img" class="is-rounded" :src="cat.img" />
-                  <img v-else-if="cat.name === xchSymbol" src="@/assets/chia-logo.svg" />
-                  <jazzicon v-else :diameter="32" :address="cat.id"></jazzicon>
+                  <img v-else-if="cat.name === xchSymbol" class="is-rounded" src="@/assets/chia-logo.svg" />
+                  <img v-else class="is-rounded" src="@/assets/custom-cat.svg">
                 </span>
               </div>
               <div class="py-1">
@@ -120,7 +120,6 @@ import AccountConfigure from "@/components/AccountConfigure.vue";
 import ManageCats from "@/components/ManageCats.vue";
 import ExplorerLink from "@/components/ExplorerLink.vue";
 import KeyBox from "@/components/KeyBox.vue";
-import Jazzicon from "vue3-jazzicon/src/components/Jazzicon.vue";
 import Send from "./Send.vue";
 import { demojo } from "@/filters/unitConversion";
 import { xchToCurrency } from "@/filters/usdtConversion";
@@ -146,7 +145,6 @@ type Mode = "Verify" | "Create";
     UtxoPanel,
     NftPanel,
     Dapp,
-    Jazzicon,
   },
   filters: { demojo, xchToCurrency, nameOmit },
 })

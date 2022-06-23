@@ -34,7 +34,6 @@
     "vue-property-decorator": "^9.1.2",
     "vue-qrcode-reader": "^3.1.0",
     "vue-router": "^3.2.0",
-    "vue3-jazzicon": "^0.1.2",
     "vuex": "^3.4.0",
     "zlib": "^1.0.5"
   },

@@ -8,13 +8,13 @@
         <div class="column is-1">
           <span class="image is-32x32">
             <img v-if="asset.img" class="is-rounded" :src="asset.img" />
-            <jazzicon v-else :diameter="32" :address="asset.id"></jazzicon>
+            <img v-else class="is-rounded" src="@/assets/custom-cat.svg" />
           </span>
         </div>
         <div class="column is-3">{{ asset.name | nameOmit(true) }}</div>
         <div class="column is-6">
           <b-tooltip :label="asset.id" multilined style="word-break: break-all">
-            <div class="is-hidden-mobile">{{ asset.id | shorten }}</div>
+            <div>{{ asset.id | shorten }}</div>
           </b-tooltip>
           <key-box icon="checkbox-multiple-blank-outline" :value="asset.id" :tooltip="$t('ManageCats.ui.tooltip.copy')"></key-box>
         </div>
@@ -36,12 +36,10 @@ import { shorten } from "@/filters/addressConversion";
 import { CustomCat } from "@/store/modules/account";
 import { nameOmit } from "@/filters/nameConversion";
 import KeyBox from "@/components/KeyBox.vue";
-import Jazzicon from "vue3-jazzicon/src/components/Jazzicon.vue";
 
 @Component({
   components: {
     KeyBox,
-    Jazzicon,
   },
   filters: { shorten, nameOmit },
 })

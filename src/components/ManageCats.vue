@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-card">
+  <div class="modal-card" style="overflow-y: scroll">
     <b-loading :is-full-page="true" v-model="submitting"></b-loading>
     <section>
       <header class="modal-card-head">
@@ -49,7 +49,7 @@
         </b-tabs>
         <hr class="mt-0 pt-0" />
         <b-field :label="$t('ManageCats.ui.label.listingCats')">
-          <div class="y-scroll pt-5" style="max-height: 15vh">
+          <div class="y-scroll pt-5">
             <token-item :catList="assetIds" @remove="remove" v-sortable="sortableOptions" @updateOrder="updateOrder"></token-item>
           </div>
         </b-field>
