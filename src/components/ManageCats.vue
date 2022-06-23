@@ -49,7 +49,7 @@
         </b-tabs>
         <hr class="mt-0 pt-0" />
         <b-field :label="$t('ManageCats.ui.label.listingCats')">
-          <div class="y-scroll pt-5" style="max-height: 25vh">
+          <div class="y-scroll pt-5" style="max-height: 15vh">
             <token-item :catList="assetIds" @remove="remove" v-sortable="sortableOptions" @updateOrder="updateOrder"></token-item>
           </div>
         </b-field>

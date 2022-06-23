@@ -534,7 +534,7 @@
       "tooltip": {
         "removeToken": "删除",
         "drag": "拖动排序",
-        "copy": "复制"
+        "copy": "复制AssetID"
       },
       "message": {
         "nameRequired": "CAT 名称不能为空",

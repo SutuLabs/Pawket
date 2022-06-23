@@ -23,7 +23,7 @@ const createSortable = (el: HTMLElement, options: Sortable.Options, vnode: VNode
       data[evt.newIndex] = item;
       const newOrder: CustomCat[] = [];
       for (let i = 0; i < data.length; i++) {
-        newOrder.push({ name: data[i].name, id: data[i].id });
+        newOrder.push({ name: data[i].name, id: data[i].id, img: data[i].img });
       }
       const updateOrder = new CustomEvent("updateOrder", { detail: newOrder });
       el.dispatchEvent(updateOrder);
