@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-card" style="overflow-y: scroll">
+  <div class="modal-card" style="overflow-y: auto">
     <b-loading :is-full-page="true" v-model="submitting"></b-loading>
     <section>
       <header class="modal-card-head">
@@ -49,7 +49,7 @@
         </b-tabs>
         <hr class="mt-0 pt-0" />
         <b-field :label="$t('ManageCats.ui.label.listingCats')">
-          <div class="y-scroll pt-5">
+          <div class="y-scroll pt-5" style="max-height: 30vh">
             <token-item :catList="assetIds" @remove="remove" v-sortable="sortableOptions" @updateOrder="updateOrder"></token-item>
           </div>
         </b-field>
@@ -225,7 +225,7 @@ export default class ManageCats extends Vue {
 
 <style scoped lang="scss">
 .y-scroll {
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
 }
 </style>

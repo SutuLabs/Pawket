@@ -108,7 +108,7 @@ export default class SearchCat extends Vue {
 <style scoped lang="scss">
 .tail-list {
   max-height: 20vh;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
 }
 </style>
