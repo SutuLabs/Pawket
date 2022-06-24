@@ -11,41 +11,56 @@
       </b-input>
     </b-field>
     <div class="tail-list" id="tail-list">
-      <div v-for="item of filteredData" :key="item.code" aria-role="listitem">
+      <div v-for="item of filteredData" :key="item.code" aria-role="listitem" class="has-background-white-ter">
         <div class="panel-block columns" v-if="isImported(item.code)">
-          <div class="column is-2">
-            <b-checkbox :value="true" disabled>
-              {{ item.code }}
-            </b-checkbox>
+          <div class="column is-1 is-narrow-mobile">
+            <b-checkbox :value="true" disabled> </b-checkbox>
           </div>
-          <div class="column is-offset-6 is-4">
-            <b-tag rounded class="is-pulled-right">{{ $t("searchCat.ui.tag.imported") }}</b-tag>
+          <div class="column is-1 is-narrow-mobile">
+            <span class="image is-32x32">
+              <img class="is-rounded" :src="item.logo_url" />
+            </span>
+          </div>
+          <div class="column is-2 is-narrow-mobile">
+            {{ item.code }}
+          </div>
+          <div class="column is-offset-4 is-4">
+            <b-tag rounded class="is-pulled-right has-background-grey-lighter">{{ $t("searchCat.ui.tag.imported") }}</b-tag>
           </div>
         </div>
         <div class="panel-block columns" v-else>
-          <div class="column is-2">
-            <b-checkbox v-model="checkedCat" :native-value="item">
-              {{ item.code }}
-            </b-checkbox>
+          <div class="column is-1 is-narrow-mobile">
+            <b-checkbox v-model="checkedCat" :native-value="item"> </b-checkbox>
           </div>
+          <div class="column is-1 is-narrow-mobile">
+            <span class="image is-32x32">
+              <img class="is-rounded" :src="item.logo_url" />
+            </span>
+          </div>
+          <div class="column is-2 is-narrow-mobile">
+            {{ item.code }}
+          </div>
+          <div class="column is-offset-4 is-4"></div>
         </div>
       </div>
       <div v-if="!filteredData.length" class="has-text-centered has-text-grey mb-2">
         {{ $t("searchCat.ui.text.emptyList") }}
       </div>
     </div>
-    <div class="mt-2 has-text-centered">
-      <b-button
-        :label="$t('ManageCats.ui.button.add')"
-        type="is-primary"
-        rounded
-        outlined
-        class="mx-2"
-        :disabled="!checkedCat.length"
-        @click="addCat()"
-      ></b-button>
+    <div class="mt-5 pt-3">
+      <div class="has-text-centered">
+        <b-button
+          :label="$t('ManageCats.ui.button.add')"
+          type="is-primary"
+          rounded
+          outlined
+          class="mx-2"
+          :disabled="!checkedCat.length"
+          @click="addCat()"
+        ></b-button>
+      </div>
+      <p class="has-text-centered has-text-grey mt-2 mb-0 is-size-7">{{ $t("searchCat.ui.text.ascription") }}</p>
     </div>
-    <p class="has-text-centered has-text-grey mt-2 is-size-7">{{ $t("searchCat.ui.text.ascription") }}</p>
   </div>
 </template>
 
@@ -93,6 +108,7 @@ export default class SearchCat extends Vue {
 <style scoped lang="scss">
 .tail-list {
   max-height: 20vh;
-  overflow-y: scroll;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 </style>

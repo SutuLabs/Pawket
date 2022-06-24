@@ -534,7 +534,7 @@
       "tooltip": {
         "removeToken": "Remove CAT",
         "drag": "Drag to sort",
-        "copy": "Copy"
+        "copy": "Copy AssetID"
       },
       "message": {
         "nameRequired": "Name is required.",

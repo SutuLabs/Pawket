@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-card">
+  <div class="modal-card" style="overflow-y: auto">
     <b-loading :is-full-page="true" v-model="submitting"></b-loading>
     <section>
       <header class="modal-card-head">
@@ -35,7 +35,7 @@
                 :validation-message="$t('ManageCats.ui.message.assetIdRequired')"
               ></b-input>
             </b-field>
-            <div class="has-text-centered">
+            <div class="mt-5 pt-3 has-text-centered">
               <b-button
                 :label="$t('ManageCats.ui.button.add')"
                 type="is-primary"
@@ -47,8 +47,7 @@
             </div>
           </b-tab-item>
         </b-tabs>
-        <hr />
-
+        <hr class="mt-0 pt-0" />
         <b-field :label="$t('ManageCats.ui.label.listingCats')">
           <div class="y-scroll pt-5" style="max-height: 30vh">
             <token-item :catList="assetIds" @remove="remove" v-sortable="sortableOptions" @updateOrder="updateOrder"></token-item>
@@ -168,7 +167,7 @@ export default class ManageCats extends Vue {
 
   addCats(tails: TailInfo[]): void {
     tails.map((_) => {
-      this.assetIds.push({ name: _.code, id: _.hash });
+      this.assetIds.push({ name: _.code, id: _.hash, img: _.logo_url });
     });
     this.submit();
   }
@@ -204,7 +203,7 @@ export default class ManageCats extends Vue {
     const network = store.state.network.networkId;
     this.account.allCats = this.account.allCats
       .filter((_) => _.network != network)
-      .concat(this.assetIds.map((_) => ({ name: _.name, id: _.id, network })));
+      .concat(this.assetIds.map((_) => ({ name: _.name, id: _.id, img: _.img, network })));
     this.account.addressGenerated = 0;
     await store.dispatch("persistent");
     this.$emit("refresh");
@@ -226,6 +225,7 @@ export default class ManageCats extends Vue {
 
 <style scoped lang="scss">
 .y-scroll {
-  overflow-y: scroll;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 </style>
