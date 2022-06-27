@@ -76,7 +76,7 @@
                 <span class="image is-32x32">
                   <img v-if="cat.img" class="is-rounded" :src="cat.img" />
                   <img v-else-if="cat.name === xchSymbol" class="is-rounded" src="@/assets/chia-logo.svg" />
-                  <img v-else class="is-rounded" src="@/assets/custom-cat.svg">
+                  <img v-else class="is-rounded" src="@/assets/custom-cat.svg" />
                 </span>
               </div>
               <div class="py-1">
@@ -251,6 +251,7 @@ export default class AccountDetail extends Vue {
       cancelText: this.$tc("accountDetail.ui.button.cancel"),
       trapFocus: true,
       onConfirm: () => {
+        if (this.timeoutId) clearTimeout(this.timeoutId);
         store.dispatch("lock");
       },
     });
