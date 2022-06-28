@@ -165,11 +165,21 @@ export default class ManageCats extends Vue {
     this.reset();
   }
 
-  addCats(tails: TailInfo[]): void {
+  async addCats(tails: TailInfo[]): Promise<void> {
+    let added = 0;
     tails.map((_) => {
-      this.assetIds.push({ name: _.code, id: _.hash, img: _.logo_url });
+      if (this.isExisted(_.code, _.hash)) {
+        Notification.open({
+          message: this.$tc("ManageCats.message.alert.isExisted") + " " + _.code,
+          type: "is-danger",
+          duration: 3000,
+        });
+      } else {
+        added++;
+        this.assetIds.push({ name: _.code, id: _.hash, img: _.logo_url });
+      }
     });
-    this.submit();
+    if (added) this.submit();
   }
 
   remove(id: string): void {
@@ -204,14 +214,13 @@ export default class ManageCats extends Vue {
     this.account.allCats = this.account.allCats
       .filter((_) => _.network != network)
       .concat(this.assetIds.map((_) => ({ name: _.name, id: _.id, img: _.img, network })));
-    this.account.addressGenerated = 0;
-    await store.dispatch("persistent");
-    this.$emit("refresh");
-
     Notification.open({
       message: this.$tc("ManageCats.message.notification.saved"),
       type: "is-primary",
     });
+    this.account.addressGenerated = 0;
+    await store.dispatch("persistent");
+    this.$emit("refresh");
 
     this.submitting = false;
   }
