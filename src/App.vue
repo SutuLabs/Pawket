@@ -1,28 +1,82 @@
 <template>
   <div id="app">
-    <div class="column is-8 is-offset-2">
+    <div class="column is-8 is-offset-2 is-hidden-mobile">
       <b-navbar>
         <template #brand>
-          <b-navbar-item tag="router-link" :to="{ path: '/' }">
+          <b-navbar-item tag="router-link" :to="{ path: '/home' }">
             <img src="./assets/logo.svg" :alt="$t('verifyPassword.ui.alt.logoAlt')" />
           </b-navbar-item>
         </template>
         <template #start> </template>
         <template #end>
-          <b-navbar-dropdown :label="networkId">
-            <b-navbar-item @click="switchNetwork(net.name)" v-for="net in networks" :key="net.name" :active="networkId === net.name">
-              {{ net.name }}
-            </b-navbar-item>
-          </b-navbar-dropdown>
-          <b-navbar-dropdown :label="$t('app.ui.button.lang')">
-            <b-navbar-item @click="changeLang('en')" :active="$i18n.locale === 'en'"> English </b-navbar-item>
-            <b-navbar-item @click="changeLang('zhcn')" :active="$i18n.locale === 'zhcn'"> 简体中文 </b-navbar-item>
-          </b-navbar-dropdown>
+          <div class="py-4">
+            <b-button
+              @click="$router.push('/')"
+              size="is-medium"
+              icon-left="wallet"
+              type="is-primary"
+              class="boder-less"
+              outlined
+            >
+              Wallet
+            </b-button>
+            <b-button
+              @click="$router.push('/trade')"
+              size="is-medium"
+              icon-left="trending-up"
+              type="is-primary"
+              class="boder-less"
+              outlined
+            >
+              Trade
+            </b-button>
+            <b-button
+              @click="$router.push('/explore')"
+              size="is-medium"
+              icon-left="earth"
+              type="is-primary"
+              class="boder-less"
+              outlined
+            >
+              Explore
+            </b-button>
+            <b-button
+              @click="$router.push('/settings')"
+              size="is-medium"
+              icon-left="cog"
+              type="is-primary"
+              class="boder-less"
+              outlined
+            >
+              Settings
+            </b-button>
+          </div>
         </template>
       </b-navbar>
     </div>
     <router-view />
-    <footer class="footer">
+    <nav class="navbar is-link is-fixed-bottom is-hidden-tablet top-border" role="navigation" v-if="showBottomBar">
+      <div class="navbar-brand">
+        <router-link :to="'/'" class="navbar-item is-expanded is-block has-text-centered has-background-white">
+          <b-icon icon="wallet" type="is-primary"></b-icon>
+          <p class="is-size-7 has-text-primary">Wallet</p>
+        </router-link>
+        <router-link :to="'/trade'" class="navbar-item is-expanded is-block has-text-centered has-background-white">
+          <b-icon icon="trending-up" type="is-primary"></b-icon>
+          <p class="is-size-7 has-text-primary">Trade</p>
+        </router-link>
+        <router-link :to="'/explore'" class="navbar-item is-expanded is-block has-text-centered has-background-white">
+          <b-icon icon="earth" type="is-primary"></b-icon>
+          <p class="is-size-7 has-text-primary">Explore</p>
+        </router-link>
+        <router-link :to="'/settings'" class="navbar-item is-expanded is-block has-text-centered has-background-white">
+          <b-icon icon="cog" type="is-primary"></b-icon>
+          <p class="is-size-7 has-text-primary">Settings</p>
+        </router-link>
+      </div>
+    </nav>
+    <div class="my-3 is-hidden-tablet">&nbsp;</div>
+    <footer class="footer is-hidden-mobile">
       <div class="content has-text-centered">
         <p>
           <strong> {{ $t("footer.ui.productInfo.name") }}</strong>
@@ -69,6 +123,14 @@ export default class App extends Vue {
 
   get debugMode(): boolean {
     return store.state.app.debug;
+  }
+
+  get unlocked(): boolean {
+    return store.state.vault.unlocked;
+  }
+
+  get showBottomBar(): boolean {
+    return !this.$route.path.startsWith("/create") && this.unlocked;
   }
 
   get networks(): NetworkInfo {
@@ -157,5 +219,13 @@ html {
 #app {
   width: 100%;
   height: 100%;
+}
+
+.top-border {
+  border-top: 1px solid #ededed;
+}
+
+.boder-less {
+  border: none;
 }
 </style>

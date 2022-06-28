@@ -969,5 +969,96 @@
         "ascription": "Powered by TailDatabase"
       }
     }
+  },
+  "settings": {
+    "menu": {
+      "title": "Settings",
+      "items": {
+        "general": {
+          "title": "General",
+          "description": "Language, network and currency conversion"
+        },
+        "security": {
+          "title": "Security",
+          "description": "Password, mnemonic and private information export"
+        },
+        "addressBook": {
+          "title": "Address Book",
+          "description": "Add, edit, remove, and manage your contact addresses"
+        },
+        "advanced": {
+          "title": "Advanced",
+          "description": "Experimental"
+        },
+        "donate": {
+          "title": "Donate",
+          "description": "Donate to Support Development"
+        },
+        "about": {
+          "title": "About",
+          "description": "Privacy Policy, Terms of use, Pawket Version, our Website"
+        }
+      }
+    },
+    "general": {
+      "title": "General",
+      "label": {
+        "language": "Language",
+        "network": "Network",
+        "currency": "Currency Conversion"
+      }
+    },
+    "security": {
+      "title": "Security",
+      "label": {
+        "mnemonic": "Mnemonic Works",
+        "password": "Login Password",
+        "export": "Export Private Information"
+      },
+      "button": {
+        "mnemonic": "Reveal Mnemonics",
+        "password": "Change Password",
+        "export": "Export Private Information"
+      }
+    },
+    "addressBook": {
+      "title": "Address Book"
+    },
+    "advanced": {
+      "title": "Advanced",
+      "label": {
+        "experimental": "Experimental"
+      },
+      "description": "After enabling this mode, you can use experimental functions, such as \"Make Offer\", \"Take Offer\", \"Batch Send\", \"Issue CAT\", \"Shadow Wallet\", etc.",
+      "warning": "Experimental features are not stable and not fully tested yet, you can have a try and give us your feedback. Please turn it on carefully"
+    },
+    "donation": {
+      "title": "Donation"
+    },
+    "about": {
+      "title": "About",
+      "links": {
+        "title": "Links",
+        "privacyPolicy": "Privacy Policy",
+        "termsOfUse": "Terms of Use",
+        "pawketWebsite": "Pawket Website",
+        "github": "Github",
+        "twitter": "Twitter",
+        "discord": "Discord"
+      }
+    }
+  },
+  "trade": {
+    "title": "Trade"
+  },
+  "explore": {
+    "title": "Explore",
+    "label": {
+      "dapps": "Dapps",
+      "popular": "Popular"
+    }
+  },
+  "accountManagement": {
+    "title": "Account Management"
   }
 }

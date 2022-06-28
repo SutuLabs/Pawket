@@ -1,8 +1,7 @@
 <template>
   <div class="home">
     <b-loading v-if="loading" :is-full-page="true" v-model="loading"></b-loading>
-    <verify-password v-else-if="!password"></verify-password>
-    <create-seed v-else-if="!mnemonic"></create-seed>
+    <verify-password v-if="!password"></verify-password>
     <account-detail v-else></account-detail>
     <div v-if="!loading" class="sticky">
       <self-test v-if="!unlocked"></self-test>
@@ -38,6 +37,16 @@ export default class Home extends Vue {
   }
   get loading(): boolean {
     return store.state.vault.loading;
+  }
+
+  get passwordHash(): string {
+    return store.state.vault.passwordHash;
+  }
+
+  mounted(): void {
+    if (!this.mnemonic && !this.passwordHash) {
+      this.$router.push("/create");
+    }
   }
 }
 </script>

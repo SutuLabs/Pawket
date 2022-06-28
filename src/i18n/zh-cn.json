@@ -969,5 +969,96 @@
         "ascription": "由 TailDatabase 提供支持"
       }
     }
+  },
+  "settings": {
+    "menu": {
+      "title": "设置",
+      "items": {
+        "general": {
+          "title": "常规",
+          "description": "语言、网络、货币习惯"
+        },
+        "security": {
+          "title": "安全",
+          "description": "密码、助记词、账户信息导出"
+        },
+        "addressBook": {
+          "title": "地址簿",
+          "description": "添加、编辑、删除、管理你的联系人地址"
+        },
+        "advanced": {
+          "title": "高级",
+          "description": "实验室模式"
+        },
+        "donate": {
+          "title": "捐赠",
+          "description": "向开发者捐赠"
+        },
+        "about": {
+          "title": "关于",
+          "description": "隐私条款、使用条款、钱包版本、官网"
+        }
+      }
+    },
+    "general": {
+      "title": "常规",
+      "label": {
+        "language": "选择语言",
+        "network": "切换网络",
+        "currency": "货币转换"
+      }
+    },
+    "security": {
+      "title": "安全",
+      "label": {
+        "mnemonic": "钱包助记词",
+        "password": "登陆密码",
+        "export": "导出账户信息"
+      },
+      "button": {
+        "mnemonic": "显示助记词 ",
+        "password": "修改密码",
+        "export": "导出账户信息"
+      }
+    },
+    "addressBook": {
+      "title": "地址薄"
+    },
+    "advanced": {
+      "title": "高级",
+      "label": {
+        "experimental": "实验模式"
+      },
+      "description": "开启后可使用“发起 Offer”、“接受 Offer”、“批量发送”、“发行 CAT”、“影子钱包”等实验功能。",
+      "warning": "实验功能尚未经过详细测试，目前仅供内部人员及热心粉丝使用。请谨慎开启。"
+    },
+    "donation": {
+      "title": "捐赠"
+    },
+    "about": {
+      "title": "关于",
+      "links": {
+        "title": "链接",
+        "privacyPolicy": "隐私条款",
+        "termsOfUse": "使用条款",
+        "pawketWebsite": "薄荷钱包官网",
+        "github": "Github",
+        "twitter": "Twitter",
+        "discord": "Discord"
+      }
+    }
+  },
+  "trade": {
+    "title": "交易"
+  },
+  "explore": {
+    "title": "探索",
+    "label": {
+      "dapps": "应用",
+      "popular": "流行"
+    }
+  },
+  "accountManagement": {
+    "title": "账户管理"
   }
 }

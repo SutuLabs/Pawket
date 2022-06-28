@@ -1,9 +1,5 @@
 <template>
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">{{ $t("send.ui.title.send") }}</p>
-      <button type="button" class="delete" @click="close()"></button>
-    </header>
+  <div>
     <section class="modal-card-body">
       <div v-show="!bundle">
         <b-notification
@@ -60,7 +56,7 @@
         <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
       </template>
     </section>
-    <footer class="modal-card-foot is-justify-content-space-between">
+    <footer class="is-justify-content-center buttons mt-4">
       <div>
         <b-button :label="$t('send.ui.button.cancel')" @click="cancel()"></b-button>
         <b-button

@@ -3,22 +3,30 @@
     <div class="container px-4">
       <div class="py-5 has-text-centered" v-if="account && account.key">
         <section>
-          <b-tooltip :label="$t('accountDetail.ui.tooltip.setting')" class="is-pulled-left">
-            <b-button @click="configureAccount()">
-              <b-icon icon="cog" class="has-text-grey"> </b-icon>
-            </b-button>
-          </b-tooltip>
-          <b-tooltip :label="$t('accountDetail.ui.tooltip.lock')" class="is-pulled-right">
+          <b-button class="is-pulled-left" icon-left="account" icon-right="menu-down" @click="selectAccount()">{{
+            account.name | nameOmit
+          }}</b-button>
+          <b-tooltip :label="$t('accountDetail.ui.tooltip.lock')" class="is-pulled-right is-hidden-mobile">
             <b-button @click="lock()"><b-icon icon="lock" class="has-text-grey"> </b-icon></b-button>
           </b-tooltip>
+          <b-dropdown v-model="networkId" aria-role="list" :mobile-modal="false" class="is-pulled-right">
+            <template #trigger>
+              <b-button
+                :class="networkId == 'mainnet' ? 'has-text-primary' : ''"
+                icon-left="brightness-1"
+                icon-right="menu-down"
+                >{{ networkId }}</b-button
+              >
+            </template>
+            <b-dropdown-item v-for="net in networks" :key="net.name" :value="net.name" aria-role="listitem">{{
+              net.name
+            }}</b-dropdown-item>
+          </b-dropdown>
           <b-tooltip :label="$t('accountDetail.ui.tooltip.errorLog')" class="is-pulled-right">
             <b-button v-if="debugMode && hasError" @click="openErrorLog()"
               ><b-icon icon="bug" class="has-text-grey"> </b-icon
             ></b-button>
           </b-tooltip>
-          <b-button class="is-pulled-right" @click="selectAccount()"
-            >{{ account.name | nameOmit }}: {{ account.key.fingerprint }}</b-button
-          >
           <br />
           <div class="mt-5">
             <h2 class="is-size-3 py-5">
@@ -105,7 +113,7 @@
         </b-tab-item>
       </b-tabs>
     </div>
-    <div class="p-4 border-top-1">
+    <div class="p-4 border-top-1 is-hidden-mobile">
       <dapp :account="account" :tokenList="tokenList"></dapp>
     </div>
   </div>
@@ -115,7 +123,6 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import store from "@/store";
 import AccountExport from "@/components/AccountExport.vue";
-import AccountList from "@/components/AccountList.vue";
 import AccountConfigure from "@/components/AccountConfigure.vue";
 import ManageCats from "@/components/ManageCats.vue";
 import ExplorerLink from "@/components/ExplorerLink.vue";
@@ -131,10 +138,12 @@ import UtxoPanel from "@/components/UtxoPanel.vue";
 import { CoinRecord } from "@/models/wallet";
 import { nameOmit } from "@/filters/nameConversion";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { xchSymbol } from "@/store/modules/network";
+import { NetworkInfo, xchSymbol } from "@/store/modules/network";
 import NftPanel from "@/components/Detail/NftPanel.vue";
 import Dapp from "./Dapp.vue";
 import ErrorLog from "./ErrorLog.vue";
+import AccountManagement from "./AccountManagement/AccountManagement.vue";
+import { tc } from "@/i18n/i18n";
 
 type Mode = "Verify" | "Create";
 
@@ -155,6 +164,26 @@ export default class AccountDetail extends Vue {
 
   get refreshing(): boolean {
     return store.state.account.refreshing;
+  }
+
+  get networkId(): string {
+    return store.state.network.networkId;
+  }
+
+  set networkId(value: string) {
+    store.dispatch("switchNetwork", value);
+    this.$buefy.dialog.confirm({
+      message: tc("app.switchNetwork.message"),
+      confirmText: tc("app.switchNetwork.confirm"),
+      cancelText: tc("app.switchNetwork.cancel"),
+      type: "is-primary",
+      hasIcon: true,
+      onConfirm: () => store.dispatch("lock"),
+    });
+  }
+
+  get networks(): NetworkInfo {
+    return store.state.network.networks;
   }
 
   get account(): AccountEntity {
@@ -306,10 +335,10 @@ export default class AccountDetail extends Vue {
   selectAccount(): void {
     this.$buefy.modal.open({
       parent: this,
-      component: AccountList,
-      hasModalCard: true,
+      component: AccountManagement,
       trapFocus: true,
       canCancel: [""],
+      fullScreen: true,
       props: {},
     });
   }
@@ -330,9 +359,8 @@ export default class AccountDetail extends Vue {
     this.$buefy.modal.open({
       parent: this,
       component: ExplorerLink,
-      hasModalCard: true,
       trapFocus: true,
-      canCancel: ["outside"],
+      fullScreen: true,
       props: { account: this.account, token: token },
     });
   }

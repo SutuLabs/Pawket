@@ -1,10 +1,7 @@
 <template>
   <div class="modal-card">
     <b-loading :is-full-page="true" v-model="submitting"></b-loading>
-    <header class="modal-card-head">
-      <p class="modal-card-title">{{ $t("addByPassword.ui.title") }}</p>
-      <button type="button" class="delete" @click="close()"></button>
-    </header>
+    <top-bar :title="$t('addByPassword.ui.title')" @close="close()"></top-bar>
     <section class="modal-card-body">
       <b-field :label="$t('addByPassword.ui.label.name')">
         <b-input
@@ -43,8 +40,9 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import store from "@/store/index";
 import account from "@/services/crypto/account";
+import TopBar from "../TopBar.vue";
 
-@Component
+@Component({ components: { TopBar } })
 export default class AddByPassword extends Vue {
   @Prop({ default: 24 }) private mnemonicLen!: number;
   @Prop() public title!: string;
