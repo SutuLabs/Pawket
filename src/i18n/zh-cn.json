@@ -137,7 +137,6 @@
         "nft": "NFT"
       },
       "tooltip": {
-        "setting": "设置",
         "lock": "锁定",
         "errorLog": "错误日志",
         "refresh": "刷新"
@@ -321,9 +320,6 @@
     "ui": {
       "title": {
         "link": "接收地址"
-      },
-      "label": {
-        "address": "地址[硬币数]"
       },
       "tooltip": {
         "blockchainExplorer": "在区块链浏览器里查看"
@@ -1020,9 +1016,6 @@
         "password": "修改密码",
         "export": "导出账户信息"
       }
-    },
-    "addressBook": {
-      "title": "地址薄"
     },
     "advanced": {
       "title": "高级",

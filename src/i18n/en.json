@@ -137,7 +137,6 @@
         "nft": "NFT"
       },
       "tooltip": {
-        "setting": "Settings",
         "lock": "Lock",
         "errorLog": "Error Log",
         "refresh": "Refresh"
@@ -321,9 +320,6 @@
     "ui": {
       "title": {
         "link": "Receive Addresses"
-      },
-      "label": {
-        "address": "Address[number of coins]"
       },
       "tooltip": {
         "blockchainExplorer": "View on Block Explorer"
@@ -1020,9 +1016,6 @@
         "password": "Change Password",
         "export": "Export Private Information"
       }
-    },
-    "addressBook": {
-      "title": "Address Book"
     },
     "advanced": {
       "title": "Advanced",
