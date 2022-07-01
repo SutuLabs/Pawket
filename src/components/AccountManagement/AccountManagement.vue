@@ -1,65 +1,67 @@
 <template>
   <div class="modal-card">
-    <div class="has-text-centered is-size-5 pt-5 pb-2 pr-2 border-bottom">
-      <span @click="$emit('close')"><b-icon class="is-pulled-left has-text-grey pl-4 pt-2" icon="chevron-left"> </b-icon></span>
-      <span>{{ $t("accountManagement.title") }}</span>
-      <span @click="lock()"><b-icon class="is-pulled-right pr-2 pt-2" icon="lock" > </b-icon></span>
-    </div>
-    <a v-for="(account, idx) in accounts" :key="idx" class="panel-block" @click="showExport(idx)">
-      <b-icon icon="account"></b-icon>
-      <div class="column is-flex my-0 py-0">
-        <div class="py-1">
-          <p class="is-size-6">{{ account.name }}</p>
-          <p class="is-size-7">{{ account.key.fingerprint }}</p>
+    <div class="modal-card-body">
+      <div class="has-text-centered is-size-5 pt-5 pb-2 pr-2 border-bottom">
+        <span @click="$emit('close')"><b-icon class="is-pulled-left has-text-grey pl-4 pt-2" icon="chevron-left"> </b-icon></span>
+        <span>{{ $t("accountManagement.title") }}</span>
+        <span @click="lock()"><b-icon class="is-pulled-right pr-2 pt-2" icon="lock"> </b-icon></span>
+      </div>
+      <a v-for="(account, idx) in accounts" :key="idx" class="panel-block" @click="showExport(idx)">
+        <b-icon icon="account"></b-icon>
+        <div class="column is-flex my-0 py-0">
+          <div class="py-1">
+            <p class="is-size-6">{{ account.name }}</p>
+            <p class="is-size-7">{{ account.key.fingerprint }}</p>
+          </div>
         </div>
-      </div>
-      <div class="column has-text-centered">
-        <b-tag rounded class="has-background-grey-lighter">{{ account.type }}</b-tag>
-      </div>
-      <div class="column py-1" @click="remove(idx)">
-        <b-icon class="is-pulled-right" icon="delete"> </b-icon>
-      </div>
-    </a>
-    <a href="javascript:void(0)" class="panel-block" @click="addBySerial()">
-      <b-tooltip :label="$t('accountList.ui.tooltip.addBySerial')" position="is-right" multilined size="is-small">
-        <span class="panel-icon">
-          <b-icon icon="plus-thick"></b-icon>
-        </span>
-        <span class="mx-2">{{ $t("accountList.ui.button.addBySerial") }}</span>
-      </b-tooltip>
-    </a>
-    <a href="javascript:void(0)" class="panel-block" @click="addByPassword()" v-if="experimentMode">
-      <b-tooltip :label="$t('accountList.ui.tooltip.addByPassword')" position="is-right" multilined size="is-small">
-        <span class="panel-icon">
-          <b-icon icon="plus-thick"></b-icon>
-        </span>
-        <span class="mx-2">{{ $t("accountList.ui.button.addByPassword") }}</span>
-      </b-tooltip>
-    </a>
-    <a v-if="debugMode" href="javascript:void(0)" class="panel-block" @click="addByAddress()">
-      <b-tooltip :label="$t('accountList.ui.tooltip.addByAddress')" multilined size="is-small">
-        <span class="panel-icon">
-          <b-icon icon="plus-thick"></b-icon>
-        </span>
-        <span class="mx-2">{{ $t("accountList.ui.button.addByAddress") }}</span>
-      </b-tooltip>
-    </a>
-    <a href="javascript:void(0)" class="panel-block" @click="addByLegacy()">
-      <b-tooltip :label="$t('accountList.ui.tooltip.addByLegacy')" multilined size="is-small">
-        <span class="panel-icon">
-          <b-icon icon="import"></b-icon>
-        </span>
-        <span class="mx-2">{{ $t("accountList.ui.button.addByLegacy") }}</span>
-      </b-tooltip>
-    </a>
-    <a href="javascript:void(0)" class="panel-block" @click="addByMnemonic()">
-      <b-tooltip :label="$t('accountList.ui.tooltip.addByMnemonic')" multilined size="is-small">
-        <span class="panel-icon">
-          <b-icon icon="import"></b-icon>
-        </span>
-        <span class="mx-2">{{ $t("accountList.ui.button.addByMnemonic") }}</span>
-      </b-tooltip>
-    </a>
+        <div class="column has-text-centered">
+          <b-tag rounded class="has-background-grey-lighter">{{ account.type }}</b-tag>
+        </div>
+        <div class="column py-1" @click="remove(idx)">
+          <b-icon class="is-pulled-right" icon="delete"> </b-icon>
+        </div>
+      </a>
+      <a href="javascript:void(0)" class="panel-block" @click="addBySerial()">
+        <b-tooltip :label="$t('accountList.ui.tooltip.addBySerial')" position="is-right" multilined size="is-small">
+          <span class="panel-icon">
+            <b-icon icon="plus-thick"></b-icon>
+          </span>
+          <span class="mx-2">{{ $t("accountList.ui.button.addBySerial") }}</span>
+        </b-tooltip>
+      </a>
+      <a href="javascript:void(0)" class="panel-block" @click="addByPassword()" v-if="experimentMode">
+        <b-tooltip :label="$t('accountList.ui.tooltip.addByPassword')" position="is-right" multilined size="is-small">
+          <span class="panel-icon">
+            <b-icon icon="plus-thick"></b-icon>
+          </span>
+          <span class="mx-2">{{ $t("accountList.ui.button.addByPassword") }}</span>
+        </b-tooltip>
+      </a>
+      <a v-if="debugMode" href="javascript:void(0)" class="panel-block" @click="addByAddress()">
+        <b-tooltip :label="$t('accountList.ui.tooltip.addByAddress')" multilined size="is-small">
+          <span class="panel-icon">
+            <b-icon icon="plus-thick"></b-icon>
+          </span>
+          <span class="mx-2">{{ $t("accountList.ui.button.addByAddress") }}</span>
+        </b-tooltip>
+      </a>
+      <a href="javascript:void(0)" class="panel-block" @click="addByLegacy()">
+        <b-tooltip :label="$t('accountList.ui.tooltip.addByLegacy')" multilined size="is-small">
+          <span class="panel-icon">
+            <b-icon icon="import"></b-icon>
+          </span>
+          <span class="mx-2">{{ $t("accountList.ui.button.addByLegacy") }}</span>
+        </b-tooltip>
+      </a>
+      <a href="javascript:void(0)" class="panel-block" @click="addByMnemonic()">
+        <b-tooltip :label="$t('accountList.ui.tooltip.addByMnemonic')" multilined size="is-small">
+          <span class="panel-icon">
+            <b-icon icon="import"></b-icon>
+          </span>
+          <span class="mx-2">{{ $t("accountList.ui.button.addByMnemonic") }}</span>
+        </b-tooltip>
+      </a>
+    </div>
   </div>
 </template>
 

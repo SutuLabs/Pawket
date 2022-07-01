@@ -11,6 +11,12 @@
     "ui": {
       "button": {
         "lang": "简体中文"
+      },
+      "navigation": {
+        "wallet": "钱包",
+        "trade": "交易",
+        "explore": "探索",
+        "settings": "设置"
       }
     },
     "message": {
@@ -49,16 +55,13 @@
     "ui": {
       "button": {
         "confirm": "确认",
-        "clear": "重置钱包",
-        "create": "创建"
+        "clear": "重置钱包"
       },
       "label": {
-        "password": "密码",
-        "reEnter": "确认密码"
+        "password": "密码"
       },
       "title": {
-        "verifyPassword": "验证密码",
-        "createPassword": "创建密码"
+        "verifyPassword": "验证密码"
       },
       "alt": {
         "logoAlt": "Pawket图标"
@@ -1053,5 +1056,52 @@
   },
   "accountManagement": {
     "title": "账户管理"
+  },
+  "welcome": {
+    "ui": {
+      "description": "用安全的方式，管理 Chia 链上资产。",
+      "slogan": "区块链世界的探索，从这里开始！",
+      "button": {
+        "start": "开始使用"
+      }
+    }
+  },
+  "disclaimer": {
+    "ui": {
+      "title": "免责声明",
+      "tip": "确保始终备份您的助记词和私钥。我们绝不会要求您分享您的私钥或钱包种子。永远不要相信任何人或任何要求您输入私钥或钱包种子的网站。",
+      "privary": "我们后续可能会更改隐私政策。我们鼓励您定期查看有关我们隐私惯例的最新信息。如果我们进行任何更改，我们将更改上面的上次更新日期。",
+      "agreementPrefix": "我接受",
+      "agreement": "隐私政策",
+      "link": "https://info.pawket.app/zh/privacy-policy/",
+      "agreementSuffix": "并希望访问 Pawket。",
+      "button": {
+        "continue": "继续"
+      }
+    }
+  },
+  "createPassword": {
+    "title": "创建密码",
+    "tip": "开始前，请先设置登录密码。此密码将用于确保您的钱包在此设备上的安全。",
+    "label": {
+      "password": "密码",
+      "confirm": "确认密码"
+    },
+    "button": {
+      "continue": "继续"
+    }
+  },
+  "createWallet": {
+    "title": "创建钱包",
+    "button": {
+      "create": "创建",
+      "import": "导入"
+    }
+  },
+  "newWallet": {
+    "title": "新建钱包"
+  },
+  "importWallet": {
+    "title": "导入钱包"
   }
 }

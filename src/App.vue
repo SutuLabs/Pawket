@@ -3,13 +3,13 @@
     <div class="column is-8 is-offset-2 is-hidden-mobile">
       <b-navbar>
         <template #brand>
-          <b-navbar-item tag="router-link" :to="{ path: '/home' }">
+          <b-navbar-item tag="router-link" :to="{ path: '/' }">
             <img src="./assets/logo.svg" :alt="$t('verifyPassword.ui.alt.logoAlt')" />
           </b-navbar-item>
         </template>
         <template #start> </template>
         <template #end>
-          <div class="py-4">
+          <div class="py-4" v-if="showNavigation">
             <b-button
               @click="$router.push('/')"
               size="is-medium"
@@ -18,7 +18,7 @@
               class="boder-less"
               outlined
             >
-              Wallet
+              {{ $t("app.ui.navigation.wallet") }}
             </b-button>
             <b-button
               @click="$router.push('/trade')"
@@ -28,7 +28,7 @@
               class="boder-less"
               outlined
             >
-              Trade
+              {{ $t("app.ui.navigation.trade") }}
             </b-button>
             <b-button
               @click="$router.push('/explore')"
@@ -37,8 +37,9 @@
               type="is-primary"
               class="boder-less"
               outlined
+              v-if="debugMode"
             >
-              Explore
+              {{ $t("app.ui.navigation.explore") }}
             </b-button>
             <b-button
               @click="$router.push('/settings')"
@@ -48,30 +49,34 @@
               class="boder-less"
               outlined
             >
-              Settings
+              {{ $t("app.ui.navigation.settings") }}
             </b-button>
           </div>
         </template>
       </b-navbar>
     </div>
     <router-view />
-    <nav class="navbar is-link is-fixed-bottom is-hidden-tablet top-border" role="navigation" v-if="showBottomBar">
+    <nav class="navbar is-link is-fixed-bottom is-hidden-tablet top-border" role="navigation" v-if="showNavigation">
       <div class="navbar-brand">
         <router-link :to="'/'" class="navbar-item is-expanded is-block has-text-centered has-background-white">
           <b-icon icon="wallet" type="is-primary"></b-icon>
-          <p class="is-size-7 has-text-primary">Wallet</p>
+          <p class="is-size-7 has-text-primary">{{ $t("app.ui.navigation.wallet") }}</p>
         </router-link>
         <router-link :to="'/trade'" class="navbar-item is-expanded is-block has-text-centered has-background-white">
           <b-icon icon="trending-up" type="is-primary"></b-icon>
-          <p class="is-size-7 has-text-primary">Trade</p>
+          <p class="is-size-7 has-text-primary">{{ $t("app.ui.navigation.trade") }}</p>
         </router-link>
-        <router-link :to="'/explore'" class="navbar-item is-expanded is-block has-text-centered has-background-white">
+        <router-link
+          :to="'/explore'"
+          class="navbar-item is-expanded is-block has-text-centered has-background-white"
+          v-if="debugMode"
+        >
           <b-icon icon="earth" type="is-primary"></b-icon>
-          <p class="is-size-7 has-text-primary">Explore</p>
+          <p class="is-size-7 has-text-primary">{{ $t("app.ui.navigation.explore") }}</p>
         </router-link>
         <router-link :to="'/settings'" class="navbar-item is-expanded is-block has-text-centered has-background-white">
           <b-icon icon="cog" type="is-primary"></b-icon>
-          <p class="is-size-7 has-text-primary">Settings</p>
+          <p class="is-size-7 has-text-primary">{{ $t("app.ui.navigation.settings") }}</p>
         </router-link>
       </div>
     </nav>
@@ -129,7 +134,7 @@ export default class App extends Vue {
     return store.state.vault.unlocked;
   }
 
-  get showBottomBar(): boolean {
+  get showNavigation(): boolean {
     return !this.$route.path.startsWith("/create") && this.unlocked;
   }
 

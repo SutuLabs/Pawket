@@ -44,7 +44,7 @@ export default class Home extends Vue {
   }
 
   mounted(): void {
-    if (!this.mnemonic && !this.passwordHash) {
+    if (!localStorage.getItem("SETTINGS")) {
       this.$router.push("/create");
     }
   }

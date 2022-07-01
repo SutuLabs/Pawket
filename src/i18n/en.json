@@ -11,6 +11,12 @@
     "ui": {
       "button": {
         "lang": "English"
+      },
+      "navigation": {
+        "wallet": "Wallet",
+        "trade": "Trade",
+        "explore": "Explore",
+        "settings": "Settings"
       }
     },
     "message": {
@@ -49,16 +55,13 @@
     "ui": {
       "button": {
         "confirm": "Confirm",
-        "clear": "Reset Wallet",
-        "create": "Create"
+        "clear": "Reset Wallet"
       },
       "label": {
-        "password": "Password",
-        "reEnter": "Re-Enter Password"
+        "password": "Password"
       },
       "title": {
-        "verifyPassword": "Verify Password",
-        "createPassword": "Create Password"
+        "verifyPassword": "Verify Password"
       },
       "alt": {
         "logoAlt": "Pawket Logo"
@@ -1053,5 +1056,52 @@
   },
   "accountManagement": {
     "title": "Account Management"
+  },
+  "welcome": {
+    "ui": {
+      "description": "Manage your assets on Chia blockchain in a secure way.",
+      "slogan": "Let's explore the world of blockchain together!",
+      "button": {
+        "start": "START"
+      }
+    }
+  },
+  "disclaimer": {
+    "ui": {
+      "title": "Disclaimer",
+      "tip": "Make sure to always backup your mnemonic phrase and private keys. We will never ask you to share your private keys or wallet seed. NEVER trust anyone or any site that asks you to enter your private keys or wallet seed.",
+      "privary": "We may change this Privacy Policy from time to time. We encourage you to periodically review it for the latest information on our privacy practices. If we make any changes, we will change the Last Updated date above.",
+      "agreementPrefix": "I accept the ",
+      "agreement": "Privacy Policy",
+      "link": "https://info.pawket.app/privacy-policy/",
+      "agreementSuffix": "and want to access Pawket.",
+      "button": {
+        "continue": "CONTINUE"
+      }
+    }
+  },
+  "createPassword": {
+    "title": "Create Password",
+    "tip": "Before starting, please set a login password. This password will be used to keep your wallet safe on this device.",
+    "label": {
+      "password": "Password",
+      "confirm": "Confirm Password"
+    },
+    "button": {
+      "continue": "CONTINUE"
+    }
+  },
+  "createWallet": {
+    "title": "Create Wallet",
+    "button": {
+      "create": "Create",
+      "import": "Import"
+    }
+  },
+  "newWallet": {
+    "title": "New Wallet"
+  },
+  "importWallet": {
+    "title": "Import Wallet"
   }
 }

@@ -1,12 +1,12 @@
 <template>
-  <div>
-    <top-bar title="Create Password" @close="back()"></top-bar>
+  <div class="width-700">
+    <top-bar :title="$t('createPassword.title')" @close="back()"></top-bar>
     <section class="modal-card-body">
       <p class="py-5">
-        Before starting, please set a login password. This password will be used to keep your wallet safe on this device.
+        {{ $t("createPassword.tip") }}
       </p>
       <div>
-        <b-field :label="$t('verifyPassword.ui.label.password')" :type="isEmpty ? 'is-danger' : ''">
+        <b-field :label="$t('createPassword.label.password')" :type="isEmpty ? 'is-danger' : ''">
           <b-input type="password" v-model="password" @input.native.enter="checkStrength()"></b-input>
         </b-field>
         <p class="help is-danger" v-if="isEmpty">{{ $t("verifyPassword.message.error.passwordEmpty") }}</p>
@@ -15,7 +15,7 @@
             {{ strengthMsg }}
           </b-progress>
         </b-field>
-        <b-field :label="$t('verifyPassword.ui.label.reEnter')" :type="isMatch ? '' : 'is-danger'">
+        <b-field :label="$t('createPassword.label.confirm')" :type="isMatch ? '' : 'is-danger'">
           <b-input
             type="password"
             @input.native.enter="checkMatch()"
@@ -27,7 +27,7 @@
       </div>
       <p class="has-text-centered pt-6">
         <b-button @click="create()" type="is-primary" :disabled="!isMatch">
-          <span class="px-5">CONTINUE</span>
+          <span class="px-5">{{ $t("createPassword.button.continue") }}</span>
         </b-button>
       </p>
     </section>
@@ -57,7 +57,7 @@ export default class CreatePassword extends Vue {
   public showStrength = false;
 
   back(): void {
-    this.$router.push('/create/disclaimer');
+    this.$router.push("/create/disclaimer");
   }
 
   clearErrorMsg(): void {
@@ -71,7 +71,7 @@ export default class CreatePassword extends Vue {
     if (this.repassword != this.password) return;
     store.dispatch("setPassword", this.password);
     store.dispatch("setCurrency", CurrencyType.USDT);
-    this.$router.push('/create/create-wallet');
+    this.$router.push("/create/create-wallet");
   }
 
   checkStrength(): void {
@@ -156,4 +156,9 @@ export default class CreatePassword extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.width-700 {
+  max-width: 700px;
+  margin: auto;
+}
+</style>

@@ -1,7 +1,7 @@
 <template>
   <div class="import-container">
     <div v-if="mode == 'Menu'">
-      <top-bar title="Import Wallet" @close="back()"></top-bar>
+      <top-bar :title="$t('importWallet.title')" @close="back()"></top-bar>
       <div class="menu-btn is-clickable mx-3 mt-4 p-3" @click="import12()">
         <h2 class="is-size-2 has-text-weight-bold has-text-primary">{{ $t("createSeed.ui.button.12word") }}</h2>
         <p class="is-size-6">{{ $t("createSeed.ui.button.import12") }}</p>
@@ -83,7 +83,7 @@ export default class Add extends Vue {
   }
 
   back(): void {
-    this.$router.push('/create/create-wallet');
+    this.$router.push("/create/create-wallet");
   }
 }
 </script>

@@ -4,8 +4,7 @@
     <p class="is-hidden-mobile has-text-left is-size-5 pt-5 pb-2 pl-2 border-bottom">{{ $t("trade.title") }}</p>
     <div style="height: 100vh">
       <div class="has-text-centered is-block">
-        <p class="is-size-4 has-text-grey">暂未开放</p>
-        <p class="is-size-4 has-text-grey">敬请期待</p>
+        <p class="is-size-4 has-text-grey">Coming Soon</p>
       </div>
     </div>
   </div>

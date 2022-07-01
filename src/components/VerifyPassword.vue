@@ -2,7 +2,7 @@
   <div class="login-form-wrapper">
     <div class="columns is-centered">
       <div class="box p-6">
-        <section v-if="mode == 'Verify'">
+        <section>
           <h1 class="title is-4">{{ $t("verifyPassword.ui.title.verifyPassword") }}</h1>
           <b-field
             :label="$t('verifyPassword.ui.label.password')"
@@ -23,31 +23,6 @@
             <b-button v-if="!isCorrect" type="is-danger" @click="clear()">{{ $t("verifyPassword.ui.button.clear") }}</b-button>
           </div>
         </section>
-
-        <section v-if="mode == 'Create'">
-          <h1 class="title is-4">{{ $t("verifyPassword.ui.title.createPassword") }}</h1>
-          <b-field :label="$t('verifyPassword.ui.label.password')" :type="isEmpty ? 'is-danger' : ''" label-position="on-border">
-            <b-input type="password" v-model="password" @input.native.enter="checkStrength()"></b-input>
-          </b-field>
-          <p class="help is-danger" v-if="isEmpty">{{ $t("verifyPassword.message.error.passwordEmpty") }}</p>
-          <b-field>
-            <b-progress :type="strengthClass" :value="passwordStrength" show-value v-show="showStrength">
-              {{ strengthMsg }}
-            </b-progress>
-          </b-field>
-          <b-field :label="$t('verifyPassword.ui.label.reEnter')" :type="isMatch ? '' : 'is-danger'" label-position="on-border">
-            <b-input
-              type="password"
-              @input.native.enter="checkMatch()"
-              @keyup.native.enter="create()"
-              v-model="repassword"
-            ></b-input>
-          </b-field>
-          <p class="help is-danger" v-if="!isMatch">{{ $t("verifyPassword.message.error.passwordNotMatch") }}</p>
-          <b-button @click="create()" type="is-primary" :disabled="!isMatch" expanded>{{
-            $t("verifyPassword.ui.button.create")
-          }}</b-button>
-        </section>
       </div>
     </div>
   </div>
@@ -58,8 +33,6 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 import store from "@/store";
 import { CurrencyType } from "@/services/exchange/currencyType";
 import { isPasswordCorrect } from "@/store/modules/vault";
-
-type Mode = "Verify" | "Create";
 
 @Component
 export default class VerifyPassword extends Vue {
@@ -72,10 +45,6 @@ export default class VerifyPassword extends Vue {
   public strengthMsg = "";
   public strengthClass: "is-danger" | "is-warning" | "is-primary" = "is-danger";
   public showStrength = false;
-
-  get mode(): Mode {
-    return store.state.vault.passwordHash ? "Verify" : "Create";
-  }
 
   @Watch("mode")
   onModeChanged(): void {
@@ -94,7 +63,7 @@ export default class VerifyPassword extends Vue {
   }
 
   async confirm(): Promise<void> {
-    if (!await isPasswordCorrect(this.password)) {
+    if (!(await isPasswordCorrect(this.password))) {
       this.isCorrect = false;
       return;
     }

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="modal-card">
     <section class="modal-card-body">
       <div v-show="!bundle">
         <b-notification
@@ -56,7 +56,7 @@
         <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
       </template>
     </section>
-    <footer class="is-justify-content-center buttons mt-4">
+    <footer class="is-justify-content-center buttons modal-card-body">
       <div>
         <b-button :label="$t('send.ui.button.cancel')" @click="cancel()"></b-button>
         <b-button

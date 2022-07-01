@@ -1,6 +1,6 @@
 <template>
   <div class="add-container">
-    <top-bar title="New Wallet"></top-bar>
+    <top-bar :title="$t('newWallet.title')"></top-bar>
     <section class="modal-card-body">
       <p class="pt-5">
         {{ $t("createSeed.ui.text.create.tip1") }}

@@ -1,12 +1,16 @@
 <template>
-  <div>
-    <top-bar title="CreateWallet" @close="back()"></top-bar>
+  <div class="width-700">
+    <top-bar :title="$t('createWallet.title')" @close="back()"></top-bar>
     <section class="modal-card-body">
       <p class="pt-4 has-text-centered">
-        <b-button @click="addAcc()" type="is-primary" icon-left="wallet-plus" outlined class="px-6">Create</b-button>
+        <b-button @click="addAcc()" type="is-primary" icon-left="wallet-plus" outlined class="px-6">{{
+          $t("createWallet.button.create")
+        }}</b-button>
       </p>
       <p class="pt-4 has-text-centered">
-        <b-button @click="importAcc()" type="is-primary" icon-left="import" outlined class="px-6">Import</b-button>
+        <b-button @click="importAcc()" type="is-primary" icon-left="import" outlined class="px-6">{{
+          $t("createWallet.button.import")
+        }}</b-button>
       </p>
     </section>
   </div>
@@ -37,4 +41,9 @@ export default class Disclaimer extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.width-700 {
+  max-width: 700px;
+  margin: auto;
+}
+</style>

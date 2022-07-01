@@ -1,23 +1,24 @@
 <template>
-  <div>
-    <top-bar title="Disclaimer"></top-bar>
+  <div class="width-700">
+    <top-bar :title="$t('disclaimer.ui.title')" @close="back()"></top-bar>
     <section class="modal-card-body">
       <p class="pt-5">
-        Make sure to always backup your mnemonic phrase and private keys. We will never ask you to share your private keys or
-        wallet seed. NEVER trust anyone or any site that asks you to enter your private keys or wallet seed.
+        {{ $t("disclaimer.ui.tip") }}
       </p>
       <p class="py-4">
-        We may change this Privacy Policy from time to time. We encourage you to periodically review it for the latest information
-        on our privacy practices. If we make any changes, we will change the Last Updated date above.
+        {{ $t("disclaimer.ui.privary") }}
       </p>
       <div class="box">
-        <b-checkbox v-model="isAccept"
-          >I accept the <a href="https://info.pawket.app/privacy-policy/" target="_blank">Privacy Policy</a> and want to access
-          Pawket.
+        <b-checkbox v-model="isAccept">
+          {{ $t("disclaimer.ui.agreementPrefix") }}
+          <a :href="$t('disclaimer.ui.link')" target="_blank">{{ $t("disclaimer.ui.agreement") }}</a>
+          {{ $t("disclaimer.ui.agreementSuffix") }}
         </b-checkbox>
       </div>
       <p class="pt-4 has-text-centered">
-        <b-button :disabled="!isAccept" @click="next()" type="is-primary"><span class="px-5">CONTINUE</span></b-button>
+        <b-button :disabled="!isAccept" @click="next()" type="is-primary"
+          ><span class="px-5"> {{ $t("disclaimer.ui.button.continue") }}</span></b-button
+        >
       </p>
     </section>
   </div>
@@ -37,7 +38,16 @@ export default class Disclaimer extends Vue {
   next(): void {
     this.$router.push("/create/create-password");
   }
+
+  back(): void {
+    this.$router.push("/create");
+  }
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.width-700 {
+  max-width: 700px;
+  margin: auto;
+}
+</style>

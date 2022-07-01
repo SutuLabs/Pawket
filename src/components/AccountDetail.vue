@@ -113,7 +113,7 @@
         </b-tab-item>
       </b-tabs>
     </div>
-    <div class="p-4 border-top-1 is-hidden-mobile">
+    <div class="p-4 border-top-1">
       <dapp :account="account" :tokenList="tokenList"></dapp>
     </div>
   </div>
@@ -123,7 +123,6 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import store from "@/store";
 import AccountExport from "@/components/AccountExport.vue";
-import AccountConfigure from "@/components/AccountConfigure.vue";
 import ManageCats from "@/components/ManageCats.vue";
 import ExplorerLink from "@/components/ExplorerLink.vue";
 import KeyBox from "@/components/KeyBox.vue";
@@ -248,6 +247,10 @@ export default class AccountDetail extends Vue {
     return xchSymbol();
   }
 
+  get isMobile(): boolean {
+    return window.screen.width < 700;
+  }
+
   mounted(): void {
     this.mode = store.state.vault.passwordHash ? "Verify" : "Create";
     this.autoRefresh(60);
@@ -303,19 +306,8 @@ export default class AccountDetail extends Vue {
       component: ErrorLog,
       hasModalCard: true,
       trapFocus: true,
+      fullScreen: this.isMobile,
       canCancel: ["outside"],
-    });
-  }
-
-  configureAccount(): void {
-    this.$buefy.modal.open({
-      parent: this,
-      component: AccountConfigure,
-      hasModalCard: true,
-      trapFocus: true,
-      canCancel: [""],
-      props: { account: this.account },
-      events: { refresh: this.refresh },
     });
   }
 
@@ -326,6 +318,7 @@ export default class AccountDetail extends Vue {
       component: ManageCats,
       hasModalCard: true,
       trapFocus: true,
+      fullScreen: this.isMobile,
       canCancel: [""],
       props: { account: this.account },
       events: { refresh: this.refresh },
@@ -337,8 +330,8 @@ export default class AccountDetail extends Vue {
       parent: this,
       component: AccountManagement,
       trapFocus: true,
-      canCancel: [""],
-      fullScreen: true,
+      canCancel: ["outside"],
+      fullScreen: this.isMobile,
       props: {},
     });
   }
@@ -350,6 +343,7 @@ export default class AccountDetail extends Vue {
       component: Send,
       hasModalCard: true,
       trapFocus: true,
+      fullScreen: this.isMobile,
       canCancel: [""],
       props: { account: this.account, rate: this.rate, currency: this.currency },
     });
@@ -360,7 +354,7 @@ export default class AccountDetail extends Vue {
       parent: this,
       component: ExplorerLink,
       trapFocus: true,
-      fullScreen: true,
+      fullScreen: this.isMobile,
       props: { account: this.account, token: token },
     });
   }
