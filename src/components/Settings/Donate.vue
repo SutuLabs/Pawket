@@ -1,17 +1,14 @@
 <template>
-  <div class="modal-card">
-    <top-bar :title="$t('settings.donation.title')" @close="$emit('close')"></top-bar>
-    <section class="modal-card-body">
-      <send
-        :account="account"
-        :inputAddress="donationAddress"
-        :addressEditable="false"
-        :notificationMessage="$tc('accountDetail.message.notification.donate')"
-        notificationIcon="hand-heart"
-        :notificationClosable="false"
-        @close="$emit('close')"
-      ></send>
-    </section>
+  <div class="modal-card m-0">
+    <send
+      :account="account"
+      :inputAddress="donationAddress"
+      :addressEditable="false"
+      :notificationMessage="$tc('accountDetail.message.notification.donate')"
+      notificationIcon="hand-heart"
+      :notificationClosable="false"
+      @close="$emit('close')"
+    ></send>
   </div>
 </template>
 
@@ -27,7 +24,7 @@ import TopBar from "../TopBar.vue";
 @Component({
   components: {
     Send,
-    TopBar
+    TopBar,
   },
 })
 export default class Donate extends Vue {
@@ -41,5 +38,4 @@ export default class Donate extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

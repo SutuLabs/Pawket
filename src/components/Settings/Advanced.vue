@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-card">
+  <div class="modal-card m-0">
     <top-bar :title="$t('settings.advanced.title')" @close="$emit('close')"></top-bar>
     <section class="modal-card-body">
       <b-field>

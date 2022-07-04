@@ -1012,12 +1012,14 @@
       "label": {
         "mnemonic": "Mnemonic Works",
         "password": "Login Password",
-        "export": "Export Private Information"
+        "export": "Export Private Information",
+        "reset": "Reset Wallet"
       },
       "button": {
         "mnemonic": "Reveal Mnemonics",
         "password": "Change Password",
-        "export": "Export Private Information"
+        "export": "Export Private Information",
+        "reset": "Reset Wallet"
       }
     },
     "advanced": {
@@ -1028,15 +1030,11 @@
       "description": "After enabling this mode, you can use experimental functions, such as \"Make Offer\", \"Take Offer\", \"Batch Send\", \"Issue CAT\", \"Shadow Wallet\", etc.",
       "warning": "Experimental features are not stable and not fully tested yet, you can have a try and give us your feedback. Please turn it on carefully"
     },
-    "donation": {
-      "title": "Donation"
-    },
     "about": {
       "title": "About",
       "links": {
         "title": "Links",
         "privacyPolicy": "Privacy Policy",
-        "termsOfUse": "Terms of Use",
         "pawketWebsite": "Pawket Website",
         "github": "Github",
         "twitter": "Twitter",

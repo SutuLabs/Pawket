@@ -34,7 +34,7 @@
         </li>
       </ul>
       <div class="border-bottom py-2">
-        <a href="javascript:void(0)" @click="showMnemonic = !showMnemonic" class="is-size-6 has-text-weight-bold has-text-dark">
+        <a href="javascript:void(0)" @click="toggleMnemonic()" class="is-size-6 has-text-weight-bold has-text-dark">
           <span class="is-size-6 has-text-weight-bold"
             >{{ $t("accountExport.ui.label.mnemonicSeed") }}:
             <b-tooltip :label="$t('accountExport.ui.tooltip.mnemonicTip')" position="is-top">
@@ -97,6 +97,7 @@
 import utility from "@/services/crypto/utility";
 import store from "@/store";
 import { AccountEntity } from "@/store/modules/account";
+import { isPasswordCorrect } from "@/store/modules/vault";
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import KeyBox from "../KeyBox.vue";
 import TopBar from "../TopBar.vue";
@@ -148,6 +149,35 @@ export default class AccountDetail extends Vue {
 
   rename(): void {
     this.$emit("rename", this.idx);
+  }
+
+  async toggleMnemonic(): Promise<void> {
+    if (this.showMnemonic) {
+      this.showMnemonic = false;
+      return;
+    }
+    this.$buefy.dialog.prompt({
+      message: this.$tc("accountExport.message.inputPassword"),
+      inputAttrs: {
+        type: "password",
+      },
+      trapFocus: true,
+      closeOnConfirm: false,
+      canCancel: ["button"],
+      cancelText: this.$tc("accountConfigure.ui.button.cancel"),
+      confirmText: this.$tc("accountConfigure.ui.button.confirm"),
+      onConfirm: async (password, { close }) => {
+        if (!(await isPasswordCorrect(password))) {
+          this.$buefy.toast.open({
+            message: this.$tc("accountConfigure.message.error.passwordNotCorrect"),
+            type: "is-danger",
+          });
+          return;
+        }
+        close();
+        this.showMnemonic = true;
+      },
+    });
   }
 }
 </script>

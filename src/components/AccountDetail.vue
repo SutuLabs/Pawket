@@ -3,13 +3,13 @@
     <div class="container px-4">
       <div class="py-5 has-text-centered" v-if="account && account.key">
         <section>
-          <b-button class="is-pulled-left" icon-left="account" icon-right="menu-down" @click="selectAccount()">{{
+          <b-button class="is-pulled-right" icon-left="account" icon-right="menu-down" @click="selectAccount()">{{
             account.name | nameOmit
           }}</b-button>
           <b-tooltip :label="$t('accountDetail.ui.tooltip.lock')" class="is-pulled-right is-hidden-mobile">
             <b-button @click="lock()"><b-icon icon="lock" class="has-text-grey"> </b-icon></b-button>
           </b-tooltip>
-          <b-dropdown v-model="networkId" aria-role="list" :mobile-modal="false" class="is-pulled-right">
+          <b-dropdown v-model="networkId" aria-role="list" :mobile-modal="false" class="is-pulled-left">
             <template #trigger>
               <b-button
                 :class="networkId == 'mainnet' ? 'has-text-primary' : ''"
@@ -296,6 +296,7 @@ export default class AccountDetail extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
+      fullScreen: this.isMobile,
       props: { account: this.account },
     });
   }

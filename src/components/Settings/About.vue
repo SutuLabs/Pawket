@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-card">
+  <div class="modal-card m-0">
     <top-bar :title="$t('settings.about.title')" @close="$emit('close')"></top-bar>
     <section class="modal-card-body">
       <div class="has-text-centered py-2">
@@ -9,11 +9,10 @@
       <div class="mt-5">
         <strong>{{ $t("settings.about.links.title") }}</strong>
         <a href="https://info.pawket.app/privacy-policy"
-          ><p>{{ $t("settings.about.links.privacyPolicy") }}</p></a
+          ><p class="pt-4">{{ $t("settings.about.links.privacyPolicy") }}</p></a
         >
-        <a href=""
-          ><p>{{ $t("settings.about.links.termsOfUse") }}</p></a
-        >
+        <hr class="p-0 my-2"/>
+
         <a href="https://info.pawket.app/"
           ><p>{{ $t("settings.about.links.pawketWebsite") }}</p></a
         >

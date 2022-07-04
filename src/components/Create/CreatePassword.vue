@@ -1,6 +1,6 @@
 <template>
-  <div class="width-700">
-    <top-bar :title="$t('createPassword.title')" @close="back()"></top-bar>
+  <div>
+    <top-bar :title="$t('createPassword.title')" @close="back()" :showBack="true"></top-bar>
     <section class="modal-card-body">
       <p class="py-5">
         {{ $t("createPassword.tip") }}
@@ -156,9 +156,4 @@ export default class CreatePassword extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-.width-700 {
-  max-width: 700px;
-  margin: auto;
-}
-</style>
+<style scoped lang="scss"></style>

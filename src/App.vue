@@ -12,41 +12,56 @@
           <div class="py-4" v-if="showNavigation">
             <b-button
               @click="$router.push('/')"
-              size="is-medium"
               icon-left="wallet"
               type="is-primary"
               class="boder-less"
               outlined
+              :class="{
+                'boder-less': true,
+                'has-background-primary': path == '/',
+                'has-text-white': path == '/',
+              }"
             >
               {{ $t("app.ui.navigation.wallet") }}
             </b-button>
             <b-button
               @click="$router.push('/trade')"
-              size="is-medium"
               icon-left="trending-up"
               type="is-primary"
               class="boder-less"
               outlined
+              :class="{
+                'boder-less': true,
+                'has-background-primary': path == '/trade',
+                'has-text-white': path == '/trade',
+              }"
             >
               {{ $t("app.ui.navigation.trade") }}
             </b-button>
             <b-button
               @click="$router.push('/explore')"
-              size="is-medium"
               icon-left="earth"
               type="is-primary"
               class="boder-less"
               outlined
+              :class="{
+                'boder-less': true,
+                'has-background-primary': path == '/explore',
+                'has-text-white': path == '/explore',
+              }"
               v-if="debugMode"
             >
               {{ $t("app.ui.navigation.explore") }}
             </b-button>
             <b-button
               @click="$router.push('/settings')"
-              size="is-medium"
               icon-left="cog"
               type="is-primary"
-              class="boder-less"
+              :class="{
+                'boder-less': true,
+                'has-background-primary': path == '/settings',
+                'has-text-white': path == '/settings',
+              }"
               outlined
             >
               {{ $t("app.ui.navigation.settings") }}
@@ -144,6 +159,10 @@ export default class App extends Vue {
 
   get networkId(): string {
     return store.state.network.networkId;
+  }
+
+  get path(): string {
+    return this.$route.path;
   }
 
   mounted(): void {

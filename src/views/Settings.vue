@@ -1,5 +1,5 @@
 <template>
-  <div class="settings-container">
+  <div class="column is-8 is-offset-2">
     <div class="box is-hidden-mobile">
       <p class="has-text-left is-size-5 pt-5 pb-2 pl-2 border-bottom">{{ $t("settings.menu.title") }}</p>
       <b-tabs type="is-boxed" vertical>
@@ -26,13 +26,13 @@
     <div class="is-hidden-tablet">
       <p class="has-text-centered is-size-5 pt-5 pb-2 pr-2 border-bottom">{{ $t("settings.menu.title") }}</p>
       <div class="panel-block py-0 my-0" @click="goToGeneral()">
-        <div class="is-11 is-flex my-0 py-0">
+        <div class="is-11 is-flex my-1 py-1">
           <div class="mr-2 py-1">
             <b-icon icon="tune"></b-icon>
           </div>
           <div class="py-1">
             <p>{{ $t("settings.menu.items.general.title") }}</p>
-            <p class="is-size-7">{{ $t("settings.menu.items.general.description") }}</p>
+            <p class="is-size-7 pt-2">{{ $t("settings.menu.items.general.description") }}</p>
           </div>
         </div>
         <div class="column py-1">
@@ -40,13 +40,13 @@
         </div>
       </div>
       <div class="panel-block py-0 my-0" @click="goToSecurity()">
-        <div class="is-11 is-flex my-0 py-0">
+        <div class="is-11 is-flex my-1 py-1">
           <div class="mr-2 py-1">
             <b-icon icon="key"></b-icon>
           </div>
           <div class="py-1">
             <p>{{ $t("settings.menu.items.security.title") }}</p>
-            <p class="is-size-7">{{ $t("settings.menu.items.security.description") }}</p>
+            <p class="is-size-7 pt-2">{{ $t("settings.menu.items.security.description") }}</p>
           </div>
         </div>
         <div class="column py-1">
@@ -54,13 +54,13 @@
         </div>
       </div>
       <div class="panel-block py-0 my-0" @click="goToAddressBook()">
-        <div class="is-11 is-flex my-0 py-0">
+        <div class="is-11 is-flex my-1 py-1">
           <div class="mr-2 py-1">
             <b-icon icon="account-box-multiple-outline"></b-icon>
           </div>
           <div class="py-1">
             <p>{{ $t("settings.menu.items.addressBook.title") }}</p>
-            <p class="is-size-7">{{ $t("settings.menu.items.addressBook.description") }}</p>
+            <p class="is-size-7 pt-2">{{ $t("settings.menu.items.addressBook.description") }}</p>
           </div>
         </div>
         <div class="column py-1">
@@ -68,13 +68,13 @@
         </div>
       </div>
       <div class="panel-block py-0 my-0" @click="goToAdvanced()">
-        <div class="is-11 is-flex my-0 py-0">
+        <div class="is-11 is-flex my-1 py-1">
           <div class="mr-2 py-1">
             <b-icon icon="lightbulb-outline"></b-icon>
           </div>
           <div class="py-1">
             <p>{{ $t("settings.menu.items.advanced.title") }}</p>
-            <p class="is-size-7">{{ $t("settings.menu.items.advanced.description") }}</p>
+            <p class="is-size-7 pt-2">{{ $t("settings.menu.items.advanced.description") }}</p>
           </div>
         </div>
         <div class="column py-1">
@@ -82,35 +82,32 @@
         </div>
       </div>
       <div class="panel-block py-0 my-0" @click="goToDonate()">
-        <div class="is-11 is-flex my-0 py-0">
+        <div class="is-11 is-flex my-1 py-1">
           <div class="mr-2 py-1">
             <b-icon icon="hand-heart-outline"></b-icon>
           </div>
           <div class="py-1">
             <p>{{ $t("settings.menu.items.donate.title") }}</p>
-            <p class="is-size-7">{{ $t("settings.menu.items.donate.description") }}</p>
+            <p class="is-size-7 pt-2">{{ $t("settings.menu.items.donate.description") }}</p>
           </div>
         </div>
         <div class="column py-1">
           <b-icon class="is-pulled-right has-text-grey" icon="chevron-right"> </b-icon>
         </div>
       </div>
-      <div class="panel-block py-0 my-0" @click="goToAbout()">
-        <div class="is-11 is-flex my-0 py-0">
+      <div class="panel-block py-0 my-0 border-bottom" @click="goToAbout()">
+        <div class="is-11 is-flex my-1 py-1">
           <div class="mr-2 py-1">
             <b-icon icon="information-outline"></b-icon>
           </div>
           <div class="py-1">
             <p>{{ $t("settings.menu.items.about.title") }}</p>
-            <p class="is-size-7">{{ $t("settings.menu.items.about.description") }}</p>
+            <p class="is-size-7 pt-2">{{ $t("settings.menu.items.about.description") }}</p>
           </div>
         </div>
         <div class="column py-1">
           <b-icon class="is-pulled-right has-text-grey" icon="chevron-right"> </b-icon>
         </div>
-      </div>
-      <div class="panel-block py-4 my-0" @click="reset()">
-        <b-button type="is-danger" expanded outlined>reset</b-button>
       </div>
     </div>
   </div>
@@ -123,7 +120,6 @@ import Advanced from "@/components/Settings/Advanced.vue";
 import Donate from "@/components/Settings/Donate.vue";
 import General from "@/components/Settings/General.vue";
 import Security from "@/components/Settings/Security.vue";
-import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component({
@@ -195,25 +191,12 @@ export default class Settings extends Vue {
       props: {},
     });
   }
-
-  reset(): void {
-    this.$buefy.dialog.confirm({
-      message: this.$tc("verifyPassword.message.confirmation.clear"),
-      confirmText: this.$tc("verifyPassword.message.confirmation.confirmText"),
-      cancelText: this.$tc("verifyPassword.message.confirmation.cancelText"),
-      trapFocus: true,
-      type: "is-danger",
-      onConfirm: () => {
-        store.dispatch("clear");
-      },
-    });
-  }
 }
 </script>
 
 <style scoped lang="scss">
-.settings-container {
-  max-width: 900px;
-  margin: auto;
+.border-bottom {
+  border-bottom: 1px solid #ededed;
+  border-radius: 0;
 }
 </style>

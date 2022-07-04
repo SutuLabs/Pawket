@@ -17,7 +17,7 @@
         <div class="column has-text-centered">
           <b-tag rounded class="has-background-grey-lighter">{{ account.type }}</b-tag>
         </div>
-        <div class="column py-1" @click="remove(idx)">
+        <div class="column py-1" @click.stop="remove(idx)">
           <b-icon class="is-pulled-right" icon="delete"> </b-icon>
         </div>
       </a>
@@ -91,6 +91,10 @@ export default class AccountManagement extends Vue {
 
   get debugMode(): boolean {
     return store.state.app.debug;
+  }
+
+  get isMobile(): boolean {
+    return window.screen.width < 700;
   }
 
   get accountNum(): string {

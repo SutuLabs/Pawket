@@ -1012,12 +1012,14 @@
       "label": {
         "mnemonic": "钱包助记词",
         "password": "登陆密码",
-        "export": "导出账户信息"
+        "export": "导出账户信息",
+        "reset": "重置钱包"
       },
       "button": {
         "mnemonic": "显示助记词 ",
         "password": "修改密码",
-        "export": "导出账户信息"
+        "export": "导出账户信息",
+        "reset": "重置钱包"
       }
     },
     "advanced": {
@@ -1028,15 +1030,11 @@
       "description": "开启后可使用“发起 Offer”、“接受 Offer”、“批量发送”、“发行 CAT”、“影子钱包”等实验功能。",
       "warning": "实验功能尚未经过详细测试，目前仅供内部人员及热心粉丝使用。请谨慎开启。"
     },
-    "donation": {
-      "title": "捐赠"
-    },
     "about": {
       "title": "关于",
       "links": {
         "title": "链接",
         "privacyPolicy": "隐私条款",
-        "termsOfUse": "使用条款",
         "pawketWebsite": "薄荷钱包官网",
         "github": "Github",
         "twitter": "Twitter",

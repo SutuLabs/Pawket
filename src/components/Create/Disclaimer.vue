@@ -1,6 +1,6 @@
 <template>
-  <div class="width-700">
-    <top-bar :title="$t('disclaimer.ui.title')" @close="back()"></top-bar>
+  <div>
+    <top-bar :title="$t('disclaimer.ui.title')" @close="back()" :showBack="true"></top-bar>
     <section class="modal-card-body">
       <p class="pt-5">
         {{ $t("disclaimer.ui.tip") }}
@@ -46,8 +46,4 @@ export default class Disclaimer extends Vue {
 </script>
 
 <style scoped lang="scss">
-.width-700 {
-  max-width: 700px;
-  margin: auto;
-}
 </style>

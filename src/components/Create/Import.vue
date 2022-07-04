@@ -1,23 +1,25 @@
 <template>
   <div class="import-container">
     <div v-if="mode == 'Menu'">
-      <top-bar :title="$t('importWallet.title')" @close="back()"></top-bar>
-      <div class="menu-btn is-clickable mx-3 mt-4 p-3" @click="import12()">
-        <h2 class="is-size-2 has-text-weight-bold has-text-primary">{{ $t("createSeed.ui.button.12word") }}</h2>
-        <p class="is-size-6">{{ $t("createSeed.ui.button.import12") }}</p>
-      </div>
-      <div class="menu-btn is-clickable mx-3 mt-4 p-3" @click="import24()">
-        <h2 class="is-size-2 has-text-weight-bold">{{ $t("createSeed.ui.button.24word") }}</h2>
-        <p class="is-size-6">{{ $t("createSeed.ui.button.import24") }}</p>
+      <top-bar :title="$t('importWallet.title')" @close="back()" :showBack="true"></top-bar>
+      <div class="columns pt-6 is-centered">
+        <div class="column is-5 menu-btn is-clickable mx-3 mt-4 p-3" @click="import12()">
+          <h2 class="is-size-2 has-text-weight-bold has-text-primary">{{ $t("createSeed.ui.button.12word") }}</h2>
+          <p class="is-size-6">{{ $t("createSeed.ui.button.import12") }}</p>
+        </div>
+        <div class="column is-5 menu-btn is-clickable mx-3 mt-4 p-3" @click="import24()">
+          <h2 class="is-size-2 has-text-weight-bold">{{ $t("createSeed.ui.button.24word") }}</h2>
+          <p class="is-size-6">{{ $t("createSeed.ui.button.import24") }}</p>
+        </div>
       </div>
     </div>
     <div v-if="mode == 'Import'">
       <section v-if="mnemonicLen == 12">
-        <top-bar :title="$t('createSeed.ui.text.import12.title')" @close="backToImportMenu()"></top-bar>
+        <top-bar :title="$t('createSeed.ui.text.import12.title')" @close="backToImportMenu()" :showBack="true"></top-bar>
         <p class="is-size-6 p-5">{{ $t("createSeed.ui.text.import12.tip") }}</p>
       </section>
       <section v-if="mnemonicLen == 24">
-        <top-bar :title="$t('createSeed.ui.text.import24.title')" @close="backToImportMenu()"></top-bar>
+        <top-bar :title="$t('createSeed.ui.text.import24.title')" @close="backToImportMenu()" :showBack="true"></top-bar>
         <p class="is-size-6 p-5">{{ $t("createSeed.ui.text.import24.tip") }}</p>
       </section>
       <div class="px-5">
@@ -26,7 +28,9 @@
         </b-field>
       </div>
       <div class="has-text-centered">
-        <b-button type="is-primary" class="px-6 mt-5" @click="confirm()">{{ $t("createSeed.ui.button.confirm") }}</b-button>
+        <b-button :loading="submitting" type="is-primary" class="px-6 mt-5" @click="confirm()">{{
+          $t("createSeed.ui.button.confirm")
+        }}</b-button>
       </div>
     </div>
   </div>
@@ -50,6 +54,7 @@ export default class Add extends Vue {
   public mnemonicLen: MnemonicLen = 12;
   seedMnemonic = "";
   seedMnemonicList: string[] = [];
+  submitting = false;
 
   import12(): void {
     this.mnemonicLen = 12;
@@ -67,13 +72,17 @@ export default class Add extends Vue {
 
   async confirm(): Promise<void> {
     this.isLegal = true;
+    this.submitting = true;
     this.seedMnemonic = this.seedMnemonic.replace(/\s+/g, " ").trim();
     this.seedMnemonicList = this.seedMnemonic.split(" ");
     if (this.seedMnemonicList.length != this.mnemonicLen) {
       this.isLegal = false;
+      this.submitting = false;
       return;
     }
     await store.dispatch("importSeed", this.seedMnemonic).catch((error) => (this.isLegal = error == null));
+    this.submitting = false;
+    this.$router.push("/");
   }
 
   backToImportMenu(): void {
@@ -90,8 +99,6 @@ export default class Add extends Vue {
 
 <style scoped lang="scss">
 .import-container {
-  max-width: 700px;
-  margin: auto;
   height: 80vh;
   overflow-x: hidden;
 }

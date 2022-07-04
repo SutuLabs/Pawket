@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-card">
+  <div class="modal-card m-0">
     <header>
       <top-bar :title="title" @close="$emit('close')"></top-bar>
     </header>

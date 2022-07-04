@@ -2,25 +2,30 @@
   <div class="modal-card">
     <top-bar :title="$t('explorerLink.ui.title.link')" @close="close()"></top-bar>
     <section class="modal-card-body">
-      <b-field label="Max number of addresses">
-        <b-numberinput
-          controls-alignment="left"
-          v-model="maxAddress"
-          :max="12"
-          :min="1"
-          @input="changeMaxAddress"
-        ></b-numberinput>
+      <b-field>
+        <template #label>
+          <span>Max number of addresses</span>
+          <b-tooltip :label="$t('accountConfigure.ui.tooltip.receiveAddress')" position="is-bottom" multilined>
+            <b-icon icon="help-circle" size="is-small"> </b-icon>
+          </b-tooltip>
+        </template>
+        <b-numberinput controls-alignment="left" v-model="maxAddress" :max="12" @input="changeMaxAddress"></b-numberinput>
       </b-field>
       <b-tabs position="is-centered" v-model="addressType" expanded @input="changeAddressType">
         <b-tab-item label="Observer" icon="eye-check" value="Observed">
           <div class="has-text-centered">
-            <qrcode-vue class="is-hidden-tablet" :value="externalExplorerPrefix + address" size="200"></qrcode-vue>
+            <qrcode-vue :value="externalExplorerPrefix + address" size="200"></qrcode-vue>
             <key-box icon="checkbox-multiple-blank-outline" :value="address" :showValue="true"></key-box>
+            <b-tooltip :label="$t('explorerLink.ui.tooltip.blockchainExplorer')">
+              <a target="_blank" :href="externalExplorerPrefix + address">
+                <b-icon class="pl-4" icon="open-in-new" size="is-small"></b-icon>
+              </a>
+            </b-tooltip>
           </div>
         </b-tab-item>
         <b-tab-item label="Non-observer" icon="security" value="Hardened">
           <div class="has-text-centered">
-            <qrcode-vue class="is-hidden-tablet" :value="externalExplorerPrefix + address" size="200"></qrcode-vue>
+            <qrcode-vue :value="externalExplorerPrefix + address" size="200"></qrcode-vue>
             <key-box icon="checkbox-multiple-blank-outline" :value="address" :showValue="true"></key-box>
             <b-tooltip :label="$t('explorerLink.ui.tooltip.blockchainExplorer')" v-if="explorerUrl"> </b-tooltip>
           </div>
@@ -35,7 +40,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="addr in addresses" :key="addr.address" :active="address == addr.address" @click="address = addr.address">
+          <tr
+            v-for="addr in addresses"
+            :key="addr.address"
+            @click="address = addr.address"
+            :class="{ 'hover-primary': true, 'is-clickable': true, 'is-selected': address == addr.address }"
+          >
             <td>{{ addr.address | shorten }}</td>
             <td>{{ addr.coins.filter((_) => _.coin && !_.spent).length }}</td>
             <td>
@@ -111,4 +121,16 @@ export default class ExplorerLink extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+// Import Bulma's core
+@import "~bulma/sass/utilities/derived-variables";
+.hover-primary:hover {
+  background-color: $primary;
+  color: white;
+}
+
+.hover-primary:active {
+  background-color: $primary;
+  color: white;
+}
+</style>

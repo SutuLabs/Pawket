@@ -1,5 +1,6 @@
 <template>
   <div class="modal-card">
+    <top-bar :title="$t('send.ui.title.send')" @close="$emit('close')"></top-bar>
     <section class="modal-card-body">
       <div v-show="!bundle">
         <b-notification
@@ -56,13 +57,14 @@
         <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
       </template>
     </section>
-    <footer class="is-justify-content-center buttons modal-card-body">
+    <footer class="is-block buttons modal-card-foot">
       <div>
-        <b-button :label="$t('send.ui.button.cancel')" @click="cancel()"></b-button>
+        <b-button :label="$t('send.ui.button.cancel')" class="is-pulled-left" @click="cancel()"></b-button>
         <b-button
           :label="$t('send.ui.button.sign')"
           v-if="!bundle"
           type="is-primary"
+          class="is-pulled-right"
           @click="sign()"
           :disabled="!validity || submitting"
         ></b-button>
@@ -116,6 +118,7 @@ import AddressBook, { Contact } from "./AddressBook.vue";
 import { xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getCatNames, getTokenInfo } from "@/services/coin/cat";
 import AddressField from "./AddressField.vue";
+import TopBar from "./TopBar.vue";
 
 @Component({
   components: {
@@ -125,6 +128,7 @@ import AddressField from "./AddressField.vue";
     BundleSummary,
     SendSummary,
     AddressField,
+    TopBar
   },
 })
 export default class Send extends Vue {

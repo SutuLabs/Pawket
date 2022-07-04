@@ -1,6 +1,11 @@
 <template>
-  <div>
-    <router-view></router-view>
+  <div class="column is-6 is-offset-3">
+    <div class="box is-hidden-mobile">
+      <router-view></router-view>
+    </div>
+    <div class="is-hidden-tablet">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 

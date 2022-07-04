@@ -1,6 +1,6 @@
 <template>
-  <div class="width-700">
-    <top-bar :title="$t('createWallet.title')" @close="back()"></top-bar>
+  <div>
+    <top-bar :title="$t('createWallet.title')" @close="back()" :showBack="true"></top-bar>
     <section class="modal-card-body">
       <p class="pt-4 has-text-centered">
         <b-button @click="addAcc()" type="is-primary" icon-left="wallet-plus" outlined class="px-6">{{
@@ -42,8 +42,4 @@ export default class Disclaimer extends Vue {
 </script>
 
 <style scoped lang="scss">
-.width-700 {
-  max-width: 700px;
-  margin: auto;
-}
 </style>
