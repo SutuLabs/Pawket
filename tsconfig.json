@@ -15,7 +15,8 @@
         "baseUrl": ".",
         "types": [
             "webpack-env",
-            "chrome"
+            "chrome",
+            "jest"
         ],
         "paths": {
             "@/*": [

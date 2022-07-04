@@ -53,7 +53,7 @@ class TestRunner {
       store.state.app.selfTestError = store.state.app.selfTestStatus;
     } catch (error) {
       store.state.app.selfTestStatus = "Failed";
-      store.state.app.selfTestError = error;
+      store.state.app.selfTestError = String(error);
     }
   }
 

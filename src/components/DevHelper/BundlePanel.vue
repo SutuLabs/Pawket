@@ -189,7 +189,26 @@ export default class BundlePanel extends Vue {
         if (this.bundle && cs && !this.bundle.coin_spends) {
           Vue.set(this.bundle, "coin_spends", cs);
         }
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const ba = this.bundle as any;
+        if (this.bundle && ba?.CoinSpends) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const cs: CoinSpend[] = ba?.CoinSpends.map((_: any) => ({
+            coin: {
+              parent_coin_info: _.Coin.ParentCoinInfo,
+              puzzle_hash: _.Coin.PuzzleHash,
+              amount: _.Coin.Amount,
+            },
+            puzzle_reveal: _.PuzzleReveal,
+            solution: _.Solution,
+          }));
+          Vue.set(this.bundle, "coin_spends", cs);
+          Vue.set(this.bundle, "aggregated_signature", ba?.AggregatedSignature);
+        }
       }
+      const st = this.bundle?.coin_spends.map((_) => "\"" + transfer.getCoinName(_.coin).hex() + "\"").join(", ");
+      console.log(st);
     } catch (error) {
       this.bundle = null;
     }

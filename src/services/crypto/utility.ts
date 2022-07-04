@@ -2,6 +2,7 @@ import store from "@/store";
 import { PrivateKey, ModuleInstance } from "@chiamine/bls-signatures";
 import { prefix0x, unprefix0x } from "../coin/condition";
 import { Bytes } from "clvm";
+import crypto from "./isoCrypto"
 
 type deriveCallback = (path: number[]) => PrivateKey;
 
