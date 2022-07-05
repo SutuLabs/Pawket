@@ -3,19 +3,19 @@
     <div class="container px-4">
       <div class="py-5 has-text-centered" v-if="account && account.key">
         <section>
-          <b-button class="is-pulled-right" icon-left="account" icon-right="menu-down" @click="selectAccount()">{{
-            account.name | nameOmit
-          }}</b-button>
           <b-tooltip :label="$t('accountDetail.ui.tooltip.lock')" class="is-pulled-right is-hidden-mobile">
             <b-button @click="lock()"><b-icon icon="lock" class="has-text-grey"> </b-icon></b-button>
           </b-tooltip>
+          <b-button class="is-pulled-right" icon-left="account" icon-right="menu-down" @click="selectAccount()">{{
+            account.name | nameOmit
+          }}</b-button>
           <b-dropdown v-model="networkId" aria-role="list" :mobile-modal="false" class="is-pulled-left">
             <template #trigger>
               <b-button
-                :class="networkId == 'mainnet' ? 'has-text-primary' : ''"
+                :class="networkId == 'mainnet' ? 'has-text-primary' : 'has-text-info'"
                 icon-left="brightness-1"
                 icon-right="menu-down"
-                >{{ networkId }}</b-button
+                ><span class="has-text-dark">{{ networkId }}</span></b-button
               >
             </template>
             <b-dropdown-item v-for="net in networks" :key="net.name" :value="net.name" aria-role="listitem">{{

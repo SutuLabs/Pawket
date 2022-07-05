@@ -3,8 +3,11 @@
     <top-bar :title="$t('settings.security.title')" @close="$emit('close')"></top-bar>
     <section class="modal-card-body">
       <b-field :label="$t('settings.security.label.mnemonic')">
-        <b-button type="is-primary" icon-left="eye" outlined expanded @click="toggleMnemonic()">
-          {{ $t("settings.security.button.mnemonic") }}</b-button
+        <b-button v-if="!showMnemonic" type="is-primary" icon-left="eye" outlined expanded @click="toggleMnemonic()">
+          {{ $t("settings.security.button.showMnemonic") }}</b-button
+        >
+         <b-button v-else type="is-primary" icon-left="eye-off" outlined expanded @click="toggleMnemonic()">
+          {{ $t("settings.security.button.hideMnemonic") }}</b-button
         >
         <span v-if="showMnemonic">
           <br />
@@ -22,7 +25,7 @@
         >
       </b-field>
       <b-field :label="$t('settings.security.label.export')">
-        <b-button type="is-primary" icon-left="export" outlined expanded> {{ $t("settings.security.button.export") }}</b-button>
+        <b-button icon-left="export" outlined expanded disabled> {{ $t("settings.security.button.export") }}</b-button>
       </b-field>
       <b-field :label="$t('settings.security.label.reset')">
         <b-button type="is-danger" expanded outlined @click="reset()">{{ $t("settings.security.button.reset") }}</b-button>
@@ -54,6 +57,10 @@ export default class Security extends Vue {
     return store.state.account.accounts[store.state.account.selectedAccount] ?? {};
   }
 
+  get isMobile(): boolean {
+    return window.screen.width < 700;
+  }
+
   ChangePassword(): void {
     this.$buefy.modal.open({
       parent: this,
@@ -61,7 +68,7 @@ export default class Security extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
-      fullScreen: true,
+      fullScreen: this.isMobile,
       props: { mnemonic: store.state.vault.seedMnemonic },
     });
   }

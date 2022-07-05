@@ -76,7 +76,10 @@ export default class General extends Vue {
       cancelText: tc("app.switchNetwork.cancel"),
       type: "is-primary",
       hasIcon: true,
-      onConfirm: () => store.dispatch("lock"),
+      onConfirm: () => {
+        this.$emit("close");
+        store.dispatch("lock");
+      },
     });
   }
 

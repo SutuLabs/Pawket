@@ -1,5 +1,5 @@
 <template>
-  <div class="login-form-wrapper">
+  <div class="column is-8 is-offset-2 pt-6 mt-6">
     <div class="columns is-centered">
       <div class="box p-6">
         <section>
@@ -166,9 +166,4 @@ export default class VerifyPassword extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-.login-form-wrapper {
-  display: table-cell;
-  vertical-align: middle;
-}
-</style>
+<style scoped lang="scss"></style>

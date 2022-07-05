@@ -10,7 +10,7 @@
       <div class="px-4 has-text-centered pt-6">
         <b-radio v-model="language" name="language" native-value="en"> English </b-radio>
         <b-radio v-model="language" name="language" native-value="zhcn"> 简体中文 </b-radio>
-        <p class="pt-6 mt-2">
+        <p class="py-6 mt-2">
           <b-button type="is-primary" @click="next()"
             ><span class="px-5">{{ $t("welcome.ui.button.start") }}</span></b-button
           >

@@ -1,6 +1,6 @@
 <template>
   <div class="add-container">
-    <top-bar :title="$t('newWallet.title')"></top-bar>
+    <top-bar :title="$t('newWallet.title')" :showBack="true" @close="back()"></top-bar>
     <section class="modal-card-body">
       <p class="pt-5">
         {{ $t("createSeed.ui.text.create.tip1") }}
@@ -59,6 +59,10 @@ export default class Add extends Vue {
     // TODO: go to verify seed page
     store.dispatch("importSeed", this.seedMnemonic);
     this.$router.push("/");
+  }
+
+  back(): void {
+    this.$router.push("/create/create-wallet");
   }
 }
 </script>

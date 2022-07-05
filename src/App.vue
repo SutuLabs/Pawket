@@ -3,7 +3,7 @@
     <div class="column is-8 is-offset-2 is-hidden-mobile">
       <b-navbar>
         <template #brand>
-          <b-navbar-item tag="router-link" :to="{ path: '/' }">
+          <b-navbar-item @click="home()">
             <img src="./assets/logo.svg" :alt="$t('verifyPassword.ui.alt.logoAlt')" />
           </b-navbar-item>
         </template>
@@ -70,28 +70,75 @@
         </template>
       </b-navbar>
     </div>
-    <router-view />
+    <div v-if="unlocked == false" class="pt-6 mt-6 login">
+      <verify-password></verify-password>
+    </div>
+    <div v-else>
+      <router-view />
+    </div>
     <nav class="navbar is-link is-fixed-bottom is-hidden-tablet top-border" role="navigation" v-if="showNavigation">
       <div class="navbar-brand">
-        <router-link :to="'/'" class="navbar-item is-expanded is-block has-text-centered has-background-white">
-          <b-icon icon="wallet" type="is-primary"></b-icon>
-          <p class="is-size-7 has-text-primary">{{ $t("app.ui.navigation.wallet") }}</p>
+        <router-link
+          :to="'/'"
+          :class="{
+            'navbar-item': true,
+            'is-expanded': true,
+            'is-block': true,
+            'has-text-centered': true,
+            'has-background-white': true,
+            'has-text-grey': path != '/',
+            'has-text-primary': path == '/',
+          }"
+        >
+          <b-icon icon="wallet"></b-icon>
+          <p class="is-size-7">{{ $t("app.ui.navigation.wallet") }}</p>
         </router-link>
-        <router-link :to="'/trade'" class="navbar-item is-expanded is-block has-text-centered has-background-white">
-          <b-icon icon="trending-up" type="is-primary"></b-icon>
-          <p class="is-size-7 has-text-primary">{{ $t("app.ui.navigation.trade") }}</p>
+        <router-link
+          :to="'/trade'"
+          :class="{
+            'navbar-item': true,
+            'is-expanded': true,
+            'is-block': true,
+            'has-text-centered': true,
+            'has-background-white': true,
+            'has-text-grey': path != '/trade',
+            'has-text-primary': path == '/trade',
+          }"
+        >
+          <b-icon icon="trending-up"></b-icon>
+          <p class="is-size-7">{{ $t("app.ui.navigation.trade") }}</p>
         </router-link>
         <router-link
           :to="'/explore'"
-          class="navbar-item is-expanded is-block has-text-centered has-background-white"
+          :class="{
+            'navbar-item': true,
+            'is-expanded': true,
+            'is-block': true,
+            'has-text-centered': true,
+            'has-background-white': true,
+            'has-text-grey': path != '/explore',
+            'has-text-primary': path == '/explore',
+          }"
           v-if="debugMode"
         >
-          <b-icon icon="earth" type="is-primary"></b-icon>
-          <p class="is-size-7 has-text-primary">{{ $t("app.ui.navigation.explore") }}</p>
+          <b-icon icon="earth"></b-icon>
+          <p class="is-size-7">{{ $t("app.ui.navigation.explore") }}</p>
         </router-link>
-        <router-link :to="'/settings'" class="navbar-item is-expanded is-block has-text-centered has-background-white">
-          <b-icon icon="cog" type="is-primary"></b-icon>
-          <p class="is-size-7 has-text-primary">{{ $t("app.ui.navigation.settings") }}</p>
+        <router-link
+          :to="'/settings'"
+          :active="path == '/settings'"
+          :class="{
+            'navbar-item': true,
+            'is-expanded': true,
+            'is-block': true,
+            'has-text-centered': true,
+            'has-background-white': true,
+            'has-text-grey': path != '/settings',
+            'has-text-primary': path == '/settings',
+          }"
+        >
+          <b-icon icon="cog"></b-icon>
+          <p class="is-size-7">{{ $t("app.ui.navigation.settings") }}</p>
         </router-link>
       </div>
     </nav>
@@ -133,8 +180,9 @@ import DevHelper from "@/components/DevHelper.vue";
 import OfflineQrCode from "./components/OfflineQrCode.vue";
 import { NetworkInfo, xchPrefix } from "./store/modules/network";
 import { tc } from "./i18n/i18n";
+import VerifyPassword from "./components/VerifyPassword.vue";
 
-@Component
+@Component({ components: { VerifyPassword } })
 export default class App extends Vue {
   public debugClick = 9;
   get version(): string {
@@ -147,6 +195,14 @@ export default class App extends Vue {
 
   get unlocked(): boolean {
     return store.state.vault.unlocked;
+  }
+
+  get password(): boolean {
+    return !!store.state.vault.encryptKey;
+  }
+
+  get mnemonic(): string {
+    return store.state.vault.seedMnemonic;
   }
 
   get showNavigation(): boolean {
@@ -184,6 +240,11 @@ export default class App extends Vue {
   changeLang(lang: string): void {
     this.$i18n.locale = lang;
     localStorage.setItem("Locale", lang);
+  }
+
+  home(): void {
+    if (this.$route.path.startsWith("/create") || this.$route.path == "/") return;
+    this.$router.push("/");
   }
 
   async switchNetwork(networkId: string): Promise<void> {
@@ -232,6 +293,8 @@ export default class App extends Vue {
 </script>
 <style lang="scss">
 @import "@/styles/colors.scss";
+@import "~bulma/sass/utilities/derived-variables";
+
 body,
 html {
   width: 100%;
@@ -251,5 +314,15 @@ html {
 
 .boder-less {
   border: none;
+}
+
+.login {
+  height: 60vh !important;
+  z-index: 99 !important;
+}
+
+a.has-text-primary:hover,
+a.has-text-primary:focus {
+  color: $primary !important;
 }
 </style>

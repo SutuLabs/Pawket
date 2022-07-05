@@ -4,7 +4,6 @@
       <div class="has-text-centered is-size-5 pt-5 pb-2 pr-2 border-bottom">
         <span @click="$emit('close')"><b-icon class="is-pulled-left has-text-grey pl-4 pt-2" icon="chevron-left"> </b-icon></span>
         <span>{{ $t("accountManagement.title") }}</span>
-        <span @click="lock()"><b-icon class="is-pulled-right pr-2 pt-2" icon="lock"> </b-icon></span>
       </div>
       <a v-for="(account, idx) in accounts" :key="idx" class="panel-block" @click="showExport(idx)">
         <b-icon icon="account"></b-icon>
@@ -113,7 +112,7 @@ export default class AccountManagement extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
-      fullScreen: true,
+      fullScreen: this.isMobile,
       props: { idx: idx },
       events: { rename: this.rename },
     });
@@ -175,7 +174,7 @@ export default class AccountManagement extends Vue {
       parent: this,
       component: AddByPassword,
       hasModalCard: true,
-      fullScreen: true,
+      fullScreen: this.isMobile,
       canCancel: [""],
       trapFocus: true,
     });
@@ -186,7 +185,7 @@ export default class AccountManagement extends Vue {
       parent: this,
       component: AddBySerial,
       hasModalCard: true,
-      fullScreen: true,
+      fullScreen: this.isMobile,
       canCancel: [""],
       trapFocus: true,
       props: { defaultName: this.$t("accountList.ui.value.defaultName", { n: this.accountNum }) },
@@ -199,7 +198,7 @@ export default class AccountManagement extends Vue {
       component: AddByMnemonic,
       hasModalCard: true,
       trapFocus: true,
-      fullScreen: true,
+      fullScreen: this.isMobile,
       canCancel: [""],
       props: { title: this.$t("accountList.ui.modal.addByLegacy"), mnemonicLen: 24 },
     });
@@ -211,7 +210,7 @@ export default class AccountManagement extends Vue {
       component: AddByMnemonic,
       hasModalCard: true,
       trapFocus: true,
-      fullScreen: true,
+      fullScreen: this.isMobile,
       canCancel: [""],
       props: { title: this.$t("accountList.ui.modal.addByMnemonic"), mnemonicLen: 12 },
     });
@@ -222,7 +221,7 @@ export default class AccountManagement extends Vue {
       parent: this,
       component: AddByAddress,
       hasModalCard: true,
-      fullScreen: true,
+      fullScreen: this.isMobile,
       trapFocus: true,
       canCancel: [""],
     });

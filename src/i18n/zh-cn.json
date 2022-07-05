@@ -324,6 +324,14 @@
       "title": {
         "link": "接收地址"
       },
+      "label": {
+        "maxAddress": "最大地址数量",
+        "address": "地址",
+        "coin": "硬币",
+        "link": "区块链浏览器",
+        "observer": "观察钱包",
+        "nonObserver": "私房钱包"
+      },
       "tooltip": {
         "blockchainExplorer": "在区块链浏览器里查看"
       }
@@ -525,7 +533,9 @@
       "label": {
         "listingCats": "CATs 列表",
         "name": "CAT 名称",
-        "assetID": "Asset ID"
+        "assetID": "Asset ID",
+        "search": "搜索",
+        "custom": "自定义"
       },
       "button": {
         "add": "添加"
@@ -761,6 +771,9 @@
       "label": {
         "cost": "发送",
         "receive": "接收"
+      },
+      "text": {
+        "empty": "暂无交易记录"
       }
     }
   },
@@ -1011,12 +1024,13 @@
       "title": "安全",
       "label": {
         "mnemonic": "钱包助记词",
-        "password": "登陆密码",
+        "password": "登录密码",
         "export": "导出账户信息",
         "reset": "重置钱包"
       },
       "button": {
-        "mnemonic": "显示助记词 ",
+        "showMnemonic": "显示助记词 ",
+        "hideMnemonic": "隐藏助记词",
         "password": "修改密码",
         "export": "导出账户信息",
         "reset": "重置钱包"

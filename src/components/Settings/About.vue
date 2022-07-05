@@ -8,21 +8,21 @@
       </div>
       <div class="mt-5">
         <strong>{{ $t("settings.about.links.title") }}</strong>
-        <a href="https://info.pawket.app/privacy-policy"
+        <a href="https://info.pawket.app/privacy-policy" target="_blank"
           ><p class="pt-4">{{ $t("settings.about.links.privacyPolicy") }}</p></a
         >
-        <hr class="p-0 my-2"/>
+        <hr class="p-0 my-2" />
 
-        <a href="https://info.pawket.app/"
+        <a href="https://info.pawket.app/" target="_blank"
           ><p>{{ $t("settings.about.links.pawketWebsite") }}</p></a
         >
-        <a href="https://github.com/Chiabee"
+        <a href="https://github.com/Chiabee" target="_blank"
           ><p>{{ $t("settings.about.links.github") }}</p></a
         >
-        <a href="https://twitter.com/pawket_app"
+        <a href="https://twitter.com/pawket_app" target="_blank"
           ><p>{{ $t("settings.about.links.twitter") }}</p></a
         >
-        <a href="https://discord.com/invite/ndQgpHwe4V "
+        <a href="https://discord.com/invite/ndQgpHwe4V " target="_blank"
           ><p>{{ $t("settings.about.links.discord") }}</p></a
         >
       </div>

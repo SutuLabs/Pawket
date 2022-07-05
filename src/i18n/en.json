@@ -324,6 +324,14 @@
       "title": {
         "link": "Receive Addresses"
       },
+      "label": {
+        "maxAddress": "Max number of addresses",
+        "address": "Address",
+        "coin": "Coin",
+        "link": "Explorer",
+        "observer": "Observer",
+        "nonObserver": "Non-Observer"
+      },
       "tooltip": {
         "blockchainExplorer": "View on Block Explorer"
       }
@@ -525,7 +533,9 @@
       "label": {
         "listingCats": "CATs List",
         "name": "Name",
-        "assetID": "Asset ID"
+        "assetID": "Asset ID",
+        "search": "Search",
+        "custom": "Custom"
       },
       "button": {
         "add": "Add"
@@ -761,6 +771,9 @@
       "label": {
         "cost": "Send",
         "receive": "Receive"
+      },
+      "text": {
+        "empty": "You have no transactions."
       }
     }
   },
@@ -1016,7 +1029,8 @@
         "reset": "Reset Wallet"
       },
       "button": {
-        "mnemonic": "Reveal Mnemonics",
+        "showMnemonic": "Reveal Mnemonics",
+        "hideMnemonic": "Hide Mnemonics",
         "password": "Change Password",
         "export": "Export Private Information",
         "reset": "Reset Wallet"

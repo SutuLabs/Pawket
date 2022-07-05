@@ -1,8 +1,7 @@
 <template>
   <div class="home">
     <b-loading v-if="loading" :is-full-page="true" v-model="loading"></b-loading>
-    <verify-password v-if="!password"></verify-password>
-    <account-detail v-else></account-detail>
+    <account-detail></account-detail>
     <div v-if="!loading" class="sticky">
       <self-test v-if="!unlocked"></self-test>
     </div>
@@ -11,16 +10,12 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import CreateSeed from "@/components/CreateSeed.vue";
-import VerifyPassword from "@/components/VerifyPassword.vue";
 import AccountDetail from "@/components/AccountDetail.vue";
 import SelfTest from "@/components/SelfTest.vue";
 import store from "@/store";
 
 @Component({
   components: {
-    CreateSeed,
-    VerifyPassword,
     AccountDetail,
     SelfTest,
   },

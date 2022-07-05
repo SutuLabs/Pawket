@@ -4,7 +4,7 @@
     <section class="modal-card-body">
       <b-field>
         <template #label>
-          <span>Max number of addresses</span>
+          <span>{{ $t("explorerLink.ui.label.maxAddress") }}</span>
           <b-tooltip :label="$t('accountConfigure.ui.tooltip.receiveAddress')" position="is-bottom" multilined>
             <b-icon icon="help-circle" size="is-small"> </b-icon>
           </b-tooltip>
@@ -12,7 +12,7 @@
         <b-numberinput controls-alignment="left" v-model="maxAddress" :max="12" @input="changeMaxAddress"></b-numberinput>
       </b-field>
       <b-tabs position="is-centered" v-model="addressType" expanded @input="changeAddressType">
-        <b-tab-item label="Observer" icon="eye-check" value="Observed">
+        <b-tab-item :label="$t('explorerLink.ui.label.observer')" icon="eye-check" value="Observed">
           <div class="has-text-centered">
             <qrcode-vue :value="externalExplorerPrefix + address" size="200"></qrcode-vue>
             <key-box icon="checkbox-multiple-blank-outline" :value="address" :showValue="true"></key-box>
@@ -23,20 +23,24 @@
             </b-tooltip>
           </div>
         </b-tab-item>
-        <b-tab-item label="Non-observer" icon="security" value="Hardened">
+        <b-tab-item :label="$t('explorerLink.ui.label.nonObserver')" icon="security" value="Hardened">
           <div class="has-text-centered">
             <qrcode-vue :value="externalExplorerPrefix + address" size="200"></qrcode-vue>
             <key-box icon="checkbox-multiple-blank-outline" :value="address" :showValue="true"></key-box>
-            <b-tooltip :label="$t('explorerLink.ui.tooltip.blockchainExplorer')" v-if="explorerUrl"> </b-tooltip>
+            <b-tooltip :label="$t('explorerLink.ui.tooltip.blockchainExplorer')">
+              <a target="_blank" :href="externalExplorerPrefix + address">
+                <b-icon class="pl-4" icon="open-in-new" size="is-small"></b-icon>
+              </a>
+            </b-tooltip>
           </div>
         </b-tab-item>
       </b-tabs>
       <table class="table has-text-centered is-fullwidth">
         <thead>
           <tr>
-            <th>Address</th>
-            <th>Coin</th>
-            <th>Explorer</th>
+            <th>{{ $t("explorerLink.ui.label.address") }}</th>
+            <th>{{ $t("explorerLink.ui.label.coin") }}</th>
+            <th>{{ $t("explorerLink.ui.label.link") }}</th>
           </tr>
         </thead>
         <tbody>
@@ -103,7 +107,7 @@ export default class ExplorerLink extends Vue {
   }
 
   mounted(): void {
-    Vue.set(this, "address", this.token.addresses[0].address);
+    Vue.set(this, "address", this.addresses[0].address);
     Vue.set(this, "maxAddress", this.account.addressRetrievalCount);
   }
 

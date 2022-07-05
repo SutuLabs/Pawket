@@ -1,5 +1,6 @@
 <template>
   <section>
+    <p v-if="!currentActList.length" class="has-text-centered">{{ $t("utxo.ui.text.empty") }}</p>
     <a
       href="javascript:void(0)"
       v-for="(activity, i) of currentActList"
