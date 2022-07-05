@@ -1009,7 +1009,8 @@
         "about": {
           "title": "About",
           "description": "Privacy Policy, Terms of use, Pawket Version, our Website"
-        }
+        },
+        "lock": "Lock"
       }
     },
     "general": {
@@ -1067,7 +1068,12 @@
     }
   },
   "accountManagement": {
-    "title": "Account Management"
+    "title": "Account Management",
+    "label": {
+      "address": "Address",
+      "imported": "Imported",
+      "passPhrase": "Passphrase"
+    }
   },
   "welcome": {
     "ui": {

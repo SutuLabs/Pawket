@@ -70,7 +70,7 @@
         </template>
       </b-navbar>
     </div>
-    <div v-if="unlocked == false" class="pt-6 mt-6 login">
+    <div v-if="unlocked == false && hasAccount" class="pt-6 mt-6 login">
       <verify-password></verify-password>
     </div>
     <div v-else>
@@ -201,8 +201,8 @@ export default class App extends Vue {
     return !!store.state.vault.encryptKey;
   }
 
-  get mnemonic(): string {
-    return store.state.vault.seedMnemonic;
+  get hasAccount(): boolean {
+    return store.state.vault.createdAt > 0;
   }
 
   get showNavigation(): boolean {

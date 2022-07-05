@@ -39,9 +39,7 @@ export default class Home extends Vue {
   }
 
   mounted(): void {
-    if (!localStorage.getItem("SETTINGS")) {
-      this.$router.push("/create");
-    }
+    if (localStorage.getItem("SETTINGS") == null) this.$router.push("/create");
   }
 }
 </script>

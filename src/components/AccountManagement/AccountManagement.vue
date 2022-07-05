@@ -5,7 +5,8 @@
         <span @click="$emit('close')"><b-icon class="is-pulled-left has-text-grey pl-4 pt-2" icon="chevron-left"> </b-icon></span>
         <span>{{ $t("accountManagement.title") }}</span>
       </div>
-      <a v-for="(account, idx) in accounts" :key="idx" class="panel-block" @click="showExport(idx)">
+      <a v-for="(account, idx) in accounts" :key="idx" class="panel-block" @click="select(idx)">
+        <b-icon icon="check" v-if="idx == selectedAccount" style="margin-left: -15px" size="is-small" type="is-primary"></b-icon>
         <b-icon icon="account"></b-icon>
         <div class="column is-flex my-0 py-0">
           <div class="py-1">
@@ -14,10 +15,15 @@
           </div>
         </div>
         <div class="column has-text-centered">
-          <b-tag rounded class="has-background-grey-lighter">{{ account.type }}</b-tag>
+          <b-tag v-if="account.type == 'Password'" rounded class="has-background-grey-lighter">{{ $t("accountManagement.label.passPhrase") }}</b-tag>
+          <b-tag v-if="account.type == 'Address'" rounded class="has-background-grey-lighter">{{ $t("accountManagement.label.address") }}</b-tag>
+          <b-tag v-if="account.type == 'Legacy'" rounded class="has-background-grey-lighter">{{ $t("accountManagement.label.imported") }}</b-tag>
         </div>
-        <div class="column py-1" @click.stop="remove(idx)">
-          <b-icon class="is-pulled-right" icon="delete"> </b-icon>
+        <div class="column py-1">
+          <span @click.stop="showDetail(idx)"><b-icon class="is-pulled-right" icon="dots-vertical"> </b-icon></span>
+          <span v-if="idx != 0" @click.stop="remove(idx)"
+            ><b-icon class="is-pulled-right pr-2" icon="delete-outline"> </b-icon
+          ></span>
         </div>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addBySerial()">
@@ -88,6 +94,10 @@ export default class AccountManagement extends Vue {
     return store.state.vault.experiment;
   }
 
+  get selectedAccount(): number {
+    return store.state.account.selectedAccount;
+  }
+
   get debugMode(): boolean {
     return store.state.app.debug;
   }
@@ -105,7 +115,7 @@ export default class AccountManagement extends Vue {
     this.$emit("close");
   }
 
-  showExport(idx: number): void {
+  showDetail(idx: number): void {
     this.$buefy.modal.open({
       parent: this,
       component: AccountDetail,
@@ -141,6 +151,13 @@ export default class AccountManagement extends Vue {
         store.dispatch("removeAccount", idx);
       },
     });
+  }
+
+  select(idx: number): void {
+    store.state.account.selectedAccount = idx;
+    store.dispatch("refreshBalance");
+    store.dispatch("selectAccount", idx);
+    this.close();
   }
 
   getAccountName(idx: number): Promise<string> {

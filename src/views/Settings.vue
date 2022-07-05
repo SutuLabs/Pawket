@@ -109,6 +109,9 @@
           <b-icon class="is-pulled-right has-text-grey" icon="chevron-right"> </b-icon>
         </div>
       </div>
+      <div class="panel-block mt-4">
+        <b-button type="is-info" expanded outlined @click="lock()">{{ $t("settings.menu.items.lock") }}</b-button>
+      </div>
     </div>
   </div>
 </template>
@@ -120,6 +123,7 @@ import Advanced from "@/components/Settings/Advanced.vue";
 import Donate from "@/components/Settings/Donate.vue";
 import General from "@/components/Settings/General.vue";
 import Security from "@/components/Settings/Security.vue";
+import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component({
@@ -189,6 +193,18 @@ export default class Settings extends Vue {
       canCancel: [""],
       fullScreen: true,
       props: {},
+    });
+  }
+
+  lock(): void {
+    this.$buefy.dialog.confirm({
+      message: this.$tc("accountDetail.message.confirmation.lock"),
+      confirmText: this.$tc("accountDetail.ui.button.confirm"),
+      cancelText: this.$tc("accountDetail.ui.button.cancel"),
+      trapFocus: true,
+      onConfirm: () => {
+        store.dispatch("lock");
+      },
     });
   }
 }

@@ -1009,7 +1009,8 @@
         "about": {
           "title": "关于",
           "description": "隐私条款、使用条款、钱包版本、官网"
-        }
+        },
+        "lock": "锁定钱包"
       }
     },
     "general": {
@@ -1067,7 +1068,12 @@
     }
   },
   "accountManagement": {
-    "title": "账户管理"
+    "title": "账户管理",
+    "label": {
+      "address": "地址账户",
+      "imported": "导入账户",
+      "passPhrase": "影子钱包"
+    }
   },
   "welcome": {
     "ui": {
