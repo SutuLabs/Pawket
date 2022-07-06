@@ -10,8 +10,8 @@
       <span v-if="showBack" @click="$emit('close')"
         ><b-icon class="is-pulled-left has-text-grey pt-2 is-clickable" icon="chevron-left"> </b-icon
       ></span>
-      <span v-else @click="$emit('close')"
-        ><b-icon class="is-pulled-right has-text-grey pt-2 is-clickable" icon="close"> </b-icon
+      <span v-if="showClose" @click="$emit('close')"
+        ><b-icon class="is-pulled-right has-text-grey pt-2 is-clickable hover-danger" icon="close"> </b-icon
       ></span>
       <span class="pl-4">{{ title }}</span>
     </div>
@@ -25,10 +25,15 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 export default class TopBar extends Vue {
   @Prop() title!: string;
   @Prop({ default: false }) showBack!: boolean;
+   @Prop({ default: false }) showClose!: boolean;
 }
 </script>
 
 <style scoped lang="scss">
+@import "~bulma/sass/utilities/derived-variables";
+.hover-danger:hover {
+  color: $danger !important;
+}
 .border-bottom {
   border-bottom: 2px solid #ededed;
   background-color: white;

@@ -1,10 +1,14 @@
 <template>
-  <div id="app">
+  <div id="app" ref="container">
     <div class="is-hidden-tablet has-text-centered pt-2" v-if="!unlocked">
       <b-dropdown v-model="networkId" aria-role="list" :mobile-modal="false">
         <template #trigger>
           <b-button
-            :class="{ 'has-text-primary': networkId == 'mainnet', 'has-text-info': networkId == 'testnet', 'border-less': true }"
+            :class="{
+              'has-text-primary': networkId == 'mainnet',
+              'has-text-info': networkId == 'testnet10',
+              'border-less': true,
+            }"
             icon-left="brightness-1"
             icon-right="menu-down"
             ><span class="has-text-dark">{{ networkId }}</span></b-button
@@ -195,7 +199,7 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import { NotificationProgrammatic as Notification } from "buefy";
 import store from "./store";
 import DevHelper from "@/components/DevHelper.vue";
@@ -206,6 +210,13 @@ import VerifyPassword from "./components/VerifyPassword.vue";
 @Component({ components: { VerifyPassword } })
 export default class App extends Vue {
   public debugClick = 9;
+
+  @Watch("path")
+  scrollTop(): void {
+    const container = this.$refs.container as Element;
+    if (container) container.scrollIntoView();
+  }
+
   get version(): string {
     return process.env.VUE_APP_VERSION || "";
   }

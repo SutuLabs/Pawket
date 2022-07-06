@@ -71,18 +71,16 @@
   </div>
 </template>
 <script lang="ts">
-import puzzle from "@/services/crypto/puzzle";
 import store from "@/store";
 import { AccountEntity, CustomCat } from "@/store/modules/account";
-import { xchPrefix } from "@/store/modules/network";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import MintCat from "./Mint/MintCat.vue";
 import MintNft from "./Mint/MintNft.vue";
 import MakeOffer from "./Offer/Make.vue";
 import TakeOffer from "./Offer/Take.vue";
-import Send from "./Send.vue";
 import BatchSend from "./Transfer/BatchSend.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
+import Donate from "./Settings/Donate.vue";
 
 @Component
 export default class Dapp extends Vue {
@@ -107,6 +105,10 @@ export default class Dapp extends Vue {
     return this.account.type == "Address";
   }
 
+  get isMobile(): boolean {
+    return window.screen.width < 700;
+  }
+
   mounted(): void {
     this.displayDapp = localStorage.getItem("DISPLAY_DAPP") ? localStorage.getItem("DISPLAY_DAPP") === "true" : true;
   }
@@ -128,24 +130,13 @@ export default class Dapp extends Vue {
 
   openDonation(): void {
     this.checkObserveMode();
-    const donationAddress = puzzle.getAddressFromPuzzleHash(
-      "d19c05a54dacbf2b40ff4843534c47976de90246c3fc42ac1f42ea81b434b8ea",
-      xchPrefix()
-    );
     this.$buefy.modal.open({
       parent: this,
-      component: Send,
+      component: Donate,
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
-      props: {
-        account: this.account,
-        inputAddress: donationAddress,
-        addressEditable: false,
-        notificationMessage: this.$tc("accountDetail.message.notification.donate"),
-        notificationIcon: "hand-heart",
-        notificationClosable: false,
-      },
+      fullScreen: this.isMobile,
     });
   }
 
@@ -157,6 +148,7 @@ export default class Dapp extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
+      fullScreen: this.isMobile,
       props: {
         account: this.account,
         tokenList: this.tokenList,
@@ -172,6 +164,7 @@ export default class Dapp extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
+      fullScreen: this.isMobile,
       props: {
         account: this.account,
       },
@@ -186,6 +179,7 @@ export default class Dapp extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
+      fullScreen: this.isMobile,
       props: {
         account: this.account,
       },
@@ -200,6 +194,7 @@ export default class Dapp extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
+      fullScreen: this.isMobile,
       props: {
         account: this.account,
         tokenList: this.tokenList,
@@ -215,6 +210,7 @@ export default class Dapp extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
+      fullScreen: this.isMobile,
       props: {
         account: this.account,
       },

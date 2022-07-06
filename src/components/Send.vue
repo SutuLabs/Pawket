@@ -57,7 +57,7 @@
         <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
       </template>
     </section>
-    <footer class="is-block buttons modal-card-foot">
+    <footer class="is-block buttons modal-card-foot pb-0 mb-0">
       <div>
         <b-button :label="$t('send.ui.button.cancel')" class="is-pulled-left" @click="cancel()"></b-button>
         <b-button

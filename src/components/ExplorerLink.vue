@@ -1,6 +1,6 @@
 <template>
   <div class="modal-card margin-auto">
-    <top-bar :title="$t('explorerLink.ui.title.link')" @close="close()"></top-bar>
+    <top-bar :title="$t('explorerLink.ui.title.link')" @close="close()" :showClose="true"></top-bar>
     <section class="modal-card-body">
       <b-field>
         <template #label>
