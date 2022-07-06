@@ -40,7 +40,6 @@ store.registerModule<IVaultState>("vault", {
       experiment: false,
       currency: CurrencyType.USDT,
       selectedAccount: 0,
-      createdAt: 0,
     };
   },
   actions: {
@@ -91,9 +90,9 @@ store.registerModule<IVaultState>("vault", {
       await dispatch("createAccountBySerial", tc("default.accountName"));
       await dispatch("refreshBalance");
     },
-    async setPassword({ dispatch }, password: string) {
+    async setPassword({ state, dispatch }, password: string) {
+      state.unlocked = true;
       await dispatch("ensureSalt", password);
-      await dispatch("unlock", password);
     },
     setCurrency({ state, dispatch }, currency: CurrencyType) {
       state.currency = currency;

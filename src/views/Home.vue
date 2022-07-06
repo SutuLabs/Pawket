@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <b-loading v-if="loading" :is-full-page="true" v-model="loading"></b-loading>
-    <account-detail></account-detail>
+    <account-detail v-if="!loading"></account-detail>
     <div v-if="!loading" class="sticky">
       <self-test v-if="!unlocked"></self-test>
     </div>
@@ -39,7 +39,7 @@ export default class Home extends Vue {
   }
 
   get hasAccount(): boolean {
-    return !!store.state.vault.passwordHash;
+    return store.state.vault.passwordHash != null;
   }
 
   mounted(): void {

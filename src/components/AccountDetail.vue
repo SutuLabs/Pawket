@@ -80,7 +80,7 @@
             v-show="account.tokens && account.tokens.hasOwnProperty(cat.name)"
           >
             <div class="column is-flex is-7" v-if="account.tokens && account.tokens.hasOwnProperty(cat.name)">
-              <div class="mr-3">
+              <div class="mr-4">
                 <span class="image is-32x32">
                   <img v-if="cat.img" class="is-rounded" :src="cat.img" />
                   <img v-else-if="cat.name === xchSymbol" class="is-rounded" src="@/assets/chia-logo.svg" />

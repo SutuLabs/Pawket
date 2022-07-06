@@ -1,5 +1,5 @@
 <template>
-  <div class="column is-6 is-offset-3">
+  <div class="column is-6 is-offset-3" v-if="!loading">
     <div class="box is-hidden-mobile">
       <router-view></router-view>
     </div>
@@ -17,6 +17,10 @@ import { Component, Vue } from "vue-property-decorator";
 export default class Create extends Vue {
   get hasAccount(): boolean {
     return !!store.state.vault.passwordHash && !!store.state.vault.seedMnemonic;
+  }
+
+  get loading(): boolean {
+    return store.state.vault.loading;
   }
 
   mounted(): void {

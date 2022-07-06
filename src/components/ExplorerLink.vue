@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-card">
+  <div class="modal-card margin-auto">
     <top-bar :title="$t('explorerLink.ui.title.link')" @close="close()"></top-bar>
     <section class="modal-card-body">
       <b-field>
@@ -136,5 +136,9 @@ export default class ExplorerLink extends Vue {
 .hover-primary:active {
   background-color: $primary;
   color: white;
+}
+
+.margin-auto {
+  margin: auto !important;
 }
 </style>

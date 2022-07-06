@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-card">
+  <div class="modal-card margin-auto">
     <div class="modal-card-body">
       <div class="has-text-centered is-size-5 pt-5 pb-2 pr-2 border-bottom">
         <span @click="$emit('close')"><b-icon class="is-pulled-left has-text-grey pl-4 pt-2" icon="chevron-left"> </b-icon></span>
@@ -249,5 +249,9 @@ export default class AccountManagement extends Vue {
 <style scoped lang="scss">
 .border-bottom {
   border-bottom: 2px solid #ededed;
+}
+
+.margin-auto {
+  margin: auto !important;
 }
 </style>

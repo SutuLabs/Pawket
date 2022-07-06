@@ -1,5 +1,20 @@
 <template>
   <div id="app">
+    <div class="is-hidden-tablet has-text-centered pt-2" v-if="!unlocked">
+      <b-dropdown v-model="networkId" aria-role="list" :mobile-modal="false">
+        <template #trigger>
+          <b-button
+            :class="{ 'has-text-primary': networkId == 'mainnet', 'has-text-info': networkId == 'testnet', 'border-less': true }"
+            icon-left="brightness-1"
+            icon-right="menu-down"
+            ><span class="has-text-dark">{{ networkId }}</span></b-button
+          >
+        </template>
+        <b-dropdown-item v-for="net in networks" :key="net.name" :value="net.name" aria-role="listitem">{{
+          net.name
+        }}</b-dropdown-item>
+      </b-dropdown>
+    </div>
     <div class="column is-8 is-offset-2 is-hidden-mobile">
       <b-navbar>
         <template #brand>
@@ -24,10 +39,9 @@
               @click="$router.push('/')"
               icon-left="wallet"
               type="is-primary"
-              class="boder-less"
               outlined
               :class="{
-                'boder-less': true,
+                'border-less': true,
                 'has-background-primary': path == '/',
                 'has-text-white': path == '/',
               }"
@@ -38,10 +52,9 @@
               @click="$router.push('/trade')"
               icon-left="trending-up"
               type="is-primary"
-              class="boder-less"
               outlined
               :class="{
-                'boder-less': true,
+                'border-less': true,
                 'has-background-primary': path == '/trade',
                 'has-text-white': path == '/trade',
               }"
@@ -52,10 +65,9 @@
               @click="$router.push('/explore')"
               icon-left="earth"
               type="is-primary"
-              class="boder-less"
               outlined
               :class="{
-                'boder-less': true,
+                'border-less': true,
                 'has-background-primary': path == '/explore',
                 'has-text-white': path == '/explore',
               }"
@@ -68,7 +80,7 @@
               icon-left="cog"
               type="is-primary"
               :class="{
-                'boder-less': true,
+                'border-less': true,
                 'has-background-primary': path == '/settings',
                 'has-text-white': path == '/settings',
               }"
@@ -189,7 +201,6 @@ import store from "./store";
 import DevHelper from "@/components/DevHelper.vue";
 import OfflineQrCode from "./components/OfflineQrCode.vue";
 import { NetworkInfo, xchPrefix } from "./store/modules/network";
-import { tc } from "./i18n/i18n";
 import VerifyPassword from "./components/VerifyPassword.vue";
 
 @Component({ components: { VerifyPassword } })
@@ -212,7 +223,7 @@ export default class App extends Vue {
   }
 
   get hasAccount(): boolean {
-    return !!store.state.vault.passwordHash;
+    return store.state.vault.passwordHash != null;
   }
 
   get showNavigation(): boolean {
@@ -225,6 +236,10 @@ export default class App extends Vue {
 
   get networkId(): string {
     return store.state.network.networkId;
+  }
+
+  set networkId(value: string) {
+    store.state.network.networkId = value;
   }
 
   get path(): string {
@@ -309,7 +324,7 @@ html {
   border-top: 1px solid #ededed;
 }
 
-.boder-less {
+.border-less {
   border: none;
 }
 

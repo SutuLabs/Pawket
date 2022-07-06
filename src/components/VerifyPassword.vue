@@ -160,6 +160,7 @@ export default class VerifyPassword extends Vue {
       type: "is-danger",
       onConfirm: () => {
         store.dispatch("clear");
+        this.$router.push('/create');
       },
     });
   }
