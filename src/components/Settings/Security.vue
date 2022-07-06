@@ -6,7 +6,7 @@
         <b-button v-if="!showMnemonic" type="is-primary" icon-left="eye" outlined expanded @click="toggleMnemonic()">
           {{ $t("settings.security.button.showMnemonic") }}</b-button
         >
-         <b-button v-else type="is-primary" icon-left="eye-off" outlined expanded @click="toggleMnemonic()">
+        <b-button v-else type="is-primary" icon-left="eye-off" outlined expanded @click="toggleMnemonic()">
           {{ $t("settings.security.button.hideMnemonic") }}</b-button
         >
         <span v-if="showMnemonic">
@@ -82,6 +82,7 @@ export default class Security extends Vue {
       type: "is-danger",
       onConfirm: () => {
         store.dispatch("clear");
+        this.$router.push("/create");
       },
     });
   }

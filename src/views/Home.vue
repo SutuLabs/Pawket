@@ -38,8 +38,12 @@ export default class Home extends Vue {
     return store.state.vault.passwordHash;
   }
 
+  get hasAccount(): boolean {
+    return !!store.state.vault.passwordHash;
+  }
+
   mounted(): void {
-    if (localStorage.getItem("SETTINGS") == null) this.$router.push("/create");
+    if (!this.hasAccount) this.$router.push("/create");
   }
 }
 </script>

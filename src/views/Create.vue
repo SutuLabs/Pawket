@@ -10,10 +10,19 @@
 </template>
 
 <script lang="ts">
+import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component
-export default class Create extends Vue {}
+export default class Create extends Vue {
+  get hasAccount(): boolean {
+    return !!store.state.vault.passwordHash && !!store.state.vault.seedMnemonic;
+  }
+
+  mounted(): void {
+    if (this.hasAccount) this.$router.push("/");
+  }
+}
 </script>
 
 <style scoped lang="scss"></style>

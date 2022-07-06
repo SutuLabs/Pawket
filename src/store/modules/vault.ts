@@ -21,7 +21,6 @@ export interface IVaultState {
   experiment: boolean;
   currency: CurrencyType;
   selectedAccount: number;
-  createdAt: number;
 }
 
 const PasswordHashIteration = 6000;
@@ -71,7 +70,6 @@ store.registerModule<IVaultState>("vault", {
       if (state.loading) {
         const value = await ustore.getItem("SETTINGS");
         const sts = JSON.parse(value || "{}") as IVaultState;
-        if (value != null) sts.createdAt = Date.now();
         state.passwordHash = sts.passwordHash;
         state.salt = sts.salt;
         state.encryptKey = sts.encryptKey;
@@ -80,7 +78,6 @@ store.registerModule<IVaultState>("vault", {
         state.experiment = sts.experiment;
         state.currency = sts.currency;
         state.selectedAccount = sts.selectedAccount ?? 0;
-        state.createdAt = sts.createdAt ?? 0;
         state.loading = false;
       }
 
@@ -90,7 +87,6 @@ store.registerModule<IVaultState>("vault", {
       const seedLen = mnemonic.trim().split(" ").length;
       if (seedLen != 12 && seedLen != 24) throw new Error("Only accept mnemonic with 12/24 words.");
       state.seedMnemonic = mnemonic;
-      state.createdAt = Date.now();
       await dispatch("persistent");
       await dispatch("createAccountBySerial", tc("default.accountName"));
       await dispatch("refreshBalance");
@@ -205,7 +201,6 @@ store.registerModule<IVaultState>("vault", {
           experiment: state.experiment,
           currency: state.currency,
           selectedAccount: state.selectedAccount,
-          createdAt: state.createdAt,
         })
       );
 

@@ -9,6 +9,16 @@
         </template>
         <template #start> </template>
         <template #end>
+          <b-navbar-dropdown :label="networkId" v-if="!unlocked">
+            <b-navbar-item
+              @click="switchNetwork(net.name)"
+              v-for="net in networks"
+              :key="net.name"
+              :active="networkId === net.name"
+            >
+              {{ net.name }}
+            </b-navbar-item>
+          </b-navbar-dropdown>
           <div class="py-4" v-if="showNavigation">
             <b-button
               @click="$router.push('/')"
@@ -143,7 +153,7 @@
       </div>
     </nav>
     <div class="my-3 is-hidden-tablet">&nbsp;</div>
-    <footer class="footer is-hidden-mobile">
+    <footer class="footer">
       <div class="content has-text-centered">
         <p>
           <strong> {{ $t("footer.ui.productInfo.name") }}</strong>
@@ -202,7 +212,7 @@ export default class App extends Vue {
   }
 
   get hasAccount(): boolean {
-    return store.state.vault.createdAt > 0;
+    return !!store.state.vault.passwordHash;
   }
 
   get showNavigation(): boolean {
@@ -237,11 +247,6 @@ export default class App extends Vue {
     }
   }
 
-  changeLang(lang: string): void {
-    this.$i18n.locale = lang;
-    localStorage.setItem("Locale", lang);
-  }
-
   home(): void {
     if (this.$route.path.startsWith("/create") || this.$route.path == "/") return;
     this.$router.push("/");
@@ -249,14 +254,6 @@ export default class App extends Vue {
 
   async switchNetwork(networkId: string): Promise<void> {
     await store.dispatch("switchNetwork", networkId);
-    this.$buefy.dialog.confirm({
-      message: tc("app.switchNetwork.message"),
-      confirmText: tc("app.switchNetwork.confirm"),
-      cancelText: tc("app.switchNetwork.cancel"),
-      type: "is-primary",
-      hasIcon: true,
-      onConfirm: () => store.dispatch("lock"),
-    });
   }
 
   disableDebug(): void {

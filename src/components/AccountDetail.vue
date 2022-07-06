@@ -355,6 +355,7 @@ export default class AccountDetail extends Vue {
       parent: this,
       component: ExplorerLink,
       trapFocus: true,
+      canCancel: [""],
       fullScreen: this.isMobile,
       props: { account: this.account, token: token },
     });
