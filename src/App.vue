@@ -19,6 +19,9 @@
         }}</b-dropdown-item>
       </b-dropdown>
     </div>
+    <div class="logo is-hidden-tablet">
+      <img width="200px" src="@/assets/logo.svg" />
+    </div>
     <div class="column is-8 is-offset-2 is-hidden-mobile">
       <b-navbar>
         <template #brand>
@@ -347,5 +350,11 @@ html {
 a.has-text-primary:hover,
 a.has-text-primary:focus {
   color: $primary !important;
+}
+
+.logo {
+  position: absolute;
+  top: 15%;
+  left: 20%
 }
 </style>

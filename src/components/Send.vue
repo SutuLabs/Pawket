@@ -1,6 +1,6 @@
 <template>
   <div class="modal-card">
-    <top-bar :title="$t('send.ui.title.send')" @close="$emit('close')"></top-bar>
+    <top-bar :title="$t('send.ui.title.send')" @close="$emit('close')" :showClose="showClose"></top-bar>
     <section class="modal-card-body">
       <div v-show="!bundle">
         <b-notification
@@ -128,7 +128,7 @@ import TopBar from "./TopBar.vue";
     BundleSummary,
     SendSummary,
     AddressField,
-    TopBar
+    TopBar,
   },
 })
 export default class Send extends Vue {
@@ -143,6 +143,7 @@ export default class Send extends Vue {
   @Prop() private notificationType!: string;
   @Prop() private notificationIcon!: string;
   @Prop() private notificationClosable!: boolean;
+  @Prop({ default: true }) public showClose!: boolean;
 
   public submitting = false;
   public validAddress = true;

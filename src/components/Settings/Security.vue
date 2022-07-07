@@ -1,6 +1,6 @@
 <template>
   <div class="modal-card m-0">
-    <top-bar :title="$t('settings.security.title')" @close="$emit('close')"></top-bar>
+    <top-bar :title="$t('settings.security.title')" @close="close()"></top-bar>
     <section class="modal-card-body">
       <b-field :label="$t('settings.security.label.mnemonic')">
         <b-button v-if="!showMnemonic" type="is-primary" icon-left="eye" outlined expanded @click="toggleMnemonic()">
@@ -61,6 +61,10 @@ export default class Security extends Vue {
     return window.screen.width < 700;
   }
 
+  close(): void {
+    this.$emit("close");
+  }
+
   ChangePassword(): void {
     this.$buefy.modal.open({
       parent: this,
@@ -70,6 +74,7 @@ export default class Security extends Vue {
       canCancel: [""],
       fullScreen: this.isMobile,
       props: { mnemonic: store.state.vault.seedMnemonic },
+      events: { close: this.close },
     });
   }
 

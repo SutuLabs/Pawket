@@ -1,15 +1,14 @@
 <template>
-  <div class="modal-card m-0">
-    <send
-      :account="account"
-      :inputAddress="donationAddress"
-      :addressEditable="false"
-      :notificationMessage="$tc('accountDetail.message.notification.donate')"
-      notificationIcon="hand-heart"
-      :notificationClosable="false"
-      @close="$emit('close')"
-    ></send>
-  </div>
+  <send
+    :account="account"
+    :showClose="showClose"
+    :inputAddress="donationAddress"
+    :addressEditable="false"
+    :notificationMessage="$tc('accountDetail.message.notification.donate')"
+    notificationIcon="hand-heart"
+    :notificationClosable="false"
+    @close="$emit('close')"
+  ></send>
 </template>
 
 <script lang="ts">
@@ -17,7 +16,7 @@ import puzzle from "@/services/crypto/puzzle";
 import store from "@/store";
 import { AccountEntity } from "@/store/modules/account";
 import { xchPrefix } from "@/store/modules/network";
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
 import Send from "../Send.vue";
 import TopBar from "../TopBar.vue";
 
@@ -28,6 +27,8 @@ import TopBar from "../TopBar.vue";
   },
 })
 export default class Donate extends Vue {
+  @Prop({ default: true }) public showClose!: boolean;
+  
   get account(): AccountEntity {
     return store.state.account.accounts[store.state.account.selectedAccount] ?? {};
   }

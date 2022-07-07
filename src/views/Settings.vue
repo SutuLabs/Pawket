@@ -16,7 +16,7 @@
           <advanced></advanced>
         </b-tab-item>
         <b-tab-item :label="$t('settings.menu.items.donate.title')" icon="hand-heart-outline">
-          <donate></donate>
+          <donate :showClose="false"></donate>
         </b-tab-item>
         <b-tab-item :label="$t('settings.menu.items.about.title')" icon="information-outline">
           <about></about>

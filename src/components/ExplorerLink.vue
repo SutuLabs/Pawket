@@ -117,7 +117,7 @@ export default class ExplorerLink extends Vue {
   }
 
   changeMaxAddress(): void {
-    if (this.maxAddress) {
+    if (this.maxAddress && this.maxAddress < 13) {
       this.account.addressRetrievalCount = this.maxAddress;
       notifyPrimary(this.$tc("accountConfigure.message.notification.saved"));
     }
