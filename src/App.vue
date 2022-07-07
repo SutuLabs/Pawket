@@ -19,7 +19,7 @@
         }}</b-dropdown-item>
       </b-dropdown>
     </div>
-    <div class="logo is-hidden-tablet">
+    <div class="logo is-hidden-tablet" v-if="!unlocked">
       <img width="200px" src="@/assets/logo.svg" />
     </div>
     <div class="column is-8 is-offset-2 is-hidden-mobile">
