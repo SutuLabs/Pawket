@@ -1,12 +1,12 @@
 <template>
   <div>
     <a href="javascript:void(0)" @click="toggleDapp()">
-      <p class="has-text-weight-bold is-size-5 pb-5">
+      <p class="has-text-weight-bold is-size-5 mb-5">
         {{ $t("accountDetail.ui.dApps.title") }}
         <b-icon class="is-pulled-right" :icon="displayDapp ? 'menu-up' : 'menu-down'" size="is-medium"></b-icon>
       </p>
     </a>
-    <div v-if="displayDapp" class="columns is-mobile is-multiline">
+    <div v-if="displayDapp" class="columns is-mobile is-multiline mt-2">
       <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.donate')" position="is-right">
           <a href="javascript:void(0)" @click="openDonation()" class="has-text-link">

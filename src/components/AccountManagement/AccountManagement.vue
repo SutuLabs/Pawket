@@ -1,7 +1,7 @@
 <template>
   <div class="modal-card margin-auto">
+    <top-bar :title="$t('accountManagement.title')" :showClose="true" @close="close()"></top-bar>
     <div class="modal-card-body">
-      <top-bar :title="$t('accountManagement.title')" :showClose="true" @close="close()"></top-bar>
       <a v-for="(account, idx) in accounts" :key="idx" class="panel-block" @click="select(idx)">
         <b-icon icon="check" v-if="idx == selectedAccount" style="margin-left: -15px" size="is-small" type="is-primary"></b-icon>
         <b-icon icon="account" class="has-text-grey"></b-icon>
@@ -23,7 +23,9 @@
           }}</b-tag>
         </div>
         <div class="column py-1">
-          <span @click.stop="showDetail(idx)"><b-icon class="is-pulled-right hover-info has-text-grey" icon="dots-vertical"> </b-icon></span>
+          <span @click.stop="showDetail(idx)"
+            ><b-icon class="is-pulled-right hover-info has-text-grey" icon="dots-vertical"> </b-icon
+          ></span>
           <span v-if="idx != 0" @click.stop="remove(idx)"
             ><b-icon class="is-pulled-right pr-2 hover-danger has-text-grey" icon="delete-outline"> </b-icon
           ></span>

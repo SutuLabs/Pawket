@@ -1,6 +1,6 @@
 <template>
   <div class="modal-card">
-    <top-bar title="账户详情" @close="close()" :showClose="true"></top-bar>
+    <top-bar :title="$t('accountExport.ui.title.export')" @close="close()" :showClose="true"></top-bar>
     <section class="modal-card-body">
       <ul class="border-bottom">
         <li class="pb-2">
