@@ -50,6 +50,7 @@ import { CoinRecord } from "@/models/wallet";
 import { TokenInfo } from "@/store/modules/account";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import UtxoDetail from "@/components/UtxoDetail.vue";
+import { isMobile } from "@/services/view/responsive";
 
 @Component({
   filters: { demojo },
@@ -62,16 +63,13 @@ export default class UtxoPanel extends Vue {
   @Prop({ default: 1 }) private rangeAfter!: number;
   current = 1;
 
-  get isMobile(): boolean {
-    return window.screen.width < 700;
-  }
-
   showUtxo(activity: CoinRecord): void {
     this.$buefy.modal.open({
       parent: this,
       component: UtxoDetail,
       hasModalCard: true,
       trapFocus: true,
+      fullScreen: isMobile(),
       canCancel: ["outside"],
       props: { activity: activity, tokenInfo: this.tokenInfo },
     });

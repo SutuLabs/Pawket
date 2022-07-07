@@ -42,6 +42,7 @@ import KeyBox from "@/components/KeyBox.vue";
 import ChangePassword from "../ChangePassword.vue";
 import TopBar from "../TopBar.vue";
 import { isPasswordCorrect } from "@/store/modules/vault";
+import { isMobile } from "@/services/view/responsive";
 
 @Component({
   components: {
@@ -57,10 +58,6 @@ export default class Security extends Vue {
     return store.state.account.accounts[store.state.account.selectedAccount] ?? {};
   }
 
-  get isMobile(): boolean {
-    return window.screen.width < 700;
-  }
-
   close(): void {
     this.$emit("close");
   }
@@ -72,7 +69,7 @@ export default class Security extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
-      fullScreen: this.isMobile,
+      fullScreen: isMobile(),
       props: { mnemonic: store.state.vault.seedMnemonic },
       events: { close: this.close },
     });

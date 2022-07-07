@@ -81,6 +81,7 @@ import TakeOffer from "./Offer/Take.vue";
 import BatchSend from "./Transfer/BatchSend.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import Donate from "./Settings/Donate.vue";
+import { isMobile } from "@/services/view/responsive";
 
 @Component
 export default class Dapp extends Vue {
@@ -103,10 +104,6 @@ export default class Dapp extends Vue {
 
   get observeMode(): boolean {
     return this.account.type == "Address";
-  }
-
-  get isMobile(): boolean {
-    return window.screen.width < 700;
   }
 
   mounted(): void {
@@ -136,7 +133,7 @@ export default class Dapp extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
-      fullScreen: this.isMobile,
+      fullScreen: isMobile(),
     });
   }
 
@@ -148,7 +145,7 @@ export default class Dapp extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
-      fullScreen: this.isMobile,
+      fullScreen: isMobile(),
       props: {
         account: this.account,
         tokenList: this.tokenList,
@@ -164,7 +161,7 @@ export default class Dapp extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
-      fullScreen: this.isMobile,
+      fullScreen: isMobile(),
       props: {
         account: this.account,
       },
@@ -179,7 +176,7 @@ export default class Dapp extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
-      fullScreen: this.isMobile,
+      fullScreen: isMobile(),
       props: {
         account: this.account,
       },
@@ -194,7 +191,7 @@ export default class Dapp extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
-      fullScreen: this.isMobile,
+      fullScreen: isMobile(),
       props: {
         account: this.account,
         tokenList: this.tokenList,
@@ -210,7 +207,7 @@ export default class Dapp extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
-      fullScreen: this.isMobile,
+      fullScreen: isMobile(),
       props: {
         account: this.account,
       },

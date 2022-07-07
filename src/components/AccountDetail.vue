@@ -143,6 +143,7 @@ import Dapp from "./Dapp.vue";
 import ErrorLog from "./ErrorLog.vue";
 import AccountManagement from "./AccountManagement/AccountManagement.vue";
 import { tc } from "@/i18n/i18n";
+import { isMobile } from "@/services/view/responsive";
 
 type Mode = "Verify" | "Create";
 
@@ -247,10 +248,6 @@ export default class AccountDetail extends Vue {
     return xchSymbol();
   }
 
-  get isMobile(): boolean {
-    return window.screen.width < 700;
-  }
-
   mounted(): void {
     this.mode = store.state.vault.passwordHash ? "Verify" : "Create";
     this.autoRefresh(60);
@@ -296,7 +293,7 @@ export default class AccountDetail extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
-      fullScreen: this.isMobile,
+      fullScreen: isMobile(),
       props: { account: this.account },
     });
   }
@@ -307,7 +304,7 @@ export default class AccountDetail extends Vue {
       component: ErrorLog,
       hasModalCard: true,
       trapFocus: true,
-      fullScreen: this.isMobile,
+      fullScreen: isMobile(),
       canCancel: ["outside"],
     });
   }
@@ -319,7 +316,7 @@ export default class AccountDetail extends Vue {
       component: ManageCats,
       hasModalCard: true,
       trapFocus: true,
-      fullScreen: this.isMobile,
+      fullScreen: isMobile(),
       canCancel: [""],
       props: { account: this.account },
       events: { refresh: this.refresh },
@@ -332,7 +329,7 @@ export default class AccountDetail extends Vue {
       component: AccountManagement,
       trapFocus: true,
       canCancel: ["outside"],
-      fullScreen: this.isMobile,
+      fullScreen: isMobile(),
       props: {},
     });
   }
@@ -344,7 +341,7 @@ export default class AccountDetail extends Vue {
       component: Send,
       hasModalCard: true,
       trapFocus: true,
-      fullScreen: this.isMobile,
+      fullScreen: isMobile(),
       canCancel: [""],
       props: { account: this.account, rate: this.rate, currency: this.currency },
     });
@@ -356,7 +353,7 @@ export default class AccountDetail extends Vue {
       component: ExplorerLink,
       trapFocus: true,
       canCancel: [""],
-      fullScreen: this.isMobile,
+      fullScreen: isMobile(),
       props: { account: this.account, token: token },
     });
   }

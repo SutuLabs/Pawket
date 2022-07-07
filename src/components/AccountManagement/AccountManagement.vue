@@ -79,13 +79,14 @@
 import store from "@/store";
 import { AccountEntity } from "@/store/modules/account";
 import { Component, Vue } from "vue-property-decorator";
-import AccountDetail from "./AccountDetail.vue";
+import AccountInfo from "./AccountInfo.vue";
 import TopBar from "../TopBar.vue";
 import { notifyPrimary } from "@/notification/notification";
 import AddByAddress from "../AddAccount/AddByAddress.vue";
 import AddByMnemonic from "../AddAccount/AddByMnemonic.vue";
 import AddBySerial from "../AddAccount/AddBySerial.vue";
 import AddByPassword from "../AddAccount/AddByPassword.vue";
+import { isMobile } from "@/services/view/responsive";
 
 @Component({
   components: { TopBar },
@@ -107,10 +108,6 @@ export default class AccountManagement extends Vue {
     return store.state.app.debug;
   }
 
-  get isMobile(): boolean {
-    return window.screen.width < 700;
-  }
-
   get accountNum(): string {
     const n = this.accounts.filter((a) => a.type === "Serial").length;
     return (n + 1).toString();
@@ -123,11 +120,11 @@ export default class AccountManagement extends Vue {
   showDetail(idx: number): void {
     this.$buefy.modal.open({
       parent: this,
-      component: AccountDetail,
+      component: AccountInfo,
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
-      fullScreen: this.isMobile,
+      fullScreen: isMobile(),
       props: { idx: idx },
       events: { rename: this.rename },
     });
@@ -196,7 +193,7 @@ export default class AccountManagement extends Vue {
       parent: this,
       component: AddByPassword,
       hasModalCard: true,
-      fullScreen: this.isMobile,
+      fullScreen: isMobile(),
       canCancel: [""],
       trapFocus: true,
     });
@@ -207,7 +204,7 @@ export default class AccountManagement extends Vue {
       parent: this,
       component: AddBySerial,
       hasModalCard: true,
-      fullScreen: this.isMobile,
+      fullScreen: isMobile(),
       canCancel: [""],
       trapFocus: true,
       props: { defaultName: this.$t("accountList.ui.value.defaultName", { n: this.accountNum }) },
@@ -220,7 +217,7 @@ export default class AccountManagement extends Vue {
       component: AddByMnemonic,
       hasModalCard: true,
       trapFocus: true,
-      fullScreen: this.isMobile,
+      fullScreen: isMobile(),
       canCancel: [""],
       props: { title: this.$t("accountList.ui.modal.addByLegacy"), mnemonicLen: 24 },
     });
@@ -232,7 +229,7 @@ export default class AccountManagement extends Vue {
       component: AddByMnemonic,
       hasModalCard: true,
       trapFocus: true,
-      fullScreen: this.isMobile,
+      fullScreen: isMobile(),
       canCancel: [""],
       props: { title: this.$t("accountList.ui.modal.addByMnemonic"), mnemonicLen: 12 },
     });
@@ -243,7 +240,7 @@ export default class AccountManagement extends Vue {
       parent: this,
       component: AddByAddress,
       hasModalCard: true,
-      fullScreen: this.isMobile,
+      fullScreen: isMobile(),
       trapFocus: true,
       canCancel: [""],
     });
