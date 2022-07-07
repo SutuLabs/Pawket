@@ -90,7 +90,7 @@ export default class AddressDetail extends Vue {
   }
 }
 </script>
-<style type="text/scss">
+<style scoped type="text/scss">
 .word-break {
   word-break: break-all;
 }

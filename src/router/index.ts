@@ -1,9 +1,6 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 import Home from "../views/Home.vue";
-import Trade from "../views/Trade.vue";
-import Explore from "../views/Explore.vue";
-import Settings from "../views/Settings.vue";
 import Create from "../views/Create.vue";
 import Welcome from "../components/Create/Welcome.vue";
 import Disclaimer from "../components/Create/Disclaimer.vue";
@@ -66,16 +63,16 @@ const routes: Array<RouteConfig> = [
   {
     path: "/trade",
     name: "Trade",
-    component: Trade,
+    component: () => import(/* webpackChunkName: "trade" */ "../views/Trade.vue"),
   },
   {
     path: "/explore",
     name: "Explore",
-    component: Explore,
+    component: () => import(/* webpackChunkName: "explore" */ "../views/Explore.vue"),
   },
   {
     path: "/settings",
-    component: Settings,
+    component: () => import(/* webpackChunkName: "settings" */ "../views/Settings.vue"),
   },
 ];
 

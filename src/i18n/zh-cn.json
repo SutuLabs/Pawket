@@ -41,6 +41,9 @@
         "home": "主页",
         "developer": "开发者工具",
         "proxy": "离线代理"
+      },
+      "error": {
+        "READ_VERSION_FAILED": "读取版本信息失败"
       }
     }
   },
@@ -1049,11 +1052,20 @@
       "title": "关于",
       "links": {
         "title": "链接",
-        "privacyPolicy": "隐私条款",
-        "pawketWebsite": "薄荷钱包官网",
-        "github": "Github",
-        "twitter": "Twitter",
-        "discord": "Discord"
+        "label": {
+          "privacyPolicy": "隐私条款",
+          "pawketWebsite": "薄荷钱包官网",
+          "github": "Github",
+          "twitter": "Twitter",
+          "discord": "Discord"
+        },
+        "url": {
+          "privacyPolicy": "https://info.pawket.app/zh/privacy-policy",
+          "pawketWebsite": "https://info.pawket.app/zh",
+          "github": "https://github.com/Chiabee",
+          "twitter": "https://twitter.com/pawket_app",
+          "discord": "https://discord.com/invite/ndQgpHwe4V"
+        }
       }
     }
   },

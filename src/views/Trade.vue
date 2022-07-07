@@ -15,7 +15,7 @@ import { Component, Vue } from "vue-property-decorator";
 @Component
 export default class Settings extends Vue {}
 </script>
-<style lang="scss">
+<style scoped lang="scss">
 .border-bottom {
   border-bottom: 2px solid #ededed;
 }

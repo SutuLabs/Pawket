@@ -1,28 +1,30 @@
 <template>
-  <div class="column is-8 is-offset-2 pt-6 mt-6">
-    <div class="columns is-centered">
-      <div class="box p-6">
-        <section>
-          <h1 class="title is-4">{{ $t("verifyPassword.ui.title.verifyPassword") }}</h1>
-          <b-field
-            :label="$t('verifyPassword.ui.label.password')"
-            label-position="on-border"
-            :type="isCorrect ? '' : 'is-danger'"
-          >
-            <b-input
-              type="password"
-              ref="password"
-              @keyup.native.enter="confirm()"
-              @input.native.enter="clearErrorMsg()"
-              v-model="password"
-            ></b-input>
-          </b-field>
-          <p class="help is-danger" v-if="!isCorrect">{{ $t("verifyPassword.message.error.incorrectPassword") }}</p>
-          <div class="buttons">
-            <b-button @click="confirm()" type="is-primary">{{ $t("verifyPassword.ui.button.confirm") }}</b-button>
-            <b-button v-if="!isCorrect" type="is-danger" @click="clear()">{{ $t("verifyPassword.ui.button.clear") }}</b-button>
-          </div>
-        </section>
+  <div>
+    <div class="column is-8 is-offset-2 pt-6 mt-6 login">
+      <div class="columns is-centered">
+        <div class="box p-6">
+          <section>
+            <h1 class="title is-4">{{ $t("verifyPassword.ui.title.verifyPassword") }}</h1>
+            <b-field
+              :label="$t('verifyPassword.ui.label.password')"
+              label-position="on-border"
+              :type="isCorrect ? '' : 'is-danger'"
+            >
+              <b-input
+                type="password"
+                ref="password"
+                @keyup.native.enter="confirm()"
+                @input.native.enter="clearErrorMsg()"
+                v-model="password"
+              ></b-input>
+            </b-field>
+            <p class="help is-danger" v-if="!isCorrect">{{ $t("verifyPassword.message.error.incorrectPassword") }}</p>
+            <div class="buttons">
+              <b-button @click="confirm()" type="is-primary">{{ $t("verifyPassword.ui.button.confirm") }}</b-button>
+              <b-button v-if="!isCorrect" type="is-danger" @click="clear()">{{ $t("verifyPassword.ui.button.clear") }}</b-button>
+            </div>
+          </section>
+        </div>
       </div>
     </div>
   </div>
@@ -160,11 +162,16 @@ export default class VerifyPassword extends Vue {
       type: "is-danger",
       onConfirm: () => {
         store.dispatch("clear");
-        this.$router.push('/create');
+        this.$router.push("/create");
       },
     });
   }
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.login {
+  height: 60vh !important;
+  z-index: 99 !important;
+}
+</style>

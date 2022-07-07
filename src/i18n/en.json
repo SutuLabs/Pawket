@@ -41,6 +41,9 @@
         "home": "Home",
         "developer": "Developer",
         "proxy": "Proxy"
+      },
+      "error": {
+        "READ_VERSION_FAILED": "failed to read version"
       }
     }
   },
@@ -1049,11 +1052,20 @@
       "title": "About",
       "links": {
         "title": "Links",
-        "privacyPolicy": "Privacy Policy",
-        "pawketWebsite": "Pawket Website",
-        "github": "Github",
-        "twitter": "Twitter",
-        "discord": "Discord"
+        "label": {
+          "privacyPolicy": "Privacy Policy",
+          "pawketWebsite": "Pawket Website",
+          "github": "Github",
+          "twitter": "Twitter",
+          "discord": "Discord"
+        },
+        "url": {
+          "privacyPolicy": "https://info.pawket.app/privacy-policy",
+          "pawketWebsite": "https://info.pawket.app",
+          "github": "https://github.com/Chiabee",
+          "twitter": "https://twitter.com/pawket_app",
+          "discord": "https://discord.com/invite/ndQgpHwe4V"
+        }
       }
     }
   },

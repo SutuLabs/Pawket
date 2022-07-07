@@ -63,7 +63,7 @@ export default class Explore extends Vue {
   }
 }
 </script>
-<style lang="scss">
+<style scoped lang="scss">
 .border-bottom {
   border-bottom: 2px solid #ededed;
 }

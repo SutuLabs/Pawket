@@ -1,176 +1,13 @@
 <template>
   <div id="app" ref="container">
-    <div class="is-hidden-tablet has-text-centered pt-2" v-if="!unlocked">
-      <b-dropdown v-model="networkId" aria-role="list" :mobile-modal="false">
-        <template #trigger>
-          <b-button
-            :class="{
-              'has-text-primary': networkId == 'mainnet',
-              'has-text-info': networkId == 'testnet10',
-              'border-less': true,
-            }"
-            icon-left="brightness-1"
-            icon-right="menu-down"
-            ><span class="has-text-dark">{{ networkId }}</span></b-button
-          >
-        </template>
-        <b-dropdown-item v-for="net in networks" :key="net.name" :value="net.name" aria-role="listitem">{{
-          net.name
-        }}</b-dropdown-item>
-      </b-dropdown>
-    </div>
-    <div class="logo is-hidden-tablet" v-if="!unlocked">
-      <img width="200px" src="@/assets/logo.svg" />
-    </div>
-    <div class="column is-8 is-offset-2 is-hidden-mobile">
-      <b-navbar>
-        <template #brand>
-          <b-navbar-item @click="home()">
-            <img src="./assets/logo.svg" :alt="$t('verifyPassword.ui.alt.logoAlt')" />
-          </b-navbar-item>
-        </template>
-        <template #start> </template>
-        <template #end>
-          <b-navbar-dropdown :label="networkId" v-if="!unlocked">
-            <b-navbar-item
-              @click="switchNetwork(net.name)"
-              v-for="net in networks"
-              :key="net.name"
-              :active="networkId === net.name"
-            >
-              {{ net.name }}
-            </b-navbar-item>
-          </b-navbar-dropdown>
-          <div class="py-4" v-if="showNavigation">
-            <b-button
-              @click="$router.push('/')"
-              icon-left="wallet"
-              type="is-primary"
-              outlined
-              :class="{
-                'border-less': true,
-                'has-background-primary': path == '/',
-                'has-text-white': path == '/',
-              }"
-            >
-              {{ $t("app.ui.navigation.wallet") }}
-            </b-button>
-            <b-button
-              @click="$router.push('/trade')"
-              icon-left="trending-up"
-              type="is-primary"
-              outlined
-              :class="{
-                'border-less': true,
-                'has-background-primary': path == '/trade',
-                'has-text-white': path == '/trade',
-              }"
-            >
-              {{ $t("app.ui.navigation.trade") }}
-            </b-button>
-            <b-button
-              @click="$router.push('/explore')"
-              icon-left="earth"
-              type="is-primary"
-              outlined
-              :class="{
-                'border-less': true,
-                'has-background-primary': path == '/explore',
-                'has-text-white': path == '/explore',
-              }"
-              v-if="debugMode"
-            >
-              {{ $t("app.ui.navigation.explore") }}
-            </b-button>
-            <b-button
-              @click="$router.push('/settings')"
-              icon-left="cog"
-              type="is-primary"
-              :class="{
-                'border-less': true,
-                'has-background-primary': path == '/settings',
-                'has-text-white': path == '/settings',
-              }"
-              outlined
-            >
-              {{ $t("app.ui.navigation.settings") }}
-            </b-button>
-          </div>
-        </template>
-      </b-navbar>
-    </div>
-    <div v-if="unlocked == false && hasAccount" class="pt-6 mt-6 login">
+    <nav-bar></nav-bar>
+    <div v-if="unlocked == false && hasAccount" class="pt-6 mt-6">
       <verify-password></verify-password>
     </div>
     <div v-else>
       <router-view />
     </div>
-    <nav class="navbar is-link is-fixed-bottom is-hidden-tablet top-border" role="navigation" v-if="showNavigation">
-      <div class="navbar-brand">
-        <router-link
-          :to="'/'"
-          :class="{
-            'navbar-item': true,
-            'is-expanded': true,
-            'is-block': true,
-            'has-text-centered': true,
-            'has-background-white': true,
-            'has-text-grey': path != '/',
-            'has-text-primary': path == '/',
-          }"
-        >
-          <b-icon icon="wallet"></b-icon>
-          <p class="is-size-7">{{ $t("app.ui.navigation.wallet") }}</p>
-        </router-link>
-        <router-link
-          :to="'/trade'"
-          :class="{
-            'navbar-item': true,
-            'is-expanded': true,
-            'is-block': true,
-            'has-text-centered': true,
-            'has-background-white': true,
-            'has-text-grey': path != '/trade',
-            'has-text-primary': path == '/trade',
-          }"
-        >
-          <b-icon icon="trending-up"></b-icon>
-          <p class="is-size-7">{{ $t("app.ui.navigation.trade") }}</p>
-        </router-link>
-        <router-link
-          :to="'/explore'"
-          :class="{
-            'navbar-item': true,
-            'is-expanded': true,
-            'is-block': true,
-            'has-text-centered': true,
-            'has-background-white': true,
-            'has-text-grey': path != '/explore',
-            'has-text-primary': path == '/explore',
-          }"
-          v-if="debugMode"
-        >
-          <b-icon icon="earth"></b-icon>
-          <p class="is-size-7">{{ $t("app.ui.navigation.explore") }}</p>
-        </router-link>
-        <router-link
-          :to="'/settings'"
-          :active="path == '/settings'"
-          :class="{
-            'navbar-item': true,
-            'is-expanded': true,
-            'is-block': true,
-            'has-text-centered': true,
-            'has-background-white': true,
-            'has-text-grey': path != '/settings',
-            'has-text-primary': path == '/settings',
-          }"
-        >
-          <b-icon icon="cog"></b-icon>
-          <p class="is-size-7">{{ $t("app.ui.navigation.settings") }}</p>
-        </router-link>
-      </div>
-    </nav>
+    <mobile-nav v-if="showNavigation"></mobile-nav>
     <div class="my-3 is-hidden-tablet">&nbsp;</div>
     <footer class="footer">
       <div class="content has-text-centered">
@@ -207,10 +44,13 @@ import { NotificationProgrammatic as Notification } from "buefy";
 import store from "./store";
 import DevHelper from "@/components/DevHelper.vue";
 import OfflineQrCode from "./components/OfflineQrCode.vue";
-import { NetworkInfo, xchPrefix } from "./store/modules/network";
+import { xchPrefix } from "./store/modules/network";
 import VerifyPassword from "./components/VerifyPassword.vue";
+import MobileNav from "./components/Navigation/MobileNav.vue";
+import NavBar from "./components/Navigation/Navbar.vue";
+import { tc } from "./i18n/i18n";
 
-@Component({ components: { VerifyPassword } })
+@Component({ components: { VerifyPassword, MobileNav, NavBar } })
 export default class App extends Vue {
   public debugClick = 9;
 
@@ -221,7 +61,7 @@ export default class App extends Vue {
   }
 
   get version(): string {
-    return process.env.VUE_APP_VERSION || "";
+    return process.env.VUE_APP_VERSION || tc("footer.ui.error.READ_VERSION_FAILED");
   }
 
   get debugMode(): boolean {
@@ -244,18 +84,6 @@ export default class App extends Vue {
     return !this.$route.path.startsWith("/create") && this.unlocked;
   }
 
-  get networks(): NetworkInfo {
-    return store.state.network.networks;
-  }
-
-  get networkId(): string {
-    return store.state.network.networkId;
-  }
-
-  set networkId(value: string) {
-    store.state.network.networkId = value;
-  }
-
   get path(): string {
     return this.$route.path;
   }
@@ -274,15 +102,6 @@ export default class App extends Vue {
       });
       localStorage.setItem("DEBUG_MODE", "true");
     }
-  }
-
-  home(): void {
-    if (this.$route.path.startsWith("/create") || this.$route.path == "/") return;
-    this.$router.push("/");
-  }
-
-  async switchNetwork(networkId: string): Promise<void> {
-    await store.dispatch("switchNetwork", networkId);
   }
 
   disableDebug(): void {
@@ -319,7 +138,6 @@ export default class App extends Vue {
 </script>
 <style lang="scss">
 @import "@/styles/colors.scss";
-@import "~bulma/sass/utilities/derived-variables";
 
 body,
 html {
@@ -332,29 +150,5 @@ html {
 #app {
   width: 100%;
   height: 100%;
-}
-
-.top-border {
-  border-top: 1px solid #ededed;
-}
-
-.border-less {
-  border: none;
-}
-
-.login {
-  height: 60vh !important;
-  z-index: 99 !important;
-}
-
-a.has-text-primary:hover,
-a.has-text-primary:focus {
-  color: $primary !important;
-}
-
-.logo {
-  position: absolute;
-  top: 15%;
-  left: 20%
 }
 </style>

@@ -259,7 +259,7 @@ export default class AddressBook extends Vue {
   }
 }
 </script>
-<style lang="scss">
+<style scoped lang="scss">
 .word-break {
   word-break: break-all;
 }

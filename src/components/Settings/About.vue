@@ -8,22 +8,22 @@
       </div>
       <div class="mt-5">
         <strong>{{ $t("settings.about.links.title") }}</strong>
-        <a href="https://info.pawket.app/privacy-policy" target="_blank"
-          ><p class="pt-4">{{ $t("settings.about.links.privacyPolicy") }}</p></a
+        <a :href="$t('settings.about.links.url.privacyPolicy')" target="_blank"
+          ><p class="pt-4">{{ $t("settings.about.links.label.privacyPolicy") }}</p></a
         >
         <hr class="p-0 my-2" />
 
-        <a href="https://info.pawket.app/" target="_blank"
-          ><p>{{ $t("settings.about.links.pawketWebsite") }}</p></a
+        <a :href="$t('settings.about.links.url.pawketWebsite')" target="_blank"
+          ><p>{{ $t("settings.about.links.label.pawketWebsite") }}</p></a
         >
-        <a href="https://github.com/Chiabee" target="_blank"
-          ><p>{{ $t("settings.about.links.github") }}</p></a
+        <a :href="$t('settings.about.links.url.github')" target="_blank"
+          ><p>{{ $t("settings.about.links.label.github") }}</p></a
         >
-        <a href="https://twitter.com/pawket_app" target="_blank"
-          ><p>{{ $t("settings.about.links.twitter") }}</p></a
+        <a :href="$t('settings.about.links.url.twitter')" target="_blank"
+          ><p>{{ $t("settings.about.links.label.twitter") }}</p></a
         >
-        <a href="https://discord.com/invite/ndQgpHwe4V " target="_blank"
-          ><p>{{ $t("settings.about.links.discord") }}</p></a
+        <a :href="$t('settings.about.links.url.discord')" target="_blank"
+          ><p>{{ $t("settings.about.links.label.discord") }}</p></a
         >
       </div>
     </section>
@@ -31,6 +31,7 @@
 </template>
 
 <script lang="ts">
+import { tc } from "@/i18n/i18n";
 import { Component, Vue } from "vue-property-decorator";
 import TopBar from "../TopBar.vue";
 
@@ -39,7 +40,7 @@ import TopBar from "../TopBar.vue";
 })
 export default class About extends Vue {
   get version(): string {
-    return process.env.VUE_APP_VERSION || "";
+    return process.env.VUE_APP_VERSION || tc("footer.ui.error.READ_VERSION_FAILED");
   }
 }
 </script>

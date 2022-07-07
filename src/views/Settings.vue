@@ -1,6 +1,6 @@
 <template>
   <div class="column is-8 is-offset-2">
-    <div class="box is-hidden-touch">
+    <div class="box is-hidden-until-widescreen">
       <p class="has-text-left is-size-5 pb-2 pl-2 border-bottom">{{ $t("settings.menu.title") }}</p>
       <b-tabs type="is-boxed" vertical>
         <b-tab-item :label="$t('settings.menu.items.general.title')" icon="tune" class="pt-0 mt-0">
@@ -23,7 +23,7 @@
         </b-tab-item>
       </b-tabs>
     </div>
-    <div class="is-hidden-desktop">
+    <div class="is-hidden-widescreen">
       <p class="has-text-centered is-size-5 pt-5 pb-2 pr-2 border-bottom">{{ $t("settings.menu.title") }}</p>
       <div class="panel-block py-0 my-0" @click="goToGeneral()">
         <div class="is-11 is-flex my-1 py-1">
@@ -212,8 +212,16 @@ export default class Settings extends Vue {
 </script>
 
 <style scoped lang="scss">
+@import "~bulma/sass/utilities/mixins.sass";
+
 .border-bottom {
   border-bottom: 1px solid #ededed;
   border-radius: 0;
+}
+
+.is-hidden-until-widescreen {
+  @include until-widescreen {
+    display: none;
+  }
 }
 </style>
