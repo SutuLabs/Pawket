@@ -18,7 +18,7 @@
           {{ nftAddress }}
           <key-box
             icon="checkbox-multiple-blank-outline"
-            :tooltip="$t('accountExport.ui.tooltip.copy')"
+            :tooltip="$t('common.tooltip.copy')"
             :value="nftAddress"
             :showValue="false"
           ></key-box>
@@ -30,7 +30,7 @@
           {{ coinname }}
           <key-box
             icon="checkbox-multiple-blank-outline"
-            :tooltip="$t('accountExport.ui.tooltip.copy')"
+            :tooltip="$t('common.tooltip.copy')"
             :value="coinname"
             :showValue="false"
           ></key-box>
@@ -42,7 +42,7 @@
           {{ owner }}
           <key-box
             icon="checkbox-multiple-blank-outline"
-            :tooltip="$t('accountExport.ui.tooltip.copy')"
+            :tooltip="$t('common.tooltip.copy')"
             :value="owner"
             :showValue="false"
           ></key-box>
@@ -52,7 +52,7 @@
     </section>
     <footer class="modal-card-foot is-justify-content-space-between">
       <div>
-        <b-button :label="$t('send.ui.button.cancel')" @click="close()"></b-button>
+        <b-button :label="$t('common.button.cancel')" @click="close()"></b-button>
       </div>
       <div>
         <!-- :label="$t('send.ui.button.submit')" -->

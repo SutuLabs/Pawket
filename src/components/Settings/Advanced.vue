@@ -32,19 +32,19 @@ export default class Advanced extends Vue {
   async toggleExperiment(): Promise<void> {
     if (!this.experimentMode) {
       this.$buefy.dialog.confirm({
-        message: this.$tc("accountConfigure.message.confirmation.experiment"),
-        confirmText: this.$tc("accountConfigure.ui.button.confirm"),
-        cancelText: this.$tc("accountConfigure.ui.button.cancel"),
+        message: this.$tc("settings.advanced.confirmation.experimental"),
+        confirmText: this.$tc("common.button.confirm"),
+        cancelText: this.$tc("common.button.cancel"),
         trapFocus: true,
         onConfirm: async () => {
           store.state.vault.experiment = true;
-          notifyPrimary(this.$tc("accountConfigure.message.notification.saved"));
+          notifyPrimary(this.$tc("common.message.saved"));
           await store.dispatch("persistent");
         },
       });
     } else {
       store.state.vault.experiment = false;
-      notifyPrimary(this.$tc("accountConfigure.message.notification.saved"));
+      notifyPrimary(this.$tc("common.message.saved"));
       await store.dispatch("persistent");
     }
   }

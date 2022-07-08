@@ -1,7 +1,7 @@
 <template>
   <div class="modal-card m-0">
     <header>
-      <top-bar :title="title" @close="$emit('close')"></top-bar>
+      <top-bar :title="title" @close="back()" :showClose="parent == 'Send'"></top-bar>
     </header>
     <section v-if="mode == 'List'" class="modal-card-body">
       <div class="mb-3">

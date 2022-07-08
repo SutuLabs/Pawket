@@ -1,6 +1,6 @@
 <template>
   <div class="modal-card margin-auto">
-    <top-bar :title="$t('accountManagement.title')" :showClose="true" @close="close()"></top-bar>
+    <top-bar :title="$t('accountManagement.ui.title')" :showClose="true" @close="close()"></top-bar>
     <div class="modal-card-body">
       <a v-for="(account, idx) in accounts" :key="idx" class="panel-block" @click="select(idx)">
         <b-icon icon="check" v-if="idx == selectedAccount" style="margin-left: -15px" size="is-small" type="is-primary"></b-icon>
@@ -13,13 +13,13 @@
         </div>
         <div class="column has-text-centered">
           <b-tag v-if="account.type == 'Password'" rounded class="has-background-grey-lighter">{{
-            $t("accountManagement.label.passPhrase")
+            $t("accountManagement.ui.label.passPhrase")
           }}</b-tag>
           <b-tag v-if="account.type == 'Address'" rounded class="has-background-grey-lighter">{{
-            $t("accountManagement.label.address")
+            $t("accountManagement.ui.label.address")
           }}</b-tag>
           <b-tag v-if="account.type == 'Legacy'" rounded class="has-background-grey-lighter">{{
-            $t("accountManagement.label.imported")
+            $t("accountManagement.ui.label.imported")
           }}</b-tag>
         </div>
         <div class="column py-1">
@@ -32,43 +32,43 @@
         </div>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addBySerial()">
-        <b-tooltip :label="$t('accountList.ui.tooltip.addBySerial')" position="is-right" multilined size="is-small">
+        <b-tooltip :label="$t('accountManagement.ui.tooltip.addBySerial')" position="is-right" multilined size="is-small">
           <span class="panel-icon">
             <b-icon icon="plus-thick"></b-icon>
           </span>
-          <span class="mx-2">{{ $t("accountList.ui.button.addBySerial") }}</span>
+          <span class="mx-2">{{ $t("accountManagement.ui.button.addBySerial") }}</span>
         </b-tooltip>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addByPassword()" v-if="experimentMode">
-        <b-tooltip :label="$t('accountList.ui.tooltip.addByPassword')" position="is-right" multilined size="is-small">
+        <b-tooltip :label="$t('accountManagement.ui.tooltip.addByPassword')" position="is-right" multilined size="is-small">
           <span class="panel-icon">
             <b-icon icon="plus-thick"></b-icon>
           </span>
-          <span class="mx-2">{{ $t("accountList.ui.button.addByPassword") }}</span>
+          <span class="mx-2">{{ $t("accountManagement.ui.button.addByPassword") }}</span>
         </b-tooltip>
       </a>
       <a v-if="debugMode" href="javascript:void(0)" class="panel-block" @click="addByAddress()">
-        <b-tooltip :label="$t('accountList.ui.tooltip.addByAddress')" multilined size="is-small">
+        <b-tooltip :label="$t('accountManagement.ui.tooltip.addByAddress')" multilined size="is-small">
           <span class="panel-icon">
             <b-icon icon="plus-thick"></b-icon>
           </span>
-          <span class="mx-2">{{ $t("accountList.ui.button.addByAddress") }}</span>
+          <span class="mx-2">{{ $t("accountManagement.ui.button.addByAddress") }}</span>
         </b-tooltip>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addByLegacy()">
-        <b-tooltip :label="$t('accountList.ui.tooltip.addByLegacy')" multilined size="is-small">
+        <b-tooltip :label="$t('accountManagement.ui.tooltip.addByLegacy')" multilined size="is-small">
           <span class="panel-icon">
             <b-icon icon="import"></b-icon>
           </span>
-          <span class="mx-2">{{ $t("accountList.ui.button.addByLegacy") }}</span>
+          <span class="mx-2">{{ $t("accountManagement.ui.button.addByLegacy") }}</span>
         </b-tooltip>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addByMnemonic()">
-        <b-tooltip :label="$t('accountList.ui.tooltip.addByMnemonic')" multilined size="is-small">
+        <b-tooltip :label="$t('accountManagement.ui.tooltip.addByMnemonic')" multilined size="is-small">
           <span class="panel-icon">
             <b-icon icon="import"></b-icon>
           </span>
-          <span class="mx-2">{{ $t("accountList.ui.button.addByMnemonic") }}</span>
+          <span class="mx-2">{{ $t("accountManagement.ui.button.addByMnemonic") }}</span>
         </b-tooltip>
       </a>
     </div>
@@ -144,9 +144,9 @@ export default class AccountManagement extends Vue {
 
   remove(idx: number): void {
     this.$buefy.dialog.confirm({
-      message: this.$tc("accountList.message.confirmation.removeAccount"),
-      confirmText: this.$tc("accountList.message.confirmation.confirmText"),
-      cancelText: this.$tc("accountList.message.confirmation.cancelText"),
+      message: this.$tc("accountManagement.message.confirmation.removeAccount"),
+      confirmText: this.$tc("accountManagement.message.confirmation.confirmText"),
+      cancelText: this.$tc("accountManagement.message.confirmation.cancelText"),
       trapFocus: true,
       type: "is-danger",
       onConfirm: () => {
@@ -166,9 +166,9 @@ export default class AccountManagement extends Vue {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return new Promise((resolve, reject) => {
       this.$buefy.dialog.prompt({
-        message: this.$tc("accountList.message.prompt.setAccountName"),
-        confirmText: this.$tc("accountList.message.prompt.confirmText"),
-        cancelText: this.$tc("accountList.message.prompt.cancelText"),
+        message: this.$tc("accountManagement.message.prompt.setAccountName"),
+        confirmText: this.$tc("accountManagement.message.prompt.confirmText"),
+        cancelText: this.$tc("accountManagement.message.prompt.cancelText"),
         inputAttrs: {
           maxlength: 36,
           value: this.accounts[idx].name,
@@ -185,7 +185,7 @@ export default class AccountManagement extends Vue {
   async rename(idx: number): Promise<void> {
     const name = await this.getAccountName(idx);
     store.dispatch("renameAccount", { idx, name });
-    notifyPrimary(this.$tc("accountList.message.notification.saved"));
+    notifyPrimary(this.$tc("accountManagement.message.notification.saved"));
   }
 
   async addByPassword(): Promise<void> {
@@ -207,7 +207,7 @@ export default class AccountManagement extends Vue {
       fullScreen: isMobile(),
       canCancel: [""],
       trapFocus: true,
-      props: { defaultName: this.$t("accountList.ui.value.defaultName", { n: this.accountNum }) },
+      props: { defaultName: this.$t("accountManagement.ui.value.defaultName", { n: this.accountNum }) },
     });
   }
 
@@ -219,7 +219,7 @@ export default class AccountManagement extends Vue {
       trapFocus: true,
       fullScreen: isMobile(),
       canCancel: [""],
-      props: { title: this.$t("accountList.ui.modal.addByLegacy"), mnemonicLen: 24 },
+      props: { title: this.$t("accountManagement.ui.modal.addByLegacy"), mnemonicLen: 24 },
     });
   }
 
@@ -231,7 +231,7 @@ export default class AccountManagement extends Vue {
       trapFocus: true,
       fullScreen: isMobile(),
       canCancel: [""],
-      props: { title: this.$t("accountList.ui.modal.addByMnemonic"), mnemonicLen: 12 },
+      props: { title: this.$t("accountManagement.ui.modal.addByMnemonic"), mnemonicLen: 12 },
     });
   }
 

@@ -5,7 +5,7 @@
       <b-field>
         <template #label>
           <span>{{ $t("explorerLink.ui.label.maxAddress") }}</span>
-          <b-tooltip :label="$t('accountConfigure.ui.tooltip.receiveAddress')" position="is-bottom" multilined>
+          <b-tooltip :label="$t('explorerLink.ui.tooltip.receiveAddress')" position="is-bottom" multilined>
             <b-icon icon="help-circle" size="is-small"> </b-icon>
           </b-tooltip>
         </template>
@@ -119,7 +119,7 @@ export default class ExplorerLink extends Vue {
   changeMaxAddress(): void {
     if (this.maxAddress && this.maxAddress < 13) {
       this.account.addressRetrievalCount = this.maxAddress;
-      notifyPrimary(this.$tc("accountConfigure.message.notification.saved"));
+      notifyPrimary(this.$tc("common.message.saved"));
     }
   }
 }

@@ -55,7 +55,7 @@ export default class General extends Vue {
   set currency(value: CurrencyType) {
     store.dispatch("setCurrency", value);
     Notification.open({
-      message: this.$tc("accountConfigure.message.notification.saved"),
+      message: this.$tc("common.message.saved"),
       type: "is-primary",
     });
   }

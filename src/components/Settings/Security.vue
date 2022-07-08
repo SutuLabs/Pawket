@@ -14,7 +14,7 @@
           {{ account.key.compatibleMnemonic }}
           <key-box
             icon="checkbox-multiple-blank-outline"
-            :tooltip="$t('accountExport.ui.tooltip.copy')"
+            :tooltip="$t('common.tooltip.copy')"
             :value="account.key.compatibleMnemonic"
           ></key-box>
         </span>
@@ -77,9 +77,9 @@ export default class Security extends Vue {
 
   reset(): void {
     this.$buefy.dialog.confirm({
-      message: this.$tc("verifyPassword.message.confirmation.clear"),
-      confirmText: this.$tc("verifyPassword.message.confirmation.confirmText"),
-      cancelText: this.$tc("verifyPassword.message.confirmation.cancelText"),
+      message: this.$tc("settings.security.message.clear"),
+      confirmText: this.$tc("common.button.confirm"),
+      cancelText: this.$tc("common.button.cancel"),
       trapFocus: true,
       type: "is-danger",
       onConfirm: () => {
@@ -95,19 +95,19 @@ export default class Security extends Vue {
       return;
     }
     this.$buefy.dialog.prompt({
-      message: this.$tc("accountExport.message.inputPassword"),
+      message: this.$tc("settings.security.message.inputPassword"),
       inputAttrs: {
         type: "password",
       },
       trapFocus: true,
       closeOnConfirm: false,
       canCancel: ["button"],
-      cancelText: this.$tc("accountConfigure.ui.button.cancel"),
-      confirmText: this.$tc("accountConfigure.ui.button.confirm"),
+      cancelText: this.$tc("common.button.cancel"),
+      confirmText: this.$tc("common.button.confirm"),
       onConfirm: async (password, { close }) => {
         if (!(await isPasswordCorrect(password))) {
           this.$buefy.toast.open({
-            message: this.$tc("accountConfigure.message.error.passwordNotCorrect"),
+            message: this.$tc("settings.security.message.passwordNotCorrect"),
             type: "is-danger",
           });
           return;

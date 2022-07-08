@@ -122,7 +122,7 @@
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
 import store from "@/store";
-import AccountExport from "@/components/AccountExport.vue";
+import AccountInfo from "@/components/AccountManagement/AccountInfo.vue";
 import ManageCats from "@/components/ManageCats.vue";
 import ExplorerLink from "@/components/ExplorerLink.vue";
 import KeyBox from "@/components/KeyBox.vue";
@@ -186,8 +186,12 @@ export default class AccountDetail extends Vue {
     return store.state.network.networks;
   }
 
+  get selectedAccount(): number {
+    return store.state.account.selectedAccount;
+  }
+
   get account(): AccountEntity {
-    return store.state.account.accounts[store.state.account.selectedAccount] ?? {};
+    return store.state.account.accounts[this.selectedAccount] ?? {};
   }
 
   get activities(): CoinRecord[] {
@@ -289,12 +293,12 @@ export default class AccountDetail extends Vue {
   showExport(): void {
     this.$buefy.modal.open({
       parent: this,
-      component: AccountExport,
+      component: AccountInfo,
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
       fullScreen: isMobile(),
-      props: { account: this.account },
+      props: { idx: this.selectedAccount },
     });
   }
 

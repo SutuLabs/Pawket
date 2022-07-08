@@ -33,7 +33,6 @@
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
 import store from "@/store";
-import { CurrencyType } from "@/services/exchange/currencyType";
 import { isPasswordCorrect } from "@/store/modules/vault";
 
 @Component
@@ -75,15 +74,6 @@ export default class VerifyPassword extends Vue {
 
   clearErrorMsg(): void {
     this.isCorrect = true;
-  }
-
-  create(): void {
-    this.checkStrength();
-    this.checkMatch();
-    if (this.isEmpty || !this.isMatch) return;
-    if (this.repassword != this.password) return;
-    store.dispatch("setPassword", this.password);
-    store.dispatch("setCurrency", CurrencyType.USDT);
   }
 
   checkStrength(): void {

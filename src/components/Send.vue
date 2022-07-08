@@ -114,11 +114,11 @@ import OfflineSendShowBundle from "./OfflineSendShowBundle.vue";
 import { CurrencyType } from "@/services/exchange/currencyType";
 import BundleSummary from "./BundleSummary.vue";
 import SendSummary from "./SendSummary.vue";
-import AddressBook, { Contact } from "./AddressBook.vue";
 import { xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getCatNames, getTokenInfo } from "@/services/coin/cat";
 import AddressField from "./AddressField.vue";
 import TopBar from "./TopBar.vue";
+import AddressBook, { Contact } from "./Settings/AddressBook.vue";
 
 @Component({
   components: {

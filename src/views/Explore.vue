@@ -4,7 +4,7 @@
     <p class="is-hidden-mobile has-text-left is-size-5 pt-5 pb-2 pl-2 border-bottom">{{ $t("explore.title") }}</p>
     <section class="modal-card-body">
       <b-field :label="$t('explore.label.dapps')" class="mb-2">
-        <dapp :account="account" :tokenList="tokenList"></dapp>
+        <explore-dapp :account="account" :tokenList="tokenList"></explore-dapp>
       </b-field>
       <div>
         <label class="label mt-6">{{ $t("explore.label.popular") }}</label>
@@ -48,10 +48,10 @@
 import { AccountEntity, CustomCat, getAllCats } from "@/store/modules/account";
 import { Component, Vue } from "vue-property-decorator";
 import store from "@/store";
-import Dapp from "@/components/Explore/Dapp.vue";
+import ExploreDapp from "@/components/Explore/ExploreDapp.vue";
 
 @Component({
-  components: { Dapp },
+  components: { ExploreDapp },
 })
 export default class Explore extends Vue {
   get account(): AccountEntity {

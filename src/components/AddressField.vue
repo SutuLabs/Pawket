@@ -35,7 +35,7 @@
 <script lang="ts">
 import store from "@/store";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import AddressBook, { Contact } from "./AddressBook.vue";
+import AddressBook, { Contact } from "./Settings/AddressBook.vue";
 import ScanQrCode from "./ScanQrCode.vue";
 
 @Component

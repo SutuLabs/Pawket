@@ -7,6 +7,18 @@
       "title": "Pawket"
     }
   },
+  "common": {
+    "button": {
+      "confirm": "Confirm",
+      "cancel": "Cancel"
+    },
+    "tooltip": {
+      "copy": "Copy"
+    },
+    "message": {
+      "saved": "Saved"
+    }
+  },
   "app": {
     "ui": {
       "button": {
@@ -177,40 +189,6 @@
       }
     }
   },
-  "accountConfigure": {
-    "ui": {
-      "title": {
-        "settings": "Settings"
-      },
-      "label": {
-        "receiveAddress": "Receive Address Settings",
-        "privacyPolicy": "Privacy Policy",
-        "currencyConversion": "Currency Conversion"
-      },
-      "button": {
-        "cancel": "Cancel",
-        "changePassword": "Change Password",
-        "addressBook": "Address Book",
-        "showMnemonic": "Reveal Mnemonics",
-        "experimental": "Experimental",
-        "confirm": "Confirm"
-      },
-      "tooltip": {
-        "receiveAddress": "You can check the balance on more addresses if you increase the value, but the wallet will run slower."
-      }
-    },
-    "message": {
-      "confirmation": {
-        "experiment": "Experimental features are not stable and not fully tested yet, you can have a try and give us your feedback."
-      },
-      "notification": {
-        "saved": "Saved."
-      },
-      "error": {
-        "passwordNotCorrect": "Incorrect password."
-      }
-    }
-  },
   "changePassword": {
     "ui": {
       "title": {
@@ -237,91 +215,6 @@
       }
     }
   },
-  "accountExport": {
-    "ui": {
-      "title": {
-        "export": "Account Information"
-      },
-      "label": {
-        "name": "Name",
-        "type": "Type",
-        "fingerprint": "Fingerprint",
-        "masterPublicKey": "Master public key (m)",
-        "farmerPublicKey": "Farmer public key (m/12381/8444/0/0)",
-        "poolPublicKey": "Pool public key (m/12381/8444/1/0)",
-        "firstWalletAddress": "First wallet address",
-        "masterPrivateKey": "Master private key (m)",
-        "firstWalletSecretKey": "First wallet secret key (m/12381/8444/2/0)",
-        "PrivateKey": "Private key",
-        "firstWalletPublicKey": "First wallet public key (m/12381/8444/2/0)",
-        "mnemonicSeed": "Mnemonic seed (24-word)",
-        "details": "Details"
-      },
-      "button": {
-        "reveal": "Reveal Mnemonics",
-        "hide": "Hide Mnemonics",
-        "confirm": "Confirm",
-        "cancel": "Cancel"
-      },
-      "tooltip": {
-        "copy": "Copy",
-        "fingerprintTip": "Compatible with Chia official wallet",
-        "mnemonicTip": "Compatible with Chia official wallet"
-      }
-    },
-    "message": {
-      "inputPassword": "Enter Password to Continue",
-      "passwordNotCorrect": "Incorrect password."
-    }
-  },
-  "accountList": {
-    "ui": {
-      "title": {
-        "list": "Account List"
-      },
-      "button": {
-        "addBySerial": "Add by Serial",
-        "addByPassword": "Add Shadow Wallet",
-        "addByLegacy": "Import Chia Official Wallet（24-word）",
-        "addByMnemonic": "Import Nucle/Goby Wallet（12-word）",
-        "addByAddress": "Add by Address(Observation Mode)"
-      },
-      "tooltip": {
-        "delete": "Delete",
-        "edit": "Edit",
-        "details": "Details",
-        "addBySerial": "Derived serial accounts are created in order.",
-        "addByPassword": "Account protected by MNEMONIC and PASSPHRASE. Enter the same PASSPHRASE to access the same account.",
-        "addByLegacy": "Import Chia official wallet.",
-        "addByMnemonic": "Import Nucle/Goby wallet.",
-        "addByAddress": "Only reading is supported in this mode."
-      },
-      "modal": {
-        "addByLegacy": "Import Chia Official Wallet",
-        "addByMnemonic": "Import Nucle/Goby Wallet"
-      },
-      "value": {
-        "defaultName": "Account{n}"
-      }
-    },
-    "message": {
-      "confirmation": {
-        "removeAccount": "Remove account? ",
-        "cancelText": "Cancel",
-        "confirmText": "OK"
-      },
-      "prompt": {
-        "setAccountName": "Enter New Name",
-        "setPassword": "Enter Password",
-        "setLegacyMnemonic": "Enter Mnemonic Words",
-        "cancelText": "Cancel",
-        "confirmText": "OK"
-      },
-      "notification": {
-        "saved": "Saved"
-      }
-    }
-  },
   "explorerLink": {
     "ui": {
       "title": {
@@ -336,7 +229,8 @@
         "nonObserver": "Non-Observer"
       },
       "tooltip": {
-        "blockchainExplorer": "View on Block Explorer"
+        "blockchainExplorer": "View on Block Explorer",
+        "receiveAddress": "You can check the balance on more addresses if you increase the value, but the wallet will run slower."
       }
     }
   },
@@ -427,39 +321,6 @@
         "OverconstrainedError": "ERROR: Installed camera is not suitable.",
         "StreamApiNotSupportedError": "ERROR: Stream API is not supported in this browser.",
         "InsecureContextError": "ERROR: Camera access is only permitted in secure context. Use HTTPS or localhost rather than HTTP."
-      }
-    }
-  },
-  "about": {
-    "ui": {
-      "title": {
-        "roadmap": "Roadmap"
-      },
-      "blackquote": {
-        "slogan": "Manage Your CATs in Pawket!"
-      },
-      "list": {
-        "1": "Fully support offline scenario",
-        "2": "View XCH/CATs balance",
-        "3": "Receive XCH/CATs in online/offline mode",
-        "4": "Init wallet by freely 12/24 words mnemonic",
-        "5": "Generated compatible mnemonic which could be used directly in Chia™ client",
-        "6": "Show fingerprint which fully compatible with Chia™ client",
-        "7": "Infinite derivative wallet",
-        "8": "Shadow wallet(password protected mnemonic)",
-        "9": "Address variation(derivative addresses) for XCH/CATs",
-        "10": "Import and manage custom CATs",
-        "11": "Comprehensive developer tool for coins",
-        "12": "Support customize fee",
-        "13": "Support multiple coins mix send",
-        "14": "Support multiple target address in one transaction",
-        "15": "Support offer creation/consumption",
-        "16": "Support view only wallet",
-        "17": "Package as extension and provide API for dApps",
-        "18": "Package as the app and provide download through AppStore and Google Play",
-        "19": "Support view NFT",
-        "20": "Support send NFT",
-        "21": "Support NFT creation"
       }
     }
   },
@@ -858,9 +719,6 @@
         "addContact": "Add Contact",
         "showInnerAcc": "My accounts"
       },
-      "text": {
-        "createYourAddressBook": "Create Your Address Book"
-      },
       "tooltip": {
         "remove": "Remove"
       }
@@ -1032,6 +890,11 @@
         "export": "Export Private Information",
         "reset": "Reset Wallet"
       },
+      "message": {
+        "clear": "Resetting wallet will permanently remove all data (including mnemonics and passwords) from your device, make sure that wallet mnemonics have been backed up. Are you sure to reset?",
+        "inputPassword": "Enter Password to Continue",
+        "passwordNotCorrect": "Incorrect password."
+      },
       "button": {
         "showMnemonic": "Reveal Mnemonics",
         "hideMnemonic": "Hide Mnemonics",
@@ -1044,6 +907,9 @@
       "title": "Advanced",
       "label": {
         "experimental": "Experimental"
+      },
+      "confirmation": {
+        "experimental": "Experimental features are not stable and not fully tested yet, you can have a try and give us your feedback."
       },
       "description": "After enabling this mode, you can use experimental functions, such as \"Make Offer\", \"Take Offer\", \"Batch Send\", \"Issue CAT\", \"Shadow Wallet\", etc.",
       "warning": "Experimental features are not stable and not fully tested yet, you can have a try and give us your feedback. Please turn it on carefully"
@@ -1080,11 +946,49 @@
     }
   },
   "accountManagement": {
-    "title": "Account Management",
-    "label": {
-      "address": "Address",
-      "imported": "Imported",
-      "passPhrase": "Passphrase"
+    "ui": {
+      "title": "Account Management",
+      "button": {
+        "addBySerial": "Add by Serial",
+        "addByPassword": "Add Shadow Wallet",
+        "addByLegacy": "Import Chia Official Wallet（24-word）",
+        "addByMnemonic": "Import Nucle/Goby Wallet（12-word）",
+        "addByAddress": "Add by Address(Observation Mode)"
+      },
+      "label": {
+        "address": "Address",
+        "imported": "Imported",
+        "passPhrase": "Passphrase"
+      },
+      "tooltip": {
+        "addBySerial": "Derived serial accounts are created in order.",
+        "addByPassword": "Account protected by MNEMONIC and PASSPHRASE. Enter the same PASSPHRASE to access the same account.",
+        "addByLegacy": "Import Chia official wallet.",
+        "addByMnemonic": "Import Nucle/Goby wallet.",
+        "addByAddress": "Only reading is supported in this mode."
+      },
+      "modal": {
+        "addByLegacy": "Import Chia Official Wallet",
+        "addByMnemonic": "Import Nucle/Goby Wallet"
+      },
+      "value": {
+        "defaultName": "Account{n}"
+      }
+    },
+    "message": {
+      "confirmation": {
+        "removeAccount": "Remove account? ",
+        "cancelText": "Cancel",
+        "confirmText": "OK"
+      },
+      "prompt": {
+        "setAccountName": "Enter New Name",
+        "cancelText": "Cancel",
+        "confirmText": "OK"
+      },
+      "notification": {
+        "saved": "Saved"
+      }
     }
   },
   "welcome": {
@@ -1133,5 +1037,35 @@
   },
   "importWallet": {
     "title": "Import Wallet"
+  },
+  "accountInfo": {
+    "ui": {
+      "title": {
+        "export": "Account Information"
+      },
+      "label": {
+        "name": "Name",
+        "type": "Type",
+        "fingerprint": "Fingerprint",
+        "masterPublicKey": "Master public key (m)",
+        "farmerPublicKey": "Farmer public key (m/12381/8444/0/0)",
+        "poolPublicKey": "Pool public key (m/12381/8444/1/0)",
+        "firstWalletAddress": "First wallet address",
+        "masterPrivateKey": "Master private key (m)",
+        "firstWalletSecretKey": "First wallet secret key (m/12381/8444/2/0)",
+        "PrivateKey": "Private key",
+        "firstWalletPublicKey": "First wallet public key (m/12381/8444/2/0)",
+        "mnemonicSeed": "Mnemonic seed (24-word)",
+        "details": "Details"
+      },
+      "tooltip": {
+        "fingerprintTip": "Compatible with Chia official wallet",
+        "mnemonicTip": "Compatible with Chia official wallet"
+      }
+    },
+    "message": {
+      "inputPassword": "Enter Password to Continue",
+      "passwordNotCorrect": "Incorrect password."
+    }
   }
 }

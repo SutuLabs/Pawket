@@ -69,7 +69,7 @@ import BatchSend from "@/components/Transfer/BatchSend.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 
 @Component
-export default class Dapp extends Vue {
+export default class ExploreDapp extends Vue {
   @Prop() private account!: AccountEntity;
   @Prop() tokenList!: CustomCat[];
 
