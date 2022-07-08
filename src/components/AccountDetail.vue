@@ -3,22 +3,30 @@
     <div class="container px-4">
       <div class="py-5 has-text-centered" v-if="account && account.key">
         <section>
-          <b-tooltip :label="$t('accountDetail.ui.tooltip.setting')" class="is-pulled-left">
-            <b-button @click="configureAccount()">
-              <b-icon icon="cog" class="has-text-grey"> </b-icon>
-            </b-button>
-          </b-tooltip>
-          <b-tooltip :label="$t('accountDetail.ui.tooltip.lock')" class="is-pulled-right">
+          <b-tooltip :label="$t('accountDetail.ui.tooltip.lock')" class="is-pulled-right is-hidden-mobile">
             <b-button @click="lock()"><b-icon icon="lock" class="has-text-grey"> </b-icon></b-button>
           </b-tooltip>
+          <b-button class="is-pulled-right" icon-left="account" icon-right="menu-down" @click="selectAccount()">{{
+            account.name | nameOmit
+          }}</b-button>
+          <b-dropdown v-model="networkId" aria-role="list" :mobile-modal="false" class="is-pulled-left">
+            <template #trigger>
+              <b-button
+                :class="networkId == 'mainnet' ? 'has-text-primary' : 'has-text-info'"
+                icon-left="brightness-1"
+                icon-right="menu-down"
+                ><span class="has-text-dark">{{ networkId }}</span></b-button
+              >
+            </template>
+            <b-dropdown-item v-for="net in networks" :key="net.name" :value="net.name" aria-role="listitem">{{
+              net.name
+            }}</b-dropdown-item>
+          </b-dropdown>
           <b-tooltip :label="$t('accountDetail.ui.tooltip.errorLog')" class="is-pulled-right">
             <b-button v-if="debugMode && hasError" @click="openErrorLog()"
               ><b-icon icon="bug" class="has-text-grey"> </b-icon
             ></b-button>
           </b-tooltip>
-          <b-button class="is-pulled-right" @click="selectAccount()"
-            >{{ account.name | nameOmit }}: {{ account.key.fingerprint }}</b-button
-          >
           <br />
           <div class="mt-5">
             <h2 class="is-size-3 py-5">
@@ -72,7 +80,7 @@
             v-show="account.tokens && account.tokens.hasOwnProperty(cat.name)"
           >
             <div class="column is-flex is-7" v-if="account.tokens && account.tokens.hasOwnProperty(cat.name)">
-              <div class="mr-3">
+              <div class="mr-4">
                 <span class="image is-32x32">
                   <img v-if="cat.img" class="is-rounded" :src="cat.img" />
                   <img v-else-if="cat.name === xchSymbol" class="is-rounded" src="@/assets/chia-logo.svg" />
@@ -114,9 +122,7 @@
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
 import store from "@/store";
-import AccountExport from "@/components/AccountExport.vue";
-import AccountList from "@/components/AccountList.vue";
-import AccountConfigure from "@/components/AccountConfigure.vue";
+import AccountInfo from "@/components/AccountManagement/AccountInfo.vue";
 import ManageCats from "@/components/ManageCats.vue";
 import ExplorerLink from "@/components/ExplorerLink.vue";
 import KeyBox from "@/components/KeyBox.vue";
@@ -131,10 +137,13 @@ import UtxoPanel from "@/components/UtxoPanel.vue";
 import { CoinRecord } from "@/models/wallet";
 import { nameOmit } from "@/filters/nameConversion";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { xchSymbol } from "@/store/modules/network";
+import { NetworkInfo, xchSymbol } from "@/store/modules/network";
 import NftPanel from "@/components/Detail/NftPanel.vue";
 import Dapp from "./Dapp.vue";
 import ErrorLog from "./ErrorLog.vue";
+import AccountManagement from "./AccountManagement/AccountManagement.vue";
+import { tc } from "@/i18n/i18n";
+import { isMobile } from "@/services/view/responsive";
 
 type Mode = "Verify" | "Create";
 
@@ -157,8 +166,32 @@ export default class AccountDetail extends Vue {
     return store.state.account.refreshing;
   }
 
+  get networkId(): string {
+    return store.state.network.networkId;
+  }
+
+  set networkId(value: string) {
+    store.dispatch("switchNetwork", value);
+    this.$buefy.dialog.confirm({
+      message: tc("app.switchNetwork.message"),
+      confirmText: tc("app.switchNetwork.confirm"),
+      cancelText: tc("app.switchNetwork.cancel"),
+      type: "is-primary",
+      hasIcon: true,
+      onConfirm: () => store.dispatch("lock"),
+    });
+  }
+
+  get networks(): NetworkInfo {
+    return store.state.network.networks;
+  }
+
+  get selectedAccount(): number {
+    return store.state.account.selectedAccount;
+  }
+
   get account(): AccountEntity {
-    return store.state.account.accounts[store.state.account.selectedAccount] ?? {};
+    return store.state.account.accounts[this.selectedAccount] ?? {};
   }
 
   get activities(): CoinRecord[] {
@@ -260,11 +293,12 @@ export default class AccountDetail extends Vue {
   showExport(): void {
     this.$buefy.modal.open({
       parent: this,
-      component: AccountExport,
+      component: AccountInfo,
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
-      props: { account: this.account },
+      fullScreen: isMobile(),
+      props: { idx: this.selectedAccount },
     });
   }
 
@@ -274,19 +308,8 @@ export default class AccountDetail extends Vue {
       component: ErrorLog,
       hasModalCard: true,
       trapFocus: true,
+      fullScreen: isMobile(),
       canCancel: ["outside"],
-    });
-  }
-
-  configureAccount(): void {
-    this.$buefy.modal.open({
-      parent: this,
-      component: AccountConfigure,
-      hasModalCard: true,
-      trapFocus: true,
-      canCancel: [""],
-      props: { account: this.account },
-      events: { refresh: this.refresh },
     });
   }
 
@@ -297,6 +320,7 @@ export default class AccountDetail extends Vue {
       component: ManageCats,
       hasModalCard: true,
       trapFocus: true,
+      fullScreen: isMobile(),
       canCancel: [""],
       props: { account: this.account },
       events: { refresh: this.refresh },
@@ -306,10 +330,10 @@ export default class AccountDetail extends Vue {
   selectAccount(): void {
     this.$buefy.modal.open({
       parent: this,
-      component: AccountList,
-      hasModalCard: true,
+      component: AccountManagement,
       trapFocus: true,
-      canCancel: [""],
+      canCancel: ["outside"],
+      fullScreen: isMobile(),
       props: {},
     });
   }
@@ -321,6 +345,7 @@ export default class AccountDetail extends Vue {
       component: Send,
       hasModalCard: true,
       trapFocus: true,
+      fullScreen: isMobile(),
       canCancel: [""],
       props: { account: this.account, rate: this.rate, currency: this.currency },
     });
@@ -330,9 +355,9 @@ export default class AccountDetail extends Vue {
     this.$buefy.modal.open({
       parent: this,
       component: ExplorerLink,
-      hasModalCard: true,
       trapFocus: true,
-      canCancel: ["outside"],
+      canCancel: [""],
+      fullScreen: isMobile(),
       props: { account: this.account, token: token },
     });
   }

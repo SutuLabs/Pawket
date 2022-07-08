@@ -10,10 +10,10 @@
       </header>
       <section class="modal-card-body">
         <b-tabs position="is-centered" class="block" expanded v-model="activeTab">
-          <b-tab-item label="Search">
+          <b-tab-item :label="$t('ManageCats.ui.label.search')">
             <search-cat :allCats="allCats" @addCats="addCats"></search-cat>
           </b-tab-item>
-          <b-tab-item label="Custom">
+          <b-tab-item :label="$t('ManageCats.ui.label.custom')">
             <b-field :label="$t('ManageCats.ui.label.name')">
               <b-input
                 v-model="name"

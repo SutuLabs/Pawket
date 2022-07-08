@@ -1,0 +1,123 @@
+<template>
+  <div class="modal-card m-0">
+    <top-bar :title="$t('settings.security.title')" @close="close()"></top-bar>
+    <section class="modal-card-body">
+      <b-field :label="$t('settings.security.label.mnemonic')">
+        <b-button v-if="!showMnemonic" type="is-primary" icon-left="eye" outlined expanded @click="toggleMnemonic()">
+          {{ $t("settings.security.button.showMnemonic") }}</b-button
+        >
+        <b-button v-else type="is-primary" icon-left="eye-off" outlined expanded @click="toggleMnemonic()">
+          {{ $t("settings.security.button.hideMnemonic") }}</b-button
+        >
+        <span v-if="showMnemonic">
+          <br />
+          {{ account.key.compatibleMnemonic }}
+          <key-box
+            icon="checkbox-multiple-blank-outline"
+            :tooltip="$t('common.tooltip.copy')"
+            :value="account.key.compatibleMnemonic"
+          ></key-box>
+        </span>
+      </b-field>
+      <b-field :label="$t('settings.security.label.password')">
+        <b-button type="is-primary" icon-left="pencil-lock-outline" outlined expanded @click="ChangePassword()">
+          {{ $t("settings.security.button.password") }}</b-button
+        >
+      </b-field>
+      <b-field :label="$t('settings.security.label.export')">
+        <b-button icon-left="export" outlined expanded disabled> {{ $t("settings.security.button.export") }}</b-button>
+      </b-field>
+      <b-field :label="$t('settings.security.label.reset')">
+        <b-button type="is-danger" expanded outlined @click="reset()">{{ $t("settings.security.button.reset") }}</b-button>
+      </b-field>
+    </section>
+  </div>
+</template>
+
+<script lang="ts">
+import store from "@/store";
+import { AccountEntity } from "@/store/modules/account";
+import { Component, Vue } from "vue-property-decorator";
+import KeyBox from "@/components/KeyBox.vue";
+import ChangePassword from "../ChangePassword.vue";
+import TopBar from "../TopBar.vue";
+import { isPasswordCorrect } from "@/store/modules/vault";
+import { isMobile } from "@/services/view/responsive";
+
+@Component({
+  components: {
+    KeyBox,
+    ChangePassword,
+    TopBar,
+  },
+})
+export default class Security extends Vue {
+  showMnemonic = false;
+
+  get account(): AccountEntity {
+    return store.state.account.accounts[store.state.account.selectedAccount] ?? {};
+  }
+
+  close(): void {
+    this.$emit("close");
+  }
+
+  ChangePassword(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: ChangePassword,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      fullScreen: isMobile(),
+      props: { mnemonic: store.state.vault.seedMnemonic },
+      events: { close: this.close },
+    });
+  }
+
+  reset(): void {
+    this.$buefy.dialog.confirm({
+      message: this.$tc("settings.security.message.clear"),
+      confirmText: this.$tc("common.button.confirm"),
+      cancelText: this.$tc("common.button.cancel"),
+      trapFocus: true,
+      type: "is-danger",
+      onConfirm: () => {
+        store.dispatch("clear");
+        this.$router.push("/create");
+      },
+    });
+  }
+
+  async toggleMnemonic(): Promise<void> {
+    if (this.showMnemonic) {
+      this.showMnemonic = false;
+      return;
+    }
+    this.$buefy.dialog.prompt({
+      message: this.$tc("settings.security.message.inputPassword"),
+      inputAttrs: {
+        type: "password",
+      },
+      trapFocus: true,
+      closeOnConfirm: false,
+      canCancel: ["button"],
+      cancelText: this.$tc("common.button.cancel"),
+      confirmText: this.$tc("common.button.confirm"),
+      onConfirm: async (password, { close }) => {
+        if (!(await isPasswordCorrect(password))) {
+          this.$buefy.toast.open({
+            message: this.$tc("settings.security.message.passwordNotCorrect"),
+            type: "is-danger",
+          });
+          return;
+        }
+        close();
+        this.showMnemonic = true;
+      },
+    });
+  }
+}
+</script>
+
+<style scoped lang="scss"></style>

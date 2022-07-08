@@ -1,9 +1,6 @@
 <template>
   <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">{{ $t("send.ui.title.send") }}</p>
-      <button type="button" class="delete" @click="close()"></button>
-    </header>
+    <top-bar :title="$t('send.ui.title.send')" @close="$emit('close')" :showClose="showClose"></top-bar>
     <section class="modal-card-body">
       <div v-show="!bundle">
         <b-notification
@@ -60,13 +57,14 @@
         <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
       </template>
     </section>
-    <footer class="modal-card-foot is-justify-content-space-between">
+    <footer class="is-block buttons modal-card-foot pb-2 my-0">
       <div>
-        <b-button :label="$t('send.ui.button.cancel')" @click="cancel()"></b-button>
+        <b-button :label="$t('send.ui.button.cancel')" class="is-pulled-left" @click="cancel()"></b-button>
         <b-button
           :label="$t('send.ui.button.sign')"
           v-if="!bundle"
           type="is-primary"
+          class="is-pulled-right"
           @click="sign()"
           :disabled="!validity || submitting"
         ></b-button>
@@ -116,10 +114,11 @@ import OfflineSendShowBundle from "./OfflineSendShowBundle.vue";
 import { CurrencyType } from "@/services/exchange/currencyType";
 import BundleSummary from "./BundleSummary.vue";
 import SendSummary from "./SendSummary.vue";
-import AddressBook, { Contact } from "./AddressBook.vue";
 import { xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getCatNames, getTokenInfo } from "@/services/coin/cat";
 import AddressField from "./AddressField.vue";
+import TopBar from "./TopBar.vue";
+import AddressBook, { Contact } from "./Settings/AddressBook.vue";
 
 @Component({
   components: {
@@ -129,6 +128,7 @@ import AddressField from "./AddressField.vue";
     BundleSummary,
     SendSummary,
     AddressField,
+    TopBar,
   },
 })
 export default class Send extends Vue {
@@ -143,6 +143,7 @@ export default class Send extends Vue {
   @Prop() private notificationType!: string;
   @Prop() private notificationIcon!: string;
   @Prop() private notificationClosable!: boolean;
+  @Prop({ default: true }) public showClose!: boolean;
 
   public submitting = false;
   public validAddress = true;

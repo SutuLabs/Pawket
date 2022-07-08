@@ -1,27 +1,14 @@
 <template>
-  <div id="app">
-    <div class="column is-8 is-offset-2">
-      <b-navbar>
-        <template #brand>
-          <b-navbar-item tag="router-link" :to="{ path: '/' }">
-            <img src="./assets/logo.svg" :alt="$t('verifyPassword.ui.alt.logoAlt')" />
-          </b-navbar-item>
-        </template>
-        <template #start> </template>
-        <template #end>
-          <b-navbar-dropdown :label="networkId">
-            <b-navbar-item @click="switchNetwork(net.name)" v-for="net in networks" :key="net.name" :active="networkId === net.name">
-              {{ net.name }}
-            </b-navbar-item>
-          </b-navbar-dropdown>
-          <b-navbar-dropdown :label="$t('app.ui.button.lang')">
-            <b-navbar-item @click="changeLang('en')" :active="$i18n.locale === 'en'"> English </b-navbar-item>
-            <b-navbar-item @click="changeLang('zhcn')" :active="$i18n.locale === 'zhcn'"> 简体中文 </b-navbar-item>
-          </b-navbar-dropdown>
-        </template>
-      </b-navbar>
+  <div id="app" ref="container">
+    <nav-bar></nav-bar>
+    <div v-if="unlocked == false && hasAccount" class="pt-6 mt-6">
+      <verify-password></verify-password>
     </div>
-    <router-view />
+    <div v-else>
+      <router-view />
+    </div>
+    <mobile-nav v-if="showNavigation"></mobile-nav>
+    <div class="my-3 is-hidden-tablet">&nbsp;</div>
     <footer class="footer">
       <div class="content has-text-centered">
         <p>
@@ -52,31 +39,53 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import { NotificationProgrammatic as Notification } from "buefy";
 import store from "./store";
 import DevHelper from "@/components/DevHelper.vue";
 import OfflineQrCode from "./components/OfflineQrCode.vue";
-import { NetworkInfo, xchPrefix } from "./store/modules/network";
+import { xchPrefix } from "./store/modules/network";
+import VerifyPassword from "./components/VerifyPassword.vue";
+import MobileNav from "./components/Navigation/MobileNav.vue";
+import NavBar from "./components/Navigation/Navbar.vue";
 import { tc } from "./i18n/i18n";
 
-@Component
+@Component({ components: { VerifyPassword, MobileNav, NavBar } })
 export default class App extends Vue {
   public debugClick = 9;
+
+  @Watch("path")
+  scrollTop(): void {
+    const container = this.$refs.container as Element;
+    if (container) container.scrollIntoView();
+  }
+
   get version(): string {
-    return process.env.VUE_APP_VERSION || "";
+    return process.env.VUE_APP_VERSION || tc("footer.ui.error.READ_VERSION_FAILED");
   }
 
   get debugMode(): boolean {
     return store.state.app.debug;
   }
 
-  get networks(): NetworkInfo {
-    return store.state.network.networks;
+  get unlocked(): boolean {
+    return store.state.vault.unlocked;
   }
 
-  get networkId(): string {
-    return store.state.network.networkId;
+  get password(): boolean {
+    return !!store.state.vault.encryptKey;
+  }
+
+  get hasAccount(): boolean {
+    return store.state.vault.passwordHash != null;
+  }
+
+  get showNavigation(): boolean {
+    return !this.$route.path.startsWith("/create") && this.unlocked;
+  }
+
+  get path(): string {
+    return this.$route.path;
   }
 
   mounted(): void {
@@ -93,23 +102,6 @@ export default class App extends Vue {
       });
       localStorage.setItem("DEBUG_MODE", "true");
     }
-  }
-
-  changeLang(lang: string): void {
-    this.$i18n.locale = lang;
-    localStorage.setItem("Locale", lang);
-  }
-
-  async switchNetwork(networkId: string): Promise<void> {
-    await store.dispatch("switchNetwork", networkId);
-    this.$buefy.dialog.confirm({
-      message: tc("app.switchNetwork.message"),
-      confirmText: tc("app.switchNetwork.confirm"),
-      cancelText: tc("app.switchNetwork.cancel"),
-      type: "is-primary",
-      hasIcon: true,
-      onConfirm: () => store.dispatch("lock"),
-    });
   }
 
   disableDebug(): void {
@@ -146,6 +138,7 @@ export default class App extends Vue {
 </script>
 <style lang="scss">
 @import "@/styles/colors.scss";
+
 body,
 html {
   width: 100%;

@@ -1,13 +1,13 @@
-import store, { IRootState } from '@/store'
-import utility from '../../services/crypto/utility';
-import { PersistentAccount } from './account';
-import Vue from 'vue';
-import encryption from '@/services/crypto/encryption';
-import puzzle from '@/services/crypto/puzzle';
-import i18n, { tc } from '@/i18n/i18n';
-import UniStorage from '@/services/storage';
-import { CurrencyType } from '@/services/exchange/currencyType';
-import { xchPrefix } from './network';
+import store, { IRootState } from "@/store";
+import utility from "../../services/crypto/utility";
+import { PersistentAccount } from "./account";
+import Vue from "vue";
+import encryption from "@/services/crypto/encryption";
+import puzzle from "@/services/crypto/puzzle";
+import i18n, { tc } from "@/i18n/i18n";
+import UniStorage from "@/services/storage";
+import { CurrencyType } from "@/services/exchange/currencyType";
+import { xchPrefix } from "./network";
 
 export interface IVaultState {
   passwordHash: string;
@@ -26,7 +26,7 @@ export interface IVaultState {
 const PasswordHashIteration = 6000;
 const EncryptKeyHashIteration = 3000;
 
-store.registerModule<IVaultState>('vault', {
+store.registerModule<IVaultState>("vault", {
   state() {
     return {
       seedMnemonic: "",
@@ -50,7 +50,7 @@ store.registerModule<IVaultState>('vault', {
       await store.dispatch("initializeBls");
       await store.dispatch("initializeClvm");
 
-      const locale = await UniStorage.create().getItem("Locale")
+      const locale = await UniStorage.create().getItem("Locale");
       if (locale) i18n.locale = locale;
 
       const memsetting = await ustore.getItem("MEMORY_STATE");
@@ -87,12 +87,12 @@ store.registerModule<IVaultState>('vault', {
       if (seedLen != 12 && seedLen != 24) throw new Error("Only accept mnemonic with 12/24 words.");
       state.seedMnemonic = mnemonic;
       await dispatch("persistent");
-      await dispatch("createAccountBySerial", tc('default.accountName'));
+      await dispatch("createAccountBySerial", tc("default.accountName"));
       await dispatch("refreshBalance");
     },
-    async setPassword({ dispatch }, password: string) {
+    async setPassword({ state, dispatch }, password: string) {
+      state.unlocked = true;
       await dispatch("ensureSalt", password);
-      await dispatch("unlock", password);
     },
     setCurrency({ state, dispatch }, currency: CurrencyType) {
       state.currency = currency;
@@ -102,8 +102,8 @@ store.registerModule<IVaultState>('vault', {
       state.selectedAccount = account;
       dispatch("persistent");
     },
-    async changePassword({ dispatch }, { oldPassword, newPassword }: { oldPassword: string, newPassword: string }) {
-      if (!await isPasswordCorrect(oldPassword)) return;
+    async changePassword({ dispatch }, { oldPassword, newPassword }: { oldPassword: string; newPassword: string }) {
+      if (!(await isPasswordCorrect(oldPassword))) return;
 
       await dispatch("ensureSalt", newPassword);
       await dispatch("persistent");
@@ -113,7 +113,7 @@ store.registerModule<IVaultState>('vault', {
         const account = rootState.account.accounts[i];
         if (account.type == "Address") {
           if (!account.puzzleHash) {
-            console.warn(`Found malformat 'Address' account [${account.name}]`)
+            console.warn(`Found malformat 'Address' account [${account.name}]`);
             continue;
           }
           Vue.set(account, "firstAddress", puzzle.getAddressFromPuzzleHash(account.puzzleHash, xchPrefix()));
@@ -122,33 +122,24 @@ store.registerModule<IVaultState>('vault', {
 
         const privkey = utility.fromHexString(account.key.privateKey);
         const derive = await utility.derive(privkey, true);
-        const firstWalletAddressPubkey = utility.toHexString(
-          derive([12381, 8444, 2, 0]).get_g1().serialize()
-        );
+        const firstWalletAddressPubkey = utility.toHexString(derive([12381, 8444, 2, 0]).get_g1().serialize());
         Vue.set(account, "firstAddress", await puzzle.getAddress(firstWalletAddressPubkey, xchPrefix()));
       }
     },
     async unlock({ state, dispatch, rootState }, password) {
-      if (!await isPasswordCorrect(password)) return;
+      if (!(await isPasswordCorrect(password))) return;
 
       const salt = state.salt;
-      const encryptKey = salt
-        ? await getEncryptKey(password)
-        : password;
-      rootState.account.accounts = JSON.parse(
-        (await encryption.decrypt(state.encryptedAccounts, encryptKey)) || "[]"
-      );
+      const encryptKey = salt ? await getEncryptKey(password) : password;
+      rootState.account.accounts = JSON.parse((await encryption.decrypt(state.encryptedAccounts, encryptKey)) || "[]");
       rootState.account.selectedAccount = state.selectedAccount;
       ensureState(rootState);
-      rootState.account.accounts.forEach(_ => {
-        _.cats?.forEach(c => _.allCats.push({ name: c.name, id: c.id, network: "mainnet"}));
+      rootState.account.accounts.forEach((_) => {
+        _.cats?.forEach((c) => _.allCats.push({ name: c.name, id: c.id, network: "mainnet" }));
         Vue.set(_, "balance", -1);
         Vue.set(_, "activities", []);
       });
-      state.seedMnemonic = await encryption.decrypt(
-        state.encryptedSeed,
-        encryptKey
-      );
+      state.seedMnemonic = await encryption.decrypt(state.encryptedSeed, encryptKey);
 
       // initialize upgraded salt
       await dispatch("ensureSalt", password);
@@ -176,28 +167,31 @@ store.registerModule<IVaultState>('vault', {
     },
     async persistent({ state, rootState, dispatch }) {
       if (!state.unlocked) return;
-      if (!state.encryptKey || !state.seedMnemonic)
-        console.warn("abnormal situration, encrypt key or seed mnemonic is empty!!!");
-      const encryptedSeed = await encryption.encrypt(
-        state.seedMnemonic,
-        state.encryptKey
-      )
+      if (!state.encryptKey || !state.seedMnemonic) console.warn("abnormal situration, encrypt key or seed mnemonic is empty!!!");
+      const encryptedSeed = await encryption.encrypt(state.seedMnemonic, state.encryptKey);
       const encryptedAccounts = await encryption.encrypt(
-        JSON.stringify(rootState.account.accounts.map(_ => (<PersistentAccount>{
-          key: _.key,
-          name: _.name,
-          type: _.type,
-          serial: _.serial,
-          addressRetrievalCount: _.addressRetrievalCount,
-          allCats: _.allCats,
-          puzzleHash: _.puzzleHash,
-        }))), state.encryptKey
-      )
+        JSON.stringify(
+          rootState.account.accounts.map(
+            (_) =>
+              <PersistentAccount>{
+                key: _.key,
+                name: _.name,
+                type: _.type,
+                serial: _.serial,
+                addressRetrievalCount: _.addressRetrievalCount,
+                allCats: _.allCats,
+                puzzleHash: _.puzzleHash,
+              }
+          )
+        ),
+        state.encryptKey
+      );
       state.encryptedAccounts = encryptedAccounts;
       state.encryptedSeed = encryptedSeed;
 
       const ustore = UniStorage.create();
-      await ustore.setItem("SETTINGS",
+      await ustore.setItem(
+        "SETTINGS",
         JSON.stringify({
           encryptedSeed: encryptedSeed,
           passwordHash: state.passwordHash,
@@ -214,15 +208,18 @@ store.registerModule<IVaultState>('vault', {
     async saveState({ rootState }) {
       const ustore = UniStorage.create();
       if (ustore.type == "background") {
-        await ustore.setItem("MEMORY_STATE", JSON.stringify({
-          account: rootState.account,
-          network: rootState.network,
-          vault: rootState.vault,
-          app: {
-            debug: rootState.app.debug,
-            selfTestStatus: rootState.app.selfTestStatus == "Passed" ? "Passed" : "Checking",
-          }
-        }));
+        await ustore.setItem(
+          "MEMORY_STATE",
+          JSON.stringify({
+            account: rootState.account,
+            network: rootState.network,
+            vault: rootState.vault,
+            app: {
+              debug: rootState.app.debug,
+              selfTestStatus: rootState.app.selfTestStatus == "Passed" ? "Passed" : "Checking",
+            },
+          })
+        );
       }
     },
     async clear() {
@@ -236,7 +233,6 @@ store.registerModule<IVaultState>('vault', {
       await ustore.removeItem("CONTACTS");
       location.reload();
     },
-
   },
 });
 
@@ -263,8 +259,6 @@ async function getEncryptKey(password: string): Promise<string> {
 export async function isPasswordCorrect(password: string): Promise<boolean> {
   // upgrade security level by adding salt and strong hash, here keep backward compatibility.
   const salt = store.state.vault.salt;
-  const pswhash: string = salt
-    ? await getPasswordHash(password)
-    : await utility.hash(password);
-  return pswhash == store.state.vault.passwordHash
+  const pswhash: string = salt ? await getPasswordHash(password) : await utility.hash(password);
+  return pswhash == store.state.vault.passwordHash;
 }

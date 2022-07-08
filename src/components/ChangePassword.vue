@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="modal-card">
     <header class="modal-card-head">
       <p class="modal-card-title">{{ $t("changePassword.ui.title.changePassword") }}</p>
-      <button type="button" class="delete" @click="back()"></button>
+      <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
       <b-field :label="$t('changePassword.ui.label.oldPassword')" :type="isCorrect ? '' : 'is-danger'">
@@ -36,7 +36,7 @@
       <p class="help is-danger" v-if="!isMatch">{{ $t("changePassword.message.error.passwordNotMatch") }}</p>
     </section>
     <footer class="modal-card-foot is-justify-content-space-between">
-      <b-button :label="$t('changePassword.ui.button.back')" @click="back()"></b-button>
+      <b-button :label="$t('changePassword.ui.button.back')" @click="close()"></b-button>
       <b-button
         :label="$t('changePassword.ui.button.submitChange')"
         :loading="isProcessing"

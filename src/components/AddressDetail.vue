@@ -38,7 +38,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { Contact } from "./AddressBook.vue";
+import { Contact } from "./Settings/AddressBook.vue";
 import AddressBookField from "./AddressBook/AddressBookFields.vue";
 import KeyBox from "./KeyBox.vue";
 
@@ -49,7 +49,7 @@ type Mode = "Detail" | "Edit";
 export default class AddressDetail extends Vue {
   @Prop() contact?: Contact;
   @Prop() index?: number;
-  @Prop({default: true}) isEditable?: boolean;
+  @Prop({ default: true }) isEditable?: boolean;
 
   public mode: Mode = "Detail";
   public name = "";
@@ -90,7 +90,7 @@ export default class AddressDetail extends Vue {
   }
 }
 </script>
-<style type="text/scss">
+<style scoped type="text/scss">
 .word-break {
   word-break: break-all;
 }

@@ -4,9 +4,9 @@
       <p class="break-all">{{ effectiveTooltip }}</p>
     </template>
     <a @click="copy(value)">
-      <div class="control mr-2">
+      <div class="control">
         <div class="tags has-addons">
-          <span class="tag is-info is-light">
+          <span class="tag is-info is-light m-0">
             <span class="mx-1" v-if="effectiveDisplayValue">{{ effectiveDisplayValue }} </span>
             <b-icon v-if="icon" :icon="icon" size="is-small"> </b-icon>
           </span>

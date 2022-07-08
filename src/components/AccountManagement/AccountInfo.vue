@@ -1,28 +1,25 @@
 <template>
   <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">{{ $t("accountExport.ui.title.export") }}</p>
-      <button type="button" class="delete" @click="close()"></button>
-    </header>
+    <top-bar :title="$t('accountInfo.ui.title.export')" @close="close()" :showClose="true"></top-bar>
     <section class="modal-card-body">
-      <ul>
+      <ul class="border-bottom">
         <li class="pb-2">
-          <span class="is-size-6 has-text-weight-bold">{{ $t("accountExport.ui.label.name") }}:</span>
-          <span class="is-size-6 is-pulled-right">
-            {{ account.name }}
+          <span class="is-size-6 has-text-weight-bold">{{ $t("accountInfo.ui.label.name") }}:</span>
+          <span class="is-size-6 is-pulled-right" @click="rename()">
+            <b-icon icon="pencil" custom-size="mdi-18px" class="pr-2"></b-icon>{{ account.name }}
           </span>
         </li>
         <li class="pb-2">
           <span class="is-size-6 has-text-weight-bold"
-            >{{ $t("accountExport.ui.label.fingerprint") }}
+            >{{ $t("accountInfo.ui.label.fingerprint") }}
             :
-            <b-tooltip :label="$t('accountExport.ui.tooltip.fingerprintTip')" position="is-top">
+            <b-tooltip :label="$t('accountInfo.ui.tooltip.fingerprintTip')" position="is-top">
               <b-icon icon="help-circle" size="is-small"> </b-icon> </b-tooltip
           ></span>
           <span v-if="!observeMode" class="is-size-6 is-pulled-right">
             <key-box
               icon="checkbox-multiple-blank-outline"
-              :tooltip="$t('accountExport.ui.tooltip.copy')"
+              :tooltip="$t('common.tooltip.copy')"
               :value="account.key.fingerprint"
               :showValue="false"
             ></key-box>
@@ -30,68 +27,64 @@
           </span>
         </li>
         <li class="pb-2">
-          <span class="is-size-6 has-text-weight-bold">{{ $t("accountExport.ui.label.type") }}:</span>
+          <span class="is-size-6 has-text-weight-bold">{{ $t("accountInfo.ui.label.type") }}:</span>
           <span class="is-size-6 is-pulled-right">
             {{ account.type }}
           </span>
         </li>
-        <li class="pb-2">
+      </ul>
+      <div class="border-bottom py-2">
+        <a href="javascript:void(0)" @click="toggleMnemonic()" class="is-size-6 has-text-weight-bold has-text-dark">
           <span class="is-size-6 has-text-weight-bold"
-            >{{ $t("accountExport.ui.label.mnemonicSeed") }}:
-            <b-tooltip :label="$t('accountExport.ui.tooltip.mnemonicTip')" position="is-top">
+            >{{ $t("accountInfo.ui.label.mnemonicSeed") }}:
+            <b-tooltip :label="$t('accountInfo.ui.tooltip.mnemonicTip')" position="is-top">
               <b-icon icon="help-circle" size="is-small"> </b-icon> </b-tooltip
           ></span>
-          <span class="is-pulled-right" v-if="!observeMode">
-            <b-button v-if="!showMnemonic" size="is-small" @click="show()" class="is-primary">{{
-              $t("accountExport.ui.button.reveal")
-            }}</b-button>
-            <b-button v-else size="is-small" @click="showMnemonic = false" class="is-link">
-              {{ $t("accountExport.ui.button.hide") }}
-            </b-button>
-          </span>
-          <span v-if="showMnemonic">
-            <br />
-            {{ account.key.compatibleMnemonic }}
-            <key-box
-              icon="checkbox-multiple-blank-outline"
-              :tooltip="$t('accountExport.ui.tooltip.copy')"
-              :value="account.key.compatibleMnemonic"
-            ></key-box>
-            <qrcode-vue v-if="debugMode" :value="account.key.compatibleMnemonic" size="300"></qrcode-vue>
-          </span>
-        </li>
-      </ul>
-      <div class="pt-4">
+          <span class="is-pulled-right"><b-icon :icon="showMnemonic ? 'menu-up' : 'menu-down'"></b-icon></span>
+        </a>
+        <span v-if="showMnemonic">
+          <br />
+          {{ account.key.compatibleMnemonic }}
+          <key-box
+            icon="checkbox-multiple-blank-outline"
+            :tooltip="$t('common.tooltip.copy')"
+            :value="account.key.compatibleMnemonic"
+          ></key-box>
+          <qrcode-vue v-if="debugMode" :value="account.key.compatibleMnemonic" size="300"></qrcode-vue>
+        </span>
+      </div>
+      <div class="border-bottom py-2">
         <a href="javascript:void(0)" @click="showDetail = !showDetail" class="is-size-6 has-text-weight-bold has-text-dark">
-          {{ $t("accountExport.ui.label.details") }}<b-icon :icon="showDetail ? 'menu-up' : 'menu-down'"></b-icon>
+          {{ $t("accountInfo.ui.label.details") }}
+          <span class="is-pulled-right"><b-icon :icon="showDetail ? 'menu-up' : 'menu-down'"></b-icon></span>
         </a>
         <ul v-if="showDetail">
           <li>
-            {{ $t("accountExport.ui.label.masterPublicKey") }}:
+            {{ $t("accountInfo.ui.label.masterPublicKey") }}:
             <key-box :value="masterpubkey" :showValue="true"></key-box>
           </li>
           <li>
-            {{ $t("accountExport.ui.label.farmerPublicKey") }}:
+            {{ $t("accountInfo.ui.label.farmerPublicKey") }}:
             <key-box :value="farmerpubkey" :showValue="true"></key-box>
           </li>
           <li>
-            {{ $t("accountExport.ui.label.poolPublicKey") }}:
+            {{ $t("accountInfo.ui.label.poolPublicKey") }}:
             <key-box :value="poolpubkey" :showValue="true"></key-box>
           </li>
           <li>
-            {{ $t("accountExport.ui.label.firstWalletAddress") }}:
+            {{ $t("accountInfo.ui.label.firstWalletAddress") }}:
             <key-box :value="account.firstAddress" :showValue="true"></key-box>
           </li>
           <li>
-            {{ $t("accountExport.ui.label.masterPrivateKey") }}:
+            {{ $t("accountInfo.ui.label.masterPrivateKey") }}:
             <key-box :value="masterprikey" :showValue="true"></key-box>
           </li>
           <li>
-            {{ $t("accountExport.ui.label.firstWalletSecretKey") }}: &lt;{{ $t("accountExport.ui.label.PrivateKey") }}
+            {{ $t("accountInfo.ui.label.firstWalletSecretKey") }}: &lt;{{ $t("accountInfo.ui.label.PrivateKey") }}
             <key-box :value="walletprikey" :showValue="true"></key-box>&gt;
           </li>
           <li>
-            {{ $t("accountExport.ui.label.firstWalletPublicKey") }}:
+            {{ $t("accountInfo.ui.label.firstWalletPublicKey") }}:
             <key-box :value="walletpubkey" :showValue="true"></key-box>
           </li>
         </ul>
@@ -101,22 +94,19 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Emit } from "vue-property-decorator";
+import utility from "@/services/crypto/utility";
 import store from "@/store";
 import { AccountEntity } from "@/store/modules/account";
-import KeyBox from "@/components/KeyBox.vue";
-import QrcodeVue from "qrcode.vue";
-import utility from "@/services/crypto/utility";
 import { isPasswordCorrect } from "@/store/modules/vault";
+import { Component, Emit, Prop, Vue } from "vue-property-decorator";
+import KeyBox from "../KeyBox.vue";
+import TopBar from "../TopBar.vue";
 
 @Component({
-  components: {
-    KeyBox,
-    QrcodeVue,
-  },
+  components: { TopBar, KeyBox },
 })
-export default class AccountExport extends Vue {
-  @Prop() private account!: AccountEntity;
+export default class AccountDetail extends Vue {
+  @Prop() private idx!: number;
   public masterpubkey = "";
   public masterprikey = "";
   public farmerpubkey = "";
@@ -140,6 +130,10 @@ export default class AccountExport extends Vue {
     });
   }
 
+  get account(): AccountEntity {
+    return store.state.account.accounts[this.idx] ?? {};
+  }
+
   get observeMode(): boolean {
     return this.account.type == "Address";
   }
@@ -153,24 +147,31 @@ export default class AccountExport extends Vue {
     return;
   }
 
-  show(): void {
+  rename(): void {
+    this.$emit("rename", this.idx);
+  }
+
+  async toggleMnemonic(): Promise<void> {
+    if (this.showMnemonic) {
+      this.showMnemonic = false;
+      return;
+    }
     this.$buefy.dialog.prompt({
-      message: this.$tc("accountExport.message.inputPassword"),
+      message: this.$tc("accountInfo.message.inputPassword"),
       inputAttrs: {
         type: "password",
       },
       trapFocus: true,
       closeOnConfirm: false,
       canCancel: ["button"],
-      cancelText: this.$tc("accountExport.ui.button.cancel"),
-      confirmText: this.$tc("accountExport.ui.button.confirm"),
+      cancelText: this.$tc("common.button.cancel"),
+      confirmText: this.$tc("common.button.confirm"),
       onConfirm: async (password, { close }) => {
         if (!(await isPasswordCorrect(password))) {
           this.$buefy.toast.open({
-            message: this.$tc("accountExport.message.passwordNotCorrect"),
+            message: this.$tc("accountInfo.message.passwordNotCorrect"),
             type: "is-danger",
           });
-          this.showMnemonic = false;
           return;
         }
         close();
@@ -181,4 +182,8 @@ export default class AccountExport extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.border-bottom {
+  border-bottom: 1px solid #ededed;
+}
+</style>

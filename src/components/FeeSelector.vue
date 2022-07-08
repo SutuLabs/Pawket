@@ -24,7 +24,7 @@
     </b-field>
     <b-field>
       <p class="control is-hidden-tablet">
-        <span class="button column is-full">
+        <span class="button" style="width: 80vw">
           <fee-type-slider :feeType.sync="feeType" @changeFeeType="changeFeeType"></fee-type-slider>
         </span>
       </p>

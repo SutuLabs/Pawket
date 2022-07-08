@@ -1,42 +1,51 @@
 <template>
   <div>
-    <div class="column is-8 is-offset-2 pt-6 mt-6 login">
-      <div class="columns is-centered">
-        <div class="box p-6">
-          <section>
-            <h1 class="title is-4">{{ $t("verifyPassword.ui.title.verifyPassword") }}</h1>
-            <b-field
-              :label="$t('verifyPassword.ui.label.password')"
-              label-position="on-border"
-              :type="isCorrect ? '' : 'is-danger'"
-            >
-              <b-input
-                type="password"
-                ref="password"
-                @keyup.native.enter="confirm()"
-                @input.native.enter="clearErrorMsg()"
-                v-model="password"
-              ></b-input>
-            </b-field>
-            <p class="help is-danger" v-if="!isCorrect">{{ $t("verifyPassword.message.error.incorrectPassword") }}</p>
-            <div class="buttons">
-              <b-button @click="confirm()" type="is-primary">{{ $t("verifyPassword.ui.button.confirm") }}</b-button>
-              <b-button v-if="!isCorrect" type="is-danger" @click="clear()">{{ $t("verifyPassword.ui.button.clear") }}</b-button>
-            </div>
-          </section>
-        </div>
+    <top-bar :title="$t('createPassword.title')" @close="back()" :showBack="true"></top-bar>
+    <section class="modal-card-body">
+      <p class="py-5">
+        {{ $t("createPassword.tip") }}
+      </p>
+      <div>
+        <b-field :label="$t('createPassword.label.password')" :type="isEmpty ? 'is-danger' : ''">
+          <b-input type="password" v-model="password" @input.native.enter="checkStrength()"></b-input>
+        </b-field>
+        <p class="help is-danger" v-if="isEmpty">{{ $t("verifyPassword.message.error.passwordEmpty") }}</p>
+        <b-field>
+          <b-progress :type="strengthClass" :value="passwordStrength" show-value v-show="showStrength">
+            {{ strengthMsg }}
+          </b-progress>
+        </b-field>
+        <b-field :label="$t('createPassword.label.confirm')" :type="isMatch ? '' : 'is-danger'">
+          <b-input
+            type="password"
+            @input.native.enter="checkMatch()"
+            @keyup.native.enter="create()"
+            v-model="repassword"
+          ></b-input>
+        </b-field>
+        <p class="help is-danger" v-if="!isMatch">{{ $t("verifyPassword.message.error.passwordNotMatch") }}</p>
       </div>
-    </div>
+      <p class="has-text-centered pt-6">
+        <b-button @click="create()" type="is-primary" :disabled="!isMatch">
+          <span class="px-5">{{ $t("createPassword.button.continue") }}</span>
+        </b-button>
+      </p>
+    </section>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from "vue-property-decorator";
+import { CurrencyType } from "@/services/exchange/currencyType";
 import store from "@/store";
-import { isPasswordCorrect } from "@/store/modules/vault";
+import { Component, Vue } from "vue-property-decorator";
+import TopBar from "../TopBar.vue";
 
-@Component
-export default class VerifyPassword extends Vue {
+@Component({
+  components: {
+    TopBar,
+  },
+})
+export default class CreatePassword extends Vue {
   public password = "";
   public repassword = "";
   public isCorrect = true;
@@ -47,33 +56,22 @@ export default class VerifyPassword extends Vue {
   public strengthClass: "is-danger" | "is-warning" | "is-primary" = "is-danger";
   public showStrength = false;
 
-  @Watch("mode")
-  onModeChanged(): void {
-    this.focus();
-  }
-
-  mounted(): void {
-    this.focus();
-  }
-
-  focus(): void {
-    setTimeout(() => {
-      const pswElm = this.$refs.password as HTMLInputElement | undefined;
-      if (pswElm) pswElm.focus();
-    }, 300);
-  }
-
-  async confirm(): Promise<void> {
-    if (!(await isPasswordCorrect(this.password))) {
-      this.isCorrect = false;
-      return;
-    }
-    this.isCorrect = true;
-    await store.dispatch("unlock", this.password);
+  back(): void {
+    this.$router.push("/create/disclaimer");
   }
 
   clearErrorMsg(): void {
     this.isCorrect = true;
+  }
+
+  create(): void {
+    this.checkStrength();
+    this.checkMatch();
+    if (this.isEmpty || !this.isMatch) return;
+    if (this.repassword != this.password) return;
+    store.dispatch("setPassword", this.password);
+    store.dispatch("setCurrency", CurrencyType.USDT);
+    this.$router.push("/create/create-wallet");
   }
 
   checkStrength(): void {
@@ -152,16 +150,10 @@ export default class VerifyPassword extends Vue {
       type: "is-danger",
       onConfirm: () => {
         store.dispatch("clear");
-        this.$router.push("/create");
       },
     });
   }
 }
 </script>
 
-<style scoped lang="scss">
-.login {
-  height: 60vh !important;
-  z-index: 99 !important;
-}
-</style>
+<style scoped lang="scss"></style>

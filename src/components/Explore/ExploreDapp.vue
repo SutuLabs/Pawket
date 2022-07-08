@@ -1,90 +1,75 @@
 <template>
   <div>
-    <a href="javascript:void(0)" @click="toggleDapp()">
-      <p class="has-text-weight-bold is-size-5 mb-5">
-        {{ $t("accountDetail.ui.dApps.title") }}
-        <b-icon class="is-pulled-right" :icon="displayDapp ? 'menu-up' : 'menu-down'" size="is-medium"></b-icon>
-      </p>
-    </a>
-    <div v-if="displayDapp" class="columns is-mobile is-multiline mt-2">
-      <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
-        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.donate')" position="is-right">
-          <a href="javascript:void(0)" @click="openDonation()" class="has-text-link">
-            <div class="has-text-centered">
-              <b-icon icon="hand-heart-outline" size="is-medium"></b-icon>
-              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.donate") }}</p>
-            </div>
-          </a>
-        </b-tooltip>
-      </div>
-      <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+    <div class="buttons is-mobile is-multiline">
+      <div v-if="experimentMode" class="px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.takeOffer')" position="is-right">
-          <a v-if="experimentMode" href="javascript:void(0)" @click="openTakeOffer()" class="has-text-link">
+          <b-button @click="openTakeOffer()" class="has-text-link" size="is-medium">
             <div class="has-text-centered">
               <b-icon icon="email-check-outline" size="is-medium"></b-icon>
-              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.takeOffer") }}</p>
             </div>
-          </a>
+          </b-button>
+          <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.takeOffer") }}</p>
         </b-tooltip>
       </div>
-      <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+      <div v-if="experimentMode" class="px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.makeOffer')" position="is-right">
-          <a v-if="experimentMode" href="javascript:void(0)" @click="openMakeOffer()" class="has-text-link">
+          <b-button href="javascript:void(0)" @click="openMakeOffer()" class="has-text-link" size="is-medium">
             <div class="has-text-centered">
               <b-icon icon="email-send-outline" size="is-medium"></b-icon>
-              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.makeOffer") }}</p>
             </div>
-          </a>
+          </b-button>
+          <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.makeOffer") }}</p>
         </b-tooltip>
       </div>
-      <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+      <div v-if="experimentMode" class="px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.batchSend')" position="is-right">
-          <a v-if="experimentMode" href="javascript:void(0)" @click="openBatchSend()" class="has-text-link">
+          <b-button @click="openBatchSend()" class="has-text-link" size="is-medium">
             <div class="has-text-centered">
               <b-icon icon="share-all-outline" size="is-medium"></b-icon>
-              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.batchSend") }}</p>
             </div>
-          </a>
+          </b-button>
+          <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.batchSend") }}</p>
         </b-tooltip>
       </div>
-      <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+      <div v-if="experimentMode" class="px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.mintCat')" position="is-right">
-          <a v-if="experimentMode" href="javascript:void(0)" @click="openMintCat()" class="has-text-link">
+          <b-button @click="openMintCat()" class="has-text-link" size="is-medium">
             <div class="has-text-centered">
               <b-icon icon="cat" size="is-medium"></b-icon>
-              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.mintCat") }}</p>
             </div>
-          </a>
+          </b-button>
+          <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.mintCat") }}</p>
         </b-tooltip>
       </div>
-      <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+      <div v-if="experimentMode && testnet" class="px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.mintNft')" position="is-right">
-          <a v-if="experimentMode && testnet" href="javascript:void(0)" @click="openMintNft()" class="has-text-link">
+          <b-button @click="openMintNft()" class="has-text-link" size="is-medium">
             <div class="has-text-centered">
               <b-icon icon="tag-faces" size="is-medium"></b-icon>
-              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.mintNft") }}</p>
             </div>
-          </a>
+          </b-button>
+          <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.mintNft") }}</p>
         </b-tooltip>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts">
+import puzzle from "@/services/crypto/puzzle";
 import store from "@/store";
 import { AccountEntity, CustomCat } from "@/store/modules/account";
+import { xchPrefix } from "@/store/modules/network";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import MintCat from "./Mint/MintCat.vue";
-import MintNft from "./Mint/MintNft.vue";
-import MakeOffer from "./Offer/Make.vue";
-import TakeOffer from "./Offer/Take.vue";
-import BatchSend from "./Transfer/BatchSend.vue";
+import MintCat from "@/components/Mint/MintCat.vue";
+import MintNft from "@/components/Mint/MintNft.vue";
+import MakeOffer from "@/components/Offer/Make.vue";
+import TakeOffer from "@/components/Offer/Take.vue";
+import Send from "@/components/Send.vue";
+import BatchSend from "@/components/Transfer/BatchSend.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import Donate from "./Settings/Donate.vue";
-import { isMobile } from "@/services/view/responsive";
 
 @Component
-export default class Dapp extends Vue {
+export default class ExploreDapp extends Vue {
   @Prop() private account!: AccountEntity;
   @Prop() tokenList!: CustomCat[];
 
@@ -118,7 +103,7 @@ export default class Dapp extends Vue {
   checkObserveMode(): void {
     if (this.observeMode) {
       Notification.open({
-        message: this.$tc('accountDetail.message.notification.observeMode'),
+        message: this.$tc("accountDetail.message.notification.observeMode"),
         type: "is-warning",
       });
       throw new Error("Interaction function disabled in Observe Mode");
@@ -127,13 +112,24 @@ export default class Dapp extends Vue {
 
   openDonation(): void {
     this.checkObserveMode();
+    const donationAddress = puzzle.getAddressFromPuzzleHash(
+      "d19c05a54dacbf2b40ff4843534c47976de90246c3fc42ac1f42ea81b434b8ea",
+      xchPrefix()
+    );
     this.$buefy.modal.open({
       parent: this,
-      component: Donate,
+      component: Send,
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
-      fullScreen: isMobile(),
+      props: {
+        account: this.account,
+        inputAddress: donationAddress,
+        addressEditable: false,
+        notificationMessage: this.$tc("accountDetail.message.notification.donate"),
+        notificationIcon: "hand-heart",
+        notificationClosable: false,
+      },
     });
   }
 
@@ -145,7 +141,6 @@ export default class Dapp extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
-      fullScreen: isMobile(),
       props: {
         account: this.account,
         tokenList: this.tokenList,
@@ -161,7 +156,6 @@ export default class Dapp extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
-      fullScreen: isMobile(),
       props: {
         account: this.account,
       },
@@ -176,7 +170,6 @@ export default class Dapp extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
-      fullScreen: isMobile(),
       props: {
         account: this.account,
       },
@@ -191,7 +184,6 @@ export default class Dapp extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
-      fullScreen: isMobile(),
       props: {
         account: this.account,
         tokenList: this.tokenList,
@@ -207,7 +199,6 @@ export default class Dapp extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
-      fullScreen: isMobile(),
       props: {
         account: this.account,
       },

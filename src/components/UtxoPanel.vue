@@ -1,5 +1,6 @@
 <template>
   <section>
+    <p v-if="!currentActList.length" class="has-text-centered">{{ $t("utxo.ui.text.empty") }}</p>
     <a
       href="javascript:void(0)"
       v-for="(activity, i) of currentActList"
@@ -17,7 +18,9 @@
           <p v-else class="has-text-grey-dark is-size-6">{{ $t("utxo.ui.label.receive") }}</p>
           <p>
             <b-tooltip v-if="!activity.spent" :label="new Date(activity.timestamp * 1000).toISOString()">
-              <span v-if="!activity.spent" class="mr-2 is-size-7 has-text-info">{{ new Date(activity.timestamp * 1000).toISOString().slice(5, 10) }}</span>
+              <span v-if="!activity.spent" class="mr-2 is-size-7 has-text-info">{{
+                new Date(activity.timestamp * 1000).toISOString().slice(5, 10)
+              }}</span>
             </b-tooltip>
             <span v-if="activity.spent" class="is-size-7 has-text-grey-light">{{ activity.spentBlockIndex }}</span>
             <span v-else class="is-size-7 has-text-grey-light">{{ activity.confirmedBlockIndex }}</span>
@@ -30,7 +33,14 @@
         >
       </div>
     </a>
-    <b-pagination :total="total" v-model="current" :range-before="rangeBefore" :range-after="rangeAfter" :per-page="perPage" @change="changePage">
+    <b-pagination
+      :total="total"
+      v-model="current"
+      :range-before="rangeBefore"
+      :range-after="rangeAfter"
+      :per-page="perPage"
+      @change="changePage"
+    >
     </b-pagination>
   </section>
 </template>
@@ -40,6 +50,7 @@ import { CoinRecord } from "@/models/wallet";
 import { TokenInfo } from "@/store/modules/account";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import UtxoDetail from "@/components/UtxoDetail.vue";
+import { isMobile } from "@/services/view/responsive";
 
 @Component({
   filters: { demojo },
@@ -58,6 +69,7 @@ export default class UtxoPanel extends Vue {
       component: UtxoDetail,
       hasModalCard: true,
       trapFocus: true,
+      fullScreen: isMobile(),
       canCancel: ["outside"],
       props: { activity: activity, tokenInfo: this.tokenInfo },
     });
