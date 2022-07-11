@@ -69,8 +69,8 @@ export default class VerifyPassword extends Vue {
       return;
     }
     this.isCorrect = true;
-    await store.dispatch("unlock", this.password);
     if (this.$route.path != "/") this.$router.push("/");
+    await store.dispatch("unlock", this.password);
   }
 
   clearErrorMsg(): void {
