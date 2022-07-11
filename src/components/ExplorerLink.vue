@@ -9,7 +9,14 @@
             <b-icon icon="help-circle" size="is-small"> </b-icon>
           </b-tooltip>
         </template>
-        <b-numberinput controls-alignment="left" v-model="maxAddress" :max="12" @input="changeMaxAddress"></b-numberinput>
+        <b-numberinput
+          controls-alignment="left"
+          v-model="maxAddress"
+          @click.native="clicked = true"
+          @mouseleave.native="changeMaxAddress"
+          :max="12"
+          ref="maxAddress"
+        ></b-numberinput>
       </b-field>
       <b-tabs position="is-centered" v-model="addressType" expanded @input="changeAddressType">
         <b-tab-item :label="$t('explorerLink.ui.label.observer')" icon="eye-check" value="Observed">
@@ -74,6 +81,7 @@ import { shorten } from "@/filters/addressConversion";
 import TopBar from "./TopBar.vue";
 import { AddressType } from "@/services/crypto/puzzle";
 import { notifyPrimary } from "@/notification/notification";
+import { xchSymbol } from "@/store/modules/network";
 
 @Component({
   components: {
@@ -85,13 +93,17 @@ import { notifyPrimary } from "@/notification/notification";
 })
 export default class ExplorerLink extends Vue {
   @Prop() private account!: AccountEntity;
-  @Prop() private token!: AccountToken;
   public address = "";
   public maxAddress = 0;
   public addressType: AddressType = "Observed";
+  public clicked = false;
 
   get externalExplorerPrefix(): string {
     return store.state.app.externalExplorerPrefix;
+  }
+
+  get token(): AccountToken {
+    return this.account.tokens[xchSymbol()];
   }
 
   get explorerUrl(): string {
@@ -116,10 +128,12 @@ export default class ExplorerLink extends Vue {
     return;
   }
 
-  changeMaxAddress(): void {
-    if (this.maxAddress && this.maxAddress < 13) {
+  async changeMaxAddress(): Promise<void> {
+    if (this.clicked && this.maxAddress && this.maxAddress < 13) {
       this.account.addressRetrievalCount = this.maxAddress;
       notifyPrimary(this.$tc("common.message.saved"));
+      await store.dispatch("refreshBalance");
+      this.clicked = false;
     }
   }
 }

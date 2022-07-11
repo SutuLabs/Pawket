@@ -49,7 +49,7 @@
             </h2>
           </div>
           <div class="b-tooltip mx-5">
-            <a @click="openLink(account.tokens[xchSymbol])" href="javascript:void(0)" class="has-text-primary">
+            <a @click="openLink()" href="javascript:void(0)" class="has-text-primary">
               <b-icon icon="download-circle" size="is-medium"> </b-icon>
               <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.receive") }}</p>
             </a>
@@ -351,14 +351,14 @@ export default class AccountDetail extends Vue {
     });
   }
 
-  openLink(token: AccountToken): void {
+  openLink(): void {
     this.$buefy.modal.open({
       parent: this,
       component: ExplorerLink,
       trapFocus: true,
       canCancel: [""],
       fullScreen: isMobile(),
-      props: { account: this.account, token: token },
+      props: { account: this.account },
     });
   }
 
