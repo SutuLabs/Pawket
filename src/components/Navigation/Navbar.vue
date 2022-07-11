@@ -85,7 +85,7 @@ export default class NavBar extends Vue {
   }
 
   set networkId(value: string) {
-    store.state.network.networkId = value;
+    store.dispatch("switchNetwork", value);
   }
 }
 </script>
