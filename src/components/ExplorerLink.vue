@@ -9,14 +9,12 @@
             <b-icon icon="help-circle" size="is-small"> </b-icon>
           </b-tooltip>
         </template>
-        <b-numberinput
-          controls-alignment="left"
-          v-model="maxAddress"
-          @click.native="clicked = true"
-          @mouseleave.native="changeMaxAddress"
-          :max="12"
-          ref="maxAddress"
-        ></b-numberinput>
+        <p class="control buttons">
+          <b-button type="is-primary" @click="decrease"><b-icon icon="minus"></b-icon></b-button>
+          <b-button type="is-primary" @click="increase"><b-icon icon="plus"></b-icon></b-button>
+        </p>
+        <b-input type="number" v-model="maxAddress" @blur="changeMaxAddress" :max="12" expanded custom-class="no-spin-btn">
+        </b-input>
       </b-field>
       <b-tabs position="is-centered" v-model="addressType" expanded @input="changeAddressType">
         <b-tab-item :label="$t('explorerLink.ui.label.observer')" icon="eye-check" value="Observed">
@@ -96,7 +94,6 @@ export default class ExplorerLink extends Vue {
   public address = "";
   public maxAddress = 0;
   public addressType: AddressType = "Observed";
-  public clicked = false;
 
   get externalExplorerPrefix(): string {
     return store.state.app.externalExplorerPrefix;
@@ -114,6 +111,14 @@ export default class ExplorerLink extends Vue {
     return this.token.addresses.filter((a) => a.type == this.addressType);
   }
 
+  increase(): void {
+    if (this.maxAddress < 12) this.maxAddress++ && this.changeMaxAddress();
+  }
+
+  decrease(): void {
+    if (this.maxAddress > 1) this.maxAddress-- && this.changeMaxAddress();
+  }
+
   changeAddressType(): void {
     this.address = this.addresses[0].address;
   }
@@ -125,15 +130,15 @@ export default class ExplorerLink extends Vue {
 
   @Emit("close")
   close(): void {
+    store.dispatch("refreshBalance");
     return;
   }
 
-  async changeMaxAddress(): Promise<void> {
-    if (this.clicked && this.maxAddress && this.maxAddress < 13) {
+  changeMaxAddress(): void {
+    if (this.maxAddress && this.maxAddress < 13) {
       this.account.addressRetrievalCount = this.maxAddress;
       notifyPrimary(this.$tc("common.message.saved"));
-      await store.dispatch("refreshBalance");
-      this.clicked = false;
+      store.dispatch("refreshAddress");
     }
   }
 }
