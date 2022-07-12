@@ -211,6 +211,18 @@ store.registerModule<IAccountState>("account", {
       const nfts = await receive.getNfts(hintRecords);
       Vue.set(account, "nfts", nfts);
     },
+    async refreshAddress({ state }, parameters: { idx: number; maxId: number }) {
+      if (!parameters) parameters = { idx: state.selectedAccount, maxId: -1 };
+      let idx = parameters.idx;
+      if (typeof idx !== "number" || idx <= 0) idx = state.selectedAccount;
+      const account = state.accounts[idx];
+      if (!account) return;
+
+      const puzzleAddress: TokenPuzzleAddress[] = await getAccountAddressDetails(account, parameters.maxId);
+      const xidx = puzzleAddress.findIndex((p) => (p.symbol = xchSymbol()));
+      const addresses = puzzleAddress[xidx].puzzles.map((_) => ({ address: _.address, type: _.type, coins: [] }));
+      account.tokens[xchSymbol()].addresses = addresses;
+    },
   },
 });
 

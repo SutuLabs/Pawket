@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <b-loading v-if="loading" :is-full-page="true" v-model="loading"></b-loading>
-    <account-detail v-if="!loading"></account-detail>
+    <account-detail v-if="!loading && unlocked"></account-detail>
     <div v-if="!loading" class="sticky">
       <self-test v-if="!unlocked"></self-test>
     </div>
@@ -24,12 +24,15 @@ export default class Home extends Vue {
   get mnemonic(): string {
     return store.state.vault.seedMnemonic;
   }
+
   get password(): boolean {
     return !!store.state.vault.encryptKey;
   }
+
   get unlocked(): boolean {
     return store.state.vault.unlocked;
   }
+
   get loading(): boolean {
     return store.state.vault.loading;
   }

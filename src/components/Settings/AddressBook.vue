@@ -171,11 +171,7 @@ export default class AddressBook extends Vue {
   }
 
   back(): void {
-    if (this.parent === "Configure") {
-      this.mode === "Add" ? (this.mode = "List") : this.$emit("back");
-    } else {
-      this.$emit("close");
-    }
+    this.mode === "Add" ? (this.mode = "List") : this.$emit("close");
   }
 
   cancel(): void {

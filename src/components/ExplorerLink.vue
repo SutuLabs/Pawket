@@ -9,7 +9,7 @@
             <b-icon icon="help-circle" size="is-small"> </b-icon>
           </b-tooltip>
         </template>
-        <b-numberinput controls-alignment="left" v-model="maxAddress" :max="12" @input="changeMaxAddress"></b-numberinput>
+        <b-slider v-model="maxAddress" :max="12" :min="1" indicator ticks lazy></b-slider>
       </b-field>
       <b-tabs position="is-centered" v-model="addressType" expanded @input="changeAddressType">
         <b-tab-item :label="$t('explorerLink.ui.label.observer')" icon="eye-check" value="Observed">
@@ -74,6 +74,7 @@ import { shorten } from "@/filters/addressConversion";
 import TopBar from "./TopBar.vue";
 import { AddressType } from "@/services/crypto/puzzle";
 import { notifyPrimary } from "@/notification/notification";
+import { xchSymbol } from "@/store/modules/network";
 
 @Component({
   components: {
@@ -85,13 +86,15 @@ import { notifyPrimary } from "@/notification/notification";
 })
 export default class ExplorerLink extends Vue {
   @Prop() private account!: AccountEntity;
-  @Prop() private token!: AccountToken;
   public address = "";
-  public maxAddress = 0;
   public addressType: AddressType = "Observed";
 
   get externalExplorerPrefix(): string {
     return store.state.app.externalExplorerPrefix;
+  }
+
+  get token(): AccountToken {
+    return this.account.tokens[xchSymbol()];
   }
 
   get explorerUrl(): string {
@@ -102,25 +105,31 @@ export default class ExplorerLink extends Vue {
     return this.token.addresses.filter((a) => a.type == this.addressType);
   }
 
+  get maxAddress(): number {
+    return this.account.addressRetrievalCount;
+  }
+
+  set maxAddress(value: number) {
+    if(this.maxAddress == value) return;
+    if (value && value < 13) {
+      this.account.addressRetrievalCount = value;
+      store.dispatch("refreshAddress");
+      notifyPrimary(this.$tc("common.message.saved"));
+    }
+  }
+
   changeAddressType(): void {
     this.address = this.addresses[0].address;
   }
 
   mounted(): void {
     Vue.set(this, "address", this.addresses[0].address);
-    Vue.set(this, "maxAddress", this.account.addressRetrievalCount);
   }
 
   @Emit("close")
   close(): void {
+    store.dispatch("refreshBalance");
     return;
-  }
-
-  changeMaxAddress(): void {
-    if (this.maxAddress && this.maxAddress < 13) {
-      this.account.addressRetrievalCount = this.maxAddress;
-      notifyPrimary(this.$tc("common.message.saved"));
-    }
   }
 }
 </script>

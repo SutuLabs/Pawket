@@ -130,18 +130,6 @@ export default class AccountManagement extends Vue {
     });
   }
 
-  lock(): void {
-    this.$buefy.dialog.confirm({
-      message: this.$tc("accountDetail.message.confirmation.lock"),
-      confirmText: this.$tc("accountDetail.ui.button.confirm"),
-      cancelText: this.$tc("accountDetail.ui.button.cancel"),
-      trapFocus: true,
-      onConfirm: () => {
-        store.dispatch("lock");
-      },
-    });
-  }
-
   remove(idx: number): void {
     this.$buefy.dialog.confirm({
       message: this.$tc("accountManagement.message.confirmation.removeAccount"),

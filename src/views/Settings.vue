@@ -203,7 +203,6 @@ export default class Settings extends Vue {
       cancelText: this.$tc("accountDetail.ui.button.cancel"),
       trapFocus: true,
       onConfirm: () => {
-        this.$router.push("/");
         store.dispatch("lock");
       },
     });
