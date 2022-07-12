@@ -9,12 +9,7 @@
             <b-icon icon="help-circle" size="is-small"> </b-icon>
           </b-tooltip>
         </template>
-        <p class="control buttons">
-          <b-button type="is-primary" @click="decrease"><b-icon icon="minus"></b-icon></b-button>
-          <b-button type="is-primary" @click="increase"><b-icon icon="plus"></b-icon></b-button>
-        </p>
-        <b-input type="number" v-model="maxAddress" @blur="changeMaxAddress" :max="12" expanded custom-class="no-spin-btn">
-        </b-input>
+        <b-slider v-model="maxAddress" :max="12" :min="1" indicator ticks lazy></b-slider>
       </b-field>
       <b-tabs position="is-centered" v-model="addressType" expanded @input="changeAddressType">
         <b-tab-item :label="$t('explorerLink.ui.label.observer')" icon="eye-check" value="Observed">
@@ -92,7 +87,6 @@ import { xchSymbol } from "@/store/modules/network";
 export default class ExplorerLink extends Vue {
   @Prop() private account!: AccountEntity;
   public address = "";
-  public maxAddress = 0;
   public addressType: AddressType = "Observed";
 
   get externalExplorerPrefix(): string {
@@ -111,12 +105,17 @@ export default class ExplorerLink extends Vue {
     return this.token.addresses.filter((a) => a.type == this.addressType);
   }
 
-  increase(): void {
-    if (this.maxAddress < 12) this.maxAddress++ && this.changeMaxAddress();
+  get maxAddress(): number {
+    return this.account.addressRetrievalCount;
   }
 
-  decrease(): void {
-    if (this.maxAddress > 1) this.maxAddress-- && this.changeMaxAddress();
+  set maxAddress(value: number) {
+    if(this.maxAddress == value) return;
+    if (value && value < 13) {
+      this.account.addressRetrievalCount = value;
+      store.dispatch("refreshAddress");
+      notifyPrimary(this.$tc("common.message.saved"));
+    }
   }
 
   changeAddressType(): void {
@@ -125,21 +124,12 @@ export default class ExplorerLink extends Vue {
 
   mounted(): void {
     Vue.set(this, "address", this.addresses[0].address);
-    Vue.set(this, "maxAddress", this.account.addressRetrievalCount);
   }
 
   @Emit("close")
   close(): void {
     store.dispatch("refreshBalance");
     return;
-  }
-
-  changeMaxAddress(): void {
-    if (this.maxAddress && this.maxAddress < 13) {
-      this.account.addressRetrievalCount = this.maxAddress;
-      notifyPrimary(this.$tc("common.message.saved"));
-      store.dispatch("refreshAddress");
-    }
   }
 }
 </script>
