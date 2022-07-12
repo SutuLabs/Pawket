@@ -956,6 +956,7 @@
         "addByAddress": "Add by Address(Observation Mode)"
       },
       "label": {
+        "serial": "Serial",
         "address": "Address",
         "imported": "Imported",
         "passPhrase": "Passphrase"
@@ -1061,6 +1062,11 @@
       "tooltip": {
         "fingerprintTip": "Compatible with Chia official wallet",
         "mnemonicTip": "Compatible with Chia official wallet"
+      },
+      "button": {
+        "reveal": "Reveal Mnemonics",
+        "hide": "Hide Mnemonics",
+        "delete": "Delete"
       }
     },
     "message": {
