@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="nav-box">
     <div class="is-hidden-tablet has-text-centered pt-2" v-if="!unlocked">
       <b-dropdown v-model="networkId" aria-role="list" :mobile-modal="false">
         <template #trigger>
@@ -22,7 +22,7 @@
     <div class="logo is-hidden-tablet" v-if="!unlocked">
       <img width="200px" src="@/assets/logo.svg" />
     </div>
-    <div class="column is-8 is-offset-2 is-hidden-mobile">
+    <div class="is-hidden-mobile">
       <b-navbar>
         <template #brand>
           <b-navbar-item @click="home()">
@@ -98,5 +98,10 @@ export default class NavBar extends Vue {
   position: absolute;
   top: 15%;
   left: 20%;
+}
+
+.nav-box {
+  max-width: 1000px;
+  margin: auto;
 }
 </style>
