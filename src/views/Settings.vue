@@ -32,7 +32,7 @@
           </div>
           <div class="py-1">
             <p>{{ $t("settings.menu.items.general.title") }}</p>
-            <p class="is-size-7 pt-2">{{ $t("settings.menu.items.general.description") }}</p>
+            <p class="is-size-7 pt-2 has-text-grey">{{ $t("settings.menu.items.general.description") }}</p>
           </div>
         </div>
         <div class="column py-1">
@@ -46,7 +46,7 @@
           </div>
           <div class="py-1">
             <p>{{ $t("settings.menu.items.security.title") }}</p>
-            <p class="is-size-7 pt-2">{{ $t("settings.menu.items.security.description") }}</p>
+            <p class="is-size-7 pt-2 has-text-grey">{{ $t("settings.menu.items.security.description") }}</p>
           </div>
         </div>
         <div class="column py-1">
@@ -60,7 +60,7 @@
           </div>
           <div class="py-1">
             <p>{{ $t("settings.menu.items.addressBook.title") }}</p>
-            <p class="is-size-7 pt-2">{{ $t("settings.menu.items.addressBook.description") }}</p>
+            <p class="is-size-7 pt-2 has-text-grey">{{ $t("settings.menu.items.addressBook.description") }}</p>
           </div>
         </div>
         <div class="column py-1">
@@ -74,7 +74,7 @@
           </div>
           <div class="py-1">
             <p>{{ $t("settings.menu.items.advanced.title") }}</p>
-            <p class="is-size-7 pt-2">{{ $t("settings.menu.items.advanced.description") }}</p>
+            <p class="is-size-7 pt-2 has-text-grey">{{ $t("settings.menu.items.advanced.description") }}</p>
           </div>
         </div>
         <div class="column py-1">
@@ -88,7 +88,7 @@
           </div>
           <div class="py-1">
             <p>{{ $t("settings.menu.items.donate.title") }}</p>
-            <p class="is-size-7 pt-2">{{ $t("settings.menu.items.donate.description") }}</p>
+            <p class="is-size-7 pt-2 has-text-grey">{{ $t("settings.menu.items.donate.description") }}</p>
           </div>
         </div>
         <div class="column py-1">
@@ -102,7 +102,7 @@
           </div>
           <div class="py-1">
             <p>{{ $t("settings.menu.items.about.title") }}</p>
-            <p class="is-size-7 pt-2">{{ $t("settings.menu.items.about.description") }}</p>
+            <p class="is-size-7 pt-2 has-text-grey">{{ $t("settings.menu.items.about.description") }}</p>
           </div>
         </div>
         <div class="column py-1">
