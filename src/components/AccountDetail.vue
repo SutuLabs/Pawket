@@ -146,6 +146,7 @@ import ErrorLog from "./ErrorLog.vue";
 import AccountManagement from "./AccountManagement/AccountManagement.vue";
 import { tc } from "@/i18n/i18n";
 import { isMobile } from "@/services/view/responsive";
+import AddressAccountQr from "./AddressAccountQr.vue";
 
 type Mode = "Verify" | "Create";
 
@@ -358,9 +359,10 @@ export default class AccountDetail extends Vue {
   }
 
   openLink(): void {
+    const component = this.account.type == "Address" ? AddressAccountQr : ExplorerLink;
     this.$buefy.modal.open({
       parent: this,
-      component: ExplorerLink,
+      component: component,
       trapFocus: true,
       canCancel: [""],
       fullScreen: isMobile(),
