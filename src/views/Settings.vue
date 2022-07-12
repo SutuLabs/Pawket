@@ -1,29 +1,29 @@
 <template>
-  <div class="column is-8 is-offset-2">
-    <div class="box is-hidden-until-widescreen">
+  <div class="column nav-box">
+    <div class="box is-hidden-mobile">
       <p class="has-text-left is-size-5 pb-2 pl-2 border-bottom">{{ $t("settings.menu.title") }}</p>
       <b-tabs type="is-boxed" vertical>
         <b-tab-item :label="$t('settings.menu.items.general.title')" icon="tune" class="pt-0 mt-0">
-          <general></general>
+          <general class="width-auto"></general>
         </b-tab-item>
         <b-tab-item :label="$t('settings.menu.items.security.title')" icon="key">
-          <security></security>
+          <security class="width-auto"></security>
         </b-tab-item>
         <b-tab-item :label="$t('settings.menu.items.addressBook.title')" icon="account-box-multiple-outline">
-          <address-book></address-book>
+          <address-book class="width-auto"></address-book>
         </b-tab-item>
         <b-tab-item :label="$t('settings.menu.items.advanced.title')" icon="lightbulb-outline">
-          <advanced></advanced>
+          <advanced class="width-auto"></advanced>
         </b-tab-item>
         <b-tab-item :label="$t('settings.menu.items.donate.title')" icon="hand-heart-outline">
-          <donate :showClose="false"></donate>
+          <donate :showClose="false" class="width-auto"></donate>
         </b-tab-item>
         <b-tab-item :label="$t('settings.menu.items.about.title')" icon="information-outline">
-          <about></about>
+          <about class="width-auto"></about>
         </b-tab-item>
       </b-tabs>
     </div>
-    <div class="is-hidden-widescreen">
+    <div class="is-hidden-tablet">
       <p class="has-text-centered is-size-5 pt-5 pb-2 pr-2 border-bottom">{{ $t("settings.menu.title") }}</p>
       <div class="panel-block py-0 my-0" @click="goToGeneral()">
         <div class="is-11 is-flex my-1 py-1">
@@ -123,6 +123,7 @@ import Advanced from "@/components/Settings/Advanced.vue";
 import Donate from "@/components/Settings/Donate.vue";
 import General from "@/components/Settings/General.vue";
 import Security from "@/components/Settings/Security.vue";
+import { isDesktop } from "@/services/view/responsive";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 
@@ -207,6 +208,10 @@ export default class Settings extends Vue {
       },
     });
   }
+
+  get isDesktop(): boolean {
+    return isDesktop();
+  }
 }
 </script>
 
@@ -218,9 +223,12 @@ export default class Settings extends Vue {
   border-radius: 0;
 }
 
-.is-hidden-until-widescreen {
-  @include until-widescreen {
-    display: none;
-  }
+.width-auto {
+  width: 100%;
+}
+
+.nav-box {
+  max-width: 1000px;
+  margin: auto;
 }
 </style>
