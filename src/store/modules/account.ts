@@ -192,7 +192,7 @@ store.registerModule<IAccountState>("account", {
           const token = requests[i];
           tokenBalances[token.symbol] = {
             amount: -1n,
-            addresses: token.puzzles.map((_) => ({ address: _.address, coins: [] })),
+            addresses: token.puzzles.map((_) => ({ address: _.address, type: _.type, coins: [] })),
           };
         }
         Vue.set(account, "tokens", tokenBalances);

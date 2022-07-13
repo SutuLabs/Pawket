@@ -5,7 +5,7 @@
       <b-field>
         <template #label>
           <p class="is-size-4">{{ $t("settings.advanced.label.experimental") }}</p>
-          <div class="is-size-7 has-text-grey py-3 text-width-500">
+          <div class="is-size-7 has-text-grey py-3 text-width-400">
             <p>{{ $t("settings.advanced.description") }}</p>
             <p>{{ $t("settings.advanced.warning") }}</p>
           </div>
@@ -52,7 +52,7 @@ export default class Advanced extends Vue {
 </script>
 
 <style scoped lang="scss">
-.text-width-500 {
-  max-width: 500px;
+.text-width-400 {
+  max-width: 400px;
 }
 </style>
