@@ -5,7 +5,7 @@
     </header>
     <section v-if="mode == 'List'" class="modal-card-body">
       <div class="mb-3">
-        <a @click="mode = 'Add'" class="button is-fullwidth is-primary is-outlined is-size-6">
+        <a @click="mode = 'Add'" class="button is-fullwidth is-primary is-size-6">
           <b-icon icon="plus" size="is-small" class="mr-1"></b-icon>
           {{ $t("addressBook.ui.button.addContact") }}
         </a>
