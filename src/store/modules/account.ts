@@ -150,6 +150,7 @@ store.registerModule<IAccountState>("account", {
     },
     removeAccount({ state, dispatch }, idx: number) {
       if (idx == state.selectedAccount) state.selectedAccount = 0;
+      if (idx < state.selectedAccount) state.selectedAccount--;
       state.accounts.splice(idx, 1);
       dispatch("persistent");
     },
