@@ -467,7 +467,6 @@ export default class Send extends Vue {
       component: OfflineSendShowBundle,
       hasModalCard: true,
       trapFocus: false,
-      canCancel: [""],
       props: { bundle: this.bundle },
     });
   }
