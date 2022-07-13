@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="is-hidden-tablet has-text-centered pt-2" v-if="!unlocked">
+  <div class="nav-box">
+    <div class="is-hidden-tablet has-text-centered pt-2" v-if="!unlocked && hasAccount">
       <b-dropdown v-model="networkId" aria-role="list" :mobile-modal="false">
         <template #trigger>
           <b-button
@@ -19,10 +19,10 @@
         }}</b-dropdown-item>
       </b-dropdown>
     </div>
-    <div class="logo is-hidden-tablet" v-if="!unlocked">
+    <div class="logo is-hidden-tablet" v-if="!unlocked && hasAccount">
       <img width="200px" src="@/assets/logo.svg" />
     </div>
-    <div class="column is-8 is-offset-2 is-hidden-mobile">
+    <div class="is-hidden-mobile">
       <b-navbar>
         <template #brand>
           <b-navbar-item @click="home()">
@@ -68,6 +68,10 @@ export default class NavBar extends Vue {
     return store.state.vault.unlocked;
   }
 
+  get hasAccount(): boolean {
+    return store.state.vault.passwordHash != null;
+  }
+
   async switchNetwork(networkId: string): Promise<void> {
     await store.dispatch("switchNetwork", networkId);
   }
@@ -98,5 +102,10 @@ export default class NavBar extends Vue {
   position: absolute;
   top: 15%;
   left: 20%;
+}
+
+.nav-box {
+  max-width: 1000px;
+  margin: auto;
 }
 </style>

@@ -1,120 +1,122 @@
 <template>
-  <div class="column is-8 is-offset-2 box">
-    <div class="container px-4">
-      <div class="py-5 has-text-centered" v-if="account && account.key">
-        <section>
-          <b-tooltip :label="$t('accountDetail.ui.tooltip.lock')" class="is-pulled-right is-hidden-mobile">
-            <b-button @click="lock()"><b-icon icon="lock" class="has-text-grey"> </b-icon></b-button>
-          </b-tooltip>
-          <b-button class="is-pulled-right" icon-left="account" icon-right="menu-down" @click="selectAccount()">{{
-            account.name | nameOmit
-          }}</b-button>
-          <b-dropdown v-model="networkId" aria-role="list" :mobile-modal="false" class="is-pulled-left">
-            <template #trigger>
-              <b-button
-                :class="networkId == 'mainnet' ? 'has-text-primary' : 'has-text-info'"
-                icon-left="brightness-1"
-                icon-right="menu-down"
-                ><span class="has-text-dark">{{ networkId }}</span></b-button
-              >
-            </template>
-            <b-dropdown-item v-for="net in networks" :key="net.name" :value="net.name" aria-role="listitem">{{
-              net.name
-            }}</b-dropdown-item>
-          </b-dropdown>
-          <b-tooltip :label="$t('accountDetail.ui.tooltip.errorLog')" class="is-pulled-right">
-            <b-button v-if="debugMode && hasError" @click="openErrorLog()"
-              ><b-icon icon="bug" class="has-text-grey"> </b-icon
-            ></b-button>
-          </b-tooltip>
-          <br />
-          <div class="mt-5">
-            <h2 class="is-size-3 py-5">
-              <span class="pl-4">
-                <span v-if="account.tokens && account.tokens.hasOwnProperty(xchSymbol)">
-                  {{ account.tokens[xchSymbol].amount | demojo(null, 6) }}
+  <div class="column nav-box">
+    <div :class="{ box: !isMobile }">
+      <div class="container px-4">
+        <div class="py-5 has-text-centered" v-if="account && account.key">
+          <section>
+            <b-tooltip :label="$t('accountDetail.ui.tooltip.lock')" class="is-pulled-right is-hidden-mobile">
+              <b-button @click="lock()"><b-icon icon="lock" class="has-text-grey"> </b-icon></b-button>
+            </b-tooltip>
+            <b-button class="is-pulled-right" icon-left="account" icon-right="menu-down" @click="selectAccount()">{{
+              account.name | nameOmit
+            }}</b-button>
+            <b-dropdown v-model="networkId" aria-role="list" :mobile-modal="false" class="is-pulled-left">
+              <template #trigger>
+                <b-button
+                  :class="networkId == 'mainnet' ? 'has-text-primary' : 'has-text-info'"
+                  icon-left="brightness-1"
+                  icon-right="menu-down"
+                  ><span class="has-text-dark">{{ networkId }}</span></b-button
+                >
+              </template>
+              <b-dropdown-item v-for="net in networks" :key="net.name" :value="net.name" aria-role="listitem">{{
+                net.name
+              }}</b-dropdown-item>
+            </b-dropdown>
+            <b-tooltip :label="$t('accountDetail.ui.tooltip.errorLog')" class="is-pulled-right">
+              <b-button v-if="debugMode && hasError" @click="openErrorLog()"
+                ><b-icon icon="bug" class="has-text-grey"> </b-icon
+              ></b-button>
+            </b-tooltip>
+            <br />
+            <div class="mt-5">
+              <h2 class="is-size-3 py-5">
+                <span class="pl-4">
+                  <span v-if="account.tokens && account.tokens.hasOwnProperty(xchSymbol)">
+                    {{ account.tokens[xchSymbol].amount | demojo(null, 6) }}
+                  </span>
+                  <span v-else>- {{ xchSymbol }}</span>
+                  <b-tooltip :label="$t('accountDetail.ui.tooltip.refresh')">
+                    <a class="is-size-6" href="javascript:void(0)" @click="refresh()" :disabled="refreshing">
+                      <b-icon
+                        :icon="refreshing ? 'autorenew' : 'refresh'"
+                        :class="refreshing ? 'rotate' : 'has-text-primary'"
+                        custom-size="mdi-18px"
+                      >
+                      </b-icon>
+                    </a>
+                  </b-tooltip>
                 </span>
-                <span v-else>- {{ xchSymbol }}</span>
-                <b-tooltip :label="$t('accountDetail.ui.tooltip.refresh')">
-                  <a class="is-size-6" href="javascript:void(0)" @click="refresh()" :disabled="refreshing">
-                    <b-icon
-                      :icon="refreshing ? 'autorenew' : 'refresh'"
-                      :class="refreshing ? 'rotate' : 'has-text-primary'"
-                      custom-size="mdi-18px"
-                    >
-                    </b-icon>
-                  </a>
-                </b-tooltip>
-              </span>
-            </h2>
-          </div>
-          <div class="b-tooltip mx-5">
-            <a @click="openLink()" href="javascript:void(0)" class="has-text-primary">
-              <b-icon icon="download-circle" size="is-medium"> </b-icon>
-              <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.receive") }}</p>
-            </a>
-          </div>
-          <div class="b-tooltip mr-5">
-            <a @click="showSend()" href="javascript:void(0)" class="has-text-primary">
-              <b-icon icon="arrow-right-circle" size="is-medium"> </b-icon>
-              <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.send") }}</p>
-            </a>
-          </div>
-          <div v-if="debugMode" class="b-tooltip mr-5">
-            <a @click="showExport()" href="javascript:void(0)" class="has-text-primary">
-              <b-icon icon="alpha-e-circle" size="is-medium"> </b-icon>
-              <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.export") }}</p>
-            </a>
-          </div>
-        </section>
-      </div>
-    </div>
-    <div id="tab"></div>
-    <div class="p-2">
-      <b-tabs position="is-centered" class="block" expanded>
-        <b-tab-item :label="$t('accountDetail.ui.tab.asset')">
-          <a
-            v-for="cat of tokenList"
-            :key="cat.id"
-            class="panel-block is-justify-content-space-between py-4 has-text-grey-dark"
-            v-show="account.tokens && account.tokens.hasOwnProperty(cat.name)"
-          >
-            <div class="column is-flex is-7" v-if="account.tokens && account.tokens.hasOwnProperty(cat.name)">
-              <div class="mr-4">
-                <span class="image is-32x32">
-                  <img v-if="cat.img" class="is-rounded" :src="cat.img" />
-                  <img v-else-if="cat.name === xchSymbol" class="is-rounded" src="@/assets/chia-logo.svg" />
-                  <img v-else class="is-rounded" src="@/assets/custom-cat.svg" />
-                </span>
-              </div>
-              <div class="py-1">
-                <p class="has-text-grey-dark is-size-6" v-if="tokenInfo[cat.name]">
-                  {{ account.tokens[cat.name].amount | demojo(tokenInfo[cat.name]) }}
-                </p>
-                <p>
-                  <span class="mr-2 is-size-7 has-text-grey" v-if="cat.name === xchSymbol">{{
-                    account.tokens[cat.name].amount | xchToCurrency(rate, currency)
-                  }}</span>
-                </p>
-              </div>
+              </h2>
             </div>
-          </a>
-          <div class="column is-full has-text-centered pt-5 mt-2">
-            <a @click="ManageCats()"
-              ><span class="has-color-link">{{ $t("accountDetail.ui.button.manageCats") }}</span></a
+            <div class="b-tooltip mx-5">
+              <a @click="openLink()" href="javascript:void(0)" class="has-text-primary">
+                <b-icon icon="download-circle" size="is-medium"> </b-icon>
+                <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.receive") }}</p>
+              </a>
+            </div>
+            <div class="b-tooltip mr-5">
+              <a @click="showSend()" href="javascript:void(0)" class="has-text-primary">
+                <b-icon icon="arrow-right-circle" size="is-medium"> </b-icon>
+                <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.send") }}</p>
+              </a>
+            </div>
+            <div v-if="debugMode" class="b-tooltip mr-5">
+              <a @click="showExport()" href="javascript:void(0)" class="has-text-primary">
+                <b-icon icon="alpha-e-circle" size="is-medium"> </b-icon>
+                <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.export") }}</p>
+              </a>
+            </div>
+          </section>
+        </div>
+      </div>
+      <div id="tab"></div>
+      <div class="p-2">
+        <b-tabs position="is-centered" class="block" expanded>
+          <b-tab-item :label="$t('accountDetail.ui.tab.asset')">
+            <a
+              v-for="cat of tokenList"
+              :key="cat.id"
+              class="panel-block is-justify-content-space-between py-4 has-text-grey-dark"
+              v-show="account.tokens && account.tokens.hasOwnProperty(cat.name)"
             >
-          </div>
-        </b-tab-item>
-        <b-tab-item :label="$t('accountDetail.ui.tab.utxos')">
-          <utxo-panel :tokenInfo="tokenInfo" v-model="activities" @changePage="changePage"></utxo-panel>
-        </b-tab-item>
-        <b-tab-item v-if="experimentMode && testnet" :label="$t('accountDetail.ui.tab.nft')" :visible="debugMode">
-          <nft-panel :account="account" @changePage="changePage"></nft-panel>
-        </b-tab-item>
-      </b-tabs>
-    </div>
-    <div class="p-4 border-top-1">
-      <dapp :account="account" :tokenList="tokenList"></dapp>
+              <div class="column is-flex is-7" v-if="account.tokens && account.tokens.hasOwnProperty(cat.name)">
+                <div class="mr-4">
+                  <span class="image is-32x32">
+                    <img v-if="cat.img" class="is-rounded" :src="cat.img" />
+                    <img v-else-if="cat.name === xchSymbol" class="is-rounded" src="@/assets/chia-logo.svg" />
+                    <img v-else class="is-rounded" src="@/assets/custom-cat.svg" />
+                  </span>
+                </div>
+                <div class="py-1">
+                  <p class="has-text-grey-dark is-size-6" v-if="tokenInfo[cat.name]">
+                    {{ account.tokens[cat.name].amount | demojo(tokenInfo[cat.name]) }}
+                  </p>
+                  <p>
+                    <span class="mr-2 is-size-7 has-text-grey" v-if="cat.name === xchSymbol">{{
+                      account.tokens[cat.name].amount | xchToCurrency(rate, currency)
+                    }}</span>
+                  </p>
+                </div>
+              </div>
+            </a>
+            <div class="column is-full has-text-centered pt-5 mt-2">
+              <a @click="ManageCats()"
+                ><span class="has-color-link">{{ $t("accountDetail.ui.button.manageCats") }}</span></a
+              >
+            </div>
+          </b-tab-item>
+          <b-tab-item :label="$t('accountDetail.ui.tab.utxos')">
+            <utxo-panel :tokenInfo="tokenInfo" v-model="activities" @changePage="changePage"></utxo-panel>
+          </b-tab-item>
+          <b-tab-item v-if="experimentMode && testnet" :label="$t('accountDetail.ui.tab.nft')" :visible="debugMode">
+            <nft-panel :account="account" @changePage="changePage"></nft-panel>
+          </b-tab-item>
+        </b-tabs>
+      </div>
+      <div class="p-4 border-top-1">
+        <dapp :account="account" :tokenList="tokenList"></dapp>
+      </div>
     </div>
   </div>
 </template>
@@ -144,6 +146,7 @@ import ErrorLog from "./ErrorLog.vue";
 import AccountManagement from "./AccountManagement/AccountManagement.vue";
 import { tc } from "@/i18n/i18n";
 import { isMobile } from "@/services/view/responsive";
+import AddressAccountQr from "./AddressAccountQr.vue";
 
 type Mode = "Verify" | "Create";
 
@@ -216,6 +219,10 @@ export default class AccountDetail extends Vue {
 
   get observeMode(): boolean {
     return this.account.type == "Address";
+  }
+
+  get isMobile(): boolean {
+    return isMobile();
   }
 
   checkObserveMode(): void {
@@ -352,9 +359,10 @@ export default class AccountDetail extends Vue {
   }
 
   openLink(): void {
+    const component = this.account.type == "Address" ? AddressAccountQr : ExplorerLink;
     this.$buefy.modal.open({
       parent: this,
-      component: ExplorerLink,
+      component: component,
       trapFocus: true,
       canCancel: [""],
       fullScreen: isMobile(),
@@ -394,5 +402,10 @@ export default class AccountDetail extends Vue {
 
 .border-top-1 {
   border-top: 1px solid $grey-lighter;
+}
+
+.nav-box {
+  max-width: 1000px;
+  margin: auto;
 }
 </style>

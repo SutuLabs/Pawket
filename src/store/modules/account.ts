@@ -149,6 +149,8 @@ store.registerModule<IAccountState>("account", {
       dispatch("persistent");
     },
     removeAccount({ state, dispatch }, idx: number) {
+      if (idx == state.selectedAccount) state.selectedAccount = 0;
+      if (idx < state.selectedAccount) state.selectedAccount--;
       state.accounts.splice(idx, 1);
       dispatch("persistent");
     },
@@ -191,7 +193,7 @@ store.registerModule<IAccountState>("account", {
           const token = requests[i];
           tokenBalances[token.symbol] = {
             amount: -1n,
-            addresses: token.puzzles.map((_) => ({ address: _.address, coins: [] })),
+            addresses: token.puzzles.map((_) => ({ address: _.address, type: _.type, coins: [] })),
           };
         }
         Vue.set(account, "tokens", tokenBalances);

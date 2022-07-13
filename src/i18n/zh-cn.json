@@ -949,6 +949,7 @@
     "ui": {
       "title": "账户管理",
       "label": {
+        "serial": "序列钱包",
         "address": "地址账户",
         "imported": "导入账户",
         "passPhrase": "影子钱包"
@@ -1061,6 +1062,11 @@
       "tooltip": {
         "fingerprintTip": "与 Chia 客户端兼容",
         "mnemonicTip": "与 Chia 客户端兼容"
+      },
+      "button": {
+        "reveal": "隐藏助记词",
+        "hide": "显示助记词",
+        "delete": "删除"
       }
     },
     "message": {

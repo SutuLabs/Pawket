@@ -24,10 +24,7 @@
         </div>
         <div class="column py-1">
           <span @click.stop="showDetail(idx)"
-            ><b-icon class="is-pulled-right hover-info has-text-grey" icon="dots-vertical"> </b-icon
-          ></span>
-          <span v-if="idx != 0" @click.stop="remove(idx)"
-            ><b-icon class="is-pulled-right pr-2 hover-danger has-text-grey" icon="delete-outline"> </b-icon
+            ><b-icon class="is-pulled-right hover-info has-text-grey" icon="pencil"> </b-icon
           ></span>
         </div>
       </a>
@@ -127,19 +124,6 @@ export default class AccountManagement extends Vue {
       fullScreen: isMobile(),
       props: { idx: idx },
       events: { rename: this.rename },
-    });
-  }
-
-  remove(idx: number): void {
-    this.$buefy.dialog.confirm({
-      message: this.$tc("accountManagement.message.confirmation.removeAccount"),
-      confirmText: this.$tc("accountManagement.message.confirmation.confirmText"),
-      cancelText: this.$tc("accountManagement.message.confirmation.cancelText"),
-      trapFocus: true,
-      type: "is-danger",
-      onConfirm: () => {
-        store.dispatch("removeAccount", idx);
-      },
     });
   }
 

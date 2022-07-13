@@ -5,7 +5,7 @@
       <ul class="border-bottom">
         <li class="pb-2">
           <span class="is-size-6 has-text-weight-bold">{{ $t("accountInfo.ui.label.name") }}:</span>
-          <span class="is-size-6 is-pulled-right" @click="rename()">
+          <span class="is-size-6 is-pulled-right is-clickable" @click="rename()">
             <b-icon icon="pencil" custom-size="mdi-18px" class="pr-2"></b-icon>{{ account.name }}
           </span>
         </li>
@@ -29,19 +29,24 @@
         <li class="pb-2">
           <span class="is-size-6 has-text-weight-bold">{{ $t("accountInfo.ui.label.type") }}:</span>
           <span class="is-size-6 is-pulled-right">
-            {{ account.type }}
+            {{ account.type | accountTypeConverter }}
           </span>
         </li>
       </ul>
       <div class="border-bottom py-2">
-        <a href="javascript:void(0)" @click="toggleMnemonic()" class="is-size-6 has-text-weight-bold has-text-dark">
-          <span class="is-size-6 has-text-weight-bold"
-            >{{ $t("accountInfo.ui.label.mnemonicSeed") }}:
-            <b-tooltip :label="$t('accountInfo.ui.tooltip.mnemonicTip')" position="is-top">
-              <b-icon icon="help-circle" size="is-small"> </b-icon> </b-tooltip
-          ></span>
-          <span class="is-pulled-right"><b-icon :icon="showMnemonic ? 'menu-up' : 'menu-down'"></b-icon></span>
-        </a>
+        <span class="is-size-6 has-text-weight-bold"
+          >{{ $t("accountInfo.ui.label.mnemonicSeed") }}:
+          <b-tooltip :label="$t('accountInfo.ui.tooltip.mnemonicTip')" position="is-top">
+            <b-icon icon="help-circle" size="is-small"> </b-icon> </b-tooltip
+        ></span>
+        <span class="is-pulled-right" v-if="!observeMode">
+          <b-button v-if="!showMnemonic" size="is-small" @click="show()" class="is-primary">{{
+            $t("accountInfo.ui.button.reveal")
+          }}</b-button>
+          <b-button v-else size="is-small" @click="showMnemonic = false" class="is-link">
+            {{ $t("accountInfo.ui.button.hide") }}
+          </b-button>
+        </span>
         <span v-if="showMnemonic">
           <br />
           {{ account.key.compatibleMnemonic }}
@@ -89,6 +94,9 @@
           </li>
         </ul>
       </div>
+      <div class="pt-6 px-2" v-if="idx != 0">
+        <b-button type="is-danger" outlined expanded @click="remove()">{{ $t("accountInfo.ui.button.delete") }}</b-button>
+      </div>
     </section>
   </div>
 </template>
@@ -99,11 +107,13 @@ import store from "@/store";
 import { AccountEntity } from "@/store/modules/account";
 import { isPasswordCorrect } from "@/store/modules/vault";
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
+import { accountTypeConverter } from "@/filters/accountTypeConversion";
 import KeyBox from "../KeyBox.vue";
 import TopBar from "../TopBar.vue";
 
 @Component({
   components: { TopBar, KeyBox },
+  filters: { accountTypeConverter },
 })
 export default class AccountDetail extends Vue {
   @Prop() private idx!: number;
@@ -151,11 +161,21 @@ export default class AccountDetail extends Vue {
     this.$emit("rename", this.idx);
   }
 
-  async toggleMnemonic(): Promise<void> {
-    if (this.showMnemonic) {
-      this.showMnemonic = false;
-      return;
-    }
+  remove(): void {
+    this.$buefy.dialog.confirm({
+      message: this.$tc("accountManagement.message.confirmation.removeAccount"),
+      confirmText: this.$tc("accountManagement.message.confirmation.confirmText"),
+      cancelText: this.$tc("accountManagement.message.confirmation.cancelText"),
+      trapFocus: true,
+      type: "is-danger",
+      onConfirm: () => {
+        store.dispatch("removeAccount", this.idx);
+      },
+    });
+    this.close();
+  }
+
+  async show(): Promise<void> {
     this.$buefy.dialog.prompt({
       message: this.$tc("accountInfo.message.inputPassword"),
       inputAttrs: {

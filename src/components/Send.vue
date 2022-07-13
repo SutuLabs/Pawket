@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-card">
+  <div class="modal-card m-0">
     <top-bar :title="$t('send.ui.title.send')" @close="$emit('close')" :showClose="showClose"></top-bar>
     <section class="modal-card-body">
       <div v-show="!bundle">
