@@ -1,22 +1,40 @@
 <template>
   <div class="column nav-box">
     <div :class="{ box: !isMobile }">
+      <div class="notification has-background-grey-dark has-text-centered has-text-info-light py-2 fix-top" v-if="offline">
+        {{ $t("accountDetail.message.notification.offline") }}
+      </div>
       <div class="container px-4">
         <div class="py-5 has-text-centered" v-if="account && account.key">
           <section>
             <b-tooltip :label="$t('accountDetail.ui.tooltip.lock')" class="is-pulled-right is-hidden-mobile">
-              <b-button @click="lock()"><b-icon icon="lock" class="has-text-grey"> </b-icon></b-button>
+              <b-button @click="lock()" rounded><b-icon icon="lock" class="has-text-grey"> </b-icon></b-button>
             </b-tooltip>
-            <b-button class="is-pulled-right" icon-left="account" icon-right="menu-down" @click="selectAccount()">{{
-              account.name | nameOmit
-            }}</b-button>
+            <b-button
+              :class="{
+                'has-text-primary': !offline && networkId == 'mainnet',
+                'has-text-info': !offline && networkId == 'testnet10',
+                'has-text-grey': offline,
+                'is-pulled-right': true,
+              }"
+              icon-left="account"
+              icon-right="menu-down"
+              @click="selectAccount()"
+              rounded
+              ><span class="has-text-grey">{{ account.name | nameOmit }}</span></b-button
+            >
             <b-dropdown v-model="networkId" aria-role="list" :mobile-modal="false" class="is-pulled-left">
               <template #trigger>
                 <b-button
-                  :class="networkId == 'mainnet' ? 'has-text-primary' : 'has-text-info'"
+                  :class="{
+                    'has-text-primary': !offline && networkId == 'mainnet',
+                    'has-text-info': !offline && networkId == 'testnet10',
+                    'has-text-grey': offline,
+                  }"
                   icon-left="brightness-1"
                   icon-right="menu-down"
-                  ><span class="has-text-dark">{{ networkId }}</span></b-button
+                  rounded
+                  ><span class="has-text-grey">{{ networkId }}</span></b-button
                 >
               </template>
               <b-dropdown-item v-for="net in networks" :key="net.name" :value="net.name" aria-role="listitem">{{
@@ -29,10 +47,11 @@
               ></b-button>
             </b-tooltip>
             <br />
-            <div class="mt-5">
+            <div class="mt-6">
               <h2 class="is-size-3 py-5">
                 <span class="pl-4">
-                  <span v-if="account.tokens && account.tokens.hasOwnProperty(xchSymbol)">
+                  <span v-if="offline">- {{ xchSymbol }}</span>
+                  <span v-else-if="account.tokens && account.tokens.hasOwnProperty(xchSymbol)">
                     {{ account.tokens[xchSymbol].amount | demojo(null, 6) }}
                   </span>
                   <span v-else>- {{ xchSymbol }}</span>
@@ -163,6 +182,7 @@ type Mode = "Verify" | "Create";
 export default class AccountDetail extends Vue {
   public mode: Mode = "Verify";
   private exchangeRate = -1;
+  public showOfflineNotification = true;
   public timeoutId?: ReturnType<typeof setTimeout>;
 
   get refreshing(): boolean {
@@ -257,6 +277,10 @@ export default class AccountDetail extends Vue {
 
   get xchSymbol(): string {
     return xchSymbol();
+  }
+
+  get offline(): boolean {
+    return store.state.account.offline;
   }
 
   mounted(): void {
@@ -407,5 +431,11 @@ export default class AccountDetail extends Vue {
 .nav-box {
   max-width: 1000px;
   margin: auto;
+}
+
+.fix-top {
+  position: fixed;
+  width: 100%;
+  z-index: 99;
 }
 </style>

@@ -92,6 +92,7 @@ export interface IAccountState {
   accounts: AccountEntity[];
   tokenInfo: TokenInfo;
   refreshing: boolean;
+  offline: boolean;
 }
 
 store.registerModule<IAccountState>("account", {
@@ -101,6 +102,7 @@ store.registerModule<IAccountState>("account", {
       accounts: [],
       selectedAccount: 0,
       refreshing: false,
+      offline: false,
     };
   },
   actions: {
@@ -186,17 +188,21 @@ store.registerModule<IAccountState>("account", {
 
         Vue.set(account, "activities", activities);
         Vue.set(account, "tokens", tokenBalances);
+        state.offline = false;
       } catch (error) {
         console.warn("error get account balance", error);
-        const tokenBalances: AccountTokens = {};
-        for (let i = 0; i < requests.length; i++) {
-          const token = requests[i];
-          tokenBalances[token.symbol] = {
-            amount: -1n,
-            addresses: token.puzzles.map((_) => ({ address: _.address, type: _.type, coins: [] })),
-          };
+        if (!account.tokens) {
+          const tokenBalances: AccountTokens = {};
+          for (let i = 0; i < requests.length; i++) {
+            const token = requests[i];
+            tokenBalances[token.symbol] = {
+              amount: -1n,
+              addresses: token.puzzles.map((_) => ({ address: _.address, type: _.type, coins: [] })),
+            };
+          }
+          Vue.set(account, "tokens", tokenBalances);
         }
-        Vue.set(account, "tokens", tokenBalances);
+        state.offline = true;
       }
 
       resetState();
