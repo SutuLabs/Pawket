@@ -1,7 +1,7 @@
 <template>
   <div class="column nav-box">
     <div :class="{ box: !isMobile }">
-      <div class="notification has-background-grey-dark has-text-centered has-text-info-light py-2 fix-top" v-if="offline">
+      <div class="notification has-background-grey-dark has-text-centered has-text-info-light py-2" v-if="offline">
         {{ $t("accountDetail.message.notification.offline") }}
       </div>
       <div class="container px-4">
@@ -50,8 +50,7 @@
             <div class="mt-6">
               <h2 class="is-size-3 py-5">
                 <span class="pl-4">
-                  <span v-if="offline">- {{ xchSymbol }}</span>
-                  <span v-else-if="account.tokens && account.tokens.hasOwnProperty(xchSymbol)">
+                  <span v-if="account.tokens && account.tokens.hasOwnProperty(xchSymbol)">
                     {{ account.tokens[xchSymbol].amount | demojo(null, 6) }}
                   </span>
                   <span v-else>- {{ xchSymbol }}</span>
@@ -431,11 +430,5 @@ export default class AccountDetail extends Vue {
 .nav-box {
   max-width: 1000px;
   margin: auto;
-}
-
-.fix-top {
-  position: fixed;
-  width: 100%;
-  z-index: 99;
 }
 </style>

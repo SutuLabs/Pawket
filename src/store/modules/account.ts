@@ -191,7 +191,7 @@ store.registerModule<IAccountState>("account", {
         state.offline = false;
       } catch (error) {
         console.warn("error get account balance", error);
-        if (!account.tokens) {
+        if (!account.tokens || !account.tokens[requests[0].symbol]) {
           const tokenBalances: AccountTokens = {};
           for (let i = 0; i < requests.length; i++) {
             const token = requests[i];
