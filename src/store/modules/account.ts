@@ -4,7 +4,7 @@ import { CoinRecord } from "@/models/wallet";
 import Vue from "vue";
 import receive, { NftDetail, TokenPuzzleAddress, TokenPuzzleDetail } from "@/services/crypto/receive";
 import { AddressType } from "@/services/crypto/puzzle";
-import { xchSymbol } from "./network";
+import { xchPrefix, xchSymbol } from "./network";
 
 export function getAccountCats(account: AccountEntity): CustomCat[] {
   return account.allCats?.filter((c) => c.network == store.state.network.networkId) ?? [];
@@ -267,7 +267,7 @@ export async function getAccountAddressDetails(
     return account.addressPuzzles;
   }
 
-  account.addressPuzzles = await receive.getAssetsRequestDetail(account.key.privateKey, maxId, getAccountCats(account));
+  account.addressPuzzles = await receive.getAssetsRequestDetail(account.key.privateKey, maxId, getAccountCats(account), xchPrefix());
   account.addressGenerated = maxId;
   return account.addressPuzzles;
 }

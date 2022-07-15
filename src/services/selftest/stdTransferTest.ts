@@ -23,7 +23,7 @@ export async function testStandardTransfer(): Promise<void> {
   );
   const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(tgt_addr));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(change_addr));
-  const puzzles = await puzzle.getPuzzleDetails(utility.fromHexString(sk_hex), 0, 5);
+  const puzzles = await puzzle.getPuzzleDetails(utility.fromHexString(sk_hex), "xch", 0, 5);
   const plan = await transfer.generateSpendPlan({ [xchSymbol()]: [coin] }, [{ symbol: xchSymbol(), address: tgt_hex, amount: 1_000_000n, }], change_hex, 0n);
   const bundle = await transfer.generateSpendBundle(plan, [{ symbol: xchSymbol(), puzzles }], []);
   assert(

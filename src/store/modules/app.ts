@@ -1,10 +1,9 @@
 import { NotificationProgrammatic as Notification } from "buefy";
 import store from '@/store'
 import { ModuleInstance } from "@chiamine/bls-signatures";
-import * as clvm_tools from "clvm_tools/browser";
-import loadBls from "@chiamine/bls-signatures";
 import TestRunner from "@/services/selftest/runner";
 import { tc } from "../../i18n/i18n";
+import { Instance } from "@/services/util/instance";
 
 export type SelfTestStatus = "Checking" | "Passed" | "Failed";
 export interface IAppState {
@@ -31,14 +30,14 @@ store.registerModule<IAppState>('app', {
 
     async initializeClvm({ state }) {
       if (state.clvmInitialized) return;
-      await clvm_tools.initialize();
+      await Instance.init();
       state.clvmInitialized = true;
     },
 
     async initializeBls({ state }) {
       if (state.bls) return;
-      const BLS = await loadBls();
-      state.bls = BLS;
+      await Instance.init();
+      state.bls = Instance.BLS;
     },
 
     async selfTest({ state, dispatch }) {

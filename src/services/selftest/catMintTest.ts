@@ -39,7 +39,7 @@ export async function testMintCat(): Promise<void> {
   const memo = "hello";
   const fee = 1n;
   const amount = 10n;
-  const requests = await puzzle.getPuzzleDetails(utility.fromHexString(sk_hex), 0, 1);
+  const requests = await puzzle.getPuzzleDetails(utility.fromHexString(sk_hex), "xch", 0, 1);
 
   const { spendBundle, assetId } = await generateMintCatBundle(
     tgt_addr,

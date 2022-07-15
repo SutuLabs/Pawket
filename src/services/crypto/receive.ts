@@ -28,10 +28,10 @@ export interface NftDetail {
 }
 
 class Receive {
-  async getAssetsRequestDetail(sk_hex: string, maxId: number, customCats: CustomCat[]): Promise<TokenPuzzleDetail[]> {
+  async getAssetsRequestDetail(sk_hex: string, maxId: number, customCats: CustomCat[], prefix: string): Promise<TokenPuzzleDetail[]> {
 
     const privkey = utility.fromHexString(sk_hex);
-    const xchToken = { symbol: xchSymbol(), puzzles: await puzzle.getPuzzleDetails(privkey, 0, maxId) };
+    const xchToken = { symbol: xchSymbol(), puzzles: await puzzle.getPuzzleDetails(privkey, prefix, 0, maxId) };
     const tokens: TokenPuzzleDetail[] = [xchToken];
     const standardAssets = Object.values(store.state.account.tokenInfo)
       .filter(_ => _.id)
@@ -41,7 +41,7 @@ class Receive {
 
     for (let i = 0; i < assets.length; i++) {
       const assetId = assets[i].id;
-      const ps = await puzzle.getCatPuzzleDetails(privkey, assetId, 0, maxId);
+      const ps = await puzzle.getCatPuzzleDetails(privkey, assetId, prefix, 0, maxId);
       tokens.push(Object.assign({}, assets[i], { puzzles: ps }));
     }
 
