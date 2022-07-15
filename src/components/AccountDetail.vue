@@ -51,7 +51,8 @@
               <h2 class="is-size-3 py-5">
                 <span class="pl-4">
                   <span v-if="account.tokens && account.tokens.hasOwnProperty(xchSymbol)">
-                    {{ account.tokens[xchSymbol].amount | demojo(null, 6) }}
+                    <span v-if="account.tokens[xchSymbol].amount < 0">- {{ xchSymbol }}</span>
+                    <span v-else>{{ account.tokens[xchSymbol].amount | demojo(null, 6) }}</span>
                   </span>
                   <span v-else>- {{ xchSymbol }}</span>
                   <b-tooltip :label="$t('accountDetail.ui.tooltip.refresh')">
@@ -108,7 +109,8 @@
                 </div>
                 <div class="py-1">
                   <p class="has-text-grey-dark is-size-6" v-if="tokenInfo[cat.name]">
-                    {{ account.tokens[cat.name].amount | demojo(tokenInfo[cat.name]) }}
+                    <span v-if="account.tokens[cat.name].amount < 0">- {{ cat.name }}</span>
+                    <span v-else>{{ account.tokens[cat.name].amount | demojo(tokenInfo[cat.name]) }}</span>
                   </p>
                   <p>
                     <span class="mr-2 is-size-7 has-text-grey" v-if="cat.name === xchSymbol">{{

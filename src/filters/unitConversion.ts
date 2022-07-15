@@ -15,7 +15,6 @@ export function demojo(mojo: null | number | bigint, token: OneTokenInfo | null 
   }
 
   if (!mojo) return "0.0 " + unit;
-  if (mojo < 0) return "- " + unit;
   const num = mojo.toString();
   const bnum = bigDecimal.divide(num, Math.pow(10, decimal), digits);
   const fnum = bnum.replace(/\.?0+$/, "");
