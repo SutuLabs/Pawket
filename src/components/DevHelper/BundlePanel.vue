@@ -207,8 +207,6 @@ export default class BundlePanel extends Vue {
           Vue.set(this.bundle, "aggregated_signature", ba?.AggregatedSignature);
         }
       }
-      const st = this.bundle?.coin_spends.map((_) => "\"" + transfer.getCoinName(_.coin).hex() + "\"").join(", ");
-      console.log(st);
     } catch (error) {
       this.bundle = null;
     }
