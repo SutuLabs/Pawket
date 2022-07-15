@@ -15,6 +15,10 @@
           <b-tooltip :label="$t('batchSend.ui.tooltip.help')" position="is-bottom" multilined>
             <b-icon icon="help-circle" size="is-small"> </b-icon>
           </b-tooltip>
+          <a @click="fillSample"
+            ><span class="is-size-7 is-underlined">{{ $t("batchSend.ui.field.csv.fillSample") }}</span></a
+          >
+          <span class="is-size-7">{{ $t("batchSend.ui.field.csv.or") }}</span>
           <a :href="csvSampleUri" :download="$t('batchSend.ui.field.csv.sampleName') + '.csv'"
             ><span class="is-size-7 is-underlined">{{ $t("batchSend.ui.field.csv.downloadSample") }}</span></a
           >
@@ -233,6 +237,14 @@ export default class BatchSend extends Vue {
     )},${this.$tc("batchSend.sample.memo")}\n`;
     const content = `${dataPrefix},${fields}${address},BSH,150,hello_memo\n${address},${xchSymbol()},150,`;
     return encodeURI(content);
+  }
+
+  fillSample(): void {
+    const address = puzzle.getAddressFromPuzzleHash(
+      "d19c05a54dacbf2b40ff4843534c47976de90246c3fc42ac1f42ea81b434b8ea",
+      xchPrefix()
+    );
+    this.csv = `${address},BSH,150,hello_memo\n${address},${xchSymbol()},150,`;
   }
 
   async afterUploadCsv(f: File): Promise<void> {
