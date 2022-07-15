@@ -38,8 +38,8 @@
       }
     },
     "switchNetwork": {
-      "message": "切换网络后，为保证一切功能正常使用，需重新登入。",
-      "confirm": "确认",
+      "message": "网络已切换。为保证一切功能正常使用，建议重新登入。",
+      "confirm": "重新登入",
       "cancel": "稍后"
     }
   },
@@ -408,7 +408,7 @@
       "tooltip": {
         "removeToken": "删除",
         "drag": "拖动排序",
-        "copy": "复制AssetID"
+        "copy": "复制 Asset ID"
       },
       "message": {
         "nameRequired": "CAT 名称不能为空",
@@ -599,8 +599,8 @@
       "field": {
         "csv": {
           "fillSample": "填写示例",
-          "or": "或",
-          "downloadSample": "点击此处下载 CSV 示例文件。",
+          "or": " 或 ",
+          "downloadSample": "下载 CSV 示例文件",
           "drag": "拖放到此区域可直接上传。",
           "sampleName": "示例文件"
         }
@@ -628,9 +628,9 @@
     },
     "sample": {
       "address": "地址",
-      "coin": "硬币种类",
+      "coin": "硬币名称",
       "amount": "金额(mojo)",
-      "memo": "备注(如果你的硬币种类填写了 XCH则不能填写备注内容。)"
+      "memo": "备注(如果你的硬币名称填写了 XCH，则不能填写备注内容。)"
     }
   },
   "utxo": {
@@ -653,7 +653,7 @@
       "label": {
         "amount": "金额",
         "time": "时间",
-        "spentHeight": "消费区块高度",
+        "spentHeight": "花费区块高度",
         "confirmedHeight": "确认区块高度",
         "parentCoinInfo": "父硬币信息",
         "puzzleHash": "谜语哈希"
@@ -714,12 +714,12 @@
     "ui": {
       "title": {
         "list": "地址簿",
-        "add": "Add"
+        "add": "添加地址"
       },
       "button": {
         "cancel": "取消",
         "confirm": "确认",
-        "addContact": "添加联系人",
+        "addContact": "添加地址",
         "showInnerAcc": "我的账户"
       },
       "tooltip": {
@@ -733,7 +733,7 @@
         "saved": "已保存"
       },
       "alert": {
-        "addressExists": "该地址已存在于地址簿。"
+        "addressExists": "该地址已存在于地址簿中。"
       },
       "confirmation": {
         "removeConfirm": "确定要将该地址从地址簿中删除吗？"
@@ -864,7 +864,7 @@
         },
         "advanced": {
           "title": "高级",
-          "description": "实验室模式"
+          "description": "实验模式"
         },
         "donate": {
           "title": "捐赠",
@@ -872,7 +872,7 @@
         },
         "about": {
           "title": "关于",
-          "description": "隐私条款、使用条款、钱包版本、官网"
+          "description": "隐私条款、钱包版本、官网"
         },
         "lock": "锁定钱包"
       }
@@ -952,7 +952,7 @@
     "ui": {
       "title": "账户管理",
       "label": {
-        "serial": "序列钱包",
+        "serial": "序列账户",
         "address": "地址账户",
         "imported": "导入账户",
         "passPhrase": "影子钱包"
@@ -966,7 +966,7 @@
       },
       "tooltip": {
         "addBySerial": "按顺序创建派生的序列账户。",
-        "addByPassword": "由【助记词+密码】保护的账户。输入相同的密码即可进入相同的账户。",
+        "addByPassword": "由【助记词+口令】保护的账户。输入相同的口令即可进入相同的账户。",
         "addByLegacy": "导入 Chia 客户端账户。",
         "addByMnemonic": "导入 Nucle/Goby 账户。",
         "addByAddress": "该模式下仅支持阅读。"
@@ -997,8 +997,8 @@
   },
   "welcome": {
     "ui": {
-      "description": "用安全的方式，管理 Chia 链上资产。",
-      "slogan": "区块链世界的探索，从这里开始！",
+      "description": "安全、开源、易用的 Chia 轻钱包",
+      "slogan": "薄荷钱包将陪伴你尽情畅游 Chia 网络！",
       "button": {
         "start": "开始使用"
       }
@@ -1008,11 +1008,11 @@
     "ui": {
       "title": "免责声明",
       "tip": "确保始终备份您的助记词和私钥。我们绝不会要求您分享您的私钥或钱包种子。永远不要相信任何人或任何要求您输入私钥或钱包种子的网站。",
-      "privary": "我们后续可能会更改隐私政策。我们鼓励您定期查看有关我们隐私惯例的最新信息。如果我们进行任何更改，我们将更改上面的上次更新日期。",
+      "privary": "我们后续可能会更改隐私条款。我们鼓励您定期查看有关我们隐私惯例的最新信息。如果我们进行任何更改，我们将更改上次更新日期。",
       "agreementPrefix": "我接受",
-      "agreement": "隐私政策",
+      "agreement": "隐私条款",
       "link": "https://info.pawket.app/zh/privacy-policy/",
-      "agreementSuffix": "并希望访问 Pawket。",
+      "agreementSuffix": "并希望访问薄荷钱包。",
       "button": {
         "continue": "继续"
       }
@@ -1020,7 +1020,7 @@
   },
   "createPassword": {
     "title": "创建密码",
-    "tip": "开始前，请先设置登录密码。此密码将用于确保您的钱包在此设备上的安全。",
+    "tip": "开始前，请先设置登录密码。此密码将用于保障您的钱包在此设备上的安全。",
     "label": {
       "password": "密码",
       "confirm": "确认密码"
@@ -1067,8 +1067,8 @@
         "mnemonicTip": "与 Chia 客户端兼容"
       },
       "button": {
-        "reveal": "隐藏助记词",
-        "hide": "显示助记词",
+        "reveal": "显示助记词",
+        "hide": "隐藏助记词",
         "delete": "删除"
       }
     },
