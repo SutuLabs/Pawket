@@ -170,9 +170,9 @@ export default class AccountDetail extends Vue {
       type: "is-danger",
       onConfirm: () => {
         store.dispatch("removeAccount", this.idx);
+        this.close();
       },
     });
-    this.close();
   }
 
   async show(): Promise<void> {

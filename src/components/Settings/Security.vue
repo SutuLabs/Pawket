@@ -9,15 +9,11 @@
         <b-button v-else type="is-primary" icon-left="eye-off" outlined expanded @click="toggleMnemonic()">
           {{ $t("settings.security.button.hideMnemonic") }}</b-button
         >
-        <span v-if="showMnemonic">
+        <div v-if="showMnemonic" class="width-400">
           <br />
-          {{ account.key.compatibleMnemonic }}
-          <key-box
-            icon="checkbox-multiple-blank-outline"
-            :tooltip="$t('common.tooltip.copy')"
-            :value="account.key.compatibleMnemonic"
-          ></key-box>
-        </span>
+          {{ mnemonic }}
+          <key-box icon="checkbox-multiple-blank-outline" :tooltip="$t('common.tooltip.copy')" :value="mnemonic"></key-box>
+        </div>
       </b-field>
       <b-field :label="$t('settings.security.label.password')">
         <b-button type="is-primary" icon-left="pencil-lock-outline" outlined expanded @click="ChangePassword()">
@@ -58,6 +54,10 @@ export default class Security extends Vue {
     return store.state.account.accounts[store.state.account.selectedAccount] ?? {};
   }
 
+  get mnemonic(): string {
+    return store.state.vault.seedMnemonic;
+  }
+
   close(): void {
     this.$emit("close");
   }
@@ -71,7 +71,6 @@ export default class Security extends Vue {
       canCancel: [""],
       fullScreen: isMobile(),
       props: { mnemonic: store.state.vault.seedMnemonic },
-      events: { close: this.close },
     });
   }
 
@@ -120,4 +119,8 @@ export default class Security extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.width-400 {
+  max-width: 400px;
+}
+</style>
