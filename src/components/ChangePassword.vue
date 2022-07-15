@@ -65,10 +65,6 @@ export default class ChangePassword extends Vue {
     this.$emit("close");
   }
 
-  back(): void {
-    this.$emit("back");
-  }
-
   validate(): void {
     (this.$refs.oldPwd as Vue & { checkHtml5Validity: () => boolean }).checkHtml5Validity();
     (this.$refs.newPwd as Vue & { checkHtml5Validity: () => boolean }).checkHtml5Validity();
