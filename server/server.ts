@@ -22,4 +22,11 @@ Instance.init().then(() => {
     app.get('/test', async (req: express.Request, res: express.Response) => {
         res.send(JSON.stringify(await puzzle.getAddressFromPuzzleHash("0xce8a53f46946e5c5e2aa835d700745d9be3879bc5f6a029a965b7663a5c1f74c", "xch")))
     })
+    //     app.get('/test', async (req: express.Request, res: express.Response) => {
+    // //   const blkgenpuz= await puzzle.disassemblePuzzle(blkgen)
+    // //   const bg= await puzzle.calcPuzzleResult(blkgenpuz,"()")
+    // //   const prog = assemble(bg);
+    // //   const argarr = Array.from(prog.first().as_iter()).map(_ => disassemble(_ as SExp));
+    // //   console.warn(argarr,prog.rest());
+    //     })
 });
