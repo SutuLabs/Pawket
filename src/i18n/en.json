@@ -185,7 +185,8 @@
       },
       "notification": {
         "donate": "You are donating to the developers.",
-        "observeMode": "Interaction function disabled in Observe Mode"
+        "observeMode": "Interaction function disabled in Observe Mode",
+        "offline": "Currently in offline mode."
       }
     }
   },

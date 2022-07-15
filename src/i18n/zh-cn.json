@@ -185,7 +185,8 @@
       },
       "notification": {
         "donate": "你正在向开发者捐赠",
-        "observeMode": "观察模式下无法使用交互功能。"
+        "observeMode": "观察模式下无法使用交互功能。",
+        "offline": "当前处于离线模式"
       }
     }
   },

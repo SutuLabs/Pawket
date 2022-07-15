@@ -10,15 +10,14 @@ export function demojo(mojo: null | number | bigint, token: OneTokenInfo | null 
     unit = nameOmit(token.unit, true);
     decimal = token.decimal;
     digits = digits == -1 ? token.decimal : digits;
-  }
-  else {
+  } else {
     digits = digits == -1 ? 12 : digits;
   }
 
   if (!mojo) return "0.0 " + unit;
   const num = mojo.toString();
   const bnum = bigDecimal.divide(num, Math.pow(10, decimal), digits);
-  const fnum = bnum.replace(/\.?0+$/, '');
+  const fnum = bnum.replace(/\.?0+$/, "");
 
   return fnum + " " + unit;
 }
