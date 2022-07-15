@@ -597,6 +597,8 @@
       },
       "field": {
         "csv": {
+          "fillSample": "填写示例",
+          "or": "或",
           "downloadSample": "点击此处下载 CSV 示例文件。",
           "drag": "拖放到此区域可直接上传。",
           "sampleName": "示例文件"

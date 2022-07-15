@@ -597,6 +597,8 @@
       },
       "field": {
         "csv": {
+          "fillSample": "Fill Sample",
+          "or": "or",
           "downloadSample": "Click here to download a sample CSV file.",
           "drag": "Drag and drop to this area to upload directly.",
           "sampleName": "Sample"
