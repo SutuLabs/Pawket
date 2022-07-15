@@ -38,8 +38,8 @@
       }
     },
     "switchNetwork": {
-      "message": "After switching the network, you need to log in again in order to ensure that all functions can be used normally.",
-      "confirm": "OK",
+      "message": "The network has been switched. To make sure that all funtions can be used normally, it is recommended to log in again.",
+      "confirm": "Re-Login",
       "cancel": "Later"
     }
   },
@@ -155,7 +155,7 @@
         "nft": "NFT"
       },
       "tooltip": {
-        "lock": "Lock",
+        "lock": "Lock Wallet",
         "errorLog": "Error Log",
         "refresh": "Refresh"
       },
@@ -181,7 +181,7 @@
     },
     "message": {
       "confirmation": {
-        "lock": "Lock?"
+        "lock": "Lock the wallet?"
       },
       "notification": {
         "donate": "You are donating to the developers.",
@@ -408,7 +408,7 @@
       "tooltip": {
         "removeToken": "Remove CAT",
         "drag": "Drag to sort",
-        "copy": "Copy AssetID"
+        "copy": "Copy asset ID"
       },
       "message": {
         "nameRequired": "Name is required.",
@@ -422,7 +422,7 @@
       },
       "confirmation": {
         "removeToken": "Are you sure to remove the CAT?",
-        "closeWithContent": "You have unsaved changes made to this page which will be lost if you navigate away. Are you sure you want to close?",
+        "closeWithContent": "You have unsaved changes on this page which will be lost if you navigate away. Are you sure to close?",
         "confirm": "Confirm",
         "cancel": "Cancel"
       },
