@@ -630,7 +630,7 @@
       "address": "Address",
       "coin": "Coin",
       "amount": "Amount(mojo)",
-      "memo": "Memo(If the coin you are sending is XCH, you cannot fill in the memo)"
+      "memo": "Memo(If the coin you are sending is XCH you cannot fill in the memo)"
     }
   },
   "utxo": {
