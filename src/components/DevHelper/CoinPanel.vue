@@ -38,9 +38,9 @@ import BundlePanel from "@/components/DevHelper/BundlePanel.vue";
 import puzzle from "@/services/crypto/puzzle";
 import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
 import { ConditionOpcode } from "@/services/coin/opcode";
-import transfer from "@/services/transfer/transfer";
 import { prefix0x } from "@/services/coin/condition";
 import { NotificationProgrammatic as Notification } from "buefy";
+import { getCoinName } from "@/services/coin/coinUtility";
 
 interface CoinSearchType {
   coinId: string;
@@ -95,7 +95,7 @@ export default class CoinPanel extends Vue {
         .map((_) => ({ op: Number(_[0]), args: _.slice(1) }))
         .filter((_) => _.op == ConditionOpcode.CREATE_COIN)
         .map((_) => ({ address: _.args[0], amount: BigInt(_.args[1]) }))
-        .map((_) => transfer.getCoinName({ amount: _.amount, parent_coin_info: this.coinId, puzzle_hash: _.address }).hex())
+        .map((_) => getCoinName({ amount: _.amount, parent_coin_info: this.coinId, puzzle_hash: _.address }))
         .map((_) => ({ coinId: prefix0x(_), type: "CHILD" }));
 
       this.coinSearchList.push(...children);

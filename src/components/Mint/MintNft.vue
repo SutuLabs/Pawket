@@ -297,7 +297,8 @@ export default class MintNft extends Vue {
         BigInt(this.fee),
         { uri: this.uri, hash: this.hash },
         this.availcoins,
-        this.requests
+        this.requests,
+        xchSymbol()
       );
 
       this.bundle = spendBundle;

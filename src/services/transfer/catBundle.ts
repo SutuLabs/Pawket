@@ -9,6 +9,7 @@ import puzzle, { PuzzleDetail } from "../crypto/puzzle";
 import transfer, { GetPuzzleApiCallback, TokenSpendPlan } from "./transfer";
 import { TokenPuzzleDetail } from "../crypto/receive";
 import { rpcUrl } from "@/store/modules/network";
+import { getCoinName } from "../coin/coinUtility";
 
 export interface LineageProof {
   coinId: string;
@@ -113,7 +114,7 @@ class CatBundle {
     // lineage_proof            ;; This is the parent's coin info, used to check if the parent was a CAT. Optional if using tail_program. parent_parent_(coin_info puzzle_hash amount)
     const lineage_proof = ljoin(prefix0x(proof.coinId), prefix0x(proof.proof), formatAmount(proof.amount));
     // prev_coin_id             ;; used in this coin's announcement, prev_coin ASSERT_COIN_ANNOUNCEMENT will fail if wrong (parent_coin_name)
-    const prev_coin_id = prefix0x(transfer.getCoinName(catcoin).hex());
+    const prev_coin_id = prefix0x(getCoinName(catcoin));
     // this_coin_info           ;; verified with ASSERT_MY_COIN_ID comsumed coin (parent_coin_info puzzle_hash amount)
     const this_coin_info = ljoin(catcoin.parent_coin_info, catcoin.puzzle_hash, formatAmount(catcoin.amount));
     // next_coin_proof          ;; used to generate ASSERT_COIN_ANNOUNCEMENT (parent_coin_info coin_inner_puzzle_treehash(puzzle_hash -> pk -> inner_puzzle_hash) total_amount)

@@ -6,8 +6,7 @@ import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
 import { SExp, Tuple } from "clvm";
 import { uncurry } from "clvm_tools/clvm_tools/curry";
 import { modsdict, modsprog } from "../src/services/coin/mods";
-import { Bytes } from "clvm";
-import { prefix0x } from '../src/services/coin/condition';
+import { getCoinName } from "../src/services/coin/coinUtility";
 import cluster from 'cluster'
 import os from 'os'
 
@@ -58,6 +57,7 @@ else {
     puzzle: SimplePuzzle | CannotParsePuzzle,
     amount: string,
     solution: string,
+    coinname: string,
   }
 
   interface SimplePuzzle {
@@ -73,11 +73,13 @@ else {
     const all = assemble(info);
     const parent = disassemble(all.first());
     const puz = disassemble(all.rest().first());
-    const puzzle = await simplifyPuzzle(puz);
+    const decPuzzle = await simplifyPuzzle(puz);
     const amount = disassemble(all.rest().rest().first());
     const solution = disassemble(all.rest().rest().rest().first());
+    const puzzle_hash = await puzzle.getPuzzleHashFromPuzzle(puz);
+    const coinname = getCoinName({ parent_coin_info: parent, puzzle_hash, amount: BigInt(amount) });
 
-    return { parent, puzzle, amount, solution };
+    return { parent, puzzle: decPuzzle, amount, solution, coinname };
   }
 
   const simplifyPuzzle = async function (puz: string): Promise<SimplePuzzle | CannotParsePuzzle> {

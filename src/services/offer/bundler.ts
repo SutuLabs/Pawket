@@ -13,6 +13,7 @@ import { GetParentPuzzleResponse } from "@/models/api";
 import { assemble, curry, disassemble } from "clvm_tools";
 import { modsprog } from "../coin/mods";
 import { xchSymbol } from "@/store/modules/network";
+import { getCoinName0x } from "../coin/coinUtility";
 
 export async function generateOffer(
   offered: OfferPlan[],
@@ -218,7 +219,7 @@ export async function combineSpendBundle(
     const reqcs = spendbundles[i].coin_spends[0];
     const offcs = spendbundles[(i + 1) % summaries.length].coin_spends[1];
     const sumoff = summaries[(i + 1) % summaries.length].offered[0];
-    reqcs.coin.parent_coin_info = prefix0x(transfer.getCoinName(offcs.coin).hex());
+    reqcs.coin.parent_coin_info = getCoinName0x(offcs.coin);
     reqcs.coin.amount = req.amount;
 
     // generate cat solution
@@ -226,7 +227,7 @@ export async function combineSpendBundle(
       const inner_puzzle = await puzzle.disassemblePuzzle(reqcs.solution);
       if (!sumoff.cat_target) throw new Error("cat target should be parsed");
       const offnewcoin: OriginCoin = {
-        parent_coin_info: prefix0x(transfer.getCoinName(offcs.coin).hex()),
+        parent_coin_info: getCoinName0x(offcs.coin),
         amount: req.amount,
         puzzle_hash: sumoff.cat_target,
       }
@@ -239,7 +240,7 @@ export async function combineSpendBundle(
           "puzzleReveal": offcs.puzzle_reveal,
         };
       }
-      const proof = await catBundle.getLineageProof(prefix0x(transfer.getCoinName(offcs.coin).hex()), localPuzzleApiCall);
+      const proof = await catBundle.getLineageProof(getCoinName0x(offcs.coin), localPuzzleApiCall);
       const solution = catBundle.getCatPuzzleSolution(inner_puzzle, offnewcoin, proof, settlement_tgt)
       reqcs.solution = prefix0x(await puzzle.encodePuzzle(solution));
     }

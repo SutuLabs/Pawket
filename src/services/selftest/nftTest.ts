@@ -1,7 +1,6 @@
 import { OriginCoin, SpendBundle } from "@/models/wallet";
 import { assertBundle } from "./runner";
 import { SymbolCoins } from "../transfer/transfer";
-import { xchPrefix, xchSymbol } from "@/store/modules/network";
 import { generateMintNftBundle, generateTransferNftBundle, NftCoinAnalysisResult } from "../coin/nft";
 import puzzle from "../crypto/puzzle";
 import { getTestAccount } from "./offerTest";
@@ -65,7 +64,7 @@ export async function testNftMint(): Promise<void> {
     "hash": "76a1900b6931f7bf5f07ab310733270838b040385f285423f49e2f5518867335",
   };
   const fee = 0n;
-  const { spendBundle } = await generateMintNftBundle(targetAddress, changeAddress, fee, metadata, availcoins, tokenPuzzles);
+  const { spendBundle } = await generateMintNftBundle(targetAddress, changeAddress, fee, metadata, availcoins, tokenPuzzles, xchSymbol());
   assertBundle(expect, spendBundle);
 }
 
@@ -124,7 +123,7 @@ export async function testNftTransfer(): Promise<void> {
   };
 
   const fee = 0n;
-  const spendBundle = await generateTransferNftBundle(targetAddress, changeAddress, fee, nftCoin, analysis, availcoins, tokenPuzzles, localPuzzleApiCall);
+  const spendBundle = await generateTransferNftBundle(targetAddress, changeAddress, fee, nftCoin, analysis, availcoins, tokenPuzzles, xchSymbol(), localPuzzleApiCall);
   assertBundle(expect, spendBundle);
 }
 
@@ -140,3 +139,6 @@ async function localPuzzleApiCall(parentCoinId: string): Promise<GetParentPuzzle
   const resp = knownCoins.find(_ => _.parentCoinId == parentCoinId);
   return resp;
 }
+
+function xchPrefix() { return "txch"; }
+function xchSymbol() { return "TXCH"; }

@@ -241,56 +241,62 @@ export default class NftTransfer extends Vue {
   }
 
   async sign(): Promise<void> {
-    // this.submitting = true;
-    // try {
-    //   if (!this.account.firstAddress) {
-    //     this.submitting = false;
-    //     return;
-    //   }
-    //   if (this.availcoins == null) {
-    //     this.submitting = false;
-    //     return;
-    //   }
-    //   try {
-    //     Bytes.from(bech32m.decodeToBytes(this.address).bytes).hex();
-    //   } catch (error) {
-    //     Notification.open({
-    //       message: this.$tc("send.messages.error.INVALID_ADDRESS"),
-    //       type: "is-danger",
-    //       duration: 5000,
-    //     });
-    //     this.submitting = false;
-    //     return;
-    //   }
-    //   if (!this.address.startsWith(xchPrefix())) {
-    //     Notification.open({
-    //       message: this.$tc("send.messages.error.ADDRESS_NOT_MATCH_NETWORK"),
-    //       type: "is-danger",
-    //       duration: 5000,
-    //     });
-    //     this.submitting = false;
-    //     return;
-    //   }
-    //   const spendBundle = await generateTransferNftBundle(
-    //     this.address,
-    //     this.account.firstAddress,
-    //     BigInt(this.fee),
-    //     this.nft.coin,
-    //     this.nft.analysis,
-    //     this.availcoins,
-    //     this.requests
-    //   );
-    //   this.bundle = spendBundle;
-    // } catch (error) {
-    //   Notification.open({
-    //     message: this.$tc("mintNft.ui.messages.failedToSign") + error,
-    //     type: "is-danger",
-    //     autoClose: false,
-    //   });
-    //   console.warn(error);
-    //   this.submitting = false;
-    // }
-    // this.submitting = false;
+    this.submitting = true;
+    try {
+      if (!this.account.firstAddress) {
+        this.submitting = false;
+        return;
+      }
+
+      if (this.availcoins == null) {
+        this.submitting = false;
+        return;
+      }
+
+      try {
+        Bytes.from(bech32m.decodeToBytes(this.address).bytes).hex();
+      } catch (error) {
+        Notification.open({
+          message: this.$tc("send.messages.error.INVALID_ADDRESS"),
+          type: "is-danger",
+          duration: 5000,
+        });
+        this.submitting = false;
+        return;
+      }
+
+      if (!this.address.startsWith(xchPrefix())) {
+        Notification.open({
+          message: this.$tc("send.messages.error.ADDRESS_NOT_MATCH_NETWORK"),
+          type: "is-danger",
+          duration: 5000,
+        });
+        this.submitting = false;
+        return;
+      }
+
+      const spendBundle = await generateTransferNftBundle(
+        this.address,
+        this.account.firstAddress,
+        BigInt(this.fee),
+        this.nft.coin,
+        this.nft.analysis,
+        this.availcoins,
+        this.requests,
+        xchSymbol()
+      );
+
+      this.bundle = spendBundle;
+    } catch (error) {
+      Notification.open({
+        message: this.$tc("mintNft.ui.messages.failedToSign") + error,
+        type: "is-danger",
+        autoClose: false,
+      });
+      console.warn(error);
+      this.submitting = false;
+    }
+    this.submitting = false;
   }
 
   async submit(): Promise<void> {

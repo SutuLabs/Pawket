@@ -7,6 +7,7 @@ import { TokenPuzzleDetail } from "../crypto/receive";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { curryMod } from "../offer/bundler";
 import { modsprog } from "../coin/mods";
+import { getCoinName0x } from "../coin/coinUtility";
 
 export interface MintCatInfo {
   spendBundle: SpendBundle;
@@ -68,7 +69,7 @@ async function constructCatPuzzle(
 
   const tempplan = transfer.generateSpendPlan(availcoins, itgts, change_hex, fee);
   const catmod = catClvmTreehash;
-  const bootstrapCoin = prefix0x(transfer.getCoinName(tempplan[baseSymbol].coins[0]).hex());
+  const bootstrapCoin = getCoinName0x(tempplan[baseSymbol].coins[0]);
   const curried_tail = await curryMod(modsprog["genesis_by_coin_id"], bootstrapCoin);
   if (!curried_tail) throw new Error("failed to curry tail.");
 
@@ -112,7 +113,7 @@ async function constructExternalBundle(
   sk_hex: string,
 ): Promise<SpendBundle> {
   const coin = { parent_coin_info: bootstrapCoin, amount, puzzle_hash: catPuzzle.hash };
-  const coin_name = prefix0x(transfer.getCoinName(coin).hex());
+  const coin_name = getCoinName0x(coin);
 
   const catsln = `(() () ${coin_name} (${bootstrapCoin} ${catPuzzle.hash} ${amount}) (${bootstrapCoin} ${innerPuzzle.hash} ${amount}) () ())`;
   const puzzle_reveal = prefix0x(await puzzle.encodePuzzle(catPuzzle.plaintext));

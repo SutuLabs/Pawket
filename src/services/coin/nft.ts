@@ -1,5 +1,4 @@
 import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
-import { xchSymbol } from "@/store/modules/network";
 import { assemble } from "clvm_tools/clvm_tools/binutils";
 import debug from "../api/debug";
 import puzzle, { PuzzleDetail } from "../crypto/puzzle";
@@ -13,6 +12,7 @@ import { modsdict, modshash, modsprog, modspuz } from "./mods";
 import { Bytes } from "clvm";
 import { bytesToHex0x } from "../crypto/utility";
 import catBundle from "../transfer/catBundle";
+import { getCoinName0x } from "./coinUtility";
 
 export interface MintNftInfo {
   spendBundle: SpendBundle;
@@ -40,13 +40,13 @@ export async function generateMintNftBundle(
   fee: bigint,
   metadata: NftMetadata,
   availcoins: SymbolCoins,
-  requests: TokenPuzzleDetail[]
+  requests: TokenPuzzleDetail[],
+  baseSymbol: string,
 ): Promise<MintNftInfo> {
   const amount = 1n; // always 1 mojo for 1 NFT
   const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(changeAddress));
   const inner_p2_puzzle = getPuzzleDetail(tgt_hex, requests);
-  const baseSymbol = xchSymbol();
 
   /*
   1. BootstrapCoin: XCH Tx -> (XCH Change Tx . SgtLauncher Tx)
@@ -115,13 +115,13 @@ export async function generateTransferNftBundle(
   analysis: NftCoinAnalysisResult,
   availcoins: SymbolCoins,
   requests: TokenPuzzleDetail[],
+  baseSymbol: string,
   api: GetPuzzleApiCallback | null = null,
 ): Promise<SpendBundle> {
 
   const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(changeAddress));
   const inner_p2_puzzle = getPuzzleDetail(analysis.hintPuzzle, requests);
-  const baseSymbol = xchSymbol();
 
   const amount = 1n;
   const nftStatePuzzle = await constructNftStatePuzzle(analysis.metadata, inner_p2_puzzle.puzzle);
@@ -246,14 +246,6 @@ async function constructNftTopLayerPuzzle(
   if (!curried_tail) throw new Error("failed to curry tail.");
 
   return curried_tail;
-}
-
-export function getCoinName0x(coin: OriginCoin): string {
-  return prefix0x(transfer.getCoinName(coin).hex());
-}
-
-export function getCoinName(coin: OriginCoin): string {
-  return transfer.getCoinName(coin).hex();
 }
 
 function getPuzzleDetail(

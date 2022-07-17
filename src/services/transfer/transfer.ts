@@ -11,6 +11,7 @@ import stdBundle from "./stdBundle";
 import { ConditionOpcode } from "../coin/opcode";
 import catBundle from "./catBundle";
 import { xchSymbol } from "@/store/modules/network";
+import { getCoinNameHex } from "../coin/coinUtility";
 
 export type GetPuzzleApiCallback = (parentCoinId: string) => Promise<GetParentPuzzleResponse | undefined>;
 
@@ -93,7 +94,7 @@ class Transfer {
       const synthetic_sk = puz
         ? this.calculate_synthetic_secret_key(BLS, puz.privateKey, DEFAULT_HIDDEN_PUZZLE_HASH.raw())
         : undefined;
-      const coinname = this.getCoinName(coin_spend.coin);
+      const coinname = getCoinNameHex(coin_spend.coin);
 
       const result = await puzzle.calcPuzzleResult(puzzle_reveal, await puzzle.disassemblePuzzle(coin_spend.solution));
       const signature = await this.signSolution(BLS, result, synthetic_sk, coinname);
@@ -124,15 +125,6 @@ class Transfer {
         .map(_ => (typeof _ === "object" ? ("(" + _.join(" ") + ")") : _))
         .join(" ") + ")")
       .join(" ") + ")";
-  }
-
-  public getCoinName(coin: OriginCoin): Bytes {
-    const a = bigint_to_bytes(BigInt(coin.amount), { signed: true });
-    const pci = Bytes.from(coin.parent_coin_info, "hex");
-    const ph = Bytes.from(coin.puzzle_hash, "hex");
-    const cont = pci.concat(ph).concat(a);
-    const coinname = Bytes.SHA256(cont);
-    return coinname;
   }
 
   private calculate_synthetic_offset(public_key: G1Element, hidden_puzzle_hash: Uint8Array): bigint {
