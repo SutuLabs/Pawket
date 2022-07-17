@@ -419,6 +419,34 @@ export const mods: ModDetail[] = [
       },
     ],
   },
+  {
+    name: "generator_for_single_coin",
+    mod: "(a (q 2 12 (c 2 (c (f (a 5 (c 10 (c 19 ())))) (c 23 ())))) (c (q ((= (sha256 9 (a 14 (c 2 (c 21 ()))) 45) 11) 2 (i 5 (q 2 (i (a 8 (c 2 (c 9 (c 11 ())))) (q 4 41 (c -71 ())) (q 2 12 (c 2 (c 13 (c 11 ()))))) 1) (q 8)) 1) (a (q 5 (a 62 (c 2 (c 5 ())))) (c (q ((-1 . 127) -33 . -65) ((a (i (= 11 (q . -128)) (q 4 () (c 5 ())) (q 2 (i (>s 11 24) (q 2 26 (c 2 (c (a (i (>s 11 28) (q 2 (i (>s 11 20) (q 8) (q 4 (concat (logand (q . 31) 11) (substr 5 () (q . 1))) (c (substr 5 (q . 1)) ()))) 1) (q 4 (logand (q . 63) 11) (c 5 ()))) 1) ()))) (q 4 11 (c 5 ()))) 1)) 1) 4 (substr 21 () 9) (c (substr 21 9) ())) (c (c 5 19) (c 43 ())) (a 22 (c 2 (c 9 (c (a 62 (c 2 (c 21 ()))) ())))) 2 (i (= (substr 5 () (q . 1)) 16) (q 2 46 (c 2 (c (a 62 (c 2 (c (substr 5 (q . 1)) ()))) ()))) (q 2 18 (c 2 (c (substr 5 (q . 1)) (c (substr 5 () (q . 1)) ()))))) 1) 1)) 2 (i (l 5) (q 11 (q . 2) (a 14 (c 2 (c 9 ()))) (a 14 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1))",
+    parameters: [
+      {
+        name: "block_program",
+        desc: "",
+      },
+      {
+        name: "(block_ref)",
+        desc: "",
+      },
+      {
+        name: "coinname",
+        desc: "",
+      },
+    ],
+  },
+  {
+    name: "chialisp_deserialisation",
+    mod: "(a (q 5 (a 62 (c 2 (c 5 ())))) (c (q ((-1 . 127) -33 . -65) ((a (i (= 11 (q . -128)) (q 4 () (c 5 ())) (q 2 (i (>s 11 24) (q 2 26 (c 2 (c (a (i (>s 11 28) (q 2 (i (>s 11 20) (q 8) (q 4 (concat (logand (q . 31) 11) (substr 5 () (q . 1))) (c (substr 5 (q . 1)) ()))) 1) (q 4 (logand (q . 63) 11) (c 5 ()))) 1) ()))) (q 4 11 (c 5 ()))) 1)) 1) 4 (substr 21 () 9) (c (substr 21 9) ())) (c (c 5 19) (c 43 ())) (a 22 (c 2 (c 9 (c (a 62 (c 2 (c 21 ()))) ())))) 2 (i (= (substr 5 () (q . 1)) 16) (q 2 46 (c 2 (c (a 62 (c 2 (c (substr 5 (q . 1)) ()))) ()))) (q 2 18 (c 2 (c (substr 5 (q . 1)) (c (substr 5 () (q . 1)) ()))))) 1) 1))",
+    parameters: [
+      {
+        name: "input",
+        desc: "",
+      },
+    ],
+  },
 ]
 export const modsdict: { [mod: string]: string } = mods.reduce((acc, cur) => ({ ...acc, [cur.mod]: cur.name }), {});
 export const modsprog: { [name: string]: string } = mods.reduce((acc, cur) => ({ ...acc, [cur.name]: cur.mod }), {});

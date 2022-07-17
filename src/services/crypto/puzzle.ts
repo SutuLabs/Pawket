@@ -1,10 +1,11 @@
-import * as clvm_tools from "clvm_tools/browser";
+import * as clvm_tools from "clvm_tools";
 import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
 import { PrivateKey } from "@chiamine/bls-signatures";
 import utility from "./utility";
 import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
 import { Instance } from "../util/instance";
+import { modsdict } from "../coin/mods";
 
 export interface ExecuteResultCondition {
   op: number;
@@ -149,16 +150,16 @@ class PuzzleMaker {
     return hex;
   }
 
-  public async getPuzzleHashes(privateKey: Uint8Array, prefix:string,startIndex = 0, endIndex = 10): Promise<string[]> {
-    return (await this.getPuzzleDetails(privateKey,prefix, startIndex, endIndex)).map(_ => _.hash);
+  public async getPuzzleHashes(privateKey: Uint8Array, prefix: string, startIndex = 0, endIndex = 10): Promise<string[]> {
+    return (await this.getPuzzleDetails(privateKey, prefix, startIndex, endIndex)).map(_ => _.hash);
   }
 
-  public async getPuzzleDetails(privateKey: Uint8Array,prefix:string, startIndex = 0, endIndex = 10): Promise<PuzzleDetail[]> {
-    return await this.getPuzzleDetailsInner(privateKey, async (spk) => this.getPuzzle(spk), startIndex, endIndex,prefix, true)
+  public async getPuzzleDetails(privateKey: Uint8Array, prefix: string, startIndex = 0, endIndex = 10): Promise<PuzzleDetail[]> {
+    return await this.getPuzzleDetailsInner(privateKey, async (spk) => this.getPuzzle(spk), startIndex, endIndex, prefix, true)
   }
 
-  public async getCatPuzzleDetails(privateKey: Uint8Array, assetId: string,prefix:string, startIndex = 0, endIndex = 10): Promise<PuzzleDetail[]> {
-    return await this.getPuzzleDetailsInner(privateKey, async (spk) => this.getCatPuzzle(spk, assetId), startIndex, endIndex,prefix, true)
+  public async getCatPuzzleDetails(privateKey: Uint8Array, assetId: string, prefix: string, startIndex = 0, endIndex = 10): Promise<PuzzleDetail[]> {
+    return await this.getPuzzleDetailsInner(privateKey, async (spk) => this.getCatPuzzle(spk, assetId), startIndex, endIndex, prefix, true)
   }
 
   private async getPuzzleDetailsInner(
@@ -166,7 +167,7 @@ class PuzzleMaker {
     getPuzzle: (pubkey: string) => Promise<string>,
     startIndex: number,
     endIndex: number,
-    prefix:string,
+    prefix: string,
     includeUnhardened = false): Promise<PuzzleDetail[]> {
     const derive = await utility.derive(privateKey, true);
     const deriveUnhardened = await utility.derive(privateKey, false);
@@ -199,8 +200,8 @@ class PuzzleMaker {
     return sk;
   }
 
-  public async getCatPuzzleHashes(privateKey: Uint8Array, assetId: string,prefix:string, startIndex = 0, endIndex = 10): Promise<string[]> {
-    return (await this.getCatPuzzleDetails(privateKey, assetId, prefix,startIndex, endIndex)).map(_ => _.hash);
+  public async getCatPuzzleHashes(privateKey: Uint8Array, assetId: string, prefix: string, startIndex = 0, endIndex = 10): Promise<string[]> {
+    return (await this.getCatPuzzleDetails(privateKey, assetId, prefix, startIndex, endIndex)).map(_ => _.hash);
   }
 
   public async calcPuzzleResult(puzzle_reveal: string, solution: string): Promise<string> {
@@ -210,7 +211,8 @@ class PuzzleMaker {
     clvm_tools.go("brun", puzzle_reveal, solution);
     const result = output[0];
 
-    if (result.startsWith("FAIL")) throw new Error(`Error calculating puzzle [${puzzle_reveal}] from solution [${solution}]: ${result}`);
+    const modname = modsdict[puzzle_reveal];
+    if (result.startsWith("FAIL")) throw new Error(`Error calculating puzzle [${modname ?? puzzle_reveal}] from solution [${solution}]: ${result}`);
 
     return result;
   }

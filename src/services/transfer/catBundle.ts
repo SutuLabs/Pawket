@@ -2,7 +2,7 @@ import { Bytes } from "clvm";
 import { CoinSpend, OriginCoin } from "@/models/wallet";
 import { GetParentPuzzleRequest, GetParentPuzzleResponse } from "@/models/api";
 import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
-import { uncurry } from "clvm_tools/browser";
+import { uncurry } from "clvm_tools";
 import { SExp, Tuple } from "clvm";
 import { ConditionType, formatAmount, prefix0x } from "../coin/condition";
 import puzzle, { PuzzleDetail } from "../crypto/puzzle";

@@ -10,7 +10,7 @@ import stdBundle from "../transfer/stdBundle";
 import { getOfferSummary, OfferEntity, OfferPlan, OfferSummary } from "./summary";
 import store from "@/store";
 import { GetParentPuzzleResponse } from "@/models/api";
-import { assemble, curry, disassemble } from "clvm_tools/browser";
+import { assemble, curry, disassemble } from "clvm_tools";
 import { modsprog } from "../coin/mods";
 import { xchSymbol } from "@/store/modules/network";
 
