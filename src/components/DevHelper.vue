@@ -1,12 +1,6 @@
 <template>
   <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">
-        Debug
-        <span class="tag is-info">{{ networkId }}</span>
-      </p>
-      <button type="button" class="delete" @click="close()"></button>
-    </header>
+    <top-bar :title="$t('settings.devhelper.title') + network" @close="$emit('close')" :showClose="showClose"></top-bar>
     <section class="modal-card-body">
       <b-tabs position="is-centered" class="block" v-model="selectedTab">
         <b-tab-item label="Bech32m">
@@ -26,14 +20,11 @@
         </b-tab-item>
       </b-tabs>
     </section>
-    <footer class="modal-card-foot">
-      <b-button label="Close" @click="close()"></b-button>
-    </footer>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Emit } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
 import BundlePanel from "@/components/DevHelper/BundlePanel.vue";
 import CoinPanel from "@/components/DevHelper/CoinPanel.vue";
@@ -41,6 +32,7 @@ import HashPanel from "@/components/DevHelper/HashPanel.vue";
 import ClvmPanel from "@/components/DevHelper/ClvmPanel.vue";
 import OfferPanel from "@/components/DevHelper/OfferPanel.vue";
 import store from "@/store";
+import TopBar from "./TopBar.vue";
 
 @Component({
   components: {
@@ -50,11 +42,13 @@ import store from "@/store";
     HashPanel,
     ClvmPanel,
     OfferPanel,
+    TopBar,
   },
 })
 export default class DevHelper extends Vue {
   @Prop() private inputBundleText!: string;
   @Prop() private inputOfferText!: string;
+  @Prop({ default: true }) public showClose!: boolean;
   public selectedTab = 0;
 
   get networkId(): string {
@@ -74,9 +68,8 @@ export default class DevHelper extends Vue {
     return store.state.app.debug;
   }
 
-  @Emit("close")
-  close(): void {
-    return;
+  get network(): string {
+    return `[${this.networkId}]`;
   }
 }
 </script>

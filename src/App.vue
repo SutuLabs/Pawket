@@ -9,7 +9,7 @@
     </div>
     <mobile-nav v-if="showNavigation"></mobile-nav>
     <div class="my-3 is-hidden-tablet">&nbsp;</div>
-    <footer class="footer">
+    <footer class="footer" :class="{ 'is-hidden-mobile': unlocked }">
       <div class="content has-text-centered">
         <p>
           <strong> {{ $t("footer.ui.productInfo.name") }}</strong>
@@ -49,6 +49,7 @@ import VerifyPassword from "./components/VerifyPassword.vue";
 import MobileNav from "./components/Navigation/MobileNav.vue";
 import NavBar from "./components/Navigation/Navbar.vue";
 import { tc } from "./i18n/i18n";
+import { isMobile } from "./services/view/responsive";
 
 @Component({ components: { VerifyPassword, MobileNav, NavBar } })
 export default class App extends Vue {
@@ -120,8 +121,8 @@ export default class App extends Vue {
       component: DevHelper,
       hasModalCard: true,
       trapFocus: true,
+      fullScreen: isMobile(),
       canCancel: [""],
-      props: {},
     });
   }
 
@@ -131,6 +132,8 @@ export default class App extends Vue {
       component: OfflineQrCode,
       hasModalCard: true,
       trapFocus: true,
+      fullScreen: isMobile(),
+      canCancel: [""],
       props: { mode: "PROXY", prefix: xchPrefix() },
     });
   }

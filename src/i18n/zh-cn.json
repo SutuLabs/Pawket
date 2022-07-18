@@ -163,6 +163,7 @@
         "title": "应用",
         "tooltip": {
           "donate": "向开发者捐赠",
+          "proxy": "离线代理",
           "takeOffer": "接受 Offer",
           "makeOffer": "发起 Offer",
           "batchSend": "批量发送",
@@ -171,6 +172,7 @@
         },
         "button": {
           "donate": "捐赠",
+          "proxy": "离线代理",
           "takeOffer": "接受 Offer",
           "makeOffer": "发起 Offer",
           "batchSend": "批量发送",
@@ -866,9 +868,9 @@
           "title": "高级",
           "description": "实验室模式"
         },
-        "donate": {
-          "title": "捐赠",
-          "description": "向开发者捐赠"
+        "devhelper": {
+          "title": "开发者工具",
+          "description": "Bech32m, CLVM, Bundle, Offer, Coin"
         },
         "about": {
           "title": "关于",
@@ -905,6 +907,9 @@
         "export": "导出账户信息",
         "reset": "重置钱包"
       }
+    },
+    "devhelper": {
+      "title": "开发者工具"
     },
     "advanced": {
       "title": "高级",
@@ -1055,10 +1060,6 @@
         "farmerPublicKey": "农夫节点公钥 (m/12381/8444/0/0)",
         "poolPublicKey": "矿池公钥 (m/12381/8444/1/0)",
         "firstWalletAddress": "钱包首地址",
-        "masterPrivateKey": "主节点私钥 (m)",
-        "firstWalletSecretKey": "第一个钱包私钥 (m/12381/8444/2/0)",
-        "PrivateKey": "私钥",
-        "firstWalletPublicKey": "第一个钱包公钥 (m/12381/8444/2/0)",
         "mnemonicSeed": "助记词种子(24词)",
         "details": "显示详情"
       },

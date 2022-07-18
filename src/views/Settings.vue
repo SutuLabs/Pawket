@@ -15,8 +15,8 @@
         <b-tab-item :label="$t('settings.menu.items.advanced.title')" icon="lightbulb-outline">
           <advanced class="width-auto"></advanced>
         </b-tab-item>
-        <b-tab-item :label="$t('settings.menu.items.donate.title')" icon="hand-heart-outline">
-          <donate :showClose="false" class="width-auto"></donate>
+        <b-tab-item :label="$t('settings.menu.items.devhelper.title')" icon="developer-board">
+          <dev-helper class="width-auto" :showClose="false"></dev-helper>
         </b-tab-item>
         <b-tab-item :label="$t('settings.menu.items.about.title')" icon="information-outline">
           <about class="width-auto"></about>
@@ -81,14 +81,14 @@
           <b-icon class="is-pulled-right has-text-grey" icon="chevron-right"> </b-icon>
         </div>
       </div>
-      <div class="panel-block py-0 my-0" @click="goToDonate()">
+      <div class="panel-block py-0 my-0" @click="goToDevHelper()">
         <div class="is-11 is-flex my-1 py-1">
           <div class="mr-2 py-1">
-            <b-icon icon="hand-heart-outline"></b-icon>
+            <b-icon icon="developer-board"></b-icon>
           </div>
           <div class="py-1">
-            <p>{{ $t("settings.menu.items.donate.title") }}</p>
-            <p class="is-size-7 pt-2 has-text-grey">{{ $t("settings.menu.items.donate.description") }}</p>
+            <p>{{ $t("settings.menu.items.devhelper.title") }}</p>
+            <p class="is-size-7 pt-2 has-text-grey">{{ $t("settings.menu.items.devhelper.description") }}</p>
           </div>
         </div>
         <div class="column py-1">
@@ -109,7 +109,7 @@
           <b-icon class="is-pulled-right has-text-grey" icon="chevron-right"> </b-icon>
         </div>
       </div>
-      <div class="panel-block mt-4">
+      <div class="panel-block my-4">
         <b-button type="is-info" expanded outlined @click="lock()">{{ $t("settings.menu.items.lock") }}</b-button>
       </div>
     </div>
@@ -117,10 +117,10 @@
 </template>
 
 <script lang="ts">
+import DevHelper from "@/components/DevHelper.vue";
 import About from "@/components/Settings/About.vue";
 import AddressBook from "@/components/Settings/AddressBook.vue";
 import Advanced from "@/components/Settings/Advanced.vue";
-import Donate from "@/components/Settings/Donate.vue";
 import General from "@/components/Settings/General.vue";
 import Security from "@/components/Settings/Security.vue";
 import { isDesktop } from "@/services/view/responsive";
@@ -128,7 +128,7 @@ import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component({
-  components: { General, Security, Advanced, AddressBook, Donate, About },
+  components: { General, Security, Advanced, AddressBook, About, DevHelper },
 })
 export default class Settings extends Vue {
   goToGeneral(): void {
@@ -175,10 +175,10 @@ export default class Settings extends Vue {
     });
   }
 
-  goToDonate(): void {
+  goToDevHelper(): void {
     this.$buefy.modal.open({
       parent: this,
-      component: Donate,
+      component: DevHelper,
       trapFocus: true,
       canCancel: [""],
       fullScreen: true,
