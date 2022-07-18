@@ -18,6 +18,16 @@
         </b-tooltip>
       </div>
       <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.proxy')" position="is-right">
+          <a href="javascript:void(0)" @click="showProxy()" class="has-text-link">
+            <div class="has-text-centered">
+              <b-icon icon="router-network" size="is-medium"></b-icon>
+              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.proxy") }}</p>
+            </div>
+          </a>
+        </b-tooltip>
+      </div>
+      <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.takeOffer')" position="is-right">
           <a v-if="experimentMode" href="javascript:void(0)" @click="openTakeOffer()" class="has-text-link">
             <div class="has-text-centered">
@@ -82,6 +92,8 @@ import BatchSend from "./Transfer/BatchSend.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import Donate from "./Settings/Donate.vue";
 import { isMobile } from "@/services/view/responsive";
+import OfflineQrCode from "./OfflineQrCode.vue";
+import { xchPrefix } from "@/store/modules/network";
 
 @Component
 export default class Dapp extends Vue {
@@ -118,7 +130,7 @@ export default class Dapp extends Vue {
   checkObserveMode(): void {
     if (this.observeMode) {
       Notification.open({
-        message: this.$tc('accountDetail.message.notification.observeMode'),
+        message: this.$tc("accountDetail.message.notification.observeMode"),
         type: "is-warning",
       });
       throw new Error("Interaction function disabled in Observe Mode");
@@ -165,6 +177,18 @@ export default class Dapp extends Vue {
       props: {
         account: this.account,
       },
+    });
+  }
+
+  showProxy(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: OfflineQrCode,
+      hasModalCard: true,
+      fullScreen: isMobile(),
+      canCancel: [""],
+      trapFocus: true,
+      props: { mode: "PROXY", prefix: xchPrefix() },
     });
   }
 

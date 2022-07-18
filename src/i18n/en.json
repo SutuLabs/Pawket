@@ -163,6 +163,7 @@
         "title": "dApps",
         "tooltip": {
           "donate": "Donate to Support Development",
+          "proxy": "Proxy",
           "takeOffer": "Take Offer",
           "makeOffer": "Make Offer",
           "batchSend": "Batch Send",
@@ -171,6 +172,7 @@
         },
         "button": {
           "donate": "Donate",
+          "proxy": "Proxy",
           "takeOffer": "Take Offer",
           "makeOffer": "Make Offer",
           "batchSend": "Batch Send",
@@ -866,9 +868,8 @@
           "title": "Advanced",
           "description": "Experimental"
         },
-        "donate": {
-          "title": "Donate",
-          "description": "Donate to Support Development"
+        "devhelper": {
+          "title": "Developer"
         },
         "about": {
           "title": "About",
@@ -905,6 +906,9 @@
         "export": "Export Private Information",
         "reset": "Reset Wallet"
       }
+    },
+    "devhelper":{
+      "title": "Debug"
     },
     "advanced": {
       "title": "Advanced",
@@ -1055,10 +1059,6 @@
         "farmerPublicKey": "Farmer public key (m/12381/8444/0/0)",
         "poolPublicKey": "Pool public key (m/12381/8444/1/0)",
         "firstWalletAddress": "First wallet address",
-        "masterPrivateKey": "Master private key (m)",
-        "firstWalletSecretKey": "First wallet secret key (m/12381/8444/2/0)",
-        "PrivateKey": "Private key",
-        "firstWalletPublicKey": "First wallet public key (m/12381/8444/2/0)",
         "mnemonicSeed": "Mnemonic seed (24-word)",
         "details": "Details"
       },

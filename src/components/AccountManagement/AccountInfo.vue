@@ -80,18 +80,6 @@
             {{ $t("accountInfo.ui.label.firstWalletAddress") }}:
             <key-box :value="account.firstAddress" :showValue="true"></key-box>
           </li>
-          <li>
-            {{ $t("accountInfo.ui.label.masterPrivateKey") }}:
-            <key-box :value="masterprikey" :showValue="true"></key-box>
-          </li>
-          <li>
-            {{ $t("accountInfo.ui.label.firstWalletSecretKey") }}: &lt;{{ $t("accountInfo.ui.label.PrivateKey") }}
-            <key-box :value="walletprikey" :showValue="true"></key-box>&gt;
-          </li>
-          <li>
-            {{ $t("accountInfo.ui.label.firstWalletPublicKey") }}:
-            <key-box :value="walletpubkey" :showValue="true"></key-box>
-          </li>
         </ul>
       </div>
       <div class="pt-6 px-2" v-if="idx != 0">
@@ -118,25 +106,19 @@ import TopBar from "../TopBar.vue";
 export default class AccountDetail extends Vue {
   @Prop() private idx!: number;
   public masterpubkey = "";
-  public masterprikey = "";
   public farmerpubkey = "";
   public poolpubkey = "";
-  public walletprikey = "";
-  public walletpubkey = "";
   public showMnemonic = false;
   public showDetail = false;
 
   mounted(): void {
     var privkey = utility.fromHexString(this.account.key.privateKey);
     utility.getPrivateKey(privkey).then((sk) => {
-      this.masterprikey = utility.toHexString(sk.serialize());
       this.masterpubkey = utility.toHexString(sk.get_g1().serialize());
     });
     utility.derive(privkey).then((derive) => {
       this.farmerpubkey = utility.toHexString(derive([12381, 8444, 0, 0]).get_g1().serialize());
       this.poolpubkey = utility.toHexString(derive([12381, 8444, 1, 0]).get_g1().serialize());
-      this.walletprikey = utility.toHexString(derive([12381, 8444, 2, 0]).serialize());
-      this.walletpubkey = utility.toHexString(derive([12381, 8444, 2, 0]).get_g1().serialize());
     });
   }
 
