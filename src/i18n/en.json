@@ -869,7 +869,8 @@
           "description": "Experimental"
         },
         "devhelper": {
-          "title": "Developer"
+          "title": "Developer",
+          "description": "Bech32m, CLVM, Bundle, Offer, Coin"
         },
         "about": {
           "title": "About",
@@ -907,8 +908,8 @@
         "reset": "Reset Wallet"
       }
     },
-    "devhelper":{
-      "title": "Debug"
+    "devhelper": {
+      "title": "Developer"
     },
     "advanced": {
       "title": "Advanced",

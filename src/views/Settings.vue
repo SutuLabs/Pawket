@@ -88,7 +88,7 @@
           </div>
           <div class="py-1">
             <p>{{ $t("settings.menu.items.devhelper.title") }}</p>
-            <div class="py-4"></div>
+            <p class="is-size-7 pt-2 has-text-grey">{{ $t("settings.menu.items.devhelper.description") }}</p>
           </div>
         </div>
         <div class="column py-1">

@@ -869,7 +869,8 @@
           "description": "实验室模式"
         },
         "devhelper": {
-          "title": "开发者"
+          "title": "开发者工具",
+          "description": "Bech32m, CLVM, Bundle, Offer, Coin"
         },
         "about": {
           "title": "关于",
@@ -907,8 +908,8 @@
         "reset": "重置钱包"
       }
     },
-    "devhelper":{
-      "title": "调试"
+    "devhelper": {
+      "title": "开发者工具"
     },
     "advanced": {
       "title": "高级",
