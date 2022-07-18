@@ -38,8 +38,8 @@
       }
     },
     "switchNetwork": {
-      "message": "After switching the network, you need to log in again in order to ensure that all functions can be used normally.",
-      "confirm": "OK",
+      "message": "The network has been switched. To make sure that all funtions can be used normally, it is recommended to log in again.",
+      "confirm": "Re-Login",
       "cancel": "Later"
     }
   },
@@ -155,7 +155,7 @@
         "nft": "NFT"
       },
       "tooltip": {
-        "lock": "Lock",
+        "lock": "Lock Wallet",
         "errorLog": "Error Log",
         "refresh": "Refresh"
       },
@@ -183,7 +183,7 @@
     },
     "message": {
       "confirmation": {
-        "lock": "Lock?"
+        "lock": "Lock the wallet?"
       },
       "notification": {
         "donate": "You are donating to the developers.",
@@ -410,7 +410,7 @@
       "tooltip": {
         "removeToken": "Remove CAT",
         "drag": "Drag to sort",
-        "copy": "Copy AssetID"
+        "copy": "Copy asset ID"
       },
       "message": {
         "nameRequired": "Name is required.",
@@ -424,12 +424,12 @@
       },
       "confirmation": {
         "removeToken": "Are you sure to remove the CAT?",
-        "closeWithContent": "You have unsaved changes made to this page which will be lost if you navigate away. Are you sure you want to close?",
+        "closeWithContent": "You have unsaved changes on this page which will be lost if you navigate away. Are you sure to close?",
         "confirm": "Confirm",
         "cancel": "Cancel"
       },
       "alert": {
-        "isExisted": "Asset ID/Name Already Exists in CATs List!"
+        "isExisted": "Asset ID/Name already exists in CATs List!"
       }
     }
   },
@@ -601,8 +601,8 @@
       "field": {
         "csv": {
           "fillSample": "Fill Sample",
-          "or": "or",
-          "downloadSample": "Click here to download a sample CSV file.",
+          "or": " or ",
+          "downloadSample": "Download a sample CSV file",
           "drag": "Drag and drop to this area to upload directly.",
           "sampleName": "Sample"
         }
@@ -632,7 +632,7 @@
       "address": "Address",
       "coin": "Coin",
       "amount": "Amount(mojo)",
-      "memo": "Memo(If you are sending XCH(s) you cannot fill in the memo)"
+      "memo": "Memo(If the coin you are sending is XCH you cannot fill in the memo)"
     }
   },
   "utxo": {
@@ -721,8 +721,8 @@
       "button": {
         "cancel": "Cancel",
         "confirm": "Confirm",
-        "addContact": "Add Contact",
-        "showInnerAcc": "My accounts"
+        "addContact": "Add Address",
+        "showInnerAcc": "My Accounts"
       },
       "tooltip": {
         "remove": "Remove"
@@ -738,7 +738,7 @@
         "addressExists": "The address already exists in Address Book."
       },
       "confirmation": {
-        "removeConfirm": "Are you sure you want to remove this address from your Address Book?"
+        "removeConfirm": "Are you sure to remove this address from your Address Book?"
       }
     }
   },
@@ -874,9 +874,9 @@
         },
         "about": {
           "title": "About",
-          "description": "Privacy Policy, Terms of use, Pawket Version, our Website"
+          "description": "Privacy Policy, Pawket Version, Contact Us"
         },
-        "lock": "Lock"
+        "lock": "Lock Wallet"
       }
     },
     "general": {
@@ -890,7 +890,7 @@
     "security": {
       "title": "Security",
       "label": {
-        "mnemonic": "Mnemonic Works",
+        "mnemonic": "Mnemonic Words",
         "password": "Login Password",
         "export": "Export Private Information",
         "reset": "Reset Wallet"
@@ -920,7 +920,7 @@
         "experimental": "Experimental features are not stable and not fully tested yet, you can have a try and give us your feedback."
       },
       "description": "After enabling this mode, you can use experimental functions, such as \"Make Offer\", \"Take Offer\", \"Batch Send\", \"Issue CAT\", \"Shadow Wallet\", etc.",
-      "warning": "Experimental features are not stable and not fully tested yet, you can have a try and give us your feedback. Please turn it on carefully"
+      "warning": "Experimental features are not stable and not fully tested yet, you can have a try and give us your feedback. Please turn it on carefully."
     },
     "about": {
       "title": "About",
@@ -974,7 +974,7 @@
         "addByPassword": "Account protected by MNEMONIC and PASSPHRASE. Enter the same PASSPHRASE to access the same account.",
         "addByLegacy": "Import Chia official wallet.",
         "addByMnemonic": "Import Nucle/Goby wallet.",
-        "addByAddress": "Only reading is supported in this mode."
+        "addByAddress": "Read-only is supported in this mode."
       },
       "modal": {
         "addByLegacy": "Import Chia Official Wallet",
@@ -1002,8 +1002,8 @@
   },
   "welcome": {
     "ui": {
-      "description": "Manage your assets on Chia blockchain in a secure way.",
-      "slogan": "Let's explore the world of blockchain together!",
+      "description": "Manage Your XCH/CATs in Pawket!",
+      "slogan": "Pawket is and will continue to be your good companion in the Chia world.",
       "button": {
         "start": "START"
       }
@@ -1068,8 +1068,8 @@
         "mnemonicTip": "Compatible with Chia official wallet"
       },
       "button": {
-        "reveal": "Reveal Mnemonics",
-        "hide": "Hide Mnemonics",
+        "reveal": "Reveal",
+        "hide": "Hide",
         "delete": "Delete"
       }
     },
