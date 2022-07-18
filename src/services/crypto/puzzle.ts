@@ -213,7 +213,8 @@ class PuzzleMaker {
     const result = output[0];
 
     const modname = modsdict[puzzle_reveal];
-    if (result.startsWith("FAIL")) throw new Error(`Error calculating puzzle [${modname ?? puzzle_reveal}] from solution [${solution}]: ${result}`);
+    if (result.startsWith("FAIL"))
+      throw new Error(`Error calculating puzzle [${modname ?? puzzle_reveal.slice(0, 200)}] from solution [${solution.slice(0, 200)}]: ${result.slice(0, 200)}`);
 
     return result;
   }
