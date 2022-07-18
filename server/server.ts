@@ -81,30 +81,33 @@ else {
     raw: string,
   }
 
-  const parseCoin = async function (info: string): Promise<CoinInfo> {
-    const all = assemble(info);
+  const parseCoin = async function (all: SExp): Promise<CoinInfo> {
     const parent = disassemble(all.first());
-    const puz = disassemble(all.rest().first());
-    const decPuzzle = await simplifyPuzzle(puz);
-    const amount = disassemble(all.rest().rest().first());
-    const solution_plain = disassemble(all.rest().rest().rest().first());
+    let next = all.rest();
+    const puz = next.first();
+    const puz_str = disassemble(puz);
+    const decPuzzle = await simplifyPuzzle(puz, puz_str);
+    next = next.rest();
+    const amount = disassemble(next.first());
+    next = next.rest();
+    const solution_plain = disassemble(next.first());
     const solution = prefix0x(await puzzle.encodePuzzle(solution_plain));
-    const puzzle_hash = await puzzle.getPuzzleHashFromPuzzle(puz);
+    const puzzle_hash = await puzzle.getPuzzleHashFromPuzzle(puz_str);
     const coinname = getCoinName0x({ parent_coin_info: parent, puzzle_hash, amount: BigInt(amount) });
 
     return { parent, puzzle: decPuzzle, amount, solution, coinname };
   }
 
-  const simplifyPuzzle = async function (puz: string): Promise<SimplePuzzle | CannotParsePuzzle> {
+  const simplifyPuzzle = async function (origin: SExp, puz: string | undefined = undefined): Promise<SimplePuzzle | CannotParsePuzzle> {
 
     try {
+      if (!puz) puz = disassemble(origin);
       const puremodname = modsdict[puz];
       if (puremodname) return { mod: puremodname, args: [] };
 
-      const curried = assemble(puz);
-      const [mod, args] = uncurry(curried) as Tuple<SExp, SExp>;
+      const [mod, args] = uncurry(origin) as Tuple<SExp, SExp>;
       const mods = disassemble(mod);
-      const argarr = !args ? [] : Array.from(args.as_iter()).map((_) => disassemble(_ as SExp));
+      const argarr: SExp[] = !args ? [] : Array.from(args.as_iter());//.map((_) => disassemble(_ as SExp));
       const simpargs = (await Promise.all(argarr.map(_ => simplifyPuzzle(_))))
         .map(_ => "raw" in _ ? { raw: _.raw } : _);
       const modname = modsdict[mods];
@@ -112,7 +115,7 @@ else {
 
       return { mod: modname, args: simpargs };
     } catch (err) {
-      return { raw: puz };
+      return { raw: puz ?? "" };
     }
   }
 
@@ -130,7 +133,6 @@ else {
           : await puzzle.calcPuzzleResult(blkgenpuz, "(())");
         const prog = assemble(bg);
         const argarr = await Promise.all(Array.from(prog.first().as_iter())
-          .map(_ => disassemble(_ as SExp))
           .map(async _ => await parseCoin(_)));
         console.timeEnd("parse_block");
         console.log(`generated ${argarr.length} coins`);
@@ -147,7 +149,7 @@ else {
       try {
         const r = req.body as ParsePuzzleRequest;
         const puz = await puzzle.disassemblePuzzle(r.puzzle);
-        const decPuzzle = await simplifyPuzzle(puz);
+        const decPuzzle = await simplifyPuzzle(assemble(puz));
         res.send(JSON.stringify(decPuzzle))
       }
       catch (err) {
