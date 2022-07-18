@@ -109,7 +109,7 @@
           <b-icon class="is-pulled-right has-text-grey" icon="chevron-right"> </b-icon>
         </div>
       </div>
-      <div class="panel-block mt-4">
+      <div class="panel-block my-4">
         <b-button type="is-info" expanded outlined @click="lock()">{{ $t("settings.menu.items.lock") }}</b-button>
       </div>
     </div>
