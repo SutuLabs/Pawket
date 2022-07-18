@@ -27,6 +27,7 @@ if (cluster.isPrimary && numCPUs > 1) {
   }
 
   // This event is firs when worker died
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   cluster.on('exit', (worker, code, signal) => {
     console.log(`worker ${worker.process.pid} died`);
   });
@@ -115,34 +116,23 @@ else {
     }
   }
 
-  const chialisp_deserialisation = async function (input: string): Promise<string> {
-    const result = await puzzle.calcPuzzleResult(modsprog["chialisp_deserialisation"], input);
-    return result;
-  }
-
   Instance.init().then(() => {
     app.post('/parse_block', async (req: express.Request, res: express.Response) => {
       try {
-
+        console.time("parse_block");
         const r = req.body as ParseBlockRequest;
         const blkgenpuz = await puzzle.disassemblePuzzle(r.generator);
-        if (r.ref_list?.length ?? 0 > 0) {
-          res.status(400).send(JSON.stringify({ success: false, error: `ref_list cannot be supported` }));
-          return;
-        }
 
-        if (r.ref_list?.length ?? 0 > 1) {
-          throw new Error(`abnormal ref_list with length ${r.ref_list?.length}`);
-        }
-        const arg = (r.ref_list?.length ?? 0) == 1
-          ? await chialisp_deserialisation("(" + (await puzzle.disassemblePuzzle(r.ref_list?.[0] ?? "")) + ")")
-          : "()";
-
-        const bg = await puzzle.calcPuzzleResult(blkgenpuz, `(${arg})`)
+        const getArg = function (ref: string): string { return "(" + prefix0x(ref) + ")"; };
+        const getArgs = function (ref_list: string[]) { return "(" + [blkgenpuz, "(" + ref_list.map(_ => getArg(_)).join(" ") + ")"].join(" ") + ")"; };
+        const bg = r.ref_list?.length ?? 0 > 0
+          ? await puzzle.calcPuzzleResult(modsprog["generator"], getArgs(r.ref_list ?? []))
+          : await puzzle.calcPuzzleResult(blkgenpuz, "(())");
         const prog = assemble(bg);
         const argarr = await Promise.all(Array.from(prog.first().as_iter())
           .map(_ => disassemble(_ as SExp))
           .map(async _ => await parseCoin(_)));
+        console.timeEnd("parse_block");
         console.log(`generated ${argarr.length} coins`);
         res.send(JSON.stringify(argarr))
       }
@@ -155,7 +145,6 @@ else {
 
     app.post('/parse_puzzle', async (req: express.Request, res: express.Response) => {
       try {
-
         const r = req.body as ParsePuzzleRequest;
         const puz = await puzzle.disassemblePuzzle(r.puzzle);
         const decPuzzle = await simplifyPuzzle(puz);
