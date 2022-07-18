@@ -6,6 +6,7 @@ import utility from "./utility";
 import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
 import { Instance } from "../util/instance";
 import { modsdict } from "../coin/mods";
+import { unprefix0x } from "../coin/condition";
 
 export interface ExecuteResultCondition {
   op: number;
@@ -90,7 +91,7 @@ class PuzzleMaker {
   }
 
   public async disassemblePuzzle(puzzle_hex: string): Promise<string> {
-    puzzle_hex = puzzle_hex.startsWith("0x") ? puzzle_hex.substring(2) : puzzle_hex;
+    puzzle_hex = unprefix0x(puzzle_hex);
     let output: string[] = [];
     clvm_tools.setPrintFunction((...args) => output = args)
 
