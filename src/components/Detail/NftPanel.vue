@@ -12,14 +12,14 @@
         <template #trigger="props">
           <p class="is-size-5 mb-1">
             <span><b-icon class="is-pulled-left pt-1" :icon="props.open ? 'chevron-down' : 'chevron-right'"></b-icon></span>
-            <span>collection #{{ index }}</span>
+            <span>collection{{index}}</span>
           </p>
         </template>
         <ul class="is-flex columns is-multiline is-mobile my-2" v-if="nftList">
-          <li class="column is-4" v-for="(nft, i) of nftList" :key="i" @click="showDetail(nft)">
+          <li class="column is-4-tablet is-6-mobile" v-for="(nft, i) of nftList" :key="i" @click="showDetail(nft)">
             <div class="nft-image-container is-clickable">
               <img class="nft-image" :src="nft.uri" :alt="nft.hash" />
-              <p class="nft-name has-background-white-ter pt-2 pl-3 is-hidden-mobile">NFT Name <span class="is-pulled-right"><b-icon icon="dots-vertical"></b-icon></span></p>
+              <p class="nft-name has-background-white-ter pt-2 pl-3 is-hidden-mobile">{{nft.name }}<span class="is-pulled-right"><b-icon icon="dots-vertical"></b-icon></span></p>
             </div>
           </li>
         </ul>
@@ -48,25 +48,25 @@ export default class NftPanel extends Vue {
     return [
       {
         uri: "https://info.pawket.app/.attachments/Blog-5-5f57f9a4-ea47-47e5-a6db-bb00e3562355.jpg",
-        hash: "xxx",
+        hash: "xch1urk05s...6m09v",
         collection: "1",
         name: "NFT Name #1",
       },
       {
         uri: "https://info.pawket.app/.attachments/Blog-5-5f57f9a4-ea47-47e5-a6db-bb00e3562355.jpg",
-        hash: "xxx",
+        hash: "xch1urk05s...6m09v",
         collection: "2",
         name: "NFT Name #2",
       },
       {
         uri: "https://info.pawket.app/.attachments/Blog-5-5f57f9a4-ea47-47e5-a6db-bb00e3562355.jpg",
-        hash: "xxx",
+        hash: "xch1urk05s...6m09v",
         collection: "3",
         name: "NFT Name #3",
       },
       {
         uri: "https://info.pawket.app/.attachments/Blog-5-5f57f9a4-ea47-47e5-a6db-bb00e3562355.jpg",
-        hash: "xxx",
+        hash: "xch1urk05s...6m09v",
         collection: "4",
         name: "NFT Name #4",
       },
@@ -103,10 +103,10 @@ export default class NftPanel extends Vue {
 
 .nft-name {
   position: absolute;
-  bottom: 0vh;
-  right: 0vw;
+  bottom: 0;
+  right: 0;
   width: 100%;
-  height: 3vh;
+  height: 40px;
   border-bottom-right-radius: 0.5vw;
   border-bottom-left-radius: 0.5vw;
 }

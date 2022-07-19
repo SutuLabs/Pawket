@@ -126,11 +126,11 @@
               >
             </div>
           </b-tab-item>
-          <b-tab-item :label="$t('accountDetail.ui.tab.utxos')">
-            <utxo-panel :tokenInfo="tokenInfo" v-model="activities" @changePage="changePage"></utxo-panel>
-          </b-tab-item>
           <b-tab-item v-if="experimentMode && testnet" :label="$t('accountDetail.ui.tab.nft')" :visible="debugMode">
             <nft-panel :account="account" @changePage="changePage"></nft-panel>
+          </b-tab-item>
+          <b-tab-item :label="$t('accountDetail.ui.tab.utxos')">
+            <utxo-panel :tokenInfo="tokenInfo" v-model="activities" @changePage="changePage"></utxo-panel>
           </b-tab-item>
         </b-tabs>
       </div>

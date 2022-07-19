@@ -8,9 +8,9 @@
     <section class="modal-card-body">
       <div v-show="!bundle">
         <div class="has-text-centered">
-          <p class="has-text-grey">You will transfer this NFT to a new owner.</p>
+          <p class="has-text-grey pb-3">You will transfer this NFT to a new owner.</p>
           <img :src="uri" class="image is-128x128" />
-          <p>{{nft.name}}</p>
+          <p>{{ nft.name }}</p>
         </div>
         <address-field
           :inputAddress="address"
@@ -37,13 +37,14 @@
         <bundle-summary :account="account" :bundle="bundle" :ignoreError="true"></bundle-summary>
       </template>
     </section>
-    <footer class="modal-card-foot is-justify-content-space-between">
+    <footer class="modal-card-foot is-block">
       <div>
-        <b-button :label="$t('mintNft.ui.button.cancel')" @click="cancel()"></b-button>
+        <b-button class="is-pulled-left" :label="$t('mintNft.ui.button.cancel')" @click="cancel()"></b-button>
         <b-button
           :label="$t('mintNft.ui.button.sign')"
           v-if="!bundle"
           type="is-primary"
+          class="is-pulled-right"
           @click="sign()"
           :disabled="!validity || submitting"
         ></b-button>
