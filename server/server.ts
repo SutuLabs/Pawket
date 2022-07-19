@@ -107,7 +107,7 @@ else {
 
       const [mod, args] = uncurry(origin) as Tuple<SExp, SExp>;
       const mods = disassemble(mod);
-      const argarr: SExp[] = !args ? [] : Array.from(args.as_iter());//.map((_) => disassemble(_ as SExp));
+      const argarr: SExp[] = !args ? [] : Array.from(args.as_iter());
       const simpargs = (await Promise.all(argarr.map(_ => simplifyPuzzle(_))))
         .map(_ => "raw" in _ ? { raw: _.raw } : _);
       const modname = modsdict[mods];
@@ -124,17 +124,23 @@ else {
       try {
         console.time("parse_block");
         const r = req.body as ParseBlockRequest;
-        const blkgenpuz = await puzzle.disassemblePuzzle(r.generator);
 
         const getArg = function (ref: string): string { return "(" + prefix0x(ref) + ")"; };
-        const getArgs = function (ref_list: string[]) { return "(" + [blkgenpuz, "(" + ref_list.map(_ => getArg(_)).join(" ") + ")"].join(" ") + ")"; };
+        const getArgs = async function (ref_list: string[]): Promise<string> {
+          return "(" + [await puzzle.disassemblePuzzle(r.generator), "(" + ref_list.map(_ => getArg(_)).join(" ") + ")"].join(" ") + ")";
+        };
+        // console.time("brun");
         const bg = r.ref_list?.length ?? 0 > 0
-          ? await puzzle.calcPuzzleResult(modsprog["generator"], getArgs(r.ref_list ?? []))
-          : await puzzle.calcPuzzleResult(blkgenpuz, "(())");
+          ? await puzzle.calcPuzzleResult(modsprog["generator"], await getArgs(r.ref_list ?? []))
+          : await puzzle.calcPuzzleResult(r.generator, "ff8080", "--hex"); // ff8080 == "(())"
+        // console.timeEnd("brun");
+        // console.time("assemble");
         const prog = assemble(bg);
+        // console.timeEnd("assemble");
+        // console.time("parse_coin");
         const argarr = await Promise.all(Array.from(prog.first().as_iter())
           .map(async _ => await parseCoin(_)));
-        console.timeEnd("parse_block");
+        // console.timeEnd("parse_coin");
         console.log(`generated ${argarr.length} coins`);
         res.send(JSON.stringify(argarr))
       }
@@ -142,6 +148,9 @@ else {
         console.warn(err);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         res.status(500).send(JSON.stringify({ success: false, error: (<any>err).message }))
+      }
+      finally {
+        console.timeEnd("parse_block");
       }
     })
 
