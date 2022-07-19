@@ -7,18 +7,19 @@
     </header>
     <section class="modal-card-body">
       <div v-show="!bundle">
+        <div class="has-text-centered">
+          <p class="has-text-grey pb-3">You will transfer this NFT to a new owner.</p>
+          <img :src="uri" class="image is-128x128" />
+          <p>{{ nft.name }}</p>
+        </div>
         <address-field
           :inputAddress="address"
           :addressEditable="addressEditable"
           @updateAddress="updateAddress"
           @updateContactName="updateContactName"
         ></address-field>
-        <b-field :label="$t('mintNft.ui.label.uri')">
-          <a v-if="uri" :href="uri" target="_blank">
-            <img :src="uri" class="image-preview" />
-          </a>
-        </b-field>
-        <fee-selector v-if="false" v-model="fee" @input="changeFee()"></fee-selector>
+
+        <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
       </div>
       <template v-if="bundle">
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
@@ -36,13 +37,14 @@
         <bundle-summary :account="account" :bundle="bundle" :ignoreError="true"></bundle-summary>
       </template>
     </section>
-    <footer class="modal-card-foot is-justify-content-space-between">
+    <footer class="modal-card-foot is-block">
       <div>
-        <b-button :label="$t('mintNft.ui.button.cancel')" @click="cancel()"></b-button>
+        <b-button class="is-pulled-left" :label="$t('mintNft.ui.button.cancel')" @click="cancel()"></b-button>
         <b-button
           :label="$t('mintNft.ui.button.sign')"
           v-if="!bundle"
           type="is-primary"
+          class="is-pulled-right"
           @click="sign()"
           :disabled="!validity || submitting"
         ></b-button>
@@ -85,6 +87,7 @@ import { generateTransferNftBundle } from "@/services/coin/nft";
 import AddressField from "../AddressField.vue";
 import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
+import { NFT } from "./NftPanel.vue";
 
 @Component({
   components: {
@@ -98,7 +101,7 @@ import { Bytes } from "clvm";
 })
 export default class NftTransfer extends Vue {
   @Prop() private account!: AccountEntity;
-  @Prop() private nft!: NftDetail;
+  @Prop() private nft!: NFT;
 
   public addressEditable = true;
   public submitting = false;
@@ -175,11 +178,11 @@ export default class NftTransfer extends Vue {
   }
 
   get hash(): string | undefined {
-    return this.nft?.metadata.hash;
+    return this.nft?.hash;
   }
 
   get uri(): string | undefined {
-    return this.nft?.metadata.uri;
+    return this.nft?.uri;
   }
 
   changeToken(token: string): void {
@@ -238,61 +241,56 @@ export default class NftTransfer extends Vue {
   }
 
   async sign(): Promise<void> {
-    this.submitting = true;
-    try {
-      if (!this.account.firstAddress) {
-        this.submitting = false;
-        return;
-      }
-
-      if (this.availcoins == null) {
-        this.submitting = false;
-        return;
-      }
-
-      try {
-        Bytes.from(bech32m.decodeToBytes(this.address).bytes).hex();
-      } catch (error) {
-        Notification.open({
-          message: this.$tc("send.messages.error.INVALID_ADDRESS"),
-          type: "is-danger",
-          duration: 5000,
-        });
-        this.submitting = false;
-        return;
-      }
-
-      if (!this.address.startsWith(xchPrefix())) {
-        Notification.open({
-          message: this.$tc("send.messages.error.ADDRESS_NOT_MATCH_NETWORK"),
-          type: "is-danger",
-          duration: 5000,
-        });
-        this.submitting = false;
-        return;
-      }
-
-      const spendBundle = await generateTransferNftBundle(
-        this.address,
-        this.account.firstAddress,
-        BigInt(this.fee),
-        this.nft.coin,
-        this.nft.analysis,
-        this.availcoins,
-        this.requests
-      );
-
-      this.bundle = spendBundle;
-    } catch (error) {
-      Notification.open({
-        message: this.$tc("mintNft.ui.messages.failedToSign") + error,
-        type: "is-danger",
-        autoClose: false,
-      });
-      console.warn(error);
-      this.submitting = false;
-    }
-    this.submitting = false;
+    // this.submitting = true;
+    // try {
+    //   if (!this.account.firstAddress) {
+    //     this.submitting = false;
+    //     return;
+    //   }
+    //   if (this.availcoins == null) {
+    //     this.submitting = false;
+    //     return;
+    //   }
+    //   try {
+    //     Bytes.from(bech32m.decodeToBytes(this.address).bytes).hex();
+    //   } catch (error) {
+    //     Notification.open({
+    //       message: this.$tc("send.messages.error.INVALID_ADDRESS"),
+    //       type: "is-danger",
+    //       duration: 5000,
+    //     });
+    //     this.submitting = false;
+    //     return;
+    //   }
+    //   if (!this.address.startsWith(xchPrefix())) {
+    //     Notification.open({
+    //       message: this.$tc("send.messages.error.ADDRESS_NOT_MATCH_NETWORK"),
+    //       type: "is-danger",
+    //       duration: 5000,
+    //     });
+    //     this.submitting = false;
+    //     return;
+    //   }
+    //   const spendBundle = await generateTransferNftBundle(
+    //     this.address,
+    //     this.account.firstAddress,
+    //     BigInt(this.fee),
+    //     this.nft.coin,
+    //     this.nft.analysis,
+    //     this.availcoins,
+    //     this.requests
+    //   );
+    //   this.bundle = spendBundle;
+    // } catch (error) {
+    //   Notification.open({
+    //     message: this.$tc("mintNft.ui.messages.failedToSign") + error,
+    //     type: "is-danger",
+    //     autoClose: false,
+    //   });
+    //   console.warn(error);
+    //   this.submitting = false;
+    // }
+    // this.submitting = false;
   }
 
   async submit(): Promise<void> {
@@ -331,10 +329,7 @@ export default class NftTransfer extends Vue {
 </script>
 
 <style scoped lang="scss">
-img.image-preview {
-  width: 100%;
-  max-height: 40vh;
-  object-fit: cover;
-  border: 1px solid;
+.image {
+  margin: auto;
 }
 </style>

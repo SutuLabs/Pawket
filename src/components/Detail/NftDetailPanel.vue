@@ -1,62 +1,100 @@
 <template>
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <!-- <p class="modal-card-title">{{ $t("send.ui.title.send") }}</p> -->
-      <p class="modal-card-title">Nft Detail</p>
-      <button type="button" class="delete" @click="close()"></button>
-    </header>
+  <div :class="{ 'modal-card': true, 'min-width-table': !isMobile }">
+    <top-bar :title="nft.name" :showClose="true" @close="close()"></top-bar>
     <section class="modal-card-body">
-      <!-- <b-field custom-class="is-medium has-text-weight-normal" :label="$t('utxoDetail.ui.label.confirmedHeight')"> -->
-      <b-field custom-class="is-medium has-text-weight-normal" :label="'image'">
-        <b-image :src="nft.metadata.uri" :alt="nft.metadata.uri" class="image-preview"></b-image>
-      </b-field>
-      <b-field custom-class="is-medium has-text-weight-normal" :label="'hash'">
-        <p class="has-text-grey">{{ nft.metadata.hash }}</p>
-      </b-field>
-      <b-field custom-class="is-medium has-text-weight-normal" :label="'nft'">
-        <p class="has-text-grey">
-          {{ nftAddress }}
-          <key-box
-            icon="checkbox-multiple-blank-outline"
-            :tooltip="$t('common.tooltip.copy')"
-            :value="nftAddress"
-            :showValue="false"
-          ></key-box>
-        </p>
-        <a class="is-pulled-right" target="_blank" :href="'https://www.spacescan.io/txch10/nft/' + nftAddress">⚓</a>
-      </b-field>
-      <b-field custom-class="is-medium has-text-weight-normal" :label="'coin'">
-        <p class="has-text-grey">
-          {{ coinname }}
-          <key-box
-            icon="checkbox-multiple-blank-outline"
-            :tooltip="$t('common.tooltip.copy')"
-            :value="coinname"
-            :showValue="false"
-          ></key-box>
-        </p>
-        <a class="is-pulled-right" target="_blank" :href="'https://www.spacescan.io/txch10/coin/' + coinname">⚓</a>
-      </b-field>
-      <b-field custom-class="is-medium has-text-weight-normal" :label="'owner'">
-        <p class="has-text-grey">
-          {{ owner }}
-          <key-box
-            icon="checkbox-multiple-blank-outline"
-            :tooltip="$t('common.tooltip.copy')"
-            :value="owner"
-            :showValue="false"
-          ></key-box>
-        </p>
-        <a class="is-pulled-right" target="_blank" :href="'https://www.spacescan.io/txch10/address/' + owner">⚓</a>
-      </b-field>
-    </section>
-    <footer class="modal-card-foot is-justify-content-space-between">
-      <div>
-        <b-button :label="$t('common.button.cancel')" @click="close()"></b-button>
+      <div class="columns is-mobile is-multiline">
+        <div class="column is-6-tablet is-12-mobile">
+          <span @click="preview(nft.uri)"><b-image :src="nft.uri" alt="A random image" ratio="6by4"></b-image></span>
+        </div>
+        <div class="column is-6-tablet is-12-mobile">
+          <b-field>
+            <template #label>
+              {{ nft.name }}
+              <b-dropdown aria-role="list" class="is-pulled-right" :mobile-modal="false" position="is-bottom-left">
+                <template #trigger>
+                  <b-icon icon="dots-vertical" class="is-clickable"></b-icon>
+                </template>
+                <b-dropdown-item aria-role="listitem"
+                  ><b-icon class="media-left" icon="open-in-new" size="is-small"></b-icon>View on MintGarden</b-dropdown-item
+                >
+                <b-dropdown-item aria-role="listitem"
+                  ><b-icon class="media-left" icon="open-in-new" size="is-small"></b-icon>View on SkyNFT</b-dropdown-item
+                >
+                <b-dropdown-item aria-role="listitem"
+                  ><b-icon class="media-left" icon="open-in-new" size="is-small"></b-icon>View on Spacescan.io</b-dropdown-item
+                >
+                <b-dropdown-item aria-role="listitem"
+                  ><b-icon class="media-left" icon="download" size="is-small"></b-icon>Download</b-dropdown-item
+                >
+              </b-dropdown>
+            </template>
+            NFT ID: xxxxxxxx <key-box icon="checkbox-multiple-blank-outline" value="xxxxxxxx"></key-box>
+          </b-field>
+          <b-field label="Collection">collection name </b-field>
+          <b-field label="Create by"
+            >OwnerID: yyyyyyyy <key-box icon="checkbox-multiple-blank-outline" value="yyyyyy"></key-box
+          ></b-field>
+          <b-field label="Description"> This is a description of the collection of objects of the given owner</b-field>
+          <div class="buttons is-hidden-mobile">
+            <b-button :label="'Transfer'" type="is-primary" @click="transfer()" icon-left="share" outlined></b-button>
+            <b-button :label="'Make Offer'" type="is-info" @click="offer()" icon-left="email-send-outline" outlined></b-button>
+          </div>
+        </div>
+        <div class="column is-12 is-hidden-mobile">
+          <hr />
+        </div>
+        <div class="column is-6-tablet is-12-mobile">
+          <b-collapse class="card" animation="slide">
+            <template #trigger="props">
+              <div class="card-header" role="button" :aria-expanded="props.open">
+                <p class="card-header-title">Properties</p>
+                <a class="card-header-icon">
+                  <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"> </b-icon>
+                </a>
+              </div>
+            </template>
+            <div class="columns is-mobile is-multiline card-content is-justify-content-center">
+              <div class="column is-5 is-size-5 property m-2" v-for="index of 12" :key="index">
+                <span class="has-text-grey is-size-7">
+                  <p>{{ index }}</p>
+                  xxxx</span
+                >
+              </div>
+            </div>
+          </b-collapse>
+        </div>
+        <div class="column is-6-tablet is-12-mobile">
+          <b-collapse class="card" animation="slide">
+            <template #trigger="props">
+              <div class="card-header" role="button" :aria-expanded="props.open">
+                <p class="card-header-title">Details</p>
+                <a class="card-header-icon">
+                  <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"> </b-icon>
+                </a>
+              </div>
+            </template>
+            <div class="card-content">
+              <ul>
+                <li><span class="has-text-grey">NFT ID </span><span class="is-pulled-right">xxxxx</span></li>
+                <li><span class="has-text-grey">Launcher ID </span><span class="is-pulled-right">xxxxx</span></li>
+                <li><span class="has-text-grey">Owner DID </span><span class="is-pulled-right">xxxxx</span></li>
+                <li><span class="has-text-grey">Royalty Percentage </span><span class="is-pulled-right">5%</span></li>
+                <li><span class="has-text-grey">Minted at Block Height</span><span class="is-pulled-right">2189241</span></li>
+                <li><span class="has-text-grey">Data URL 1</span><span class="is-pulled-right">xxxxx</span></li>
+                <li><span class="has-text-grey">Data Hash</span><span class="is-pulled-right">xxxxxx</span></li>
+                <li><span class="has-text-grey">Metadata URL 1</span><span class="is-pulled-right">https://pawket.app</span></li>
+                <li><span class="has-text-grey">Metadata Hash</span><span class="is-pulled-right">0x4277...c8da</span></li>
+                <li><span class="has-text-grey">License Hash</span><span class="is-pulled-right">0x00</span></li>
+              </ul>
+            </div>
+          </b-collapse>
+        </div>
       </div>
-      <div>
-        <!-- :label="$t('send.ui.button.submit')" -->
-        <b-button :label="'Transfer'" type="is-primary" class="is-pulled-right" @click="transfer()"></b-button>
+    </section>
+    <footer class="modal-card-foot is-justify-content-space-between is-block is-hidden-tablet">
+      <div class="buttons is-pulled-right">
+        <b-button :label="'Transfer'" type="is-primary" @click="transfer()" icon-left="share" outlined></b-button>
+        <b-button :label="'Make Offer'" type="is-info" @click="offer()" icon-left="email-send-outline" outlined></b-button>
       </div>
     </footer>
   </div>
@@ -64,44 +102,33 @@
 
 <script lang="ts">
 import { demojo } from "@/filters/unitConversion";
-import { getCoinName } from "@/services/coin/nft";
-import puzzle from "@/services/crypto/puzzle";
-import { NftDetail } from "@/services/crypto/receive";
-import utility from "@/services/crypto/utility";
+import { isMobile } from "@/services/view/responsive";
 import { AccountEntity } from "@/store/modules/account";
-import { xchPrefix } from "@/store/modules/network";
-import { bech32m } from "@scure/base";
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import KeyBox from "../KeyBox.vue";
+import TopBar from "../TopBar.vue";
+import NftOffer from "./NftOffer.vue";
+import { NFT } from "./NftPanel.vue";
 import NftTransfer from "./NftTransfer.vue";
 
 @Component({
   components: {
     KeyBox,
+    TopBar,
   },
   filters: { demojo },
 })
 export default class NftDetailPanel extends Vue {
   @Prop() private account!: AccountEntity;
-  @Prop() private nft!: NftDetail;
+  @Prop() public nft!: NFT;
 
   @Emit("close")
   close(): void {
     return;
   }
 
-  get nftAddress(): string {
-    if (!this.nft?.analysis.launcherId) return "";
-    const nftPrefix = "nft";
-    return bech32m.encode(nftPrefix, bech32m.toWords(utility.fromHexString(this.nft.analysis.launcherId)), false);
-  }
-
-  get coinname(): string {
-    return getCoinName(this.nft.coin);
-  }
-
-  get owner(): string {
-    return puzzle.getAddressFromPuzzleHash(this.nft.coin.puzzle_hash, xchPrefix());
+  get isMobile(): boolean {
+    return isMobile();
   }
 
   transfer(): void {
@@ -110,20 +137,43 @@ export default class NftDetailPanel extends Vue {
       component: NftTransfer,
       hasModalCard: true,
       trapFocus: true,
+      fullScreen: isMobile(),
       canCancel: [""],
       props: { nft: this.nft, account: this.account },
+    });
+  }
+
+  offer(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: NftOffer,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      fullScreen: isMobile(),
+      props: { nft: this.nft, account: this.account },
+    });
+  }
+
+  preview(uri: string): void {
+    this.$buefy.modal.open({
+      parent: this,
+      content: `<div class='modal-card'><img src="${uri}"></div>`,
+      hasModalCard: true,
+      trapFocus: true,
+      props: {},
     });
   }
 }
 </script>
 <style scoped lang="scss">
-.long-text-wrapper {
-  overflow-wrap: break-word !important;
+.property {
+  border: 1px solid black;
+  border-radius: 0.2vw;
+  height: 5rem;
 }
-.image-preview ::v-deep img {
-  width: 100%;
-  max-height: 70vh;
-  object-fit: cover;
-  border: 1px solid;
+
+.min-width-table {
+  min-width: 768px;
 }
 </style>
