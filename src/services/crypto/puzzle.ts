@@ -205,11 +205,11 @@ class PuzzleMaker {
     return (await this.getCatPuzzleDetails(privateKey, assetId, prefix, startIndex, endIndex)).map(_ => _.hash);
   }
 
-  public async calcPuzzleResult(puzzle_reveal: string, solution: string): Promise<string> {
+  public async calcPuzzleResult(puzzle_reveal: string, solution: string, ...args:string[]): Promise<string> {
     let output: string[] = [];
     clvm_tools.setPrintFunction((...args) => output = args)
 
-    clvm_tools.go("brun", puzzle_reveal, solution);
+    clvm_tools.go("brun", puzzle_reveal, solution, "--experiment-backend", "rust", ...args);
     const result = output[0];
 
     const modname = modsdict[puzzle_reveal];
