@@ -8,18 +8,19 @@ import { TokenPuzzleDetail } from "../crypto/receive";
 import catBundle from "../transfer/catBundle";
 import stdBundle from "../transfer/stdBundle";
 import { getOfferSummary, OfferEntity, OfferPlan, OfferSummary } from "./summary";
-import store from "@/store";
 import { GetParentPuzzleResponse } from "@/models/api";
 import { assemble, curry, disassemble } from "clvm_tools";
 import { modsprog } from "../coin/mods";
 import { xchSymbol } from "@/store/modules/network";
 import { getCoinName0x } from "../coin/coinUtility";
+import { Instance } from "../util/instance";
 
 export async function generateOffer(
   offered: OfferPlan[],
   requested: OfferEntity[],
   puzzles: TokenPuzzleDetail[],
   getPuzzle: GetPuzzleApiCallback,
+  chainId: string,
   nonceHex: string | null = null,
 ): Promise<SpendBundle> {
   if (offered.length != 1 || requested.length != 1) throw new Error("currently, only support single offer/request");
@@ -145,7 +146,7 @@ export async function generateOffer(
   }
 
   // combine into one spendbundle
-  return transfer.getSpendBundle(spends, puzzleCopy);
+  return transfer.getSpendBundle(spends, puzzleCopy, chainId);
 }
 
 export function sha256(...args: (string | Uint8Array)[]): string {
@@ -205,8 +206,8 @@ export async function combineSpendBundle(
 ): Promise<SpendBundle> {
   if (spendbundles.length != 2) throw new Error("unexpected length of spendbundle");
 
-  if (!store.state.app.bls) throw new Error("bls not initialized");
-  const BLS = store.state.app.bls;
+  const BLS = Instance.BLS;
+  if (!BLS) throw new Error("BLS not initialized");
   const sigs = spendbundles.map(_ => BLS.G2Element.from_bytes(Bytes.from(_.aggregated_signature, "hex").raw()));
   const agg_sig = BLS.AugSchemeMPL.aggregate(sigs);
   const sig = Bytes.from(agg_sig.serialize()).hex();

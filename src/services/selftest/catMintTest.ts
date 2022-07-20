@@ -3,7 +3,7 @@ import puzzle from "../crypto/puzzle";
 import utility from "../crypto/utility";
 import { generateMintCatBundle } from "../mint/cat";
 import { assert, assertBundle } from "./runner";
-import { xchSymbol } from "@/store/modules/network";
+import { chainId, xchSymbol } from "@/store/modules/network";
 
 export async function testMintCat(): Promise<void> {
   const expectBundle: SpendBundle = {
@@ -51,6 +51,7 @@ export async function testMintCat(): Promise<void> {
     sk_hex,
     [{ puzzles: requests, symbol: xchSymbol() }],
     xchSymbol(),
+    chainId(),
   );
 
   assertBundle(expectBundle, spendBundle);

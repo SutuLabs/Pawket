@@ -32,14 +32,14 @@ class Utility {
 
   async derive(privateKey: Uint8Array, hardened = true): Promise<deriveCallback> {
     const BLS = Instance.BLS;
-    if (!BLS) throw "BLS not initialized";
+    if (!BLS) throw new Error("BLS not initialized");
     const sk = BLS.PrivateKey.from_bytes(privateKey, false);
     return (path: number[]) => this.derivePath(BLS, sk, path, hardened);
   }
 
   async getPrivateKey(privateKey: Uint8Array): Promise<PrivateKey> {
     const BLS = Instance.BLS;
-    if (!BLS) throw "BLS not initialized";
+    if (!BLS) throw new Error("BLS not initialized");
     const sk = BLS.PrivateKey.from_bytes(privateKey, false);
     return sk;
   }

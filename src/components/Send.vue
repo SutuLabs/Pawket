@@ -114,7 +114,7 @@ import OfflineSendShowBundle from "./OfflineSendShowBundle.vue";
 import { CurrencyType } from "@/services/exchange/currencyType";
 import BundleSummary from "./BundleSummary.vue";
 import SendSummary from "./SendSummary.vue";
-import { xchPrefix, xchSymbol } from "@/store/modules/network";
+import { chainId, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getCatNames, getTokenInfo } from "@/services/coin/cat";
 import AddressField from "./AddressField.vue";
 import TopBar from "./TopBar.vue";
@@ -367,8 +367,8 @@ export default class Send extends Vue {
       // eslint-disable-next-line no-useless-escape
       const memo = this.memo.replace(/[&/\\#,+()$~%.'":*?<>{}\[\] ]/g, "_");
       const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: this.selectedToken, memos: [tgt_hex, memo] }];
-      const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee),xchSymbol());
-      this.bundle = await transfer.generateSpendBundle(plan, this.requests, [],xchSymbol());
+      const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
+      this.bundle = await transfer.generateSpendBundle(plan, this.requests, [], xchSymbol(), chainId());
     } catch (error) {
       Notification.open({
         message: this.$tc("send.ui.messages.failedToSign") + error,

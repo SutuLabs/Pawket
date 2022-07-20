@@ -10,6 +10,9 @@ export function xchSymbol(): string {
 export function rpcUrl(): string {
   return store.state.network.network.rpcUrl;
 }
+export function chainId(): string {
+  return store.state.network.network.chainId;
+}
 
 export interface NetworkDetail {
   name: string;

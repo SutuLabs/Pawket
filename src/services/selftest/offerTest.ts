@@ -7,7 +7,7 @@ import { getOfferSummary, OfferEntity, OfferPlan } from "../offer/summary";
 import { combineSpendBundle, generateOffer, generateOfferPlan, getReversePlan } from "../offer/bundler";
 import { getCatNameDict } from "../coin/cat";
 import { SymbolCoins } from "../transfer/transfer";
-import { xchSymbol } from "@/store/modules/network";
+import { chainId, xchSymbol } from "@/store/modules/network";
 import { noNeedGetProof } from "../transfer/call";
 
 export async function testOfferEncoding(): Promise<void> {
@@ -113,7 +113,7 @@ export async function testMakeOffer1(): Promise<void> {
   const tokenPuzzles = await getAccountAddressDetails(account);
 
   const nonce = "71bdf5d923a48956a8d26a36c6ea4a9959de221ff2ee986bce4827e5f037ceb8";
-  const bundle = await generateOffer(offplan, reqs, tokenPuzzles, noNeedGetProof, nonce);
+  const bundle = await generateOffer(offplan, reqs, tokenPuzzles, noNeedGetProof, chainId(), nonce);
   const encoded = await encodeOffer(bundle);
 
   assertBundle(expect, bundle);
@@ -195,7 +195,7 @@ export async function testMakeOffer2(): Promise<void> {
   const tokenPuzzles = await getAccountAddressDetails(account);
 
   const nonce = "741f8564b6637aee92dd68548cfe7df8ec35b20029235565244944febd68bf8d";
-  const bundle = await generateOffer(offplan, reqs, tokenPuzzles, localPuzzleApiCall, nonce);
+  const bundle = await generateOffer(offplan, reqs, tokenPuzzles, localPuzzleApiCall, chainId(), nonce);
   const encoded = await encodeOffer(bundle);
 
   assertBundle(expect, bundle);
@@ -268,7 +268,7 @@ export async function testTakeOfferXchForCat(): Promise<void> {
 
   const revSummary = getReversePlan(summary, change_hex, cats);
   const offplan = await generateOfferPlan(revSummary.offered, change_hex, availcoins, 0n, xchSymbol());
-  const takerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, localPuzzleApiCall, nonce);
+  const takerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, localPuzzleApiCall, chainId(), nonce);
   const combined = await combineSpendBundle([makerBundle, takerBundle]);
 
   assertBundle(expect, combined);
@@ -340,7 +340,7 @@ export async function testTakeOfferCatForXch(): Promise<void> {
 
   const revSummary = getReversePlan(summary, change_hex, cats);
   const offplan = await generateOfferPlan(revSummary.offered, change_hex, availcoins, 0n, xchSymbol());
-  const takerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, localPuzzleApiCall, nonce);
+  const takerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, localPuzzleApiCall, chainId(), nonce);
   // console.log("bundle",makerBundle,takerBundle)
   const combined = await combineSpendBundle([makerBundle, takerBundle]);
   // console.log("combined", combined)

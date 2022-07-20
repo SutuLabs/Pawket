@@ -1,7 +1,6 @@
 import { PrivateKey, G1Element, G2Element, ModuleInstance } from "@chiamine/bls-signatures";
 import { Bytes, bigint_from_bytes, bigint_to_bytes } from "clvm";
 import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
-import store from "@/store";
 import { GetParentPuzzleResponse } from "@/models/api";
 import { DEFAULT_HIDDEN_PUZZLE_HASH, GROUP_ORDER } from "../coin/consts";
 import { CoinConditions, ConditionType, prefix0x } from "../coin/condition";
@@ -11,6 +10,7 @@ import stdBundle from "./stdBundle";
 import { ConditionOpcode } from "../coin/opcode";
 import catBundle from "./catBundle";
 import { getCoinNameHex } from "../coin/coinUtility";
+import { Instance } from "../util/instance";
 
 export type GetPuzzleApiCallback = (parentCoinId: string) => Promise<GetParentPuzzleResponse | undefined>;
 
@@ -59,6 +59,7 @@ class Transfer {
     puzzles: TokenPuzzleDetail[],
     catAdditionalConditions: ConditionType[],
     tokenSymbol: string,
+    chainId: string,
     getPuzzle: GetPuzzleApiCallback | null = null,
   ): Promise<SpendBundle> {
     const coin_spends: CoinSpend[] = [];
@@ -70,20 +71,21 @@ class Transfer {
       if (symbol == tokenSymbol) {
         coin_spends.push(... await stdBundle.generateCoinSpends(tp, puzzles));
       } else {
-        if (getPuzzle == null) throw new Error("getPuzzle cannot be null when composing cat spendbundle");
+        if (getPuzzle == null) throw new Error(`getPuzzle cannot be null when composing cat[${symbol}] spendbundle other than native token[${tokenSymbol}]`);
         coin_spends.push(... await catBundle.generateCoinSpends(tp, puzzles, catAdditionalConditions, getPuzzle));
       }
     }
 
-    return this.getSpendBundle(coin_spends, puzzles);
+    return this.getSpendBundle(coin_spends, puzzles, chainId);
   }
 
   public async getSignaturesFromCoinSpends(
     css: CoinSpend[],
     puzzles: TokenPuzzleDetail[],
+    chainId: string,
   ): Promise<G2Element> {
-    if (!store.state.app.bls) throw new Error("bls not initialized");
-    const BLS = store.state.app.bls;
+    const BLS = Instance.BLS;
+    if (!BLS) throw new Error("BLS not initialized");
     const puzzleDict: { [key: string]: PuzzleDetail } = Object.assign({}, ...puzzles.flatMap(_ => _.puzzles).map((x) => ({ [prefix0x(x.hash)]: x })));
     const getPuzDetail = (hash: string): PuzzleDetail | undefined => { return puzzleDict[hash]; }
 
@@ -100,7 +102,7 @@ class Transfer {
       const coinname = getCoinNameHex(coin_spend.coin);
 
       const result = await puzzle.calcPuzzleResult(puzzle_reveal, await puzzle.disassemblePuzzle(coin_spend.solution));
-      const signature = await this.signSolution(BLS, result, synthetic_sk, coinname);
+      const signature = await this.signSolution(BLS, result, synthetic_sk, coinname, chainId);
 
       sigs.push(signature);
     }
@@ -112,8 +114,9 @@ class Transfer {
 
   public async getSpendBundle(coin_spends: CoinSpend[],
     puzzles: TokenPuzzleDetail[],
+    chainId: string,
   ): Promise<SpendBundle> {
-    const agg_sig = await this.getSignaturesFromCoinSpends(coin_spends, puzzles);
+    const agg_sig = await this.getSignaturesFromCoinSpends(coin_spends, puzzles, chainId);
 
     const sig = Bytes.from(agg_sig.serialize()).hex();
     return {
@@ -148,7 +151,13 @@ class Transfer {
     return synthetic_secret_key;
   }
 
-  private async signSolution(BLS: ModuleInstance, solution_executed_result: string, synthetic_sk: PrivateKey | undefined, coinname: Bytes): Promise<G2Element> {
+  private async signSolution(
+    BLS: ModuleInstance,
+    solution_executed_result: string,
+    synthetic_sk: PrivateKey | undefined,
+    coinname: Bytes,
+    chainId: string,
+  ): Promise<G2Element> {
     const conds = puzzle.parseConditions(solution_executed_result);
     const sigs: G2Element[] = [];
 
@@ -160,7 +169,7 @@ class Transfer {
       else if (cond.code == ConditionOpcode.AGG_SIG_ME) {
         if (!cond.args || cond.args.length != 2) throw "wrong args"
         const args = cond.args as Uint8Array[];
-        const AGG_SIG_ME_ADDITIONAL_DATA = Bytes.from(store.state.network.network.chainId, "hex");
+        const AGG_SIG_ME_ADDITIONAL_DATA = Bytes.from(chainId, "hex");
         const msg = Uint8Array.from([...args[1], ...coinname.raw(), ...AGG_SIG_ME_ADDITIONAL_DATA.raw()]);
         const pk_hex = Bytes.from(args[0]).hex();
         if (!synthetic_sk) throw new Error("synthetic_sk is required. maybe puzzle is not find.");

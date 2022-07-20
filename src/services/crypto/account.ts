@@ -1,10 +1,10 @@
-import store from "@/store";
 import {
   entropyToMnemonic,
   mnemonicToSeedSync,
 } from "bip39";
 
 import pbkdf2Hmac from "pbkdf2-hmac";
+import { Instance } from "../util/instance";
 import utility from "./utility";
 
 export interface AccountKey {
@@ -30,8 +30,8 @@ class AccountHelper {
     if (legacyMnemonic) compatibleMnemonic = legacyMnemonic;
 
     // let d = mnemonicToSeedSync(compatibleMnemonic);
-    const BLS = store.state.app.bls;
-    if (!BLS) throw "BLS not initialized";
+    const BLS = Instance.BLS;
+    if (!BLS) throw new Error("BLS not initialized");
     const key = await pbkdf2Hmac(
       compatibleMnemonic,
       "mnemonic",

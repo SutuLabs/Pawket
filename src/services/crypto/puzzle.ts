@@ -196,7 +196,7 @@ class PuzzleMaker {
   public getPrivateKeyFromHex(sk_hex: string): PrivateKey {
     const privateKey = utility.fromHexString(sk_hex);
     const BLS = Instance.BLS;
-    if (!BLS) throw "BLS not initialized";
+    if (!BLS) throw new Error("BLS not initialized");
     const sk = BLS.PrivateKey.from_bytes(privateKey, false);
     return sk;
   }
@@ -249,7 +249,7 @@ class PuzzleMaker {
   public getEmptyPrivateKey(
   ): PrivateKey {
     const BLS = Instance.BLS;
-    if (!BLS) throw "BLS not initialized";
+    if (!BLS) throw new Error("BLS not initialized");
     return BLS.PrivateKey.from_bytes(new Uint8Array(32), false);
   }
 

@@ -13,7 +13,7 @@ import { Bytes } from "clvm";
 import { bytesToHex0x } from "../crypto/utility";
 import catBundle from "../transfer/catBundle";
 import { getCoinName0x } from "./coinUtility";
-import { xchSymbol } from "@/store/modules/network";
+import { chainId, xchSymbol } from "@/store/modules/network";
 
 export interface MintNftInfo {
   spendBundle: SpendBundle;
@@ -57,7 +57,7 @@ export async function generateMintNftBundle(
 
   const bootstrapTgts: TransferTarget[] = [{ address: await modshash("singleton_launcher"), amount, symbol: baseSymbol }];
   const bootstrapSpendPlan = transfer.generateSpendPlan(availcoins, bootstrapTgts, change_hex, fee, xchSymbol());
-  const bootstrapSpendBundle = await transfer.generateSpendBundle(bootstrapSpendPlan, requests, [], xchSymbol());
+  const bootstrapSpendBundle = await transfer.generateSpendBundle(bootstrapSpendPlan, requests, [], xchSymbol(), chainId());
   const bootstrapCoin = bootstrapSpendBundle.coin_spends[0].coin;// get the primary coin
   const bootstrapCoinId = getCoinName0x(bootstrapCoin);
 
@@ -100,7 +100,7 @@ export async function generateMintNftBundle(
 
   const extreqs = cloneAndChangeRequestPuzzleTemporary(baseSymbol, requests, inner_p2_puzzle.hash, nftPuzzle, nftPuzzleHash);
 
-  const bundles = await transfer.getSpendBundle([launcherCoinSpend, nftCoinSpend], extreqs);
+  const bundles = await transfer.getSpendBundle([launcherCoinSpend, nftCoinSpend], extreqs, chainId());
   const bundle = await combineSpendBundlePure(bootstrapSpendBundle, bundles);
 
   return {
@@ -150,7 +150,7 @@ export async function generateTransferNftBundle(
 
   const extreqs = cloneAndChangeRequestPuzzleTemporary(baseSymbol, requests, inner_p2_puzzle.hash, nftPuzzle, nftPuzzleHash);
 
-  const bundle = await transfer.getSpendBundle([nftCoinSpend], extreqs);
+  const bundle = await transfer.getSpendBundle([nftCoinSpend], extreqs, chainId());
 
 
   if (fee > 0n) {
@@ -158,7 +158,7 @@ export async function generateTransferNftBundle(
     // throw new Error("fee is not supported in transfer");
     const feeTgts: TransferTarget[] = [{ address: "0x0000000000000000000000000000000000000000000000000000000000000000", amount: 0n, symbol: baseSymbol }];
     const feeSpendPlan = transfer.generateSpendPlan(availcoins, feeTgts, change_hex, fee, xchSymbol());
-    const feeSpendBundle = await transfer.generateSpendBundle(feeSpendPlan, requests, [], xchSymbol());
+    const feeSpendBundle = await transfer.generateSpendBundle(feeSpendPlan, requests, [], xchSymbol(), chainId());
     const feeBundle = await combineSpendBundlePure(feeSpendBundle, bundle);
 
     return feeBundle;
