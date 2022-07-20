@@ -164,17 +164,17 @@ class Transfer {
     for (let i = 0; i < conds.length; i++) {
       const cond = conds[i];
       if (cond.code == ConditionOpcode.AGG_SIG_UNSAFE) {
-        throw "not implement";
+        throw new Error("not implement");
       }
       else if (cond.code == ConditionOpcode.AGG_SIG_ME) {
-        if (!cond.args || cond.args.length != 2) throw "wrong args"
+        if (!cond.args || cond.args.length != 2) throw new Error("wrong args");
         const args = cond.args as Uint8Array[];
         const AGG_SIG_ME_ADDITIONAL_DATA = Bytes.from(chainId, "hex");
         const msg = Uint8Array.from([...args[1], ...coinname.raw(), ...AGG_SIG_ME_ADDITIONAL_DATA.raw()]);
         const pk_hex = Bytes.from(args[0]).hex();
         if (!synthetic_sk) throw new Error("synthetic_sk is required. maybe puzzle is not find.");
         const synthetic_pk_hex = Bytes.from(synthetic_sk.get_g1().serialize()).hex();
-        if (pk_hex != synthetic_pk_hex) throw "wrong args due to pk != synthetic_pk";
+        if (pk_hex != synthetic_pk_hex) throw new Error("wrong args due to pk != synthetic_pk");
         const sig = BLS.AugSchemeMPL.sign(synthetic_sk, msg);
         sigs.push(sig);
       }

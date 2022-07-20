@@ -22,7 +22,7 @@ class AccountHelper {
   }
 
   async getAccount(mnemonic: string, password: string | null, legacyMnemonic: string | null = null): Promise<AccountKey> {
-    if (legacyMnemonic && (mnemonic || password)) throw "legacy mnemonic cannot work with new mnemonic/password!";
+    if (legacyMnemonic && (mnemonic || password)) throw new Error("legacy mnemonic cannot work with new mnemonic/password!");
     const seeds = mnemonicToSeedSync(mnemonic, password ?? "");
     let compatibleMnemonic = entropyToMnemonic(
       new Buffer(seeds.slice(0, 32))

@@ -46,7 +46,7 @@ export async function getOfferSummary(bundle: SpendBundle): Promise<OfferSummary
       assetId = await tryGetAssetId(puzzle_reveal);
     }
     else {
-      throw "not implement"
+      throw new Error("not implement");
     }
 
     const conds = puzzle.parseConditions(result);

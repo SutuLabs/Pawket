@@ -18,5 +18,5 @@ export async function getLineageProofPuzzle(parentCoinId: string, baseUrl: strin
 }
 
 export async function noNeedGetProof(): Promise<GetParentPuzzleResponse> {
-  throw "unexpected";
+  throw new Error("unexpected, program declared it does not need proof");
 }
