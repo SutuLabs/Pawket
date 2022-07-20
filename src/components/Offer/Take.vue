@@ -106,6 +106,7 @@ import FeeSelector from "@/components/FeeSelector.vue";
 import ManageCats from "@/components/ManageCats.vue";
 import OfflineSendShowBundle from "../OfflineSendShowBundle.vue";
 import { xchSymbol } from "@/store/modules/network";
+import { getLineageProofPuzzle } from "@/services/transfer/call";
 
 @Component({
   components: {
@@ -216,8 +217,8 @@ export default class TakeOffer extends Vue {
         revSummary.requested[0].amount -= fee;
       }
       const fee = isReceivingCat ? BigInt(this.fee) : 0n;
-      const offplan = await generateOfferPlan(revSummary.offered, change_hex, this.availcoins, fee);
-      const takerBundle = await generateOffer(offplan, revSummary.requested, this.tokenPuzzles);
+      const offplan = await generateOfferPlan(revSummary.offered, change_hex, this.availcoins, fee, xchSymbol());
+      const takerBundle = await generateOffer(offplan, revSummary.requested, this.tokenPuzzles, getLineageProofPuzzle);
       const combined = await combineSpendBundle([this.makerBundle, takerBundle]);
       // for creating unit test
       // console.log("const change_hex=", change_hex, ";");

@@ -10,7 +10,6 @@ import { TokenPuzzleDetail } from "../crypto/receive";
 import stdBundle from "./stdBundle";
 import { ConditionOpcode } from "../coin/opcode";
 import catBundle from "./catBundle";
-import { xchSymbol } from "@/store/modules/network";
 import { getCoinNameHex } from "../coin/coinUtility";
 
 export type GetPuzzleApiCallback = (parentCoinId: string) => Promise<GetParentPuzzleResponse | undefined>;
@@ -21,7 +20,8 @@ class Transfer {
     availcoins: SymbolCoins,
     targets: TransferTarget[],
     changeAddress: string,
-    fee: bigint
+    fee: bigint,
+    tokenSymbol: string,
   ): SpendPlan {
     const plan: SpendPlan = {};
     for (const symbol in availcoins) {
@@ -30,9 +30,9 @@ class Transfer {
       const coins = availcoins[symbol];
       const tgts = targets.filter(_ => _.symbol == symbol);
 
-      const outgoingExtra = (symbol == xchSymbol()) ? fee : 0n;
+      const outgoingExtra = (symbol == tokenSymbol) ? fee : 0n;
       const outgoingTotal = tgts.reduce((acc, cur) => acc + cur.amount, 0n) + outgoingExtra;
-      const incomingCoins = (symbol == xchSymbol())
+      const incomingCoins = (symbol == tokenSymbol)
         ? this.findCoins(coins, outgoingTotal)
         : this.findPossibleSmallest(coins, outgoingTotal);
 
@@ -58,6 +58,7 @@ class Transfer {
     plan: SpendPlan,
     puzzles: TokenPuzzleDetail[],
     catAdditionalConditions: ConditionType[],
+    tokenSymbol: string,
     getPuzzle: GetPuzzleApiCallback | null = null,
   ): Promise<SpendBundle> {
     const coin_spends: CoinSpend[] = [];
@@ -66,10 +67,12 @@ class Transfer {
       if (!Object.prototype.hasOwnProperty.call(plan, symbol)) continue;
 
       const tp = plan[symbol];
-      const css = symbol == xchSymbol()
-        ? await stdBundle.generateCoinSpends(tp, puzzles)
-        : await catBundle.generateCoinSpends(tp, puzzles, catAdditionalConditions, getPuzzle);
-      coin_spends.push(...css);
+      if (symbol == tokenSymbol) {
+        coin_spends.push(... await stdBundle.generateCoinSpends(tp, puzzles));
+      } else {
+        if (getPuzzle == null) throw new Error("getPuzzle cannot be null when composing cat spendbundle");
+        coin_spends.push(... await catBundle.generateCoinSpends(tp, puzzles, catAdditionalConditions, getPuzzle));
+      }
     }
 
     return this.getSpendBundle(coin_spends, puzzles);

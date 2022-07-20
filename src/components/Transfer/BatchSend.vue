@@ -207,8 +207,8 @@ export default class BatchSend extends Vue {
         tgts.push({ address: tgt_hex, amount, symbol, memos: [tgt_hex, std_memo] });
       }
 
-      const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee));
-      this.bundle = await transfer.generateSpendBundle(plan, this.requests, []);
+      const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
+      this.bundle = await transfer.generateSpendBundle(plan, this.requests, [], xchSymbol());
     } catch (error) {
       Notification.open({
         message: this.$tc("batchSend.ui.messages.failedToSign") + error,

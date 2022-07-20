@@ -5,7 +5,7 @@ import puzzle from "../crypto/puzzle";
 import utility from "../crypto/utility";
 import transfer from "../transfer/transfer";
 import { assert } from "./runner";
-import { xchPrefix } from "@/store/modules/network";
+import { xchPrefix, xchSymbol } from "@/store/modules/network";
 
 export async function testCatTransfer(): Promise<void> {
   const coin: OriginCoin = {
@@ -28,8 +28,8 @@ export async function testCatTransfer(): Promise<void> {
   const assetId = "78ad32a8c9ea70f27d73e9306fc467bab2a6b15b30289791e37ab6e8612212b1";
 
   const puzzles = await puzzle.getCatPuzzleDetails(utility.fromHexString(sk_hex), assetId, "xch", 0, 5);
-  const plan = await transfer.generateSpendPlan({ "CAT": [coin] }, [{ symbol: "CAT", address: tgt_hex, amount: 300n, memos: [tgt_hex] }], change_hex, 0n);
-  const bundle = await transfer.generateSpendBundle(plan, [{ symbol: "CAT", puzzles }], [], localPuzzleApiCall);
+  const plan = await transfer.generateSpendPlan({ "CAT": [coin] }, [{ symbol: "CAT", address: tgt_hex, amount: 300n, memos: [tgt_hex] }], change_hex, 0n, xchSymbol());
+  const bundle = await transfer.generateSpendBundle(plan, [{ symbol: "CAT", puzzles }], [], xchSymbol(), localPuzzleApiCall);
   assert(
     "0xa2b3ea73ce4c16248e6b57fb72498d95881866fce4651aeba3b98e1c287700b35aebba853f11d4c7fef14d3381c6172d1847796d44b3f4c5f9ed42315a53694b9b849f4b28690fcb553617d0b7f1b9080dc060f6ac0ad4eb34661bce37e92a40",
     bundle?.aggregated_signature
@@ -76,8 +76,8 @@ export async function testCatTransfer2(): Promise<void> {
   const assetId = "6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b";
   const puzzles = await puzzle.getCatPuzzleDetails(utility.fromHexString(sk_hex), assetId, "xch", 0, 8);
 
-  const plan = await transfer.generateSpendPlan({ "CAT": [coin] }, [{ symbol: "CAT", address: tgt_hex, amount: 300n, memos: [tgt_hex] }], change_hex, 0n);
-  const bundle = await transfer.generateSpendBundle(plan, [{ symbol: "CAT", puzzles }], [], localPuzzleApiCall);
+  const plan = await transfer.generateSpendPlan({ "CAT": [coin] }, [{ symbol: "CAT", address: tgt_hex, amount: 300n, memos: [tgt_hex] }], change_hex, 0n, xchSymbol());
+  const bundle = await transfer.generateSpendBundle(plan, [{ symbol: "CAT", puzzles }], [], xchSymbol(), localPuzzleApiCall);
   assert(
     "0xad060a5265b32a23f96022588fcb422684bb0f44dc1aaa49415ce6ed78d931a4c3b3dc71c0c677b8f868b83f5d693a08187899f1d4579bab6b35670566579e9bd1108e7f6a353109b8a2bd563ba8458a224c80e57a104c8b165151eb959fe096",
     bundle?.aggregated_signature

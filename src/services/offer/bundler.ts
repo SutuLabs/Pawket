@@ -19,8 +19,8 @@ export async function generateOffer(
   offered: OfferPlan[],
   requested: OfferEntity[],
   puzzles: TokenPuzzleDetail[],
+  getPuzzle: GetPuzzleApiCallback,
   nonceHex: string | null = null,
-  getPuzzle: GetPuzzleApiCallback | null = null,
 ): Promise<SpendBundle> {
   if (offered.length != 1 || requested.length != 1) throw new Error("currently, only support single offer/request");
   if (offered[0].id && offered[0].plan.coins.length != 1) throw new Error("currently, only support single coin for CAT");
@@ -161,6 +161,7 @@ export async function generateOfferPlan(
   change_hex: string,
   availcoins: SymbolCoins,
   fee: bigint,
+  tokenSymbol: string,
 ): Promise<OfferPlan[]> {
   const plans: OfferPlan[] = [];
   change_hex = prefix0x(change_hex);
@@ -175,7 +176,7 @@ export async function generateOfferPlan(
       memos: off.symbol == xchSymbol() ? undefined : [settlement_tgt],
     };
 
-    const plan = transfer.generateSpendPlan(availcoins, [tgt], change_hex, fee);
+    const plan = transfer.generateSpendPlan(availcoins, [tgt], change_hex, fee, tokenSymbol);
     const keys = Object.keys(plan);
     if (keys.length != 1) {
       throw new Error("spend plan must be 1");

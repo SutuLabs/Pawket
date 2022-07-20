@@ -49,7 +49,8 @@ export async function testMintCat(): Promise<void> {
     memo,
     { [xchSymbol()]: [coin] },
     sk_hex,
-    [{ puzzles: requests, symbol: xchSymbol() }]
+    [{ puzzles: requests, symbol: xchSymbol() }],
+    xchSymbol(),
   );
 
   assertBundle(expectBundle, spendBundle);

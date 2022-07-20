@@ -35,6 +35,7 @@ export async function generateMintCatBundle(
   availcoins: SymbolCoins,
   sk_hex: string,
   requests: TokenPuzzleDetail[],
+  tokenSymbol: string,
 ): Promise<MintCatInfo> {
   const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(changeAddress));
@@ -43,8 +44,8 @@ export async function generateMintCatBundle(
   // eslint-disable-next-line no-useless-escape
   memo = memo.replace(/[&/\\#,+()$~%.'":*?<>{}\[\] ]/g, "_");
 
-  const { innerPuzzle, catPuzzle, assetId, bootstrapCoin } = await constructCatPuzzle(tgt_hex, change_hex, amount, fee, memo, availcoins);
-  const ibundle = await constructInternalBundle(catPuzzle.hash, change_hex, amount, fee, availcoins, requests);
+  const { innerPuzzle, catPuzzle, assetId, bootstrapCoin } = await constructCatPuzzle(tgt_hex, change_hex, amount, fee, memo, availcoins, tokenSymbol);
+  const ibundle = await constructInternalBundle(catPuzzle.hash, change_hex, amount, fee, availcoins, requests, tokenSymbol);
   const ebundle = await constructExternalBundle(innerPuzzle, catPuzzle, bootstrapCoin, amount, sk_hex);
   const bundle = await combineSpendBundlePure(ibundle, ebundle);
 
@@ -61,13 +62,14 @@ async function constructCatPuzzle(
   fee: bigint,
   memo: string,
   availcoins: SymbolCoins,
+  tokenSymbol: string,
 ): Promise<CatPuzzleResponse> {
   const baseSymbol = Object.keys(availcoins)[0];
   const itgts: TransferTarget[] = [
     { address: "0x0000000000000000000000000000000000000000000000000000000000000000", amount, symbol: baseSymbol },
   ];
 
-  const tempplan = transfer.generateSpendPlan(availcoins, itgts, change_hex, fee);
+  const tempplan = transfer.generateSpendPlan(availcoins, itgts, change_hex, fee, tokenSymbol);
   const catmod = catClvmTreehash;
   const bootstrapCoin = getCoinName0x(tempplan[baseSymbol].coins[0]);
   const curried_tail = await curryMod(modsprog["genesis_by_coin_id"], bootstrapCoin);
@@ -96,12 +98,13 @@ async function constructInternalBundle(
   fee: bigint,
   availcoins: SymbolCoins,
   requests: TokenPuzzleDetail[],
+  tokenSymbol: string,
 ): Promise<SpendBundle> {
   const baseSymbol = Object.keys(availcoins)[0];
   const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: baseSymbol },];
   tgts[0].address = tgt_hex;
-  const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, fee);
-  const bundle = await transfer.generateSpendBundle(plan, requests, []);
+  const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, fee, tokenSymbol);
+  const bundle = await transfer.generateSpendBundle(plan, requests, [], tokenSymbol);
   return bundle;
 }
 

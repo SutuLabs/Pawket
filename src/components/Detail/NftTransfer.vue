@@ -88,6 +88,7 @@ import AddressField from "../AddressField.vue";
 import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
 import { NFT } from "./NftPanel.vue";
+import { getLineageProofPuzzle } from "@/services/transfer/call";
 
 @Component({
   components: {
@@ -283,7 +284,8 @@ export default class NftTransfer extends Vue {
         this.nft.analysis,
         this.availcoins,
         this.requests,
-        xchSymbol()
+        xchSymbol(),
+        getLineageProofPuzzle
       );
 
       this.bundle = spendBundle;

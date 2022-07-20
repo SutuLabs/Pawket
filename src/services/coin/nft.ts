@@ -13,6 +13,7 @@ import { Bytes } from "clvm";
 import { bytesToHex0x } from "../crypto/utility";
 import catBundle from "../transfer/catBundle";
 import { getCoinName0x } from "./coinUtility";
+import { xchSymbol } from "@/store/modules/network";
 
 export interface MintNftInfo {
   spendBundle: SpendBundle;
@@ -55,8 +56,8 @@ export async function generateMintNftBundle(
   */
 
   const bootstrapTgts: TransferTarget[] = [{ address: await modshash("singleton_launcher"), amount, symbol: baseSymbol }];
-  const bootstrapSpendPlan = transfer.generateSpendPlan(availcoins, bootstrapTgts, change_hex, fee);
-  const bootstrapSpendBundle = await transfer.generateSpendBundle(bootstrapSpendPlan, requests, []);
+  const bootstrapSpendPlan = transfer.generateSpendPlan(availcoins, bootstrapTgts, change_hex, fee, xchSymbol());
+  const bootstrapSpendBundle = await transfer.generateSpendBundle(bootstrapSpendPlan, requests, [], xchSymbol());
   const bootstrapCoin = bootstrapSpendBundle.coin_spends[0].coin;// get the primary coin
   const bootstrapCoinId = getCoinName0x(bootstrapCoin);
 
@@ -116,7 +117,7 @@ export async function generateTransferNftBundle(
   availcoins: SymbolCoins,
   requests: TokenPuzzleDetail[],
   baseSymbol: string,
-  api: GetPuzzleApiCallback | null = null,
+  api: GetPuzzleApiCallback,
 ): Promise<SpendBundle> {
 
   const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
@@ -156,8 +157,8 @@ export async function generateTransferNftBundle(
     // not tested so far
     // throw new Error("fee is not supported in transfer");
     const feeTgts: TransferTarget[] = [{ address: "0x0000000000000000000000000000000000000000000000000000000000000000", amount: 0n, symbol: baseSymbol }];
-    const feeSpendPlan = transfer.generateSpendPlan(availcoins, feeTgts, change_hex, fee);
-    const feeSpendBundle = await transfer.generateSpendBundle(feeSpendPlan, requests, []);
+    const feeSpendPlan = transfer.generateSpendPlan(availcoins, feeTgts, change_hex, fee, xchSymbol());
+    const feeSpendBundle = await transfer.generateSpendBundle(feeSpendPlan, requests, [], xchSymbol());
     const feeBundle = await combineSpendBundlePure(feeSpendBundle, bundle);
 
     return feeBundle;
