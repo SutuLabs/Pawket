@@ -91,7 +91,7 @@ class CatBundle {
       }
       const trickarg = disassemble(effectiveArg).slice(1, -1);
       const hash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(trickarg));
-      return hash;
+      return hash; // getting inner_puzzle hash
     }
 
     const presp = await api(parentCoinId);
