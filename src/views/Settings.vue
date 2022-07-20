@@ -23,8 +23,8 @@
         </b-tab-item>
       </b-tabs>
     </div>
-    <div class="is-hidden-tablet pb-4">
-      <p class="has-text-centered is-size-5 pt-5 pb-2 pr-2 border-bottom">{{ $t("settings.menu.title") }}</p>
+    <div class="is-hidden-tablet pb-4 pt-6">
+      <p class="has-text-centered is-size-5 pt-5 pb-2 pr-2 border-bottom fixed-top">{{ $t("settings.menu.title") }}</p>
       <div class="panel-block py-0 my-0" @click="goToGeneral()">
         <div class="is-11 is-flex my-1 py-1">
           <div class="mr-2 py-1">
@@ -230,5 +230,13 @@ export default class Settings extends Vue {
 .nav-box {
   max-width: 1000px;
   margin: auto;
+}
+
+.fixed-top {
+  width: 100%;
+  height: 10vh;
+  position: fixed;
+  top: 0;
+  background-color: white;
 }
 </style>
