@@ -19,6 +19,8 @@ export interface NftDetail {
   metadata: {
     uri: string;
     hash: string;
+    collection?: string;
+    name?: string;
   }
   hintPuzzle: string;
   coin: OriginCoin;

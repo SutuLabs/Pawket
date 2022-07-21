@@ -108,8 +108,8 @@ import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import KeyBox from "../KeyBox.vue";
 import TopBar from "../TopBar.vue";
 import NftOffer from "./NftOffer.vue";
-import { NFT } from "./NftPanel.vue";
 import NftTransfer from "./NftTransfer.vue";
+import { NftDetail } from "@/services/crypto/receive";
 
 @Component({
   components: {
@@ -120,7 +120,7 @@ import NftTransfer from "./NftTransfer.vue";
 })
 export default class NftDetailPanel extends Vue {
   @Prop() private account!: AccountEntity;
-  @Prop() public nft!: NFT;
+  @Prop() public nft!: NftDetail;
 
   @Emit("close")
   close(): void {

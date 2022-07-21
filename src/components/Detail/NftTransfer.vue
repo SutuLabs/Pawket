@@ -87,7 +87,6 @@ import { generateTransferNftBundle } from "@/services/coin/nft";
 import AddressField from "../AddressField.vue";
 import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
-import { NFT } from "./NftPanel.vue";
 import { getLineageProofPuzzle } from "@/services/transfer/call";
 
 @Component({
@@ -102,7 +101,7 @@ import { getLineageProofPuzzle } from "@/services/transfer/call";
 })
 export default class NftTransfer extends Vue {
   @Prop() private account!: AccountEntity;
-  @Prop() private nft!: NFT;
+  @Prop() private nft!: NftDetail;
 
   public addressEditable = true;
   public submitting = false;
@@ -179,11 +178,11 @@ export default class NftTransfer extends Vue {
   }
 
   get hash(): string | undefined {
-    return this.nft?.hash;
+    return this.nft?.metadata.hash;
   }
 
   get uri(): string | undefined {
-    return this.nft?.uri;
+    return this.nft?.metadata.uri;
   }
 
   changeToken(token: string): void {
