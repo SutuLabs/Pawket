@@ -1,11 +1,19 @@
 import { OriginCoin, SpendBundle } from "@/models/wallet";
-import puzzle from "../crypto/puzzle";
-import utility from "../crypto/utility";
-import { generateMintCatBundle } from "../mint/cat";
-import { assert, assertBundle } from "./runner";
-import { xchSymbol } from "@/store/modules/network";
+import puzzle from "@/services/crypto/puzzle";
+import utility from "@/services/crypto/utility";
+import { generateMintCatBundle } from "@/services/mint/cat";
+import { Instance } from "@/services/util/instance";
+import { assert, assertBundle } from "./utility";
 
-export async function testMintCat(): Promise<void> {
+function xchPrefix() { return "xch"; }
+function xchSymbol() { return "XCH"; }
+function chainId() { return "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb"; }
+
+beforeAll(async () => {
+  await Instance.init();
+})
+
+test('Mint Cat', async () => {
   const expectBundle: SpendBundle = {
     "aggregated_signature": "a2e7cae0b1d495f7a83ef15cc9d39da348b84ce1124e3031af0f1af9d6f3c3f51d09277a2b3541d81768619551a0db55158f475965aa5129998e9c19cd41826c3503135498d825f5628730b410f4e1f9219e8b4b68fcd647671fcf22de95fdb7",
     "coin_spends": [
@@ -39,7 +47,7 @@ export async function testMintCat(): Promise<void> {
   const memo = "hello";
   const fee = 1n;
   const amount = 10n;
-  const requests = await puzzle.getPuzzleDetails(utility.fromHexString(sk_hex), 0, 1);
+  const requests = await puzzle.getPuzzleDetails(utility.fromHexString(sk_hex), "xch", 0, 1);
 
   const { spendBundle, assetId } = await generateMintCatBundle(
     tgt_addr,
@@ -49,9 +57,11 @@ export async function testMintCat(): Promise<void> {
     memo,
     { [xchSymbol()]: [coin] },
     sk_hex,
-    [{ puzzles: requests, symbol: xchSymbol() }]
+    [{ puzzles: requests, symbol: xchSymbol() }],
+    xchSymbol(),
+    chainId(),
   );
 
   assertBundle(expectBundle, spendBundle);
   assert("0x3d65a20099e84ac0d5a061d74814ea76bbe786783588707211e3d95c5a78e7a2", assetId);
-}
+});

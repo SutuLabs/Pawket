@@ -151,7 +151,7 @@ import KeyBox from "@/components/KeyBox.vue";
 import Send from "./Send.vue";
 import { demojo } from "@/filters/unitConversion";
 import { xchToCurrency } from "@/filters/usdtConversion";
-import { TokenInfo, AccountEntity, CustomCat, getAllCats } from "@/store/modules/account";
+import { TokenInfo, AccountEntity, CustomCat } from "@/models/account";
 import { getTokenInfo } from "@/services/coin/cat";
 import { getExchangeRate } from "@/services/exchange/rates";
 import { CurrencyType } from "@/services/exchange/currencyType";
@@ -167,6 +167,7 @@ import AccountManagement from "./AccountManagement/AccountManagement.vue";
 import { tc } from "@/i18n/i18n";
 import { isMobile } from "@/services/view/responsive";
 import AddressAccountQr from "./AddressAccountQr.vue";
+import { getAllCats } from "@/store/modules/account";
 
 type Mode = "Verify" | "Create";
 

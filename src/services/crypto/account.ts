@@ -1,10 +1,10 @@
-import store from "@/store";
 import {
   entropyToMnemonic,
   mnemonicToSeedSync,
 } from "bip39";
 
 import pbkdf2Hmac from "pbkdf2-hmac";
+import { Instance } from "../util/instance";
 import utility from "./utility";
 
 export interface AccountKey {
@@ -22,7 +22,7 @@ class AccountHelper {
   }
 
   async getAccount(mnemonic: string, password: string | null, legacyMnemonic: string | null = null): Promise<AccountKey> {
-    if (legacyMnemonic && (mnemonic || password)) throw "legacy mnemonic cannot work with new mnemonic/password!";
+    if (legacyMnemonic && (mnemonic || password)) throw new Error("legacy mnemonic cannot work with new mnemonic/password!");
     const seeds = mnemonicToSeedSync(mnemonic, password ?? "");
     let compatibleMnemonic = entropyToMnemonic(
       new Buffer(seeds.slice(0, 32))
@@ -30,8 +30,8 @@ class AccountHelper {
     if (legacyMnemonic) compatibleMnemonic = legacyMnemonic;
 
     // let d = mnemonicToSeedSync(compatibleMnemonic);
-    const BLS = store.state.app.bls;
-    if (!BLS) throw "BLS not initialized";
+    const BLS = Instance.BLS;
+    if (!BLS) throw new Error("BLS not initialized");
     const key = await pbkdf2Hmac(
       compatibleMnemonic,
       "mnemonic",

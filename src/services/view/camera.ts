@@ -5,7 +5,10 @@ export async function initCameraHandleError(promise: Promise<void>, errorCallbac
   try {
     await promise;
   } catch (error) {
-    console.warn("camera error: ", typeof error, error);
+    if (!(error instanceof Error)) {
+      console.warn("camera error: ", typeof error, error);
+      return;
+    }
     if (error.name === "NotAllowedError") {
       await errorCallback($tc("scanQrCode.message.error.NotAllowedError"));
     } else if (error.name === "NotFoundError") {

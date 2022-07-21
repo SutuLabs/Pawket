@@ -3,6 +3,7 @@ import utility from "../crypto/utility";
 import transfer from "../transfer/transfer";
 import { assert } from "./runner";
 import { xchPrefix } from "@/store/modules/network";
+import { getCoinName } from "../coin/coinUtility";
 
 export async function testCryptography(): Promise<void> {
   const hash = await utility.hash("test");
@@ -56,10 +57,10 @@ export async function testPuzzleAssemble(): Promise<void> {
 }
 
 export async function testCoinName(): Promise<void> {
-  const coinname = transfer.getCoinName({
+  const coinname = getCoinName({
     amount: 1000000000n,
     parent_coin_info: "0xcd299604b459e5ff20da17627d684ea143fc1b5b4165166943729d2d24305de8",
     puzzle_hash: "0x484aaab0cda1b0149df9adeddb0a5d28976ad259ff6173f4488cbc68f095eb79",
   });
-  assert("c62152493a6f3fbca7a918a8258e52f84c4e8aa286b8ebf1b0d5e5dda7fa7e6f", coinname.hex());
+  assert("c62152493a6f3fbca7a918a8258e52f84c4e8aa286b8ebf1b0d5e5dda7fa7e6f", coinname);
 }

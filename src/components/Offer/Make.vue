@@ -105,7 +105,7 @@
 import { Component, Vue, Prop, Emit } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
 import { SpendBundle } from "@/models/wallet";
-import { AccountEntity } from "@/store/modules/account";
+import { AccountEntity } from "@/models/account";
 import { prefix0x } from "@/services/coin/condition";
 import store from "@/store";
 import TokenAmountField from "@/components/TokenAmountField.vue";
@@ -120,7 +120,8 @@ import { getCatIdDict, getCatNameDict, getCatNames } from "@/services/coin/cat";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
 import { generateOffer, generateOfferPlan } from "@/services/offer/bundler";
 import bigDecimal from "js-big-decimal";
-import { xchSymbol } from "@/store/modules/network";
+import { chainId, xchSymbol } from "@/store/modules/network";
+import { getLineageProofPuzzle } from "@/services/transfer/call";
 
 @Component({
   components: {
@@ -251,11 +252,11 @@ export default class MakeOffer extends Vue {
       this.signing = true;
 
       const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
-      const offs: OfferEntity[] = getOfferEntities(this.offers, "", this.catIds);
-      const reqs: OfferEntity[] = getOfferEntities(this.requests, change_hex, this.catIds);
+      const offs: OfferEntity[] = getOfferEntities(this.offers, "", this.catIds, xchSymbol());
+      const reqs: OfferEntity[] = getOfferEntities(this.requests, change_hex, this.catIds, xchSymbol());
 
-      const offplan = await generateOfferPlan(offs, change_hex, this.availcoins, 0n);
-      const bundle = await generateOffer(offplan, reqs, this.tokenPuzzles);
+      const offplan = await generateOfferPlan(offs, change_hex, this.availcoins, 0n, xchSymbol());
+      const bundle = await generateOffer(offplan, reqs, this.tokenPuzzles, getLineageProofPuzzle, xchSymbol(), chainId());
       // for creating unit test
       // console.log("const offplan=", JSON.stringify([offplan], null, 2), ";");
       // console.log("const reqs=", JSON.stringify(reqs, null, 2), ";");

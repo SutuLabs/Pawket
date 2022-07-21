@@ -54,17 +54,17 @@ stages:
         script: 'echo $(versionNumber)>$(Build.SourcesDirectory)/dist/web/version.txt'
       displayName: 'write version file'
 
-    - task: CmdLine@2
-      inputs:
-        workingDirectory: '$(Build.SourcesDirectory)'
-        script: 'yarn build-ext'
-      displayName: 'yarn build-ext'
+    # - task: CmdLine@2
+    #   inputs:
+    #     workingDirectory: '$(Build.SourcesDirectory)'
+    #     script: 'yarn build-ext'
+    #   displayName: 'yarn build-ext'
 
-    - task: CmdLine@2
-      inputs:
-        workingDirectory: '$(Build.SourcesDirectory)'
-        script: 'echo $(versionNumber)>$(Build.SourcesDirectory)/dist/ext/version.txt'
-      displayName: 'write version file(ext)'
+    # - task: CmdLine@2
+    #   inputs:
+    #     workingDirectory: '$(Build.SourcesDirectory)'
+    #     script: 'echo $(versionNumber)>$(Build.SourcesDirectory)/dist/ext/version.txt'
+    #   displayName: 'write version file(ext)'
 
     - task: PublishBuildArtifacts@1
       inputs:
@@ -72,11 +72,11 @@ stages:
         ArtifactName: '$(webArtifactName)'
         publishLocation: 'Container'
 
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.SourcesDirectory)/dist/ext'
-        ArtifactName: '$(extArtifactName)'
-        publishLocation: 'Container'
+    # - task: PublishBuildArtifacts@1
+    #   inputs:
+    #     PathtoPublish: '$(Build.SourcesDirectory)/dist/ext'
+    #     ArtifactName: '$(extArtifactName)'
+    #     publishLocation: 'Container'
 
 
 - stage: pr

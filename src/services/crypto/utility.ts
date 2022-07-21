@@ -1,7 +1,8 @@
-import store from "@/store";
 import { PrivateKey, ModuleInstance } from "@chiamine/bls-signatures";
 import { prefix0x, unprefix0x } from "../coin/condition";
 import { Bytes } from "clvm";
+import crypto from "./isoCrypto"
+import { Instance } from "../util/instance";
 
 type deriveCallback = (path: number[]) => PrivateKey;
 
@@ -30,15 +31,15 @@ class Utility {
   }
 
   async derive(privateKey: Uint8Array, hardened = true): Promise<deriveCallback> {
-    const BLS = store.state.app.bls;
-    if (!BLS) throw "BLS not initialized";
+    const BLS = Instance.BLS;
+    if (!BLS) throw new Error("BLS not initialized");
     const sk = BLS.PrivateKey.from_bytes(privateKey, false);
     return (path: number[]) => this.derivePath(BLS, sk, path, hardened);
   }
 
   async getPrivateKey(privateKey: Uint8Array): Promise<PrivateKey> {
-    const BLS = store.state.app.bls;
-    if (!BLS) throw "BLS not initialized";
+    const BLS = Instance.BLS;
+    if (!BLS) throw new Error("BLS not initialized");
     const sk = BLS.PrivateKey.from_bytes(privateKey, false);
     return sk;
   }

@@ -78,7 +78,7 @@ import { debugBundle } from "@/services/view/bundle";
 import { ConditionOpcode } from "@/services/coin/opcode";
 import { uncurry } from "clvm_tools/clvm_tools/curry";
 import { SExp, Tuple } from "clvm";
-import { AccountEntity } from "@/store/modules/account";
+import { AccountEntity } from "@/models/account";
 import { getCatNameDict } from "@/services/coin/cat";
 import { demojo } from "@/filters/unitConversion";
 import BundleText from "./BundelText.vue";

@@ -1,12 +1,13 @@
 import { Bytes } from "clvm";
 import { CoinSpend, SpendBundle } from "@/models/wallet";
-import store from "@/store";
 import { prefix0x } from "../coin/condition";
 import puzzle, { catClvmTreehash } from "../crypto/puzzle";
 import { TokenPuzzleDetail } from "../crypto/receive";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { curryMod } from "../offer/bundler";
 import { modsprog } from "../coin/mods";
+import { getCoinName0x } from "../coin/coinUtility";
+import { Instance } from "../util/instance";
 
 export interface MintCatInfo {
   spendBundle: SpendBundle;
@@ -34,6 +35,8 @@ export async function generateMintCatBundle(
   availcoins: SymbolCoins,
   sk_hex: string,
   requests: TokenPuzzleDetail[],
+  tokenSymbol: string,
+  chainId: string,
 ): Promise<MintCatInfo> {
   const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(changeAddress));
@@ -42,9 +45,9 @@ export async function generateMintCatBundle(
   // eslint-disable-next-line no-useless-escape
   memo = memo.replace(/[&/\\#,+()$~%.'":*?<>{}\[\] ]/g, "_");
 
-  const { innerPuzzle, catPuzzle, assetId, bootstrapCoin } = await constructCatPuzzle(tgt_hex, change_hex, amount, fee, memo, availcoins);
-  const ibundle = await constructInternalBundle(catPuzzle.hash, change_hex, amount, fee, availcoins, requests);
-  const ebundle = await constructExternalBundle(innerPuzzle, catPuzzle, bootstrapCoin, amount, sk_hex);
+  const { innerPuzzle, catPuzzle, assetId, bootstrapCoin } = await constructCatPuzzle(tgt_hex, change_hex, amount, fee, memo, availcoins, tokenSymbol);
+  const ibundle = await constructInternalBundle(catPuzzle.hash, change_hex, amount, fee, availcoins, requests, tokenSymbol, chainId);
+  const ebundle = await constructExternalBundle(innerPuzzle, catPuzzle, bootstrapCoin, amount, sk_hex, chainId);
   const bundle = await combineSpendBundlePure(ibundle, ebundle);
 
   return {
@@ -60,15 +63,16 @@ async function constructCatPuzzle(
   fee: bigint,
   memo: string,
   availcoins: SymbolCoins,
+  tokenSymbol: string,
 ): Promise<CatPuzzleResponse> {
   const baseSymbol = Object.keys(availcoins)[0];
   const itgts: TransferTarget[] = [
     { address: "0x0000000000000000000000000000000000000000000000000000000000000000", amount, symbol: baseSymbol },
   ];
 
-  const tempplan = transfer.generateSpendPlan(availcoins, itgts, change_hex, fee);
+  const tempplan = transfer.generateSpendPlan(availcoins, itgts, change_hex, fee, tokenSymbol);
   const catmod = catClvmTreehash;
-  const bootstrapCoin = prefix0x(transfer.getCoinName(tempplan[baseSymbol].coins[0]).hex());
+  const bootstrapCoin = getCoinName0x(tempplan[baseSymbol].coins[0]);
   const curried_tail = await curryMod(modsprog["genesis_by_coin_id"], bootstrapCoin);
   if (!curried_tail) throw new Error("failed to curry tail.");
 
@@ -95,12 +99,14 @@ async function constructInternalBundle(
   fee: bigint,
   availcoins: SymbolCoins,
   requests: TokenPuzzleDetail[],
+  tokenSymbol: string,
+  chainId: string,
 ): Promise<SpendBundle> {
   const baseSymbol = Object.keys(availcoins)[0];
   const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: baseSymbol },];
   tgts[0].address = tgt_hex;
-  const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, fee);
-  const bundle = await transfer.generateSpendBundle(plan, requests, []);
+  const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, fee, tokenSymbol);
+  const bundle = await transfer.generateSpendBundle(plan, requests, [], tokenSymbol, chainId);
   return bundle;
 }
 
@@ -110,9 +116,10 @@ async function constructExternalBundle(
   bootstrapCoin: string,
   amount: bigint,
   sk_hex: string,
+  chainId: string,
 ): Promise<SpendBundle> {
   const coin = { parent_coin_info: bootstrapCoin, amount, puzzle_hash: catPuzzle.hash };
-  const coin_name = prefix0x(transfer.getCoinName(coin).hex());
+  const coin_name = getCoinName0x(coin);
 
   const catsln = `(() () ${coin_name} (${bootstrapCoin} ${catPuzzle.hash} ${amount}) (${bootstrapCoin} ${innerPuzzle.hash} ${amount}) () ())`;
   const puzzle_reveal = prefix0x(await puzzle.encodePuzzle(catPuzzle.plaintext));
@@ -134,15 +141,15 @@ async function constructExternalBundle(
       ],
     },
   ];
-  const bundle = await transfer.getSpendBundle(cs, puzzles);
+  const bundle = await transfer.getSpendBundle(cs, puzzles, chainId);
   return bundle;
 }
 
 export async function combineSpendBundlePure(
   ...spendbundles: SpendBundle[]
 ): Promise<SpendBundle> {
-  if (!store.state.app.bls) throw new Error("bls not initialized");
-  const BLS = store.state.app.bls;
+  const BLS = Instance.BLS;
+  if (!BLS) throw new Error("BLS not initialized");
 
   const sigs = spendbundles.map(_ => BLS.G2Element.from_bytes(Bytes.from(_.aggregated_signature, "hex").raw()));
   const agg_sig = BLS.AugSchemeMPL.aggregate(sigs);

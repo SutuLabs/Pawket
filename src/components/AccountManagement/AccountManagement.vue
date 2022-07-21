@@ -74,7 +74,7 @@
 
 <script lang="ts">
 import store from "@/store";
-import { AccountEntity } from "@/store/modules/account";
+import { AccountEntity } from "@/models/account";
 import { Component, Vue } from "vue-property-decorator";
 import AccountInfo from "./AccountInfo.vue";
 import TopBar from "../TopBar.vue";

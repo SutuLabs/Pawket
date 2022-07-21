@@ -80,7 +80,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
-import { AccountEntity, CustomCat, TokenInfo } from "@/store/modules/account";
+import { AccountEntity, CustomCat, TokenInfo } from "@/models/account";
 import KeyBox from "@/components/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { TokenPuzzleDetail } from "@/services/crypto/receive";
@@ -96,7 +96,7 @@ import FeeSelector from "@/components/FeeSelector.vue";
 import BundleSummary from "../BundleSummary.vue";
 import SendSummary from "../SendSummary.vue";
 import { generateMintCatBundle } from "@/services/mint/cat";
-import { xchPrefix, xchSymbol } from "@/store/modules/network";
+import { chainId, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
 import { getTokenInfo } from "@/services/coin/cat";
@@ -339,7 +339,9 @@ export default class MintCat extends Vue {
         this.memo,
         this.availcoins,
         this.account.key.privateKey,
-        this.requests
+        this.requests,
+        xchSymbol(),
+        chainId()
       );
 
       this.bundle = spendBundle;

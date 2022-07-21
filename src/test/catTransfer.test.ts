@@ -1,13 +1,21 @@
 import { GetParentPuzzleResponse } from "@/models/api";
 import { OriginCoin } from "@/models/wallet";
-import { prefix0x } from "../coin/condition";
-import puzzle from "../crypto/puzzle";
-import utility from "../crypto/utility";
-import transfer from "../transfer/transfer";
-import { assert } from "./runner";
-import { xchPrefix } from "@/store/modules/network";
+import { prefix0x } from "@/services/coin/condition";
+import puzzle from "@/services/crypto/puzzle";
+import utility from "@/services/crypto/utility";
+import transfer from "@/services/transfer/transfer";
+import { Instance } from "@/services/util/instance";
+import { assert } from "./utility";
 
-export async function testCatTransfer(): Promise<void> {
+function xchPrefix() { return "xch"; }
+function xchSymbol() { return "XCH"; }
+function chainId() { return "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb"; }
+
+beforeAll(async () => {
+  await Instance.init();
+})
+
+test('Cat Transfer', async () => {
   const coin: OriginCoin = {
     amount: 9799n,
     parent_coin_info: "0x979cea91ab150d99211b9e5705b088c7807aac849d494fecf0419a382fe361f7",
@@ -27,9 +35,9 @@ export async function testCatTransfer(): Promise<void> {
 
   const assetId = "78ad32a8c9ea70f27d73e9306fc467bab2a6b15b30289791e37ab6e8612212b1";
 
-  const puzzles = await puzzle.getCatPuzzleDetails(utility.fromHexString(sk_hex), assetId, 0, 5);
-  const plan = await transfer.generateSpendPlan({ "CAT": [coin] }, [{ symbol: "CAT", address: tgt_hex, amount: 300n, memos: [tgt_hex] }], change_hex, 0n);
-  const bundle = await transfer.generateSpendBundle(plan, [{ symbol: "CAT", puzzles }], [], localPuzzleApiCall);
+  const puzzles = await puzzle.getCatPuzzleDetails(utility.fromHexString(sk_hex), assetId, xchPrefix(), 0, 5);
+  const plan = await transfer.generateSpendPlan({ "CAT": [coin] }, [{ symbol: "CAT", address: tgt_hex, amount: 300n, memos: [tgt_hex] }], change_hex, 0n, xchSymbol());
+  const bundle = await transfer.generateSpendBundle(plan, [{ symbol: "CAT", puzzles }], [], xchSymbol(), chainId(), localPuzzleApiCall);
   assert(
     "0xa2b3ea73ce4c16248e6b57fb72498d95881866fce4651aeba3b98e1c287700b35aebba853f11d4c7fef14d3381c6172d1847796d44b3f4c5f9ed42315a53694b9b849f4b28690fcb553617d0b7f1b9080dc060f6ac0ad4eb34661bce37e92a40",
     bundle?.aggregated_signature
@@ -42,7 +50,7 @@ export async function testCatTransfer(): Promise<void> {
     "0xffff80ffff01ffff33ffa03eb239190ce59b4af1e461291b9185cea62d6072fd3718051a530fd8a8218bc0ff82012cffffa03eb239190ce59b4af1e461291b9185cea62d6072fd3718051a530fd8a8218bc08080ffff33ffa01cf63b7cc60279a1b0745e8f426585ee81d8da0cd2d92dd9b44e6efbd88d40ceff82251b8080ff8080ffffa03bc85a15c8a944691fa366adf58b476b30703de493b383ef6e05bed1b22b24bdffa02e04a52b8bb59373c6a9ea0d66f9fa67038044753119006b882623f6caa3c13aff82270f80ffa0e938d14885cf035c96dcff1ceb9e7b1a5a19910df6c9e593ada67cb1b8202ac4ffffa0979cea91ab150d99211b9e5705b088c7807aac849d494fecf0419a382fe361f7ffa0ce8a53f46946e5c5e2aa835d700745d9be3879bc5f6a029a965b7663a5c1f74cff82264780ffffa0979cea91ab150d99211b9e5705b088c7807aac849d494fecf0419a382fe361f7ffa057cddc50cc0b1e75d2324030880d970e327989b47495ed28cd7bcc7653b7e757ff82264780ff80ff8080",
     bundle?.coin_spends[0].solution
   );
-}
+});
 
 async function localPuzzleApiCall(parentCoinId: string): Promise<GetParentPuzzleResponse | undefined> {
   const knownCoins = [
@@ -53,7 +61,7 @@ async function localPuzzleApiCall(parentCoinId: string): Promise<GetParentPuzzle
   return resp;
 }
 
-export async function testCatTransfer2(): Promise<void> {
+test('Cat Transfer2', async () => {
   const coin: OriginCoin = {
     amount: 100000000n,
     parent_coin_info: "0x5c4d6545eb708deb0b5e594403d7038f372c46f18eae853677d20f9a1ec2307d",
@@ -74,10 +82,10 @@ export async function testCatTransfer2(): Promise<void> {
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(change_addr));
 
   const assetId = "6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b";
-  const puzzles = await puzzle.getCatPuzzleDetails(utility.fromHexString(sk_hex), assetId, 0, 8);
+  const puzzles = await puzzle.getCatPuzzleDetails(utility.fromHexString(sk_hex), assetId, xchPrefix(), 0, 8);
 
-  const plan = await transfer.generateSpendPlan({ "CAT": [coin] }, [{ symbol: "CAT", address: tgt_hex, amount: 300n, memos: [tgt_hex] }], change_hex, 0n);
-  const bundle = await transfer.generateSpendBundle(plan, [{ symbol: "CAT", puzzles }], [], localPuzzleApiCall);
+  const plan = await transfer.generateSpendPlan({ "CAT": [coin] }, [{ symbol: "CAT", address: tgt_hex, amount: 300n, memos: [tgt_hex] }], change_hex, 0n, xchSymbol());
+  const bundle = await transfer.generateSpendBundle(plan, [{ symbol: "CAT", puzzles }], [], xchSymbol(), chainId(), localPuzzleApiCall);
   assert(
     "0xad060a5265b32a23f96022588fcb422684bb0f44dc1aaa49415ce6ed78d931a4c3b3dc71c0c677b8f868b83f5d693a08187899f1d4579bab6b35670566579e9bd1108e7f6a353109b8a2bd563ba8458a224c80e57a104c8b165151eb959fe096",
     bundle?.aggregated_signature
@@ -90,4 +98,4 @@ export async function testCatTransfer2(): Promise<void> {
     "0xffff80ffff01ffff33ffa01cf63b7cc60279a1b0745e8f426585ee81d8da0cd2d92dd9b44e6efbd88d40ceff82012cffffa01cf63b7cc60279a1b0745e8f426585ee81d8da0cd2d92dd9b44e6efbd88d40ce8080ffff33ffa0c467280169dfc93e7a14b98475641996966d4d3800f814a2baaeab14a96e3b40ff8405f5dfd48080ff8080ffffa021c2167357ccce57f6e592b3c83c2c5e290ab11904fa3646747b7b298497c7f1ffa0b1fe69c9d077b339dfa965bddae6a7d926317f2955d2674edc9b6e10a72a2df1ff8405f5e10080ffa0cbcd120ddaf7fa60b1b316ea59860068ab1c0bbd384fc20b8844f8ec5b1edd17ffffa05c4d6545eb708deb0b5e594403d7038f372c46f18eae853677d20f9a1ec2307dffa09a3e78995734c97d37e7d497098203117a19cefef1bbfe276bc7903f5e279e1dff8405f5e10080ffffa05c4d6545eb708deb0b5e594403d7038f372c46f18eae853677d20f9a1ec2307dffa03eb239190ce59b4af1e461291b9185cea62d6072fd3718051a530fd8a8218bc0ff8405f5e10080ff80ff8080",
     bundle?.coin_spends[0].solution
   );
-}
+});

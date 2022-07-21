@@ -82,7 +82,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
-import { AccountEntity } from "@/store/modules/account";
+import { AccountEntity } from "@/models/account";
 import KeyBox from "@/components/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { TokenPuzzleDetail } from "@/services/crypto/receive";
@@ -96,7 +96,7 @@ import { submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/FeeSelector.vue";
 import BundleSummary from "@/components/BundleSummary.vue";
 import { csvToArray } from "@/services/util/csv";
-import { xchPrefix, xchSymbol } from "@/store/modules/network";
+import { chainId, xchPrefix, xchSymbol } from "@/store/modules/network";
 
 @Component({
   components: {
@@ -207,8 +207,8 @@ export default class BatchSend extends Vue {
         tgts.push({ address: tgt_hex, amount, symbol, memos: [tgt_hex, std_memo] });
       }
 
-      const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee));
-      this.bundle = await transfer.generateSpendBundle(plan, this.requests, []);
+      const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
+      this.bundle = await transfer.generateSpendBundle(plan, this.requests, [], xchSymbol(), chainId());
     } catch (error) {
       Notification.open({
         message: this.$tc("batchSend.ui.messages.failedToSign") + error,

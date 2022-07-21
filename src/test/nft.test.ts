@@ -1,14 +1,22 @@
 import { OriginCoin, SpendBundle } from "@/models/wallet";
-import { assertBundle } from "./runner";
-import { SymbolCoins } from "../transfer/transfer";
-import { xchPrefix, xchSymbol } from "@/store/modules/network";
-import { generateMintNftBundle, generateTransferNftBundle, NftCoinAnalysisResult } from "../coin/nft";
-import puzzle from "../crypto/puzzle";
-import { getTestAccount } from "./offerTest";
-import { getAccountAddressDetails } from "@/store/modules/account";
+import { assertBundle, getTestAccount } from "./utility";
+import { SymbolCoins } from "@/services/transfer/transfer";
+import { generateMintNftBundle, generateTransferNftBundle, NftCoinAnalysisResult } from "@/services/coin/nft";
+import puzzle from "@/services/crypto/puzzle";
 import { GetParentPuzzleResponse } from "@/models/api";
+import { Instance } from "@/services/util/instance";
+import { getAccountAddressDetails } from "@/services/util/account";
 
-export async function testNftMint(): Promise<void> {
+function xchPrefix() { return "txch"; }
+function xchSymbol() { return "TXCH"; }
+function chainId() { return "ae83525ba8d1dd3f09b277de18ca3e43fc0af20d20c4b3e92ef2a48bd291ccb2"; }
+function tokenInfo() { return {}; }
+
+beforeAll(async () => {
+  await Instance.init();
+})
+
+test('Mint Nft', async () => {
   const expect: SpendBundle = {
     "aggregated_signature": "8f26a2c064e02728bd8ed76b6b719a381ec1e478c02004ae06c1d6cddac99a84943864948b97859be66a39c70969be37137ba31bb1f1f4baa4e56e296897df4fd0f57388f7635444ec230a74b06a7d68d4317a4efd3d2f159794711faf0a25c3",
     "coin_spends": [
@@ -50,7 +58,7 @@ export async function testNftMint(): Promise<void> {
   const changeAddress = puzzle.getAddressFromPuzzleHash(change_hex, xchPrefix());
   const targetAddress = puzzle.getAddressFromPuzzleHash(target_hex, xchPrefix());
 
-  const tokenPuzzles = await getAccountAddressDetails(account);
+  const tokenPuzzles = await getAccountAddressDetails(account, [], tokenInfo(), xchPrefix(), xchSymbol());
   const availcoins: SymbolCoins = {
     [xchSymbol()]: [
       {
@@ -65,11 +73,11 @@ export async function testNftMint(): Promise<void> {
     "hash": "76a1900b6931f7bf5f07ab310733270838b040385f285423f49e2f5518867335",
   };
   const fee = 0n;
-  const { spendBundle } = await generateMintNftBundle(targetAddress, changeAddress, fee, metadata, availcoins, tokenPuzzles);
+  const { spendBundle } = await generateMintNftBundle(targetAddress, changeAddress, fee, metadata, availcoins, tokenPuzzles, xchSymbol(), chainId());
   assertBundle(expect, spendBundle);
-}
+});
 
-export async function testNftTransfer(): Promise<void> {
+test('Transfer Nft', async () => {
   const expect: SpendBundle = {
     "aggregated_signature": "0xaef55f10c030b74b9f45622be96c9826787bb246245638830c27befb2b2ec7a48fad8752dd47d858762c7c6db943e02a05f0ca61ff4b01009eff4d769b188e354588aa26b0ac0ae26b121113bced0d110e8104bf9b735ea004c9bd082d425c60",
     "coin_spends": [
@@ -112,7 +120,7 @@ export async function testNftTransfer(): Promise<void> {
   const changeAddress = puzzle.getAddressFromPuzzleHash(change_hex, xchPrefix());
   const targetAddress = puzzle.getAddressFromPuzzleHash(target_hex, xchPrefix());
 
-  const tokenPuzzles = await getAccountAddressDetails(account);
+  const tokenPuzzles = await getAccountAddressDetails(account, [], tokenInfo(), xchPrefix(), xchSymbol());
   const availcoins: SymbolCoins = {
     [xchSymbol()]: [
       {
@@ -124,9 +132,9 @@ export async function testNftTransfer(): Promise<void> {
   };
 
   const fee = 0n;
-  const spendBundle = await generateTransferNftBundle(targetAddress, changeAddress, fee, nftCoin, analysis, availcoins, tokenPuzzles, localPuzzleApiCall);
+  const spendBundle = await generateTransferNftBundle(targetAddress, changeAddress, fee, nftCoin, analysis, availcoins, tokenPuzzles, xchSymbol(), chainId(), localPuzzleApiCall);
   assertBundle(expect, spendBundle);
-}
+});
 
 async function localPuzzleApiCall(parentCoinId: string): Promise<GetParentPuzzleResponse | undefined> {
   const knownCoins: GetParentPuzzleResponse[] = [

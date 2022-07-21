@@ -8,18 +8,20 @@ import { TokenPuzzleDetail } from "../crypto/receive";
 import catBundle from "../transfer/catBundle";
 import stdBundle from "../transfer/stdBundle";
 import { getOfferSummary, OfferEntity, OfferPlan, OfferSummary } from "./summary";
-import store from "@/store";
 import { GetParentPuzzleResponse } from "@/models/api";
-import { assemble, curry, disassemble } from "clvm_tools/browser";
+import { assemble, curry, disassemble } from "clvm_tools";
 import { modsprog } from "../coin/mods";
-import { xchSymbol } from "@/store/modules/network";
+import { getCoinName0x } from "../coin/coinUtility";
+import { Instance } from "../util/instance";
 
 export async function generateOffer(
   offered: OfferPlan[],
   requested: OfferEntity[],
   puzzles: TokenPuzzleDetail[],
+  getPuzzle: GetPuzzleApiCallback,
+  tokenSymbol: string,
+  chainId: string,
   nonceHex: string | null = null,
-  getPuzzle: GetPuzzleApiCallback | null = null,
 ): Promise<SpendBundle> {
   if (offered.length != 1 || requested.length != 1) throw new Error("currently, only support single offer/request");
   if (offered[0].id && offered[0].plan.coins.length != 1) throw new Error("currently, only support single coin for CAT");
@@ -70,7 +72,7 @@ export async function generateOffer(
       const puzzle_reveal_text = puzzle.getSettlementPaymentsPuzzle();
 
       // put special target into puzzle reverse dict
-      puzzleCopy.filter(_ => _.symbol == xchSymbol())[0].puzzles.push({
+      puzzleCopy.filter(_ => _.symbol == tokenSymbol)[0].puzzles.push({
         privateKey: puzzle.getEmptyPrivateKey(), // this private key will not really calculated due to no AGG_SIG_ME exist in this spend
         puzzle: puzzle_reveal_text,
         hash: settlement_tgt,
@@ -144,7 +146,7 @@ export async function generateOffer(
   }
 
   // combine into one spendbundle
-  return transfer.getSpendBundle(spends, puzzleCopy);
+  return transfer.getSpendBundle(spends, puzzleCopy, chainId);
 }
 
 export function sha256(...args: (string | Uint8Array)[]): string {
@@ -160,6 +162,7 @@ export async function generateOfferPlan(
   change_hex: string,
   availcoins: SymbolCoins,
   fee: bigint,
+  tokenSymbol: string,
 ): Promise<OfferPlan[]> {
   const plans: OfferPlan[] = [];
   change_hex = prefix0x(change_hex);
@@ -170,11 +173,11 @@ export async function generateOfferPlan(
     const tgt: TransferTarget = {
       address: settlement_tgt,
       amount: off.amount,
-      symbol: off.symbol ?? xchSymbol(),
-      memos: off.symbol == xchSymbol() ? undefined : [settlement_tgt],
+      symbol: off.symbol ?? tokenSymbol,
+      memos: off.symbol == tokenSymbol ? undefined : [settlement_tgt],
     };
 
-    const plan = transfer.generateSpendPlan(availcoins, [tgt], change_hex, fee);
+    const plan = transfer.generateSpendPlan(availcoins, [tgt], change_hex, fee, tokenSymbol);
     const keys = Object.keys(plan);
     if (keys.length != 1) {
       throw new Error("spend plan must be 1");
@@ -203,8 +206,8 @@ export async function combineSpendBundle(
 ): Promise<SpendBundle> {
   if (spendbundles.length != 2) throw new Error("unexpected length of spendbundle");
 
-  if (!store.state.app.bls) throw new Error("bls not initialized");
-  const BLS = store.state.app.bls;
+  const BLS = Instance.BLS;
+  if (!BLS) throw new Error("BLS not initialized");
   const sigs = spendbundles.map(_ => BLS.G2Element.from_bytes(Bytes.from(_.aggregated_signature, "hex").raw()));
   const agg_sig = BLS.AugSchemeMPL.aggregate(sigs);
   const sig = Bytes.from(agg_sig.serialize()).hex();
@@ -218,7 +221,7 @@ export async function combineSpendBundle(
     const reqcs = spendbundles[i].coin_spends[0];
     const offcs = spendbundles[(i + 1) % summaries.length].coin_spends[1];
     const sumoff = summaries[(i + 1) % summaries.length].offered[0];
-    reqcs.coin.parent_coin_info = prefix0x(transfer.getCoinName(offcs.coin).hex());
+    reqcs.coin.parent_coin_info = getCoinName0x(offcs.coin);
     reqcs.coin.amount = req.amount;
 
     // generate cat solution
@@ -226,7 +229,7 @@ export async function combineSpendBundle(
       const inner_puzzle = await puzzle.disassemblePuzzle(reqcs.solution);
       if (!sumoff.cat_target) throw new Error("cat target should be parsed");
       const offnewcoin: OriginCoin = {
-        parent_coin_info: prefix0x(transfer.getCoinName(offcs.coin).hex()),
+        parent_coin_info: getCoinName0x(offcs.coin),
         amount: req.amount,
         puzzle_hash: sumoff.cat_target,
       }
@@ -239,7 +242,7 @@ export async function combineSpendBundle(
           "puzzleReveal": offcs.puzzle_reveal,
         };
       }
-      const proof = await catBundle.getLineageProof(prefix0x(transfer.getCoinName(offcs.coin).hex()), localPuzzleApiCall);
+      const proof = await catBundle.getLineageProof(getCoinName0x(offcs.coin), localPuzzleApiCall);
       const solution = catBundle.getCatPuzzleSolution(inner_puzzle, offnewcoin, proof, settlement_tgt)
       reqcs.solution = prefix0x(await puzzle.encodePuzzle(solution));
     }

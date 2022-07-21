@@ -1,4 +1,4 @@
-import { CustomCat } from "@/store/modules/account";
+import { CustomCat } from "@/models/account";
 import Sortable from "sortablejs";
 import { VNode } from "vue";
 import { DirectiveBinding } from "vue/types/options";

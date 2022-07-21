@@ -66,7 +66,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
-import { AccountEntity, TokenInfo } from "@/store/modules/account";
+import { AccountEntity, TokenInfo } from "@/models/account";
 import KeyBox from "@/components/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { NftDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
@@ -81,13 +81,13 @@ import { debugBundle, submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/FeeSelector.vue";
 import BundleSummary from "../BundleSummary.vue";
 import SendSummary from "../SendSummary.vue";
-import { xchPrefix, xchSymbol } from "@/store/modules/network";
+import { chainId, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getTokenInfo } from "@/services/coin/cat";
 import { generateTransferNftBundle } from "@/services/coin/nft";
 import AddressField from "../AddressField.vue";
 import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
-import { NFT } from "./NftPanel.vue";
+import { getLineageProofPuzzle } from "@/services/transfer/call";
 
 @Component({
   components: {
@@ -101,7 +101,7 @@ import { NFT } from "./NftPanel.vue";
 })
 export default class NftTransfer extends Vue {
   @Prop() private account!: AccountEntity;
-  @Prop() private nft!: NFT;
+  @Prop() private nft!: NftDetail;
 
   public addressEditable = true;
   public submitting = false;
@@ -178,11 +178,11 @@ export default class NftTransfer extends Vue {
   }
 
   get hash(): string | undefined {
-    return this.nft?.hash;
+    return this.nft?.metadata.hash;
   }
 
   get uri(): string | undefined {
-    return this.nft?.uri;
+    return this.nft?.metadata.uri;
   }
 
   changeToken(token: string): void {
@@ -241,56 +241,64 @@ export default class NftTransfer extends Vue {
   }
 
   async sign(): Promise<void> {
-    // this.submitting = true;
-    // try {
-    //   if (!this.account.firstAddress) {
-    //     this.submitting = false;
-    //     return;
-    //   }
-    //   if (this.availcoins == null) {
-    //     this.submitting = false;
-    //     return;
-    //   }
-    //   try {
-    //     Bytes.from(bech32m.decodeToBytes(this.address).bytes).hex();
-    //   } catch (error) {
-    //     Notification.open({
-    //       message: this.$tc("send.messages.error.INVALID_ADDRESS"),
-    //       type: "is-danger",
-    //       duration: 5000,
-    //     });
-    //     this.submitting = false;
-    //     return;
-    //   }
-    //   if (!this.address.startsWith(xchPrefix())) {
-    //     Notification.open({
-    //       message: this.$tc("send.messages.error.ADDRESS_NOT_MATCH_NETWORK"),
-    //       type: "is-danger",
-    //       duration: 5000,
-    //     });
-    //     this.submitting = false;
-    //     return;
-    //   }
-    //   const spendBundle = await generateTransferNftBundle(
-    //     this.address,
-    //     this.account.firstAddress,
-    //     BigInt(this.fee),
-    //     this.nft.coin,
-    //     this.nft.analysis,
-    //     this.availcoins,
-    //     this.requests
-    //   );
-    //   this.bundle = spendBundle;
-    // } catch (error) {
-    //   Notification.open({
-    //     message: this.$tc("mintNft.ui.messages.failedToSign") + error,
-    //     type: "is-danger",
-    //     autoClose: false,
-    //   });
-    //   console.warn(error);
-    //   this.submitting = false;
-    // }
-    // this.submitting = false;
+    this.submitting = true;
+    try {
+      if (!this.account.firstAddress) {
+        this.submitting = false;
+        return;
+      }
+
+      if (this.availcoins == null) {
+        this.submitting = false;
+        return;
+      }
+
+      try {
+        Bytes.from(bech32m.decodeToBytes(this.address).bytes).hex();
+      } catch (error) {
+        Notification.open({
+          message: this.$tc("send.messages.error.INVALID_ADDRESS"),
+          type: "is-danger",
+          duration: 5000,
+        });
+        this.submitting = false;
+        return;
+      }
+
+      if (!this.address.startsWith(xchPrefix())) {
+        Notification.open({
+          message: this.$tc("send.messages.error.ADDRESS_NOT_MATCH_NETWORK"),
+          type: "is-danger",
+          duration: 5000,
+        });
+        this.submitting = false;
+        return;
+      }
+
+      const spendBundle = await generateTransferNftBundle(
+        this.address,
+        this.account.firstAddress,
+        BigInt(this.fee),
+        this.nft.coin,
+        this.nft.analysis,
+        this.availcoins,
+        this.requests,
+        xchSymbol(),
+        chainId(),
+        getLineageProofPuzzle
+      );
+
+      this.bundle = spendBundle;
+    } catch (error) {
+      Notification.open({
+        message: this.$tc("mintNft.ui.messages.failedToSign") + error,
+        type: "is-danger",
+        autoClose: false,
+      });
+      console.warn(error);
+      this.submitting = false;
+    }
+    this.submitting = false;
   }
 
   async submit(): Promise<void> {

@@ -81,7 +81,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
-import { AccountEntity, TokenInfo } from "@/store/modules/account";
+import { AccountEntity, TokenInfo } from "@/models/account";
 import KeyBox from "@/components/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { TokenPuzzleDetail } from "@/services/crypto/receive";
@@ -96,7 +96,7 @@ import { debugBundle, submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/FeeSelector.vue";
 import BundleSummary from "../BundleSummary.vue";
 import SendSummary from "../SendSummary.vue";
-import { xchPrefix, xchSymbol } from "@/store/modules/network";
+import { chainId, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getTokenInfo } from "@/services/coin/cat";
 import { generateMintNftBundle } from "@/services/coin/nft";
 import AddressField from "../AddressField.vue";
@@ -297,7 +297,9 @@ export default class MintNft extends Vue {
         BigInt(this.fee),
         { uri: this.uri, hash: this.hash },
         this.availcoins,
-        this.requests
+        this.requests,
+        xchSymbol(),
+        chainId()
       );
 
       this.bundle = spendBundle;

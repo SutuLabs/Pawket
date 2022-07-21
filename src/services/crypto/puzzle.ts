@@ -1,11 +1,12 @@
-import * as clvm_tools from "clvm_tools/browser";
+import * as clvm_tools from "clvm_tools";
 import { bech32m } from "@scure/base";
-import store from "../../store";
 import { Bytes } from "clvm";
 import { PrivateKey } from "@chiamine/bls-signatures";
 import utility from "./utility";
 import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
-import { xchPrefix } from "@/store/modules/network";
+import { Instance } from "../util/instance";
+import { modsdict } from "../coin/mods";
+import { unprefix0x } from "../coin/condition";
 
 export interface ExecuteResultCondition {
   op: number;
@@ -48,7 +49,6 @@ class PuzzleMaker {
 
   public async getSyntheticKey(pubkey: string): Promise<string> {
     if (!pubkey.startsWith("0x")) pubkey = "0x" + pubkey;
-    await store.dispatch("initializeClvm");
     const hidden_puzzle_hash = "0x711d6c4e32c92e53179b199484cf8c897542bc57f2b22582799f9d657eec4699";
 
     let output: string[] = [];
@@ -91,7 +91,7 @@ class PuzzleMaker {
   }
 
   public async disassemblePuzzle(puzzle_hex: string): Promise<string> {
-    puzzle_hex = puzzle_hex.startsWith("0x") ? puzzle_hex.substring(2) : puzzle_hex;
+    puzzle_hex = unprefix0x(puzzle_hex);
     let output: string[] = [];
     clvm_tools.setPrintFunction((...args) => output = args)
 
@@ -151,16 +151,16 @@ class PuzzleMaker {
     return hex;
   }
 
-  public async getPuzzleHashes(privateKey: Uint8Array, startIndex = 0, endIndex = 10): Promise<string[]> {
-    return (await this.getPuzzleDetails(privateKey, startIndex, endIndex)).map(_ => _.hash);
+  public async getPuzzleHashes(privateKey: Uint8Array, prefix: string, startIndex = 0, endIndex = 10): Promise<string[]> {
+    return (await this.getPuzzleDetails(privateKey, prefix, startIndex, endIndex)).map(_ => _.hash);
   }
 
-  public async getPuzzleDetails(privateKey: Uint8Array, startIndex = 0, endIndex = 10): Promise<PuzzleDetail[]> {
-    return await this.getPuzzleDetailsInner(privateKey, async (spk) => this.getPuzzle(spk), startIndex, endIndex, true)
+  public async getPuzzleDetails(privateKey: Uint8Array, prefix: string, startIndex = 0, endIndex = 10): Promise<PuzzleDetail[]> {
+    return await this.getPuzzleDetailsInner(privateKey, async (spk) => this.getPuzzle(spk), startIndex, endIndex, prefix, true)
   }
 
-  public async getCatPuzzleDetails(privateKey: Uint8Array, assetId: string, startIndex = 0, endIndex = 10): Promise<PuzzleDetail[]> {
-    return await this.getPuzzleDetailsInner(privateKey, async (spk) => this.getCatPuzzle(spk, assetId), startIndex, endIndex, true)
+  public async getCatPuzzleDetails(privateKey: Uint8Array, assetId: string, prefix: string, startIndex = 0, endIndex = 10): Promise<PuzzleDetail[]> {
+    return await this.getPuzzleDetailsInner(privateKey, async (spk) => this.getCatPuzzle(spk, assetId), startIndex, endIndex, prefix, true)
   }
 
   private async getPuzzleDetailsInner(
@@ -168,8 +168,8 @@ class PuzzleMaker {
     getPuzzle: (pubkey: string) => Promise<string>,
     startIndex: number,
     endIndex: number,
-    includeUnhardened = false,
-    prefix = xchPrefix()): Promise<PuzzleDetail[]> {
+    prefix: string,
+    includeUnhardened = false): Promise<PuzzleDetail[]> {
     const derive = await utility.derive(privateKey, true);
     const deriveUnhardened = await utility.derive(privateKey, false);
     const details: PuzzleDetail[] = [];
@@ -195,24 +195,26 @@ class PuzzleMaker {
 
   public getPrivateKeyFromHex(sk_hex: string): PrivateKey {
     const privateKey = utility.fromHexString(sk_hex);
-    const BLS = store.state.app.bls;
-    if (!BLS) throw "BLS not initialized";
+    const BLS = Instance.BLS;
+    if (!BLS) throw new Error("BLS not initialized");
     const sk = BLS.PrivateKey.from_bytes(privateKey, false);
     return sk;
   }
 
-  public async getCatPuzzleHashes(privateKey: Uint8Array, assetId: string, startIndex = 0, endIndex = 10): Promise<string[]> {
-    return (await this.getCatPuzzleDetails(privateKey, assetId, startIndex, endIndex)).map(_ => _.hash);
+  public async getCatPuzzleHashes(privateKey: Uint8Array, assetId: string, prefix: string, startIndex = 0, endIndex = 10): Promise<string[]> {
+    return (await this.getCatPuzzleDetails(privateKey, assetId, prefix, startIndex, endIndex)).map(_ => _.hash);
   }
 
-  public async calcPuzzleResult(puzzle_reveal: string, solution: string): Promise<string> {
+  public async calcPuzzleResult(puzzle_reveal: string, solution: string, ...args:string[]): Promise<string> {
     let output: string[] = [];
     clvm_tools.setPrintFunction((...args) => output = args)
 
-    clvm_tools.go("brun", puzzle_reveal, solution);
+    clvm_tools.go("brun", puzzle_reveal, solution, "--experiment-backend", "rust", ...args);
     const result = output[0];
 
-    if (result.startsWith("FAIL")) throw new Error(`Error calculating puzzle [${puzzle_reveal}] from solution [${solution}]: ${result}`);
+    const modname = modsdict[puzzle_reveal];
+    if (result.startsWith("FAIL"))
+      throw new Error(`Error calculating puzzle [${modname ?? puzzle_reveal.slice(0, 200)}] from solution [${solution.slice(0, 200)}]: ${result.slice(0, 200)}`);
 
     return result;
   }
@@ -246,8 +248,8 @@ class PuzzleMaker {
 
   public getEmptyPrivateKey(
   ): PrivateKey {
-    if (!store.state.app.bls) throw new Error("bls not initialized");
-    const BLS = store.state.app.bls;
+    const BLS = Instance.BLS;
+    if (!BLS) throw new Error("BLS not initialized");
     return BLS.PrivateKey.from_bytes(new Uint8Array(32), false);
   }
 

@@ -47,7 +47,7 @@
 <script lang="ts">
 import { demojo } from "@/filters/unitConversion";
 import { CoinRecord } from "@/models/wallet";
-import { TokenInfo } from "@/store/modules/account";
+import { TokenInfo } from "@/models/account";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import UtxoDetail from "@/components/UtxoDetail.vue";
 import { isMobile } from "@/services/view/responsive";

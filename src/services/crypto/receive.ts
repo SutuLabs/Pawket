@@ -1,10 +1,8 @@
 import { CoinRecord, convertToOriginCoin, GetRecordsResponse, OriginCoin } from "@/models/wallet";
-import store from "@/store";
 import puzzle, { PuzzleAddress } from "./puzzle";
 import { PuzzleDetail } from "./puzzle";
 import utility from "./utility";
-import { AccountTokenAddress, AccountTokens, CustomCat } from "@/store/modules/account";
-import { rpcUrl, xchSymbol } from "@/store/modules/network";
+import { CustomCat, AccountTokens, AccountTokenAddress, TokenInfo } from "@/models/account";
 import { analyzeNftCoin, NftCoinAnalysisResult } from "../coin/nft";
 
 export interface TokenPuzzleDetail {
@@ -21,6 +19,8 @@ export interface NftDetail {
   metadata: {
     uri: string;
     hash: string;
+    collection?: string;
+    name?: string;
   }
   hintPuzzle: string;
   coin: OriginCoin;
@@ -28,12 +28,12 @@ export interface NftDetail {
 }
 
 class Receive {
-  async getAssetsRequestDetail(sk_hex: string, maxId: number, customCats: CustomCat[]): Promise<TokenPuzzleDetail[]> {
+  async getAssetsRequestDetail(sk_hex: string, maxId: number, customCats: CustomCat[], tokenInfo: TokenInfo, prefix: string, symbol: string): Promise<TokenPuzzleDetail[]> {
 
     const privkey = utility.fromHexString(sk_hex);
-    const xchToken = { symbol: xchSymbol(), puzzles: await puzzle.getPuzzleDetails(privkey, 0, maxId) };
+    const xchToken = { symbol, puzzles: await puzzle.getPuzzleDetails(privkey, prefix, 0, maxId) };
     const tokens: TokenPuzzleDetail[] = [xchToken];
-    const standardAssets = Object.values(store.state.account.tokenInfo)
+    const standardAssets = Object.values(tokenInfo)
       .filter(_ => _.id)
       .map(_ => ({ symbol: _.symbol, id: _.id ?? "" }));
     const accountAssets = (customCats ?? []).map(_ => ({ symbol: _.name, id: _.id }));
@@ -41,17 +41,17 @@ class Receive {
 
     for (let i = 0; i < assets.length; i++) {
       const assetId = assets[i].id;
-      const ps = await puzzle.getCatPuzzleDetails(privkey, assetId, 0, maxId);
+      const ps = await puzzle.getCatPuzzleDetails(privkey, assetId, prefix, 0, maxId);
       tokens.push(Object.assign({}, assets[i], { puzzles: ps }));
     }
 
     return tokens;
   }
 
-  async getCoinRecords(tokens: TokenPuzzleAddress[], includeSpentCoins: boolean, hint = false): Promise<GetRecordsResponse> {
+  async getCoinRecords(tokens: TokenPuzzleAddress[], includeSpentCoins: boolean, rpcUrl: string, hint = false): Promise<GetRecordsResponse> {
     const hashes = tokens.reduce((acc, token) => acc.concat(token.puzzles.map(_ => _.hash)), ([] as string[]));
 
-    const resp = await fetch(rpcUrl() + "Wallet/records", {
+    const resp = await fetch(rpcUrl + "Wallet/records", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -79,8 +79,8 @@ class Receive {
     return dictAssets;
   }
 
-  async getActivities(tokens: TokenPuzzleAddress[], includeSpentCoins: boolean): Promise<CoinRecord[]> {
-    const records = (await this.getCoinRecords(tokens, includeSpentCoins));
+  async getActivities(tokens: TokenPuzzleAddress[], includeSpentCoins: boolean, rpcUrl: string): Promise<CoinRecord[]> {
+    const records = (await this.getCoinRecords(tokens, includeSpentCoins, rpcUrl));
     const activities = this.convertActivities(tokens, records);
     return activities;
   }
@@ -118,7 +118,7 @@ class Receive {
     return tokenBalances;
   }
 
-  async getNfts(records: GetRecordsResponse): Promise<NftDetail[]> {
+  async getNfts(records: GetRecordsResponse, rpcUrl: string): Promise<NftDetail[]> {
     const nftList: NftDetail[] = [];
     for (let i = 0; i < records.coins.length; i++) {
       const coinRecords = records.coins[i];
@@ -131,7 +131,7 @@ class Receive {
           continue;
         }
 
-        const result = await analyzeNftCoin(coinRecord.coin.parentCoinInfo, coinRecords.puzzleHash);
+        const result = await analyzeNftCoin(coinRecord.coin.parentCoinInfo, coinRecords.puzzleHash, rpcUrl);
         if (result) {
           nftList.push({
             metadata: result.metadata,
