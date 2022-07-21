@@ -135,7 +135,7 @@
         </b-tabs>
       </div>
       <div class="p-4 border-top-1">
-        <dapp :account="account" :tokenList="tokenList"></dapp>
+        <dapp :account="account" :tokenList="tokenList" class="pb-6"></dapp>
       </div>
     </div>
   </div>
