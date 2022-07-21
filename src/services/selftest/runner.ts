@@ -1,11 +1,6 @@
 import { SpendBundle } from "@/models/wallet";
 import store from "@/store";
-import { xchPrefix } from "@/store/modules/network";
-import { testMintCat } from "./catMintTest";
-import { testCatTransfer, testCatTransfer2 } from "./catTransferTest";
 import { testCoinName, testCryptography, testPuzzleAssemble } from "./cryptoTest";
-import { testNftMint, testNftTransfer } from "./nftTest";
-import { testMakeOffer2, testMakeOffer1, testOfferEncoding, testTakeOfferXchForCat, testTakeOfferCatForXch } from "./offerTest";
 import { testStandardTransfer } from "./stdTransferTest";
 
 class TestRunner {
@@ -25,27 +20,9 @@ class TestRunner {
       await this.runTest(testCryptography);
       await this.runTest(testPuzzleAssemble);
       await this.runTest(testCoinName);
+      await this.runTest(testStandardTransfer);
 
-      // make extra tests not in production
       if (process.env.NODE_ENV !== "production") {
-        if (xchPrefix() == "xch") {
-          // test only on mainnet
-          await this.runTest(testStandardTransfer);
-          await this.runTest(testCatTransfer);
-          await this.runTest(testCatTransfer2);
-          await this.runTest(testOfferEncoding);
-          await this.runTest(testMakeOffer1);
-          await this.runTest(testMakeOffer2);
-          await this.runTest(testTakeOfferXchForCat);
-          await this.runTest(testTakeOfferCatForXch);
-          await this.runTest(testMintCat);
-        } else {
-          await this.runTest(testNftMint);
-          await this.runTest(testNftTransfer);
-
-          console.log("self-test partially ignored");
-        }
-
         console.log("self-test passed");
       }
 

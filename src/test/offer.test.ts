@@ -1,16 +1,34 @@
 import { GetParentPuzzleResponse } from "@/models/api";
 import { SpendBundle } from "@/models/wallet";
-import { AccountEntity, getAccountAddressDetails } from "@/store/modules/account";
-import { assert, assertBundle } from "./runner";
-import { decodeOffer, encodeOffer } from "../offer/encoding";
-import { getOfferSummary, OfferEntity, OfferPlan } from "../offer/summary";
-import { combineSpendBundle, generateOffer, generateOfferPlan, getReversePlan } from "../offer/bundler";
-import { getCatNameDict } from "../coin/cat";
-import { SymbolCoins } from "../transfer/transfer";
-import { chainId, xchSymbol } from "@/store/modules/network";
-import { noNeedGetProof } from "../transfer/call";
+import { assert, assertBundle, getTestAccount, noNeedGetProof } from "./utility";
+import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
+import { getOfferSummary, OfferEntity, OfferPlan } from "@/services/offer/summary";
+import { combineSpendBundle, generateOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
+import { SymbolCoins } from "@/services/transfer/transfer";
+import { Instance } from "@/services/util/instance";
+import { getAccountAddressDetails } from "@/services/util/account";
+import { AccountEntity, PersistentCustomCat } from "@/models/account";
+import { prefix0x } from "@/services/coin/condition";
 
-export async function testOfferEncoding(): Promise<void> {
+function xchPrefix() { return "xch"; }
+function xchSymbol() { return "XCH"; }
+function chainId() { return "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb"; }
+function tokenInfo() {
+  return {
+    BSH: {
+      symbol: "BSH",
+      decimal: 3,
+      unit: "BSH",
+      id: "6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b",
+    },
+  };
+}
+
+beforeAll(async () => {
+  await Instance.init();
+})
+
+test('Offer Encoding', async () => {
   const expect = {
     'aggregated_signature': '0x98c70db3903a9804825c68d92d0ac911986a56815966dcd9475dd354600aed6a8c224b318376ad85b3ed484c51a31b770ed22e72388e3b822a1a5917ed896f41153671856b2f4f903680fc7fa28955908f693d8b0f5dba002d3009dff320c000',
     'coin_spends': [{
@@ -47,9 +65,9 @@ export async function testOfferEncoding(): Promise<void> {
 
   const encoded = await encodeOffer(bundle);
   assert(offerText, encoded);
-}
+});
 
-export async function testMakeOffer1(): Promise<void> {
+test('Make Offer 1', async () => {
   const expect: SpendBundle = {
     "aggregated_signature": "0x9025b0df26ebc111aa44333b06c12d7524f7abeffc7563dccd6ae8c90ef6eaa1337b736eae25eead49fa0be1771b1ff418fb1fa22b1eb30527778c329e8b64cc00e9c5f8d7891583c3111593964c49a759c80726c7d8f228d95bae9b69405fd4",
     "coin_spends": [
@@ -110,15 +128,15 @@ export async function testMakeOffer1(): Promise<void> {
     }
   ];
   const account = getTestAccount("46815978e90da660427161c265b400831ee59f9aae9a40b449fbcd67ca140590");
-  const tokenPuzzles = await getAccountAddressDetails(account);
+  const tokenPuzzles = await getAccountAddressDetails(account, [], tokenInfo(), xchPrefix(), xchSymbol());
 
   const nonce = "71bdf5d923a48956a8d26a36c6ea4a9959de221ff2ee986bce4827e5f037ceb8";
-  const bundle = await generateOffer(offplan, reqs, tokenPuzzles, noNeedGetProof, chainId(), nonce);
+  const bundle = await generateOffer(offplan, reqs, tokenPuzzles, noNeedGetProof, xchSymbol(), chainId(), nonce);
   const encoded = await encodeOffer(bundle);
 
   assertBundle(expect, bundle);
   assert(expectOfferText, encoded);
-}
+});
 
 async function localPuzzleApiCall(parentCoinId: string): Promise<GetParentPuzzleResponse | undefined> {
   const knownCoins = [
@@ -128,7 +146,7 @@ async function localPuzzleApiCall(parentCoinId: string): Promise<GetParentPuzzle
   return resp;
 }
 
-export async function testMakeOffer2(): Promise<void> {
+test('Make Offer 2', async () => {
   const expect: SpendBundle = {
     "aggregated_signature": "0x961b5e079ab9b78374e95ebc7e5b6a1ab839afebb44427ecf5833627280327c2cf2a3de114cae7aff782b22bf2dc44850efebcf5cb84cd9de515638f42fb10ecc40bf1d9583462d1301153253120448cd2dd45f4e1ec9c5d6f89e19ddad7228d",
     "coin_spends": [
@@ -192,17 +210,17 @@ export async function testMakeOffer2(): Promise<void> {
     }
   ];
   const account = getTestAccount("46815978e90da660427161c265b400831ee59f9aae9a40b449fbcd67ca140590");
-  const tokenPuzzles = await getAccountAddressDetails(account);
+  const tokenPuzzles = await getAccountAddressDetails(account, [], tokenInfo(), xchPrefix(), xchSymbol());
 
   const nonce = "741f8564b6637aee92dd68548cfe7df8ec35b20029235565244944febd68bf8d";
-  const bundle = await generateOffer(offplan, reqs, tokenPuzzles, localPuzzleApiCall, chainId(), nonce);
+  const bundle = await generateOffer(offplan, reqs, tokenPuzzles, localPuzzleApiCall, xchSymbol(), chainId(), nonce);
   const encoded = await encodeOffer(bundle);
 
   assertBundle(expect, bundle);
   assert(expectOfferText, encoded);
-}
+});
 
-export async function testTakeOfferXchForCat(): Promise<void> {
+test('Take Offer Xch For CAT', async () => {
   const expect: SpendBundle = {
     "aggregated_signature": "8519b6590745c2643cd51e84d4807a08ac512b6e3febdd7fe549146096c19eae2138edfddbc0c775eeb55f24684ba0f419f44615fc039e6fa822de9387466f93d405490b1fa4e46ed94aa80ba1519606711af4ca8e86b16ff07357f2a217f71d",
     "coin_spends": [
@@ -252,7 +270,7 @@ export async function testTakeOfferXchForCat(): Promise<void> {
   const summary = await getOfferSummary(makerBundle);
   const change_hex = "0x907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96";
   const nonce = "c616dec58b3c9a898b167f4ea26adb27b464c7e28d2656eeb845a525b9f5786c";
-  const tokenPuzzles = await getAccountAddressDetails(account);
+  const tokenPuzzles = await getAccountAddressDetails(account, [], tokenInfo(), xchPrefix(), xchSymbol());
   // const availcoins = await coinHandler.getAvailableCoins(tokenPuzzles, coinHandler.getTokenNames(account));
   const availcoins: SymbolCoins = {
     "BSH": [
@@ -268,13 +286,13 @@ export async function testTakeOfferXchForCat(): Promise<void> {
 
   const revSummary = getReversePlan(summary, change_hex, cats);
   const offplan = await generateOfferPlan(revSummary.offered, change_hex, availcoins, 0n, xchSymbol());
-  const takerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, localPuzzleApiCall, chainId(), nonce);
+  const takerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, localPuzzleApiCall, xchSymbol(), chainId(), nonce);
   const combined = await combineSpendBundle([makerBundle, takerBundle]);
 
   assertBundle(expect, combined);
-}
+});
 
-export async function testTakeOfferCatForXch(): Promise<void> {
+test('Take Offer CAT For Xch', async () => {
   const expect: SpendBundle = {
     "aggregated_signature": "b5ef407448ad63b5a16241f80b980956d82dd7353097d100712bce25503fc42f70593e98077e45f43066956c901c1366097537c01fee94d16678da87b73fba2bbfe24c17fd7d83180b2dbd098d9f0ccd8ef535e6305513fb03c06061567d4b3c",
     "coin_spends": [
@@ -324,7 +342,7 @@ export async function testTakeOfferCatForXch(): Promise<void> {
   const summary = await getOfferSummary(makerBundle);
   const change_hex = "0xb379a659194799dfa9171f7770f6935b1644fe48fd6fb596d5df0ac2abff2bda";
   const nonce = "c616dec58b3c9a898b167f4ea26adb27b464c7e28d2656eeb845a525b9f5786c";
-  const tokenPuzzles = await getAccountAddressDetails(account);
+  const tokenPuzzles = await getAccountAddressDetails(account, [], tokenInfo(), xchPrefix(), xchSymbol());
   // const availcoins = await coinHandler.getAvailableCoins(tokenPuzzles, coinHandler.getTokenNames(account));
   const availcoins: SymbolCoins = {
     [xchSymbol()]: [
@@ -340,28 +358,19 @@ export async function testTakeOfferCatForXch(): Promise<void> {
 
   const revSummary = getReversePlan(summary, change_hex, cats);
   const offplan = await generateOfferPlan(revSummary.offered, change_hex, availcoins, 0n, xchSymbol());
-  const takerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, localPuzzleApiCall, chainId(), nonce);
+  const takerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, localPuzzleApiCall, xchSymbol(), chainId(), nonce);
   // console.log("bundle",makerBundle,takerBundle)
   const combined = await combineSpendBundle([makerBundle, takerBundle]);
   // console.log("combined", combined)
 
   assertBundle(expect, combined);
-}
+});
 
-export function getTestAccount(privateKey: string): AccountEntity {
-  return {
-    addressRetrievalCount: 4,
-    key: {
-      privateKey: privateKey,
-      fingerprint: 0,
-      compatibleMnemonic: "",
-    },
-    name: "",
-    type: "Legacy",
-    tokens: {},
-    nfts: [],
-    allCats: [],
-    addressGenerated: 0,
-    addressPuzzles: [],
-  }
+function getCatNameDict(account?: AccountEntity): { [id: string]: string } {
+  const cats: PersistentCustomCat[] = [];
+  return Object.assign(
+    {},
+    ...Object.values(tokenInfo()).map((_) => ({ [prefix0x(_.id ?? "")]: _.symbol })),
+    ...(cats.map((_) => ({ [prefix0x(_.id)]: _.name })))
+  );
 }
