@@ -1,9 +1,13 @@
 .fixed-top {
   width: 100%;
-  height: 10vh;
+  height: 4rem;
   position: fixed;
   top: 0;
   background-color: white;
+}
+
+.pt-8 {
+  padding-top: 4rem;
 }
 
 .border-bottom {
