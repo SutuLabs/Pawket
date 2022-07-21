@@ -199,7 +199,7 @@ store.registerModule<IVaultState>("vault", {
           encryptedAccounts: encryptedAccounts,
           experiment: state.experiment,
           currency: state.currency,
-          selectedAccount: state.selectedAccount,
+          selectedAccount: rootState.account.selectedAccount,
         })
       );
 
