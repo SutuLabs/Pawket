@@ -1,6 +1,7 @@
+import { AccountEntity, TokenInfo } from "@/models/account";
 import { prefix0x } from "@/services/coin/condition";
 import store from "@/store";
-import { AccountEntity, getAccountCats, TokenInfo } from "@/store/modules/account";
+import { getAccountCats } from "@/store/modules/account";
 
 export function getCatNames(account?: AccountEntity): string[] {
   if (!account) {

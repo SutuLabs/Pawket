@@ -11,7 +11,6 @@ import { getOfferSummary, OfferEntity, OfferPlan, OfferSummary } from "./summary
 import { GetParentPuzzleResponse } from "@/models/api";
 import { assemble, curry, disassemble } from "clvm_tools";
 import { modsprog } from "../coin/mods";
-import { xchSymbol } from "@/store/modules/network";
 import { getCoinName0x } from "../coin/coinUtility";
 import { Instance } from "../util/instance";
 
@@ -20,6 +19,7 @@ export async function generateOffer(
   requested: OfferEntity[],
   puzzles: TokenPuzzleDetail[],
   getPuzzle: GetPuzzleApiCallback,
+  tokenSymbol: string,
   chainId: string,
   nonceHex: string | null = null,
 ): Promise<SpendBundle> {
@@ -72,7 +72,7 @@ export async function generateOffer(
       const puzzle_reveal_text = puzzle.getSettlementPaymentsPuzzle();
 
       // put special target into puzzle reverse dict
-      puzzleCopy.filter(_ => _.symbol == xchSymbol())[0].puzzles.push({
+      puzzleCopy.filter(_ => _.symbol == tokenSymbol)[0].puzzles.push({
         privateKey: puzzle.getEmptyPrivateKey(), // this private key will not really calculated due to no AGG_SIG_ME exist in this spend
         puzzle: puzzle_reveal_text,
         hash: settlement_tgt,
@@ -173,8 +173,8 @@ export async function generateOfferPlan(
     const tgt: TransferTarget = {
       address: settlement_tgt,
       amount: off.amount,
-      symbol: off.symbol ?? xchSymbol(),
-      memos: off.symbol == xchSymbol() ? undefined : [settlement_tgt],
+      symbol: off.symbol ?? tokenSymbol,
+      memos: off.symbol == tokenSymbol ? undefined : [settlement_tgt],
     };
 
     const plan = transfer.generateSpendPlan(availcoins, [tgt], change_hex, fee, tokenSymbol);

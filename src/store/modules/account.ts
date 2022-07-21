@@ -1,10 +1,10 @@
 import store from "@/store";
 import account, { AccountKey } from "@/services/crypto/account";
-import { CoinRecord } from "@/models/wallet";
 import Vue from "vue";
-import receive, { NftDetail, TokenPuzzleAddress, TokenPuzzleDetail } from "@/services/crypto/receive";
-import { AddressType } from "@/services/crypto/puzzle";
-import { xchPrefix, xchSymbol } from "./network";
+import receive, { TokenPuzzleAddress, TokenPuzzleDetail } from "@/services/crypto/receive";
+import { rpcUrl, xchPrefix, xchSymbol } from "./network";
+import { AccountEntity, AccountTokens, AccountType, CustomCat, TokenInfo } from "@/models/account";
+import { DEFAULT_ADDRESS_RETRIEVAL_COUNT, getAccountAddressDetails as getAccountAddressDetailsExternal } from "@/services/util/account";
 
 export function getAccountCats(account: AccountEntity): CustomCat[] {
   return account.allCats?.filter((c) => c.network == store.state.network.networkId) ?? [];
@@ -25,66 +25,6 @@ export function getDefaultCats(): CustomCat[] {
 export function getAllCats(account: AccountEntity): CustomCat[] {
   const defaultCats = getDefaultCats();
   return defaultCats.concat(getAccountCats(account));
-}
-
-type AccountType = "Serial" | "Password" | "Legacy" | "Address";
-
-export interface AccountTokenAddress {
-  address: string;
-  type?: AddressType;
-  coins: CoinRecord[];
-}
-
-export interface AccountToken {
-  amount: bigint;
-  addresses: AccountTokenAddress[];
-}
-export interface AccountTokens {
-  [symbol: string]: AccountToken;
-}
-
-export interface PersistentAccount {
-  key: AccountKey;
-  name: string;
-  type: AccountType;
-  serial?: number;
-  puzzleHash?: string;
-  addressRetrievalCount: number;
-  cats?: CustomCat[];
-  allCats: PersistentCustomCat[];
-}
-
-export interface AccountEntity extends PersistentAccount {
-  firstAddress?: string;
-  activities?: CoinRecord[];
-  tokens: AccountTokens;
-  nfts: NftDetail[];
-  addressPuzzles: TokenPuzzleDetail[];
-  addressGenerated: number;
-}
-
-export interface CustomCat {
-  name: string;
-  id: string;
-  img?: string;
-}
-
-export interface PersistentCustomCat extends CustomCat {
-  network: string;
-}
-
-const DEFAULT_ADDRESS_RETRIEVAL_COUNT = 4;
-
-export interface TokenInfo {
-  [symbol: string]: OneTokenInfo;
-}
-
-export interface OneTokenInfo {
-  id?: string;
-  symbol: string;
-  decimal: number;
-  unit: string;
-  img?: string;
 }
 
 export interface IAccountState {
@@ -177,12 +117,12 @@ store.registerModule<IAccountState>("account", {
       const requests: TokenPuzzleAddress[] =
         account.type == "Address"
           ? <TokenPuzzleAddress[]>[
-              { symbol: xchSymbol(), puzzles: [{ hash: account.puzzleHash, type: "Unknown", address: account.firstAddress }] },
-            ]
+            { symbol: xchSymbol(), puzzles: [{ hash: account.puzzleHash, type: "Unknown", address: account.firstAddress }] },
+          ]
           : await getAccountAddressDetails(account, parameters.maxId);
 
       try {
-        const records = await receive.getCoinRecords(requests, true);
+        const records = await receive.getCoinRecords(requests, true, rpcUrl());
         const activities = receive.convertActivities(requests, records);
         const tokenBalances = receive.getTokenBalance(requests, records);
 
@@ -215,8 +155,8 @@ store.registerModule<IAccountState>("account", {
       if (!account) return;
 
       const requests = await getAccountAddressDetails(account, parameters.maxId);
-      const hintRecords = await receive.getCoinRecords(requests, false, true);
-      const nfts = await receive.getNfts(hintRecords);
+      const hintRecords = await receive.getCoinRecords(requests, false, rpcUrl(), true);
+      const nfts = await receive.getNfts(hintRecords, rpcUrl());
       Vue.set(account, "nfts", nfts);
     },
     async refreshAddress({ state }, parameters: { idx: number; maxId: number }) {
@@ -260,14 +200,5 @@ export async function getAccountAddressDetails(
   account: AccountEntity,
   maxId: number | undefined = undefined
 ): Promise<TokenPuzzleDetail[]> {
-  if (typeof maxId !== "number" || maxId <= 0) maxId = account.addressRetrievalCount;
-  if (typeof maxId !== "number" || maxId <= 0) DEFAULT_ADDRESS_RETRIEVAL_COUNT;
-
-  if (account.addressGenerated == maxId) {
-    return account.addressPuzzles;
-  }
-
-  account.addressPuzzles = await receive.getAssetsRequestDetail(account.key.privateKey, maxId, getAccountCats(account), xchPrefix());
-  account.addressGenerated = maxId;
-  return account.addressPuzzles;
+  return await getAccountAddressDetailsExternal(account, getAccountCats(account), store.state.account.tokenInfo, xchPrefix(), xchSymbol(), maxId);
 }

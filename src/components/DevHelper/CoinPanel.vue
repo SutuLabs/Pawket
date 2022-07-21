@@ -41,6 +41,7 @@ import { ConditionOpcode } from "@/services/coin/opcode";
 import { prefix0x } from "@/services/coin/condition";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { getCoinName } from "@/services/coin/coinUtility";
+import { rpcUrl } from "@/store/modules/network";
 
 interface CoinSearchType {
   coinId: string;
@@ -71,7 +72,7 @@ export default class CoinPanel extends Vue {
     if (coinId) this.coinId = coinId.trim();
     this.coinSpend = null;
     this.coinSearchList = [];
-    this.coinSpend = await debug.getCoinSolution(this.coinId);
+    this.coinSpend = await debug.getCoinSolution(this.coinId, rpcUrl());
     if (!this.coinSpend) {
       Notification.open({
         message: `Search failed`,

@@ -1,6 +1,6 @@
 import store, { IRootState } from "@/store";
 import utility from "../../services/crypto/utility";
-import { PersistentAccount } from "./account";
+import { PersistentAccount } from "@/models/account";
 import Vue from "vue";
 import encryption from "@/services/crypto/encryption";
 import puzzle from "@/services/crypto/puzzle";

@@ -103,7 +103,7 @@
 <script lang="ts">
 import { demojo } from "@/filters/unitConversion";
 import { isMobile } from "@/services/view/responsive";
-import { AccountEntity } from "@/store/modules/account";
+import { AccountEntity } from "@/models/account";
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import KeyBox from "../KeyBox.vue";
 import TopBar from "../TopBar.vue";

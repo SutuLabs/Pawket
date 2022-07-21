@@ -65,7 +65,7 @@
 </template>
 
 <script lang="ts">
-import { CustomCat } from "@/store/modules/account";
+import { CustomCat } from "@/models/account";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import TailDb, { TailInfo } from "../../services/api/tailDb";
 @Component

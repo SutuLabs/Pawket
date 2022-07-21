@@ -57,7 +57,7 @@
 <script lang="ts">
 import puzzle from "@/services/crypto/puzzle";
 import store from "@/store";
-import { AccountEntity, CustomCat } from "@/store/modules/account";
+import { AccountEntity, CustomCat } from "@/models/account";
 import { xchPrefix } from "@/store/modules/network";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import MintCat from "@/components/Mint/MintCat.vue";

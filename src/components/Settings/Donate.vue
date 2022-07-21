@@ -14,7 +14,7 @@
 <script lang="ts">
 import puzzle from "@/services/crypto/puzzle";
 import store from "@/store";
-import { AccountEntity } from "@/store/modules/account";
+import { AccountEntity } from "@/models/account";
 import { xchPrefix } from "@/store/modules/network";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Send from "../Send.vue";

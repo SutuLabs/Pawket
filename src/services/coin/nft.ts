@@ -13,7 +13,6 @@ import { Bytes } from "clvm";
 import { bytesToHex0x } from "../crypto/utility";
 import catBundle from "../transfer/catBundle";
 import { getCoinName0x } from "./coinUtility";
-import { chainId, xchSymbol } from "@/store/modules/network";
 
 export interface MintNftInfo {
   spendBundle: SpendBundle;
@@ -43,6 +42,7 @@ export async function generateMintNftBundle(
   availcoins: SymbolCoins,
   requests: TokenPuzzleDetail[],
   baseSymbol: string,
+  chainId: string,
 ): Promise<MintNftInfo> {
   const amount = 1n; // always 1 mojo for 1 NFT
   const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
@@ -56,8 +56,8 @@ export async function generateMintNftBundle(
   */
 
   const bootstrapTgts: TransferTarget[] = [{ address: await modshash("singleton_launcher"), amount, symbol: baseSymbol }];
-  const bootstrapSpendPlan = transfer.generateSpendPlan(availcoins, bootstrapTgts, change_hex, fee, xchSymbol());
-  const bootstrapSpendBundle = await transfer.generateSpendBundle(bootstrapSpendPlan, requests, [], xchSymbol(), chainId());
+  const bootstrapSpendPlan = transfer.generateSpendPlan(availcoins, bootstrapTgts, change_hex, fee, baseSymbol);
+  const bootstrapSpendBundle = await transfer.generateSpendBundle(bootstrapSpendPlan, requests, [], baseSymbol, chainId);
   const bootstrapCoin = bootstrapSpendBundle.coin_spends[0].coin;// get the primary coin
   const bootstrapCoinId = getCoinName0x(bootstrapCoin);
 
@@ -100,7 +100,7 @@ export async function generateMintNftBundle(
 
   const extreqs = cloneAndChangeRequestPuzzleTemporary(baseSymbol, requests, inner_p2_puzzle.hash, nftPuzzle, nftPuzzleHash);
 
-  const bundles = await transfer.getSpendBundle([launcherCoinSpend, nftCoinSpend], extreqs, chainId());
+  const bundles = await transfer.getSpendBundle([launcherCoinSpend, nftCoinSpend], extreqs, chainId);
   const bundle = await combineSpendBundlePure(bootstrapSpendBundle, bundles);
 
   return {
@@ -117,6 +117,7 @@ export async function generateTransferNftBundle(
   availcoins: SymbolCoins,
   requests: TokenPuzzleDetail[],
   baseSymbol: string,
+  chainId: string,
   api: GetPuzzleApiCallback,
 ): Promise<SpendBundle> {
 
@@ -150,15 +151,15 @@ export async function generateTransferNftBundle(
 
   const extreqs = cloneAndChangeRequestPuzzleTemporary(baseSymbol, requests, inner_p2_puzzle.hash, nftPuzzle, nftPuzzleHash);
 
-  const bundle = await transfer.getSpendBundle([nftCoinSpend], extreqs, chainId());
+  const bundle = await transfer.getSpendBundle([nftCoinSpend], extreqs, chainId);
 
 
   if (fee > 0n) {
     // not tested so far
     // throw new Error("fee is not supported in transfer");
     const feeTgts: TransferTarget[] = [{ address: "0x0000000000000000000000000000000000000000000000000000000000000000", amount: 0n, symbol: baseSymbol }];
-    const feeSpendPlan = transfer.generateSpendPlan(availcoins, feeTgts, change_hex, fee, xchSymbol());
-    const feeSpendBundle = await transfer.generateSpendBundle(feeSpendPlan, requests, [], xchSymbol(), chainId());
+    const feeSpendPlan = transfer.generateSpendPlan(availcoins, feeTgts, change_hex, fee, baseSymbol);
+    const feeSpendBundle = await transfer.generateSpendBundle(feeSpendPlan, requests, [], baseSymbol, chainId);
     const feeBundle = await combineSpendBundlePure(feeSpendBundle, bundle);
 
     return feeBundle;
@@ -167,8 +168,8 @@ export async function generateTransferNftBundle(
   return bundle;
 }
 
-export async function analyzeNftCoin(parent_coin_info: string, hintPuzzle: string): Promise<NftCoinAnalysisResult | null> {
-  const scoin = await debug.getCoinSolution(parent_coin_info);
+export async function analyzeNftCoin(parent_coin_info: string, hintPuzzle: string, rpcUrl: string): Promise<NftCoinAnalysisResult | null> {
+  const scoin = await debug.getCoinSolution(parent_coin_info, rpcUrl);
   const puz = await puzzle.disassemblePuzzle(scoin.puzzle_reveal);
   const { module, args } = await internalUncurry(puz);
 

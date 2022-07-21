@@ -45,7 +45,8 @@
   </div>
 </template>
 <script lang="ts">
-import { AccountEntity, CustomCat, getAllCats } from "@/store/modules/account";
+import { AccountEntity, CustomCat } from "@/models/account";
+import { getAllCats } from "@/store/modules/account";
 import { Component, Vue } from "vue-property-decorator";
 import store from "@/store";
 import ExploreDapp from "@/components/Explore/ExploreDapp.vue";

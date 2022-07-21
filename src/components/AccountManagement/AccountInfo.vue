@@ -92,7 +92,7 @@
 <script lang="ts">
 import utility from "@/services/crypto/utility";
 import store from "@/store";
-import { AccountEntity } from "@/store/modules/account";
+import { AccountEntity } from "@/models/account";
 import { isPasswordCorrect } from "@/store/modules/vault";
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import { accountTypeConverter } from "@/filters/accountTypeConversion";

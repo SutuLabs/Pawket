@@ -1,10 +1,9 @@
 import { GetCoinSolutionResponse } from "@/models/api";
 import { CoinSpend } from "@/models/wallet";
-import { rpcUrl } from "@/store/modules/network";
 
 class DebugApi {
-  public async getCoinSolution(coinId: string): Promise<CoinSpend> {
-    const resp = await fetch(rpcUrl() + "Wallet/get-coin-solution", {
+  public async getCoinSolution(coinId: string, rpcUrl: string): Promise<CoinSpend> {
+    const resp = await fetch(rpcUrl + "Wallet/get-coin-solution", {
       method: "POST",
       headers: {
         Accept: "application/json",

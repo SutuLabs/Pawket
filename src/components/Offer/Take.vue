@@ -89,7 +89,7 @@ import { Component, Vue, Prop, Emit } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
 import { SpendBundle } from "@/models/wallet";
 import { getCatIdDict, getCatNameDict, getTokenInfo } from "@/services/coin/cat";
-import { AccountEntity, CustomCat, TokenInfo } from "@/store/modules/account";
+import { AccountEntity, CustomCat, TokenInfo } from "@/models/account";
 import { demojo } from "@/filters/unitConversion";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import { TokenPuzzleDetail } from "@/services/crypto/receive";
@@ -218,7 +218,14 @@ export default class TakeOffer extends Vue {
       }
       const fee = isReceivingCat ? BigInt(this.fee) : 0n;
       const offplan = await generateOfferPlan(revSummary.offered, change_hex, this.availcoins, fee, xchSymbol());
-      const takerBundle = await generateOffer(offplan, revSummary.requested, this.tokenPuzzles, getLineageProofPuzzle, chainId());
+      const takerBundle = await generateOffer(
+        offplan,
+        revSummary.requested,
+        this.tokenPuzzles,
+        getLineageProofPuzzle,
+        xchSymbol(),
+        chainId()
+      );
       const combined = await combineSpendBundle([this.makerBundle, takerBundle]);
       // for creating unit test
       // console.log("const change_hex=", change_hex, ";");

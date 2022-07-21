@@ -1,5 +1,5 @@
 import store from "@/store";
-import { TokenInfo } from "./account";
+import { TokenInfo } from "@/models/account";
 
 export function xchPrefix(): string {
   return store.state.network.prefix;

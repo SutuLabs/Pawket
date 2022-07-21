@@ -29,7 +29,7 @@
 </template>
 <script lang="ts">
 import { demojo } from "@/filters/unitConversion";
-import { AccountEntity } from "@/store/modules/account";
+import { AccountEntity } from "@/models/account";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import store from "@/store";
 import NftDetailPanel from "./NftDetailPanel.vue";

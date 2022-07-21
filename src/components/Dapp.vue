@@ -82,7 +82,7 @@
 </template>
 <script lang="ts">
 import store from "@/store";
-import { AccountEntity, CustomCat } from "@/store/modules/account";
+import { AccountEntity, CustomCat } from "@/models/account";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import MintCat from "./Mint/MintCat.vue";
 import MintNft from "./Mint/MintNft.vue";

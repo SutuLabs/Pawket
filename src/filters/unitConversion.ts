@@ -1,4 +1,4 @@
-import { OneTokenInfo } from "@/store/modules/account";
+import { OneTokenInfo } from "@/models/account";
 import { xchSymbol } from "@/store/modules/network";
 import bigDecimal from "js-big-decimal";
 import { nameOmit } from "./nameConversion";

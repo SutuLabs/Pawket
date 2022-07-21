@@ -32,7 +32,7 @@
 
 <script lang="ts">
 import store from "@/store";
-import { AccountEntity } from "@/store/modules/account";
+import { AccountEntity } from "@/models/account";
 import { Component, Vue } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
 import ChangePassword from "../ChangePassword.vue";
