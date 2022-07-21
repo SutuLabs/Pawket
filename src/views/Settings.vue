@@ -217,11 +217,7 @@ export default class Settings extends Vue {
 
 <style scoped lang="scss">
 @import "~bulma/sass/utilities/mixins.sass";
-
-.border-bottom {
-  border-bottom: 1px solid #ededed;
-  border-radius: 0;
-}
+@import "@/styles/topbar.scss";
 
 .width-auto {
   width: 100%;
@@ -230,13 +226,5 @@ export default class Settings extends Vue {
 .nav-box {
   max-width: 1000px;
   margin: auto;
-}
-
-.fixed-top {
-  width: 100%;
-  height: 10vh;
-  position: fixed;
-  top: 0;
-  background-color: white;
 }
 </style>

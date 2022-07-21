@@ -23,19 +23,10 @@ export default class Settings extends Vue {
 }
 </script>
 <style scoped lang="scss">
-.border-bottom {
-  border-bottom: 2px solid #ededed;
-}
+@import "@/styles/topbar.scss";
+ 
 .nav-box {
   max-width: 1000px;
   margin: auto;
-}
-
-.fixed-top {
-  width: 100%;
-  height: 10vh;
-  position: fixed;
-  top: 0;
-  background-color: white;
 }
 </style>
