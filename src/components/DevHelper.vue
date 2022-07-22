@@ -4,7 +4,7 @@
     <section class="modal-card-body">
       <b-tabs position="is-centered" class="block" v-model="selectedTab">
         <b-tab-item label="Bech32m">
-          <hash-panel></hash-panel>
+          <hash-panel @search="search"></hash-panel>
         </b-tab-item>
         <b-tab-item label="CLVM">
           <clvm-panel></clvm-panel>
@@ -16,7 +16,7 @@
           <offer-panel :input-offer-text="inputOfferText"></offer-panel>
         </b-tab-item>
         <b-tab-item label="Coin">
-          <coin-panel></coin-panel>
+          <coin-panel :puzzle-hash="puzzle_hash"></coin-panel>
         </b-tab-item>
       </b-tabs>
     </section>
@@ -46,10 +46,11 @@ import TopBar from "./TopBar.vue";
   },
 })
 export default class DevHelper extends Vue {
-  @Prop() private inputBundleText!: string;
-  @Prop() private inputOfferText!: string;
+  @Prop() public inputBundleText!: string;
+  @Prop() public inputOfferText!: string;
   @Prop({ default: true }) public showClose!: boolean;
   public selectedTab = 0;
+  public puzzle_hash = "";
 
   get networkId(): string {
     return store.state.network.networkId;
@@ -70,6 +71,11 @@ export default class DevHelper extends Vue {
 
   get network(): string {
     return `[${this.networkId}]`;
+  }
+
+  search(hash: string): void {
+    this.selectedTab = 4;
+    this.puzzle_hash = hash;
   }
 }
 </script>

@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
 import debug from "../../services/api/debug";
 import { CoinSpend } from "@/models/wallet";
@@ -55,9 +55,16 @@ interface CoinSearchType {
   },
 })
 export default class CoinPanel extends Vue {
+  @Prop() public puzzleHash!: string;
   public coinId = "";
   public coinSpend: CoinSpend | null = null;
   public coinSearchList: CoinSearchType[] = [];
+
+  @Watch("puzzleHash")
+  onPropertyChanged(value: string, oldValue: string): void {
+    if (oldValue == value) return;
+    this.searchCoinId(value);
+  }
 
   get bundleText(): string {
     return this.coinSpend == null ? "" : JSON.stringify({ aggregated_signature: "", coin_spends: [this.coinSpend] });
