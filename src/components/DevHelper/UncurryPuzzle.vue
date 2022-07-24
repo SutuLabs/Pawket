@@ -63,7 +63,7 @@ export default class UncurryPuzzle extends Vue {
   public uncurried_module_hash = "";
   public uncurried_args: string[] = [];
   public uncurriable: boolean | null = null;
-  public showUncurry = false;
+  public showUncurry = true;
 
   public readonly modsdict = modsdict;
   public readonly modsprog = modsprog;
@@ -91,6 +91,7 @@ export default class UncurryPuzzle extends Vue {
       const argarr = Array.from(args.as_iter()).map((_) => disassemble(_ as SExp));
       this.uncurried_module = mods;
       this.uncurried_module_hash = await puzzle.getPuzzleHashFromPuzzle(mods);
+      console.log("argarr",argarr)
       this.uncurried_args = argarr;
       this.uncurriable = true;
     } catch (err) {
