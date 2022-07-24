@@ -219,7 +219,7 @@ export const mods: ModDetail[] = [
         desc: "",
       },
       {
-        name: "delta",
+        name: "my_amount",
         desc: "",
       },
       {
@@ -229,7 +229,7 @@ export const mods: ModDetail[] = [
     ],
   },
   {
-    name: "nft_state_layer_nft1",
+    name: "nft_state_layer",
     parameters: [
       {
         name: "NFT_STATE_LAYER_MOD_HASH",
@@ -249,35 +249,6 @@ export const mods: ModDetail[] = [
       },
       {
         name: "inner_solution",
-        desc: "",
-      },
-    ],
-  },
-  {
-    name: "nft_state_layer",
-    parameters: [
-      {
-        name: "NFT_STATE_LAYER_MOD_HASH",
-        desc: "",
-      },
-      {
-        name: "METADATA",
-        desc: "117: `u` for uri\n104: `h` for hash",
-      },
-      {
-        name: "METADATA_UPDATER_PUZZLE_HASH",
-        desc: "",
-      },
-      {
-        name: "INNER_PUZZLE",
-        desc: "",
-      },
-      {
-        name: "solution",
-        desc: "either to inner puzzle or metadata updater",
-      },
-      {
-        name: "my_amount",
         desc: "",
       },
     ],
