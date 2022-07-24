@@ -1,26 +1,22 @@
 import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
 import { assemble } from "clvm_tools/clvm_tools/binutils";
 import debug from "../api/debug";
-import puzzle, { PuzzleDetail } from "../crypto/puzzle";
+import puzzle from "../crypto/puzzle";
 import { TokenPuzzleDetail } from "../crypto/receive";
 import { combineSpendBundlePure } from "../mint/cat";
 import { curryMod } from "../offer/bundler";
 import { internalUncurry } from "../offer/summary";
 import transfer, { GetPuzzleApiCallback, SymbolCoins, TransferTarget } from "../transfer/transfer";
-import { prefix0x } from "./condition";
+import { getNumber, prefix0x } from "./condition";
 import { modsdict, modshash, modsprog, modspuz } from "./mods";
 import { Bytes } from "clvm";
 import { bytesToHex0x } from "../crypto/utility";
 import catBundle from "../transfer/catBundle";
 import { getCoinName0x } from "./coinUtility";
+import { cloneAndChangeRequestPuzzleTemporary, constructSingletonTopLayerPuzzle, getPuzzleDetail, hex2asc, ParsedMetadata, parseMetadata, SingletonStructList } from "./singleton";
 
 export interface MintNftInfo {
   spendBundle: SpendBundle;
-}
-
-export interface NftMetadata {
-  uri: string;
-  hash: string;
 }
 
 export interface NftCoinAnalysisResult {
@@ -31,18 +27,41 @@ export interface NftCoinAnalysisResult {
   metadataUpdaterPuzzleHash: string;
   p2InnerPuzzle: string;
   hintPuzzle: string;
-  metadata: NftMetadata;
+  nftOwnershipModHash: string,
+  currentOwner: string,
+  royaltyAddress: string,
+  tradePricePercentage: number,
+  metadata: NftMetadataValues;
 }
+
+// - singleton_top_layer_v1_1
+//   - `SINGLETON_STRUCT`
+//   - `INNER_PUZZLE` -> nft_state_layer
+//       - `NFT_STATE_LAYER_MOD_HASH`
+//       - `METADATA`
+//       - `METADATA_UPDATER_PUZZLE_HASH`
+//       - `INNER_PUZZLE` -> nft_ownership_layer
+//           - `NFT_OWNERSHIP_LAYER_MOD_HASH`
+//           - `CURRENT_OWNER`
+//           - `TRANSFER_PROGRAM` -> nft_ownership_transfer_program_one_way_claim_with_royalties
+//               - `SINGLETON_STRUCT`
+//               - `ROYALTY_ADDRESS`
+//               - `TRADE_PRICE_PERCENTAGE`
+//           - `INNER_PUZZLE` -> p2_delegated_puzzle_or_hidden_puzzle
 
 export async function generateMintNftBundle(
   targetAddress: string,
   changeAddress: string,
   fee: bigint,
-  metadata: NftMetadata,
+  metadata: NftMetadataValues,
   availcoins: SymbolCoins,
   requests: TokenPuzzleDetail[],
   baseSymbol: string,
   chainId: string,
+  royaltyAddressHex: string,
+  tradePricePercentage: number,
+  didcoin:string,
+  currentOwner = "()",
 ): Promise<MintNftInfo> {
   const amount = 1n; // always 1 mojo for 1 NFT
   const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
@@ -53,6 +72,7 @@ export async function generateMintNftBundle(
   1. BootstrapCoin: XCH Tx -> (XCH Change Tx . SgtLauncher Tx)
   2. LauncherCoin: SgtLauncher Tx -> Genesis NFT Tx
   3. NftCoin: Genesis NFT Tx -> Updater NFT Tx
+  4. DidCoin: DID Tx -> DID Tx
   */
 
   const bootstrapTgts: TransferTarget[] = [{ address: await modshash("singleton_launcher"), amount, symbol: baseSymbol }];
@@ -68,10 +88,15 @@ export async function generateMintNftBundle(
   };
   const launcherCoinId = getCoinName0x(launcherCoin);
 
-  const nftPuzzle = await constructNftTopLayerPuzzle(
+  const sgnStruct = `(${await modshash("singleton_top_layer_v1_1")} ${prefix0x(launcherCoinId)} . ${prefix0x(await modshash("singleton_launcher"))})`;
+  const nftPuzzle = await constructSingletonTopLayerPuzzle(
     launcherCoinId,
     await modshash("singleton_launcher"),
-    await constructNftStatePuzzle(metadata, inner_p2_puzzle.puzzle)
+    // await constructNftStatePuzzle(metadata, inner_p2_puzzle.puzzle)
+    await constructNftStatePuzzle(metadata,
+      await constructNftOwnershipPuzzle(currentOwner,
+        await constructNftTransferPuzzle(sgnStruct, royaltyAddressHex, tradePricePercentage),
+        inner_p2_puzzle.puzzle))
   );
 
   const nftPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(nftPuzzle));
@@ -130,7 +155,7 @@ export async function generateTransferNftBundle(
   const proof = await catBundle.getLineageProof(nftCoin.parent_coin_info, api, 2);
 
   const nftSolution = `((${proof.coinId} ${proof.proof} ${proof.amount}) ${amount} ((() (q (51 ${tgt_hex} ${amount} (${tgt_hex}))) ()) ${amount} ()))`;
-  const nftPuzzle = await constructNftTopLayerPuzzle(
+  const nftPuzzle = await constructSingletonTopLayerPuzzle(
     analysis.launcherId,
     await modshash("singleton_launcher"),
     nftStatePuzzle
@@ -168,39 +193,44 @@ export async function generateTransferNftBundle(
   return bundle;
 }
 
-export async function analyzeNftCoin(parent_coin_info: string, hintPuzzle: string, rpcUrl: string): Promise<NftCoinAnalysisResult | null> {
-  const scoin = await debug.getCoinSolution(parent_coin_info, rpcUrl);
-  const puz = await puzzle.disassemblePuzzle(scoin.puzzle_reveal);
+export async function analyzeNftCoin(puzzle_reveal:string, hintPuzzle: string): Promise<NftCoinAnalysisResult | null> {
+  const puz = await puzzle.disassemblePuzzle(puzzle_reveal);
   const { module, args } = await internalUncurry(puz);
 
+  // - singleton_top_layer_v1_1
   if (modsdict[module] != "singleton_top_layer_v1_1" || args.length != 2) return null;
-  const { module: smodule, args: sargs } = await internalUncurry(args[1]);
   const sgnStructProg = assemble(args[0]);
-  const sgnStructlist: [Bytes, [Bytes, Bytes]] = (sgnStructProg.as_javascript() as [Bytes, [Bytes, Bytes]])
+  const sgnStructlist: SingletonStructList = (sgnStructProg.as_javascript() as SingletonStructList)
 
   const singletonModHash = bytesToHex0x(sgnStructlist[0]);
   const launcherId = bytesToHex0x(sgnStructlist[1][0]);
   const launcherPuzzleHash = bytesToHex0x(sgnStructlist[1][1]);
 
+  // nft_state_layer
+  const { module: smodule, args: sargs } = await internalUncurry(args[1]);
   if (modsdict[smodule] != "nft_state_layer" || sargs.length != 4) return null;
   const nftStateModHash = sargs[0];
   const metadataUpdaterPuzzleHash = sargs[2];
-  const p2InnerPuzzle = sargs[3];
 
-  const rawmeta = sargs[1];
-  const metaprog = assemble(rawmeta);
-  const metalist: string[][] = (metaprog.as_javascript() as Bytes[][])
-    .map(_ => Array.from(_))
-    .map(_ => _.map(it => it.hex()));
-  const hex2asc = function (hex: string | undefined): string | undefined {
-    if (!hex) return hex;
-    return Buffer.from(hex, "hex").toString();
-  }
+  const parsed = parseMetadata(sargs[1]);
+  const metadata = getNftMetadataInfo(parsed);
 
-  const uri = hex2asc(metalist.find(_ => _[0] == "75")?.[1]);// 75_hex = 117_dec for u
-  const hash = metalist.find(_ => _[0] == "68")?.[1];// 68_hex = 104_dec for h
-  if (!uri
-    || !hash
+  // nft_ownership_layer
+  const { module: omodule, args: oargs } = await internalUncurry(sargs[3]);
+  if (modsdict[omodule] != "nft_ownership_layer" || oargs.length != 4) return null;
+  const nftOwnershipModHash = oargs[0];
+  const currentOwner = oargs[1];
+  const p2InnerPuzzle = oargs[3];
+
+  // nft_ownership_transfer_program_one_way_claim_with_royalties
+  const { module: tmodule, args: targs } = await internalUncurry(oargs[2]);
+  if (modsdict[tmodule] != "nft_ownership_transfer_program_one_way_claim_with_royalties" || targs.length != 3) return null;
+  if (args[0] != targs[0]) throw new Error("abnormal, SINGLETON_STRUCT is different in top_layer and ownership_transfer");
+  const royaltyAddress = targs[1];
+  const tradePricePercentage = Number(getNumber(targs[2]));
+
+  if (!metadata.imageUri
+    || !metadata.imageHash
     || !singletonModHash
     || !launcherId
     || !launcherPuzzleHash
@@ -210,75 +240,98 @@ export async function analyzeNftCoin(parent_coin_info: string, hintPuzzle: strin
   ) return null;
 
   return {
-    metadata: {
-      uri,
-      hash,
-    },
+    metadata,
     singletonModHash,
     launcherId,
     launcherPuzzleHash,
     nftStateModHash,
     metadataUpdaterPuzzleHash,
     p2InnerPuzzle,
+    nftOwnershipModHash,
+    currentOwner,
+    royaltyAddress,
+    tradePricePercentage,
     hintPuzzle: prefix0x(hintPuzzle),
   };
 }
 
-async function constructNftStatePuzzle(metadata: { uri: string; hash: string }, inner_p2_puzzle: string): Promise<string> {
-  const md = `((117 "${metadata.uri.replaceAll('"', "")}") (104 . ${prefix0x(metadata.hash)}))`;
+async function constructNftStatePuzzle(metadata: NftMetadataValues, inner_puzzle: string): Promise<string> {
+  if (metadata.imageUri.indexOf("\"") >= 0) throw new Error("image uri should processed before proceeding");
+
+  const mkeys = getNftMetadataKeys();
+  const md = "(" + [
+    `${mkeys.imageUri} "${metadata.imageUri}"`,
+    `${mkeys.imageHash} . ${prefix0x(metadata.imageHash)}`,
+    `${mkeys.metadataUri} "${metadata.metadataUri}"`,
+    `${mkeys.metadataHash} . ${prefix0x(metadata.metadataHash)}`,
+    `${mkeys.licenseUri} "${metadata.licenseUri}"`,
+    `${mkeys.licenseHash} . ${prefix0x(metadata.licenseHash)}`,
+    `${mkeys.serialNumber} . ${metadata.serialNumber}`,
+    `${mkeys.serialTotal} . ${metadata.serialTotal}`,
+  ].join(" ") + ")";
+
   const curried_tail = await curryMod(
     modsprog["nft_state_layer"],
     await modshash("nft_state_layer"),
     md,
     await modshash("nft_metadata_updater_default"),
-    inner_p2_puzzle
+    inner_puzzle
   );
   if (!curried_tail) throw new Error("failed to curry tail.");
 
   return curried_tail;
 }
 
-async function constructNftTopLayerPuzzle(
-  launcherId: string,
-  launcherPuzzleHash: string,
-  inner_state_puzzle: string
-): Promise<string> {
-  const sgnStruct = `(${await modshash("singleton_top_layer_v1_1")} ${prefix0x(launcherId)} . ${prefix0x(launcherPuzzleHash)})`;
-  const curried_tail = await curryMod(modsprog["singleton_top_layer_v1_1"], sgnStruct, inner_state_puzzle);
+async function constructNftOwnershipPuzzle(currentOwner: string, transfer_program: string, inner_puzzle: string): Promise<string> {
+  const curried_tail = await curryMod(
+    modsprog["nft_ownership_layer"],
+    await modshash("nft_ownership_layer"),
+    currentOwner,
+    transfer_program,
+    inner_puzzle,
+  );
   if (!curried_tail) throw new Error("failed to curry tail.");
 
   return curried_tail;
 }
 
-function getPuzzleDetail(
-  tgt_hex: string,
-  requests: TokenPuzzleDetail[]
-): PuzzleDetail {
+async function constructNftTransferPuzzle(singletonStruct: string, royaltyAddress: string, tradePricePercentage: number): Promise<string> {
+  const curried_tail = await curryMod(
+    singletonStruct,
+    royaltyAddress,
+    tradePricePercentage.toFixed(0),
+  );
+  if (!curried_tail) throw new Error("failed to curry tail.");
 
-  const puzzleDict: { [key: string]: PuzzleDetail } = Object.assign({}, ...requests.flatMap((_) => _.puzzles).map((x) => ({ [prefix0x(x.hash)]: x })));
-  const getPuzDetail = (hash: string) => {
-    const puz = puzzleDict[hash];
-    if (!puz) throw new Error("cannot find puzzle");
-    return puz;
-  };
-
-  const inner_p2_puzzle = getPuzDetail(tgt_hex);
-  return inner_p2_puzzle;
+  return curried_tail;
 }
 
+type NftDataKey = "imageUri" | "imageHash" | "metadataUri" | "metadataHash" | "licenseUri" | "licenseHash" | "serialNumber" | "serialTotal";
+type NftMetadataValues = { [key in NftDataKey]: string };
 
-function cloneAndChangeRequestPuzzleTemporary(
-  baseSymbol: string,
-  requests: TokenPuzzleDetail[],
-  originalHash: string,
-  newPuzzle: string,
-  newPuzzleHash: string,
-): TokenPuzzleDetail[] {
-  const extreqs = Array.from(requests.map((_) => ({ symbol: _.symbol, puzzles: Array.from(_.puzzles.map((_) => ({ ..._ }))) })));
-  const nftReq = extreqs.find((_) => _.symbol == baseSymbol)?.puzzles.find((_) => originalHash == _.hash);
-  if (!nftReq) throw new Error("cannot find inner puzzle hash");
-  nftReq.puzzle = newPuzzle;
-  nftReq.hash = newPuzzleHash;
-  nftReq.address = "";
-  return extreqs;
+function getNftMetadataKeys(): NftMetadataValues {
+  return {
+    "imageUri": "117",    // for uri
+    "imageHash": "104",    // for hash
+    "metadataUri": "28021", // for metadata uri
+    "metadataHash": "28008", // for metadata hash
+    "licenseUri": "27765", // for license uri
+    "licenseHash": "27752", // for license hash
+    "serialNumber": "29550", // for series number
+    "serialTotal": "29556", // for series total
+  };
+}
+function getNftMetadataInfo(parsed: ParsedMetadata): NftMetadataValues {
+  const mkeys = getNftMetadataKeys();
+
+  return {
+    imageUri: hex2asc(parsed[mkeys.imageUri]) ?? "",
+    imageHash: parsed[mkeys.imageHash] ?? "",
+    metadataUri: hex2asc(parsed[mkeys.metadataUri]) ?? "",
+    metadataHash: parsed[mkeys.metadataHash] ?? "",
+    licenseUri: hex2asc(parsed[mkeys.licenseUri]) ?? "",
+    licenseHash: parsed[mkeys.licenseHash] ?? "",
+    serialNumber: parsed[mkeys.serialNumber] ?? "",
+    serialTotal: parsed[mkeys.serialTotal] ?? "",
+  };
 }

@@ -147,7 +147,7 @@ store.registerModule<IAccountState>("account", {
 
       resetState();
     },
-    async refreshNfts({ state }, parameters: { idx: number; maxId: number }) {
+    async refreshAssets({ state }, parameters: { idx: number; maxId: number }) {
       if (!parameters) parameters = { idx: state.selectedAccount, maxId: -1 };
       let idx = parameters.idx;
       if (typeof idx !== "number" || idx <= 0) idx = state.selectedAccount;
@@ -156,8 +156,9 @@ store.registerModule<IAccountState>("account", {
 
       const requests = await getAccountAddressDetails(account, parameters.maxId);
       const hintRecords = await receive.getCoinRecords(requests, false, rpcUrl(), true);
-      const nfts = await receive.getNfts(hintRecords, rpcUrl());
-      Vue.set(account, "nfts", nfts);
+      const assets = await receive.getAssets(hintRecords, rpcUrl());
+      Vue.set(account, "nfts", assets.nfts);
+      Vue.set(account, "dids", assets.dids);
     },
     async refreshAddress({ state }, parameters: { idx: number; maxId: number }) {
       if (!parameters) parameters = { idx: state.selectedAccount, maxId: -1 };
@@ -191,6 +192,7 @@ function getAccountEntity(
     addressRetrievalCount: DEFAULT_ADDRESS_RETRIEVAL_COUNT,
     allCats: [],
     nfts: [],
+    dids: [],
     addressGenerated: 0,
     addressPuzzles: [],
   };

@@ -76,7 +76,7 @@ export default class NftPanel extends Vue {
   }
 
   async refresh(): Promise<void> {
-    store.dispatch("refreshNfts");
+    store.dispatch("refreshAssets");
   }
 
   showDetail(nft: NftDetail): void {
