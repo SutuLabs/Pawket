@@ -149,7 +149,7 @@ import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
 import puzzle from "@/services/crypto/puzzle";
 import { beautifyLisp } from "@/services/coin/lisp";
 import { Bytes } from "clvm";
-import { conditionDict, ConditionInfo, prefix0x, getNumber } from "@/services/coin/condition";
+import { conditionDict, ConditionInfo, prefix0x, getNumber, unprefix0x } from "@/services/coin/condition";
 import { modsdict, modsprog } from "@/services/coin/mods";
 import UncurryPuzzle from "@/components/DevHelper/UncurryPuzzle.vue";
 import { decodeOffer } from "@/services/offer/encoding";
@@ -271,13 +271,13 @@ export default class BundlePanel extends Vue {
       this.puzzle_hash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(this.puzzle));
       this.solution = await puzzle.disassemblePuzzle(c.solution);
     }
-    this.used_coin_name = getCoinName(c.coin);
+    this.used_coin_name = prefix0x(getCoinName(c.coin));
     this.used_coin_tgt_address = puzzle.getAddressFromPuzzleHash(c.coin.puzzle_hash, xchPrefix());
   }
 
   public sha256(...args: string[]): string {
     const cont = new Uint8Array(
-      args.map((_) => Bytes.from(_, "hex").raw()).reduce((acc, cur) => [...acc, ...cur], [] as number[])
+      args.map((_) => Bytes.from(unprefix0x(_), "hex").raw()).reduce((acc, cur) => [...acc, ...cur], [] as number[])
     );
     const result = Bytes.SHA256(cont);
     return prefix0x(result.hex());
