@@ -150,7 +150,7 @@ class Receive {
 
         const scoin = await debug.getCoinSolution(coinRecord.coin.parentCoinInfo, rpcUrl);
         console.log("analizing", getCoinName0x(convertToOriginCoin(coinRecord.coin)));
-        const nftResult = await analyzeNftCoin(scoin.puzzle_reveal, coinRecords.puzzleHash);
+        const nftResult = await analyzeNftCoin(scoin.puzzle_reveal, coinRecords.puzzleHash, scoin.solution);
         if (nftResult) {
           nftList.push({
             metadata: {

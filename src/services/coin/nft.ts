@@ -1,5 +1,5 @@
 import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
-import { assemble } from "clvm_tools/clvm_tools/binutils";
+import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
 import debug from "../api/debug";
 import puzzle from "../crypto/puzzle";
 import { TokenPuzzleDetail } from "../crypto/receive";
@@ -10,10 +10,13 @@ import transfer, { GetPuzzleApiCallback, SymbolCoins, TransferTarget } from "../
 import { getNumber, prefix0x } from "./condition";
 import { modsdict, modshash, modsprog, modspuz } from "./mods";
 import { Bytes } from "clvm";
-import { bytesToHex0x } from "../crypto/utility";
+import utility, { bytesToHex0x } from "../crypto/utility";
 import catBundle from "../transfer/catBundle";
 import { getCoinName0x } from "./coinUtility";
 import { cloneAndChangeRequestPuzzleTemporary, constructSingletonTopLayerPuzzle, getPuzzleDetail, hex2asc, ParsedMetadata, parseMetadata, SingletonStructList } from "./singleton";
+import { SExp, Tuple } from "clvm";
+import { findByPath } from "./lisp";
+import { ConditionOpcode } from "./opcode";
 
 export interface MintNftInfo {
   spendBundle: SpendBundle;
@@ -28,9 +31,11 @@ export interface NftCoinAnalysisResult {
   p2InnerPuzzle: string;
   hintPuzzle: string;
   nftOwnershipModHash: string,
-  currentOwner: string,
-  royaltyAddress: string,
-  tradePricePercentage: number,
+  previousOwner: string;
+  didOwner: string;
+  p2Owner: string;
+  royaltyAddress: string;
+  tradePricePercentage: number;
   metadata: NftMetadataValues;
 }
 
@@ -139,6 +144,7 @@ export async function generateTransferNftBundle(
   fee: bigint,
   nftCoin: OriginCoin,
   analysis: NftCoinAnalysisResult,
+  ownerDid: string,
   availcoins: SymbolCoins,
   requests: TokenPuzzleDetail[],
   baseSymbol: string,
@@ -151,15 +157,28 @@ export async function generateTransferNftBundle(
   const inner_p2_puzzle = getPuzzleDetail(analysis.hintPuzzle, requests);
 
   const amount = 1n;
-  const nftStatePuzzle = await constructNftStatePuzzle(analysis.metadata, inner_p2_puzzle.puzzle);
+  // const nftStatePuzzle = await constructNftStatePuzzle(analysis.metadata, inner_p2_puzzle.puzzle);
   const proof = await catBundle.getLineageProof(nftCoin.parent_coin_info, api, 2);
 
-  const nftSolution = `((${proof.coinId} ${proof.proof} ${proof.amount}) ${amount} ((() (q (51 ${tgt_hex} ${amount} (${tgt_hex}))) ()) ${amount} ()))`;
+  // const nftSolution = `((${proof.coinId} ${proof.proof} ${proof.amount}) ${amount} ((() (q (51 ${tgt_hex} ${amount} (${tgt_hex}))) ()) ${amount} ()))`;
+  // `-10` is the change owner magic condition
+  const nftSolution = `((${proof.coinId} ${proof.proof} ${proof.amount}) ${amount} (((() (q (-10 () () ()) (51 ${tgt_hex} ${amount} (${tgt_hex}))) ()))))`;
+  // const nftPuzzle = await constructSingletonTopLayerPuzzle(
+  //   analysis.launcherId,
+  //   await modshash("singleton_launcher"),
+  //   nftStatePuzzle
+  // );
+  const sgnStruct = `(${await modshash("singleton_top_layer_v1_1")} ${prefix0x(analysis.launcherId)} . ${prefix0x(await modshash("singleton_launcher"))})`;
   const nftPuzzle = await constructSingletonTopLayerPuzzle(
     analysis.launcherId,
     await modshash("singleton_launcher"),
-    nftStatePuzzle
+    // await constructNftStatePuzzle(metadata, inner_p2_puzzle.puzzle)
+    await constructNftStatePuzzle(analysis.metadata,
+      await constructNftOwnershipPuzzle(ownerDid,
+        await constructNftTransferPuzzle(sgnStruct, analysis.royaltyAddress, analysis.tradePricePercentage),
+        inner_p2_puzzle.puzzle))
   );
+
   const nftPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(nftPuzzle));
   if (nftPuzzleHash != nftCoin.puzzle_hash) {
     if (process.env.NODE_ENV !== "production") {
@@ -193,8 +212,12 @@ export async function generateTransferNftBundle(
   return bundle;
 }
 
-export async function analyzeNftCoin(puzzle_reveal: string, hintPuzzle: string): Promise<NftCoinAnalysisResult | null> {
+export async function analyzeNftCoin(puzzle_reveal: string, hintPuzzle: string, solution_hex: string): Promise<NftCoinAnalysisResult | null> {
+  // console.log(`const puzzle_reveal="${puzzle_reveal}";`);
+  // console.log(`const hintPuzzle="${hintPuzzle}";`);
+  // console.log(`const solution="${solution_hex}";`);
   const puz = await puzzle.disassemblePuzzle(puzzle_reveal);
+  const solution = await puzzle.disassemblePuzzle(solution_hex);
   const { module, args } = await internalUncurry(puz);
 
   // - singleton_top_layer_v1_1
@@ -219,7 +242,7 @@ export async function analyzeNftCoin(puzzle_reveal: string, hintPuzzle: string):
   const { module: omodule, args: oargs } = await internalUncurry(sargs[3]);
   if (modsdict[omodule] != "nft_ownership_layer" || oargs.length != 4) return null;
   const nftOwnershipModHash = oargs[0];
-  const currentOwner = oargs[1];
+  const previousOwner = oargs[1];
   const p2InnerPuzzle = oargs[3];
 
   // nft_ownership_transfer_program_one_way_claim_with_royalties
@@ -228,6 +251,7 @@ export async function analyzeNftCoin(puzzle_reveal: string, hintPuzzle: string):
   if (args[0] != targs[0]) throw new Error("abnormal, SINGLETON_STRUCT is different in top_layer and ownership_transfer");
   const royaltyAddress = targs[1];
   const tradePricePercentage = Number(getNumber(targs[2]));
+  const { didOwner, p2Owner } = await getOwnerFromSolution(solution);
 
   if (!metadata.imageUri
     || !metadata.imageHash
@@ -248,11 +272,43 @@ export async function analyzeNftCoin(puzzle_reveal: string, hintPuzzle: string):
     metadataUpdaterPuzzleHash,
     p2InnerPuzzle,
     nftOwnershipModHash,
-    currentOwner,
+    previousOwner,
+    didOwner: didOwner ?? previousOwner,
+    p2Owner: p2Owner ?? "",
     royaltyAddress,
     tradePricePercentage,
     hintPuzzle: prefix0x(hintPuzzle),
   };
+}
+
+async function getOwnerFromSolution(solution: string): Promise<{ didOwner: string | undefined, p2Owner: string | undefined }> {
+  const sol = assemble(solution);
+  /*
+  example:
+  (
+    (0x6488c6e33a3719efd79aecdb6bf3c12fd65bc1367271f1b0c5982513f5b2d0ac 1)
+    1;rest
+    (;rest.first
+      (;first
+        (;first
+          () ;rest.first
+          (q ;rest.as_iter
+            (-10 0x7b7f7ae9d65865d67a0305828e940b470a11f94e96568b5df98174147a92f0d6 
+              () 0x3f48282fdc480c0f61e5c6b365997711faec970570c67aca0352ee23de88e4ac) 
+            (51 0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10 1 
+              (0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10 0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10))) 
+          ()))))
+  
+  */
+
+  const prog = findByPath(sol, "rrfffrfr");
+  const conds = puzzle.parseConditions(prog);
+  const did = conds.find(_ => _.code == 246) // magic number: 246 == -10
+  const p2 = conds.find(_ => _.code == ConditionOpcode.CREATE_COIN);
+  const didOwner = (!did || !(did.args[0] instanceof Uint8Array)) ? undefined : utility.toHexString(did.args[0]);
+  const p2Owner = (!p2 || !(p2.args[2] instanceof Array) || !(p2.args[2][0] instanceof Uint8Array)) ? undefined : utility.toHexString(p2.args[2][0]);
+
+  return { didOwner, p2Owner };
 }
 
 async function constructNftStatePuzzle(metadata: NftMetadataValues, inner_puzzle: string): Promise<string> {

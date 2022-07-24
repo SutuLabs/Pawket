@@ -34,8 +34,8 @@
             <key-box icon="checkbox-multiple-blank-outline" :value="nft.address" :showValue="true"></key-box>
           </b-field>
           <b-field label="Collection">{{ metadata.collection.name }}</b-field>
-          <b-field label="Create by"
-            >OwnerID: yyyyyyyy <key-box icon="checkbox-multiple-blank-outline" value="yyyyyy"></key-box
+          <b-field label="Owned by"
+            >OwnerID: <key-box icon="checkbox-multiple-blank-outline" :value="nft.analysis.didOwner" :showValue="true"></key-box
           ></b-field>
           <b-field label="Description">{{ metadata.description }}</b-field>
           <div class="buttons is-hidden-mobile">
@@ -82,7 +82,9 @@
                 <li><span class="has-text-grey">Launcher ID </span><span class="is-pulled-right">
                   <key-box :value="nft.analysis.launcherId" :showValue="true"></key-box></span></li>
                 <li><span class="has-text-grey">Owner DID </span><span class="is-pulled-right">
-                  <key-box :value="nft.analysis.currentOwner" :showValue="true"></key-box></span></li>
+                  <key-box :value="nft.analysis.didOwner" :showValue="true"></key-box></span></li>
+                <li><span class="has-text-grey">Owner Address </span><span class="is-pulled-right">
+                  <key-box :value="nft.analysis.p2Owner" :showValue="true"></key-box></span></li>
                 <li><span class="has-text-grey">Royalty Percentage </span><span class="is-pulled-right">
                   {{nft.analysis.tradePricePercentage/100}}%</span></li>
                 <li><span class="has-text-grey">Minted at Block Height</span><span class="is-pulled-right">
