@@ -20,4 +20,11 @@ ul.args_list.ellipsis-item > li {
   max-height: 10em;
   overflow: auto;
   white-space: pre-wrap;
+  position: relative;
+
+  label {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
 }

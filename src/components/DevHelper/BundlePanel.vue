@@ -27,16 +27,19 @@
               class="pt-1"
               v-for="(val, key) in {
                 Amount: bundle.coin_spends[selectedCoin].coin.amount,
-                ParentCoinInfo: bundle.coin_spends[selectedCoin].coin.parent_coin_info,
-                'UsedCoin Name': used_coin_name,
-                'UsedCoin Address': used_coin_tgt_address,
-                'UsedCoin PuzHash': bundle.coin_spends[selectedCoin].coin.puzzle_hash,
+                'Parent Coin': bundle.coin_spends[selectedCoin].coin.parent_coin_info,
+                'Coin Name': used_coin_name,
+                'Coin Address': used_coin_tgt_address,
+                'Coin PuzHash': bundle.coin_spends[selectedCoin].coin.puzzle_hash,
               }"
               :key="key"
             >
               <b-taglist attached>
                 <b-tag type="is-info">{{ key }}</b-tag>
-                <b-tag type="">{{ val }}</b-tag>
+                <b-tag type="">
+                  {{ val }}
+                  <key-box icon="checkbox-multiple-blank-outline" :value="val" tooltip="Copy"></key-box>
+                </b-tag>
               </b-taglist>
             </li>
           </ul>
