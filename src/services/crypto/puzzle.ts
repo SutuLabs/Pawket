@@ -141,7 +141,7 @@ class PuzzleMaker {
   }
 
   public getAddressFromPuzzleHash(puzzleHash: string, prefix: string): string {
-    const address = bech32m.encode(prefix, bech32m.toWords(utility.fromHexString(puzzleHash)));
+    const address = bech32m.encode(prefix, bech32m.toWords(utility.fromHexString(unprefix0x(puzzleHash))));
     return address;
   }
 

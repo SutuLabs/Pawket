@@ -43,9 +43,15 @@ class Utility {
     const sk = BLS.PrivateKey.from_bytes(privateKey, false);
     return sk;
   }
-  public async purehash(data: string): Promise<Uint8Array> {
-    const enc = new TextEncoder();
-    return new Uint8Array(await crypto.subtle.digest("SHA-256", enc.encode(data)));
+
+  public async purehash(data: string | ArrayBuffer): Promise<Uint8Array> {
+    if (typeof data === "string") {
+      const enc = new TextEncoder();
+      return new Uint8Array(await crypto.subtle.digest("SHA-256", enc.encode(data)));
+    }
+    else {
+      return new Uint8Array(await crypto.subtle.digest("SHA-256", data));
+    }
   }
 
   public async hash(data: string): Promise<string> {
