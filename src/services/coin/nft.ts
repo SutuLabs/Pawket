@@ -36,6 +36,7 @@ export interface NftCoinAnalysisResult {
   p2Owner: string;
   royaltyAddress: string;
   tradePricePercentage: number;
+  rawMetadata: string;
   metadata: NftMetadataValues;
 }
 
@@ -98,7 +99,7 @@ export async function generateMintNftBundle(
     launcherCoinId,
     await modshash("singleton_launcher"),
     // await constructNftStatePuzzle(metadata, inner_p2_puzzle.puzzle)
-    await constructNftStatePuzzle(metadata,
+    await constructNftStatePuzzle(await constructMetadataString(metadata),
       await constructNftOwnershipPuzzle(currentOwner,
         await constructNftTransferPuzzle(sgnStruct, royaltyAddressHex, tradePricePercentage),
         inner_p2_puzzle.puzzle))
@@ -172,7 +173,7 @@ export async function generateTransferNftBundle(
     analysis.launcherId,
     await modshash("singleton_launcher"),
     // await constructNftStatePuzzle(metadata, inner_p2_puzzle.puzzle)
-    await constructNftStatePuzzle(analysis.metadata,
+    await constructNftStatePuzzle(analysis.rawMetadata,
       await constructNftOwnershipPuzzle(analysis.didOwner,
         await constructNftTransferPuzzle(sgnStruct, analysis.royaltyAddress, analysis.tradePricePercentage),
         inner_p2_puzzle.puzzle))
@@ -234,7 +235,8 @@ export async function analyzeNftCoin(puzzle_reveal: string, hintPuzzle: string, 
   const nftStateModHash = sargs[0];
   const metadataUpdaterPuzzleHash = sargs[2];
 
-  const parsed = parseMetadata(sargs[1]);
+  const rawMetadata = sargs[1];
+  const parsed = parseMetadata(rawMetadata);
   const metadata = getNftMetadataInfo(parsed);
 
   // nft_ownership_layer
@@ -264,6 +266,7 @@ export async function analyzeNftCoin(puzzle_reveal: string, hintPuzzle: string, 
 
   return {
     metadata,
+    rawMetadata,
     singletonModHash,
     launcherId,
     launcherPuzzleHash,
@@ -310,7 +313,7 @@ async function getOwnerFromSolution(solution: string): Promise<{ didOwner: strin
   return { didOwner, p2Owner };
 }
 
-async function constructNftStatePuzzle(metadata: NftMetadataValues, inner_puzzle: string): Promise<string> {
+async function constructMetadataString(metadata: NftMetadataValues): Promise<string> {
   if (metadata.imageUri.indexOf("\"") >= 0) throw new Error("image uri should processed before proceeding");
 
   const mkeys = getNftMetadataKeys();
@@ -329,10 +332,14 @@ async function constructNftStatePuzzle(metadata: NftMetadataValues, inner_puzzle
     `${toNumber(mkeys.licenseHash)} . ${prefix0x(metadata.licenseHash)}`,
   ].map(_ => `(${_})`).join(" ") + ")";
 
+  return md;
+}
+
+async function constructNftStatePuzzle(rawMetadata: string, inner_puzzle: string): Promise<string> {
   const curried_tail = await curryMod(
     modsprog["nft_state_layer"],
     await modshash("nft_state_layer"),
-    md,
+    rawMetadata,
     await modshash("nft_metadata_updater_default"),
     inner_puzzle
   );
