@@ -1,3 +1,4 @@
+import { SExp } from "clvm";
 
 export function beautifyLisp(lisp: string): string {
   let output = "";
@@ -47,4 +48,26 @@ export function beautifyLisp(lisp: string): string {
   }
 
   return output;
+}
+
+export function findByPath(program: SExp, path: string): SExp {
+  let cursor = program;
+  try {
+    for (let i = 0; i < path.length; i++) {
+      const direction = path[i];
+      if (direction == "r") {
+        cursor = cursor.rest();
+      }
+      else if (direction == "f") {
+        cursor = cursor.first();
+      }
+      else {
+        throw new Error("only f or r allowed");
+      }
+    }
+    return cursor;
+  }
+  catch (err) {
+    return SExp.null();
+  }
 }
