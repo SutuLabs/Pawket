@@ -205,7 +205,7 @@ class PuzzleMaker {
     return (await this.getCatPuzzleDetails(privateKey, assetId, prefix, startIndex, endIndex)).map(_ => _.hash);
   }
 
-  public async calcPuzzleResult(puzzle_reveal: string, solution: string, ...args:string[]): Promise<string> {
+  public async calcPuzzleResult(puzzle_reveal: string, solution: string, ...args: string[]): Promise<string> {
     let output: string[] = [];
     clvm_tools.setPrintFunction((...args) => output = args)
 
@@ -232,13 +232,19 @@ class PuzzleMaker {
   }
 
   public parseConditions(conditonString: string): ConditionEntity[] {
-    const conds = Array.from(assemble(conditonString).as_iter())
-      .map(cond => ({
-        code: cond.first().atom?.at(0) ?? 0,
-        args: Array.from(cond.rest().as_iter()).map(_ => _.listp() ? Array.from(_.as_iter()).map(_ => _.atom?.raw()) : _.atom?.raw())
-      }));
+    try {
+      const conds = Array.from(assemble(conditonString).as_iter())
+        .map(cond => ({
+          code: cond.first().atom?.at(0) ?? 0,
+          args: Array.from(cond.rest().as_iter()).map(_ => _.listp() ? Array.from(_.as_iter()).map(_ => _.atom?.raw()) : _.atom?.raw())
+        }));
 
-    return conds;
+      return conds;
+    }
+    catch (err) {
+      console.warn("failed to parse condition: " + conditonString);
+      throw err;
+    }
   }
 
   public getSettlementPaymentsPuzzle(): string {
