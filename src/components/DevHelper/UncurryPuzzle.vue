@@ -16,7 +16,7 @@
       </div>
       <div v-else>{{ puzzle }}</div>
     </span>
-    <ul v-if="showUncurry" class="args_list">
+    <ul v-if="uncurriable && showUncurry" class="args_list">
       <li>
         <span v-if="modsdict[uncurried_module]" class="tag is-info is-light is-small">{{ modsdict[uncurried_module] }}</span>
         <key-box icon="checkbox-multiple-blank-outline" :value="uncurried_module" tooltip="Copy"></key-box>
@@ -91,7 +91,7 @@ export default class UncurryPuzzle extends Vue {
       const argarr = Array.from(args.as_iter()).map((_) => disassemble(_ as SExp));
       this.uncurried_module = mods;
       this.uncurried_module_hash = await puzzle.getPuzzleHashFromPuzzle(mods);
-      console.log("argarr",argarr)
+      console.log("argarr", argarr);
       this.uncurried_args = argarr;
       this.uncurriable = true;
     } catch (err) {
