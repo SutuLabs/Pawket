@@ -11,5 +11,9 @@ Vue.config.errorHandler = function (err: Error, vm: Vue, info: string): void {
       stack: err.stack ?? "",
     };
     store.dispatch("addErrorLog", errLog);
+
+    if (process.env.NODE_ENV !== "production") {
+      console.warn(err);
+    }
   });
 };
