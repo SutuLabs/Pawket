@@ -144,7 +144,6 @@ export async function generateTransferNftBundle(
   fee: bigint,
   nftCoin: OriginCoin,
   analysis: NftCoinAnalysisResult,
-  ownerDid: string,
   availcoins: SymbolCoins,
   requests: TokenPuzzleDetail[],
   baseSymbol: string,
@@ -174,7 +173,7 @@ export async function generateTransferNftBundle(
     await modshash("singleton_launcher"),
     // await constructNftStatePuzzle(metadata, inner_p2_puzzle.puzzle)
     await constructNftStatePuzzle(analysis.metadata,
-      await constructNftOwnershipPuzzle(ownerDid,
+      await constructNftOwnershipPuzzle(analysis.didOwner,
         await constructNftTransferPuzzle(sgnStruct, analysis.royaltyAddress, analysis.tradePricePercentage),
         inner_p2_puzzle.puzzle))
   );
@@ -315,16 +314,20 @@ async function constructNftStatePuzzle(metadata: NftMetadataValues, inner_puzzle
   if (metadata.imageUri.indexOf("\"") >= 0) throw new Error("image uri should processed before proceeding");
 
   const mkeys = getNftMetadataKeys();
+  const toNumber = function (hex: string): string {
+    const num = parseInt(hex, 16);
+    return num.toFixed(0);
+  }
   const md = "(" + [
-    `${mkeys.imageUri} "${metadata.imageUri}"`,
-    `${mkeys.imageHash} . ${prefix0x(metadata.imageHash)}`,
-    `${mkeys.metadataUri} "${metadata.metadataUri}"`,
-    `${mkeys.metadataHash} . ${prefix0x(metadata.metadataHash)}`,
-    `${mkeys.licenseUri} "${metadata.licenseUri}"`,
-    `${mkeys.licenseHash} . ${prefix0x(metadata.licenseHash)}`,
-    `${mkeys.serialNumber} . ${metadata.serialNumber}`,
-    `${mkeys.serialTotal} . ${metadata.serialTotal}`,
-  ].join(" ") + ")";
+    `${toNumber(mkeys.imageUri)} "${metadata.imageUri}"`,
+    `${toNumber(mkeys.imageHash)} . ${prefix0x(metadata.imageHash)}`,
+    `${toNumber(mkeys.metadataUri)} "${metadata.metadataUri}"`,
+    `${toNumber(mkeys.licenseUri)} "${metadata.licenseUri}"`,
+    `${toNumber(mkeys.serialNumber)} . ${toNumber(metadata.serialNumber)}`,
+    `${toNumber(mkeys.serialTotal)} . ${toNumber(metadata.serialTotal)}`,
+    `${toNumber(mkeys.metadataHash)} . ${prefix0x(metadata.metadataHash)}`,
+    `${toNumber(mkeys.licenseHash)} . ${prefix0x(metadata.licenseHash)}`,
+  ].map(_ => `(${_})`).join(" ") + ")";
 
   const curried_tail = await curryMod(
     modsprog["nft_state_layer"],
@@ -342,7 +345,7 @@ async function constructNftOwnershipPuzzle(currentOwner: string, transfer_progra
   const curried_tail = await curryMod(
     modsprog["nft_ownership_layer"],
     await modshash("nft_ownership_layer"),
-    currentOwner,
+    prefix0x(currentOwner),
     transfer_program,
     inner_puzzle,
   );
@@ -353,8 +356,9 @@ async function constructNftOwnershipPuzzle(currentOwner: string, transfer_progra
 
 async function constructNftTransferPuzzle(singletonStruct: string, royaltyAddress: string, tradePricePercentage: number): Promise<string> {
   const curried_tail = await curryMod(
+    modsprog["nft_ownership_transfer_program_one_way_claim_with_royalties"],
     singletonStruct,
-    royaltyAddress,
+    prefix0x(royaltyAddress),
     tradePricePercentage.toFixed(0),
   );
   if (!curried_tail) throw new Error("failed to curry tail.");
