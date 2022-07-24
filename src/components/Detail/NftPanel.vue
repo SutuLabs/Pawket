@@ -1,6 +1,7 @@
 <template>
   <section>
     <div>
+      <b-button @click="refresh()">Refresh</b-button>
       <b-collapse animation="slide" v-for="(col, key) of collection" :key="key" :open="true">
         <template #trigger="props">
           <p class="is-size-5 mb-1">
@@ -121,7 +122,7 @@ export default class NftPanel extends Vue {
       width: 1000,
       fullScreen: isMobile(),
       canCancel: ["outside"],
-      props: { nft: nft, account: this.account },
+      props: { nft: nft, metadata: this.extraInfo[nft.address].metadata, account: this.account },
     });
   }
 }
