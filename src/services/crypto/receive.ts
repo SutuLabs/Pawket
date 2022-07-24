@@ -27,6 +27,7 @@ export interface NftDetail {
   }
   hintPuzzle: string;
   coin: OriginCoin;
+  address: string;
   analysis: NftCoinAnalysisResult;
 }
 
@@ -157,6 +158,7 @@ class Receive {
               hash: nftResult.metadata.imageHash,
             },
             hintPuzzle: coinRecords.puzzleHash,
+            address: puzzle.getAddressFromPuzzleHash(nftResult.launcherId, "nft"),
             coin: convertToOriginCoin(coinRecord.coin),
             analysis: nftResult,
           });
