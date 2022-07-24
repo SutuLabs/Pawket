@@ -60,7 +60,7 @@ export async function generateMintNftBundle(
   chainId: string,
   royaltyAddressHex: string,
   tradePricePercentage: number,
-  didcoin:string,
+  didcoin: string,
   currentOwner = "()",
 ): Promise<MintNftInfo> {
   const amount = 1n; // always 1 mojo for 1 NFT
@@ -193,7 +193,7 @@ export async function generateTransferNftBundle(
   return bundle;
 }
 
-export async function analyzeNftCoin(puzzle_reveal:string, hintPuzzle: string): Promise<NftCoinAnalysisResult | null> {
+export async function analyzeNftCoin(puzzle_reveal: string, hintPuzzle: string): Promise<NftCoinAnalysisResult | null> {
   const puz = await puzzle.disassemblePuzzle(puzzle_reveal);
   const { module, args } = await internalUncurry(puz);
 
@@ -311,14 +311,14 @@ type NftMetadataValues = { [key in NftDataKey]: string };
 
 function getNftMetadataKeys(): NftMetadataValues {
   return {
-    "imageUri": "117",    // for uri
-    "imageHash": "104",    // for hash
-    "metadataUri": "28021", // for metadata uri
-    "metadataHash": "28008", // for metadata hash
-    "licenseUri": "27765", // for license uri
-    "licenseHash": "27752", // for license hash
-    "serialNumber": "29550", // for series number
-    "serialTotal": "29556", // for series total
+    "imageUri": "75",    // for uri
+    "imageHash": "68",    // for hash
+    "metadataUri": "6d75", // for metadata uri
+    "metadataHash": "6d68", // for metadata hash
+    "licenseUri": "6c75", // for license uri
+    "licenseHash": "6c68", // for license hash
+    "serialNumber": "736e", // for series number
+    "serialTotal": "7374", // for series total
   };
 }
 function getNftMetadataInfo(parsed: ParsedMetadata): NftMetadataValues {
