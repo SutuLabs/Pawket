@@ -75,11 +75,23 @@ export default class CoinPanel extends Vue {
     return "https://chia.tt/info/coin/";
   }
 
+  tryDecode(str: string): string {
+    if (str.startsWith("0x")) return str;
+    try {
+      const decoded = puzzle.getPuzzleHashFromAddress(str);
+      return decoded;
+    } catch {
+      return str;
+    }
+  }
+
   async searchCoinId(coinId: string): Promise<void> {
     if (coinId) this.coinId = coinId.trim();
+    coinId = prefix0x(this.tryDecode(this.coinId));
+
     this.coinSpend = null;
     this.coinSearchList = [];
-    this.coinSpend = await debug.getCoinSolution(this.coinId, rpcUrl());
+    this.coinSpend = await debug.getCoinSolution(coinId, rpcUrl());
     if (!this.coinSpend) {
       Notification.open({
         message: `Search failed`,
@@ -90,7 +102,7 @@ export default class CoinPanel extends Vue {
 
     this.coinSearchList = [
       { coinId: this.coinSpend.coin.parent_coin_info, type: "PARENT" },
-      { coinId: prefix0x(this.coinId), type: "SELF" },
+      { coinId: coinId, type: "SELF" },
     ];
     if (this.coinSpend.puzzle_reveal && this.coinSpend.solution) {
       const result = await puzzle.calcPuzzleResult(
@@ -103,7 +115,7 @@ export default class CoinPanel extends Vue {
         .map((_) => ({ op: Number(_[0]), args: _.slice(1) }))
         .filter((_) => _.op == ConditionOpcode.CREATE_COIN)
         .map((_) => ({ address: _.args[0], amount: BigInt(_.args[1]) }))
-        .map((_) => getCoinName({ amount: _.amount, parent_coin_info: this.coinId, puzzle_hash: _.address }))
+        .map((_) => getCoinName({ amount: _.amount, parent_coin_info: coinId, puzzle_hash: _.address }))
         .map((_) => ({ coinId: prefix0x(_), type: "CHILD" }));
 
       this.coinSearchList.push(...children);
