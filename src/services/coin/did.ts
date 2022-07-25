@@ -25,9 +25,11 @@ export interface DidCoinAnalysisResult {
   singletonModHash: string;
   launcherId: string;
   launcherPuzzleHash: string;
+  didInnerPuzzleHash: string;
   p2InnerPuzzle: string;
   hintPuzzle: string;
   metadata: ParsedMetadata;
+  rawMetadata: string;
   recovery_did_list_hash: string;
   num_verifications_requried: string;
 }
@@ -143,26 +145,27 @@ async function constructDidInnerPuzzle(
 export async function analyzeDidCoin(puzzle_reveal: string, hintPuzzle: string): Promise<DidCoinAnalysisResult | null> {
   const puz = await puzzle.disassemblePuzzle(puzzle_reveal);
   const { module, args } = await internalUncurry(puz);
-
   if (modsdict[module] != "singleton_top_layer_v1_1" || args.length != 2) return null;
-  console.log("analyzing layer 1")
-  const { module: smodule, args: sargs } = await internalUncurry(args[1]);
   console.log("args", args)
+
   const sgnStructlist: SingletonStructList = (assemble(args[0]).as_javascript() as SingletonStructList)
 
   const singletonModHash = bytesToHex0x(sgnStructlist[0]);
   const launcherId = bytesToHex0x(sgnStructlist[1][0]);
   const launcherPuzzleHash = bytesToHex0x(sgnStructlist[1][1]);
+  const didInnerPuzzle = args[1];
+  const didInnerPuzzleHash = await puzzle.getPuzzleHashFromPuzzle(didInnerPuzzle);
 
+  const { module: smodule, args: sargs } = await internalUncurry(didInnerPuzzle);
   if (modsdict[smodule] != "did_innerpuz" || sargs.length != 5) return null;
-  console.log("analyzing layer 2")
   console.log("sargs", sargs)
+
   const p2InnerPuzzle = sargs[0];
   const recovery_did_list_hash = sargs[1];
   const num_verifications_requried = sargs[2];
   const inner_singleton_struct: SingletonStructList = (assemble(sargs[3]).as_javascript() as SingletonStructList)
-  const rawmeta = sargs[4];
-  const metadata = rawmeta == "()" ? {} : parseMetadata(rawmeta);
+  const rawMetadata = sargs[4];
+  const metadata = rawMetadata == "()" ? {} : parseMetadata(rawMetadata);
 
   if (!recovery_did_list_hash
     || !singletonModHash
@@ -171,6 +174,7 @@ export async function analyzeDidCoin(puzzle_reveal: string, hintPuzzle: string):
     || !metadata
     || !inner_singleton_struct
     || !p2InnerPuzzle
+    || !didInnerPuzzleHash
   ) return null;
 
   return {
@@ -180,6 +184,8 @@ export async function analyzeDidCoin(puzzle_reveal: string, hintPuzzle: string):
     recovery_did_list_hash,
     num_verifications_requried,
     metadata,
+    rawMetadata,
+    didInnerPuzzleHash,
     p2InnerPuzzle,
     hintPuzzle: prefix0x(hintPuzzle),
   };

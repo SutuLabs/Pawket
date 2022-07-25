@@ -17,6 +17,7 @@ import { cloneAndChangeRequestPuzzleTemporary, constructSingletonTopLayerPuzzle,
 import { SExp, Tuple } from "clvm";
 import { findByPath } from "./lisp";
 import { ConditionOpcode } from "./opcode";
+import { DidCoinAnalysisResult } from "./did";
 
 export interface MintNftInfo {
   spendBundle: SpendBundle;
@@ -66,7 +67,7 @@ export async function generateMintNftBundle(
   chainId: string,
   royaltyAddressHex: string,
   tradePricePercentage: number,
-  didcoin: string,
+  didAnalysis: DidCoinAnalysisResult,
   currentOwner = "()",
 ): Promise<MintNftInfo> {
   const amount = 1n; // always 1 mojo for 1 NFT
@@ -114,8 +115,7 @@ export async function generateMintNftBundle(
 
   const launcherSolution = `(${nftPuzzleHash} ${amount} ())`;
 
-  // lineage_proof delta inner(solution(p2_inner or metadata updater) my_amount)
-  const nftSolution = `((${bootstrapCoinId} ${amount}) ${amount} ((() (q (51 ${tgt_hex} ${amount} (${tgt_hex}))) ()) ${amount} ()))`;
+  const nftSolution = `((${bootstrapCoinId} ${amount}) ${amount} (((() (q (-10 ${didAnalysis.launcherId} () ${didAnalysis.didInnerPuzzleHash}) (51 ${tgt_hex} 1 (${tgt_hex} ${tgt_hex}))) ()))))`;
 
   const launcherCoinSpend: CoinSpend = {
     coin: launcherCoin,
