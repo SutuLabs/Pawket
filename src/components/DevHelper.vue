@@ -1,6 +1,6 @@
 <template>
   <div class="modal-card">
-    <top-bar :title="$t('settings.devhelper.title') + network" @close="$emit('close')" :showClose="showClose"></top-bar>
+    <top-bar :title="$t('settings.devhelper.title')" :tag="network" @close="$emit('close')" :showClose="showClose"></top-bar>
     <section class="modal-card-body">
       <b-tabs position="is-centered" class="block" v-model="selectedTab">
         <b-tab-item label="Bech32m">
@@ -70,7 +70,7 @@ export default class DevHelper extends Vue {
   }
 
   get network(): string {
-    return `[${this.networkId}]`;
+    return this.networkId;
   }
 
   search(hash: string): void {

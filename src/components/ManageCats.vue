@@ -89,8 +89,8 @@ export default class ManageCats extends Vue {
   @Prop({ default: "" }) defaultAssetId!: string;
   @Prop({ default: 0 }) activeTab!: number;
 
-  public name = this.defaultName;
-  public assetId = this.defaultAssetId;
+  public name = "";
+  public assetId = "";
   public assetIds: CustomCat[] = [];
   public defaultCats: CustomCat[] = [];
 
@@ -108,6 +108,9 @@ export default class ManageCats extends Vue {
     }
     this.assetIds = getAccountCats(this.account);
     this.defaultCats = getDefaultCats();
+
+    this.name = this.defaultName;
+    this.assetId = this.defaultAssetId;
   }
 
   get allCats(): CustomCat[] {

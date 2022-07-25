@@ -3,7 +3,7 @@
     <b-field :label="$t('addressBookField.ui.label.name')">
       <b-input v-model="name" maxlength="36"></b-input>
     </b-field>
-    <b-field :label="$t('addressBookField.ui.label.address')" type="is-danger" :message="errorMessage">
+    <b-field :label="$t('addressBookField.ui.label.address')" :type="isLegalAddress ? '' : 'is-danger'" :message="errorMessage">
       <b-input
         v-model="address"
         ref="address"
@@ -38,8 +38,8 @@ export default class AddressBookField extends Vue {
   @Prop({ default: "" }) private defaultAddress!: string;
   @Prop({ default: false }) public isEdit!: boolean;
 
-  public name = this.defaultName;
-  public address = this.defaultAddress;
+  public name = "";
+  public address = "";
   public isLegalAddress = true;
   public errorMessage = "";
 
@@ -82,6 +82,11 @@ export default class AddressBookField extends Vue {
         },
       },
     });
+  }
+
+  mounted(): void {
+    this.name = this.defaultName;
+    this.address = this.defaultAddress;
   }
 }
 </script>
