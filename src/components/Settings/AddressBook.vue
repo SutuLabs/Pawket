@@ -99,12 +99,12 @@ export type Contact = {
   components: { AddressBookField, TopBar },
 })
 export default class AddressBook extends Vue {
-  @Prop({ default: "Configure" }) private parent!: Parent;
+  @Prop({ default: "Configure" }) public parent!: Parent;
   @Prop({ default: "List" }) private defaultMode!: Mode;
   @Prop({ default: "" }) private defaultAddress!: string;
-  public mode: Mode = this.defaultMode;
+  public mode: Mode = "List";
   public name = "";
-  public address = this.defaultAddress;
+  public address = "";
   public contacts: Contact[] = [];
   public showInnerAcc = false;
 
@@ -163,6 +163,8 @@ export default class AddressBook extends Vue {
 
   mounted(): void {
     this.updateContacts();
+    this.mode = this.defaultMode;
+    this.address = this.defaultAddress;
   }
 
   reset(): void {

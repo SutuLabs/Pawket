@@ -1,7 +1,7 @@
 <template>
   <div class="modal-card">
     <b-loading :is-full-page="true" v-model="submitting"></b-loading>
-    <top-bar :title="$t('addBySerial.ui.title')" @close="close()"></top-bar>
+    <top-bar :title="$t('addBySerial.ui.title')" @close="close()" :showClose="true"></top-bar>
     <section class="modal-card-body">
       <b-field :label="$t('addBySerial.ui.label.name')">
         <b-input
@@ -29,7 +29,7 @@ import TopBar from "../TopBar.vue";
 @Component({ components: { TopBar } })
 export default class AddBySerial extends Vue {
   @Prop({ default: "" }) private defaultName!: string;
-  public name = this.defaultName;
+  public name = "";
   public submitting = false;
 
   mounted(): void {
@@ -38,6 +38,7 @@ export default class AddBySerial extends Vue {
       accNameInput.focus();
       accNameInput.select();
     }
+    this.name = this.defaultName;
   }
 
   close(): void {

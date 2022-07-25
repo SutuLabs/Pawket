@@ -1,7 +1,7 @@
 <template>
   <div class="modal-card">
     <b-loading :is-full-page="true" v-model="submitting"></b-loading>
-    <top-bar :title="title" @close="close()"></top-bar>
+    <top-bar :title="title" @close="close()" :showClose="true"></top-bar>
     <section class="modal-card-body">
       <b-field :label="$t('addByMnemonic.ui.label.name')">
         <b-input
