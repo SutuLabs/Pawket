@@ -70,6 +70,7 @@ import { Bytes } from "clvm";
 import { shorten } from "@/filters/addressConversion";
 import SearchCat from "./AddCat/SearchCat.vue";
 import { TailInfo } from "@/services/api/tailDb";
+import { unprefix0x } from "@/services/coin/condition";
 
 @Component({
   directives: {
@@ -145,12 +146,14 @@ export default class ManageCats extends Vue {
     return false;
   }
 
+ 
+
   async add(): Promise<void> {
     this.validate();
     if (this.name.length == 0 || this.assetId.length == 0) {
       return;
     }
-    if (this.assetId.startsWith("0x")) this.assetId = this.assetId.slice(2);
+    this.assetId = unprefix0x(this.assetId);
     if (!this.isAssetId(this.assetId)) {
       Notification.open({
         message: this.$tc("ManageCats.message.notification.wrongAssetId"),
