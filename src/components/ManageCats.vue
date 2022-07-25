@@ -150,6 +150,7 @@ export default class ManageCats extends Vue {
     if (this.name.length == 0 || this.assetId.length == 0) {
       return;
     }
+    if (this.assetId.startsWith("0x")) this.assetId = this.assetId.slice(2);
     if (!this.isAssetId(this.assetId)) {
       Notification.open({
         message: this.$tc("ManageCats.message.notification.wrongAssetId"),
