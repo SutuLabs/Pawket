@@ -33,7 +33,7 @@ export default class DidPanel extends Vue {
     store.dispatch("refreshAssets");
   }
 
-  addDid() {
+  addDid(): void {
     this.$buefy.modal.open({
       parent: this,
       component: MintDid,

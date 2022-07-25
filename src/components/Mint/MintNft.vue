@@ -96,9 +96,8 @@ import { debugBundle, submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/FeeSelector.vue";
 import BundleSummary from "../BundleSummary.vue";
 import SendSummary from "../SendSummary.vue";
-import { chainId, xchPrefix, xchSymbol } from "@/store/modules/network";
+import { xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getTokenInfo } from "@/services/coin/cat";
-import { generateMintNftBundle } from "@/services/coin/nft";
 import AddressField from "../AddressField.vue";
 import { Bytes } from "clvm";
 import { bech32m } from "@scure/base";
@@ -291,18 +290,18 @@ export default class MintNft extends Vue {
         return;
       }
 
-      const { spendBundle } = await generateMintNftBundle(
-        this.address,
-        this.account.firstAddress,
-        BigInt(this.fee),
-        { uri: this.uri, hash: this.hash },
-        this.availcoins,
-        this.requests,
-        xchSymbol(),
-        chainId()
-      );
+      // const { spendBundle } = await generateMintNftBundle(
+      //   this.address,
+      //   this.account.firstAddress,
+      //   BigInt(this.fee),
+      //   { uri: this.uri, hash: this.hash },
+      //   this.availcoins,
+      //   this.requests,
+      //   xchSymbol(),
+      //   chainId()
+      // );
 
-      this.bundle = spendBundle;
+      // this.bundle = spendBundle;
     } catch (error) {
       Notification.open({
         message: this.$tc("mintNft.ui.messages.failedToSign") + error,

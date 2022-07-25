@@ -6,7 +6,6 @@ import { CustomCat, AccountTokens, AccountTokenAddress, TokenInfo } from "@/mode
 import { analyzeNftCoin, NftCoinAnalysisResult } from "../coin/nft";
 import debug from "../api/debug";
 import { analyzeDidCoin, DidCoinAnalysisResult } from "../coin/did";
-import { getCoinName0x } from "../coin/coinUtility";
 
 export interface TokenPuzzleDetail {
   symbol: string;
@@ -149,7 +148,7 @@ class Receive {
         }
 
         const scoin = await debug.getCoinSolution(coinRecord.coin.parentCoinInfo, rpcUrl);
-        console.log("analizing", getCoinName0x(convertToOriginCoin(coinRecord.coin)));
+        // console.log("analyzing", getCoinName0x(convertToOriginCoin(coinRecord.coin)));
         const nftResult = await analyzeNftCoin(scoin.puzzle_reveal, coinRecords.puzzleHash, scoin.solution);
         if (nftResult) {
           nftList.push({

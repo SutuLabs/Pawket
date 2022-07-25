@@ -91,7 +91,6 @@ export default class UncurryPuzzle extends Vue {
       const argarr = Array.from(args.as_iter()).map((_) => disassemble(_ as SExp));
       this.uncurried_module = mods;
       this.uncurried_module_hash = await puzzle.getPuzzleHashFromPuzzle(mods);
-      console.log("argarr", argarr);
       this.uncurried_args = argarr;
       this.uncurriable = true;
     } catch (err) {

@@ -1,6 +1,5 @@
 import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
 import { assemble } from "clvm_tools/clvm_tools/binutils";
-import debug from "../api/debug";
 import puzzle from "../crypto/puzzle";
 import { TokenPuzzleDetail } from "../crypto/receive";
 import { combineSpendBundlePure } from "../mint/cat";
@@ -67,7 +66,7 @@ export async function generateMintDidBundle(
     puzzle_hash: await modshash("singleton_launcher"),
   };
   const launcherCoinId = getCoinName0x(launcherCoin);
-  console.log("launcherCoinId", launcherCoinId)
+  // console.log("launcherCoinId", launcherCoinId)
 
   const didInnerPuzzle = await constructDidInnerPuzzle(inner_p2_puzzle.puzzle, "()", 0, launcherCoinId, "()");
   const didPuzzle = await constructSingletonTopLayerPuzzle(
@@ -85,7 +84,7 @@ export async function generateMintDidBundle(
   };
 
   const launcherSolution = `(${didPuzzleHash} ${amount} ())`;
-  console.log("launcherSolution", launcherSolution, inner_p2_puzzle)
+  // console.log("launcherSolution", launcherSolution, inner_p2_puzzle)
 
   const didInnerPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(didInnerPuzzle));
   // lineage_proof my_amount inner_puzzle(solution(p2_inner or metadata updater) my_amount)
@@ -104,13 +103,13 @@ export async function generateMintDidBundle(
     puzzle_reveal: prefix0x(await puzzle.encodePuzzle(didPuzzle)),
     solution: prefix0x(await puzzle.encodePuzzle(didSolution)),
   };
-  console.log("didCoinSpend", didCoinSpend)
+  // console.log("didCoinSpend", didCoinSpend)
 
   const extreqs = cloneAndChangeRequestPuzzleTemporary(baseSymbol, requests, inner_p2_puzzle.hash, didPuzzle, didPuzzleHash);
-  console.log("extreqs", extreqs, { coin_spends: [launcherCoinSpend, didCoinSpend] }, chainId);
+  // console.log("extreqs", extreqs, { coin_spends: [launcherCoinSpend, didCoinSpend] }, chainId);
 
   const bundles = await transfer.getSpendBundle([launcherCoinSpend, didCoinSpend], extreqs, chainId);
-  console.log("bundles", bundles)
+  // console.log("bundles", bundles)
   const bundle = await combineSpendBundlePure(bootstrapSpendBundle, bundles);
 
   return {
@@ -146,7 +145,7 @@ export async function analyzeDidCoin(puzzle_reveal: string, hintPuzzle: string):
   const puz = await puzzle.disassemblePuzzle(puzzle_reveal);
   const { module, args } = await internalUncurry(puz);
   if (modsdict[module] != "singleton_top_layer_v1_1" || args.length != 2) return null;
-  console.log("args", args)
+  // console.log("args", args)
 
   const sgnStructlist: SingletonStructList = (assemble(args[0]).as_javascript() as SingletonStructList)
 
@@ -158,7 +157,7 @@ export async function analyzeDidCoin(puzzle_reveal: string, hintPuzzle: string):
 
   const { module: smodule, args: sargs } = await internalUncurry(didInnerPuzzle);
   if (modsdict[smodule] != "did_innerpuz" || sargs.length != 5) return null;
-  console.log("sargs", sargs)
+  // console.log("sargs", sargs)
 
   const p2InnerPuzzle = sargs[0];
   const recovery_did_list_hash = sargs[1];
