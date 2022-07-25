@@ -33,12 +33,11 @@ export default class AddBySerial extends Vue {
   public submitting = false;
 
   mounted(): void {
+    this.name = this.defaultName;
     const accNameInput = this.$refs.name as HTMLInputElement | undefined;
     if (accNameInput) {
       accNameInput.focus();
-      accNameInput.select();
     }
-    this.name = this.defaultName;
   }
 
   close(): void {
