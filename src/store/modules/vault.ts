@@ -152,7 +152,7 @@ store.registerModule<IVaultState>("vault", {
         const array = new Uint8Array(16);
         self.crypto.getRandomValues(array);
         state.salt = utility.toHexString(array);
-        console.log("generate salt", state.salt, state.encryptKey);
+        // console.log("generate salt", state.salt, state.encryptKey);
       }
       state.encryptKey = await getEncryptKey(password);
       state.passwordHash = await getPasswordHash(password);

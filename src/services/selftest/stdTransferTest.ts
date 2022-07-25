@@ -4,7 +4,10 @@ import puzzle from "../crypto/puzzle";
 import utility from "../crypto/utility";
 import transfer from "../transfer/transfer";
 import { assert } from "./runner";
-import { chainId, xchPrefix, xchSymbol } from "@/store/modules/network";
+
+function xchPrefix() { return "xch"; }
+function xchSymbol() { return "XCH"; }
+function chainId() { return "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb"; }
 
 export async function testStandardTransfer(): Promise<void> {
   const coin: OriginCoin = {

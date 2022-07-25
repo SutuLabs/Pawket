@@ -38,7 +38,7 @@ export default class OfflineSendShowBundle extends Vue {
   async mounted(): Promise<void> {
     setTimeout(async () => {
       try {
-        console.log(this.bundle)
+        // console.log(this.bundle)
         this.qrcode = await encodeOffer(this.bundle, "bundle");
       } catch (err) {
         console.warn("failed to encode bundle", err);

@@ -7,6 +7,7 @@ import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
 import { Instance } from "../util/instance";
 import { modsdict } from "../coin/mods";
 import { unprefix0x } from "../coin/condition";
+import { SExp } from "clvm";
 
 export interface ExecuteResultCondition {
   op: number;
@@ -141,7 +142,7 @@ class PuzzleMaker {
   }
 
   public getAddressFromPuzzleHash(puzzleHash: string, prefix: string): string {
-    const address = bech32m.encode(prefix, bech32m.toWords(utility.fromHexString(puzzleHash)));
+    const address = bech32m.encode(prefix, bech32m.toWords(utility.fromHexString(unprefix0x(puzzleHash))));
     return address;
   }
 
@@ -205,7 +206,7 @@ class PuzzleMaker {
     return (await this.getCatPuzzleDetails(privateKey, assetId, prefix, startIndex, endIndex)).map(_ => _.hash);
   }
 
-  public async calcPuzzleResult(puzzle_reveal: string, solution: string, ...args:string[]): Promise<string> {
+  public async calcPuzzleResult(puzzle_reveal: string, solution: string, ...args: string[]): Promise<string> {
     let output: string[] = [];
     clvm_tools.setPrintFunction((...args) => output = args)
 
@@ -231,14 +232,21 @@ class PuzzleMaker {
     return result;
   }
 
-  public parseConditions(conditonString: string): ConditionEntity[] {
-    const conds = Array.from(assemble(conditonString).as_iter())
-      .map(cond => ({
-        code: cond.first().atom?.at(0) ?? 0,
-        args: Array.from(cond.rest().as_iter()).map(_ => _.listp() ? Array.from(_.as_iter()).map(_ => _.atom?.raw()) : _.atom?.raw())
-      }));
+  public parseConditions(conditon: string | SExp): ConditionEntity[] {
+    try {
+      const program = typeof conditon === "string" ? assemble(conditon) : conditon;
+      const conds = Array.from(program.as_iter())
+        .map(cond => ({
+          code: cond.first().atom?.at(0) ?? 0,
+          args: Array.from(cond.rest().as_iter()).map(_ => _.listp() ? Array.from(_.as_iter()).map(_ => _.atom?.raw()) : _.atom?.raw())
+        }));
 
-    return conds;
+      return conds;
+    }
+    catch (err) {
+      console.warn("failed to parse condition: " + conditon);
+      throw err;
+    }
   }
 
   public getSettlementPaymentsPuzzle(): string {

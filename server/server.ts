@@ -2,11 +2,9 @@ import 'dotenv/config'
 import express from 'express'
 import puzzle from "../src/services/crypto/puzzle";
 import { Instance } from "../src/services/util/instance";
-import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
-import { SExp, Tuple } from "clvm";
-import { uncurry } from "clvm_tools/clvm_tools/curry";
-import { modsdict, modsprog } from "../src/services/coin/mods";
-import { getCoinName0x } from "../src/services/coin/coinUtility";
+import { assemble } from "clvm_tools/clvm_tools/binutils";
+import { parseCoin, simplifyPuzzle } from "../src/services/coin/analyzer";
+import { modsprog } from "../src/services/coin/mods";
 import cluster from 'cluster'
 import os from 'os'
 import { prefix0x } from '../src/services/coin/condition';
@@ -58,65 +56,6 @@ else {
 
   interface ParsePuzzleRequest {
     puzzle: string,
-  }
-
-  interface CoinInfo {
-    parent: string,
-    puzzle: SimplePuzzle | CannotParsePuzzle,
-    amount: string,
-    solution: string,
-    coinname: string,
-  }
-
-  interface SimplePuzzle {
-    mod: string,
-    args: (CannotUncurryArgument | SimplePuzzle)[],
-  }
-
-  interface CannotUncurryArgument {
-    raw: string,
-  }
-
-  interface CannotParsePuzzle {
-    raw: string,
-  }
-
-  const parseCoin = async function (all: SExp): Promise<CoinInfo> {
-    const parent = disassemble(all.first());
-    let next = all.rest();
-    const puz = next.first();
-    const puz_str = disassemble(puz);
-    const decPuzzle = await simplifyPuzzle(puz, puz_str);
-    next = next.rest();
-    const amount = disassemble(next.first());
-    next = next.rest();
-    const solution_plain = disassemble(next.first());
-    const solution = prefix0x(await puzzle.encodePuzzle(solution_plain));
-    const puzzle_hash = await puzzle.getPuzzleHashFromPuzzle(puz_str);
-    const coinname = getCoinName0x({ parent_coin_info: parent, puzzle_hash, amount: BigInt(amount) });
-
-    return { parent, puzzle: decPuzzle, amount, solution, coinname };
-  }
-
-  const simplifyPuzzle = async function (origin: SExp, puz: string | undefined = undefined): Promise<SimplePuzzle | CannotParsePuzzle> {
-
-    try {
-      if (!puz) puz = disassemble(origin);
-      const puremodname = modsdict[puz];
-      if (puremodname) return { mod: puremodname, args: [] };
-
-      const [mod, args] = uncurry(origin) as Tuple<SExp, SExp>;
-      const mods = disassemble(mod);
-      const argarr: SExp[] = !args ? [] : Array.from(args.as_iter());
-      const simpargs = (await Promise.all(argarr.map(_ => simplifyPuzzle(_))))
-        .map(_ => "raw" in _ ? { raw: _.raw } : _);
-      const modname = modsdict[mods];
-      if (!modname) return { raw: puz };
-
-      return { mod: modname, args: simpargs };
-    } catch (err) {
-      return { raw: puz ?? "" };
-    }
   }
 
   Instance.init().then(() => {

@@ -12,6 +12,13 @@
       <b-input type="textarea" v-model="translated_cl" disabled></b-input>
       {{ cl_extra }}
     </b-field>
+    <b-field
+      v-if="cl_type == 'clsp' || cl_type == 'clvm'"
+      label="Navigator Tester [by f(irst) or r(est)]"
+      :message="navigateResult"
+    >
+      <b-input type="text" v-model="navigator" @input="updateNavigator()"></b-input>
+    </b-field>
   </div>
 </template>
 
@@ -20,6 +27,8 @@ import { Component, Vue } from "vue-property-decorator";
 import KeyBox from "@/components/KeyBox.vue";
 import puzzle from "@/services/crypto/puzzle";
 import { modsdict } from "@/services/coin/mods";
+import { findByPath } from "@/services/coin/lisp";
+import { assemble, disassemble } from "clvm_tools";
 
 @Component({
   components: {
@@ -31,6 +40,8 @@ export default class ClvmPanel extends Vue {
   public cl_type: "hex" | "clsp" | "clvm" | "" = "";
   public translated_cl = "";
   public cl_extra = "";
+  public navigator = "";
+  public navigateResult = "";
 
   public readonly modsdict = modsdict;
 
@@ -49,9 +60,16 @@ export default class ClvmPanel extends Vue {
       this.cl_extra = "";
     }
   }
+
+  async updateNavigator(): Promise<void> {
+    this.navigator = this.navigator.replace(/[^fr]+/g, "");
+    const program = assemble(this.origin_cl);
+    const ret = findByPath(program, this.navigator);
+    this.navigateResult = disassemble(ret);
+  }
 }
 </script>
 
 <style scoped lang="scss">
-@import "@/styles/arguments.scss"
+@import "@/styles/arguments.scss";
 </style>

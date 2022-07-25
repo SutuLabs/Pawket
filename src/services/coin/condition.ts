@@ -42,6 +42,7 @@ export function formatAmount(amount: bigint): string {
 
 export function getNumber(str: string): bigint {
   try {
+    if (str == "()") return 0n;
     if (str.startsWith("0x")) return BigInt(prefix0x(Bytes.from(str, "hex").hex()));
     else return BigInt(str);
   } catch {

@@ -129,6 +129,9 @@
           <b-tab-item v-if="experimentMode && testnet" :label="$t('accountDetail.ui.tab.nft')" :visible="debugMode">
             <nft-panel :account="account" @changePage="changePage"></nft-panel>
           </b-tab-item>
+          <b-tab-item v-if="experimentMode && testnet" :label="'DID'" :visible="debugMode">
+            <did-panel :account="account" @changePage="changePage"></did-panel>
+          </b-tab-item>
           <b-tab-item :label="$t('accountDetail.ui.tab.utxos')">
             <utxo-panel :tokenInfo="tokenInfo" v-model="activities" @changePage="changePage"></utxo-panel>
           </b-tab-item>
@@ -161,6 +164,7 @@ import { nameOmit } from "@/filters/nameConversion";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { NetworkInfo, xchSymbol } from "@/store/modules/network";
 import NftPanel from "@/components/Detail/NftPanel.vue";
+import DidPanel from "@/components/Detail/DidPanel.vue";
 import Dapp from "./Dapp.vue";
 import ErrorLog from "./ErrorLog.vue";
 import AccountManagement from "./AccountManagement/AccountManagement.vue";
@@ -177,6 +181,7 @@ type Mode = "Verify" | "Create";
     Send,
     UtxoPanel,
     NftPanel,
+    DidPanel,
     Dapp,
   },
   filters: { demojo, xchToCurrency, nameOmit },

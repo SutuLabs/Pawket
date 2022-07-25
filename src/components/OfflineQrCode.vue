@@ -175,7 +175,7 @@ export default class OfflineQrCode extends Vue {
 
   async getCoins(): Promise<void> {
     const queryAddresses = this.collectedAddresses.filter((_) => !this.queriedAddresses.includes(_));
-    console.log("get coins", queryAddresses.length);
+    // console.log("get coins", queryAddresses.length);
     if (queryAddresses.length == 0) return;
     const queryHashes = queryAddresses.map<PuzzleAddress>((_) => ({
       hash: puzzle.getPuzzleHashFromAddress(_),
