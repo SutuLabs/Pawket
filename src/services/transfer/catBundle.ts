@@ -76,6 +76,7 @@ class CatBundle {
     }
 
     const presp = await api(parentCoinId);
+    // console.log(`const presp=${JSON.stringify(presp)};`)
     if (!presp) throw new Error("cannot find the coin");
     const hash = await calcLineageProof(presp.puzzleReveal);
     // console.log("api hash", hash);

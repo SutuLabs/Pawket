@@ -156,23 +156,22 @@ export async function generateTransferNftBundle(
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(changeAddress));
   const inner_p2_puzzle = getPuzzleDetail(analysis.hintPuzzle, requests);
 
+  // console.log(`const tgt_hex="${tgt_hex}";`)
+  // console.log(`const change_hex="${change_hex}";`)
+  // console.log(`const fee=${fee}n;`)
+  // console.log(`const nftCoin=${JSON.stringify(nftCoin)};`)
+  // console.log(`const analysis=${JSON.stringify(analysis)};`)
+  // console.log(`const availcoins=${JSON.stringify(availcoins)};`)
+
   const amount = 1n;
-  // const nftStatePuzzle = await constructNftStatePuzzle(analysis.metadata, inner_p2_puzzle.puzzle);
   const proof = await catBundle.getLineageProof(nftCoin.parent_coin_info, api, 2);
 
-  // const nftSolution = `((${proof.coinId} ${proof.proof} ${proof.amount}) ${amount} ((() (q (51 ${tgt_hex} ${amount} (${tgt_hex}))) ()) ${amount} ()))`;
   // `-10` is the change owner magic condition
   const nftSolution = `((${proof.coinId} ${proof.proof} ${proof.amount}) ${amount} (((() (q (-10 () () ()) (51 ${tgt_hex} ${amount} (${tgt_hex}))) ()))))`;
-  // const nftPuzzle = await constructSingletonTopLayerPuzzle(
-  //   analysis.launcherId,
-  //   await modshash("singleton_launcher"),
-  //   nftStatePuzzle
-  // );
   const sgnStruct = `(${await modshash("singleton_top_layer_v1_1")} ${prefix0x(analysis.launcherId)} . ${prefix0x(await modshash("singleton_launcher"))})`;
   const nftPuzzle = await constructSingletonTopLayerPuzzle(
     analysis.launcherId,
     await modshash("singleton_launcher"),
-    // await constructNftStatePuzzle(metadata, inner_p2_puzzle.puzzle)
     await constructNftStatePuzzle(analysis.rawMetadata,
       await constructNftOwnershipPuzzle(analysis.didOwner,
         await constructNftTransferPuzzle(sgnStruct, analysis.royaltyAddress, analysis.tradePricePercentage),
@@ -213,9 +212,6 @@ export async function generateTransferNftBundle(
 }
 
 export async function analyzeNftCoin(puzzle_reveal: string, hintPuzzle: string, solution_hex: string): Promise<NftCoinAnalysisResult | null> {
-  // console.log(`const puzzle_reveal="${puzzle_reveal}";`);
-  // console.log(`const hintPuzzle="${hintPuzzle}";`);
-  // console.log(`const solution="${solution_hex}";`);
   const puz = await puzzle.disassemblePuzzle(puzzle_reveal);
   const solution = await puzzle.disassemblePuzzle(solution_hex);
   const { module, args } = await internalUncurry(puz);
@@ -263,6 +259,11 @@ export async function analyzeNftCoin(puzzle_reveal: string, hintPuzzle: string, 
     || !metadataUpdaterPuzzleHash
     || !p2InnerPuzzle
   ) return null;
+
+  // console.log(`NFT found: ${launcherId}`);
+  // console.log(`const puzzle_reveal="${puzzle_reveal}";`);
+  // console.log(`const hintPuzzle="${hintPuzzle}";`);
+  // console.log(`const solution="${solution_hex}";`);
 
   return {
     metadata,
