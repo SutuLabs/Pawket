@@ -146,8 +146,6 @@ export default class ManageCats extends Vue {
     return false;
   }
 
- 
-
   async add(): Promise<void> {
     this.validate();
     if (this.name.length == 0 || this.assetId.length == 0) {
