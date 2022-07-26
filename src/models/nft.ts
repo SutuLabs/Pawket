@@ -30,3 +30,25 @@ export interface NftOffChainMetadata {
   stats: string[];
   data: unknown;
 }
+
+export interface NftCoinAnalysisResult {
+  singletonModHash: string;
+  launcherId: string;
+  launcherPuzzleHash: string;
+  nftStateModHash: string;
+  metadataUpdaterPuzzleHash: string;
+  p2InnerPuzzle: string;
+  hintPuzzle: string;
+  nftOwnershipModHash: string,
+  previousOwner: string;
+  didOwner: string;
+  p2Owner: string;
+  royaltyAddress: string;
+  tradePricePercentage: number;
+  rawMetadata: string;
+  metadata: NftMetadataValues;
+}
+
+export type NftDataKey = "imageUri" | "imageHash" | "metadataUri" | "metadataHash" | "licenseUri" | "licenseHash" | "serialNumber" | "serialTotal";
+export type NftMetadataValues = { [key in NftDataKey]: string | undefined; };
+export type NftMetadataKeys = { [key in NftDataKey]: string; };

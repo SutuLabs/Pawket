@@ -15,27 +15,10 @@ import { cloneAndChangeRequestPuzzleTemporary, constructSingletonTopLayerPuzzle,
 import { findByPath } from "./lisp";
 import { ConditionOpcode } from "./opcode";
 import { DidCoinAnalysisResult } from "./did";
+import { NftCoinAnalysisResult, NftMetadataKeys, NftMetadataValues } from "@/models/nft";
 
 export interface MintNftInfo {
   spendBundle: SpendBundle;
-}
-
-export interface NftCoinAnalysisResult {
-  singletonModHash: string;
-  launcherId: string;
-  launcherPuzzleHash: string;
-  nftStateModHash: string;
-  metadataUpdaterPuzzleHash: string;
-  p2InnerPuzzle: string;
-  hintPuzzle: string;
-  nftOwnershipModHash: string,
-  previousOwner: string;
-  didOwner: string;
-  p2Owner: string;
-  royaltyAddress: string;
-  tradePricePercentage: number;
-  rawMetadata: string;
-  metadata: NftMetadataValues;
 }
 
 // - singleton_top_layer_v1_1
@@ -312,22 +295,24 @@ async function getOwnerFromSolution(solution: string): Promise<{ didOwner: strin
 }
 
 async function constructMetadataString(metadata: NftMetadataValues): Promise<string> {
+  if (!metadata.imageUri) throw new Error("empty image uri is not allowed");
   if (metadata.imageUri.indexOf("\"") >= 0) throw new Error("image uri should processed before proceeding");
 
   const mkeys = getNftMetadataKeys();
-  const toNumber = function (hex: string): string {
+  const toNumber = function (hex: string | undefined): string | undefined {
+    if (!hex) return hex;
     const num = parseInt(hex, 16);
     return num.toFixed(0);
   }
   const md = "(" + [
     `${toNumber(mkeys.imageUri)} "${metadata.imageUri}"`,
-    `${toNumber(mkeys.imageHash)} . ${prefix0x(metadata.imageHash)}`,
+    metadata.imageHash ? `${toNumber(mkeys.imageHash)} . ${prefix0x(metadata.imageHash)}` : toNumber(mkeys.imageHash),
     `${toNumber(mkeys.metadataUri)} "${metadata.metadataUri}"`,
+    metadata.metadataHash ? `${toNumber(mkeys.metadataHash)} . ${prefix0x(metadata.metadataHash)}` : toNumber(mkeys.metadataHash),
     `${toNumber(mkeys.licenseUri)} "${metadata.licenseUri}"`,
+    metadata.licenseHash ? `${toNumber(mkeys.licenseHash)} . ${prefix0x(metadata.licenseHash)}` : toNumber(mkeys.licenseHash),
     `${toNumber(mkeys.serialNumber)} . ${toNumber(metadata.serialNumber)}`,
     `${toNumber(mkeys.serialTotal)} . ${toNumber(metadata.serialTotal)}`,
-    `${toNumber(mkeys.metadataHash)} . ${prefix0x(metadata.metadataHash)}`,
-    `${toNumber(mkeys.licenseHash)} . ${prefix0x(metadata.licenseHash)}`,
   ].map(_ => `(${_})`).join(" ") + ")";
 
   return md;
@@ -371,10 +356,7 @@ async function constructNftTransferPuzzle(singletonStruct: string, royaltyAddres
   return curried_tail;
 }
 
-type NftDataKey = "imageUri" | "imageHash" | "metadataUri" | "metadataHash" | "licenseUri" | "licenseHash" | "serialNumber" | "serialTotal";
-type NftMetadataValues = { [key in NftDataKey]: string };
-
-function getNftMetadataKeys(): NftMetadataValues {
+function getNftMetadataKeys(): NftMetadataKeys {
   return {
     "imageUri": "75",    // for uri
     "imageHash": "68",    // for hash

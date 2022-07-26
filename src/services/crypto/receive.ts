@@ -3,9 +3,10 @@ import puzzle, { PuzzleAddress } from "./puzzle";
 import { PuzzleDetail } from "./puzzle";
 import utility from "./utility";
 import { CustomCat, AccountTokens, AccountTokenAddress, TokenInfo } from "@/models/account";
-import { analyzeNftCoin, NftCoinAnalysisResult } from "../coin/nft";
+import { analyzeNftCoin } from "../coin/nft";
 import debug from "../api/debug";
 import { analyzeDidCoin, DidCoinAnalysisResult } from "../coin/did";
+import { NftCoinAnalysisResult } from "@/models/nft";
 
 export interface TokenPuzzleDetail {
   symbol: string;
@@ -153,8 +154,8 @@ class Receive {
         if (nftResult) {
           nftList.push({
             metadata: {
-              uri: nftResult.metadata.imageUri,
-              hash: nftResult.metadata.imageHash,
+              uri: nftResult.metadata.imageUri ?? "",
+              hash: nftResult.metadata.imageHash ?? "",
             },
             hintPuzzle: coinRecords.puzzleHash,
             address: puzzle.getAddressFromPuzzleHash(nftResult.launcherId, "nft"),

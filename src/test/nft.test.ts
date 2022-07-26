@@ -1,11 +1,12 @@
 import { OriginCoin, SpendBundle } from "@/models/wallet";
 import { assertBundle, getTestAccount } from "./utility";
 import { SymbolCoins } from "@/services/transfer/transfer";
-import { analyzeNftCoin, generateMintNftBundle, generateTransferNftBundle, NftCoinAnalysisResult } from "@/services/coin/nft";
+import { analyzeNftCoin, generateMintNftBundle, generateTransferNftBundle } from "@/services/coin/nft";
 import puzzle from "@/services/crypto/puzzle";
 import { GetParentPuzzleResponse } from "@/models/api";
 import { Instance } from "@/services/util/instance";
 import { getAccountAddressDetails } from "@/services/util/account";
+import { NftCoinAnalysisResult } from "@/models/nft";
 
 function xchPrefix() { return "txch"; }
 function xchSymbol() { return "TXCH"; }
