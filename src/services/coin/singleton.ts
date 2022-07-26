@@ -63,12 +63,12 @@ export function parseMetadata(
     .map(_ => Array.from(_))
     .map(_ => _.map(it => it.hex()));
 
-  const parsed:ParsedMetadata={};
+  const parsed: ParsedMetadata = {};
   for (let i = 0; i < metalist.length; i++) {
     const meta = metalist[i];
-  if (meta.length != 2) throw new Error(`Face abnormal metalist: ` + metalist);
-  parsed[meta[0]]=meta[1];
-    
+    if (meta.length > 2) throw new Error(`Face abnormal metalist: ` + metalist);
+    parsed[meta[0]] = meta[1];
+
   }
 
   return parsed;
