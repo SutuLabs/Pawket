@@ -148,6 +148,8 @@ store.registerModule<IAccountState>("account", {
       resetState();
     },
     async refreshAssets({ state }, parameters: { idx: number; maxId: number }) {
+      if (state.refreshing) return;
+      state.refreshing = true;
       if (!parameters) parameters = { idx: state.selectedAccount, maxId: -1 };
       let idx = parameters.idx;
       if (typeof idx !== "number" || idx <= 0) idx = state.selectedAccount;
@@ -159,6 +161,7 @@ store.registerModule<IAccountState>("account", {
       const assets = await receive.getAssets(hintRecords, rpcUrl());
       Vue.set(account, "nfts", assets.nfts);
       Vue.set(account, "dids", assets.dids);
+      state.refreshing = false;
     },
     async refreshAddress({ state }, parameters: { idx: number; maxId: number }) {
       if (!parameters) parameters = { idx: state.selectedAccount, maxId: -1 };

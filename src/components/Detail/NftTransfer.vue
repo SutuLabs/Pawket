@@ -100,8 +100,8 @@ import { getLineageProofPuzzle } from "@/services/transfer/call";
   },
 })
 export default class NftTransfer extends Vue {
-  @Prop() private account!: AccountEntity;
-  @Prop() private nft!: NftDetail;
+  @Prop() public account!: AccountEntity;
+  @Prop() public nft!: NftDetail;
 
   public addressEditable = true;
   public submitting = false;

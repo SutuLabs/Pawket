@@ -1,7 +1,7 @@
 <template>
   <section>
     <div>
-      <b-button @click="refresh()">Refresh</b-button>
+      <b-loading v-model="refreshing" :is-full-page="false" class="py-6 my-6"></b-loading>
       <b-collapse animation="slide" v-for="(col, key) of collection" :key="key" :open="true">
         <template #trigger="props">
           <p class="is-size-5 mb-1">
@@ -10,11 +10,30 @@
           </p>
         </template>
         <ul class="is-flex columns is-multiline is-mobile my-2" v-if="col.nfts">
-          <li class="column is-4-tablet is-6-mobile" v-for="(nft, i) of col.nfts" :key="i" @click="showDetail(nft)">
-            <div class="nft-image-container is-clickable">
-              <img class="nft-image" :src="nft.metadata.uri" :alt="nft.metadata.hash" />
+          <li class="column is-4-tablet is-6-mobile" v-for="(nft, i) of col.nfts" :key="i">
+            <div class="nft-image-container">
+              <img class="nft-image is-clickable" :src="nft.metadata.uri" :alt="nft.metadata.hash" @click="showDetail(nft)" />
               <p class="nft-name has-background-white-ter pt-2 pl-3 is-hidden-mobile">
-                {{ nft.metadata.name }}<span class="is-pulled-right"><b-icon icon="dots-vertical"></b-icon></span>
+                {{ nft.metadata.name
+                }}<span class="is-pulled-right">
+                  <b-dropdown aria-role="list" class="is-pulled-right" :mobile-modal="false" position="is-bottom-left">
+                    <template #trigger>
+                      <b-icon icon="dots-vertical" class="is-clickable"></b-icon>
+                    </template>
+                    <b-dropdown-item aria-role="listitem">
+                      <a class="has-text-dark" :href="spaceScanUrl + nft.address" target="_blank"
+                        ><b-icon class="media-left" icon="open-in-new" size="is-small"></b-icon
+                        >{{ $t("nftDetail.ui.dropdown.spaceScan") }}</a
+                      ></b-dropdown-item
+                    >
+                    <b-dropdown-item aria-role="listitem">
+                      <a class="has-text-dark" :href="nft.analysis.metadata.imageUri" :download="nft.metadata.name"
+                        ><b-icon class="media-left" icon="download" size="is-small"></b-icon
+                        >{{ $t("nftDetail.ui.dropdown.download") }}</a
+                      >
+                    </b-dropdown-item>
+                  </b-dropdown></span
+                >
               </p>
             </div>
           </li>
@@ -64,6 +83,7 @@ export default class NftPanel extends Vue {
     for (let i = 0; i < this.nfts.length; i++) {
       const nft = this.nfts[i];
       const ext = this.extraInfo[nft.address];
+      nft.metadata.name = ext.metadata?.name;
       const colname = ext?.metadata?.collection?.name ?? other;
       const colid = ext?.metadata?.collection?.id ?? other;
       if (!col[colname]) {
@@ -77,6 +97,14 @@ export default class NftPanel extends Vue {
 
   get nfts(): NftDetail[] {
     return this.account.nfts ?? [];
+  }
+
+  get refreshing(): boolean {
+    return store.state.account.refreshing;
+  }
+
+  get spaceScanUrl(): string {
+    return store.state.network.network.spaceScanUrl;
   }
 
   @Watch("nfts")
@@ -108,10 +136,6 @@ export default class NftPanel extends Vue {
     this.extraInfo[nft.address].matchHash = bodyhex.toLowerCase() == unprefix0x(nft.analysis.metadata.metadataHash).toLowerCase();
   }
 
-  async refresh(): Promise<void> {
-    store.dispatch("refreshAssets");
-  }
-
   showDetail(nft: NftDetail): void {
     this.$buefy.modal.open({
       parent: this,
@@ -123,6 +147,10 @@ export default class NftPanel extends Vue {
       canCancel: ["outside"],
       props: { nft: nft, metadata: this.extraInfo[nft.address].metadata, account: this.account },
     });
+  }
+
+  async mounted(): Promise<void> {
+    await store.dispatch("refreshAssets");
   }
 }
 </script>

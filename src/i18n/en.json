@@ -1077,5 +1077,42 @@
       "inputPassword": "Enter Password to Continue",
       "passwordNotCorrect": "Incorrect password."
     }
+  },
+  "nftDetail": {
+    "ui": {
+      "label": {
+        "nftId": "NFT ID:",
+        "collection": "Collection",
+        "ownedBy": "Owned by",
+        "mintBy": "Minted by DID:",
+        "description": "Description"
+      },
+      "button":{
+        "transfer": "Transfer",
+        "makeOffer": "Make Offer"
+      },
+      "title": {
+        "properties": "Properties",
+        "details": "Details"
+      },
+      "details": {
+        "nftId": "NFT ID:",
+        "launcherId": "Launcher ID",
+        "ownerDid": "Owner DID",
+        "ownerAddress": "Owner Address",
+        "royaltyPercentage": "Royalty Percentage",
+        "dataUrl": "Data URL",
+        "dataHash": "Data Hash",
+        "metadataUrl": "Metadata URL",
+        "metadataHash": "Metadata Hash",
+        "licenseUrl": "License URL",
+        "licenseHash": "License Hash",
+        "series": "Series"
+      },
+      "dropdown": {
+        "spaceScan": "View on Spacescan.io",
+        "download": "Download"
+      }
+    }
   }
 }
