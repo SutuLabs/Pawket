@@ -32,6 +32,7 @@ export interface NftDetail {
 }
 
 export interface DidDetail {
+  name: string;
   did: string;
   hintPuzzle: string;
   coin: OriginCoin;
@@ -168,6 +169,7 @@ class Receive {
         const didResult = await analyzeDidCoin(scoin.puzzle_reveal, coinRecords.puzzleHash, coinRecord);
         if (didResult) {
           didList.push({
+            name: puzzle.getAddressFromPuzzleHash(didResult.launcherId, "did:chia:"),
             did: puzzle.getAddressFromPuzzleHash(didResult.launcherId, "did:chia:"),
             hintPuzzle: coinRecords.puzzleHash,
             coin: convertToOriginCoin(coinRecord.coin),

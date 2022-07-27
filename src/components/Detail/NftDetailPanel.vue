@@ -16,31 +16,44 @@
                 <template #trigger>
                   <b-icon icon="dots-vertical" class="is-clickable"></b-icon>
                 </template>
-                <b-dropdown-item aria-role="listitem"
-                  ><b-icon class="media-left" icon="open-in-new" size="is-small"></b-icon>View on MintGarden</b-dropdown-item
-                >
-                <b-dropdown-item aria-role="listitem"
-                  ><b-icon class="media-left" icon="open-in-new" size="is-small"></b-icon>View on SkyNFT</b-dropdown-item
-                >
-                <b-dropdown-item aria-role="listitem"
-                  ><b-icon class="media-left" icon="open-in-new" size="is-small"></b-icon>View on Spacescan.io</b-dropdown-item
-                >
-                <b-dropdown-item aria-role="listitem"
-                  ><b-icon class="media-left" icon="download" size="is-small"></b-icon>Download</b-dropdown-item
-                >
+                <a class="has-text-dark" :href="spaceScanUrl + nft.address" target="_blank">
+                  <b-dropdown-item aria-role="listitem"
+                    ><b-icon class="media-left" icon="open-in-new" size="is-small"></b-icon
+                    >{{ $t("nftDetail.ui.dropdown.spaceScan") }}
+                  </b-dropdown-item>
+                </a>
+                <a class="has-text-dark" @click="crossOriginDownload(nft.analysis.metadata.imageUri, nft.metadata.name)">
+                  <b-dropdown-item aria-role="listitem">
+                    <b-icon class="media-left" icon="download" size="is-small"></b-icon>{{ $t("nftDetail.ui.dropdown.download") }}
+                  </b-dropdown-item>
+                </a>
               </b-dropdown>
             </template>
-            NFT ID:
+            {{ $t("nftDetail.ui.label.nftId") }}
             <key-box icon="checkbox-multiple-blank-outline" :value="nft.address" :showValue="true"></key-box>
           </b-field>
-          <b-field label="Collection">{{ metadata.collection.name }}</b-field>
-          <b-field label="Owned by"
-            >OwnerID: <key-box icon="checkbox-multiple-blank-outline" :value="nft.analysis.didOwner" :showValue="true"></key-box
+          <b-field :label="$t('nftDetail.ui.label.collection')">{{ metadata.collection.name }}</b-field>
+          <b-field :label="$t('nftDetail.ui.label.mintBy')"
+            >{{ $t("nftDetail.ui.label.did") }}
+            <key-box icon="checkbox-multiple-blank-outline" :value="nft.analysis.didOwner" :showValue="true"></key-box
           ></b-field>
-          <b-field label="Description">{{ metadata.description }}</b-field>
+          <b-field :label="$t('nftDetail.ui.label.description')">{{ metadata.description }}</b-field>
           <div class="buttons is-hidden-mobile">
-            <b-button :label="'Transfer'" type="is-primary" @click="transfer()" icon-left="share" outlined></b-button>
-            <b-button :label="'Make Offer'" type="is-info" @click="offer()" icon-left="email-send-outline" outlined></b-button>
+            <b-button
+              :label="$t('nftDetail.ui.button.transfer')"
+              type="is-primary"
+              @click="transfer()"
+              icon-left="share"
+              outlined
+            ></b-button>
+            <b-button
+              :label="$t('nftDetail.ui.button.makeOffer')"
+              type="is-info"
+              @click="offer()"
+              icon-left="email-send-outline"
+              outlined
+              disabled
+            ></b-button>
           </div>
         </div>
         <div class="column is-12 is-hidden-mobile">
@@ -50,13 +63,13 @@
           <b-collapse class="card" animation="slide">
             <template #trigger="props">
               <div class="card-header" role="button" :aria-expanded="props.open">
-                <p class="card-header-title">Properties</p>
+                <p class="card-header-title">{{ $t("nftDetail.ui.title.properties") }}</p>
                 <a class="card-header-icon">
                   <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"> </b-icon>
                 </a>
               </div>
             </template>
-            <div class="columns is-mobile is-multiline card-content is-justify-content-center">
+            <div class="columns is-mobile is-multiline card-content is-justify-content-space-between">
               <div class="column is-5 is-size-5 property m-2" v-for="(att, i) of metadata.attributes" :key="i">
                 <span class="has-text-grey is-size-7">
                   <p>{{ att.trait_type }}</p>
@@ -70,41 +83,37 @@
           <b-collapse class="card" animation="slide">
             <template #trigger="props">
               <div class="card-header" role="button" :aria-expanded="props.open">
-                <p class="card-header-title">Details</p>
+                <p class="card-header-title">{{ $t("nftDetail.ui.title.details") }}</p>
                 <a class="card-header-icon"> <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"> </b-icon> </a>
               </div>
             </template>
             <div class="card-content">
               <!-- prettier-ignore -->
               <ul>
-                <li><span class="has-text-grey">NFT ID </span><span class="is-pulled-right">
+                <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.nftId") }}</span><span class="is-pulled-right">
                   <key-box :value="nft.address" :showValue="true"></key-box></span></li>
-                <li><span class="has-text-grey">Launcher ID </span><span class="is-pulled-right">
+                <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.launcherId") }}</span><span class="is-pulled-right">
                   <key-box :value="nft.analysis.launcherId" :showValue="true"></key-box></span></li>
-                <li><span class="has-text-grey">Owner DID </span><span class="is-pulled-right">
+                <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.ownerDid") }}</span><span class="is-pulled-right">
                   <key-box :value="nft.analysis.didOwner" :showValue="true"></key-box></span></li>
-                <li><span class="has-text-grey">Owner Address </span><span class="is-pulled-right">
+                <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.ownerAddress") }}</span><span class="is-pulled-right">
                   <key-box :value="nft.analysis.p2Owner" :showValue="true"></key-box></span></li>
-                <li><span class="has-text-grey">Royalty Percentage </span><span class="is-pulled-right">
+                <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.royaltyPercentage") }}</span><span class="is-pulled-right">
                   {{nft.analysis.tradePricePercentage/100}}%</span></li>
-                <li><span class="has-text-grey">Minted at Block Height</span><span class="is-pulled-right">
-                  xxx</span></li>
-                <li><span class="has-text-grey">Data URL 1</span><span class="is-pulled-right">
+                <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.dataUrl") }}</span><span class="is-pulled-right">
                   <a :href="nft.analysis.metadata.imageUri" target="_blank"><b-icon icon="open-in-new" size="is-small"></b-icon></a></span></li>
-                <li><span class="has-text-grey">Data Hash</span><span class="is-pulled-right">
+                <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.dataHash") }}</span><span class="is-pulled-right">
                   <key-box :value="nft.analysis.metadata.imageHash" :showValue="true"></key-box></span></li>
-                <li><span class="has-text-grey">Metadata URL 1</span><span class="is-pulled-right">
+                <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.metadataUrl") }}</span><span class="is-pulled-right">
                   <a :href="nft.analysis.metadata.metadataUri" target="_blank"><b-icon icon="open-in-new" size="is-small"></b-icon></a></span></li>
-                <li><span class="has-text-grey">Metadata Hash</span><span class="is-pulled-right">
+                <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.metadataHash") }}</span><span class="is-pulled-right">
                   <key-box :value="nft.analysis.metadata.metadataHash" :showValue="true"></key-box></span></li>
-                <li><span class="has-text-grey">License Uri</span><span class="is-pulled-right">
+                <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.licenseUrl") }}</span><span class="is-pulled-right">
                   <a :href="nft.analysis.metadata.licenseUri" target="_blank"><b-icon icon="open-in-new" size="is-small"></b-icon></a></span></li>
-                <li><span class="has-text-grey">License Hash</span><span class="is-pulled-right">
+                <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.licenseHash") }}</span><span class="is-pulled-right">
                   <key-box :value="nft.analysis.metadata.licenseHash" :showValue="true"></key-box></span></li>
-                <li><span class="has-text-grey">Series</span><span class="is-pulled-right">
-                  {{nft.analysis.metadata.serialNumber && parseInt(nft.analysis.metadata.serialNumber, 16)}}
-                  /
-                  {{nft.analysis.metadata.serialTotal && parseInt(nft.analysis.metadata.serialTotal, 16)}}</span></li>
+                <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.series") }}</span><span class="is-pulled-right">
+                  {{nft.analysis.metadata.serialNumber}} / {{nft.analysis.metadata.serialTotal}}</span></li>
               </ul>
             </div>
           </b-collapse>
@@ -113,8 +122,21 @@
     </section>
     <footer class="modal-card-foot is-justify-content-space-between is-block is-hidden-tablet">
       <div class="buttons is-pulled-right">
-        <b-button :label="'Transfer'" type="is-primary" @click="transfer()" icon-left="share" outlined></b-button>
-        <b-button :label="'Make Offer'" type="is-info" @click="offer()" icon-left="email-send-outline" outlined></b-button>
+        <b-button
+          :label="$t('nftDetail.ui.button.transfer')"
+          type="is-primary"
+          @click="transfer()"
+          icon-left="share"
+          outlined
+        ></b-button>
+        <b-button
+          :label="$t('nftDetail.ui.button.makeOffer')"
+          type="is-info"
+          @click="offer()"
+          icon-left="email-send-outline"
+          outlined
+          disabled
+        ></b-button>
       </div>
     </footer>
   </div>
@@ -131,6 +153,8 @@ import NftOffer from "./NftOffer.vue";
 import NftTransfer from "./NftTransfer.vue";
 import { NftDetail } from "@/services/crypto/receive";
 import { NftOffChainMetadata } from "@/models/nft";
+import store from "@/store";
+import { crossOriginDownload } from "@/services/api/crossOriginDownload";
 
 @Component({
   components: {
@@ -151,6 +175,19 @@ export default class NftDetailPanel extends Vue {
 
   get isMobile(): boolean {
     return isMobile();
+  }
+
+  get spaceScanUrl(): string {
+    return store.state.network.network.spaceScanUrl;
+  }
+
+  get networkId(): string {
+    return store.state.network.networkId;
+  }
+
+  async crossOriginDownload(url: string, filename: string | undefined): Promise<void> {
+    const name = filename ?? "untitled";
+    return crossOriginDownload(url, name);
   }
 
   transfer(): void {

@@ -12,6 +12,9 @@
         <b-tab-item :label="$t('settings.menu.items.addressBook.title')" icon="account-box-multiple-outline">
           <address-book class="width-auto"></address-book>
         </b-tab-item>
+        <b-tab-item :label="$t('settings.menu.items.did.title')" icon="account-box-multiple-outline">
+          <did class="width-auto"></did>
+        </b-tab-item>
         <b-tab-item :label="$t('settings.menu.items.advanced.title')" icon="lightbulb-outline">
           <advanced class="width-auto"></advanced>
         </b-tab-item>
@@ -61,6 +64,20 @@
           <div class="py-1">
             <p>{{ $t("settings.menu.items.addressBook.title") }}</p>
             <p class="is-size-7 pt-2 has-text-grey">{{ $t("settings.menu.items.addressBook.description") }}</p>
+          </div>
+        </div>
+        <div class="column py-1">
+          <b-icon class="is-pulled-right has-text-grey" icon="chevron-right"> </b-icon>
+        </div>
+      </div>
+      <div class="panel-block py-0 my-0" @click="goToDid()">
+        <div class="is-11 is-flex my-1 py-1">
+          <div class="mr-2 py-1">
+            <b-icon icon="account-box-multiple-outline"></b-icon>
+          </div>
+          <div class="py-1">
+            <p>{{ $t("settings.menu.items.did.title") }}</p>
+            <p class="is-size-7 pt-2 has-text-grey">{{ $t("settings.menu.items.did.description") }}</p>
           </div>
         </div>
         <div class="column py-1">
@@ -121,6 +138,7 @@ import DevHelper from "@/components/DevHelper.vue";
 import About from "@/components/Settings/About.vue";
 import AddressBook from "@/components/Settings/AddressBook.vue";
 import Advanced from "@/components/Settings/Advanced.vue";
+import Did from "@/components/Settings/Did.vue";
 import General from "@/components/Settings/General.vue";
 import Security from "@/components/Settings/Security.vue";
 import { isDesktop } from "@/services/view/responsive";
@@ -128,7 +146,7 @@ import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component({
-  components: { General, Security, Advanced, AddressBook, About, DevHelper },
+  components: { General, Security, Advanced, AddressBook, About, DevHelper, Did },
 })
 export default class Settings extends Vue {
   goToGeneral(): void {
@@ -157,6 +175,17 @@ export default class Settings extends Vue {
     this.$buefy.modal.open({
       parent: this,
       component: AddressBook,
+      trapFocus: true,
+      canCancel: [""],
+      fullScreen: true,
+      props: {},
+    });
+  }
+
+  goToDid(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: Did,
       trapFocus: true,
       canCancel: [""],
       fullScreen: true,

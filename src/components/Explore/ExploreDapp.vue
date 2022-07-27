@@ -41,7 +41,7 @@
           <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.mintCat") }}</p>
         </b-tooltip>
       </div>
-      <div v-if="experimentMode && testnet" class="px-1 is-1-desktop is-3-mobile has-text-centered">
+      <div v-if="experimentMode && debugMode" class="px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.mintNft')" position="is-right">
           <b-button @click="openMintNft()" class="has-text-link" size="is-medium">
             <div class="has-text-centered">

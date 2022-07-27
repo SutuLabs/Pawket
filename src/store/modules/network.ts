@@ -21,6 +21,7 @@ export interface NetworkDetail {
   symbol: string;
   chainId: string;
   explorerUrl: string;
+  spaceScanUrl: string;
   tokenInfo: TokenInfo;
 }
 
@@ -48,6 +49,7 @@ store.registerModule<INetworkState>("network", {
         symbol: "XCH",
         chainId: "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb",
         explorerUrl: "https://chia.tt/",
+        spaceScanUrl: "https://www.spacescan.io/xch/nft/",
         tokenInfo: {
           XCH: {
             symbol: "XCH",
@@ -77,6 +79,7 @@ store.registerModule<INetworkState>("network", {
         symbol: "TXCH",
         chainId: "ae83525ba8d1dd3f09b277de18ca3e43fc0af20d20c4b3e92ef2a48bd291ccb2",
         explorerUrl: "",
+        spaceScanUrl: "https://www.spacescan.io/txch10/nft/",
         tokenInfo: {
           TXCH: {
             symbol: "TXCH",

@@ -864,6 +864,10 @@
           "title": "地址簿",
           "description": "添加、编辑、删除、管理你的联系人地址"
         },
+        "did": {
+          "title": "DID",
+          "description": "添加、编辑、删除、管理你的DID"
+        },
         "advanced": {
           "title": "高级",
           "description": "实验模式"
@@ -1076,6 +1080,61 @@
     "message": {
       "inputPassword": "请输入密码",
       "passwordNotCorrect": "密码不正确"
+    }
+  },
+  "nftDetail": {
+    "ui": {
+      "label": {
+        "nftId": "NFT ID:",
+        "collection": "Collection",
+        "mintBy": "Minted by",
+        "did": "DID:",
+        "description": "Description"
+      },
+      "button": {
+        "transfer": "Transfer",
+        "makeOffer": "Make Offer"
+      },
+      "title": {
+        "properties": "Properties",
+        "details": "Details"
+      },
+      "details": {
+        "nftId": "NFT ID:",
+        "launcherId": "Launcher ID",
+        "ownerDid": "Owner DID",
+        "ownerAddress": "Owner Address",
+        "royaltyPercentage": "Royalty Percentage",
+        "dataUrl": "Data URL",
+        "dataHash": "Data Hash",
+        "metadataUrl": "Metadata URL",
+        "metadataHash": "Metadata Hash",
+        "licenseUrl": "License URL",
+        "licenseHash": "License Hash",
+        "series": "Series"
+      },
+      "dropdown": {
+        "spaceScan": "View on Spacescan.io",
+        "download": "Download"
+      }
+    }
+  },
+  "did": {
+    "ui": {
+      "title": {
+        "did": "DID",
+        "detail": "详情"
+      },
+      "button": {
+        "addDid": "添加DID"
+      },
+      "label": {
+        "name": "名称",
+        "did": "DID"
+      },
+      "prompt": {
+        "newName": "输入新名称"
+      }
     }
   }
 }

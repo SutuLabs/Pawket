@@ -864,6 +864,10 @@
           "title": "Address Book",
           "description": "Add, edit, remove, and manage your contact addresses"
         },
+        "did": {
+          "title": "DID",
+          "description": "Add, edit, remove, and manage your DIDs"
+        },
         "advanced": {
           "title": "Advanced",
           "description": "Experimental"
@@ -1076,6 +1080,61 @@
     "message": {
       "inputPassword": "Enter Password to Continue",
       "passwordNotCorrect": "Incorrect password."
+    }
+  },
+  "nftDetail": {
+    "ui": {
+      "label": {
+        "nftId": "NFT ID:",
+        "collection": "Collection",
+        "mintBy": "Minted by",
+        "did": "DID:",
+        "description": "Description"
+      },
+      "button":{
+        "transfer": "Transfer",
+        "makeOffer": "Make Offer"
+      },
+      "title": {
+        "properties": "Properties",
+        "details": "Details"
+      },
+      "details": {
+        "nftId": "NFT ID:",
+        "launcherId": "Launcher ID",
+        "ownerDid": "Owner DID",
+        "ownerAddress": "Owner Address",
+        "royaltyPercentage": "Royalty Percentage",
+        "dataUrl": "Data URL",
+        "dataHash": "Data Hash",
+        "metadataUrl": "Metadata URL",
+        "metadataHash": "Metadata Hash",
+        "licenseUrl": "License URL",
+        "licenseHash": "License Hash",
+        "series": "Series"
+      },
+      "dropdown": {
+        "spaceScan": "View on Spacescan.io",
+        "download": "Download"
+      }
+    }
+  },
+  "did": {
+    "ui": {
+      "title": {
+        "did": "DID",
+        "detail": "Detail"
+      },
+      "button": {
+        "addDid": "Add DID"
+      },
+      "label": {
+        "name": "Name",
+        "did": "DID"
+      },
+      "prompt": {
+        "newName": "Enter New Name"
+      }
     }
   }
 }
