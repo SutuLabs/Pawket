@@ -1,7 +1,7 @@
 import { PuzzleDetail } from "../crypto/puzzle";
 import { TokenPuzzleDetail } from "../crypto/receive";
 import { curryMod } from "../offer/bundler";
-import { prefix0x } from "./condition";
+import { prefix0x, unprefix0x } from "./condition";
 import { modshash, modsprog } from "./mods";
 import { Bytes } from "clvm";
 import { assemble } from "clvm_tools/clvm_tools/binutils";
@@ -47,8 +47,8 @@ export function cloneAndChangeRequestPuzzleTemporary(
   newPuzzleHash: string,
 ): TokenPuzzleDetail[] {
   const extreqs = Array.from(requests.map((_) => ({ symbol: _.symbol, puzzles: Array.from(_.puzzles.map((_) => ({ ..._ }))) })));
-  const nftReq = extreqs.find((_) => _.symbol == baseSymbol)?.puzzles.find((_) => originalHash == _.hash);
-  if (!nftReq) throw new Error("cannot find inner puzzle hash");
+  const nftReq = extreqs.find((_) => _.symbol == baseSymbol)?.puzzles.find((_) => unprefix0x(originalHash) == _.hash);
+  if (!nftReq) throw new Error(`cannot find inner puzzle hash [${unprefix0x(originalHash)}] from ` + JSON.stringify(extreqs));
   nftReq.puzzle = newPuzzle;
   nftReq.hash = newPuzzleHash;
   nftReq.address = "";
@@ -63,12 +63,12 @@ export function parseMetadata(
     .map(_ => Array.from(_))
     .map(_ => _.map(it => it.hex()));
 
-  const parsed:ParsedMetadata={};
+  const parsed: ParsedMetadata = {};
   for (let i = 0; i < metalist.length; i++) {
     const meta = metalist[i];
-  if (meta.length != 2) throw new Error(`Face abnormal metalist: ` + metalist);
-  parsed[meta[0]]=meta[1];
-    
+    if (meta.length > 2) throw new Error(`Face abnormal metalist: ` + metalist);
+    parsed[meta[0]] = meta[1];
+
   }
 
   return parsed;

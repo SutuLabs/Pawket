@@ -15,27 +15,10 @@ import { cloneAndChangeRequestPuzzleTemporary, constructSingletonTopLayerPuzzle,
 import { findByPath } from "./lisp";
 import { ConditionOpcode } from "./opcode";
 import { DidCoinAnalysisResult } from "./did";
+import { NftCoinAnalysisResult, NftMetadataKeys, NftMetadataValues } from "@/models/nft";
 
 export interface MintNftInfo {
   spendBundle: SpendBundle;
-}
-
-export interface NftCoinAnalysisResult {
-  singletonModHash: string;
-  launcherId: string;
-  launcherPuzzleHash: string;
-  nftStateModHash: string;
-  metadataUpdaterPuzzleHash: string;
-  p2InnerPuzzle: string;
-  hintPuzzle: string;
-  nftOwnershipModHash: string,
-  previousOwner: string;
-  didOwner: string;
-  p2Owner: string;
-  royaltyAddress: string;
-  tradePricePercentage: number;
-  rawMetadata: string;
-  metadata: NftMetadataValues;
 }
 
 // - singleton_top_layer_v1_1
@@ -65,7 +48,7 @@ export async function generateMintNftBundle(
   royaltyAddressHex: string,
   tradePricePercentage: number,
   didAnalysis: DidCoinAnalysisResult,
-  currentOwner = "()",
+  api: GetPuzzleApiCallback,
 ): Promise<MintNftInfo> {
   const amount = 1n; // always 1 mojo for 1 NFT
   const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
@@ -84,6 +67,7 @@ export async function generateMintNftBundle(
   const bootstrapSpendBundle = await transfer.generateSpendBundle(bootstrapSpendPlan, requests, [], baseSymbol, chainId);
   const bootstrapCoin = bootstrapSpendBundle.coin_spends[0].coin;// get the primary coin
   const bootstrapCoinId = getCoinName0x(bootstrapCoin);
+  // TODO: assert puzzle announcement from launcher coin in p2 bootstrap coin
 
   const launcherCoin: OriginCoin = {
     parent_coin_info: bootstrapCoinId,
@@ -96,9 +80,8 @@ export async function generateMintNftBundle(
   const nftPuzzle = await constructSingletonTopLayerPuzzle(
     launcherCoinId,
     await modshash("singleton_launcher"),
-    // await constructNftStatePuzzle(metadata, inner_p2_puzzle.puzzle)
     await constructNftStatePuzzle(await constructMetadataString(metadata),
-      await constructNftOwnershipPuzzle(currentOwner,
+      await constructNftOwnershipPuzzle("()", // first creation, current owner in field is () instead of didAnalysis.launcherId, true owner is in the solution
         await constructNftTransferPuzzle(sgnStruct, royaltyAddressHex, tradePricePercentage),
         inner_p2_puzzle.puzzle))
   );
@@ -109,10 +92,11 @@ export async function generateMintNftBundle(
     amount,
     puzzle_hash: nftPuzzleHash,
   };
+  const didInnerPuzzleHash0x = prefix0x(didAnalysis.didInnerPuzzleHash);
 
   const launcherSolution = `(${nftPuzzleHash} ${amount} ())`;
 
-  const nftSolution = `((${bootstrapCoinId} ${amount}) ${amount} (((() (q (-10 ${didAnalysis.launcherId} () ${didAnalysis.didInnerPuzzleHash}) (51 ${tgt_hex} 1 (${tgt_hex} ${tgt_hex}))) ()))))`;
+  const nftSolution = `((${bootstrapCoinId} ${amount}) ${amount} (((() (q (-10 ${didAnalysis.launcherId} () ${didInnerPuzzleHash0x}) (51 ${tgt_hex} 1 (${tgt_hex} ${tgt_hex}))) ()))))`;
 
   const launcherCoinSpend: CoinSpend = {
     coin: launcherCoin,
@@ -126,10 +110,35 @@ export async function generateMintNftBundle(
     solution: prefix0x(await puzzle.encodePuzzle(nftSolution)),
   };
 
-  const extreqs = cloneAndChangeRequestPuzzleTemporary(baseSymbol, requests, inner_p2_puzzle.hash, nftPuzzle, nftPuzzleHash);
+  const proof = await catBundle.getLineageProof(didAnalysis.utxoCoin.parent_coin_info, api, 2);
+  if (proof.proof != didInnerPuzzleHash0x)
+    throw new Error(`proof[${proof.proof}] should equal to did_inner_puzzle_hash[${didInnerPuzzleHash0x}]`);
+  const didP2InnerPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(didAnalysis.p2InnerPuzzle));
+  const didSolution = `((${proof.coinId} ${proof.proof} ${proof.amount}) ${amount} (q (() (q (51 ${didInnerPuzzleHash0x} ${amount} (${didP2InnerPuzzleHash})) (62 ${launcherCoinId})) ())))`;
+  const didCoinSpend: CoinSpend = {
+    coin: didAnalysis.utxoCoin,
+    puzzle_reveal: prefix0x(await puzzle.encodePuzzle(didAnalysis.rawPuzzle)),
+    solution: prefix0x(await puzzle.encodePuzzle(didSolution)),
+  };
 
+  const didPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(didAnalysis.rawPuzzle));
+
+  const extreqs = cloneAndChangeRequestPuzzleTemporary(baseSymbol, requests, inner_p2_puzzle.hash, nftPuzzle, nftPuzzleHash);
   const bundles = await transfer.getSpendBundle([launcherCoinSpend, nftCoinSpend], extreqs, chainId);
-  const bundle = await combineSpendBundlePure(bootstrapSpendBundle, bundles);
+  const extreqs2 = cloneAndChangeRequestPuzzleTemporary(baseSymbol, requests, didP2InnerPuzzleHash, didAnalysis.rawPuzzle, didPuzzleHash);
+  const bundles2 = await transfer.getSpendBundle([didCoinSpend], extreqs2, chainId);
+  const bundle = await combineSpendBundlePure(bootstrapSpendBundle, bundles, bundles2);
+
+  // for test case generation
+  // console.log(`const targetAddress="${targetAddress}";`
+  //   + `\nconst changeAddress="${changeAddress}";`
+  //   + `\nconst fee=${fee}n;`
+  //   + `\nconst metadata=${JSON.stringify(metadata, null, 2)};`
+  //   + `\nconst royaltyAddressHex="${royaltyAddressHex}";`
+  //   + `\nconst tradePricePercentage=${tradePricePercentage};`
+  //   + `\nconst didAnalysis: DidCoinAnalysisResult=${JSON.stringify(didAnalysis, null, 2)};`
+  //   + `\nconst availcoins=${JSON.stringify(availcoins, null, 2)};`
+  //   + `\nconst expect: SpendBundle=${JSON.stringify(bundle, null, 2)};`);
 
   return {
     spendBundle: bundle,
@@ -312,22 +321,24 @@ async function getOwnerFromSolution(solution: string): Promise<{ didOwner: strin
 }
 
 async function constructMetadataString(metadata: NftMetadataValues): Promise<string> {
+  if (!metadata.imageUri) throw new Error("empty image uri is not allowed");
   if (metadata.imageUri.indexOf("\"") >= 0) throw new Error("image uri should processed before proceeding");
 
   const mkeys = getNftMetadataKeys();
-  const toNumber = function (hex: string): string {
+  const toNumber = function (hex: string | undefined): string | undefined {
+    if (!hex) return hex;
     const num = parseInt(hex, 16);
     return num.toFixed(0);
   }
   const md = "(" + [
     `${toNumber(mkeys.imageUri)} "${metadata.imageUri}"`,
-    `${toNumber(mkeys.imageHash)} . ${prefix0x(metadata.imageHash)}`,
+    metadata.imageHash ? `${toNumber(mkeys.imageHash)} . ${prefix0x(metadata.imageHash)}` : toNumber(mkeys.imageHash),
     `${toNumber(mkeys.metadataUri)} "${metadata.metadataUri}"`,
+    metadata.metadataHash ? `${toNumber(mkeys.metadataHash)} . ${prefix0x(metadata.metadataHash)}` : toNumber(mkeys.metadataHash),
     `${toNumber(mkeys.licenseUri)} "${metadata.licenseUri}"`,
+    metadata.licenseHash ? `${toNumber(mkeys.licenseHash)} . ${prefix0x(metadata.licenseHash)}` : toNumber(mkeys.licenseHash),
     `${toNumber(mkeys.serialNumber)} . ${toNumber(metadata.serialNumber)}`,
     `${toNumber(mkeys.serialTotal)} . ${toNumber(metadata.serialTotal)}`,
-    `${toNumber(mkeys.metadataHash)} . ${prefix0x(metadata.metadataHash)}`,
-    `${toNumber(mkeys.licenseHash)} . ${prefix0x(metadata.licenseHash)}`,
   ].map(_ => `(${_})`).join(" ") + ")";
 
   return md;
@@ -371,10 +382,7 @@ async function constructNftTransferPuzzle(singletonStruct: string, royaltyAddres
   return curried_tail;
 }
 
-type NftDataKey = "imageUri" | "imageHash" | "metadataUri" | "metadataHash" | "licenseUri" | "licenseHash" | "serialNumber" | "serialTotal";
-type NftMetadataValues = { [key in NftDataKey]: string };
-
-function getNftMetadataKeys(): NftMetadataValues {
+function getNftMetadataKeys(): NftMetadataKeys {
   return {
     "imageUri": "75",    // for uri
     "imageHash": "68",    // for hash

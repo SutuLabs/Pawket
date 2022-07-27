@@ -29,6 +29,7 @@ export class CoinConditions {
 }
 
 export function prefix0x(str: string): string {
+  if (str == "()") return str;
   return str.startsWith("0x") ? str : "0x" + str;
 }
 

@@ -34,6 +34,30 @@
         <b-field>
           <b-input maxlength="64" v-model="hash" type="text" @input="reset()" required></b-input>
         </b-field>
+        <b-field :label="'Metadata Uri'">
+          <b-input maxlength="64" v-model="metadataUri" type="text" @input="reset()" required></b-input>
+        </b-field>
+        <b-field :label="'Metadata Hash'">
+          <b-input maxlength="64" v-model="metadataHash" type="text" @input="reset()" required></b-input>
+        </b-field>
+        <b-field :label="'License Uri'">
+          <b-input maxlength="64" v-model="licenseUri" type="text" @input="reset()" required></b-input>
+        </b-field>
+        <b-field :label="'License Hash'">
+          <b-input maxlength="64" v-model="licenseHash" type="text" @input="reset()" required></b-input>
+        </b-field>
+        <b-field :label="'Royalty Address'">
+          <b-input maxlength="64" v-model="royaltyAddress" type="text" @input="reset()" required></b-input>
+        </b-field>
+        <b-field :label="'Royalty Percentage'">
+          <b-input max="100" min="0" v-model="royaltyPercentage" type="number" @input="reset()" required></b-input>
+        </b-field>
+        <b-field :label="'Serial Number'">
+          <b-numberinput min="0" v-model="serialNumber" @input="reset()" required></b-numberinput>
+        </b-field>
+        <b-field :label="'Serial Total'">
+          <b-numberinput min="0" v-model="serialTotal" @input="reset()" required></b-numberinput>
+        </b-field>
         <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
       </div>
       <template v-if="bundle">
@@ -96,12 +120,16 @@ import { debugBundle, submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/FeeSelector.vue";
 import BundleSummary from "../BundleSummary.vue";
 import SendSummary from "../SendSummary.vue";
-import { xchPrefix, xchSymbol } from "@/store/modules/network";
+import { chainId, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getTokenInfo } from "@/services/coin/cat";
 import AddressField from "../AddressField.vue";
 import { Bytes } from "clvm";
 import { bech32m } from "@scure/base";
 import utility from "@/services/crypto/utility";
+import { generateMintNftBundle } from "@/services/coin/nft";
+import { NftMetadataValues } from "@/models/nft";
+import puzzle from "@/services/crypto/puzzle";
+import { getLineageProofPuzzle } from "@/services/transfer/call";
 
 @Component({
   components: {
@@ -126,13 +154,31 @@ export default class MintNft extends Vue {
   public maxAmount = "-1";
   public totalAmount = "-1";
   public maxStatus: "Loading" | "Loaded" = "Loading";
-  // public uri = "https://aws1.discourse-cdn.com/business4/uploads/chia/original/1X/682754dfb596e0b4ec08dc23442cc5a9192418e3.png";
-  // public hash = "76a1900b6931f7bf5f07ab310733270838b040385f285423f49e2f5518867335";
-  public uri = "";
-  public hash = "";
   public selectedToken = xchSymbol();
   public validity = false;
   public imageFile: File | null = null;
+
+  // public uri = "https://aws1.discourse-cdn.com/business4/uploads/chia/original/1X/682754dfb596e0b4ec08dc23442cc5a9192418e3.png";
+  // public hash = "76a1900b6931f7bf5f07ab310733270838b040385f285423f49e2f5518867335";
+  // public metadataUri = "https://ufzyuv55yicm3ev56cstqbmaayrkudmmjueyrd3nkolafxbe.arweave.net/oX--OKV73CBM2-SvfClOAWABiKqDYxNCYiPbVOWAtwk";
+  // public metadataHash = "44475cb971933e4545efad1337f3d68bc53523d987412df233f3b905ed1c5b3f";
+  // public licenseUri = "https://bafybeigzcazxeu7epmm4vtkuadrvysv74lbzzbl2evphtae6k57yhgynp4.ipfs.nftstorage.link/license.pdf";
+  // public licenseHash = "2267456bd2cef8ebc2f22a42947b068bc3b138284a587feda2edfe07a3577f50";
+  // public royaltyAddress = "txch10mg6zd4aksqkuc5j9e5shzt7shhpju83etmrc897yljwxtmhd5gqgt50km";
+  // public royaltyPercentage = 5;
+  // public serialNumber = 3;
+  // public serialTotal = 100;
+
+  public uri = "";
+  public hash = "";
+  public metadataUri = "";
+  public metadataHash = "";
+  public licenseUri = "";
+  public licenseHash = "";
+  public royaltyAddress = "";
+  public royaltyPercentage = 0;
+  public serialNumber = 0;
+  public serialTotal = 0;
 
   public requests: TokenPuzzleDetail[] = [];
 
@@ -290,18 +336,44 @@ export default class MintNft extends Vue {
         return;
       }
 
-      // const { spendBundle } = await generateMintNftBundle(
-      //   this.address,
-      //   this.account.firstAddress,
-      //   BigInt(this.fee),
-      //   { uri: this.uri, hash: this.hash },
-      //   this.availcoins,
-      //   this.requests,
-      //   xchSymbol(),
-      //   chainId()
-      // );
+      const did = this.account.dids[0];
+      if (!did) {
+        Notification.open({
+          message: "At least one DID is needed.",
+          type: "is-danger",
+          duration: 5000,
+        });
+        this.submitting = false;
+        return;
+      }
 
-      // this.bundle = spendBundle;
+      const md: NftMetadataValues = {
+        imageUri: this.uri,
+        imageHash: this.hash,
+        licenseUri: this.licenseUri,
+        licenseHash: this.licenseHash,
+        metadataUri: this.metadataUri,
+        metadataHash: this.metadataHash,
+        serialNumber: Math.floor(this.serialNumber).toString(16),
+        serialTotal: Math.floor(this.serialTotal).toString(16),
+      };
+
+      const { spendBundle } = await generateMintNftBundle(
+        this.address,
+        this.account.firstAddress,
+        BigInt(this.fee),
+        md,
+        this.availcoins,
+        this.requests,
+        xchSymbol(),
+        chainId(),
+        puzzle.getPuzzleHashFromAddress(this.royaltyAddress),
+        this.royaltyPercentage * 100,
+        did.analysis,
+        getLineageProofPuzzle
+      );
+
+      this.bundle = spendBundle;
     } catch (error) {
       Notification.open({
         message: this.$tc("mintNft.ui.messages.failedToSign") + error,

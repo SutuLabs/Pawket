@@ -102,7 +102,9 @@
                 <li><span class="has-text-grey">License Hash</span><span class="is-pulled-right">
                   <key-box :value="nft.analysis.metadata.licenseHash" :showValue="true"></key-box></span></li>
                 <li><span class="has-text-grey">Series</span><span class="is-pulled-right">
-                  {{nft.analysis.metadata.serialNumber}} / {{nft.analysis.metadata.serialTotal}}</span></li>
+                  {{nft.analysis.metadata.serialNumber && parseInt(nft.analysis.metadata.serialNumber, 16)}}
+                  /
+                  {{nft.analysis.metadata.serialTotal && parseInt(nft.analysis.metadata.serialTotal, 16)}}</span></li>
               </ul>
             </div>
           </b-collapse>
