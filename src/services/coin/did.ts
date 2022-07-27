@@ -1,4 +1,4 @@
-import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
+import { CoinRecord, CoinSpend, convertToOriginCoin, OriginCoin, SpendBundle } from "@/models/wallet";
 import { assemble } from "clvm_tools/clvm_tools/binutils";
 import puzzle from "../crypto/puzzle";
 import { TokenPuzzleDetail } from "../crypto/receive";
@@ -31,6 +31,8 @@ export interface DidCoinAnalysisResult {
   rawMetadata: string;
   recovery_did_list_hash: string;
   num_verifications_requried: string;
+  rawPuzzle: string;
+  utxoCoin: OriginCoin;
 }
 
 export async function generateMintDidBundle(
@@ -141,7 +143,11 @@ async function constructDidInnerPuzzle(
   return curried_tail;
 }
 
-export async function analyzeDidCoin(puzzle_reveal: string, hintPuzzle: string): Promise<DidCoinAnalysisResult | null> {
+export async function analyzeDidCoin(
+  puzzle_reveal: string,
+  hintPuzzle: string,
+  coinRecord: CoinRecord,
+): Promise<DidCoinAnalysisResult | null> {
   const puz = await puzzle.disassemblePuzzle(puzzle_reveal);
   const { module, args } = await internalUncurry(puz);
   if (modsdict[module] != "singleton_top_layer_v1_1" || args.length != 2) return null;
@@ -174,6 +180,7 @@ export async function analyzeDidCoin(puzzle_reveal: string, hintPuzzle: string):
     || !inner_singleton_struct
     || !p2InnerPuzzle
     || !didInnerPuzzleHash
+    || !coinRecord.coin
   ) return null;
 
   return {
@@ -187,5 +194,7 @@ export async function analyzeDidCoin(puzzle_reveal: string, hintPuzzle: string):
     didInnerPuzzleHash,
     p2InnerPuzzle,
     hintPuzzle: prefix0x(hintPuzzle),
+    rawPuzzle: puz,
+    utxoCoin: convertToOriginCoin(coinRecord.coin),
   };
 }
