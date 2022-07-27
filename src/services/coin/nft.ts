@@ -55,15 +55,6 @@ export async function generateMintNftBundle(
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(changeAddress));
   const inner_p2_puzzle = getPuzzleDetail(tgt_hex, requests);
 
-  // console.log(`const targetAddress="${targetAddress}";`)
-  // console.log(`const changeAddress="${changeAddress}";`)
-  // console.log(`const fee=${fee}n;`)
-  // console.log(`const metadata=${JSON.stringify(metadata,null,2)};`)
-  // console.log(`const royaltyAddressHex="${royaltyAddressHex}";`)
-  // console.log(`const tradePricePercentage=${tradePricePercentage};`)
-  // console.log(`const didAnalysis=${JSON.stringify(didAnalysis),null,2};`)
-  // console.log(`const availcoins=${JSON.stringify(availcoins),null,2};`)
-
   /*
   1. BootstrapCoin: XCH Tx -> (XCH Change Tx . SgtLauncher Tx)
   2. LauncherCoin: SgtLauncher Tx -> Genesis NFT Tx
@@ -94,15 +85,6 @@ export async function generateMintNftBundle(
         await constructNftTransferPuzzle(sgnStruct, royaltyAddressHex, tradePricePercentage),
         inner_p2_puzzle.puzzle))
   );
-  const nextNftPuzzle = await constructSingletonTopLayerPuzzle(
-    launcherCoinId,
-    await modshash("singleton_launcher"),
-    await constructNftStatePuzzle(await constructMetadataString(metadata),
-      await constructNftOwnershipPuzzle(didAnalysis.launcherId,// next coin include true owner
-        await constructNftTransferPuzzle(sgnStruct, royaltyAddressHex, tradePricePercentage),
-        inner_p2_puzzle.puzzle))
-  );
-  const nextNftPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(nextNftPuzzle));
 
   const nftPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(nftPuzzle));
   const nftCoin = {
@@ -114,7 +96,7 @@ export async function generateMintNftBundle(
 
   const launcherSolution = `(${nftPuzzleHash} ${amount} ())`;
 
-  const nftSolution = `((${bootstrapCoinId} ${amount}) ${amount} (((() (q (-10 ${didAnalysis.launcherId} () ${didInnerPuzzleHash0x}) (51 ${nextNftPuzzleHash} 1 (${tgt_hex} ${tgt_hex}))) ()))))`;
+  const nftSolution = `((${bootstrapCoinId} ${amount}) ${amount} (((() (q (-10 ${didAnalysis.launcherId} () ${didInnerPuzzleHash0x}) (51 ${tgt_hex} 1 (${tgt_hex} ${tgt_hex}))) ()))))`;
 
   const launcherCoinSpend: CoinSpend = {
     coin: launcherCoin,
@@ -146,6 +128,17 @@ export async function generateMintNftBundle(
   const extreqs2 = cloneAndChangeRequestPuzzleTemporary(baseSymbol, requests, didP2InnerPuzzleHash, didAnalysis.rawPuzzle, didPuzzleHash);
   const bundles2 = await transfer.getSpendBundle([didCoinSpend], extreqs2, chainId);
   const bundle = await combineSpendBundlePure(bootstrapSpendBundle, bundles, bundles2);
+
+  // for test case generation
+  // console.log(`const targetAddress="${targetAddress}";`
+  //   + `\nconst changeAddress="${changeAddress}";`
+  //   + `\nconst fee=${fee}n;`
+  //   + `\nconst metadata=${JSON.stringify(metadata, null, 2)};`
+  //   + `\nconst royaltyAddressHex="${royaltyAddressHex}";`
+  //   + `\nconst tradePricePercentage=${tradePricePercentage};`
+  //   + `\nconst didAnalysis: DidCoinAnalysisResult=${JSON.stringify(didAnalysis, null, 2)};`
+  //   + `\nconst availcoins=${JSON.stringify(availcoins, null, 2)};`
+  //   + `\nconst expect: SpendBundle=${JSON.stringify(bundle, null, 2)};`);
 
   return {
     spendBundle: bundle,
