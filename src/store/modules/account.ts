@@ -4,7 +4,10 @@ import Vue from "vue";
 import receive, { TokenPuzzleAddress, TokenPuzzleDetail } from "@/services/crypto/receive";
 import { rpcUrl, xchPrefix, xchSymbol } from "./network";
 import { AccountEntity, AccountTokens, AccountType, CustomCat, TokenInfo } from "@/models/account";
-import { DEFAULT_ADDRESS_RETRIEVAL_COUNT, getAccountAddressDetails as getAccountAddressDetailsExternal } from "@/services/util/account";
+import {
+  DEFAULT_ADDRESS_RETRIEVAL_COUNT,
+  getAccountAddressDetails as getAccountAddressDetailsExternal,
+} from "@/services/util/account";
 
 export function getAccountCats(account: AccountEntity): CustomCat[] {
   return account.allCats?.filter((c) => c.network == store.state.network.networkId) ?? [];
@@ -117,8 +120,8 @@ store.registerModule<IAccountState>("account", {
       const requests: TokenPuzzleAddress[] =
         account.type == "Address"
           ? <TokenPuzzleAddress[]>[
-            { symbol: xchSymbol(), puzzles: [{ hash: account.puzzleHash, type: "Unknown", address: account.firstAddress }] },
-          ]
+              { symbol: xchSymbol(), puzzles: [{ hash: account.puzzleHash, type: "Unknown", address: account.firstAddress }] },
+            ]
           : await getAccountAddressDetails(account, parameters.maxId);
 
       try {
@@ -148,8 +151,6 @@ store.registerModule<IAccountState>("account", {
       resetState();
     },
     async refreshAssets({ state }, parameters: { idx: number; maxId: number }) {
-      if (state.refreshing) return;
-      state.refreshing = true;
       if (!parameters) parameters = { idx: state.selectedAccount, maxId: -1 };
       let idx = parameters.idx;
       if (typeof idx !== "number" || idx <= 0) idx = state.selectedAccount;
@@ -161,7 +162,6 @@ store.registerModule<IAccountState>("account", {
       const assets = await receive.getAssets(hintRecords, rpcUrl());
       Vue.set(account, "nfts", assets.nfts);
       Vue.set(account, "dids", assets.dids);
-      state.refreshing = false;
     },
     async refreshAddress({ state }, parameters: { idx: number; maxId: number }) {
       if (!parameters) parameters = { idx: state.selectedAccount, maxId: -1 };
@@ -205,5 +205,12 @@ export async function getAccountAddressDetails(
   account: AccountEntity,
   maxId: number | undefined = undefined
 ): Promise<TokenPuzzleDetail[]> {
-  return await getAccountAddressDetailsExternal(account, getAccountCats(account), store.state.account.tokenInfo, xchPrefix(), xchSymbol(), maxId);
+  return await getAccountAddressDetailsExternal(
+    account,
+    getAccountCats(account),
+    store.state.account.tokenInfo,
+    xchPrefix(),
+    xchSymbol(),
+    maxId
+  );
 }

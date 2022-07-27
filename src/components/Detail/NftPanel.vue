@@ -1,6 +1,9 @@
 <template>
   <section>
     <div>
+      <b-button @click="refresh" :loading="refreshing">
+        <b-icon icon="refresh"></b-icon>
+      </b-button>
       <b-loading v-model="refreshing" :is-full-page="false" class="py-6 my-6"></b-loading>
       <b-collapse animation="slide" v-for="(col, key) of collection" :key="key" :open="true">
         <template #trigger="props">
@@ -76,6 +79,7 @@ export default class NftPanel extends Vue {
   @Prop() private account!: AccountEntity;
   public isOpen: number | string = 0;
   private extraInfo: DonwloadedNftCollection = {};
+  public refreshing = false;
 
   get collection(): CollectionDict {
     const other = "Other"; //i18n
@@ -99,12 +103,14 @@ export default class NftPanel extends Vue {
     return this.account.nfts ?? [];
   }
 
-  get refreshing(): boolean {
-    return store.state.account.refreshing;
-  }
-
   get spaceScanUrl(): string {
     return store.state.network.network.spaceScanUrl;
+  }
+
+  async refresh(): Promise<void> {
+    this.refreshing = true;
+    await store.dispatch("refreshAssets");
+    this.refreshing = false;
   }
 
   @Watch("nfts")

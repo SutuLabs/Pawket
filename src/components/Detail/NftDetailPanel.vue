@@ -34,8 +34,8 @@
             <key-box icon="checkbox-multiple-blank-outline" :value="nft.address" :showValue="true"></key-box>
           </b-field>
           <b-field :label="$t('nftDetail.ui.label.collection')">{{ metadata.collection.name }}</b-field>
-          <b-field :label="$t('nftDetail.ui.label.ownedBy')"
-            >{{ $t("nftDetail.ui.label.mintBy") }}
+          <b-field :label="$t('nftDetail.ui.label.mintBy')"
+            >{{ $t("nftDetail.ui.label.did") }}
             <key-box icon="checkbox-multiple-blank-outline" :value="nft.analysis.didOwner" :showValue="true"></key-box
           ></b-field>
           <b-field :label="$t('nftDetail.ui.label.description')">{{ metadata.description }}</b-field>
@@ -70,7 +70,7 @@
                 </a>
               </div>
             </template>
-            <div class="columns is-mobile is-multiline card-content is-justify-content-center">
+            <div class="columns is-mobile is-multiline card-content is-justify-content-space-between">
               <div class="column is-5 is-size-5 property m-2" v-for="(att, i) of metadata.attributes" :key="i">
                 <span class="has-text-grey is-size-7">
                   <p>{{ att.trait_type }}</p>

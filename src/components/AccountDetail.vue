@@ -404,7 +404,6 @@ export default class AccountDetail extends Vue {
   async refresh(): Promise<void> {
     this.refreshRate();
     await store.dispatch("refreshBalance");
-    await store.dispatch("refreshAssets");
   }
 
   changePage(): void {

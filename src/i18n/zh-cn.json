@@ -1083,8 +1083,8 @@
       "label": {
         "nftId": "NFT ID:",
         "collection": "Collection",
-        "ownedBy": "Owned by",
-        "mintBy": "Minted by DID:",
+        "mintBy": "Minted by",
+        "did": "DID:",
         "description": "Description"
       },
       "button":{
