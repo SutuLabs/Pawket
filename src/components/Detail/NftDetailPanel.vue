@@ -16,18 +16,17 @@
                 <template #trigger>
                   <b-icon icon="dots-vertical" class="is-clickable"></b-icon>
                 </template>
-                <b-dropdown-item aria-role="listitem">
-                  <a class="has-text-dark" :href="spaceScanUrl + nft.address"
+                <a class="has-text-dark" :href="spaceScanUrl + nft.address" target="_blank">
+                  <b-dropdown-item aria-role="listitem"
                     ><b-icon class="media-left" icon="open-in-new" size="is-small"></b-icon
-                    >{{ $t("nftDetail.ui.dropdown.spaceScan") }}</a
-                  ></b-dropdown-item
-                >
-                <b-dropdown-item aria-role="listitem">
-                  <a class="has-text-dark" :href="nft.analysis.metadata.imageUri" :download="nft.metadata.name"
-                    ><b-icon class="media-left" icon="download" size="is-small"></b-icon
-                    >{{ $t("nftDetail.ui.dropdown.download") }}</a
-                  >
-                </b-dropdown-item>
+                    >{{ $t("nftDetail.ui.dropdown.spaceScan") }}
+                  </b-dropdown-item>
+                </a>
+                <a class="has-text-dark" @click="crossOriginDownload(nft.analysis.metadata.imageUri, nft.metadata.name)">
+                  <b-dropdown-item aria-role="listitem">
+                    <b-icon class="media-left" icon="download" size="is-small"></b-icon>{{ $t("nftDetail.ui.dropdown.download") }}
+                  </b-dropdown-item>
+                </a>
               </b-dropdown>
             </template>
             {{ $t("nftDetail.ui.label.nftId") }}
@@ -154,6 +153,7 @@ import NftTransfer from "./NftTransfer.vue";
 import { NftDetail } from "@/services/crypto/receive";
 import { NftOffChainMetadata } from "@/models/nft";
 import store from "@/store";
+import { crossOriginDownload } from "@/services/api/crossOriginDownload";
 
 @Component({
   components: {
@@ -182,6 +182,11 @@ export default class NftDetailPanel extends Vue {
 
   get networkId(): string {
     return store.state.network.networkId;
+  }
+
+  async crossOriginDownload(url: string, filename: string | undefined): Promise<void> {
+    const name = filename ?? "untitled";
+    return crossOriginDownload(url, name);
   }
 
   transfer(): void {

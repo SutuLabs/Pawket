@@ -23,18 +23,18 @@
                     <template #trigger>
                       <b-icon icon="dots-vertical" class="is-clickable"></b-icon>
                     </template>
-                    <b-dropdown-item aria-role="listitem">
-                      <a class="has-text-dark" :href="spaceScanUrl + nft.address" target="_blank"
+                    <a class="has-text-dark" :href="spaceScanUrl + nft.address" target="_blank">
+                      <b-dropdown-item aria-role="listitem"
                         ><b-icon class="media-left" icon="open-in-new" size="is-small"></b-icon
-                        >{{ $t("nftDetail.ui.dropdown.spaceScan") }}</a
-                      ></b-dropdown-item
-                    >
-                    <b-dropdown-item aria-role="listitem">
-                      <a class="has-text-dark" :href="nft.analysis.metadata.imageUri" :download="nft.metadata.name"
-                        ><b-icon class="media-left" icon="download" size="is-small"></b-icon
-                        >{{ $t("nftDetail.ui.dropdown.download") }}</a
-                      >
-                    </b-dropdown-item>
+                        >{{ $t("nftDetail.ui.dropdown.spaceScan") }}
+                      </b-dropdown-item>
+                    </a>
+                    <a class="has-text-dark" @click="crossOriginDownload(nft.analysis.metadata.imageUri, nft.metadata.name)">
+                      <b-dropdown-item aria-role="listitem">
+                        <b-icon class="media-left" icon="download" size="is-small"></b-icon
+                        >{{ $t("nftDetail.ui.dropdown.download") }}
+                      </b-dropdown-item>
+                    </a>
                   </b-dropdown></span
                 >
               </p>
@@ -56,6 +56,7 @@ import { NftDetail } from "@/services/crypto/receive";
 import { NftOffChainMetadata } from "@/models/nft";
 import utility from "@/services/crypto/utility";
 import { unprefix0x } from "@/services/coin/condition";
+import { crossOriginDownload } from "@/services/api/crossOriginDownload";
 
 interface CollectionNfts {
   name: string;
@@ -96,6 +97,7 @@ export default class NftPanel extends Vue {
         col[colname].nfts.push(nft);
       }
     }
+    console.log(col);
     return col;
   }
 
@@ -105,6 +107,11 @@ export default class NftPanel extends Vue {
 
   get spaceScanUrl(): string {
     return store.state.network.network.spaceScanUrl;
+  }
+
+  async crossOriginDownload(url: string, filename: string | undefined): Promise<void> {
+    const name = filename ?? "untitled";
+    return crossOriginDownload(url, name);
   }
 
   async refresh(): Promise<void> {
