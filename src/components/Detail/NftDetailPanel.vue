@@ -135,6 +135,7 @@
           @click="offer()"
           icon-left="email-send-outline"
           outlined
+          disabled
         ></b-button>
       </div>
     </footer>

@@ -129,9 +129,6 @@
           <b-tab-item :label="$t('accountDetail.ui.tab.nft')">
             <nft-panel :account="account" @changePage="changePage"></nft-panel>
           </b-tab-item>
-          <b-tab-item :label="'DID'" :visible="debugMode">
-            <did-panel :account="account" @changePage="changePage"></did-panel>
-          </b-tab-item>
           <b-tab-item :label="$t('accountDetail.ui.tab.utxos')">
             <utxo-panel :tokenInfo="tokenInfo" v-model="activities" @changePage="changePage"></utxo-panel>
           </b-tab-item>

@@ -1,7 +1,7 @@
 import store from "@/store";
 import account, { AccountKey } from "@/services/crypto/account";
 import Vue from "vue";
-import receive, { TokenPuzzleAddress, TokenPuzzleDetail } from "@/services/crypto/receive";
+import receive, { DidDetail, TokenPuzzleAddress, TokenPuzzleDetail } from "@/services/crypto/receive";
 import { rpcUrl, xchPrefix, xchSymbol } from "./network";
 import { AccountEntity, AccountTokens, AccountType, CustomCat, TokenInfo } from "@/models/account";
 import {
@@ -28,6 +28,22 @@ export function getDefaultCats(): CustomCat[] {
 export function getAllCats(account: AccountEntity): CustomCat[] {
   const defaultCats = getDefaultCats();
   return defaultCats.concat(getAccountCats(account));
+}
+
+function setDidName(dids: DidDetail[]): void {
+  const didNames = localStorage.getItem("DID_NAMES");
+  if (didNames != null) {
+    const names = JSON.parse(didNames);
+    for (const n of names) {
+      const idx = dids.findIndex((d) => d.did == n.did);
+      if (idx > -1) dids[idx].name = n.name;
+    }
+  }
+}
+
+export interface DidName {
+  name: string;
+  did: string;
 }
 
 export interface IAccountState {
@@ -160,6 +176,7 @@ store.registerModule<IAccountState>("account", {
       const requests = await getAccountAddressDetails(account, parameters.maxId);
       const hintRecords = await receive.getCoinRecords(requests, false, rpcUrl(), true);
       const assets = await receive.getAssets(hintRecords, rpcUrl());
+      setDidName(assets.dids);
       Vue.set(account, "nfts", assets.nfts);
       Vue.set(account, "dids", assets.dids);
     },

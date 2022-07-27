@@ -864,6 +864,10 @@
           "title": "地址簿",
           "description": "添加、编辑、删除、管理你的联系人地址"
         },
+        "did": {
+          "title": "DID",
+          "description": "添加、编辑、删除、管理你的DID"
+        },
         "advanced": {
           "title": "高级",
           "description": "实验模式"
@@ -1087,7 +1091,7 @@
         "did": "DID:",
         "description": "Description"
       },
-      "button":{
+      "button": {
         "transfer": "Transfer",
         "makeOffer": "Make Offer"
       },
@@ -1112,6 +1116,24 @@
       "dropdown": {
         "spaceScan": "View on Spacescan.io",
         "download": "Download"
+      }
+    }
+  },
+  "did": {
+    "ui": {
+      "title": {
+        "did": "DID",
+        "detail": "详情"
+      },
+      "button": {
+        "addDid": "添加DID"
+      },
+      "label": {
+        "name": "名称",
+        "did": "DID"
+      },
+      "prompt": {
+        "newName": "输入新名称"
       }
     }
   }

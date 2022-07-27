@@ -864,6 +864,10 @@
           "title": "Address Book",
           "description": "Add, edit, remove, and manage your contact addresses"
         },
+        "did": {
+          "title": "DID",
+          "description": "Add, edit, remove, and manage your DIDs"
+        },
         "advanced": {
           "title": "Advanced",
           "description": "Experimental"
@@ -1112,6 +1116,24 @@
       "dropdown": {
         "spaceScan": "View on Spacescan.io",
         "download": "Download"
+      }
+    }
+  },
+  "did": {
+    "ui": {
+      "title": {
+        "did": "DID",
+        "detail": "Detail"
+      },
+      "button": {
+        "addDid": "Add DID"
+      },
+      "label": {
+        "name": "Name",
+        "did": "DID"
+      },
+      "prompt": {
+        "newName": "Enter New Name"
       }
     }
   }
