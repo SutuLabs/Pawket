@@ -1,7 +1,7 @@
 <template>
   <section>
     <div>
-      <b-button @click="refresh" :loading="refreshing">
+      <b-button @click="refresh()" :loading="refreshing">
         <b-icon icon="refresh"></b-icon>
       </b-button>
       <b-loading v-model="refreshing" :is-full-page="false" class="py-6 my-6"></b-loading>
@@ -97,7 +97,6 @@ export default class NftPanel extends Vue {
         col[colname].nfts.push(nft);
       }
     }
-    console.log(col);
     return col;
   }
 
@@ -112,12 +111,6 @@ export default class NftPanel extends Vue {
   async crossOriginDownload(url: string, filename: string | undefined): Promise<void> {
     const name = filename ?? "untitled";
     return crossOriginDownload(url, name);
-  }
-
-  async refresh(): Promise<void> {
-    this.refreshing = true;
-    await store.dispatch("refreshAssets");
-    this.refreshing = false;
   }
 
   @Watch("nfts")
@@ -147,6 +140,12 @@ export default class NftPanel extends Vue {
     this.extraInfo[nft.address].metadata = md;
     this.extraInfo[nft.address].status = "Processed";
     this.extraInfo[nft.address].matchHash = bodyhex.toLowerCase() == unprefix0x(nft.analysis.metadata.metadataHash).toLowerCase();
+  }
+
+  async refresh(): Promise<void> {
+    this.refreshing = true;
+    await store.dispatch("refreshAssets");
+    this.refreshing = false;
   }
 
   showDetail(nft: NftDetail): void {
