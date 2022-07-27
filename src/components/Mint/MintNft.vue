@@ -35,19 +35,19 @@
           <b-input maxlength="64" v-model="hash" type="text" @input="reset()" required></b-input>
         </b-field>
         <b-field :label="'Metadata Uri'">
-          <b-input maxlength="64" v-model="metadataUri" type="text" @input="reset()" required></b-input>
+          <b-input v-model="metadataUri" type="text" @input="reset()" required></b-input>
         </b-field>
         <b-field :label="'Metadata Hash'">
           <b-input maxlength="64" v-model="metadataHash" type="text" @input="reset()" required></b-input>
         </b-field>
         <b-field :label="'License Uri'">
-          <b-input maxlength="64" v-model="licenseUri" type="text" @input="reset()" required></b-input>
+          <b-input v-model="licenseUri" type="text" @input="reset()" required></b-input>
         </b-field>
         <b-field :label="'License Hash'">
           <b-input maxlength="64" v-model="licenseHash" type="text" @input="reset()" required></b-input>
         </b-field>
         <b-field :label="'Royalty Address'">
-          <b-input maxlength="64" v-model="royaltyAddress" type="text" @input="reset()" required></b-input>
+          <b-input v-model="royaltyAddress" type="text" @input="reset()" required></b-input>
         </b-field>
         <b-field :label="'Royalty Percentage'">
           <b-input max="100" min="0" v-model="royaltyPercentage" type="number" @input="reset()" required></b-input>
