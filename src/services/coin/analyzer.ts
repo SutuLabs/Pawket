@@ -38,7 +38,7 @@ export async function simplifyPuzzle(origin: SExp, puz: string | undefined = und
     const mods = disassemble(mod);
     const argarr: SExp[] = !args ? [] : Array.from(args.as_iter());
     const simpargs = (await Promise.all(argarr.map(_ => simplifyPuzzle(_))))
-      .map(_ => "raw" in _ ? { raw: _.raw } : _);
+      .map((_: (SimplePuzzle | CannotParsePuzzle)) => "raw" in _ ? { raw: _.raw } : _);
     const modname = modsdict[mods];
     if (!modname) return { raw: puz };
 
