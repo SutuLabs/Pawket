@@ -1,11 +1,11 @@
 import { Bytes } from "clvm";
 import { CoinSpend, SpendBundle } from "@/models/wallet";
 import { prefix0x } from "../coin/condition";
-import puzzle, { catClvmTreehash } from "../crypto/puzzle";
+import puzzle from "../crypto/puzzle";
 import { TokenPuzzleDetail } from "../crypto/receive";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { curryMod } from "../offer/bundler";
-import { modsprog } from "../coin/mods";
+import { modshash, modsprog } from "../coin/mods";
 import { getCoinName0x } from "../coin/coinUtility";
 import { Instance } from "../util/instance";
 
@@ -37,7 +37,7 @@ export async function generateMintCatBundle(
   requests: TokenPuzzleDetail[],
   tokenSymbol: string,
   chainId: string,
-  catModName = "cat_v2",
+  catModName: "cat_v1" | "cat_v2" = "cat_v2",
 ): Promise<MintCatInfo> {
   const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(changeAddress));
@@ -65,7 +65,7 @@ async function constructCatPuzzle(
   memo: string,
   availcoins: SymbolCoins,
   tokenSymbol: string,
-  catModName = "cat_v2",
+  catModName: "cat_v1" | "cat_v2" = "cat_v2",
 ): Promise<CatPuzzleResponse> {
   const baseSymbol = Object.keys(availcoins)[0];
   const itgts: TransferTarget[] = [
@@ -73,7 +73,7 @@ async function constructCatPuzzle(
   ];
 
   const tempplan = transfer.generateSpendPlan(availcoins, itgts, change_hex, fee, tokenSymbol);
-  const catmod = catClvmTreehash;
+  const catmod = await modshash(catModName);
   const bootstrapCoin = getCoinName0x(tempplan[baseSymbol].coins[0]);
   const curried_tail = await curryMod(modsprog["genesis_by_coin_id"], bootstrapCoin);
   if (!curried_tail) throw new Error("failed to curry tail.");

@@ -341,7 +341,8 @@ export default class MintCat extends Vue {
         this.account.key.privateKey,
         this.requests,
         xchSymbol(),
-        chainId()
+        chainId(),
+        "cat_v2"
       );
 
       this.bundle = spendBundle;

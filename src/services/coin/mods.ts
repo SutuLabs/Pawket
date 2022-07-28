@@ -46,7 +46,7 @@ export const mods: ModDetail[] = [
     ],
   },
   {
-    name: "cat",
+    name: "cat_v1",
     parameters: [
       {
         name: "MOD_HASH",

@@ -9,7 +9,8 @@ export async function getAccountAddressDetails(
   tokenInfo: TokenInfo,
   prefix: string,
   symbol: string,
-  maxId: number | undefined = undefined
+  maxId: number | undefined = undefined,
+  catModName: "cat_v1" | "cat_v2" = "cat_v2",
 ): Promise<TokenPuzzleDetail[]> {
   if (typeof maxId !== "number" || maxId <= 0) maxId = account.addressRetrievalCount;
   if (typeof maxId !== "number" || maxId <= 0) DEFAULT_ADDRESS_RETRIEVAL_COUNT;
@@ -18,7 +19,7 @@ export async function getAccountAddressDetails(
     return account.addressPuzzles;
   }
 
-  account.addressPuzzles = await receive.getAssetsRequestDetail(account.key.privateKey, maxId, cats, tokenInfo, prefix, symbol);
+  account.addressPuzzles = await receive.getAssetsRequestDetail(account.key.privateKey, maxId, cats, tokenInfo, prefix, symbol, catModName);
   account.addressGenerated = maxId;
   return account.addressPuzzles;
 }
