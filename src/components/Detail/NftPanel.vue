@@ -17,8 +17,8 @@
             <div class="nft-image-container">
               <img class="nft-image is-clickable" :src="nft.metadata.uri" :alt="nft.metadata.hash" @click="showDetail(nft)" />
               <p class="nft-name has-background-white-ter pt-2 pl-3 is-hidden-mobile">
-                {{ nft.metadata.name
-                }}<span class="is-pulled-right">
+                <span class="is-inline-block truncate">{{ nft.metadata.name }}</span>
+                <span class="is-pulled-right">
                   <b-dropdown aria-role="list" class="is-pulled-right" :mobile-modal="false" position="is-bottom-left">
                     <template #trigger>
                       <b-icon icon="dots-vertical" class="is-clickable"></b-icon>
@@ -35,8 +35,8 @@
                         >{{ $t("nftDetail.ui.dropdown.download") }}
                       </b-dropdown-item>
                     </a>
-                  </b-dropdown></span
-                >
+                  </b-dropdown>
+                </span>
               </p>
             </div>
           </li>
@@ -53,7 +53,7 @@ import store from "@/store";
 import NftDetailPanel from "./NftDetailPanel.vue";
 import { isMobile } from "@/services/view/responsive";
 import { NftDetail } from "@/services/crypto/receive";
-import { NftOffChainMetadata } from "@/models/nft";
+import { DonwloadedNftCollection, NftOffChainMetadata } from "@/models/nft";
 import utility from "@/services/crypto/utility";
 import { unprefix0x } from "@/services/coin/condition";
 import { crossOriginDownload } from "@/services/api/crossOriginDownload";
@@ -64,13 +64,6 @@ interface CollectionNfts {
   nfts: NftDetail[];
 }
 
-interface DownloadedNftInfo {
-  metadata?: NftOffChainMetadata;
-  matchHash?: boolean;
-  status: "Ready" | "NoMetadata" | "Downloading" | "Processed";
-}
-type DonwloadedNftCollection = { [name: string]: DownloadedNftInfo };
-
 type CollectionDict = { [name: string]: CollectionNfts };
 
 @Component({
@@ -79,7 +72,6 @@ type CollectionDict = { [name: string]: CollectionNfts };
 export default class NftPanel extends Vue {
   @Prop() private account!: AccountEntity;
   public isOpen: number | string = 0;
-  private extraInfo: DonwloadedNftCollection = {};
   public refreshing = false;
 
   get collection(): CollectionDict {
@@ -88,7 +80,7 @@ export default class NftPanel extends Vue {
     for (let i = 0; i < this.nfts.length; i++) {
       const nft = this.nfts[i];
       const ext = this.extraInfo[nft.address];
-      nft.metadata.name = ext.metadata?.name;
+      nft.metadata.name = ext?.metadata?.name;
       const colname = ext?.metadata?.collection?.name ?? other;
       const colid = ext?.metadata?.collection?.id ?? other;
       if (!col[colname]) {
@@ -108,13 +100,17 @@ export default class NftPanel extends Vue {
     return store.state.network.network.spaceScanUrl;
   }
 
+  get extraInfo(): DonwloadedNftCollection {
+    return this.account.extraInfo ?? {}
+  }
+
   async crossOriginDownload(url: string, filename: string | undefined): Promise<void> {
     const name = filename ?? "untitled";
     return crossOriginDownload(url, name);
   }
 
   @Watch("nfts")
-  downloadRelated(): void {
+  async downloadRelated(): Promise<void> {
     for (let i = 0; i < this.nfts.length; i++) {
       const nft = this.nfts[i];
       const ext = this.extraInfo[nft.address];
@@ -124,9 +120,10 @@ export default class NftPanel extends Vue {
           status: !nft.analysis.metadata.metadataUri ? "NoMetadata" : "Ready",
           metadata: {},
         });
-        this.downloadNftMetadata(nft); // don't need wait, just fire and change ui after some information got
+        await this.downloadNftMetadata(nft); // don't need wait, just fire and change ui after some information got
       }
     }
+    Vue.set(this.account, "extraInfo", this.extraInfo);
   }
 
   async downloadNftMetadata(nft: NftDetail): Promise<void> {
@@ -184,5 +181,12 @@ export default class NftPanel extends Vue {
   height: 40px;
   border-bottom-right-radius: 0.5vw;
   border-bottom-left-radius: 0.5vw;
+}
+
+.truncate {
+  width: 90%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

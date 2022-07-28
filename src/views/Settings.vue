@@ -12,7 +12,7 @@
         <b-tab-item :label="$t('settings.menu.items.addressBook.title')" icon="account-box-multiple-outline">
           <address-book class="width-auto"></address-book>
         </b-tab-item>
-        <b-tab-item :label="$t('settings.menu.items.did.title')" icon="account-box-multiple-outline">
+        <b-tab-item :label="$t('settings.menu.items.did.title')" icon="account-box-multiple-outline" v-if="debugMode">
           <did class="width-auto"></did>
         </b-tab-item>
         <b-tab-item :label="$t('settings.menu.items.advanced.title')" icon="lightbulb-outline">
@@ -240,6 +240,10 @@ export default class Settings extends Vue {
 
   get isDesktop(): boolean {
     return isDesktop();
+  }
+
+  get debugMode(): boolean {
+    return store.state.app.debug;
   }
 }
 </script>

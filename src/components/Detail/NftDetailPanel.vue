@@ -71,9 +71,9 @@
             </template>
             <div class="columns is-mobile is-multiline card-content is-justify-content-space-between">
               <div class="column is-5 is-size-5 property m-2" v-for="(att, i) of metadata.attributes" :key="i">
-                <span class="has-text-grey is-size-7">
+                <span class="has-text-grey is-size-7 line-height-normal">
                   <p>{{ att.trait_type }}</p>
-                  {{ att.value }}</span
+                  <p class="has-text-grey-dark">{{ att.value }}</p></span
                 >
               </div>
             </div>
@@ -234,5 +234,9 @@ export default class NftDetailPanel extends Vue {
 
 .min-width-table {
   min-width: 768px;
+}
+
+.line-height-normal {
+  line-height: normal;
 }
 </style>
