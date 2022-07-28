@@ -37,6 +37,7 @@ export async function generateMintCatBundle(
   requests: TokenPuzzleDetail[],
   tokenSymbol: string,
   chainId: string,
+  catModName = "cat_v2",
 ): Promise<MintCatInfo> {
   const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(changeAddress));
@@ -45,7 +46,7 @@ export async function generateMintCatBundle(
   // eslint-disable-next-line no-useless-escape
   memo = memo.replace(/[&/\\#,+()$~%.'":*?<>{}\[\] ]/g, "_");
 
-  const { innerPuzzle, catPuzzle, assetId, bootstrapCoin } = await constructCatPuzzle(tgt_hex, change_hex, amount, fee, memo, availcoins, tokenSymbol);
+  const { innerPuzzle, catPuzzle, assetId, bootstrapCoin } = await constructCatPuzzle(tgt_hex, change_hex, amount, fee, memo, availcoins, tokenSymbol, catModName);
   const ibundle = await constructInternalBundle(catPuzzle.hash, change_hex, amount, fee, availcoins, requests, tokenSymbol, chainId);
   const ebundle = await constructExternalBundle(innerPuzzle, catPuzzle, bootstrapCoin, amount, sk_hex, chainId);
   const bundle = await combineSpendBundlePure(ibundle, ebundle);
@@ -64,6 +65,7 @@ async function constructCatPuzzle(
   memo: string,
   availcoins: SymbolCoins,
   tokenSymbol: string,
+  catModName = "cat_v2",
 ): Promise<CatPuzzleResponse> {
   const baseSymbol = Object.keys(availcoins)[0];
   const itgts: TransferTarget[] = [
@@ -80,7 +82,7 @@ async function constructCatPuzzle(
   const inner_puzzle = `(q (51 () -113 ${curried_tail} ()) (51 ${tgt_hex} ${amount} (${tgt_hex} ${memo})))`;
   const inner_puzzle_hash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(inner_puzzle));
 
-  const catPuzzle = await curryMod(modsprog["cat"], catmod, tail_hash, inner_puzzle);
+  const catPuzzle = await curryMod(modsprog[catModName], catmod, tail_hash, inner_puzzle);
   if (!catPuzzle) throw new Error("failed to curry cat.");
   const catPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(catPuzzle));
 

@@ -131,7 +131,7 @@ test('Make Offer 1', async () => {
   const tokenPuzzles = await getAccountAddressDetails(account, [], tokenInfo(), xchPrefix(), xchSymbol());
 
   const nonce = "71bdf5d923a48956a8d26a36c6ea4a9959de221ff2ee986bce4827e5f037ceb8";
-  const bundle = await generateOffer(offplan, reqs, tokenPuzzles, noNeedGetProof, xchSymbol(), chainId(), nonce);
+  const bundle = await generateOffer(offplan, reqs, tokenPuzzles, noNeedGetProof, xchSymbol(), chainId(), nonce, "cat");
   const encoded = await encodeOffer(bundle);
 
   assertBundle(expect, bundle);
@@ -213,7 +213,7 @@ test('Make Offer 2', async () => {
   const tokenPuzzles = await getAccountAddressDetails(account, [], tokenInfo(), xchPrefix(), xchSymbol());
 
   const nonce = "741f8564b6637aee92dd68548cfe7df8ec35b20029235565244944febd68bf8d";
-  const bundle = await generateOffer(offplan, reqs, tokenPuzzles, localPuzzleApiCall, xchSymbol(), chainId(), nonce);
+  const bundle = await generateOffer(offplan, reqs, tokenPuzzles, localPuzzleApiCall, xchSymbol(), chainId(), nonce, "cat");
   const encoded = await encodeOffer(bundle);
 
   assertBundle(expect, bundle);
@@ -286,7 +286,7 @@ test('Take Offer Xch For CAT', async () => {
 
   const revSummary = getReversePlan(summary, change_hex, cats);
   const offplan = await generateOfferPlan(revSummary.offered, change_hex, availcoins, 0n, xchSymbol());
-  const takerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, localPuzzleApiCall, xchSymbol(), chainId(), nonce);
+  const takerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, localPuzzleApiCall, xchSymbol(), chainId(), nonce, "cat");
   const combined = await combineSpendBundle([makerBundle, takerBundle]);
 
   assertBundle(expect, combined);
@@ -358,7 +358,7 @@ test('Take Offer CAT For Xch', async () => {
 
   const revSummary = getReversePlan(summary, change_hex, cats);
   const offplan = await generateOfferPlan(revSummary.offered, change_hex, availcoins, 0n, xchSymbol());
-  const takerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, localPuzzleApiCall, xchSymbol(), chainId(), nonce);
+  const takerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, localPuzzleApiCall, xchSymbol(), chainId(), nonce, "cat");
   // console.log("bundle",makerBundle,takerBundle)
   const combined = await combineSpendBundle([makerBundle, takerBundle]);
   // console.log("combined", combined)

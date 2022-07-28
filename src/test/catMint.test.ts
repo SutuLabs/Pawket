@@ -60,6 +60,7 @@ test('Mint Cat', async () => {
     [{ puzzles: requests, symbol: xchSymbol() }],
     xchSymbol(),
     chainId(),
+    "cat",
   );
 
   assertBundle(expectBundle, spendBundle);

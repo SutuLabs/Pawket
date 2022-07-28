@@ -22,6 +22,7 @@ export async function generateOffer(
   tokenSymbol: string,
   chainId: string,
   nonceHex: string | null = null,
+  catModName = "cat_v2",
 ): Promise<SpendBundle> {
   if (offered.length != 1 || requested.length != 1) throw new Error("currently, only support single offer/request");
   if (offered[0].id && offered[0].plan.coins.length != 1) throw new Error("currently, only support single coin for CAT");
@@ -92,7 +93,7 @@ export async function generateOffer(
       if (!req.symbol) throw new Error("symbol cannot be empty.");
 
       const assetId = req.id;
-      const cat_mod = await curryMod(modsprog["cat"], catClvmTreehash, prefix0x(assetId), modsprog["settlement_payments"]);
+      const cat_mod = await curryMod(modsprog[catModName], catClvmTreehash, prefix0x(assetId), modsprog["settlement_payments"]);
       if (!cat_mod) throw new Error("cannot curry cat");
       const cat_settlement_tgt = prefix0x(await puzzle.getPuzzleHashFromPuzzle(cat_mod));
 
