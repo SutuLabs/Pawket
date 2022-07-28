@@ -1,6 +1,7 @@
 import puzzle from "../crypto/puzzle";
 import { prefix0x } from "./condition";
 import { importmods } from "./imports";
+import { otherMods } from "./otherMods";
 
 export interface ModParameter {
   name: string;
@@ -46,6 +47,23 @@ export const mods: ModDetail[] = [
   },
   {
     name: "cat",
+    parameters: [
+      {
+        name: "MOD_HASH",
+        desc: "MOD_HASH: this code's sha256 tree hash",
+      },
+      {
+        name: "TAIL_PROGRAM_HASH",
+        desc: "TAIL_PROGRAM_HASH: the program that determines if a coin can mint new cats, burn cats, and check if its lineage is valid if its parent is not a CAT",
+      },
+      {
+        name: "INNER_PUZZLE",
+        desc: "INNER_PUZZLE: an independent puzzle protecting the coins. Solutions to this puzzle are expected to generate `AGG_SIG` conditions and possibly `CREATE_COIN` conditions.",
+      },
+    ],
+  },
+  {
+    name: "cat_v2",
     parameters: [
       {
         name: "MOD_HASH",
@@ -417,8 +435,9 @@ export const mods: ModDetail[] = [
     ],
   },
 ]
-export const modsdict: { [mod: string]: string } = mods.reduce((acc, cur) => ({ ...acc, [importmods[cur.name]]: cur.name }), {});
-export const modsprog: { [name: string]: string } = mods.reduce((acc, cur) => ({ ...acc, [cur.name]: importmods[cur.name] }), {});
+const allMods = Object.assign({}, importmods, otherMods);
+export const modsdict: { [mod: string]: string } = mods.reduce((acc, cur) => ({ ...acc, [allMods[cur.name]]: cur.name }), {});
+export const modsprog: { [name: string]: string } = mods.reduce((acc, cur) => ({ ...acc, [cur.name]: allMods[cur.name] }), {});
 export const modsparams: { [name: string]: ModParameter[] } = mods.reduce((acc, cur) => ({ ...acc, [cur.name]: cur.parameters }), {});
 
 export async function modshash(name: string): Promise<string> {
