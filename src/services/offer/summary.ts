@@ -18,7 +18,7 @@ export async function getOfferSummary(bundle: SpendBundle): Promise<OfferSummary
 
   const tryGetAssetId = async (puzzle_reveal: string): Promise<string> => {
     const { module, args } = await internalUncurry(puzzle_reveal);
-    if (modsdict[module] == "cat") {
+    if (modsdict[module] == "cat_v2") {
       const assetId = args[1];
       return assetId;
     }
