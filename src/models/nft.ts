@@ -1,3 +1,5 @@
+import { NftDetail } from "@/services/crypto/receive";
+
 export interface NftItemAttribute {
   trait_type: string;
   value: string;
@@ -15,6 +17,14 @@ export interface NftCollection {
   id: string;
   attributes: NftCollectionAttribute[];
 }
+
+interface DownloadedNftInfo {
+  metadata?: NftOffChainMetadata;
+  matchHash?: boolean;
+  status: "Ready" | "NoMetadata" | "Downloading" | "Processed";
+}
+
+export type DonwloadedNftCollection = { [name: string]: DownloadedNftInfo };
 
 export interface NftOffChainMetadata {
   format: "CHIP-0007";

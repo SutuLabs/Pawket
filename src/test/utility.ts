@@ -40,6 +40,7 @@ export function getTestAccount(privateKey: string): AccountEntity {
     tokens: {},
     nfts: [],
     dids: [],
+    extraInfo: {},
     allCats: [],
     addressGenerated: 0,
     addressPuzzles: [],

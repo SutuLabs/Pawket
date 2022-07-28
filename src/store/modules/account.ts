@@ -213,6 +213,7 @@ function getAccountEntity(
     allCats: [],
     nfts: [],
     dids: [],
+    extraInfo: {},
     addressGenerated: 0,
     addressPuzzles: [],
   };

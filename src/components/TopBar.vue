@@ -4,7 +4,7 @@
       <span @click="$emit('close')"
         ><b-icon class="is-pulled-left has-text-grey pr-3 is-clickable" icon="chevron-left"> </b-icon
       ></span>
-      <span class="pr-2">{{ title }}</span>
+      <span class="pr-2 is-inline-block text-ellipsis">{{ title }}</span>
       <b-tag type="is-info" v-if="tag">{{ tag }}</b-tag>
     </div>
     <div class="is-hidden-mobile modal-card-title">
@@ -40,5 +40,12 @@ export default class TopBar extends Vue {
 .border-bottom {
   border-bottom: 2px solid #ededed;
   background-color: white;
+}
+
+.text-ellipsis {
+  text-overflow: ellipsis;
+  width: 70%;
+  white-space: nowrap;
+  overflow: hidden;
 }
 </style>

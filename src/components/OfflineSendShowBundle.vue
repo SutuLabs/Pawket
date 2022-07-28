@@ -2,8 +2,13 @@
   <div class="modal-card">
     <section class="modal-card-body">
       <center v-if="qrcode">
-        <qrcode-vue :value="qrcode" size="300"></qrcode-vue>
-        {{ $t("offline.client.show.hint") }}
+        <div v-if="qrcode.length * 8 < MAX_LENGTH">
+          <qrcode-vue :value="qrcode" size="300"></qrcode-vue>
+          {{ $t("offline.client.show.hint") }}
+        </div>
+        <div v-else>
+           {{ $t("offline.client.show.overflow") }}
+        </div>
       </center>
       <b-field>
         <template #label>
@@ -34,6 +39,7 @@ export default class OfflineSendShowBundle extends Vue {
   @Prop() public bundle!: SpendBundle;
 
   public qrcode = "";
+  public MAX_LENGTH = 23648;
 
   async mounted(): Promise<void> {
     setTimeout(async () => {
