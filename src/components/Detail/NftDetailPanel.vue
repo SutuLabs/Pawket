@@ -33,11 +33,14 @@
             <key-box icon="checkbox-multiple-blank-outline" :value="nft.address" :showValue="true"></key-box>
           </b-field>
           <b-field :label="$t('nftDetail.ui.label.collection')">{{ metadata.collection.name }}</b-field>
-          <b-field :label="$t('nftDetail.ui.label.mintBy')"
-            >{{ $t("nftDetail.ui.label.did") }}
-            <key-box icon="checkbox-multiple-blank-outline" :value="nft.analysis.didOwner" :showValue="true"></key-box
-          ></b-field>
-          <b-field :label="$t('nftDetail.ui.label.description')">{{ metadata.description }}</b-field>
+          <b-field :label="$t('nftDetail.ui.label.description')">
+            <div v-if="metadata.description.length < 100">{{ metadata.description }}</div>
+            <div v-else>
+              <span>{{ metadata.description.slice(0, 100) }}</span
+              ><span v-if="!showMore">... <a @click="showMore = true">{{ $t("nftDetail.ui.button.showMore") }}</a></span
+              ><span v-if="showMore">{{ metadata.description.slice(100) }}<a @click="showMore = false">{{ $t("nftDetail.ui.button.showLess") }}</a></span>
+            </div>
+          </b-field>
           <div class="buttons is-hidden-mobile">
             <b-button
               :label="$t('nftDetail.ui.button.transfer')"
@@ -167,6 +170,7 @@ export default class NftDetailPanel extends Vue {
   @Prop() private account!: AccountEntity;
   @Prop() public nft!: NftDetail;
   @Prop() public metadata!: NftOffChainMetadata;
+  public showMore = false;
 
   @Emit("close")
   close(): void {

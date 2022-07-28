@@ -469,6 +469,7 @@
       },
       "show": {
         "hint": "Use Proxy to scan QR to send your transaction.",
+        "overflow": "Data exceeds maximum length, cannot generate QR code",
         "bundle": "Bundle",
         "copy": "Copy"
       }
@@ -1087,13 +1088,13 @@
       "label": {
         "nftId": "NFT ID:",
         "collection": "Collection",
-        "mintBy": "Minted by",
-        "did": "DID:",
         "description": "Description"
       },
       "button":{
         "transfer": "Transfer",
-        "makeOffer": "Make Offer"
+        "makeOffer": "Make Offer",
+        "showMore": "Show More",
+        "showLess": "Show Less"
       },
       "title": {
         "properties": "Properties",

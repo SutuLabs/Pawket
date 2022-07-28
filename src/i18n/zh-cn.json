@@ -469,6 +469,7 @@
       },
       "show": {
         "hint": "用离线代理扫描该二维码来发送交易",
+        "overflow": "数据过长, 无法生成二维码",
         "bundle": "数据包",
         "copy": "拷贝"
       }
@@ -1087,13 +1088,13 @@
       "label": {
         "nftId": "NFT ID:",
         "collection": "Collection",
-        "mintBy": "Minted by",
-        "did": "DID:",
         "description": "Description"
       },
       "button": {
         "transfer": "Transfer",
-        "makeOffer": "Make Offer"
+        "makeOffer": "Make Offer",
+        "showMore": "显示更多",
+        "showLess": "收起"
       },
       "title": {
         "properties": "Properties",
