@@ -181,12 +181,12 @@ export default class BundleSummary extends Vue {
       const mods = disassemble(mod);
       const argarr = Array.from(args.as_iter()).map((_) => disassemble(_ as SExp));
       const modname = modsdict[mods];
-      if (modname != "p2_delegated_puzzle_or_hidden_puzzle" && modname != "cat") {
+      if (modname != "p2_delegated_puzzle_or_hidden_puzzle" && modname != "cat_v2") {
         this.errorText = this.$tc("bundleSummary.notification.error.unknownMod");
         return;
       }
 
-      const catid = modname == "cat" ? argarr[1] : xchSymbol();
+      const catid = modname == "cat_v2" ? argarr[1] : xchSymbol();
       const unit = this.cats[catid] ?? catid;
 
       const coins = await this.executePuzzle(puz, sln);

@@ -202,7 +202,7 @@ test('Mint Nft', async () => {
 
   const account = getTestAccount("55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f");
 
-  const tokenPuzzles = await getAccountAddressDetails(account, [], tokenInfo(), xchPrefix(), xchSymbol());
+  const tokenPuzzles = await getAccountAddressDetails(account, [], tokenInfo(), xchPrefix(), xchSymbol(), undefined, "cat_v1");
   const availcoins: SymbolCoins = {
     [xchSymbol()]: [
       {
@@ -280,7 +280,7 @@ test('Transfer Nft', async () => {
   const changeAddress = puzzle.getAddressFromPuzzleHash(change_hex, xchPrefix());
   const targetAddress = puzzle.getAddressFromPuzzleHash(target_hex, xchPrefix());
 
-  const tokenPuzzles = await getAccountAddressDetails(account, [], tokenInfo(), xchPrefix(), xchSymbol());
+  const tokenPuzzles = await getAccountAddressDetails(account, [], tokenInfo(), xchPrefix(), xchSymbol(), undefined, "cat_v1");
   const availcoins: SymbolCoins = {
     [xchSymbol()]: []
   };

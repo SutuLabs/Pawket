@@ -1,7 +1,7 @@
 import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
 import { Bytes } from "clvm";
 import { CoinConditions, ConditionType, prefix0x } from '@/services/coin/condition';
-import puzzle, { catClvmTreehash } from "../crypto/puzzle";
+import puzzle from "../crypto/puzzle";
 import { ConditionOpcode } from "../coin/opcode";
 import transfer, { GetPuzzleApiCallback, SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { TokenPuzzleDetail } from "../crypto/receive";
@@ -10,7 +10,7 @@ import stdBundle from "../transfer/stdBundle";
 import { getOfferSummary, OfferEntity, OfferPlan, OfferSummary } from "./summary";
 import { GetParentPuzzleResponse } from "@/models/api";
 import { assemble, curry, disassemble } from "clvm_tools";
-import { modsprog } from "../coin/mods";
+import { modshash, modsprog } from "../coin/mods";
 import { getCoinName0x } from "../coin/coinUtility";
 import { Instance } from "../util/instance";
 
@@ -22,6 +22,7 @@ export async function generateOffer(
   tokenSymbol: string,
   chainId: string,
   nonceHex: string | null = null,
+  catModName: "cat_v1" | "cat_v2" = "cat_v2",
 ): Promise<SpendBundle> {
   if (offered.length != 1 || requested.length != 1) throw new Error("currently, only support single offer/request");
   if (offered[0].id && offered[0].plan.coins.length != 1) throw new Error("currently, only support single coin for CAT");
@@ -92,7 +93,8 @@ export async function generateOffer(
       if (!req.symbol) throw new Error("symbol cannot be empty.");
 
       const assetId = req.id;
-      const cat_mod = await curryMod(modsprog["cat"], catClvmTreehash, prefix0x(assetId), modsprog["settlement_payments"]);
+      const catClvmTreehash = await modshash(catModName);
+      const cat_mod = await curryMod(modsprog[catModName], catClvmTreehash, prefix0x(assetId), modsprog["settlement_payments"]);
       if (!cat_mod) throw new Error("cannot curry cat");
       const cat_settlement_tgt = prefix0x(await puzzle.getPuzzleHashFromPuzzle(cat_mod));
 
@@ -102,7 +104,7 @@ export async function generateOffer(
         amount: 0n,
       };
 
-      const puzzle_reveal_text = puzzle.getCatSettlementPuzzle(req.id);
+      const puzzle_reveal_text = puzzle.getCatSettlementPuzzle(req.id, catModName);
 
       // put special target into puzzle reverse dict
       puzzleCopy.filter(_ => _.symbol == req.symbol)[0].puzzles.push({

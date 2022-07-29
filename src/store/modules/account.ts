@@ -136,8 +136,8 @@ store.registerModule<IAccountState>("account", {
       const requests: TokenPuzzleAddress[] =
         account.type == "Address"
           ? <TokenPuzzleAddress[]>[
-              { symbol: xchSymbol(), puzzles: [{ hash: account.puzzleHash, type: "Unknown", address: account.firstAddress }] },
-            ]
+            { symbol: xchSymbol(), puzzles: [{ hash: account.puzzleHash, type: "Unknown", address: account.firstAddress }] },
+          ]
           : await getAccountAddressDetails(account, parameters.maxId);
 
       try {
@@ -229,6 +229,7 @@ export async function getAccountAddressDetails(
     store.state.account.tokenInfo,
     xchPrefix(),
     xchSymbol(),
-    maxId
+    maxId,
+    "cat_v2",
   );
 }
