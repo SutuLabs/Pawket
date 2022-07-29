@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "serve": "nodemon server.ts",
-    "import": "ts-node importmods.ts",
+    "importmods": "ts-node importmods.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Chiabee",

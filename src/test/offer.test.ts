@@ -63,7 +63,7 @@ test('Offer Encoding', async () => {
 
   assertBundle(expect, bundle);
 
-  const encoded = await encodeOffer(bundle);
+  const encoded = await encodeOffer(bundle, undefined, 2);
   assert(offerText, encoded);
 });
 
@@ -132,7 +132,7 @@ test('Make Offer 1', async () => {
 
   const nonce = "71bdf5d923a48956a8d26a36c6ea4a9959de221ff2ee986bce4827e5f037ceb8";
   const bundle = await generateOffer(offplan, reqs, tokenPuzzles, noNeedGetProof, xchSymbol(), chainId(), nonce, "cat_v1");
-  const encoded = await encodeOffer(bundle);
+  const encoded = await encodeOffer(bundle, undefined, 2);
 
   assertBundle(expect, bundle);
   assert(expectOfferText, encoded);
@@ -214,7 +214,7 @@ test('Make Offer 2', async () => {
 
   const nonce = "741f8564b6637aee92dd68548cfe7df8ec35b20029235565244944febd68bf8d";
   const bundle = await generateOffer(offplan, reqs, tokenPuzzles, localPuzzleApiCall, xchSymbol(), chainId(), nonce, "cat_v1");
-  const encoded = await encodeOffer(bundle);
+  const encoded = await encodeOffer(bundle, undefined, 2);
 
   assertBundle(expect, bundle);
   assert(expectOfferText, encoded);
