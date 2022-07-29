@@ -92,6 +92,7 @@ export default {
   globals: {
     'ts-jest': {
       useESM: true,
+      isolatedModules: true,
     },
   },
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
