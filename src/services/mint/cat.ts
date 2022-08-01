@@ -108,7 +108,7 @@ async function constructInternalBundle(
   const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: baseSymbol },];
   tgts[0].address = tgt_hex;
   const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, fee, tokenSymbol);
-  const bundle = await transfer.generateSpendBundle(plan, requests, [], tokenSymbol, chainId);
+  const bundle = await transfer.generateSpendBundleWithoutCat(plan, requests, [], tokenSymbol, chainId);
   return bundle;
 }
 

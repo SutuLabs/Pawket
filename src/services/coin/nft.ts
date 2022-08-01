@@ -64,7 +64,7 @@ export async function generateMintNftBundle(
 
   const bootstrapTgts: TransferTarget[] = [{ address: await modshash("singleton_launcher"), amount, symbol: baseSymbol }];
   const bootstrapSpendPlan = transfer.generateSpendPlan(availcoins, bootstrapTgts, change_hex, fee, baseSymbol);
-  const bootstrapSpendBundle = await transfer.generateSpendBundle(bootstrapSpendPlan, requests, [], baseSymbol, chainId);
+  const bootstrapSpendBundle = await transfer.generateSpendBundleWithoutCat(bootstrapSpendPlan, requests, [], baseSymbol, chainId);
   const bootstrapCoin = bootstrapSpendBundle.coin_spends[0].coin;// get the primary coin
   const bootstrapCoinId = getCoinName0x(bootstrapCoin);
   // TODO: assert puzzle announcement from launcher coin in p2 bootstrap coin
@@ -208,7 +208,7 @@ export async function generateTransferNftBundle(
     // throw new Error("fee is not supported in transfer");
     const feeTgts: TransferTarget[] = [{ address: "0x0000000000000000000000000000000000000000000000000000000000000000", amount: 0n, symbol: baseSymbol }];
     const feeSpendPlan = transfer.generateSpendPlan(availcoins, feeTgts, change_hex, fee, baseSymbol);
-    const feeSpendBundle = await transfer.generateSpendBundle(feeSpendPlan, requests, [], baseSymbol, chainId);
+    const feeSpendBundle = await transfer.generateSpendBundleWithoutCat(feeSpendPlan, requests, [], baseSymbol, chainId);
     const feeBundle = await combineSpendBundlePure(feeSpendBundle, bundle);
 
     return feeBundle;

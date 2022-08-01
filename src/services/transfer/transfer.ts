@@ -54,7 +54,28 @@ class Transfer {
     return plan;
   }
 
-  public async generateSpendBundle(
+  public async generateSpendBundleWithoutCat(
+    plan: SpendPlan,
+    puzzles: TokenPuzzleDetail[],
+    catAdditionalConditions: ConditionType[],
+    tokenSymbol: string,
+    chainId: string,
+  ): Promise<SpendBundle> {
+    return await this.generateSpendBundleInternal(plan, puzzles, catAdditionalConditions, tokenSymbol, chainId);
+  }
+
+  public async generateSpendBundleIncludingCat(
+    plan: SpendPlan,
+    puzzles: TokenPuzzleDetail[],
+    catAdditionalConditions: ConditionType[],
+    tokenSymbol: string,
+    chainId: string,
+    getPuzzle: GetPuzzleApiCallback,
+  ): Promise<SpendBundle> {
+    return await this.generateSpendBundleInternal(plan, puzzles, catAdditionalConditions, tokenSymbol, chainId, getPuzzle);
+  }
+
+  public async generateSpendBundleInternal(
     plan: SpendPlan,
     puzzles: TokenPuzzleDetail[],
     catAdditionalConditions: ConditionType[],

@@ -366,7 +366,7 @@ test('Take Offer CAT For Xch', async () => {
   assertBundle(expect, combined);
 });
 
-function getCatNameDict(account?: AccountEntity): { [id: string]: string } {
+function getCatNameDict(_account?: AccountEntity): { [id: string]: string } {
   const cats: PersistentCustomCat[] = [];
   return Object.assign(
     {},

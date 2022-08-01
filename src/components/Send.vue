@@ -119,6 +119,7 @@ import { getCatNames, getTokenInfo } from "@/services/coin/cat";
 import AddressField from "./AddressField.vue";
 import TopBar from "./TopBar.vue";
 import AddressBook, { Contact } from "./Settings/AddressBook.vue";
+import { getLineageProofPuzzle } from "@/services/transfer/call";
 
 @Component({
   components: {
@@ -368,7 +369,7 @@ export default class Send extends Vue {
       const memo = this.memo.replace(/[&/\\#,+()$~%.'":*?<>{}\[\] ]/g, "_");
       const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: this.selectedToken, memos: [tgt_hex, memo] }];
       const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
-      this.bundle = await transfer.generateSpendBundle(plan, this.requests, [], xchSymbol(), chainId());
+      this.bundle = await transfer.generateSpendBundleIncludingCat(plan, this.requests, [], xchSymbol(), chainId(), getLineageProofPuzzle);
     } catch (error) {
       Notification.open({
         message: this.$tc("send.ui.messages.failedToSign") + error,
