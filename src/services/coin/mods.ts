@@ -442,6 +442,7 @@ export const modsdict: { [mod: string]: string } = mods.reduce((acc, cur) => ({ 
 export const modsprog: { [name: string]: string } = mods.reduce((acc, cur) => ({ ...acc, [cur.name]: allModsProg[cur.name] }), {});
 export const modsparams: { [name: string]: ModParameter[] } = mods.reduce((acc, cur) => ({ ...acc, [cur.name]: cur.parameters }), {});
 export const modshex: { [name: string]: string } = mods.reduce((acc, cur) => ({ ...acc, [cur.name]: allModsHex[cur.name] }), {});
+export const modshexdict: { [mod_hex: string]: string } = mods.reduce((acc, cur) => ({ ...acc, [allModsHex[cur.name]]: cur.name }), {});
 
 export async function modshash(name: string): Promise<string> {
   return prefix0x(await puzzle.getPuzzleHashFromPuzzle(modsprog[name]));

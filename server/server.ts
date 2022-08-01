@@ -4,10 +4,11 @@ import puzzle from "../src/services/crypto/puzzle";
 import { Instance } from "../src/services/util/instance";
 import { assemble } from "clvm_tools/clvm_tools/binutils";
 import { parseCoin, simplifyPuzzle } from "../src/services/coin/analyzer";
-import { modsprog } from "../src/services/coin/mods";
+import { modspuz } from "../src/services/coin/mods";
 import cluster from 'cluster'
 import os from 'os'
-import { prefix0x } from '../src/services/coin/condition';
+import { unprefix0x } from '../src/services/coin/condition';
+import { SExp, to_sexp_f, sexp_from_stream, Stream, Bytes } from "clvm";
 
 
 // Check the number of available CPU.
@@ -25,8 +26,7 @@ if (cluster.isPrimary && numCPUs > 1) {
   }
 
   // This event is firs when worker died
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  cluster.on('exit', (worker, code, signal) => {
+  cluster.on('exit', (worker, _code, _signal) => {
     console.log(`worker ${worker.process.pid} died`);
   });
 }
@@ -38,7 +38,7 @@ else {
   app.use(express.json({ limit: '3mb' }))
   app.use(express.urlencoded({ extended: true }))
 
-  app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
+  app.use((_req: express.Request, res: express.Response, next: express.NextFunction) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "*")
     res.header("Access-Control-Allow-Headers", "*");
@@ -64,23 +64,29 @@ else {
         console.time("parse_block");
         const r = req.body as ParseBlockRequest;
 
-        const getArg = function (ref: string): string { return "(" + prefix0x(ref) + ")"; };
-        const getArgs = async function (ref_list: string[]): Promise<string> {
-          return "(" + [await puzzle.disassemblePuzzle(r.generator), "(" + ref_list.map(_ => getArg(_)).join(" ") + ")"].join(" ") + ")";
+        const sexpAssemble = function (hexString: string): SExp {
+          const bts = Bytes.from(hexString, "hex")
+          const input_sexp = sexp_from_stream(new Stream(bts as Bytes), to_sexp_f);
+          return input_sexp;
         };
+        const getArgs = function (ref_list: string[]): SExp {
+          return SExp.to([sexpAssemble(r.generator), [ref_list.map(_ => Bytes.from(unprefix0x(_), "hex"))]]);
+        };
+
         // console.time("brun");
         const bg = r.ref_list?.length ?? 0 > 0
-          ? await puzzle.calcPuzzleResult(modsprog["generator"], await getArgs(r.ref_list ?? []))
-          : await puzzle.calcPuzzleResult(r.generator, "ff8080", "--hex"); // ff8080 == "(())"
+          ? await puzzle.calcPuzzleResult(await modspuz("generator"), getArgs(r.ref_list ?? []).as_bin().hex(), "--hex", "--dump")
+          : await puzzle.calcPuzzleResult(r.generator, "ff8080", "--hex", "--dump"); // ff8080 == "(())"
         // console.timeEnd("brun");
         // console.time("assemble");
-        const prog = assemble(bg);
+        const prog = sexpAssemble(bg);
         // console.timeEnd("assemble");
         // console.time("parse_coin");
         const argarr = await Promise.all(Array.from(prog.first().as_iter())
           .map(async _ => await parseCoin(_)));
         // console.timeEnd("parse_coin");
         console.log(`generated ${argarr.length} coins`);
+        // res.send(JSON.stringify(argarr, null, 4))
         res.send(JSON.stringify(argarr))
       }
       catch (err) {
