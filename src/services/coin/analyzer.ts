@@ -1,11 +1,12 @@
 import 'dotenv/config'
 import { disassemble } from "clvm_tools/clvm_tools/binutils";
-import { SExp, Tuple } from "clvm";
+import { SExp, Tuple, to_sexp_f, sexp_from_stream, Stream, Bytes } from "clvm";
 import { uncurry } from "clvm_tools/clvm_tools/curry";
-import { modshexdict } from "./mods";
+import { modshexdict, modspuz } from "./mods";
 import { getCoinName0x } from './coinUtility';
 import { prefix0x, unprefix0x } from './condition';
 import { sha256tree } from 'clvm_tools';
+import puzzle from '../crypto/puzzle';
 
 export interface SimplePuzzle {
   mod: string,
@@ -71,6 +72,18 @@ export async function parseCoin(all: SExp): Promise<CoinInfo> {
   return { parent, puzzle: puz_hex, parsed_puzzle: decPuzzle, amount: amount.toString(), solution, coin_name, mods, key_param };
 }
 
+export async function parseBlock(generator_hex: string, ref_hex_list: string[] | undefined): Promise<string> {
+  const getArgs = function (ref_list: string[]): SExp {
+    return SExp.to([sexpAssemble(generator_hex), [ref_list.map(_ => Bytes.from(unprefix0x(_), "hex"))]]);
+  };
+
+  const bg = ref_hex_list?.length ?? 0 > 0
+    ? await puzzle.calcPuzzleResult(await modspuz("generator"), getArgs(ref_hex_list ?? []).as_bin().hex(), "--hex", "--dump")
+    : await puzzle.calcPuzzleResult(generator_hex, "ff8080", "--hex", "--dump"); // ff8080 == "(())"
+
+  return bg;
+}
+
 function getModsPath(parsed_puzzle: SimplePuzzle | CannotParsePuzzle): string {
   if ("raw" in parsed_puzzle) return "";
   return `${parsed_puzzle.mod}(${parsed_puzzle.args.map(_ => getModsPath(_)).filter(_ => _).join(",")})`;
@@ -106,3 +119,9 @@ function getKeyParam(parsed_puzzle: SimplePuzzle | CannotParsePuzzle): string | 
 
   return undefined;
 }
+
+export const sexpAssemble = function (hexString: string): SExp {
+  const bts = Bytes.from(hexString, "hex")
+  const input_sexp = sexp_from_stream(new Stream(bts as Bytes), to_sexp_f);
+  return input_sexp;
+};
