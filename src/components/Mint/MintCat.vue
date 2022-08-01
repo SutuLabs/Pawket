@@ -96,7 +96,7 @@ import FeeSelector from "@/components/FeeSelector.vue";
 import BundleSummary from "../BundleSummary.vue";
 import SendSummary from "../SendSummary.vue";
 import { generateMintCatBundle } from "@/services/mint/cat";
-import { chainId, xchPrefix, xchSymbol } from "@/store/modules/network";
+import { chainId, ensureAddress, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
 import { getTokenInfo } from "@/services/coin/cat";
@@ -136,7 +136,7 @@ export default class MintCat extends Vue {
 
   mounted(): void {
     this.loadCoins();
-    this.address = this.account.firstAddress ?? "";
+    this.address = ensureAddress(this.account.firstAddress);
   }
 
   @Emit("close")
