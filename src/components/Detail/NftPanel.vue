@@ -57,6 +57,7 @@ import { DonwloadedNftCollection, NftOffChainMetadata } from "@/models/nft";
 import utility from "@/services/crypto/utility";
 import { unprefix0x } from "@/services/coin/condition";
 import { crossOriginDownload } from "@/services/api/crossOriginDownload";
+import { getScalarString } from "@/services/coin/nft";
 
 interface CollectionNfts {
   name: string;
@@ -101,7 +102,7 @@ export default class NftPanel extends Vue {
   }
 
   get extraInfo(): DonwloadedNftCollection {
-    return this.account.extraInfo ?? {}
+    return this.account.extraInfo ?? {};
   }
 
   async crossOriginDownload(url: string, filename: string | undefined): Promise<void> {
@@ -127,9 +128,10 @@ export default class NftPanel extends Vue {
   }
 
   async downloadNftMetadata(nft: NftDetail): Promise<void> {
-    if (!nft.analysis.metadata.metadataUri) return;
+    const uri = getScalarString(nft.analysis.metadata.metadataUri);
+    if (!uri) return;
     // console.log("start download nft", nft.analysis.metadata.metadataUri);
-    const resp = await fetch(nft.analysis.metadata.metadataUri);
+    const resp = await fetch(uri);
     const body = await resp.blob();
     const bodyhex = utility.toHexString(await utility.purehash(await body.arrayBuffer()));
     const md = JSON.parse(await body.text()) as NftOffChainMetadata;
