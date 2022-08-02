@@ -53,9 +53,9 @@ const routes: Array<RouteConfig> = [
     component: () => import(/* webpackChunkName: "simulator" */ "../views/Simulator.vue"),
   },
   {
-    path: "/trade",
-    name: "Trade",
-    component: () => import(/* webpackChunkName: "trade" */ "../views/Trade.vue"),
+    path: "/cns",
+    name: "Cns",
+    component: () => import(/* webpackChunkName: "trade" */ "../views/Cns.vue"),
   },
   {
     path: "/explore",

@@ -14,17 +14,17 @@
       {{ $t("app.ui.navigation.wallet") }}
     </b-button>
     <b-button
-      @click="$router.push('/trade')"
-      icon-left="trending-up"
+      @click="$router.push('/cns')"
+      icon-left="dns"
       type="is-primary"
       outlined
       :class="{
         'border-less': true,
-        'has-background-primary': path == '/trade',
-        'has-text-white': path == '/trade',
+        'has-background-primary': path == '/cns',
+        'has-text-white': path == '/cns',
       }"
     >
-      {{ $t("app.ui.navigation.trade") }}
+      {{ $t("app.ui.navigation.cns") }}
     </b-button>
     <b-button
       @click="$router.push('/explore')"

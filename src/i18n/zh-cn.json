@@ -26,7 +26,7 @@
       },
       "navigation": {
         "wallet": "钱包",
-        "trade": "交易",
+        "CNS": "CNS",
         "explore": "探索",
         "settings": "设置"
       }
@@ -948,8 +948,8 @@
       }
     }
   },
-  "trade": {
-    "title": "交易"
+  "cns": {
+    "title": "CNS"
   },
   "explore": {
     "title": "探索",

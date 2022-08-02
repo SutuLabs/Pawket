@@ -26,7 +26,7 @@
       },
       "navigation": {
         "wallet": "Wallet",
-        "trade": "Trade",
+        "cns": "CNS",
         "explore": "Explore",
         "settings": "Settings"
       }
@@ -948,8 +948,8 @@
       }
     }
   },
-  "trade": {
-    "title": "Trade"
+  "cns": {
+    "title": "CNS"
   },
   "explore": {
     "title": "Explore",
