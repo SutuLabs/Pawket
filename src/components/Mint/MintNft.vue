@@ -120,7 +120,7 @@ import { debugBundle, submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/FeeSelector.vue";
 import BundleSummary from "../BundleSummary.vue";
 import SendSummary from "../SendSummary.vue";
-import { chainId, xchPrefix, xchSymbol } from "@/store/modules/network";
+import { chainId, ensureAddress, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getTokenInfo } from "@/services/coin/cat";
 import AddressField from "../AddressField.vue";
 import { Bytes } from "clvm";
@@ -184,7 +184,7 @@ export default class MintNft extends Vue {
 
   mounted(): void {
     this.loadCoins();
-    this.address = this.account.firstAddress ?? "";
+    this.address = ensureAddress(this.account.firstAddress);
   }
 
   @Emit("close")

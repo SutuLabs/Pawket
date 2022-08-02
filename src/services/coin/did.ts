@@ -58,7 +58,7 @@ export async function generateMintDidBundle(
 
   const bootstrapTgts: TransferTarget[] = [{ address: await modshash("singleton_launcher"), amount, symbol: baseSymbol }];
   const bootstrapSpendPlan = transfer.generateSpendPlan(availcoins, bootstrapTgts, change_hex, fee, baseSymbol);
-  const bootstrapSpendBundle = await transfer.generateSpendBundle(bootstrapSpendPlan, requests, [], baseSymbol, chainId);
+  const bootstrapSpendBundle = await transfer.generateSpendBundleWithoutCat(bootstrapSpendPlan, requests, [], baseSymbol, chainId);
   const bootstrapCoin = bootstrapSpendBundle.coin_spends[0].coin;// get the primary coin
   const bootstrapCoinId = getCoinName0x(bootstrapCoin);
 

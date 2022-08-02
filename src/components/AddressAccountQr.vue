@@ -23,6 +23,7 @@ import KeyBox from "@/components/KeyBox.vue";
 import QrcodeVue from "qrcode.vue";
 import { shorten } from "@/filters/addressConversion";
 import TopBar from "./TopBar.vue";
+import { ensureAddress } from "@/store/modules/network";
 
 @Component({
   components: {
@@ -45,7 +46,7 @@ export default class AddressAccountQr extends Vue {
   }
 
   mounted(): void {
-    Vue.set(this, "address", this.account.firstAddress);
+    Vue.set(this, "address", ensureAddress(this.account.firstAddress));
   }
 
   @Emit("close")

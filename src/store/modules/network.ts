@@ -1,5 +1,6 @@
 import store from "@/store";
 import { TokenInfo } from "@/models/account";
+import puzzle from "@/services/crypto/puzzle";
 
 export function xchPrefix(): string {
   return store.state.network.prefix;
@@ -12,6 +13,11 @@ export function rpcUrl(): string {
 }
 export function chainId(): string {
   return store.state.network.network.chainId;
+}
+
+export function ensureAddress(address: string | undefined): string {
+  if (!address) return "";
+  return puzzle.getAddressFromPuzzleHash(puzzle.getPuzzleHashFromAddress(address), xchPrefix());
 }
 
 export interface NetworkDetail {
