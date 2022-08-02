@@ -26,11 +26,11 @@ export default class DidPanel extends Vue {
   public isOpen: number | string = 0;
 
   get dids(): DidDetail[] {
-    return this.account.dids;
+    return this.account.dids ?? [];
   }
 
   async refresh(): Promise<void> {
-    store.dispatch("refreshAssets");
+    store.dispatch("refreshDids");
   }
 
   addDid(): void {
