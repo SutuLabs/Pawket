@@ -22,7 +22,7 @@
                     >{{ $t("nftDetail.ui.dropdown.spaceScan") }}
                   </b-dropdown-item>
                 </a>
-                <a class="has-text-dark" @click="crossOriginDownload(nft.analysis.metadata.imageUri, nft.metadata.name)">
+                <a class="has-text-dark" @click="crossOriginDownload(nft.metadata.uri, nft.metadata.name)">
                   <b-dropdown-item aria-role="listitem">
                     <b-icon class="media-left" icon="download" size="is-small"></b-icon>{{ $t("nftDetail.ui.dropdown.download") }}
                   </b-dropdown-item>

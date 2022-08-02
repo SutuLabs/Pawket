@@ -36,11 +36,6 @@
         "copySuccess": "复制成功",
         "copyFailed": "复制失败"
       }
-    },
-    "switchNetwork": {
-      "message": "网络已切换。为保证一切功能正常使用，建议重新登入。",
-      "confirm": "重新登入",
-      "cancel": "稍后"
     }
   },
   "footer": {

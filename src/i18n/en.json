@@ -36,11 +36,6 @@
         "copySuccess": "Copy successfully.",
         "copyFailed": "Copy failed."
       }
-    },
-    "switchNetwork": {
-      "message": "The network has been switched. To make sure that all funtions can be used normally, it is recommended to log in again.",
-      "confirm": "Re-Login",
-      "cancel": "Later"
     }
   },
   "footer": {

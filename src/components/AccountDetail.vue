@@ -92,7 +92,7 @@
       <div id="tab"></div>
       <div class="p-2">
         <b-tabs position="is-centered" class="block" expanded>
-          <b-tab-item :label="$t('accountDetail.ui.tab.asset')">
+          <b-tab-item :label="$t('accountDetail.ui.tab.asset')" class="min-height-20">
             <a
               v-for="cat of tokenList"
               :key="cat.id"
@@ -126,10 +126,10 @@
               >
             </div>
           </b-tab-item>
-          <b-tab-item :label="$t('accountDetail.ui.tab.nft')">
+          <b-tab-item :label="$t('accountDetail.ui.tab.nft')" class="min-height-20">
             <nft-panel :account="account" @changePage="changePage"></nft-panel>
           </b-tab-item>
-          <b-tab-item :label="$t('accountDetail.ui.tab.utxos')">
+          <b-tab-item :label="$t('accountDetail.ui.tab.utxos')" class="min-height-20">
             <utxo-panel :tokenInfo="tokenInfo" v-model="activities" @changePage="changePage"></utxo-panel>
           </b-tab-item>
         </b-tabs>
@@ -165,7 +165,6 @@ import DidPanel from "@/components/Detail/DidPanel.vue";
 import Dapp from "./Dapp.vue";
 import ErrorLog from "./ErrorLog.vue";
 import AccountManagement from "./AccountManagement/AccountManagement.vue";
-import { tc } from "@/i18n/i18n";
 import { isMobile } from "@/services/view/responsive";
 import AddressAccountQr from "./AddressAccountQr.vue";
 import { getAllCats } from "@/store/modules/account";
@@ -199,14 +198,6 @@ export default class AccountDetail extends Vue {
 
   set networkId(value: string) {
     store.dispatch("switchNetwork", value);
-    this.$buefy.dialog.confirm({
-      message: tc("app.switchNetwork.message"),
-      confirmText: tc("app.switchNetwork.confirm"),
-      cancelText: tc("app.switchNetwork.cancel"),
-      type: "is-primary",
-      hasIcon: true,
-      onConfirm: () => store.dispatch("lock"),
-    });
   }
 
   get networks(): NetworkInfo {
@@ -435,5 +426,9 @@ export default class AccountDetail extends Vue {
 .nav-box {
   max-width: 1000px;
   margin: auto;
+}
+
+.min-height-20 {
+  min-height: 20vh;
 }
 </style>

@@ -31,7 +31,6 @@ import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { NetworkInfo } from "@/store/modules/network";
-import { tc } from "@/i18n/i18n";
 import TopBar from "../TopBar.vue";
 
 @Component({
@@ -70,17 +69,6 @@ export default class General extends Vue {
 
   set network(value: string) {
     store.dispatch("switchNetwork", value);
-    this.$buefy.dialog.confirm({
-      message: tc("app.switchNetwork.message"),
-      confirmText: tc("app.switchNetwork.confirm"),
-      cancelText: tc("app.switchNetwork.cancel"),
-      type: "is-primary",
-      hasIcon: true,
-      onConfirm: () => {
-        this.$emit("close");
-        store.dispatch("lock");
-      },
-    });
   }
 
   get lang(): string {
