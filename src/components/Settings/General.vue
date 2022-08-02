@@ -31,7 +31,6 @@ import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { NetworkInfo } from "@/store/modules/network";
-import { tc } from "@/i18n/i18n";
 import TopBar from "../TopBar.vue";
 
 @Component({

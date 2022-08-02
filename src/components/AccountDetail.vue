@@ -92,7 +92,7 @@
       <div id="tab"></div>
       <div class="p-2">
         <b-tabs position="is-centered" class="block" expanded>
-          <b-tab-item :label="$t('accountDetail.ui.tab.asset')">
+          <b-tab-item :label="$t('accountDetail.ui.tab.asset')" class="min-height-20">
             <a
               v-for="cat of tokenList"
               :key="cat.id"
@@ -126,10 +126,10 @@
               >
             </div>
           </b-tab-item>
-          <b-tab-item :label="$t('accountDetail.ui.tab.nft')">
+          <b-tab-item :label="$t('accountDetail.ui.tab.nft')" class="min-height-20">
             <nft-panel :account="account" @changePage="changePage"></nft-panel>
           </b-tab-item>
-          <b-tab-item :label="$t('accountDetail.ui.tab.utxos')">
+          <b-tab-item :label="$t('accountDetail.ui.tab.utxos')" class="min-height-20">
             <utxo-panel :tokenInfo="tokenInfo" v-model="activities" @changePage="changePage"></utxo-panel>
           </b-tab-item>
         </b-tabs>
@@ -427,5 +427,9 @@ export default class AccountDetail extends Vue {
 .nav-box {
   max-width: 1000px;
   margin: auto;
+}
+
+.min-height-20 {
+  min-height: 20vh;
 }
 </style>
