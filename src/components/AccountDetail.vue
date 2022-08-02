@@ -199,14 +199,6 @@ export default class AccountDetail extends Vue {
 
   set networkId(value: string) {
     store.dispatch("switchNetwork", value);
-    this.$buefy.dialog.confirm({
-      message: tc("app.switchNetwork.message"),
-      confirmText: tc("app.switchNetwork.confirm"),
-      cancelText: tc("app.switchNetwork.cancel"),
-      type: "is-primary",
-      hasIcon: true,
-      onConfirm: () => store.dispatch("lock"),
-    });
   }
 
   get networks(): NetworkInfo {
