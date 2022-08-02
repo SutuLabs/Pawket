@@ -2,16 +2,23 @@ import { CoinItem, OriginCoin } from "@/models/wallet";
 import store from "@/store";
 import { prefix0x } from "../coin/condition";
 import receive, { TokenPuzzleAddress, TokenPuzzleDetail } from "../crypto/receive";
-import { getAccountAddressDetails, getAccountCats } from "@/store/modules/account";
+import { getAccountCats } from "@/store/modules/account";
 import { SymbolCoins } from "./transfer";
-import { rpcUrl } from "@/store/modules/network";
+import { rpcUrl, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { AccountEntity } from "@/models/account";
+import { getAccountAddressDetails } from "../util/account";
 
 
 class CoinHandler {
 
   public async getAssetsRequestDetail(account: AccountEntity): Promise<TokenPuzzleDetail[]> {
-    return await getAccountAddressDetails(account);
+    return await getAccountAddressDetails(
+      account,
+      getAccountCats(account),
+      store.state.account.tokenInfo,
+      xchPrefix(),
+      xchSymbol(),
+    );
   }
 
   public async getAvailableCoins(requests: TokenPuzzleAddress[], tokenNames: string[]): Promise<SymbolCoins> {

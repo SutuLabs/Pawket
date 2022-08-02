@@ -14,6 +14,7 @@ export async function getAccountAddressDetails(
 ): Promise<TokenPuzzleDetail[]> {
   if (typeof maxId !== "number" || maxId <= 0) maxId = account.addressRetrievalCount;
   if (typeof maxId !== "number" || maxId <= 0) DEFAULT_ADDRESS_RETRIEVAL_COUNT;
+  if(!account.key.privateKey) throw new Error("Private key cannot empty to get account addresses. (Are you working with address account which don't have private key?)");
 
   if (account.addressGenerated == maxId) {
     return account.addressPuzzles;

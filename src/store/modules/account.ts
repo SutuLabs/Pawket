@@ -1,7 +1,7 @@
 import store from "@/store";
 import account, { AccountKey } from "@/services/crypto/account";
 import Vue from "vue";
-import receive, { DidDetail, TokenPuzzleAddress, TokenPuzzleDetail } from "@/services/crypto/receive";
+import receive, { DidDetail, TokenPuzzleAddress } from "@/services/crypto/receive";
 import { rpcUrl, xchPrefix, xchSymbol } from "./network";
 import { AccountEntity, AccountTokens, AccountType, CustomCat, TokenInfo } from "@/models/account";
 import {
@@ -133,13 +133,8 @@ store.registerModule<IAccountState>("account", {
         resetState();
         return;
       }
-      const requests: TokenPuzzleAddress[] =
-        account.type == "Address"
-          ? <TokenPuzzleAddress[]>[
-            { symbol: xchSymbol(), puzzles: [{ hash: account.puzzleHash, type: "Unknown", address: account.firstAddress }] },
-          ]
-          : await getAccountAddressDetails(account, parameters.maxId);
 
+      const requests = await getAccountAddressDetails(account, parameters.maxId);
       try {
         const records = await receive.getCoinRecords(requests, true, rpcUrl());
         const activities = receive.convertActivities(requests, records);
@@ -222,14 +217,22 @@ function getAccountEntity(
 export async function getAccountAddressDetails(
   account: AccountEntity,
   maxId: number | undefined = undefined
-): Promise<TokenPuzzleDetail[]> {
-  return await getAccountAddressDetailsExternal(
-    account,
-    getAccountCats(account),
-    store.state.account.tokenInfo,
-    xchPrefix(),
-    xchSymbol(),
-    maxId,
-    "cat_v2",
-  );
+): Promise<TokenPuzzleAddress[]> {
+
+  const requests: TokenPuzzleAddress[] =
+    account.type == "Address"
+      ? <TokenPuzzleAddress[]>[
+        { symbol: xchSymbol(), puzzles: [{ hash: account.puzzleHash, type: "Unknown", address: account.firstAddress }] },
+      ]
+      : await getAccountAddressDetailsExternal(
+        account,
+        getAccountCats(account),
+        store.state.account.tokenInfo,
+        xchPrefix(),
+        xchSymbol(),
+        maxId,
+        "cat_v2",
+      );
+
+  return requests;
 }
