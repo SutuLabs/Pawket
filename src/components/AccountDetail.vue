@@ -165,7 +165,6 @@ import DidPanel from "@/components/Detail/DidPanel.vue";
 import Dapp from "./Dapp.vue";
 import ErrorLog from "./ErrorLog.vue";
 import AccountManagement from "./AccountManagement/AccountManagement.vue";
-import { tc } from "@/i18n/i18n";
 import { isMobile } from "@/services/view/responsive";
 import AddressAccountQr from "./AddressAccountQr.vue";
 import { getAllCats } from "@/store/modules/account";
