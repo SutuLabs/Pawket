@@ -87,6 +87,41 @@ Object {
 }
 `;
 
+exports[`Analyze Nft 4: nft analysis result 1`] = `
+Object {
+  "didOwner": "",
+  "hintPuzzle": "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "launcherId": "0x5293c873037e8dc8000519a86ab8ed2f60d9d53db49aca3316859057954ea0a9",
+  "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+  "metadata": Object {
+    "imageHash": "5d314a2dd1f648041ef88102ddfe0a51766b2a535ddd3a4c682879615fd220d4",
+    "imageUri": Array [
+      "https://bafybeib7mxxa3oplw42tiwyorxztsywpwujxtswok4256o3nr6t2aa3guy.ipfs.nftstorage.link/nft/202281/5d314a2dd1f648041ef88102ddfe0a51766b2a535ddd3a4c682879615fd220d4.png",
+      "https://github.com/nongyehezuoshe/bshn/raw/main/nft/202281/5d314a2dd1f648041ef88102ddfe0a51766b2a535ddd3a4c682879615fd220d4.png",
+    ],
+    "licenseHash": "",
+    "licenseUri": "",
+    "metadataHash": "cc101ce2b80998a8da3fa638b3accff5631abbae9b5e5a13120881efed8145dd",
+    "metadataUri": Array [
+      "https://bafybeighvsqccu4nq2zcogcj5avn3odchwd663knfkdemwxn2exkrwidjm.ipfs.nftstorage.link/meta/202281/cc101ce2b80998a8da3fa638b3accff5631abbae9b5e5a13120881efed8145dd.json",
+      "https://github.com/nongyehezuoshe/bshn/raw/main/meta/202281/cc101ce2b80998a8da3fa638b3accff5631abbae9b5e5a13120881efed8145dd.json",
+    ],
+    "serialNumber": "01",
+    "serialTotal": "01",
+  },
+  "metadataUpdaterPuzzleHash": "0xfe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b",
+  "nftOwnershipModHash": "0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
+  "nftStateModHash": "0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
+  "p2InnerPuzzle": "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0x9684f017a0b02928260108206a96ed3c66c724b69005c05626109435f184ca980960c1a008437c5d118f016f16c3d51e) 1))",
+  "p2Owner": "05082518df7b5277bdadd31f5ddcea5c00152bfd714ab6f325cbb2f6155c7f15",
+  "previousOwner": "0x977a6f53dd6ee1fb3754550c493845be0a2b1cd82515f3a035afd12265a5d897",
+  "rawMetadata": "((117 \\"https://bafybeib7mxxa3oplw42tiwyorxztsywpwujxtswok4256o3nr6t2aa3guy.ipfs.nftstorage.link/nft/202281/5d314a2dd1f648041ef88102ddfe0a51766b2a535ddd3a4c682879615fd220d4.png\\" \\"https://github.com/nongyehezuoshe/bshn/raw/main/nft/202281/5d314a2dd1f648041ef88102ddfe0a51766b2a535ddd3a4c682879615fd220d4.png\\") (104 . 0x5d314a2dd1f648041ef88102ddfe0a51766b2a535ddd3a4c682879615fd220d4) (28021 \\"https://bafybeighvsqccu4nq2zcogcj5avn3odchwd663knfkdemwxn2exkrwidjm.ipfs.nftstorage.link/meta/202281/cc101ce2b80998a8da3fa638b3accff5631abbae9b5e5a13120881efed8145dd.json\\" \\"https://github.com/nongyehezuoshe/bshn/raw/main/meta/202281/cc101ce2b80998a8da3fa638b3accff5631abbae9b5e5a13120881efed8145dd.json\\") (27765) (29550 . 1) (29556 . 1) (28008 . 0xcc101ce2b80998a8da3fa638b3accff5631abbae9b5e5a13120881efed8145dd))",
+  "royaltyAddress": "0xf0cc0430114a43b4e16b398f95c03c38a3a668eff3785e5f080fb3ea5ca9cb3c",
+  "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
+  "tradePricePercentage": 1,
+}
+`;
+
 exports[`Mint Nft: spendbundle 1`] = `
 Object {
   "aggregated_signature": "a6a4dd809e81c641174826dd8e04477f0c7abb4eb9227b501877109cb198c05d1e23a895eb246404b0feee1af9331587191b6af4e395acacfaaf6d5f440d4917f108c0f2f05e2bae6dc9ecfcf750c966ab95658954e1184d221976f9e657b5a1",

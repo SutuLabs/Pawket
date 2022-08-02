@@ -8,7 +8,7 @@ import { assemble } from "clvm_tools/clvm_tools/binutils";
 
 export type SingletonStructList = [Bytes, [Bytes, Bytes]];
 
-export type ParsedMetadata = { [name: string]: string };
+export type ParsedMetadata = { [name: string]: string | string[] | undefined };
 
 export async function constructSingletonTopLayerPuzzle(
   launcherId: string,
@@ -66,15 +66,17 @@ export function parseMetadata(
   const parsed: ParsedMetadata = {};
   for (let i = 0; i < metalist.length; i++) {
     const meta = metalist[i];
-    if (meta.length > 2) throw new Error(`Face abnormal metalist: ` + metalist);
-    parsed[meta[0]] = meta[1];
+    if (meta.length == 0) throw new Error(`Face abnormal metalist: ` + JSON.stringify(metalist));
+    else if (meta.length > 2) parsed[meta[0]] = meta.slice(1);
+    else parsed[meta[0]] = meta[1];
 
   }
 
   return parsed;
 }
 
-export function hex2asc(hex: string | undefined): string | undefined {
+export function hex2asc(hex: string | string[] | undefined): string | string[] | undefined {
   if (!hex) return hex;
-  return Buffer.from(hex, "hex").toString();
+  if (typeof hex === "string") return Buffer.from(hex, "hex").toString();
+  return hex.map(_ => Buffer.from(_, "hex").toString());
 }

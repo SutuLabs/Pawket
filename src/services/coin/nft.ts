@@ -330,12 +330,18 @@ async function constructMetadataString(metadata: NftMetadataValues): Promise<str
     const num = parseInt(hex, 16);
     return num.toFixed(0);
   }
+  const uriToStr = function (uri: string | string[] | undefined): string {
+    if (!uri) return "";
+    if (typeof uri === "string") return ` "${uri}"`;
+    return " " + uri.map(_ => `"${_}"`).join(" ");
+
+  };
   const md = "(" + [
-    `${toNumber(mkeys.imageUri)} "${metadata.imageUri}"`,
+    `${toNumber(mkeys.imageUri)}${uriToStr(metadata.imageUri)}`,
     metadata.imageHash ? `${toNumber(mkeys.imageHash)} . ${prefix0x(metadata.imageHash)}` : toNumber(mkeys.imageHash),
-    `${toNumber(mkeys.metadataUri)} "${metadata.metadataUri}"`,
+    `${toNumber(mkeys.metadataUri)}${uriToStr(metadata.metadataUri)}`,
     metadata.metadataHash ? `${toNumber(mkeys.metadataHash)} . ${prefix0x(metadata.metadataHash)}` : toNumber(mkeys.metadataHash),
-    `${toNumber(mkeys.licenseUri)} "${metadata.licenseUri}"`,
+    `${toNumber(mkeys.licenseUri)}${uriToStr(metadata.licenseUri)}`,
     metadata.licenseHash ? `${toNumber(mkeys.licenseHash)} . ${prefix0x(metadata.licenseHash)}` : toNumber(mkeys.licenseHash),
     `${toNumber(mkeys.serialNumber)} . ${toNumber(metadata.serialNumber)}`,
     `${toNumber(mkeys.serialTotal)} . ${toNumber(metadata.serialTotal)}`,
@@ -397,14 +403,26 @@ function getNftMetadataKeys(): NftMetadataKeys {
 function getNftMetadataInfo(parsed: ParsedMetadata): NftMetadataValues {
   const mkeys = getNftMetadataKeys();
 
+  const getScalar = function (input: string | string[] | undefined): string {
+    if (!input) return "";
+    if (typeof input !== "string") throw new Error("metadata abnormally present a array");
+    return input;
+  }
+
   return {
     imageUri: hex2asc(parsed[mkeys.imageUri]) ?? "",
-    imageHash: parsed[mkeys.imageHash] ?? "",
+    imageHash: getScalar(parsed[mkeys.imageHash]),
     metadataUri: hex2asc(parsed[mkeys.metadataUri]) ?? "",
-    metadataHash: parsed[mkeys.metadataHash] ?? "",
+    metadataHash: getScalar(parsed[mkeys.metadataHash]),
     licenseUri: hex2asc(parsed[mkeys.licenseUri]) ?? "",
-    licenseHash: parsed[mkeys.licenseHash] ?? "",
-    serialNumber: parsed[mkeys.serialNumber] ?? "",
-    serialTotal: parsed[mkeys.serialTotal] ?? "",
+    licenseHash: getScalar(parsed[mkeys.licenseHash]),
+    serialNumber: getScalar(parsed[mkeys.serialNumber]),
+    serialTotal: getScalar(parsed[mkeys.serialTotal]),
   };
+}
+
+export const getScalarString = function (input: string | string[] | undefined, prefer: 1 | -1 = 1): string | undefined {
+  if (!input) return input;
+  if (typeof input === "string") return input;
+  return prefer == 1 ? input[0] : input.slice(-1)[0];
 }
