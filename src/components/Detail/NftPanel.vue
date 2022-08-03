@@ -4,7 +4,6 @@
       <b-button @click="refresh()" :loading="refreshing">
         <b-icon icon="refresh"></b-icon>
       </b-button>
-      <b-loading v-model="refreshing" :is-full-page="false" class="py-6 my-6"></b-loading>
       <b-collapse animation="slide" v-for="(col, key) of collection" :key="key" :open="true">
         <template #trigger="props">
           <p class="is-size-5 mb-1">
@@ -143,7 +142,11 @@ export default class NftPanel extends Vue {
 
   async refresh(): Promise<void> {
     this.refreshing = true;
-    await store.dispatch("refreshAssets");
+    try {
+      await store.dispatch("refreshNfts");
+    } catch (err) {
+      console.warn(err);
+    }
     this.refreshing = false;
   }
 
@@ -161,7 +164,7 @@ export default class NftPanel extends Vue {
   }
 
   async mounted(): Promise<void> {
-    await store.dispatch("refreshAssets");
+    await this.refresh();
   }
 }
 </script>

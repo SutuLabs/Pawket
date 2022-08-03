@@ -4,10 +4,11 @@
       <top-bar :title="$t('did.ui.title.did')" @close="$emit('close')"></top-bar>
     </header>
     <section class="modal-card-body">
+      <b-button @click="refresh()">Refresh</b-button>
       <div class="mb-3">
         <b-button type="is-primary" expanded @click="addDid()">
           <b-icon icon="plus" size="is-small" class="mr-1"></b-icon>
-          {{ $t('did.ui.button.addDid')}}
+          {{ $t("did.ui.button.addDid") }}
         </b-button>
       </div>
       <div class="mt-4 border-bottom" v-for="(did, i) in dids" :key="i">
@@ -51,7 +52,7 @@ export default class Did extends Vue {
   }
 
   get dids(): DidDetail[] {
-    return this.account.dids;
+    return this.account.dids ?? [];
   }
 
   get didNames(): DidName[] {
@@ -59,6 +60,10 @@ export default class Did extends Vue {
     if (didNames == null) return [];
     const names: DidName[] = JSON.parse(didNames);
     return names;
+  }
+
+  async refresh(): Promise<void> {
+    store.dispatch("refreshDids");
   }
 
   showDetail(did: DidDetail): void {

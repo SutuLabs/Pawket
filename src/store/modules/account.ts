@@ -1,7 +1,7 @@
 import store from "@/store";
 import account, { AccountKey } from "@/services/crypto/account";
 import Vue from "vue";
-import receive, { DidDetail, TokenPuzzleAddress } from "@/services/crypto/receive";
+import receive, { CoinClassType, DidDetail, TokenPuzzleAddress } from "@/services/crypto/receive";
 import { rpcUrl, xchPrefix, xchSymbol } from "./network";
 import { AccountEntity, AccountTokens, AccountType, CustomCat, TokenInfo } from "@/models/account";
 import {
@@ -161,16 +161,31 @@ store.registerModule<IAccountState>("account", {
 
       resetState();
     },
-    async refreshAssets({ state }, parameters: { idx: number; maxId: number }) {
-      if (!parameters) parameters = { idx: state.selectedAccount, maxId: -1 };
+    async refreshNfts({ dispatch }, parameters: { idx: number; maxId: number }) {
+      await dispatch("refreshAssets", Object.assign({ coinType: "NftV1" }, parameters));
+    },
+    async refreshDids({ dispatch }, parameters: { idx: number; maxId: number }) {
+      await dispatch("refreshAssets", Object.assign({ coinType: "DidV1" }, parameters));
+    },
+    async refreshAssets({ state }, parameters: { idx: number; maxId: number, coinType: CoinClassType }) {
+      if (!parameters) parameters = { idx: state.selectedAccount, maxId: -1, coinType: "DidV1" };
       let idx = parameters.idx;
       if (typeof idx !== "number" || idx <= 0) idx = state.selectedAccount;
       const account = state.accounts[idx];
       if (!account) return;
 
       const requests = await getAccountAddressDetails(account, parameters.maxId);
-      const hintRecords = await receive.getCoinRecords(requests, false, rpcUrl(), true);
-      const assets = await receive.getAssets(hintRecords, rpcUrl());
+      const assetRecords = await receive.getCoinRecords(requests, false, rpcUrl(), false, parameters.coinType);
+      const assets = await receive.getAssets(assetRecords, rpcUrl(), (_) => {
+        if (_.did) {
+          if (!account.dids) Vue.set(account, "dids", []);
+          if (account.dids) account.dids.push(_.did);
+        }
+        if (_.nft) {
+          if (!account.nfts) Vue.set(account, "nfts", []);
+          if (account.nfts) account.nfts.push(_.nft);
+        }
+      });
       setDidName(assets.dids);
       Vue.set(account, "nfts", assets.nfts);
       Vue.set(account, "dids", assets.dids);

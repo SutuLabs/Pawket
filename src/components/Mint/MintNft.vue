@@ -336,7 +336,7 @@ export default class MintNft extends Vue {
         return;
       }
 
-      const did = this.account.dids[0];
+      const did = this.account.dids ? this.account.dids[0] : undefined;
       if (!did) {
         Notification.open({
           message: "At least one DID is needed.",

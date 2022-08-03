@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "serve": "nodemon server.ts",
+    "start": "ts-node server.ts",
     "importmods": "ts-node importmods.ts",
     "test": "jest --coverage=false"
   },

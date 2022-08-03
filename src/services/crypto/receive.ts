@@ -44,6 +44,10 @@ export interface AssetsList {
   dids: DidDetail[];
 }
 
+export type CoinClassType = "CatV2" | "DidV1" | "NftV1";
+
+export type OptionalOneFoundParameterType = { did?: DidDetail, nft?: NftDetail };
+
 class Receive {
   async getAssetsRequestDetail(sk_hex: string, maxId: number, customCats: CustomCat[], tokenInfo: TokenInfo, prefix: string, symbol: string, catModName: "cat_v1" | "cat_v2"): Promise<TokenPuzzleDetail[]> {
 
@@ -65,7 +69,13 @@ class Receive {
     return tokens;
   }
 
-  async getCoinRecords(tokens: TokenPuzzleAddress[], includeSpentCoins: boolean, rpcUrl: string, hint = false): Promise<GetRecordsResponse> {
+  async getCoinRecords(
+    tokens: TokenPuzzleAddress[],
+    includeSpentCoins: boolean,
+    rpcUrl: string,
+    hint = false,
+    coinType: CoinClassType | undefined = undefined,
+  ): Promise<GetRecordsResponse> {
     const hashes = tokens.reduce((acc, token) => acc.concat(token.puzzles.map(_ => _.hash)), ([] as string[]));
 
     const resp = await fetch(rpcUrl + "Wallet/records", {
@@ -78,6 +88,7 @@ class Receive {
         puzzleHashes: hashes,
         includeSpentCoins,
         hint,
+        coinType,
       }),
     });
     const json = (await resp.json()) as GetRecordsResponse;
@@ -135,7 +146,11 @@ class Receive {
     return tokenBalances;
   }
 
-  async getAssets(records: GetRecordsResponse, rpcUrl: string): Promise<AssetsList> {
+  async getAssets(
+    records: GetRecordsResponse,
+    rpcUrl: string,
+    oneFound: ((parameter: OptionalOneFoundParameterType) => void) | undefined = undefined,
+  ): Promise<AssetsList> {
     const nftList: NftDetail[] = [];
     const didList: DidDetail[] = [];
     for (let i = 0; i < records.coins.length; i++) {
@@ -153,7 +168,7 @@ class Receive {
         // console.log("analyzing", getCoinName0x(convertToOriginCoin(coinRecord.coin)));
         const nftResult = await analyzeNftCoin(scoin.puzzle_reveal, coinRecords.puzzleHash, scoin.solution);
         if (nftResult) {
-          nftList.push({
+          const nft: NftDetail = {
             metadata: {
               uri: getScalarString(nftResult.metadata.imageUri) ?? "",
               hash: nftResult.metadata.imageHash ?? "",
@@ -162,19 +177,23 @@ class Receive {
             address: puzzle.getAddressFromPuzzleHash(nftResult.launcherId, "nft"),
             coin: convertToOriginCoin(coinRecord.coin),
             analysis: nftResult,
-          });
+          };
+          if (oneFound) oneFound({ nft });
+          nftList.push(nft);
           continue;
         }
 
         const didResult = await analyzeDidCoin(scoin.puzzle_reveal, coinRecords.puzzleHash, coinRecord);
         if (didResult) {
-          didList.push({
+          const did: DidDetail = {
             name: puzzle.getAddressFromPuzzleHash(didResult.launcherId, "did:chia:"),
             did: puzzle.getAddressFromPuzzleHash(didResult.launcherId, "did:chia:"),
             hintPuzzle: coinRecords.puzzleHash,
             coin: convertToOriginCoin(coinRecord.coin),
             analysis: didResult,
-          });
+          };
+          if (oneFound) oneFound({ did });
+          didList.push(did);
           continue;
         }
       }

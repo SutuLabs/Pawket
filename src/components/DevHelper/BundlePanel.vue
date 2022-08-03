@@ -259,6 +259,7 @@ export default class BundlePanel extends Vue {
   }
 
   async executePuzzle(puz: string, solution: string): Promise<void> {
+    if (!puz || !solution) return;
     const result = await puzzle.executePuzzle(puz, solution);
     this.solution_result = result.raw;
     this.solution_results = result.conditions;

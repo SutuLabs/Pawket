@@ -35,9 +35,9 @@ export interface AccountEntity extends PersistentAccount {
   firstAddress?: string;
   activities?: CoinRecord[];
   tokens: AccountTokens;
-  nfts: NftDetail[];
+  nfts?: NftDetail[];
   extraInfo: DonwloadedNftCollection
-  dids: DidDetail[];
+  dids?: DidDetail[];
   addressPuzzles: TokenPuzzleDetail[];
   addressGenerated: number;
 }
