@@ -26,7 +26,7 @@
       },
       "navigation": {
         "wallet": "钱包",
-        "CNS": "CNS",
+        "cns": "CNS",
         "explore": "探索",
         "settings": "设置"
       }
