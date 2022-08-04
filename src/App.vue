@@ -1,7 +1,7 @@
 <template>
   <div id="app" ref="container">
     <nav-bar></nav-bar>
-    <div v-if="unlocked == false && hasAccount" class="pt-6 mt-6">
+    <div v-if="unlocked == false && hasAccount && path != '/clvm'" class="pt-6 mt-6">
       <verify-password></verify-password>
     </div>
     <div v-else>
