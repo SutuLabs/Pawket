@@ -1,10 +1,10 @@
 <template>
-  <div class="is-size-5 border-bottom modal-card-head">
-    <div class="is-hidden-tablet modal-card-title">
+  <div class="is-size-5 border-bottom modal-card-head py-4">
+    <div class="is-hidden-tablet modal-card-title line-height-initial">
       <span @click="$emit('close')"
-        ><b-icon class="is-pulled-left has-text-grey pr-3 is-clickable pt-4" icon="chevron-left"> </b-icon
+        ><b-icon class="is-pulled-left has-text-grey pr-3 is-clickable pt-1" icon="chevron-left"> </b-icon
       ></span>
-      <span class="pr-2 is-inline-block text-ellipsis py-2">{{ title }}</span>
+      <span class="pr-2 is-inline-block text-ellipsis">{{ title }}</span>
       <b-tag type="is-info" v-if="tag">{{ tag }}</b-tag>
     </div>
     <div class="is-hidden-mobile modal-card-title">
@@ -47,5 +47,9 @@ export default class TopBar extends Vue {
   width: 80%;
   white-space: nowrap;
   overflow: hidden;
+}
+
+.line-height-initial {
+  line-height: initial;
 }
 </style>

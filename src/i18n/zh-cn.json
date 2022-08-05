@@ -952,11 +952,7 @@
     "title": "CNS"
   },
   "explore": {
-    "title": "探索",
-    "label": {
-      "dapps": "应用",
-      "popular": "流行"
-    }
+    "title": "探索"
   },
   "accountManagement": {
     "ui": {
@@ -1087,18 +1083,18 @@
     "ui": {
       "label": {
         "nftId": "NFT ID:",
-        "collection": "Collection",
-        "description": "Description"
+        "collection": "收藏集",
+        "description": "描述"
       },
       "button": {
-        "transfer": "Transfer",
-        "makeOffer": "Make Offer",
+        "transfer": "转发",
+        "makeOffer": "创建 Offer",
         "showMore": "显示更多",
         "showLess": "收起"
       },
       "title": {
-        "properties": "Properties",
-        "details": "Details"
+        "properties": "属性",
+        "details": "详情"
       },
       "details": {
         "nftId": "NFT ID:",
@@ -1115,8 +1111,8 @@
         "series": "Series"
       },
       "dropdown": {
-        "spaceScan": "View on Spacescan.io",
-        "download": "Download"
+        "spaceScan": "在Spacescan.io查看",
+        "download": "下载"
       }
     }
   },
@@ -1135,6 +1131,15 @@
       },
       "prompt": {
         "newName": "输入新名称"
+      }
+    }
+  },
+  "nftTransfer": {
+    "ui": {
+      "title": "转发",
+      "description": "你将把这个 NFT 转送给他人。",
+      "summary": {
+        "confirmation": "确定要转发这个 NFT 吗？<br>请检查您的交易。"
       }
     }
   }

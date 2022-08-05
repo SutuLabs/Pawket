@@ -2,13 +2,13 @@
   <div class="modal-card">
     <header class="modal-card-head">
       <!-- <p class="modal-card-title">{{ $t("mintNft.ui.title") }}</p> -->
-      <p class="modal-card-title">Transfer</p>
+      <p class="modal-card-title">{{ $t("nftTransfer.ui.title") }}</p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
       <div v-show="!bundle">
         <div class="has-text-centered">
-          <p class="has-text-grey pb-3">You will transfer this NFT to a new owner.</p>
+          <p class="has-text-grey pb-3">{{ $t("nftTransfer.ui.description") }}</p>
           <img :src="uri" class="image is-128x128" />
           <p>{{ nft.name }}</p>
         </div>
@@ -23,7 +23,7 @@
       </div>
       <template v-if="bundle">
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($t('mintNft.ui.summary.notification'))"></span>
+          <span v-html="$sanitize($t('nftTransfer.ui.summary.confirmation'))"></span>
         </b-notification>
         <send-summary
           :nftUri="uri"
