@@ -37,7 +37,6 @@
         'has-background-primary': path == '/explore',
         'has-text-white': path == '/explore',
       }"
-      v-if="debugMode"
     >
       {{ $t("app.ui.navigation.explore") }}
     </b-button>

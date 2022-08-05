@@ -68,7 +68,7 @@ import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import { AccountEntity, TokenInfo } from "@/models/account";
 import KeyBox from "@/components/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { CnsDetail, NftDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
+import { CnsDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
 import store from "@/store";
 import { SpendBundle } from "@/models/wallet";
 import bigDecimal from "js-big-decimal";

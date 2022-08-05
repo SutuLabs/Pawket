@@ -26,10 +26,8 @@
             <span class="has-text-danger" v-if="cnsResult.status == 'Unavailable'"
               ><b-icon icon="close-circle" size="is-small"></b-icon>NOT AVAILABLE</span
             >
-            <span class="has-text-warning" v-if="cnsResult.status == 'Registering'">
-              <b-tag class="has-text-grey-light"
-                ><b-icon icon="dots-horizontal-circle" size="is-small" class="pr-2"></b-icon>REGISTERING</b-tag
-              >
+            <span class="has-text-grey-light" v-if="cnsResult.status == 'Registering'">
+              <b-icon icon="dots-horizontal-circle" size="is-small" class="pr-2"></b-icon>REGISTERING
             </span>
           </p>
           <p v-if="cnsResult.price"><span class="has-text-grey pr-2">Price:</span>{{ cnsResult.price }} XCH</p>

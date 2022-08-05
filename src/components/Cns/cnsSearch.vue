@@ -32,7 +32,7 @@
           ><b-icon icon="close-circle" type="is-danger" size="is-small"></b-icon>NOT AVAILABLE</span
         >
         <span class="is-pulled-right" v-if="result.status == 'Registering'"
-          ><b-icon icon="dots-horizontal-circle" type="is-warning" size="is-small"></b-icon>REGISTERING</span
+          ><b-icon icon="dots-horizontal-circle" class="has-text-grey-light" size="is-small"></b-icon>REGISTERING</span
         >
       </p>
       <hr />
@@ -44,7 +44,7 @@
         <p v-if="result.address">
           Address:
           <span class="is-pulled-right"
-            ><b-tag v-if="result.status == 'Registering'" type="is-warning">Pending</b-tag>
+            ><b-tag v-if="result.status == 'Registering'" class="has-background-grey-light mr-2">Pending</b-tag>
             <key-box icon="checkbox-multiple-blank-outline" :value="result.address" :showValue="true"></key-box
           ></span>
         </p>

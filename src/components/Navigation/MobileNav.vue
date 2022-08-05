@@ -43,7 +43,6 @@
           'has-text-grey': path != '/explore',
           'has-text-primary': path == '/explore',
         }"
-        v-if="debugMode"
       >
         <b-icon icon="earth"></b-icon>
         <p class="is-size-7">{{ $t("app.ui.navigation.explore") }}</p>

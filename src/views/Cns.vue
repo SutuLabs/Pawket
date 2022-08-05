@@ -32,7 +32,7 @@
                   <b-icon
                     v-if="result.status == 'Registering'"
                     icon="dots-horizontal-circle"
-                    type="is-warning"
+                    class="has-text-grey-light"
                     size="is-small"
                   ></b-icon>
                 </p>
