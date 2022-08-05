@@ -70,7 +70,7 @@
           <b-icon class="is-pulled-right has-text-grey" icon="chevron-right"> </b-icon>
         </div>
       </div>
-      <div class="panel-block py-0 my-0" @click="goToDid()">
+      <div class="panel-block py-0 my-0" @click="goToDid()" v-if="debugMode">
         <div class="is-11 is-flex my-1 py-1">
           <div class="mr-2 py-1">
             <b-icon icon="account-box-multiple-outline"></b-icon>

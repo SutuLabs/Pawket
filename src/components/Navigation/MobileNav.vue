@@ -17,19 +17,20 @@
         <p class="is-size-7">{{ $t("app.ui.navigation.wallet") }}</p>
       </router-link>
       <router-link
-        :to="'/trade'"
+        :to="'/cns'"
+        v-if="debugMode"
         :class="{
           'navbar-item': true,
           'is-expanded': true,
           'is-block': true,
           'has-text-centered': true,
           'has-background-white': true,
-          'has-text-grey': path != '/trade',
-          'has-text-primary': path == '/trade',
+          'has-text-grey': path != '/cns',
+          'has-text-primary': path == '/cns',
         }"
       >
-        <b-icon icon="trending-up"></b-icon>
-        <p class="is-size-7">{{ $t("app.ui.navigation.trade") }}</p>
+        <b-icon icon="dns"></b-icon>
+        <p class="is-size-7">{{ $t("app.ui.navigation.cns") }}</p>
       </router-link>
       <router-link
         :to="'/explore'"
@@ -42,7 +43,6 @@
           'has-text-grey': path != '/explore',
           'has-text-primary': path == '/explore',
         }"
-        v-if="debugMode"
       >
         <b-icon icon="earth"></b-icon>
         <p class="is-size-7">{{ $t("app.ui.navigation.explore") }}</p>

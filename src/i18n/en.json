@@ -26,7 +26,7 @@
       },
       "navigation": {
         "wallet": "Wallet",
-        "trade": "Trade",
+        "cns": "CNS",
         "explore": "Explore",
         "settings": "Settings"
       }
@@ -943,15 +943,11 @@
       }
     }
   },
-  "trade": {
-    "title": "Trade"
+  "cns": {
+    "title": "CNS"
   },
   "explore": {
-    "title": "Explore",
-    "label": {
-      "dapps": "Dapps",
-      "popular": "Popular"
-    }
+    "title": "Explore"
   },
   "accountManagement": {
     "ui": {
@@ -1130,6 +1126,15 @@
       },
       "prompt": {
         "newName": "Enter New Name"
+      }
+    }
+  },
+  "nftTransfer": {
+    "ui": {
+      "title": "Transfer",
+      "description": "You will transfer this NFT to a new owner.",
+      "summary": {
+        "confirmation": "Are you sure to transfer the NFT?<br>Please review your transaction."
       }
     }
   }

@@ -37,8 +37,12 @@
             <div v-if="metadata.description.length < 100">{{ metadata.description }}</div>
             <div v-else>
               <span>{{ metadata.description.slice(0, 100) }}</span
-              ><span v-if="!showMore">... <a @click="showMore = true">{{ $t("nftDetail.ui.button.showMore") }}</a></span
-              ><span v-if="showMore">{{ metadata.description.slice(100) }}<a @click="showMore = false">{{ $t("nftDetail.ui.button.showLess") }}</a></span>
+              ><span v-if="!showMore"
+                >... <a @click="showMore = true">{{ $t("nftDetail.ui.button.showMore") }}</a></span
+              ><span v-if="showMore"
+                >{{ metadata.description.slice(100)
+                }}<a @click="showMore = false">{{ $t("nftDetail.ui.button.showLess") }}</a></span
+              >
             </div>
           </b-field>
           <div class="buttons is-hidden-mobile">
@@ -47,6 +51,7 @@
               type="is-primary"
               @click="transfer()"
               icon-left="share"
+              :disabled="this.account.type == 'Address'"
               outlined
             ></b-button>
             <b-button
@@ -76,8 +81,14 @@
               <div class="column is-5 is-size-5 property m-2" v-for="(att, i) of metadata.attributes" :key="i">
                 <span class="has-text-grey is-size-7 line-height-normal">
                   <p>{{ att.trait_type }}</p>
-                  <p class="has-text-grey-dark">{{ att.value }}</p></span
-                >
+                  <b-tooltip multilined :label="String(att.value)" style="word-break: break-all">
+                    <a @click="copy(att.value)">
+                      <p class="has-text-grey-dark property-value">
+                        {{ att.value }}
+                      </p>
+                    </a>
+                  </b-tooltip>
+                </span>
               </div>
             </div>
           </b-collapse>
@@ -130,6 +141,7 @@
           type="is-primary"
           @click="transfer()"
           icon-left="share"
+          :disabled="this.account.type == 'Address'"
           outlined
         ></b-button>
         <b-button
@@ -227,6 +239,10 @@ export default class NftDetailPanel extends Vue {
       props: {},
     });
   }
+
+  copy(text: string): void {
+    store.dispatch("copy", text);
+  }
 }
 </script>
 <style scoped lang="scss">
@@ -242,5 +258,12 @@ export default class NftDetailPanel extends Vue {
 
 .line-height-normal {
   line-height: normal;
+}
+
+.property-value {
+  width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

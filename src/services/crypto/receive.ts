@@ -7,6 +7,7 @@ import { analyzeNftCoin, getScalarString } from "../coin/nft";
 import debug from "../api/debug";
 import { analyzeDidCoin, DidCoinAnalysisResult } from "../coin/did";
 import { NftCoinAnalysisResult } from "@/models/nft";
+import { CnsCoinAnalysisResult } from "@/models/cns";
 
 export interface TokenPuzzleDetail {
   symbol: string;
@@ -16,6 +17,19 @@ export interface TokenPuzzleDetail {
 export interface TokenPuzzleAddress {
   symbol: string;
   puzzles: PuzzleAddress[];
+}
+
+export interface CnsDetail {
+  metadata: {
+    uri: string;
+    hash: string;
+    collection?: string;
+    name?: string;
+  }
+  hintPuzzle: string;
+  coin: OriginCoin;
+  address: string;
+  analysis: CnsCoinAnalysisResult;
 }
 
 export interface NftDetail {

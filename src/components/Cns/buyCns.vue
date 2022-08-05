@@ -2,15 +2,15 @@
   <div class="modal-card">
     <header class="modal-card-head">
       <!-- <p class="modal-card-title">{{ $t("mintNft.ui.title") }}</p> -->
-      <p class="modal-card-title">{{ $t("nftTransfer.ui.title") }}</p>
+      <p class="modal-card-title">Buy</p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
       <div v-show="!bundle">
         <div class="has-text-centered">
-          <p class="has-text-grey pb-3">{{ $t("nftTransfer.ui.description") }}</p>
+          <p class="has-text-grey pb-3">You are buying this Chia domain.</p>
           <img :src="uri" class="image is-128x128" />
-          <p>{{ nft.name }}</p>
+          <p>{{ domainName }}</p>
         </div>
         <address-field
           :inputAddress="address"
@@ -23,17 +23,16 @@
       </div>
       <template v-if="bundle">
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($t('nftTransfer.ui.summary.confirmation'))"></span>
+          <span v-html="$sanitize('Are you sure to buy the domain? <br>Please review your transaction.')"></span>
         </b-notification>
-        <send-summary
-          :nftUri="uri"
+        <buy-cns-summary
+          :domainName="domainName"
           :nftHash="hash"
           :fee="feeBigInt"
           :address="address"
-          :leadingText="$t('mintNft.ui.summary.label.leadingText')"
           :total="total"
           :contactName="contactName"
-        ></send-summary>
+        ></buy-cns-summary>
         <bundle-summary :account="account" :bundle="bundle" :ignoreError="true"></bundle-summary>
       </template>
     </section>
@@ -69,7 +68,7 @@ import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import { AccountEntity, TokenInfo } from "@/models/account";
 import KeyBox from "@/components/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { NftDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
+import { CnsDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
 import store from "@/store";
 import { SpendBundle } from "@/models/wallet";
 import bigDecimal from "js-big-decimal";
@@ -80,7 +79,6 @@ import coinHandler from "@/services/transfer/coin";
 import { debugBundle, submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/FeeSelector.vue";
 import BundleSummary from "../BundleSummary.vue";
-import SendSummary from "../SendSummary.vue";
 import { chainId, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getTokenInfo } from "@/services/coin/cat";
 import { generateTransferNftBundle } from "@/services/coin/nft";
@@ -88,6 +86,7 @@ import AddressField from "../AddressField.vue";
 import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
 import { getLineageProofPuzzle } from "@/services/transfer/call";
+import buyCnsSummary from "./buyCnsSummary.vue";
 
 @Component({
   components: {
@@ -95,13 +94,14 @@ import { getLineageProofPuzzle } from "@/services/transfer/call";
     FeeSelector,
     TokenAmountField,
     BundleSummary,
-    SendSummary,
     AddressField,
+    buyCnsSummary
   },
 })
-export default class NftTransfer extends Vue {
+export default class BuyCns extends Vue {
   @Prop() public account!: AccountEntity;
-  @Prop() public nft!: NftDetail;
+  @Prop() public cns!: CnsDetail;
+  @Prop() public domainName!: string;
 
   public addressEditable = true;
   public submitting = false;
@@ -121,6 +121,7 @@ export default class NftTransfer extends Vue {
 
   mounted(): void {
     this.loadCoins();
+    this.address = this.account.firstAddress ?? "";
   }
 
   @Emit("close")
@@ -152,6 +153,14 @@ export default class NftTransfer extends Vue {
     return store.state.app.debug;
   }
 
+  get hash(): string | undefined {
+    return this.cns?.metadata.hash;
+  }
+
+  get uri(): string | undefined {
+    return this.cns?.metadata.uri;
+  }
+
   reset(): void {
     this.bundle = null;
   }
@@ -175,14 +184,6 @@ export default class NftTransfer extends Vue {
 
   get tokenInfo(): TokenInfo {
     return getTokenInfo(this.account);
-  }
-
-  get hash(): string | undefined {
-    return this.nft?.metadata.hash;
-  }
-
-  get uri(): string | undefined {
-    return this.nft?.metadata.uri;
   }
 
   changeToken(token: string): void {
@@ -279,8 +280,8 @@ export default class NftTransfer extends Vue {
         this.address,
         this.account.firstAddress,
         BigInt(this.fee),
-        this.nft.coin,
-        this.nft.analysis,
+        this.cns.coin,
+        this.cns.analysis,
         this.availcoins,
         this.requests,
         xchSymbol(),
