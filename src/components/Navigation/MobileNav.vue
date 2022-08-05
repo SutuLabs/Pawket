@@ -18,6 +18,7 @@
       </router-link>
       <router-link
         :to="'/cns'"
+        v-if="debugMode"
         :class="{
           'navbar-item': true,
           'is-expanded': true,

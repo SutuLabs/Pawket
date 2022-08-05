@@ -27,12 +27,16 @@
               ><b-icon icon="close-circle" size="is-small"></b-icon>NOT AVAILABLE</span
             >
             <span class="has-text-warning" v-if="cnsResult.status == 'Registering'">
-              <b-icon icon="dots-horizontal-circle" type="is-warning" size="is-small">REGISTERING</b-icon>
+              <b-tag class="has-text-grey-light"
+                ><b-icon icon="dots-horizontal-circle" size="is-small" class="pr-2"></b-icon>REGISTERING</b-tag
+              >
             </span>
           </p>
           <p v-if="cnsResult.price"><span class="has-text-grey pr-2">Price:</span>{{ cnsResult.price }} XCH</p>
           <p v-if="cnsResult.address">
-            Address:<span>{{ cnsResult.address }}</span>
+            Address:<span
+              ><key-box icon="checkbox-multiple-blank-outline" :value="cnsResult.address" :showValue="true"></key-box
+            ></span>
           </p>
           <div class="pt-5" v-if="cnsResult.status == 'Available'">
             <b-button expanded outlined type="is-primary" @click="buy()">Buy it Now</b-button>

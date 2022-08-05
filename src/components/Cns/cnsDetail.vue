@@ -11,7 +11,7 @@
         <div class="column is-6-tablet is-12-mobile">
           <b-field>
             <template #label>
-              hann.chia
+              <span class="word-break">hann.chia</span>
               <b-dropdown aria-role="list" class="is-pulled-right" :mobile-modal="false" position="is-bottom-left">
                 <template #trigger>
                   <b-icon icon="dots-vertical" class="is-clickable"></b-icon>
@@ -37,8 +37,9 @@
             <template #label>
               Address <a @click="changeAddress"><b-icon icon="pencil" size="is-small" class="pl-2"></b-icon></a>
             </template>
-            <span class="word-break">{{ address }}</span>
-            <key-box icon="checkbox-multiple-blank-outline" :value="address" :showValue="false"></key-box>
+            <span class="word-break"
+              >{{ address }} <key-box icon="checkbox-multiple-blank-outline" :value="address" :showValue="false"></key-box
+            ></span>
           </b-field>
           <div class="buttons is-hidden-mobile">
             <b-button
@@ -46,6 +47,7 @@
               type="is-primary"
               @click="transfer()"
               icon-left="share"
+              :disabled="this.account.type == 'Address'"
               outlined
             ></b-button>
             <b-button
@@ -67,6 +69,7 @@
           type="is-primary"
           @click="transfer()"
           icon-left="share"
+          :disabled="this.account.type == 'Address'"
           outlined
         ></b-button>
         <b-button

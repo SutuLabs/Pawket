@@ -3,8 +3,8 @@
     <div :class="{ box: !isMobile, 'pt-8': isMobile }">
       <p class="is-hidden-tablet has-text-centered is-size-5 pt-5 pb-2 pr-2 border-bottom fixed-top">{{ $t("cns.title") }}</p>
       <div class="is-hidden-mobile has-text-left is-size-5 pl-2 border-bottom columns">
-        <div class="column is-3">{{ $t("cns.title") }}</div>
-        <div class="column is-4 is-offset-6">
+        <div class="column is-2">{{ $t("cns.title") }}</div>
+        <div class="column is-offset-7">
           <b-dropdown :triggers="[]" ref="searchBar">
             <template #trigger>
               <b-input
@@ -12,6 +12,8 @@
                 type="search"
                 icon-right="magnify"
                 icon-right-clickable
+                :maxlength="40"
+                :minlength="4"
                 @icon-right-click="searchCns"
                 v-model="searchStr"
                 @keyup.native.enter="searchCns"

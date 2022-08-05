@@ -23,7 +23,7 @@
       </div>
       <template v-if="bundle">
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize('Are you sure to buy the domain?Please review your transaction.')"></span>
+          <span v-html="$sanitize('Are you sure to buy the domain? <br>Please review your transaction.')"></span>
         </b-notification>
         <buy-cns-summary
           :domainName="domainName"

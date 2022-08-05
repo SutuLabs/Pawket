@@ -37,7 +37,7 @@ export default class CnsNewAddress extends Vue {
 
   submit(): void {
     this.$emit("updateAddress", this.address);
-    return;
+    this.close();
   }
 
   cancel(): void {

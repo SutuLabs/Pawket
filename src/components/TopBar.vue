@@ -2,9 +2,9 @@
   <div class="is-size-5 border-bottom modal-card-head">
     <div class="is-hidden-tablet modal-card-title">
       <span @click="$emit('close')"
-        ><b-icon class="is-pulled-left has-text-grey pr-3 is-clickable" icon="chevron-left"> </b-icon
+        ><b-icon class="is-pulled-left has-text-grey pr-3 is-clickable pt-4" icon="chevron-left"> </b-icon
       ></span>
-      <span class="pr-2 is-inline-block text-ellipsis">{{ title }}</span>
+      <span class="pr-2 is-inline-block text-ellipsis py-2">{{ title }}</span>
       <b-tag type="is-info" v-if="tag">{{ tag }}</b-tag>
     </div>
     <div class="is-hidden-mobile modal-card-title">
@@ -44,7 +44,7 @@ export default class TopBar extends Vue {
 
 .text-ellipsis {
   text-overflow: ellipsis;
-  width: 70%;
+  width: 80%;
   white-space: nowrap;
   overflow: hidden;
 }
