@@ -20,7 +20,13 @@
           <span>{{ idx }}</span>
         </b-radio-button>
       </b-field>
-      <b-field label="Information">
+      <b-field>
+        <template #label>
+          Information
+          <b-switch v-model="autoCalculation" size="is-small" class="is-pulled-right" @input="saveSettings()"
+            >Auto Calculation</b-switch
+          >
+        </template>
         <template #message>
           <ul>
             <li
@@ -56,7 +62,7 @@
           >
         </template>
         <template #message>
-          <uncurry-puzzle :puzzle="puzzle"></uncurry-puzzle>
+          <uncurry-puzzle :puzzle="puzzle" :defaultShowUncurry="autoCalculation"></uncurry-puzzle>
         </template>
       </b-field>
       <b-field v-if="solution">
@@ -174,6 +180,7 @@ export default class BundlePanel extends Vue {
   public selectedCoin = 0;
   public solution_results: { op: number; args: string[] }[] = [];
   public bundle: SpendBundle | null = null;
+  public autoCalculation = false;
 
   public readonly modsdict = modsdict;
   public readonly modsprog = modsprog;
@@ -215,11 +222,15 @@ export default class BundlePanel extends Vue {
     }
 
     await this.changeCoin(0);
-    this.save();
+    this.saveBundle();
   }
 
   get bundleJson(): string {
     return JSON.stringify(this.bundle, null, 4);
+  }
+
+  async beforeMount(): Promise<void> {
+    await this.loadSettings();
   }
 
   async mounted(): Promise<void> {
@@ -228,16 +239,18 @@ export default class BundlePanel extends Vue {
       this.bundleText = this.inputBundleText;
       await this.updateBundle();
     } else {
-      await this.load();
+      await this.loadBundle();
     }
-    await this.executePuzzle(this.puzzle, this.solution);
+    if (this.autoCalculation) {
+      await this.executePuzzle(this.puzzle, this.solution);
+    }
   }
 
   beautifyLisp(text: string): string {
     return beautifyLisp(text);
   }
 
-  async load(): Promise<void> {
+  async loadBundle(): Promise<void> {
     const bd = localStorage.getItem("BUNDLE_DEBUG");
     if (bd) {
       this.bundleText = bd;
@@ -245,9 +258,17 @@ export default class BundlePanel extends Vue {
     }
   }
 
-  save(): void {
+  async loadSettings(): Promise<void> {
+    this.autoCalculation = localStorage.getItem("BUNDLE_AUTO_CALCULATION") === "true";
+  }
+
+  saveBundle(): void {
     if (this.inputBundleText == this.bundleText) return;
     localStorage.setItem("BUNDLE_DEBUG", this.bundleText);
+  }
+
+  saveSettings(): void {
+    localStorage.setItem("BUNDLE_AUTO_CALCULATION", this.autoCalculation.toString());
   }
 
   async changeCoin(idx: number): Promise<void> {
