@@ -6,8 +6,9 @@ import utility from "./utility";
 import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
 import { Instance } from "../util/instance";
 import { modsdict, modsprog } from "../coin/mods";
-import { unprefix0x } from "../coin/condition";
-import { SExp } from "clvm";
+import { prefix0x, unprefix0x } from "../coin/condition";
+import { SExp, isAtom } from "clvm";
+import { sexpAssemble } from "../coin/analyzer";
 
 export interface ExecuteResultCondition {
   op: number;
@@ -276,6 +277,15 @@ class PuzzleMaker {
     const argarr = Array.from(conds.as_iter()).map((_) => Array.from(_.as_iter()).map((_) => disassemble(_)));
     const solution_results = argarr.map((_) => ({ op: Number(_[0]), args: _.slice(1) }));
     return { raw: solution_result, conditions: solution_results };
+  }
+
+  async executePuzzleHex(puz_hex: string, solution_hex: string): Promise<ExecuteResult> {
+    const solution_result_hex = await this.calcPuzzleResult(puz_hex, solution_hex, "--hex", "--dump");
+
+    const conds = sexpAssemble(solution_result_hex);
+    const argarr = Array.from(conds.as_iter()).map((_) => Array.from(_.as_iter()).map((_) => prefix0x((isAtom(_) ? _.atom : _.as_bin()).hex())));
+    const solution_results = argarr.map((_) => ({ op: Number(_[0]), args: _.slice(1) }));
+    return { raw: solution_result_hex, conditions: solution_results };
   }
 }
 
