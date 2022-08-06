@@ -179,11 +179,11 @@ store.registerModule<IAccountState>("account", {
       const assets = await receive.getAssets(assetRecords, rpcUrl(), (_) => {
         if (_.did) {
           if (!account.dids) Vue.set(account, "dids", []);
-          if (account.dids) account.dids.push(_.did);
+          if (account.dids && account.dids.findIndex(d => d.did == _.did?.did) == -1) account.dids.push(_.did);
         }
         if (_.nft) {
           if (!account.nfts) Vue.set(account, "nfts", []);
-          if (account.nfts) account.nfts.push(_.nft);
+          if (account.nfts && account.nfts.findIndex(d => d.address == _.nft?.address) == -1) account.nfts.push(_.nft);
         }
       });
       setDidName(assets.dids);
