@@ -360,7 +360,8 @@
       "ui": {
         "title": "Take Offer",
         "hint": {
-          "pasteOffer": "Paste your offer here, e.g. offer1..."
+          "pasteOffer": "Paste your offer here, e.g. offer1...",
+          "error": "You offer string is incorrect."
         },
         "panel": {
           "information": "Information"
@@ -1081,7 +1082,7 @@
         "collection": "Collection",
         "description": "Description"
       },
-      "button":{
+      "button": {
         "transfer": "Transfer",
         "makeOffer": "Make Offer",
         "showMore": "Show More",

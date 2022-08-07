@@ -6,7 +6,11 @@
     </header>
     <section class="modal-card-body">
       <template v-if="step == 'Input'">
-        <b-field :label="$t('offer.take.ui.field.offer')" :message="offerText ? '' : $t('offer.take.ui.hint.pasteOffer')">
+        <b-field
+          :label="$t('offer.take.ui.field.offer')"
+          :type="parseError == 'error' ? 'is-danger' : ''"
+          :message="offerText ? (parseError == 'error' ? $t('offer.take.ui.hint.error') : '') : $t('offer.take.ui.hint.pasteOffer')"
+        >
           <b-input type="textarea" v-model="offerText" @input="updateOffer()"></b-input>
         </b-field>
         <b-field v-if="summary" :label="$t('offer.take.ui.panel.information')">
@@ -131,6 +135,7 @@ export default class TakeOffer extends Vue {
   public signing = false;
   public step: "Input" | "Confirmation" = "Input";
   public fee = 0;
+  public parseError = "";
 
   @Emit("close")
   close(): void {
@@ -180,10 +185,17 @@ export default class TakeOffer extends Vue {
   }
 
   async updateOffer(): Promise<void> {
-    this.makerBundle = null;
-    this.makerBundle = await decodeOffer(this.offerText);
-    this.summary = null;
-    this.summary = await getOfferSummary(this.makerBundle);
+    try {
+      this.parseError = "";
+      this.makerBundle = null;
+      this.makerBundle = await decodeOffer(this.offerText);
+      this.summary = null;
+      this.summary = await getOfferSummary(this.makerBundle);
+    } catch (err) {
+      this.parseError = "error";
+      this.makerBundle = null;
+      this.summary = null;
+    }
     this.fee = 0;
   }
 
