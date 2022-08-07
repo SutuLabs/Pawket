@@ -15,17 +15,19 @@ beforeAll(async () => {
   await Instance.init();
 })
 
-describe("Parsing API test", () => {
-  test('Block Parsing Case 1', () =>  testCase("/parse_block", bcase1) );
-  test('Block Parsing Case 2', () =>  testCase("/parse_block", bcase2) );
-  test('Block Parsing Case 3', () =>  testCase("/parse_block", bcase3) );
-  test('Block Parsing Case 4', () =>  testCase("/parse_block", bcase4) );
-  test('Block Parsing Case 5', () =>  testCase("/parse_block", bcase5) );
-  test('Block Parsing Case 6', () =>  testCase("/parse_block", bcase6) );
-  test('Block Parsing Case 7', () =>  testCase("/parse_block", bcase7) );
-  test('Block Parsing Case 8', () =>  testCase("/parse_block", bcase8) );
+jest.setTimeout(15000);
 
-  test('Puzzle Parsing Case 1', () =>  testCase("/parse_puzzle", pcase1) );
+describe("Parsing API test", () => {
+  test('Block Parsing Case 1', () => testCase("/parse_block", bcase1));
+  test('Block Parsing Case 2', () => testCase("/parse_block", bcase2));
+  test('Block Parsing Case 3', () => testCase("/parse_block", bcase3));
+  test('Block Parsing Case 4', () => testCase("/parse_block", bcase4));
+  test('Block Parsing Case 5', () => testCase("/parse_block", bcase5));
+  test('Block Parsing Case 6', () => testCase("/parse_block", bcase6));
+  test('Block Parsing Case 7', () => testCase("/parse_block", bcase7));
+  test('Block Parsing Case 8', () => testCase("/parse_block", bcase8));
+
+  test('Puzzle Parsing Case 1', () => testCase("/parse_puzzle", pcase1));
 });
 
 async function testCase(url: string, cs: any): Promise<void> {
