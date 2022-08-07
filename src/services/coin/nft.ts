@@ -9,7 +9,7 @@ import transfer, { GetPuzzleApiCallback, SymbolCoins, TransferTarget } from "../
 import { getNumber, prefix0x } from "./condition";
 import { modsdict, modshash, modsprog, modspuz } from "./mods";
 import utility, { bytesToHex0x } from "../crypto/utility";
-import catBundle from "../transfer/catBundle";
+import catBundle, { LineageProof } from "../transfer/catBundle";
 import { getCoinName0x } from "./coinUtility";
 import { cloneAndChangeRequestPuzzleTemporary, constructSingletonTopLayerPuzzle, getPuzzleDetail, hex2asc, ParsedMetadata, parseMetadata, SingletonStructList } from "./singleton";
 import { findByPath } from "./lisp";
@@ -124,7 +124,7 @@ export async function generateMintNftBundle(
   const didPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(didAnalysis.rawPuzzle));
 
   const extreqs = cloneAndChangeRequestPuzzleTemporary(baseSymbol, requests, inner_p2_puzzle.hash, nftPuzzle, nftPuzzleHash);
-  const bundles = await transfer.getSpendBundle([launcherCoinSpend, nftCoinSpend], extreqs, chainId);
+  const bundles = await transfer.getSpendBundle([launcherCoinSpend, nftCoinSpend], extreqs, chainId, true);
   const extreqs2 = cloneAndChangeRequestPuzzleTemporary(baseSymbol, requests, didP2InnerPuzzleHash, didAnalysis.rawPuzzle, didPuzzleHash);
   const bundles2 = await transfer.getSpendBundle([didCoinSpend], extreqs2, chainId);
   const bundle = await combineSpendBundlePure(bootstrapSpendBundle, bundles, bundles2);
@@ -169,20 +169,10 @@ export async function generateTransferNftBundle(
   // console.log(`const analysis=${JSON.stringify(analysis)};`)
   // console.log(`const availcoins=${JSON.stringify(availcoins)};`)
 
-  const amount = 1n;
   const proof = await catBundle.getLineageProof(nftCoin.parent_coin_info, api, 2);
 
-  // `-10` is the change owner magic condition
-  const nftSolution = `((${proof.coinId} ${proof.proof} ${proof.amount}) ${amount} (((() (q (-10 () () ()) (51 ${tgt_hex} ${amount} (${tgt_hex}))) ()))))`;
-  const sgnStruct = `(${await modshash("singleton_top_layer_v1_1")} ${prefix0x(analysis.launcherId)} . ${prefix0x(await modshash("singleton_launcher"))})`;
-  const nftPuzzle = await constructSingletonTopLayerPuzzle(
-    analysis.launcherId,
-    await modshash("singleton_launcher"),
-    await constructNftStatePuzzle(analysis.rawMetadata,
-      await constructNftOwnershipPuzzle(analysis.didOwner,
-        await constructNftTransferPuzzle(sgnStruct, analysis.royaltyAddress, analysis.tradePricePercentage),
-        inner_p2_puzzle.puzzle))
-  );
+  const nftSolution = await getTransferNftSolution(proof, await getTransferNftInnerSolution(tgt_hex));
+  const nftPuzzle = await getTransferNftPuzzle(analysis, inner_p2_puzzle.puzzle);
 
   const nftPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(nftPuzzle));
   if (nftPuzzleHash != nftCoin.puzzle_hash) {
@@ -288,6 +278,42 @@ export async function analyzeNftCoin(puzzle_reveal: string, hintPuzzle: string, 
     tradePricePercentage,
     hintPuzzle: prefix0x(hintPuzzle),
   };
+}
+
+export async function getTransferNftPuzzle(analysis: NftCoinAnalysisResult, inner_p2_puzzle: string): Promise<string> {
+  const sgnStruct = `(${await modshash("singleton_top_layer_v1_1")} ${prefix0x(analysis.launcherId)} . ${prefix0x(
+    await modshash("singleton_launcher")
+  )})`;
+  const nftPuzzle = await constructSingletonTopLayerPuzzle(
+    analysis.launcherId,
+    await modshash("singleton_launcher"),
+    await constructNftStatePuzzle(
+      analysis.rawMetadata,
+      await constructNftOwnershipPuzzle(
+        analysis.didOwner,
+        await constructNftTransferPuzzle(sgnStruct, analysis.royaltyAddress, analysis.tradePricePercentage),
+        inner_p2_puzzle
+      )
+    )
+  );
+
+  return nftPuzzle;
+}
+
+export async function getTransferNftSolution(proof: LineageProof, p2_inner_solution: string): Promise<string> {
+  const amount = 1n;
+
+  const nftSolution = `((${proof.coinId} ${proof.proof} ${proof.amount}) ${amount} (((${p2_inner_solution}))))`;
+  return nftSolution;
+}
+
+export async function getTransferNftInnerSolution(tgt_hex: string): Promise<string> {
+  const amount = 1n;
+  tgt_hex = prefix0x(tgt_hex);
+
+  // `-10` is the change owner magic condition
+  const nftSolution = `() (q (-10 () () ()) (51 ${tgt_hex} ${amount} (${tgt_hex}))) ()`;
+  return nftSolution;
 }
 
 async function getOwnerFromSolution(solution: string): Promise<{ didOwner: string | undefined, p2Owner: string | undefined }> {
@@ -400,7 +426,8 @@ function getNftMetadataKeys(): NftMetadataKeys {
     "serialTotal": "7374", // for series total
   };
 }
-function getNftMetadataInfo(parsed: ParsedMetadata): NftMetadataValues {
+
+export function getNftMetadataInfo(parsed: ParsedMetadata): NftMetadataValues {
   const mkeys = getNftMetadataKeys();
 
   const getScalar = function (input: string | string[] | undefined): string {

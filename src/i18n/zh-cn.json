@@ -360,7 +360,8 @@
       "ui": {
         "title": "接受 Offer",
         "hint": {
-          "pasteOffer": "在此处粘贴 Offer 信息"
+          "pasteOffer": "在此处粘贴 Offer 信息",
+          "error": "您的 Offer 信息有误"
         },
         "panel": {
           "information": "信息"

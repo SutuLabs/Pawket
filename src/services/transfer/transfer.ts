@@ -104,6 +104,7 @@ class Transfer {
     css: CoinSpend[],
     puzzles: TokenPuzzleDetail[],
     chainId: string,
+    noSign = false,
   ): Promise<G2Element> {
     const BLS = Instance.BLS;
     if (!BLS) throw new Error("BLS not initialized");
@@ -115,6 +116,7 @@ class Transfer {
       const coin_spend = css[i];
       if (coin_spend.coin.parent_coin_info == "0x0000000000000000000000000000000000000000000000000000000000000000") continue;
       const puz = getPuzDetail(coin_spend.coin.puzzle_hash);
+      if (!puz && !noSign) throw new Error(`cannot find puzzle ${coin_spend.coin.puzzle_hash}`);
       const puzzle_reveal = await puzzle.disassemblePuzzle(coin_spend.puzzle_reveal);
 
       const synthetic_sk = puz
@@ -136,8 +138,9 @@ class Transfer {
   public async getSpendBundle(coin_spends: CoinSpend[],
     puzzles: TokenPuzzleDetail[],
     chainId: string,
+    noSign = false,
   ): Promise<SpendBundle> {
-    const agg_sig = await this.getSignaturesFromCoinSpends(coin_spends, puzzles, chainId);
+    const agg_sig = await this.getSignaturesFromCoinSpends(coin_spends, puzzles, chainId, noSign);
 
     const sig = Bytes.from(agg_sig.serialize()).hex();
     return {

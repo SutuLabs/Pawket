@@ -32,7 +32,7 @@
         <b-tooltip v-if="params[i]" :label="params[i].desc ? params[i].desc : params[i].name" multilined>
           <span class="tag is-primary is-light is-small">{{ params[i].name }}</span>
         </b-tooltip>
-        <uncurry-puzzle :puzzle="arg"></uncurry-puzzle>
+        <uncurry-puzzle :puzzle="arg" :defaultShowUncurry="defaultShowUncurry"></uncurry-puzzle>
       </li>
     </ul>
   </span>
@@ -58,16 +58,21 @@ import store from "@/store";
 })
 export default class UncurryPuzzle extends Vue {
   @Prop() public puzzle!: string;
+  @Prop({ default: false }) public defaultShowUncurry!: boolean;
   public puzzle_hash = "";
   public uncurried_module = "";
   public uncurried_module_hash = "";
   public uncurried_args: string[] = [];
   public uncurriable: boolean | null = null;
-  public showUncurry = true;
+  public showUncurry = false;
 
   public readonly modsdict = modsdict;
   public readonly modsprog = modsprog;
   public readonly modsparams = modsparams;
+
+  beforeMount(): void {
+    this.showUncurry = this.defaultShowUncurry;
+  }
 
   mounted(): void {
     this.uncurry(this.puzzle);

@@ -72,7 +72,7 @@ import { SpendBundle } from "@/models/wallet";
 import puzzle from "@/services/crypto/puzzle";
 import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
 import { getNumber, unprefix0x } from "@/services/coin/condition";
-import { modsdict } from "@/services/coin/mods";
+import { modsdict, modshexdict } from "@/services/coin/mods";
 import store from "@/store";
 import { debugBundle } from "@/services/view/bundle";
 import { ConditionOpcode } from "@/services/coin/opcode";
@@ -83,6 +83,7 @@ import { getCatNameDict } from "@/services/coin/cat";
 import { demojo } from "@/filters/unitConversion";
 import BundleText from "./BundelText.vue";
 import { xchPrefix, xchSymbol } from "@/store/modules/network";
+import { sexpAssemble } from "@/services/coin/analyzer";
 
 interface CoinType {
   amount: bigint;
@@ -173,14 +174,12 @@ export default class BundleSummary extends Vue {
 
     for (let i = 0; i < sb.coin_spends.length; i++) {
       const cs = sb.coin_spends[i];
-      const puz = await puzzle.disassemblePuzzle(cs.puzzle_reveal);
-      const sln = await puzzle.disassemblePuzzle(cs.solution);
 
-      const curried = assemble(puz);
+      const curried = sexpAssemble(cs.puzzle_reveal);
       const [mod, args] = uncurry(curried) as Tuple<SExp, SExp>;
-      const mods = disassemble(mod);
+      const mods = mod.as_bin().hex();
       const argarr = Array.from(args.as_iter()).map((_) => disassemble(_ as SExp));
-      const modname = modsdict[mods];
+      const modname = modshexdict[mods];
       if (modname != "p2_delegated_puzzle_or_hidden_puzzle" && modname != "cat_v2") {
         this.errorText = this.$tc("bundleSummary.notification.error.unknownMod");
         return;
@@ -189,7 +188,7 @@ export default class BundleSummary extends Vue {
       const catid = modname == "cat_v2" ? argarr[1] : xchSymbol();
       const unit = this.cats[catid] ?? catid;
 
-      const coins = await this.executePuzzle(puz, sln);
+      const coins = await this.executePuzzle(cs.puzzle_reveal, cs.solution);
       new_coins.push(...coins.map((_) => Object.assign({}, _, { unit })));
       old_coins.push({ amount: cs.coin.amount, unit: unit });
       const am = (this.coinTotals[unit] ?? 0n) + cs.coin.amount;
@@ -202,14 +201,14 @@ export default class BundleSummary extends Vue {
       this.newCoins.filter((_) => _.unit == xchSymbol()).reduce((t, cur) => t + cur.amount, 0n);
   }
 
-  async executePuzzle(puz: string, solution: string): Promise<CoinType[]> {
-    const result = await puzzle.executePuzzle(puz, solution);
+  async executePuzzle(puz_hex: string, solution_hex: string): Promise<CoinType[]> {
+    const result = await puzzle.executePuzzleHex(puz_hex, solution_hex);
     const coins: CoinType[] = result.conditions
       .filter((_) => _.op == ConditionOpcode.CREATE_COIN)
       .map((_) => ({
         address: puzzle.getAddressFromPuzzleHash(_.args[0], xchPrefix()),
         amount: getNumber(_.args[1]),
-        args: _.args[2] ? Array.from(assemble(_.args[2]).as_iter()).map((_) => disassemble(_ as SExp)) : [],
+        args: _.args[2] ? Array.from(sexpAssemble(_.args[2]).as_iter()).map((_) => disassemble(_ as SExp)) : [],
       }))
       .map((_) => ({
         address: _.address,

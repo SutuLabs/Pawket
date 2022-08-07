@@ -1,6 +1,6 @@
 import { CoinSpend, SpendBundle } from "@/models/wallet";
 import { Bytes, SExp, Tuple } from "clvm";
-import { prefix0x } from '@/services/coin/condition';
+import { getNumber, prefix0x } from '@/services/coin/condition';
 import { assemble, disassemble } from 'clvm_tools/clvm_tools/binutils';
 import puzzle from "../crypto/puzzle";
 import { modsdict, modsprog } from '@/services/coin/mods';
@@ -8,6 +8,10 @@ import { uncurry } from 'clvm_tools/clvm_tools/curry';
 import { ConditionOpcode } from "../coin/opcode";
 import { TokenSpendPlan } from "../transfer/transfer";
 import bigDecimal from "js-big-decimal";
+import { CannotParsePuzzle, getModsPath, sexpAssemble, SimplePuzzle, simplifyPuzzle } from "../coin/analyzer";
+import { parseMetadata } from "../coin/singleton";
+import { analyzeNftCoin, getNftMetadataInfo, getScalarString } from "../coin/nft";
+import { NftDetail } from "../crypto/receive";
 
 export async function getOfferSummary(bundle: SpendBundle): Promise<OfferSummary> {
 
@@ -26,23 +30,57 @@ export async function getOfferSummary(bundle: SpendBundle): Promise<OfferSummary
     return "";
   }
 
+  const tryGetNftIdAndRoyaltyAndImage = async (puzzle_reveal: string): Promise<[string, number, string]> => {
+    const puz = await simplifyPuzzle(assemble(puzzle_reveal), puzzle_reveal);
+    const modpath = getModsPath(puz);
+    if (modpath == "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),p2_delegated_puzzle_or_hidden_puzzle())))"
+      || modpath == "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),settlement_payments())))") {
+      const ss = ((puz as SimplePuzzle)?.args[0] as CannotParsePuzzle).raw;
+      const roy = (((((puz as SimplePuzzle)//singleton_top_layer_v1_1
+        ?.args[1] as SimplePuzzle)//nft_state_layer
+        ?.args[3] as SimplePuzzle)//nft_ownership_layer
+        ?.args[2] as SimplePuzzle)//nft_ownership_transfer_program_one_way_claim_with_royalties
+        ?.args[2] as CannotParsePuzzle)
+        ?.raw;
+      const rawmeta = (((puz as SimplePuzzle)//singleton_top_layer_v1_1
+        ?.args[1] as SimplePuzzle)//nft_state_layer
+        ?.args[1] as CannotParsePuzzle)
+        ?.raw;
+
+      const parsed = parseMetadata(sexpAssemble(rawmeta));
+      const metadata = getNftMetadataInfo(parsed);
+
+      const rn = Number(getNumber(prefix0x(sexpAssemble(roy).atom?.hex() ?? "")));
+      const launcherId = sexpAssemble(ss).rest().first().atom?.hex();
+      if (!launcherId) return ["", -1, ""];
+      return [prefix0x(launcherId), rn, getScalarString(metadata.imageUri) ?? ""];
+    }
+
+    return ["", -1, ""];
+  }
+
   const getCoinEntities = async (coin: CoinSpend, type: "offer" | "request") => {
     const entities: OfferEntity[] = [];
     const puzzle_reveal = await puzzle.disassemblePuzzle(coin.puzzle_reveal);
     const solution = await puzzle.disassemblePuzzle(coin.solution);
     let result = "";
     let assetId = "";
+    let nftId = "";
+    let royalty = -1;
+    let imageUri = "";
     if (type == "request") {
       if (modsdict[puzzle_reveal] == "settlement_payments") {
         result = await puzzle.calcPuzzleResult(modsprog["settlement_payments"], solution);
       }
       else {
         assetId = await tryGetAssetId(puzzle_reveal);
+        if (!assetId) [nftId, royalty, imageUri] = await tryGetNftIdAndRoyaltyAndImage(puzzle_reveal);
         result = await puzzle.calcPuzzleResult(modsprog["settlement_payments"], solution);
       }
     } else if (type == "offer") {
       result = await puzzle.calcPuzzleResult(puzzle_reveal, solution);
       assetId = await tryGetAssetId(puzzle_reveal);
+      if (!assetId) [nftId, royalty, imageUri] = await tryGetNftIdAndRoyaltyAndImage(puzzle_reveal);
     }
     else {
       throw new Error("not implement");
@@ -53,12 +91,29 @@ export async function getOfferSummary(bundle: SpendBundle): Promise<OfferSummary
       const cond = conds[j];
       if (cond.code == ConditionOpcode.CREATE_COIN) {
         const tgt = prefix0x(Bytes.from(((cond.args[2] && cond.args[2]?.length > 0) ? cond.args[2][0] : cond.args[0]) as Uint8Array).hex());
-        const cattgt = assetId ? prefix0x(Bytes.from(cond.args[0] as Uint8Array).hex()) : undefined;
+        const id = assetId ? assetId : nftId;
+        const wraptgt = id ? prefix0x(Bytes.from(cond.args[0] as Uint8Array).hex()) : undefined;
+        const analysis = await analyzeNftCoin(coin.puzzle_reveal, coin.coin.puzzle_hash, coin.solution);
+        const nft_detail: NftDetail | undefined = !analysis ? undefined :
+          {
+            metadata: {
+              uri: getScalarString(analysis.metadata.imageUri) ?? "",
+              hash: analysis.metadata.imageHash ?? "",
+            },
+            hintPuzzle: coin.coin.puzzle_hash,
+            coin: coin.coin,
+            address: puzzle.getAddressFromPuzzleHash(analysis.launcherId, "nft"),
+            analysis,
+          };
         entities.push({
-          id: assetId,
+          id,
           amount: BigInt(prefix0x(Bytes.from(cond.args[1] as Uint8Array).hex())),
           target: tgt,
-          cat_target: cattgt == tgt ? undefined : cattgt,
+          cat_target: (assetId && wraptgt != tgt) ? wraptgt : undefined,
+          nft_target: nftId ? wraptgt : undefined,
+          nft_detail,
+          royalty: (nftId && royalty != -1) ? royalty : undefined,
+          nft_uri: imageUri,
         })
       }
     }
@@ -121,6 +176,10 @@ export interface OfferEntity {
   amount: bigint;
   target: string;
   cat_target?: string;
+  nft_target?: string;
+  nft_detail?: NftDetail;
+  royalty?: number;
+  nft_uri?: string;
 }
 
 export interface OfferPlan {

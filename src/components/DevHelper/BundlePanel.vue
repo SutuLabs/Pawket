@@ -20,7 +20,13 @@
           <span>{{ idx }}</span>
         </b-radio-button>
       </b-field>
-      <b-field label="Information">
+      <b-field>
+        <template #label>
+          Information
+          <b-switch v-model="autoCalculation" size="is-small" class="is-pulled-right" @input="saveSettings()"
+            >Auto Calculation</b-switch
+          >
+        </template>
         <template #message>
           <ul>
             <li
@@ -56,25 +62,17 @@
           >
         </template>
         <template #message>
-          <uncurry-puzzle :puzzle="puzzle"></uncurry-puzzle>
+          <uncurry-puzzle :puzzle="puzzle" :defaultShowUncurry="autoCalculation"></uncurry-puzzle>
         </template>
       </b-field>
       <b-field v-if="solution">
         <template #label>
           Solution
           <key-box icon="checkbox-multiple-blank-outline" :value="solution" tooltip="Copy"></key-box>
-          <b-button
-            v-if="
-              bundle.coin_spends[selectedCoin].coin.parent_coin_info ==
-              '0x0000000000000000000000000000000000000000000000000000000000000000'
-            "
-            tag="a"
-            size="is-small"
-            @click="executePuzzle(modsprog['settlement_payments'], solution)"
-          >
-            Settlement Execute
+          <b-button tag="a" size="is-small" @click="executePuzzle(puzzle, solution)">
+            Execute
+            <span v-if="solution_executor == 'SETTLEMENT'">(Settlement)</span>
           </b-button>
-          <b-button tag="a" size="is-small" @click="executePuzzle(puzzle, solution)">Execute</b-button>
           <b-button tag="a" size="is-small" @click="solution = beautifyLisp(solution)">
             <b-icon icon="format-paint"></b-icon>
           </b-button>
@@ -138,6 +136,51 @@
           </ul>
         </template>
       </b-field>
+      <hr />
+      <b-field>
+        <template #label>
+          Overall Check
+          <b-button tag="a" size="is-small" @click="check()"> Check </b-button>
+        </template>
+        <template #message>
+          <h3 v-if="puzzleAnnoCreates.length > 0">Puzzle Announcement</h3>
+          <ul v-if="puzzleAnnoCreates.length > 0" class="args_list ellipsis-item">
+            <li v-for="(anno, i) in puzzleAnnoCreates" :key="i" :title="anno.message">
+              <span class="mid-message">
+                {{ anno.message }}
+              </span>
+              <b-button tag="a" size="is-small" @click="changeCoin(anno.coinIndex)">
+                {{ anno.coinIndex }}
+              </b-button>
+
+              <span v-for="(asserted, idx) in [puzzleAnnoAsserted.filter((_) => _.message == anno.message)[0]]" :key="idx">
+                <b-tag v-if="asserted" type="is-success is-light">AS</b-tag>
+                <b-button v-if="asserted" tag="a" size="is-small" @click="changeCoin(asserted.coinIndex)">
+                  {{ asserted.coinIndex }}
+                </b-button>
+              </span>
+              <b-tag v-if="puzzleAnnoAsserted.findIndex((_) => _.message == anno.message) == -1" type="is-warning is-light"
+                >No Assert</b-tag
+              >
+            </li>
+          </ul>
+
+          <h3 v-if="coinAvailability.length > 0">Coin Availability</h3>
+          <ul v-if="coinAvailability.length > 0" class="args_list ellipsis-item">
+            <li v-for="(ca, i) in coinAvailability" :key="i">
+              <b-button tag="a" size="is-small" @click="changeCoin(ca.coinIndex)">
+                {{ ca.coinIndex }}
+              </b-button>
+              <b-tag v-if="ca.availability == 'Available'" type="is-success is-light">UTXO</b-tag>
+              <b-tag v-else-if="ca.availability == 'Ephemeral'" type="is-success is-light">Ephemeral</b-tag>
+              <b-tag v-else-if="ca.availability == 'NotFound'" type="is-danger is-light">NotFound</b-tag>
+              <b-tag v-else-if="ca.availability == 'Used'" type="is-danger is-light">Used</b-tag>
+              <b-tag v-else type="is-light">Unknown</b-tag>
+              {{ ca.coinName }}
+            </li>
+          </ul>
+        </template>
+      </b-field>
     </template>
   </div>
 </template>
@@ -153,8 +196,21 @@ import { conditionDict, ConditionInfo, prefix0x, getNumber, unprefix0x } from "@
 import { modsdict, modsprog } from "@/services/coin/mods";
 import UncurryPuzzle from "@/components/DevHelper/UncurryPuzzle.vue";
 import { decodeOffer } from "@/services/offer/encoding";
-import { xchPrefix } from "@/store/modules/network";
-import { getCoinName } from "@/services/coin/coinUtility";
+import { rpcUrl, xchPrefix } from "@/store/modules/network";
+import { getCoinName, getCoinName0x } from "@/services/coin/coinUtility";
+import { ConditionOpcode } from "@/services/coin/opcode";
+import debug from "@/services/api/debug";
+
+interface AnnouncementCoin {
+  coinIndex: number;
+  message: string;
+}
+
+interface CoinAvailability {
+  coinName: string;
+  coinIndex: number;
+  availability: "Unknown" | "Available" | "Used" | "NotFound" | "Ephemeral";
+}
 
 @Component({
   components: {
@@ -174,6 +230,15 @@ export default class BundlePanel extends Vue {
   public selectedCoin = 0;
   public solution_results: { op: number; args: string[] }[] = [];
   public bundle: SpendBundle | null = null;
+  public autoCalculation = false;
+  public solution_executor: "NORMAL" | "SETTLEMENT" | "ERROR" = "NORMAL";
+
+  public puzzleAnnoCreates: AnnouncementCoin[] = [];
+  public puzzleAnnoAsserted: AnnouncementCoin[] = [];
+  public coinAnnoCreates: AnnouncementCoin[] = [];
+  public coinAnnoAsserted: AnnouncementCoin[] = [];
+  public coinAvailability: CoinAvailability[] = [];
+  public createdCoins: { [key: string]: boolean } = {};
 
   public readonly modsdict = modsdict;
   public readonly modsprog = modsprog;
@@ -215,11 +280,15 @@ export default class BundlePanel extends Vue {
     }
 
     await this.changeCoin(0);
-    this.save();
+    this.saveBundle();
   }
 
   get bundleJson(): string {
     return JSON.stringify(this.bundle, null, 4);
+  }
+
+  async beforeMount(): Promise<void> {
+    await this.loadSettings();
   }
 
   async mounted(): Promise<void> {
@@ -228,16 +297,18 @@ export default class BundlePanel extends Vue {
       this.bundleText = this.inputBundleText;
       await this.updateBundle();
     } else {
-      await this.load();
+      await this.loadBundle();
     }
-    await this.executePuzzle(this.puzzle, this.solution);
+    if (this.autoCalculation) {
+      await this.executePuzzle(this.puzzle, this.solution);
+    }
   }
 
   beautifyLisp(text: string): string {
     return beautifyLisp(text);
   }
 
-  async load(): Promise<void> {
+  async loadBundle(): Promise<void> {
     const bd = localStorage.getItem("BUNDLE_DEBUG");
     if (bd) {
       this.bundleText = bd;
@@ -245,9 +316,17 @@ export default class BundlePanel extends Vue {
     }
   }
 
-  save(): void {
+  async loadSettings(): Promise<void> {
+    this.autoCalculation = localStorage.getItem("BUNDLE_AUTO_CALCULATION") === "true";
+  }
+
+  saveBundle(): void {
     if (this.inputBundleText == this.bundleText) return;
     localStorage.setItem("BUNDLE_DEBUG", this.bundleText);
+  }
+
+  saveSettings(): void {
+    localStorage.setItem("BUNDLE_AUTO_CALCULATION", this.autoCalculation.toString());
   }
 
   async changeCoin(idx: number): Promise<void> {
@@ -260,9 +339,22 @@ export default class BundlePanel extends Vue {
 
   async executePuzzle(puz: string, solution: string): Promise<void> {
     if (!puz || !solution) return;
-    const result = await puzzle.executePuzzle(puz, solution);
-    this.solution_result = result.raw;
-    this.solution_results = result.conditions;
+    try {
+      const result = await puzzle.executePuzzle(puz, solution);
+      this.solution_result = result.raw;
+      this.solution_results = result.conditions;
+      this.solution_executor = "NORMAL";
+    } catch (err) {
+      try {
+        const result = await puzzle.executePuzzle(modsprog["settlement_payments"], solution);
+        this.solution_result = result.raw;
+        this.solution_results = result.conditions;
+        this.solution_executor = "SETTLEMENT";
+      } catch (err) {
+        console.warn("puzzle cannot be executed, even with settlement executor.");
+        this.solution_executor = "ERROR";
+      }
+    }
   }
 
   async update(): Promise<void> {
@@ -298,9 +390,94 @@ export default class BundlePanel extends Vue {
     };
     return getCoinName(coin);
   }
+
+  public async check(): Promise<void> {
+    if (!this.bundle) return;
+    this.puzzleAnnoCreates = [];
+    this.puzzleAnnoAsserted = [];
+    this.coinAnnoCreates = [];
+    this.coinAnnoAsserted = [];
+    // this.coinAvailability = [];
+    Vue.set(this, "coinAvailability", []);
+    const coinsForAvail = [];
+    const newCoins = [];
+    const messages = [];
+    for (let i = 0; i < this.bundle.coin_spends.length; i++) {
+      const cs = this.bundle.coin_spends[i];
+      const result = await puzzle.executePuzzleHex(cs.puzzle_reveal, cs.solution);
+
+      this.puzzleAnnoCreates.push(
+        ...result.conditions
+          .filter((_) => _.op == ConditionOpcode.CREATE_PUZZLE_ANNOUNCEMENT)
+          .map((_) => ({ coinIndex: i, message: this.sha256(cs.coin.puzzle_hash, _.args[0]) }))
+      );
+      this.puzzleAnnoAsserted.push(
+        ...result.conditions
+          .filter((_) => _.op == ConditionOpcode.ASSERT_PUZZLE_ANNOUNCEMENT)
+          .map((_) => ({ coinIndex: i, message: _.args[0] }))
+      );
+      this.coinAnnoCreates.push(
+        ...result.conditions
+          .filter((_) => _.op == ConditionOpcode.CREATE_COIN_ANNOUNCEMENT)
+          .map((_) => ({ coinIndex: i, message: this.sha256(getCoinName0x(cs.coin), _.args[0]) }))
+      );
+      this.coinAnnoAsserted.push(
+        ...result.conditions
+          .filter((_) => _.op == ConditionOpcode.ASSERT_PUZZLE_ANNOUNCEMENT)
+          .map((_) => ({ coinIndex: i, message: _.args[0] }))
+      );
+
+      const ca: CoinAvailability = { coinName: getCoinName0x(cs.coin), coinIndex: i, availability: "Unknown" };
+      coinsForAvail.push(ca);
+      newCoins.push(
+        ...result.conditions
+          .filter((_) => _.op == ConditionOpcode.CREATE_COIN)
+          .map((_) => getCoinName0x({ parent_coin_info: ca.coinName, puzzle_hash: _.args[0], amount: getNumber(_.args[1]) }))
+      );
+      messages.push(
+        ...result.conditions.filter((_) => _.op == ConditionOpcode.AGG_SIG_ME).map((_) => ({ coinIndex: i, message: _.args[0] }))
+      );
+    }
+
+    Vue.set(this, "createdCoins", {});
+    newCoins.forEach((c) => {
+      this.createdCoins[c] = true;
+    });
+
+    for (let i = 0; i < coinsForAvail.length; i++) {
+      const ca = coinsForAvail[i];
+
+      this.coinAvailability.push(ca);
+      if (this.createdCoins[ca.coinName]) {
+        ca.availability = "Ephemeral";
+        continue;
+      }
+      debug
+        .getCoinSolution(ca.coinName, rpcUrl())
+        .then((resp) => {
+          if (!resp.puzzle_reveal && !resp.solution) {
+            ca.availability = "Available";
+          } else {
+            ca.availability = "Used";
+          }
+        })
+        .catch(() => {
+          ca.availability = "NotFound";
+        });
+    }
+
+    // console.log(messages);
+  }
 }
 </script>
 
 <style scoped lang="scss">
 @import "@/styles/arguments.scss";
+
+ul.args_list.ellipsis-item > li .mid-message {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 80px;
+}
 </style>

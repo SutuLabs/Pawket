@@ -5,19 +5,15 @@
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
-      <template>
+      <template v-if="step == 'Input'">
         <b-field label="Offer">
-          <p class="control">
-            <span class="button is-static">NFT</span>
-          </p>
-          <b-input expanded v-model="nft.hash"></b-input>
+          <b-input :value="nft.address" disabled></b-input>
         </b-field>
         <b-field>
-          <img :src="nft.uri" class="image is-64x64" />
+          <img :src="nft.metadata.uri" class="image is-64x64" />
           <span class="pl-2 has-text-grey"
-            ><p>{{ nft.name }}</p>
-            <p>Amount: 1</p></span
-          >
+            ><p>{{ nft.metadata.name }}</p>
+          </span>
         </b-field>
         <b-field label="Request">
           <template v-for="(request, idx) in requests">
@@ -35,6 +31,24 @@
           </template>
         </b-field>
       </template>
+      <template v-if="step == 'Confirmation'">
+        <b-field :label="'NOTHING'" :message="$t('offer.make.ui.panel.hint.thisIsYourOffer')">
+          <template #label>
+            {{ $t("offer.make.ui.label.yourOfferTitle") }}
+            <key-box icon="checkbox-multiple-blank-outline" :value="offerText" tooltip="Copy"></key-box>
+            <a href="javascript:void(0)" v-if="debugMode || true" @click="debugOffer()">🐞</a>
+          </template>
+          <b-input type="textarea" :value="offerText" disabled></b-input>
+        </b-field>
+        <b-field v-if="debugMode && bundle">
+          <template #label>
+            {{ $t("offer.make.ui.label.bundle") }}
+            <key-box icon="checkbox-multiple-blank-outline" :value="JSON.stringify(bundle)" tooltip="Copy"></key-box>
+            <a href="javascript:void(0)" v-if="debugMode" @click="debugBundle()">🐞</a>
+          </template>
+          <b-input type="textarea" disabled :value="bundleJson"></b-input>
+        </b-field>
+      </template>
     </section>
     <footer class="modal-card-foot is-block">
       <div>
@@ -43,6 +57,15 @@
           {{ $t("offer.make.ui.button.sign") }}
           <b-loading :is-full-page="false" :active="!tokenPuzzles || !availcoins || signing"></b-loading>
         </b-button>
+      </div>
+      <div>
+        <b-button
+          :label="$t('offer.make.ui.button.copy')"
+          v-if="bundle"
+          type="is-primary"
+          class="is-pulled-right"
+          @click="copy()"
+        ></b-button>
       </div>
     </footer>
   </div>
@@ -60,11 +83,13 @@ import { SymbolCoins } from "@/services/transfer/transfer";
 import { NftDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
 import DevHelper from "../DevHelper.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { getOfferSummary, OfferSummary, OfferTokenAmount } from "@/services/offer/summary";
-import { getCatIdDict, getCatNameDict, getCatNames } from "@/services/coin/cat";
-import { decodeOffer } from "@/services/offer/encoding";
-import bigDecimal from "js-big-decimal";
-import { xchSymbol } from "@/store/modules/network";
+import { getOfferEntities, getOfferSummary, OfferEntity, OfferSummary, OfferTokenAmount } from "@/services/offer/summary";
+import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
+import { chainId, xchSymbol } from "@/store/modules/network";
+import { prefix0x } from "@/services/coin/condition";
+import puzzle from "@/services/crypto/puzzle";
+import { generateNftOffer, generateOfferPlan } from "@/services/offer/bundler";
+import { getLineageProofPuzzle } from "@/services/transfer/call";
 
 @Component({
   components: {
@@ -86,9 +111,7 @@ export default class NftOffer extends Vue {
   public signing = false;
 
   public requests: OfferTokenAmount[] = [{ token: xchSymbol(), amount: "0" }];
-  public offers: OfferTokenAmount[] = [{ token: xchSymbol(), amount: "0" }];
-  // public requests: OfferTokenAmount[] = [{ token: "BSH", amount: "0.011" }];
-  // public offers: OfferTokenAmount[] = [{ token: xchSymbol(), amount: "0.000000000009" }];
+  // public requests: OfferTokenAmount[] = [{ token: xchSymbol(), amount: "0.000000000008" }];
 
   get bundleText(): string {
     return this.offerBundle == null ? "" : JSON.stringify(this.offerBundle);
@@ -107,16 +130,8 @@ export default class NftOffer extends Vue {
     return;
   }
 
-  get cats(): { [id: string]: string } {
-    return getCatNameDict(this.account);
-  }
-
-  get catIds(): { [name: string]: string } {
-    return getCatIdDict(this.account);
-  }
-
   get tokenNames(): string[] {
-    return getCatNames(this.account);
+    return [xchSymbol()];
   }
 
   async mounted(): Promise<void> {
@@ -125,50 +140,6 @@ export default class NftOffer extends Vue {
 
   get xchSymbol(): string {
     return xchSymbol();
-  }
-
-  getTotalAmount(token: string): string {
-    if (!this.availcoins || !this.availcoins[token] || token == xchSymbol()) {
-      return "-1";
-    }
-
-    const availcoins = this.availcoins[token].map((_) => _.amount);
-    const decimal = 3;
-    const totalAmount = bigDecimal.divide(
-      availcoins.reduce((a, b) => a + b, 0n),
-      Math.pow(10, decimal),
-      decimal
-    );
-    return totalAmount;
-  }
-
-  getMaxAmount(token: string): string {
-    if (!this.availcoins || !this.availcoins[token]) {
-      return "-1";
-    }
-
-    const availcoins = this.availcoins[token].map((_) => _.amount);
-    const decimal = token == xchSymbol() ? 12 : 3;
-    const singleMax = bigDecimal.divide(
-      availcoins.reduce((a, b) => (a > b ? a : b), 0n),
-      Math.pow(10, decimal),
-      decimal
-    );
-    const totalAmount = bigDecimal.divide(
-      availcoins.reduce((a, b) => a + b, 0n),
-      Math.pow(10, decimal),
-      decimal
-    );
-    if (token == xchSymbol()) {
-      return totalAmount;
-    } else {
-      return singleMax;
-    }
-  }
-
-  setMax(offer: OfferTokenAmount): void {
-    const newAmount = this.getMaxAmount(offer.token);
-    offer.amount = newAmount;
   }
 
   async loadCoins(): Promise<void> {
@@ -196,19 +167,38 @@ export default class NftOffer extends Vue {
     try {
       this.signing = true;
 
-      // const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
-      // const offs: OfferEntity[] = getOfferEntities(this.offers, "", this.catIds);
-      // const reqs: OfferEntity[] = getOfferEntities(this.requests, change_hex, this.catIds);
+      const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
+      const offs: OfferEntity[] = [
+        {
+          id: puzzle.getPuzzleHashFromAddress(this.nft.address),
+          amount: 1n,
+          target: "",
+          nft_target: "",
+          royalty: this.nft.analysis.tradePricePercentage,
+          nft_uri: this.nft.metadata.uri,
+        },
+      ];
+      const reqs: OfferEntity[] = getOfferEntities(this.requests, change_hex, {}, xchSymbol());
 
-      // const offplan = await generateOfferPlan(offs, change_hex, this.availcoins, 0n);
-      // const bundle = await generateOffer(offplan, reqs, this.tokenPuzzles);
       // for creating unit test
-      // console.log("const offplan=", JSON.stringify([offplan], null, 2), ";");
-      // console.log("const reqs=", JSON.stringify(reqs, null, 2), ";");
-      // console.log("const bundle=", JSON.stringify(bundle, null, 2), ";");
-      // console.log("coinHandler.getAssetsRequestDetail", JSON.stringify(this.account, null, 2), ";");
-      // this.bundle = bundle;
-      // this.offerText = await encodeOffer(bundle);
+      // console.log("const change_hex=" + JSON.stringify(change_hex, null, 2) + ";");
+      // console.log("const nft=" + JSON.stringify(this.nft, null, 2) + ";");
+      // console.log("const offs=" + JSON.stringify(offs, null, 2) + ";");
+      // console.log("const reqs=" + JSON.stringify(reqs, null, 2) + ";");
+      // console.log("const availcoins=" + JSON.stringify(this.availcoins, null, 2) + ";");
+      const offplan = await generateOfferPlan(offs, change_hex, this.availcoins, 0n, xchSymbol());
+      const bundle = await generateNftOffer(
+        offplan,
+        this.nft.analysis,
+        this.nft.coin,
+        reqs,
+        this.tokenPuzzles,
+        getLineageProofPuzzle,
+        xchSymbol(),
+        chainId()
+      );
+      this.bundle = bundle;
+      this.offerText = await encodeOffer(bundle);
 
       this.step = "Confirmation";
     } catch (error) {
@@ -250,6 +240,7 @@ export default class NftOffer extends Vue {
     });
   }
 }
+
 </script>
 
 <style scoped lang="scss"></style>

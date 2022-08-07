@@ -181,7 +181,7 @@ export default class BatchSend extends Vue {
         const address = line[0];
         if (!address.startsWith(xchPrefix())) {
           Notification.open({
-            message: this.$tc("batchSend.messages.error.ADDRESS_NOT_MATCH_NETWORK"),
+            message: this.$tc("batchSend.messages.error.ADDRESS_NOT_MATCH_NETWORK", 1, { address }),
             type: "is-danger",
             duration: 5000,
           });
