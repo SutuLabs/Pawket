@@ -242,7 +242,12 @@ export default class BundlePanel extends Vue {
       await this.loadBundle();
     }
     if (this.autoCalculation) {
-      await this.executePuzzle(this.puzzle, this.solution);
+      if (
+        this.bundle?.coin_spends[this.selectedCoin].coin.parent_coin_info ==
+        "0x0000000000000000000000000000000000000000000000000000000000000000"
+      )
+        await this.executePuzzle(modsprog["settlement_payments"], this.solution);
+      else await this.executePuzzle(this.puzzle, this.solution);
     }
   }
 
@@ -281,9 +286,13 @@ export default class BundlePanel extends Vue {
 
   async executePuzzle(puz: string, solution: string): Promise<void> {
     if (!puz || !solution) return;
-    const result = await puzzle.executePuzzle(puz, solution);
-    this.solution_result = result.raw;
-    this.solution_results = result.conditions;
+    try {
+      const result = await puzzle.executePuzzle(puz, solution);
+      this.solution_result = result.raw;
+      this.solution_results = result.conditions;
+    } catch (err) {
+      console.warn("puzzle cannot be executed, maybe you want to try Settlement Execute?");
+    }
   }
 
   async update(): Promise<void> {
