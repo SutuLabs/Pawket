@@ -9,7 +9,9 @@
         <b-field
           :label="$t('offer.take.ui.field.offer')"
           :type="parseError == 'error' ? 'is-danger' : ''"
-          :message="offerText ? (parseError == 'error' ? $t('offer.take.ui.hint.error') : '') : $t('offer.take.ui.hint.pasteOffer')"
+          :message="
+            offerText ? (parseError == 'error' ? $t('offer.take.ui.hint.error') : '') : $t('offer.take.ui.hint.pasteOffer')
+          "
         >
           <b-input type="textarea" v-model="offerText" @input="updateOffer()"></b-input>
         </b-field>
@@ -21,30 +23,49 @@
               <li>
                 <ol class="token-list">
                   <li class="pt-1" v-for="(ent, idx) in arr" :key="idx">
-                    <b-taglist attached class="mb-0">
-                      <b-tag v-if="ent.id && cats[ent.id]" type="is-info" :title="cats[ent.id] + ' (' + ent.id + ')'">{{
-                        cats[ent.id]
-                      }}</b-tag>
-                      <a v-else-if="ent.id" @click="ManageCats(ent.id)">
-                        <b-tag type="is-info" :title="ent.id">
-                          {{ $t("offer.symbol.Cat") }} {{ ent.id.slice(0, 7) + "..." }}</b-tag
-                        >
-                      </a>
+                    <div class="columns">
+                      <div class="column">
+                        <b-taglist attached class="mb-0">
+                          <template v-if="ent.id && ent.nft_target">
+                            <b-tag type="is-info" class="nft-tag" :title="getNftName(ent.id)">{{ getNftName(ent.id) }}</b-tag>
+                          </template>
+                          <template v-else-if="ent.id && ent.cat_target">
+                            <b-tag v-if="ent.id && cats[ent.id]" type="is-info" :title="cats[ent.id] + ' (' + ent.id + ')'">{{
+                              cats[ent.id]
+                            }}</b-tag>
+                            <a v-else-if="ent.id" @click="ManageCats(ent.id)">
+                              <b-tag type="is-info" :title="ent.id">
+                                {{ $t("offer.symbol.Cat") }} {{ ent.id.slice(0, 7) + "..." }}</b-tag
+                              >
+                            </a>
+                          </template>
 
-                      <b-tag v-else type="is-info" :title="$t('offer.symbol.hint.XCH')">{{ xchSymbol }}</b-tag>
+                          <template v-else>
+                            <b-tag type="is-info" :title="$t('offer.symbol.hint.XCH')">{{ xchSymbol }}</b-tag>
+                          </template>
 
-                      <b-tag class="" :title="ent.amount + ' mojos'">{{
-                        ent.amount | demojo(ent.id && tokenInfo[cats[ent.id]])
-                      }}</b-tag>
-                      <b-tag v-if="sumkey == 'requested'" type="is-info is-light" :title="ent.target">
-                        <key-box :value="ent.target" :showValue="true"></key-box>
-                      </b-tag>
-                    </b-taglist>
-                    <a v-if="ent.id && !cats[ent.id]" @click="ManageCats(ent.id)">
-                      <span v-if="ent.id && !cats[ent.id]" class="pl-1 pt-0 is-size-8 has-text-danger is-inline-block">
-                        {{ $t("offer.take.information.addCat") }}
-                      </span>
-                    </a>
+                          <b-tag v-if="!ent.nft_target" class="" :title="ent.amount + ' mojos'">{{
+                            ent.amount | demojo(ent.id && tokenInfo[cats[ent.id]])
+                          }}</b-tag>
+
+                          <b-tag v-if="sumkey == 'requested'" type="is-info is-light" :title="getAddress(ent.target)">
+                            <key-box :value="getAddress(ent.target)" :showValue="true"></key-box>
+                          </b-tag>
+                        </b-taglist>
+                        <a v-if="ent.id && ent.cat_target && !cats[ent.id]" @click="ManageCats(ent.id)">
+                          <span v-if="ent.id && !cats[ent.id]" class="pl-1 pt-0 is-size-8 has-text-danger is-inline-block">
+                            {{ $t("offer.take.information.addCat") }}
+                          </span>
+                        </a>
+                      </div>
+                      <div v-if="ent.nft_uri" class="column">
+                        <a :href="ent.nft_uri" target="_blank">
+                          <b-tooltip :label="ent.nft_uri" multilined class="break-string" position="is-left">
+                            <img :src="ent.nft_uri" class="nft-image" />
+                          </b-tooltip>
+                        </a>
+                      </div>
+                    </div>
                   </li>
                 </ol>
               </li>
@@ -109,7 +130,7 @@ import { debugBundle, submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/FeeSelector.vue";
 import ManageCats from "@/components/ManageCats.vue";
 import OfflineSendShowBundle from "../OfflineSendShowBundle.vue";
-import { chainId, xchSymbol } from "@/store/modules/network";
+import { chainId, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getLineageProofPuzzle } from "@/services/transfer/call";
 
 @Component({
@@ -268,6 +289,14 @@ export default class TakeOffer extends Vue {
     debugBundle(this, this.bundle);
   }
 
+  getNftName(hex: string): string {
+    return puzzle.getAddressFromPuzzleHash(hex, "nft");
+  }
+
+  getAddress(hex: string): string {
+    return puzzle.getAddressFromPuzzleHash(hex, xchPrefix());
+  }
+
   ManageCats(id: string): void {
     this.$buefy.modal.open({
       parent: this,
@@ -295,5 +324,20 @@ export default class TakeOffer extends Vue {
 <style scoped lang="scss">
 ol.token-list {
   margin-left: 2em;
+}
+img.nft-image {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border: 1px solid;
+}
+.break-string {
+  word-break: break-word;
+}
+.nft-tag ::v-deep span{
+  text-overflow: ellipsis;
+  max-width: 100px;
+  overflow: hidden;
+  white-space: nowrap;
 }
 </style>
