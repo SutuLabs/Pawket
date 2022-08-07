@@ -185,6 +185,8 @@ export default class MintNft extends Vue {
   mounted(): void {
     this.loadCoins();
     this.address = ensureAddress(this.account.firstAddress);
+
+    store.dispatch("refreshDids");
   }
 
   @Emit("close")
