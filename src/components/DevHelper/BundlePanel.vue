@@ -136,6 +136,35 @@
           </ul>
         </template>
       </b-field>
+      <hr />
+      <b-field>
+        <template #label>
+          Overall Check
+          <b-button tag="a" size="is-small" @click="check()"> Check </b-button>
+        </template>
+        <template #message>
+          <ul v-if="puzzleAnnoCreates.length > 0" class="args_list ellipsis-item">
+            <li v-for="(anno, i) in puzzleAnnoCreates" :key="i" :title="anno.message">
+              <span class="mid-message">
+                {{ anno.message }}
+              </span>
+              <b-button tag="a" size="is-small" @click="changeCoin(anno.coinIndex)">
+                {{ anno.coinIndex }}
+              </b-button>
+
+              <span v-for="(asserted, idx) in [puzzleAnnoAsserted.filter((_) => _.message == anno.message)[0]]" :key="idx">
+                <b-tag v-if="asserted" type="is-success is-light">AS</b-tag>
+                <b-button v-if="asserted" tag="a" size="is-small" @click="changeCoin(asserted.coinIndex)">
+                  {{ asserted.coinIndex }}
+                </b-button>
+              </span>
+              <b-tag v-if="puzzleAnnoAsserted.findIndex((_) => _.message == anno.message) == -1" type="is-warning is-light"
+                >No Assert</b-tag
+              >
+            </li>
+          </ul>
+        </template>
+      </b-field>
     </template>
   </div>
 </template>
@@ -152,7 +181,13 @@ import { modsdict, modsprog } from "@/services/coin/mods";
 import UncurryPuzzle from "@/components/DevHelper/UncurryPuzzle.vue";
 import { decodeOffer } from "@/services/offer/encoding";
 import { xchPrefix } from "@/store/modules/network";
-import { getCoinName } from "@/services/coin/coinUtility";
+import { getCoinName, getCoinName0x } from "@/services/coin/coinUtility";
+import { ConditionOpcode } from "@/services/coin/opcode";
+
+interface AnnouncementCoin {
+  coinIndex: number;
+  message: string;
+}
 
 @Component({
   components: {
@@ -174,6 +209,11 @@ export default class BundlePanel extends Vue {
   public bundle: SpendBundle | null = null;
   public autoCalculation = false;
   public solution_executor: "NORMAL" | "SETTLEMENT" | "ERROR" = "NORMAL";
+
+  public puzzleAnnoCreates: AnnouncementCoin[] = [];
+  public puzzleAnnoAsserted: AnnouncementCoin[] = [];
+  public coinAnnoCreates: AnnouncementCoin[] = [];
+  public coinAnnoAsserted: AnnouncementCoin[] = [];
 
   public readonly modsdict = modsdict;
   public readonly modsprog = modsprog;
@@ -325,9 +365,54 @@ export default class BundlePanel extends Vue {
     };
     return getCoinName(coin);
   }
+
+  public async check(): Promise<void> {
+    if (!this.bundle) return;
+    this.puzzleAnnoCreates = [];
+    this.puzzleAnnoAsserted = [];
+    this.coinAnnoCreates = [];
+    this.coinAnnoAsserted = [];
+    const messages = [];
+    for (let i = 0; i < this.bundle.coin_spends.length; i++) {
+      const cs = this.bundle.coin_spends[i];
+      const result = await puzzle.executePuzzleHex(cs.puzzle_reveal, cs.solution);
+
+      this.puzzleAnnoCreates.push(
+        ...result.conditions
+          .filter((_) => _.op == ConditionOpcode.CREATE_PUZZLE_ANNOUNCEMENT)
+          .map((_) => ({ coinIndex: i, message: this.sha256(cs.coin.puzzle_hash, _.args[0]) }))
+      );
+      this.puzzleAnnoAsserted.push(
+        ...result.conditions
+          .filter((_) => _.op == ConditionOpcode.ASSERT_PUZZLE_ANNOUNCEMENT)
+          .map((_) => ({ coinIndex: i, message: _.args[0] }))
+      );
+      this.coinAnnoCreates.push(
+        ...result.conditions
+          .filter((_) => _.op == ConditionOpcode.CREATE_COIN_ANNOUNCEMENT)
+          .map((_) => ({ coinIndex: i, message: this.sha256(getCoinName0x(cs.coin), _.args[0]) }))
+      );
+      this.coinAnnoAsserted.push(
+        ...result.conditions
+          .filter((_) => _.op == ConditionOpcode.ASSERT_PUZZLE_ANNOUNCEMENT)
+          .map((_) => ({ coinIndex: i, message: _.args[0] }))
+      );
+      messages.push(
+        ...result.conditions.filter((_) => _.op == ConditionOpcode.AGG_SIG_ME).map((_) => ({ coinIndex: i, message: _.args[0] }))
+      );
+    }
+    // console.log(messages);
+  }
 }
 </script>
 
 <style scoped lang="scss">
 @import "@/styles/arguments.scss";
+
+ul.args_list.ellipsis-item > li .mid-message {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 80px;
+}
 </style>
