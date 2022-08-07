@@ -21,14 +21,18 @@ interface ParsePuzzleRequest {
 Instance.init().then(() => {
   app.post('/parse_block', async (req: express.Request, res: express.Response) => {
     try {
-      console.time("parse_block");
+      if (process.env.SHOW_LOG) {
+        console.time("parse_block");
+      }
       const r = req.body as ParseBlockRequest;
       const bg = await parseBlock(r.generator, r.ref_list);
       const prog = sexpAssemble(bg);
       const argarr = await Promise.all(Array.from(prog.first().as_iter())
         .map(async _ => await parseCoin(_)));
 
-      console.log(`generated ${argarr.length} coins`);
+      if (process.env.SHOW_LOG) {
+        console.log(`generated ${argarr.length} coins`);
+      }
       // res.send(JSON.stringify(argarr, null, 4))
       res.send(JSON.stringify(argarr))
     }
@@ -38,7 +42,9 @@ Instance.init().then(() => {
       res.status(500).send(JSON.stringify({ success: false, error: (<any>err).message }))
     }
     finally {
-      console.timeEnd("parse_block");
+      if (process.env.SHOW_LOG) {
+        console.timeEnd("parse_block");
+      }
     }
   })
 
