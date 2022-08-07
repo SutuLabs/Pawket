@@ -80,7 +80,6 @@ export default class OfferPanel extends Vue {
     this.bundle = await decodeOffer(this.offerText);
     this.summary = null;
     this.summary = await getOfferSummary(this.bundle);
-    console.log(this.summary);
     this.save();
   }
 
