@@ -10,7 +10,8 @@ import { TokenSpendPlan } from "../transfer/transfer";
 import bigDecimal from "js-big-decimal";
 import { CannotParsePuzzle, getModsPath, sexpAssemble, SimplePuzzle, simplifyPuzzle } from "../coin/analyzer";
 import { parseMetadata } from "../coin/singleton";
-import { getNftMetadataInfo, getScalarString } from "../coin/nft";
+import { analyzeNftCoin, getNftMetadataInfo, getScalarString } from "../coin/nft";
+import { NftDetail } from "../crypto/receive";
 
 export async function getOfferSummary(bundle: SpendBundle): Promise<OfferSummary> {
 
@@ -92,12 +93,25 @@ export async function getOfferSummary(bundle: SpendBundle): Promise<OfferSummary
         const tgt = prefix0x(Bytes.from(((cond.args[2] && cond.args[2]?.length > 0) ? cond.args[2][0] : cond.args[0]) as Uint8Array).hex());
         const id = assetId ? assetId : nftId;
         const wraptgt = id ? prefix0x(Bytes.from(cond.args[0] as Uint8Array).hex()) : undefined;
+        const analysis = await analyzeNftCoin(coin.puzzle_reveal, coin.coin.puzzle_hash, coin.solution);
+        const nft_detail: NftDetail | undefined = !analysis ? undefined :
+          {
+            metadata: {
+              uri: getScalarString(analysis.metadata.imageUri) ?? "",
+              hash: analysis.metadata.imageHash ?? "",
+            },
+            hintPuzzle: coin.coin.puzzle_hash,
+            coin: coin.coin,
+            address: puzzle.getAddressFromPuzzleHash(analysis.launcherId, "nft"),
+            analysis,
+          };
         entities.push({
           id,
           amount: BigInt(prefix0x(Bytes.from(cond.args[1] as Uint8Array).hex())),
           target: tgt,
           cat_target: (assetId && wraptgt != tgt) ? wraptgt : undefined,
           nft_target: nftId ? wraptgt : undefined,
+          nft_detail,
           royalty: (nftId && royalty != -1) ? royalty : undefined,
           nft_uri: imageUri,
         })
@@ -163,6 +177,7 @@ export interface OfferEntity {
   target: string;
   cat_target?: string;
   nft_target?: string;
+  nft_detail?: NftDetail;
   royalty?: number;
   nft_uri?: string;
 }

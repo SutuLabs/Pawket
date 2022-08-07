@@ -223,6 +223,10 @@ export default class TakeOffer extends Vue {
     this.fee = 0;
   }
 
+  get isNftOffer(): boolean {
+    return !!this.summary && (this.summary.requested.some((_) => _.nft_target) || this.summary.offered.some((_) => _.nft_target));
+  }
+
   async loadCoins(): Promise<void> {
     if (!this.tokenPuzzles || this.tokenPuzzles.length == 0) {
       this.tokenPuzzles = await coinHandler.getAssetsRequestDetail(this.account);
@@ -241,9 +245,8 @@ export default class TakeOffer extends Vue {
     try {
       this.signing = true;
       const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
-      const isNftOffer = this.summary.requested.some((_) => _.nft_target) || this.summary.offered.some((_) => _.nft_target);
 
-      if (!isNftOffer) {
+      if (!this.isNftOffer) {
         const isReceivingCat = !this.summary.requested[0].id;
 
         const revSummary = getReversePlan(this.summary, change_hex, this.cats);
@@ -273,8 +276,8 @@ export default class TakeOffer extends Vue {
       } else {
         const revSummary = getReversePlan(this.summary, change_hex, this.cats);
         const fee = BigInt(this.fee);
-        const nft = this.account.nfts?.filter((_) => _.analysis.launcherId == revSummary.requested[0].id)[0];
-        if (!nft) throw new Error("Cannot find your NFT");
+        const nft = revSummary.requested[0].nft_detail;
+        if (!nft) throw new Error("Cannot find NFT");
 
         // royalty_amount = uint64(offered_amount * royalty_percentage / 10000)
         const royalty_amount = (revSummary.offered[0].amount * BigInt(nft.analysis.tradePricePercentage)) / BigInt(10000);
@@ -356,8 +359,6 @@ export default class TakeOffer extends Vue {
     });
   }
 }
-
-// latest one
 </script>
 
 <style scoped lang="scss">
