@@ -84,7 +84,7 @@ export async function parseBlock(generator_hex: string, ref_hex_list: string[] |
   return bg;
 }
 
-function getModsPath(parsed_puzzle: SimplePuzzle | CannotParsePuzzle): string {
+export function getModsPath(parsed_puzzle: SimplePuzzle | CannotParsePuzzle): string {
   if ("raw" in parsed_puzzle) return "";
   return `${parsed_puzzle.mod}(${parsed_puzzle.args.map(_ => getModsPath(_)).filter(_ => _).join(",")})`;
 }

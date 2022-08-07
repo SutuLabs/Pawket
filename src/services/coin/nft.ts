@@ -400,7 +400,8 @@ function getNftMetadataKeys(): NftMetadataKeys {
     "serialTotal": "7374", // for series total
   };
 }
-function getNftMetadataInfo(parsed: ParsedMetadata): NftMetadataValues {
+
+export function getNftMetadataInfo(parsed: ParsedMetadata): NftMetadataValues {
   const mkeys = getNftMetadataKeys();
 
   const getScalar = function (input: string | string[] | undefined): string {

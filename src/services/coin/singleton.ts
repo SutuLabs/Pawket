@@ -3,7 +3,7 @@ import { TokenPuzzleDetail } from "../crypto/receive";
 import { curryMod } from "../offer/bundler";
 import { prefix0x, unprefix0x } from "./condition";
 import { modshash, modsprog } from "./mods";
-import { Bytes } from "clvm";
+import { Bytes, SExp } from "clvm";
 import { assemble } from "clvm_tools/clvm_tools/binutils";
 
 export type SingletonStructList = [Bytes, [Bytes, Bytes]];
@@ -56,9 +56,9 @@ export function cloneAndChangeRequestPuzzleTemporary(
 }
 
 export function parseMetadata(
-  rawmeta: string,
+  rawmeta: string | SExp,
 ): ParsedMetadata {
-  const metaprog = assemble(rawmeta);
+  const metaprog = typeof rawmeta === "string" ? assemble(rawmeta) : rawmeta;
   const metalist: string[][] = (metaprog.as_javascript() as Bytes[][])
     .map(_ => Array.from(_))
     .map(_ => _.map(it => it.hex()));

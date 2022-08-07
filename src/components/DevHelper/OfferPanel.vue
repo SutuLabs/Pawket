@@ -9,11 +9,22 @@
           <li>{{ sumkey }}</li>
           <li class="pt-1" v-for="(ent, idx) in arr" :key="idx">
             <b-taglist attached>
-              <b-tag v-if="ent.id" type="is-info" :title="ent.id">CAT {{ ent.id.slice(0, 7) + "..." }}</b-tag>
+              <b-tag v-if="ent.cat_target" type="is-info" :title="ent.id">CAT {{ ent.id.slice(0, 7) + "..." }}</b-tag>
+              <b-tag v-if="ent.nft_target" type="is-info" :title="getNftName(ent.id)">{{
+                getNftName(ent.id).slice(0, 20) + "..."
+              }}</b-tag>
               <b-tag v-else type="is-info">{{ xchSymbol }}</b-tag>
 
-              <b-tag type="">{{ ent.amount }}</b-tag>
-              <b-tag type="is-info is-light" :title="ent.target">{{ ent.target.slice(0, 7) + "..." }}</b-tag>
+              <b-tag type="" v-if="ent.nft_target">{{ ent.royalty / 100 }}%</b-tag>
+              <b-tag type="" v-else>{{ ent.amount }}</b-tag>
+              <b-tag type="is-info is-light" :title="ent.target">{{ getAddress(ent.target).slice(0, 7) + "..." }}</b-tag>
+              <b-tag type="is-info is-light" v-if="ent.nft_uri">
+                <a :href="ent.nft_uri" target="_blank">
+                  <b-tooltip :label="ent.nft_uri" multilined class="break-string" position="is-left">
+                    <img :src="ent.nft_uri" class="nft-image" />
+                  </b-tooltip>
+                </a>
+              </b-tag>
             </b-taglist>
           </li>
         </ul>
@@ -32,7 +43,8 @@ import { SpendBundle } from "@/models/wallet";
 import BundlePanel from "@/components/DevHelper/BundlePanel.vue";
 import { getOfferSummary, OfferSummary } from "@/services/offer/summary";
 import { decodeOffer } from "@/services/offer/encoding";
-import { xchSymbol } from "@/store/modules/network";
+import { xchPrefix, xchSymbol } from "@/store/modules/network";
+import puzzle from "@/services/crypto/puzzle";
 
 @Component({
   components: {
@@ -68,6 +80,7 @@ export default class OfferPanel extends Vue {
     this.bundle = await decodeOffer(this.offerText);
     this.summary = null;
     this.summary = await getOfferSummary(this.bundle);
+    console.log(this.summary);
     this.save();
   }
 
@@ -83,7 +96,25 @@ export default class OfferPanel extends Vue {
       this.updateOffer();
     }
   }
+
+  getNftName(hex: string): string {
+    return puzzle.getAddressFromPuzzleHash(hex, "nft");
+  }
+
+  getAddress(hex: string): string {
+    return puzzle.getAddressFromPuzzleHash(hex, xchPrefix());
+  }
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+img.nft-image {
+  width: 100px;
+  height: 1.5rem;
+  object-fit: cover;
+  border: 1px solid;
+}
+.break-string {
+  word-break: break-word;
+}
+</style>
