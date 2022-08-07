@@ -143,6 +143,7 @@
           <b-button tag="a" size="is-small" @click="check()"> Check </b-button>
         </template>
         <template #message>
+          <h3 v-if="puzzleAnnoCreates.length > 0">Puzzle Announcement</h3>
           <ul v-if="puzzleAnnoCreates.length > 0" class="args_list ellipsis-item">
             <li v-for="(anno, i) in puzzleAnnoCreates" :key="i" :title="anno.message">
               <span class="mid-message">
@@ -163,6 +164,21 @@
               >
             </li>
           </ul>
+
+          <h3 v-if="coinAvailability.length > 0">Coin Availability</h3>
+          <ul v-if="coinAvailability.length > 0" class="args_list ellipsis-item">
+            <li v-for="(ca, i) in coinAvailability" :key="i">
+              <b-button tag="a" size="is-small" @click="changeCoin(ca.coinIndex)">
+                {{ ca.coinIndex }}
+              </b-button>
+              <b-tag v-if="ca.availability == 'Available'" type="is-success is-light">UTXO</b-tag>
+              <b-tag v-else-if="ca.availability == 'Ephemeral'" type="is-success is-light">Ephemeral</b-tag>
+              <b-tag v-else-if="ca.availability == 'NotFound'" type="is-danger is-light">NotFound</b-tag>
+              <b-tag v-else-if="ca.availability == 'Used'" type="is-danger is-light">Used</b-tag>
+              <b-tag v-else type="is-light">Unknown</b-tag>
+              {{ ca.coinName }}
+            </li>
+          </ul>
         </template>
       </b-field>
     </template>
@@ -180,13 +196,20 @@ import { conditionDict, ConditionInfo, prefix0x, getNumber, unprefix0x } from "@
 import { modsdict, modsprog } from "@/services/coin/mods";
 import UncurryPuzzle from "@/components/DevHelper/UncurryPuzzle.vue";
 import { decodeOffer } from "@/services/offer/encoding";
-import { xchPrefix } from "@/store/modules/network";
+import { rpcUrl, xchPrefix } from "@/store/modules/network";
 import { getCoinName, getCoinName0x } from "@/services/coin/coinUtility";
 import { ConditionOpcode } from "@/services/coin/opcode";
+import debug from "@/services/api/debug";
 
 interface AnnouncementCoin {
   coinIndex: number;
   message: string;
+}
+
+interface CoinAvailability {
+  coinName: string;
+  coinIndex: number;
+  availability: "Unknown" | "Available" | "Used" | "NotFound" | "Ephemeral";
 }
 
 @Component({
@@ -214,6 +237,8 @@ export default class BundlePanel extends Vue {
   public puzzleAnnoAsserted: AnnouncementCoin[] = [];
   public coinAnnoCreates: AnnouncementCoin[] = [];
   public coinAnnoAsserted: AnnouncementCoin[] = [];
+  public coinAvailability: CoinAvailability[] = [];
+  public createdCoins: { [key: string]: boolean } = {};
 
   public readonly modsdict = modsdict;
   public readonly modsprog = modsprog;
@@ -372,6 +397,10 @@ export default class BundlePanel extends Vue {
     this.puzzleAnnoAsserted = [];
     this.coinAnnoCreates = [];
     this.coinAnnoAsserted = [];
+    // this.coinAvailability = [];
+    Vue.set(this, "coinAvailability", []);
+    const coinsForAvail = [];
+    const newCoins = [];
     const messages = [];
     for (let i = 0; i < this.bundle.coin_spends.length; i++) {
       const cs = this.bundle.coin_spends[i];
@@ -397,10 +426,46 @@ export default class BundlePanel extends Vue {
           .filter((_) => _.op == ConditionOpcode.ASSERT_PUZZLE_ANNOUNCEMENT)
           .map((_) => ({ coinIndex: i, message: _.args[0] }))
       );
+
+      const ca: CoinAvailability = { coinName: getCoinName0x(cs.coin), coinIndex: i, availability: "Unknown" };
+      coinsForAvail.push(ca);
+      newCoins.push(
+        ...result.conditions
+          .filter((_) => _.op == ConditionOpcode.CREATE_COIN)
+          .map((_) => getCoinName0x({ parent_coin_info: ca.coinName, puzzle_hash: _.args[0], amount: getNumber(_.args[1]) }))
+      );
       messages.push(
         ...result.conditions.filter((_) => _.op == ConditionOpcode.AGG_SIG_ME).map((_) => ({ coinIndex: i, message: _.args[0] }))
       );
     }
+
+    Vue.set(this, "createdCoins", {});
+    newCoins.forEach((c) => {
+      this.createdCoins[c] = true;
+    });
+
+    for (let i = 0; i < coinsForAvail.length; i++) {
+      const ca = coinsForAvail[i];
+
+      this.coinAvailability.push(ca);
+      if (this.createdCoins[ca.coinName]) {
+        ca.availability = "Ephemeral";
+        continue;
+      }
+      debug
+        .getCoinSolution(ca.coinName, rpcUrl())
+        .then((resp) => {
+          if (!resp.puzzle_reveal && !resp.solution) {
+            ca.availability = "Available";
+          } else {
+            ca.availability = "Used";
+          }
+        })
+        .catch(() => {
+          ca.availability = "NotFound";
+        });
+    }
+
     // console.log(messages);
   }
 }
