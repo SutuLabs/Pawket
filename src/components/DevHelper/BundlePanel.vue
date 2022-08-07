@@ -69,18 +69,10 @@
         <template #label>
           Solution
           <key-box icon="checkbox-multiple-blank-outline" :value="solution" tooltip="Copy"></key-box>
-          <b-button
-            v-if="
-              bundle.coin_spends[selectedCoin].coin.parent_coin_info ==
-              '0x0000000000000000000000000000000000000000000000000000000000000000'
-            "
-            tag="a"
-            size="is-small"
-            @click="executePuzzle(modsprog['settlement_payments'], solution)"
-          >
-            Settlement Execute
+          <b-button tag="a" size="is-small" @click="executePuzzle(puzzle, solution)">
+            Execute
+            <span v-if="solution_executor == 'SETTLEMENT'">(Settlement)</span>
           </b-button>
-          <b-button tag="a" size="is-small" @click="executePuzzle(puzzle, solution)">Execute</b-button>
           <b-button tag="a" size="is-small" @click="solution = beautifyLisp(solution)">
             <b-icon icon="format-paint"></b-icon>
           </b-button>
@@ -181,6 +173,7 @@ export default class BundlePanel extends Vue {
   public solution_results: { op: number; args: string[] }[] = [];
   public bundle: SpendBundle | null = null;
   public autoCalculation = false;
+  public solution_executor: "NORMAL" | "SETTLEMENT" | "ERROR" = "NORMAL";
 
   public readonly modsdict = modsdict;
   public readonly modsprog = modsprog;
@@ -242,12 +235,7 @@ export default class BundlePanel extends Vue {
       await this.loadBundle();
     }
     if (this.autoCalculation) {
-      if (
-        this.bundle?.coin_spends[this.selectedCoin].coin.parent_coin_info ==
-        "0x0000000000000000000000000000000000000000000000000000000000000000"
-      )
-        await this.executePuzzle(modsprog["settlement_payments"], this.solution);
-      else await this.executePuzzle(this.puzzle, this.solution);
+      await this.executePuzzle(this.puzzle, this.solution);
     }
   }
 
@@ -290,8 +278,17 @@ export default class BundlePanel extends Vue {
       const result = await puzzle.executePuzzle(puz, solution);
       this.solution_result = result.raw;
       this.solution_results = result.conditions;
+      this.solution_executor = "NORMAL";
     } catch (err) {
-      console.warn("puzzle cannot be executed, maybe you want to try Settlement Execute?");
+      try {
+        const result = await puzzle.executePuzzle(modsprog["settlement_payments"], solution);
+        this.solution_result = result.raw;
+        this.solution_results = result.conditions;
+        this.solution_executor = "SETTLEMENT";
+      } catch (err) {
+        console.warn("puzzle cannot be executed, even with settlement executor.");
+        this.solution_executor = "ERROR";
+      }
     }
   }
 
