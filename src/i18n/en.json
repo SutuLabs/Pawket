@@ -932,7 +932,8 @@
           "pawketWebsite": "Pawket Website",
           "github": "Github",
           "twitter": "Twitter",
-          "discord": "Discord"
+          "discord": "Discord",
+          "donate": "Donate to Developers"
         },
         "url": {
           "privacyPolicy": "https://info.pawket.app/privacy-policy",

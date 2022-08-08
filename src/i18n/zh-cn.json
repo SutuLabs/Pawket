@@ -932,7 +932,8 @@
           "pawketWebsite": "薄荷钱包官网",
           "github": "Github",
           "twitter": "Twitter",
-          "discord": "Discord"
+          "discord": "Discord",
+          "donate": "支持开发者"
         },
         "url": {
           "privacyPolicy": "https://info.pawket.app/zh/privacy-policy",

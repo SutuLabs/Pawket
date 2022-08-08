@@ -7,12 +7,42 @@
       </p>
     </a>
     <div v-if="displayDapp" class="columns is-mobile is-multiline mt-2">
-      <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+      <div class="column px-1 is-1-desktop is-3-mobile has-text-centered" style="display: none">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.donate')" position="is-right">
           <a href="javascript:void(0)" @click="openDonation()" class="has-text-link">
             <div class="has-text-centered">
               <b-icon icon="hand-heart-outline" size="is-medium"></b-icon>
               <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.donate") }}</p>
+            </div>
+          </a>
+        </b-tooltip>
+      </div>
+      <div v-if="experimentMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.takeOffer')" position="is-right">
+          <a href="javascript:void(0)" @click="openTakeOffer()" class="has-text-link">
+            <div class="has-text-centered">
+              <b-icon icon="email-check-outline" size="is-medium"></b-icon>
+              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.takeOffer") }}</p>
+            </div>
+          </a>
+        </b-tooltip>
+      </div>
+      <div v-if="experimentMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.makeOffer')" position="is-right">
+          <a href="javascript:void(0)" @click="openMakeOffer()" class="has-text-link">
+            <div class="has-text-centered">
+              <b-icon icon="email-send-outline" size="is-medium"></b-icon>
+              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.makeOffer") }}</p>
+            </div>
+          </a>
+        </b-tooltip>
+      </div>
+      <div v-if="experimentMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.batchSend')" position="is-right">
+          <a href="javascript:void(0)" @click="openBatchSend()" class="has-text-link">
+            <div class="has-text-centered">
+              <b-icon icon="share-all-outline" size="is-medium"></b-icon>
+              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.batchSend") }}</p>
             </div>
           </a>
         </b-tooltip>
@@ -27,39 +57,9 @@
           </a>
         </b-tooltip>
       </div>
-      <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
-        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.takeOffer')" position="is-right">
-          <a v-if="experimentMode" href="javascript:void(0)" @click="openTakeOffer()" class="has-text-link">
-            <div class="has-text-centered">
-              <b-icon icon="email-check-outline" size="is-medium"></b-icon>
-              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.takeOffer") }}</p>
-            </div>
-          </a>
-        </b-tooltip>
-      </div>
-      <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
-        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.makeOffer')" position="is-right">
-          <a v-if="experimentMode" href="javascript:void(0)" @click="openMakeOffer()" class="has-text-link">
-            <div class="has-text-centered">
-              <b-icon icon="email-send-outline" size="is-medium"></b-icon>
-              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.makeOffer") }}</p>
-            </div>
-          </a>
-        </b-tooltip>
-      </div>
-      <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
-        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.batchSend')" position="is-right">
-          <a v-if="experimentMode" href="javascript:void(0)" @click="openBatchSend()" class="has-text-link">
-            <div class="has-text-centered">
-              <b-icon icon="share-all-outline" size="is-medium"></b-icon>
-              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.batchSend") }}</p>
-            </div>
-          </a>
-        </b-tooltip>
-      </div>
-      <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+      <div v-if="experimentMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.mintCat')" position="is-right">
-          <a v-if="experimentMode" href="javascript:void(0)" @click="openMintCat()" class="has-text-link">
+          <a href="javascript:void(0)" @click="openMintCat()" class="has-text-link">
             <div class="has-text-centered">
               <b-icon icon="cat" size="is-medium"></b-icon>
               <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.mintCat") }}</p>
@@ -67,9 +67,9 @@
           </a>
         </b-tooltip>
       </div>
-      <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+      <div v-if="experimentMode && debugMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.mintNft')" position="is-right">
-          <a v-if="experimentMode && debugMode" href="javascript:void(0)" @click="openMintNft()" class="has-text-link">
+          <a href="javascript:void(0)" @click="openMintNft()" class="has-text-link">
             <div class="has-text-centered">
               <b-icon icon="tag-faces" size="is-medium"></b-icon>
               <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.mintNft") }}</p>
