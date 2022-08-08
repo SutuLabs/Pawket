@@ -25,6 +25,9 @@
         <a :href="$t('settings.about.links.url.discord')" target="_blank"
           ><p>{{ $t("settings.about.links.label.discord") }}</p></a
         >
+        <a href="javascript:void(0)" @click="openDonation()"
+          ><p>{{ $t("settings.about.links.label.donate") }}</p></a
+        >
       </div>
     </section>
   </div>
@@ -32,8 +35,10 @@
 
 <script lang="ts">
 import { tc } from "@/i18n/i18n";
+import { isMobile } from "@/services/view/responsive";
 import { Component, Vue } from "vue-property-decorator";
 import TopBar from "../TopBar.vue";
+import Donate from "./Donate.vue";
 
 @Component({
   components: { TopBar },
@@ -41,6 +46,16 @@ import TopBar from "../TopBar.vue";
 export default class About extends Vue {
   get version(): string {
     return process.env.VUE_APP_VERSION || tc("footer.ui.error.READ_VERSION_FAILED");
+  }
+  openDonation(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: Donate,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      fullScreen: isMobile(),
+    });
   }
 }
 </script>

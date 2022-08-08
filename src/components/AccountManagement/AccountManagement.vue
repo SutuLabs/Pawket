@@ -24,7 +24,7 @@
         </div>
         <div class="column py-1">
           <span @click.stop="showDetail(idx)"
-            ><b-icon class="is-pulled-right hover-info has-text-grey" icon="pencil"> </b-icon
+            ><b-icon class="is-pulled-right hover-info has-text-grey" icon="text-box-search-outline"> </b-icon
           ></span>
         </div>
       </a>
