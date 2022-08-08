@@ -15,6 +15,7 @@
         >
           <b-input type="textarea" v-model="offerText" @input="updateOffer()"></b-input>
         </b-field>
+        <b-loading :is-full-page="false" v-model="isUpdating"></b-loading>
         <b-field v-if="summary" :label="$t('offer.take.ui.panel.information')">
           <template #message>
             <ul v-for="(arr, sumkey) in summary" :key="sumkey" :class="sumkey">
@@ -160,6 +161,7 @@ export default class TakeOffer extends Vue {
   public step: "Input" | "Confirmation" = "Input";
   public fee = 0;
   public parseError = "";
+  public isUpdating = false;
 
   @Emit("close")
   close(): void {
@@ -209,6 +211,13 @@ export default class TakeOffer extends Vue {
   }
 
   async updateOffer(): Promise<void> {
+    this.isUpdating = true;
+    setTimeout(() => {
+      this.longRunUpdateOffer();
+    }, 50);
+  }
+
+  async longRunUpdateOffer(): Promise<void> {
     try {
       this.parseError = "";
       this.makerBundle = null;
@@ -219,6 +228,8 @@ export default class TakeOffer extends Vue {
       this.parseError = "error";
       this.makerBundle = null;
       this.summary = null;
+    } finally {
+      this.isUpdating = false;
     }
     this.fee = 0;
   }
