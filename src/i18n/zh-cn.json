@@ -367,7 +367,8 @@
           "information": "信息"
         },
         "label": {
-          "bundle": "数据包"
+          "bundle": "数据包",
+          "royaltyToCreator": "给创作者"
         },
         "button": {
           "cancel": "取消",
@@ -381,10 +382,13 @@
       "information": {
         "requested": "付出",
         "offered": "获得",
-        "addCat": "点击添加至 CATs 列表。"
+        "addCat": "点击添加至 CATs 列表。",
+        "royalty": "版税",
+        "unsupportOfferNftOffer": "这种类型的 NFT Offer 尚不支持"
       },
       "messages": {
-        "failedToSign": "接受 Offer 失败"
+        "failedToSign": "接受 Offer 失败",
+        "unsupportOfferNftOffer": "这种类型的 NFT Offer 尚不支持"
       }
     }
   },
