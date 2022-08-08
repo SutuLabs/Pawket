@@ -29,7 +29,7 @@
                           <template v-if="ent.id && ent.nft_target">
                             <b-tag type="is-info" class="nft-tag" :title="getNftName(ent.id)">{{ getNftName(ent.id) }}</b-tag>
                           </template>
-                          <template v-else-if="ent.id && ent.cat_target">
+                          <template v-else-if="ent.id">
                             <b-tag v-if="ent.id && cats[ent.id]" type="is-info" :title="cats[ent.id] + ' (' + ent.id + ')'">{{
                               cats[ent.id]
                             }}</b-tag>
@@ -52,7 +52,7 @@
                             <key-box :value="getAddress(ent.target)" :showValue="true"></key-box>
                           </b-tag>
                         </b-taglist>
-                        <a v-if="ent.id && ent.cat_target && !cats[ent.id]" @click="ManageCats(ent.id)">
+                        <a v-if="ent.id && !ent.nft_target && !cats[ent.id]" @click="ManageCats(ent.id)">
                           <span v-if="ent.id && !cats[ent.id]" class="pl-1 pt-0 is-size-8 has-text-danger is-inline-block">
                             {{ $t("offer.take.information.addCat") }}
                           </span>
