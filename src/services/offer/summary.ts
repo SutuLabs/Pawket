@@ -107,7 +107,7 @@ export async function getOfferSummary(bundle: SpendBundle): Promise<OfferSummary
           };
         entities.push({
           id,
-          amount: BigInt(prefix0x(Bytes.from(cond.args[1] as Uint8Array).hex())),
+          amount: getNumber(prefix0x(Bytes.from(cond.args[1] as Uint8Array).hex())),
           target: tgt,
           cat_target: (assetId && wraptgt != tgt) ? wraptgt : undefined,
           nft_target: nftId ? wraptgt : undefined,
