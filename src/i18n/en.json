@@ -367,7 +367,8 @@
           "information": "Information"
         },
         "label": {
-          "bundle": "Bundle"
+          "bundle": "Bundle",
+          "royaltyToCreator": "To Creator"
         },
         "button": {
           "cancel": "Cancel",
@@ -381,10 +382,13 @@
       "information": {
         "requested": "In exchange for",
         "offered": "You will receive",
-        "addCat": "Add to CATs List."
+        "addCat": "Add to CATs List.",
+        "royalty": "Royalty",
+        "unsupportOfferNftOffer": "This type of offer is not supported yet."
       },
       "messages": {
-        "failedToSign": "Failed to take offer."
+        "failedToSign": "Failed to take offer.",
+        "unsupportOfferNftOffer": "This type of offer is not supported yet."
       }
     }
   },

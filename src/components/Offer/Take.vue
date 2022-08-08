@@ -71,8 +71,36 @@
                 </ol>
               </li>
             </ul>
+            <template v-if="isOfferNftOffer">
+              <ul v-for="(arr, sumkey) in { royalty: summary.offered }" :key="sumkey" :class="sumkey">
+                <li>{{ $t("offer.take.information.royalty") }}</li>
+                <li>
+                  <ol class="token-list">
+                    <li class="pt-1" v-for="(ent, idx) in arr" :key="idx">
+                      <b-taglist attached class="mb-0">
+                        <template v-if="ent.id && ent.nft_target">
+                          <b-tag type="is-primary is-light" :title="getNftName(ent.id)">
+                            {{ (ent.nft_detail.analysis.tradePricePercentage / 100).toFixed(2) }}% =
+                            {{ royaltyAmount | demojo }}
+                            <key-box
+                              :value="getAddress(ent.nft_detail.analysis.royaltyAddress)"
+                              :display="$t('offer.take.ui.label.royaltyToCreator')"
+                            ></key-box>
+                          </b-tag>
+                        </template>
+                      </b-taglist>
+                    </li>
+                  </ol>
+                </li>
+              </ul>
+            </template>
           </template>
         </b-field>
+        <template v-if="isNftOffer && !isOfferNftOffer">
+          <b-notification type="is-warning is-light" aria-close-label="Close notification">{{
+            $t("offer.take.information.unsupportOfferNftOffer")
+          }}</b-notification>
+        </template>
         <fee-selector v-if="debugMode && summary" v-model="fee"></fee-selector>
       </template>
       <template v-if="step == 'Confirmation'">
@@ -90,6 +118,23 @@
     <footer class="modal-card-foot is-block">
       <div>
         <b-button :label="$t('offer.take.ui.button.cancel')" class="is-pulled-left" @click="close()"></b-button>
+        <template v-if="showTest && debugMode">
+          <b-button
+            class="is-pulled-left"
+            v-for="(c, idx) in testCases"
+            :key="idx"
+            type="is-primary is-light"
+            size="is-small"
+            :title="c.tip"
+            @click="
+              offerText = c.offer;
+              updateOffer();
+            "
+          >
+            <span>{{ c.name }}</span>
+          </b-button>
+        </template>
+        <button v-if="debugMode" class="test-btn is-pulled-left" @click="showTest = !showTest"></button>
         <b-button v-if="!bundle" type="is-primary" class="is-pulled-right" @click="sign()">
           {{ $t("offer.take.ui.button.sign") }}
           <b-loading :is-full-page="false" :active="!tokenPuzzles || !availcoins"></b-loading>
@@ -162,6 +207,39 @@ export default class TakeOffer extends Vue {
   public fee = 0;
   public parseError = "";
   public isUpdating = false;
+  public showTest = false;
+  public testCases = [
+    {
+      name: "1",
+      tip: "Pay CAT2 for XCH",
+      offer:
+        "offer1qqz83wcsltt6wcmqvpsxwgqq6tmp20fkzcmnnwmf7mff2a7a0shrpjyfl0ytl6e7hwt0887qncnmeemqatsymvx33fkmgcsm4hvyv2ak6x9xmdrzlvl5q9gm53c97c97aaeu9w7kgm3k6uer5vnwg85fv4wp7cp7wakkphxwczhd6ddjtf24qewtxs8puwhkv7ak7uzfvtup8zu8rjhmv8kcd5rue94ny5znv0mf6c2gv4s46zax6a9wrzxyzvstefhrrmjm95cvxex98tva7kkamv8vn035nl99wtj7dyglt2hqmxlujxuqfgawlntpdnwtnke79vn2rs6sdhvhaes8m7l86hv6hjclfz5kw0mtzrl7lad430e7vssyygwgeghk76l4swmvjtrc5hc0cjlkr77ugfnr3hxkks4u0gx37k44m600lvhuasekhht8dtavh972nm2muhqmcqe0mrngn03wy029d8ag2346xkxw9srkf2g7swj7c3udzuzldvrrv7xr0fz6agm4jd0vctha5sa48v88lfunl8guumtq6lurhl8tmynd6hffletf0rm0axl5yaumlelenu5a4m9np6kt2qvj4tljlk84eqc7nlw7krlvu024ymkr89sf7elfpx9h70ccln82ww965lkwa7hleh7x7pdx8schscrtq65e8kw2we6wuuxdumh6538z7600s6mzxn08n5h0h4aamzltl90me8xm4lad33xxukf9grzndlchdj5dhuwjuag60sv0a69a7vmh094fa2es0fwjgulpqxfmg5kgk6u395up4tk07t6ch8nqpv7jnkw3z8a5hjdj7z22hlymm5pxylcr2v8eatavg5yrhuv3lszp8glhk3kdjxjrmgg0pjv06xgwddc766yhnchhunmpmuum8xq4sxh5at3ak460vw4fzjkl30hmjale5dulnpjhyeza486d4lhap6v4j2mkd64q0dvrr9hegvj0rds5ng79ha9ztcvcg9csyjedm0aaf484sa2jl8e58v7z0e4wlk9zqk03nl79e5kejxln7dj5r4cas7t2v7qauhdy53slklup7x3g5ectajh0y477p3vmeedpuat5n5cnuemq783d87e66urt7u7hx4as37ptg0jamuhff9dj5ea7w57ru36hwcsek4k0emn2l4e9cvmmje073rnngnzqcyu0dth53ja5wjyfn8aec2ppj96e5lvy6tr483mvluwnnjjmwtvvdnx6m46vvjyrw732j489fn8uuyt33rgedtrucxkkctndmymx0llm3d84w006jh7m8m5nqkc76p0dq8tsd6waf5ua6xpzhf7w93umd0mnaalx052ej4460hggt77f4cf520cl8dr8z2w97tpvz6pj5w33kujscgevvmtw7yaczuez8g0d2lwegw4he3yrny0e2527hny9pcr8jw80zx4g5h2hmskkdl3hlpcu2agn392umhskslyc3xw9mvaaunr8mc4mqs22h036636fz8nk9adzts4lhwclpwlws77xdc9zgfk07rn0p8qmvyc58peux0elpqnhymyjm83va7j4t8n9kje0hd6dldawgkpdy03580hss4vj2z2lpaxresdutehl8h2mwl0l93salu48agupll9trpnmgxms5m05me707lvvl0mdnxckn60pjy6m2axnhu7wttah84x2q0m7v8ggau7z8v2v26g3zqxl2lu2klgzdy8",
+    },
+    {
+      name: "2",
+      tip: "Pay XCH for CAT2",
+      offer:
+        "offer1qqz83wcsltt6wcmqvpsxygqqwc7hynr6hum6e0mnf72sn7uvvkpt68eyumkhelprk0adeg42nlelk2mpafs8tkhg2qa9qmxpemd4um5kwgetnwdxralswd9677kfhuheclhjptsfnlm4v4vtajxlqqf2095z9an6eh2glz67dml4ljgcetlv8vk5u9eudg7u3m0llppjumltt78mh7xlzxptmudqdvpad0hjdht6dam0qseg87369a6x8mg6vq5f8zmj0n6j9s4auvn3s6zmm9agx0unrqm0kf7f9x86x7rjtpdvf42mcm5kmglpvymhje4k70m05szg5gvwput3zr0968nvw68nvw60jvw6lsvx6l5vxcllur6s7vp49wp0xr0lww0pt4468udkhxg4zymj3lzr9ts0xz0mkd3sdenkp4lwrfv6624gkfj35pc0rham8hfhhqjrrlyfc4pcu46mplktvqmxe0veyq5mnu6xkzjr4v9wgznw8zhjyqcmh3san4nv0hzmarj2v4rh87m9uym3v3e2w7wfpaygzmswhtfu5flura2hk9d38sl4ax8r8vlutxjqk4rxk8q5vgzpqc6ypkn9lut3q6hzl4hszdcapq4sfxt27dlur6sfd2clm2l5edm8q0tkdw7amvd26vh6466dkznt6xm8fh39fy0899q9tahlzajxaln028wfwdnn6af5teu9rd0uk6lcr4g5exnm0h3ptfdelavfntsaskjw0lctlztj72rxu8llz0nuampnuldeaxu6we8r9sty6a4u077l5hwkvtc52vup7mjewen0u44g6ccvhpelvehyaftn8wscjj8l8azcmm5hj4h4cfe49n0l26ng37y8vudlutmsz75feyk85ecwkm9ycghammum0l70ualaaqttz0fn2cnnkmdl4md8qxmgrksed4hlqkzd5k5sup4zpj3v58wkwtrz9eyswldaj2unpc7kskwf63m7h088wzxntk4jjhh54yklcfwv93g9smzcxea4znjvfrv6ukvla0l2s8rmvulhhyde0ktu3gurhnatuh66uawcckdlmlwtx62fvcw9hujlsaw4r52ztv27vdpym90qlljnjzft6mrl9l062rtn7juaedztnulkh0lxlwjzu5mjf2natgtd0m5526j7tftt6tcq24gwkfglw7q59",
+    },
+    {
+      name: "3",
+      tip: "Pay XCH for NFT",
+      offer:
+        "offer1qqph3wlykhv8jcmqvpsxygqqwc7hynr6hum6e0mnf72sn7uvvkpt68eyumkhelprk0adeg42nlelk2mpafsyjlm5pqpj3dkq7tjalg8mavn5l0rpvkf63762j02kf05em8j27ftplu8pt686dxmsxwcwpwt87wdam4x6w2kctdrxjah4524ektl9h3g2al0glxm0mam23xxfwk6dl7mnrmrjmmhvqsyy22gyx3x4ptwxl0rdpx9kyml9fh7pu2c7zxn8xsms076nhq7c4a43ytzz4lmxuhf9v6jrx6wfkh26w2552mh5a8g659hz3akccrjh36842ju3vxmmdq6r9s5tkrg5zx8yyf4hgyrxwsgxd6qdcfqd9a5zlf25ds0maa08cu80xsnahf3mf8hthruufl5g7vyfzkmm480uvf9uml8lp0kxtkl0fst5umw3t760sa4452vhpd8x4txl2v65j6znxayyje2d6kd7ur7cw539e7qggqmfmlegm4sutf0xwe2ht366577aj29uhlykns7k3wcjdg2h9cf38t6y8xcyxqa0gvmusalvqzt7cypdl70pvhlzzjlvrsx0dl0kd4sv56m8j4wt2txevnws7qlltrnvnpmqlx30flupezxf9y5zvg4hmldycj6v4fx5ejjf9ty24t9t955j7jjweuhuun68evm55wwv998vu23ve0y2333r8yeyyw3sevajmj6wfrxuwje6ylxnuj6y40wvs26x90dukjfw9yhu5tz0g49annxtcmxs23ludqn956ksrz5jmg8ddlcw0xvj34pwjtm7nejetl6xdc76wa0k04ld3sz9dh7q3cd652aj3dfrxve2p2954vk22fxgen2v3jxlxu626t94xnf26g92hjnn9dxucjlnfffvhzjjw0fvh2u2w2fgh5nj70xv626jwxaq95sads4vuql4yk9yksrydmrg9meddxel5emlxl06a9ak6xew3vzentjjlvu5x50fhgcdyvtgtx0lmuyshjmlth08a65trmxl9dfl0ehxu5x4a4fkwandtwah3qkd084etjen9aw7l3jjwzxsa09p5n8arqdh6xqnwqhwlyln4uzxds7dzelqp4f0v82alk489lf2qm53pa0mpd8fcae6j4hlrd29ht3w0ejrg8zhdxlw4x45r9weq6kd4fg5lajyanzulkrtk9ckk708rudal2hk525h2tu6nw28fezv5cpfyfrs0wzxq7ugdsqqzu62a6xhq9dtpt4flwa7le3h49f8h9qmzlh305jmw4wn6wrgsezdjnj4dhekkc3v8ygx2nvv8gsw0sga3ztttphdjffmpsgm0f0hf9f0nm46mdr77t6e67w8t8apjfj4ktu5lhx4ukfnqvu2607tf8m3h65kylhpj7wgpsauwkhjwmm0s22e5rdg63lu9v0k07quj9kmslpye5f784ekl646hal8t2u028vum6da5486eewt7cmhw9h6s9wsvxhaqya33kruqvc7qsm0pvyg6ljz7gptqg692qjusarz3nakllmlcywhddfzw047mw6jru2d67k8kz5vgjrhmcyltsxjuzd6lehxnkwm2le89n9ld3l29n6nn90llp4yfvxgmmkv0vc0mtw9408x5r6yrn4ttamkajyukmakrcufhl8am8xh2kex6r2tmajlunjqwpagmltjpkyllr966kqndjmlclup3pm6dg06ale97wc0ncum8dd78efm70an8a6axlgsal64mksh6zqqvatvykquh804h",
+    },
+    {
+      name: "4",
+      tip: "Pay XCH for NFT(Royalty too low)",
+      offer:
+        "offer1qqz83wcsltt6wcmqvpsxygqqwc7hynr6hum6e0mnf72sn7uvvkpt68eyumkhelprk0adeg42nlelk2mpafs8tkhg2qa9qmxp9lt3w2uzrjmwlnq2hr74qvmq4h22x9mw2lwp499e0a4wkp70t7jlyy4g5sjgpl0vjklyeyu0h4a3u8ymepef3t6dlf3ghkdh06s38cg8d3mfhh06mlz0eqsgv5sy0ay48kkf7l9d6rhgh6m899mxml0x4w9edmhk382e79flh4q0znhdq38lv220533k5pglncljpa92vdna0gmh8y4ut55dta793ulpc7qsxw5e9ngzseyyx735wfcz7zmkk338qfrzwqh7plegjqzgmf09p0729pu0lhvtplhfmenymd6z0jta77glxz0azyntrcjkk7f47m9fn8lhlswfr2np77eyd00kc4hgnsk7ma6x68kftq8an0n0ykgmljlemmknl5nthc8asafztnuqsspknhlj3htpckj7vaj4whr44faamy5te07fd8padza3y6s4wtsnzwhagzdsgvp6l5c8efclcqyhasgzmlu7ze07y997c8qv7m7lvmtqef4k092uk5kdjexapupl7k8xexrkp7dz7nlcr9gey5jst32kltaynztfj4y6nxtft8rdn3k9z4j622wed9r2d7df3yue2pffzkyjjxffl8j5vesecev6jfff4yu62fjetxjlje3ftx5nj20xn9afjptfc4a8j6f9c5jlj3vfax5h5wve08vl5s97h6gcryv3hxc6r04p4xukjkj22fdf4yv9j9smykd2gx9ytxje229yng4fsk55r2je4f5c5j2jn2jhr25pgx4grvte32u5rx59wx4gnx2e3fz64pvesxsezhjptma07qcdxzm6veukvj2zd6f9uln74el9u7j40fnx53tfteshv7jw5fc4vljwj9e9jm47wfnxuega6zwq7rx4sgz6lfmllfexny7dalhv9d94h70jv27hlk338sctlnkllsjwm35tq3swumk2q5rwc645spxngvf3fucjujxt4dxz7t3we6kvctxv9ghyntxv4ucv5df2f89nfjwg4gkzkjxffum5lnev9u4n22fg9g4u43g7kzu6jfvfwphejfserwj95fpxrgjpjkj6tgvzvfexnxvjvxeyrwj2dxz65sd2tfscr2jf5kayrqdpnf66nzvfjfyey6vekxumn2v95fyeryn2vxqcnr4k2908ul7nl5zydtg99hc3crqg2rq7xu270q2xr695ksrydmrgy6yrz74msft8ezkyu0tsupkufgahqt8hhp0vtfftvm30p6yasfn4sywed6hlw4ulh2f00g6vh4l7lzumjs24ka8emkd4dhk7yzfku7k4wtk0h36t6x6tz5en5nv822fgcnkn348dxytsellaz6f6vt3cj0knwjgt9mlgaftet66hx9yg02xltacw90xn497ghted6g2n7dclpg4tdkm5fawsmgsv2682zaw3g7nmk348hvr06axh0ua8w3gh0suvxc3qarjmeetpkejll4qrxctgh9m9hnl4cyghelqml724en9dxdssvkxzp3e4ury93smklvya3cqdx0zp2vhmauk8thyjlhsg932pahucyjazmd02majc7s5jqw04gtg2260xzwh4l8thy66w936e5k8nmad2masx2csr9t6llluzw4xj7a3dwy4dc6n872u69may4r6fxsawh4fhsnkchmtmqh9339wk9n0lq5ra58mht00eakem94vxnvagmzy6693d6g7s2kueyk3ze83xez27a8g2wcvks9qwa3sxpccvjnxuzs6lcml3wyq60urwjg9gppg4cm2c0znkq5k0h4cgvetpj2r6uun2fgwv5w8mvxum37t97m5nkq7t2utzm0a64zutkc4amz4k2d0lhlvz0ukuj8msccwm6evlcsz94mhem4539azjhdtxa6u8r7u2kx80m7dmrmr8nfwmgwthguqxr4hy7dg3n0x0xzgqcax3g9g2uyup7",
+    },
+    {
+      name: "5",
+      tip: "Provide NFT for XCH",
+      offer:
+        "offer1qqph3wlykhv8jcmqvpsxwgqq2g0eunkl9xu2343t4twx3tlfl9u6w7zuryxelx67p2uhkdjda6ffjv2vr57wnrmkmernhmugctsl768805y8dh3pd9a5rlf250s06ae086u80x5ndhfe6f8hm4ruufl5g7vvfzjmm488avd9vml07pffwgml4ruyljteau0vhw5dng3hnuuf20e7866wtfdf7x4sk6c29u9lzttcl7s4fjfnyrs5pk4h0j3ntpuk6avaj92hnh49adlyuget7ft8pld2u3z5e4cxyaxgvp6vscr5ezqtgggrwzp9lvxqwal83xtleqfrkpur0klh6xuc7td9jf2h949nvk0hc0qrl9ne7gs4303gl4ljqgdr5jj2pkz2tuljjvddxg5n2ve4kx7v9j9verzrswe8976nqdf0husz00euy5mnt0du9q7al0pg8vjmng4q5zeryva3kzsz92auk2ct9fpq2yhmxg9dtqhjltdyhqjt72p3842j7fen9adalhxggjhjqtcaazngcp08xmwulmlnn2lkhcs5jh6mtmmmfjw9vpq82luhlk8uka8845vk3w5umsxxvyhdqvvfdz8vjjzwed95utesedynwt2f93yntjadxr9ryvfje74vsneveghnrtkgxn9n9j4tffy572e2e88j52etxl92k2x9akv2echu8jsxhq9a3tlswg53dn9zuqn68w66pspgkykzwwdlxzj6y09d4jsryvfr50g2ff9z5sez7wde9r9ugf9dkrvrgwdf925uqtxd9nrjfwauyg2mknfqrw908x5c46qw3y3xuctjp0m99nux0ycm7yclr3t2u8mmjkacxsnwl9g0wzwadd7uge489vht7yv3kpq2grhv5kxs2t7c26udtlplhf9t8uvvlule05lweg430j8ga6j9wmzl4m48rlphds3zlp0e0dull23y0vmuak8elxcm236lh4yethdavt57vpeau7h97txyh4amkx22dgarfq5fjen5z35hg9yfspalaruwygg3knl5r9zc99ragatml2juh79yzwjylhlgyyl8n48w2kmudkg6a79el9g9pvwa5ea756ssvkc8yr9dxuar5x3n8gdr8kz8vws8z3dltmts9x7q7awrx4f79ju04pee5uu54mxvjstu07rv87ah79ev2mg9ywcvax4cqvhvz7g0xxkskttwsk54qeytpgzsllljlxpmydn70pwhrkrlgadxuunt6dq2nhj8djpwvhv5tydwrsdlhrfp6aq558n7xn2nmat2h9dleuhh0ct0m4c95g72vj2524r76dl242v80mmpmfm4qwqj2szt95myl2m6tzfhnaj8zd2lzyufk6f0zrsjx27803efh90mv686t658keka9xlwutcgr2fug0mt3c4ejdnzcs307wat3f7lxwxhed94k362w58g2srqvp4xujjrlmhguhjmqh05pgm83sa5tv9dhku5gfels4xmjk9m5sj7tr7t5hdvlh80wm9l5wn8ygzlsk2ayekwj69a8dpwer79t8lug3uvux4s6cry3uh7hasdwg785nmhhsl680m4fxdseavzdk8mg93dank88ue2hned4tarn0al7fljh6e9m9wscr2y9ghvjzh2sq4tvn3uhhkht6c5kh7lkhyrn49tmfjap7yd4urda8ccygmzaala5awy0mudljhgr75ng9dgmrn07q4plcljz0ja00lluhqjltah2azy29nral7xmxeaa7dumw7w3wl682k5agp2l0lsh84l8g4ttgkv7pj88xwplsu4te5ulsm8tv7atq3yhfcld0kv3tsnn5r9z4t5lr20afc3qumzjnlq0jlk09h0y85aff6dzvj7v04mknq6mc0vqa25sqwv2dskg484293xmrcaa0lp8zwmghtnwpmu369hcxh54889ff4ydhlskcsjt0ytl38k68zyvmrzk07mls888pfh8y20n3tl5llanmrdmju0nedxmae7v7ndlty46mfua9l30kyq077glepame5gz749r2v8h96vluw9aarpnsvhj2crhehjaee6vcrp62hkhn387ffz2nxhxmct430ku3nt5tvwjsu8mc8ap6sz526nf5tccs0uvy0rxjedka4sh84cvhp4r7p8ew39px8hf0q55f5rmj4uth65hl8jaha70k40fjhk0wjn9zl9ef8xmrma2yj8tpvvnrclh9tyn666acduj378famf7vuutuma0spyxfcl29vxc5r3tkj0wng5x9ujv5a5amuq3zueq88nx86ngmeucs89nxegjw37z5l8m4hjk06lv8pe2c48guzfewq52572wm67u7pt7p47lngjgf2j5vrxcq2lq6ztz55lyzrkr2qy5z8kqusq6xez2jpdev0972fvmf43p07v6f0aaglwm8mg9t5wzl7lfhjlgevr37kgtufm6m5pglv6et4z3tha9eq545mjuh3u860z0gkdkxx9kj3wmh4xrxd8j9ckmn9whk7c8msega2vwerdcj2xecea6s3vf8dhtt6umv5hzua827y9cfcqfnqkcac5mvl9y",
+    },
+  ];
 
   @Emit("close")
   close(): void {
@@ -238,6 +316,10 @@ export default class TakeOffer extends Vue {
     return !!this.summary && (this.summary.requested.some((_) => _.nft_target) || this.summary.offered.some((_) => _.nft_target));
   }
 
+  get isOfferNftOffer(): boolean {
+    return !!this.summary && this.summary.offered.some((_) => _.nft_target);
+  }
+
   async loadCoins(): Promise<void> {
     if (!this.tokenPuzzles || this.tokenPuzzles.length == 0) {
       this.tokenPuzzles = await coinHandler.getAssetsRequestDetail(this.account);
@@ -248,8 +330,26 @@ export default class TakeOffer extends Vue {
     }
   }
 
+  get royaltyAmount(): bigint {
+    const s = this.summary;
+    if (!s) return -1n;
+    const royalty_amount =
+      (s.requested[0].amount * BigInt(s.offered[0].nft_detail?.analysis.tradePricePercentage ?? 0)) / BigInt(10000);
+    return royalty_amount;
+  }
+
   async sign(): Promise<void> {
     if (!this.availcoins || !this.tokenPuzzles || !this.account.firstAddress || !this.summary || !this.makerBundle) {
+      return;
+    }
+
+    if (this.isNftOffer && !this.isOfferNftOffer) {
+      Notification.open({
+        message: this.$tc("offer.take.messages.unsupportOfferNftOffer"),
+        type: "is-warning",
+        autoClose: true,
+      });
+
       return;
     }
 
@@ -390,5 +490,15 @@ img.nft-image {
   max-width: 100px;
   overflow: hidden;
   white-space: nowrap;
+}
+.test-btn {
+  background-color: transparent;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: initial;
+  overflow: hidden;
+  outline: none;
+  min-width: 80px;
+  min-height: 35px;
 }
 </style>
