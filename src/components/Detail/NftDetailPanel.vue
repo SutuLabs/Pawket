@@ -60,6 +60,7 @@
               @click="offer()"
               icon-left="email-send-outline"
               outlined
+              :disabled="observeMode"
             ></b-button>
           </div>
         </div>
@@ -149,7 +150,7 @@
           @click="offer()"
           icon-left="email-send-outline"
           outlined
-          disabled
+          :disabled="observeMode"
         ></b-button>
       </div>
     </footer>
@@ -203,6 +204,10 @@ export default class NftDetailPanel extends Vue {
   async crossOriginDownload(url: string, filename: string | undefined): Promise<void> {
     const name = filename ?? "untitled";
     return crossOriginDownload(url, name);
+  }
+
+  get observeMode(): boolean {
+    return this.account.type == "Address";
   }
 
   transfer(): void {
