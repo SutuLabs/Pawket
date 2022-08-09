@@ -104,9 +104,19 @@ export default class NftPanel extends Vue {
     return this.account.extraInfo ?? {};
   }
 
+
+  get networkId(): string {
+    return store.state.network.networkId;
+  }
+
   async crossOriginDownload(url: string, filename: string | undefined): Promise<void> {
     const name = filename ?? "untitled";
     return crossOriginDownload(url, name);
+  }
+
+  @Watch("networkId")
+  onNetworkChange(): void {
+    this.refresh();
   }
 
   @Watch("nfts")

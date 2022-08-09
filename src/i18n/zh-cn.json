@@ -1103,7 +1103,7 @@
         "ownerDid": "Owner DID",
         "ownerAddress": "Owner Address",
         "royaltyPercentage": "Royalty Percentage",
-        "dataUrl": "Data URL",
+        "dataUrl": "Data URL {index}",
         "dataHash": "Data Hash",
         "metadataUrl": "Metadata URL",
         "metadataHash": "Metadata Hash",
