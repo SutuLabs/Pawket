@@ -377,6 +377,9 @@
         },
         "field": {
           "offer": "Offer"
+        },
+        "tooltip": {
+          "spaceScan": "View on Spacescan.io"
         }
       },
       "information": {
