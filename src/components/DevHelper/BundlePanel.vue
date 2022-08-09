@@ -164,6 +164,22 @@
               >
             </li>
           </ul>
+          <ul v-if="puzzleAnnoAsserted.length > 0" class="args_list ellipsis-item">
+            <li
+              v-for="(anno, i) in puzzleAnnoAsserted.filter((_) => !puzzleAnnoCreates.some((p) => p.message == _.message))"
+              :key="i"
+              :title="anno.message"
+            >
+              <span class="mid-message is-danger">
+                {{ anno.message }}
+              </span>
+              <b-button tag="a" size="is-small" @click="changeCoin(anno.coinIndex)">
+                {{ anno.coinIndex }}
+              </b-button>
+
+              <b-tag type="is-warning is-light">Not Created</b-tag>
+            </li>
+          </ul>
 
           <h3 v-if="coinAvailability.length > 0">Coin Availability</h3>
           <ul v-if="coinAvailability.length > 0" class="args_list ellipsis-item">
