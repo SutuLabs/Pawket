@@ -28,7 +28,20 @@
                       <div class="column">
                         <b-taglist attached class="mb-0">
                           <template v-if="ent.id && ent.nft_target">
-                            <b-tag type="is-info" class="nft-tag" :title="getNftName(ent.id)">{{ getNftName(ent.id) }}</b-tag>
+                            <b-tooltip multilined :label="getNftName(ent.id)" position="is-right" style="word-break: break-all">
+                              <b-tag
+                                type="is-info"
+                                class="nft-tag is-clickable"
+                                :title="getNftName(ent.id)"
+                                @click="copy(getNftName(ent.id))"
+                                >{{ getNftName(ent.id) }}</b-tag
+                              >
+                            </b-tooltip>
+                            <b-tooltip :label="$t('offer.take.ui.tooltip.spaceScan')">
+                              <a class="has-text-dark" :href="spaceScanUrl + getNftName(ent.id)" target="_blank">
+                                <b-tag><b-icon icon="open-in-new"></b-icon></b-tag
+                              ></a>
+                            </b-tooltip>
                           </template>
                           <template v-else-if="ent.id">
                             <b-tag v-if="ent.id && cats[ent.id]" type="is-info" :title="cats[ent.id] + ' (' + ent.id + ')'">{{
@@ -274,6 +287,10 @@ export default class TakeOffer extends Vue {
     return xchSymbol();
   }
 
+  get spaceScanUrl(): string {
+    return store.state.network.network.spaceScanUrl;
+  }
+
   async mounted(): Promise<void> {
     if (this.inputOfferText) {
       this.offerText = this.inputOfferText;
@@ -468,6 +485,10 @@ export default class TakeOffer extends Vue {
       trapFocus: false,
       props: { bundle: this.bundle },
     });
+  }
+
+  copy(text: string): void {
+    store.dispatch("copy", text);
   }
 }
 </script>

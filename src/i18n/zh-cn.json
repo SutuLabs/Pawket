@@ -378,6 +378,9 @@
         },
         "field": {
           "offer": "Offer 信息"
+        },
+        "tooltip": {
+          "spaceScan": "在Spacescan.io查看"
         }
       },
       "information": {
