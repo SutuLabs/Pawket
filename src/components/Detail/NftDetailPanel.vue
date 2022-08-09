@@ -114,12 +114,12 @@
                   <key-box :value="nft.analysis.p2Owner" :showValue="true"></key-box></span></li>
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.royaltyPercentage") }}</span><span class="is-pulled-right">
                   {{nft.analysis.tradePricePercentage/100}}%</span></li>
-                <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.dataUrl") }}</span><span class="is-pulled-right">
-                  <a :href="nft.analysis.metadata.imageUri" target="_blank"><b-icon icon="open-in-new" size="is-small"></b-icon></a></span></li>
+                <li v-for="(data, index) of dataUrls" :key="index"><span class="has-text-grey">{{ $t("nftDetail.ui.details.dataUrl", {index: index + 1})}}</span><span class="is-pulled-right">
+                  <a :href="data" target="_blank"><b-icon icon="open-in-new" size="is-small"></b-icon></a></span></li>
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.dataHash") }}</span><span class="is-pulled-right">
                   <key-box :value="nft.analysis.metadata.imageHash" :showValue="true"></key-box></span></li>
-                <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.metadataUrl") }}</span><span class="is-pulled-right">
-                  <a :href="nft.analysis.metadata.metadataUri" target="_blank"><b-icon icon="open-in-new" size="is-small"></b-icon></a></span></li>
+                <li v-for="(url, index) of metadataUrls" :key="index"><span class="has-text-grey">{{ $t("nftDetail.ui.details.metadataUrl", {index: index + 1}) }}</span><span class="is-pulled-right">
+                  <a :href="url" target="_blank"><b-icon icon="open-in-new" size="is-small"></b-icon></a></span></li>
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.metadataHash") }}</span><span class="is-pulled-right">
                   <key-box :value="nft.analysis.metadata.metadataHash" :showValue="true"></key-box></span></li>
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.licenseUrl") }}</span><span class="is-pulled-right">
@@ -127,7 +127,7 @@
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.licenseHash") }}</span><span class="is-pulled-right">
                   <key-box :value="nft.analysis.metadata.licenseHash" :showValue="true"></key-box></span></li>
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.series") }}</span><span class="is-pulled-right">
-                  {{nft.analysis.metadata.serialNumber}} / {{nft.analysis.metadata.serialTotal}}</span></li>
+                  {{parseInt(nft.analysis.metadata.serialNumber, 16)}} / {{parseInt(nft.analysis.metadata.serialTotal,16)}}</span></li>
               </ul>
             </div>
           </b-collapse>
@@ -208,6 +208,18 @@ export default class NftDetailPanel extends Vue {
 
   get observeMode(): boolean {
     return this.account.type == "Address";
+  }
+
+  get dataUrls(): string[] {
+    if (!this.nft.analysis.metadata.imageUri) return [];
+    if (typeof this.nft.analysis.metadata.imageUri == "string") return [this.nft.analysis.metadata.imageUri];
+    return this.nft.analysis.metadata.imageUri;
+  }
+
+  get metadataUrls(): string[] {
+    if (!this.nft.analysis.metadata.metadataUri) return [];
+    if (typeof this.nft.analysis.metadata.metadataUri == "string") return [this.nft.analysis.metadata.metadataUri];
+    return this.nft.analysis.metadata.metadataUri;
   }
 
   transfer(): void {
