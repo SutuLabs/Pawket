@@ -1105,7 +1105,7 @@
         "royaltyPercentage": "Royalty Percentage",
         "dataUrl": "Data URL {index}",
         "dataHash": "Data Hash",
-        "metadataUrl": "Metadata URL",
+        "metadataUrl": "Metadata URL {index}",
         "metadataHash": "Metadata Hash",
         "licenseUrl": "License URL",
         "licenseHash": "License Hash",

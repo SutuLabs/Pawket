@@ -118,8 +118,8 @@
                   <a :href="data" target="_blank"><b-icon icon="open-in-new" size="is-small"></b-icon></a></span></li>
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.dataHash") }}</span><span class="is-pulled-right">
                   <key-box :value="nft.analysis.metadata.imageHash" :showValue="true"></key-box></span></li>
-                <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.metadataUrl") }}</span><span class="is-pulled-right">
-                  <a :href="nft.analysis.metadata.metadataUri" target="_blank"><b-icon icon="open-in-new" size="is-small"></b-icon></a></span></li>
+                <li v-for="(url, index) of metadataUrls" :key="index"><span class="has-text-grey">{{ $t("nftDetail.ui.details.metadataUrl", {index: index + 1}) }}</span><span class="is-pulled-right">
+                  <a :href="url" target="_blank"><b-icon icon="open-in-new" size="is-small"></b-icon></a></span></li>
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.metadataHash") }}</span><span class="is-pulled-right">
                   <key-box :value="nft.analysis.metadata.metadataHash" :showValue="true"></key-box></span></li>
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.licenseUrl") }}</span><span class="is-pulled-right">
@@ -214,6 +214,12 @@ export default class NftDetailPanel extends Vue {
     if (!this.nft.analysis.metadata.imageUri) return [];
     if (typeof this.nft.analysis.metadata.imageUri == "string") return [this.nft.analysis.metadata.imageUri];
     return this.nft.analysis.metadata.imageUri;
+  }
+
+  get metadataUrls(): string[] {
+    if (!this.nft.analysis.metadata.metadataUri) return [];
+    if (typeof this.nft.analysis.metadata.metadataUri == "string") return [this.nft.analysis.metadata.metadataUri];
+    return this.nft.analysis.metadata.metadataUri;
   }
 
   transfer(): void {
