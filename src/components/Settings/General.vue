@@ -14,6 +14,15 @@
           <option v-for="net in networks" :key="net.name" :value="net.name">{{ net.name }}</option>
         </b-select>
       </b-field>
+      <b-field>
+        <template #label>
+          <span>{{ $t("explorerLink.ui.label.maxAddress") }}</span>
+          <b-tooltip :label="$t('explorerLink.ui.tooltip.receiveAddress')" position="is-bottom" multilined>
+            <b-icon icon="help-circle" size="is-small"> </b-icon>
+          </b-tooltip>
+        </template>
+        <b-slider v-model="maxAddress" :max="12" :min="1" indicator ticks lazy></b-slider>
+      </b-field>
       <b-field :label="$t('settings.general.label.currency')">
         <b-select v-model="currency" expanded>
           <option v-for="[key, value] in currencyList" :label="key" :value="value" :key="key">
@@ -32,6 +41,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { NetworkInfo } from "@/store/modules/network";
 import TopBar from "../TopBar.vue";
+import { AccountEntity } from "@/models/account";
 
 @Component({
   components: { TopBar },
@@ -78,6 +88,26 @@ export default class General extends Vue {
   set lang(value: string) {
     this.$i18n.locale = value;
     localStorage.setItem("Locale", value);
+  }
+
+    get selectedAccount(): number {
+    return store.state.account.selectedAccount;
+  }
+
+  get account(): AccountEntity {
+    return store.state.account.accounts[this.selectedAccount] ?? {};
+  }
+
+  get maxAddress(): number {
+    return this.account.addressRetrievalCount;
+  }
+
+  set maxAddress(value: number) {
+    if (this.maxAddress == value) return;
+    if (value && value < 13) {
+      this.account.addressRetrievalCount = value;
+      store.dispatch("refreshAddress");
+    }
   }
 }
 </script>
