@@ -471,7 +471,7 @@ export async function curryMod(mod: string, ...args: string[]): Promise<string |
     const mods = disassemble(prog);
     return mods;
   } catch (err) {
-    console.warn("failed to curry", err)
+    console.warn(`failed to curry args [${args}] to mod [${mod}]`, err)
     return null;
   }
 }
