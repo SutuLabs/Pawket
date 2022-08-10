@@ -1,6 +1,6 @@
 <template>
-  <div class="modal-card">
-    <top-bar :title="cnsResult.domainName" :showClose="true" @close="close()"></top-bar>
+  <div class="box">
+    <top-bar title="Search Result" :showBack="true" @close="close()"></top-bar>
     <section class="modal-card-body">
       <div class="columns is-multiline">
         <div class="column is-6">
@@ -18,25 +18,31 @@
           ></span>
         </div>
         <div class="column is-6">
-          <p>
+          <p class="pt-3">
             <span class="is-size-4 pr-2">{{ cnsResult.domainName }}</span>
-            <span class="has-text-primary" v-if="cnsResult.status == 'Available'"
+            <span class="has-text-primary is-size-7" v-if="cnsResult.status == 'Available'"
               ><b-icon icon="check-circle" size="is-small"></b-icon>AVAILABLE</span
             >
-            <span class="has-text-danger" v-if="cnsResult.status == 'Unavailable'"
+            <span class="has-text-danger is-size-7" v-if="cnsResult.status == 'Unavailable'"
               ><b-icon icon="close-circle" size="is-small"></b-icon>NOT AVAILABLE</span
             >
-            <span class="has-text-grey-light" v-if="cnsResult.status == 'Registering'">
+            <span class="has-text-grey-light is-size-7" v-if="cnsResult.status == 'Registering'">
               <b-icon icon="dots-horizontal-circle" size="is-small" class="pr-2"></b-icon>REGISTERING
             </span>
           </p>
-          <p v-if="cnsResult.price"><span class="has-text-grey pr-2">Price:</span>{{ cnsResult.price }} XCH</p>
-          <p v-if="cnsResult.address">
-            Address:<span
+          <p class="pt-3 has-text-grey" v-if="cnsResult.price">
+            <span class="has-text-grey pr-2">Price:</span
+            ><span class="is-pulled-right has-text-dark">{{ cnsResult.price }} XCH</span>
+          </p>
+          <p class="pt-3 has-text-grey" v-if="cnsResult.address">
+            Address:<span class="is-pulled-right has-text-dark"
               ><key-box icon="checkbox-multiple-blank-outline" :value="cnsResult.address" :showValue="true"></key-box
             ></span>
           </p>
-          <div class="pt-5" v-if="cnsResult.status == 'Available'">
+          <p class="pt-3 has-text-grey" v-if="cnsResult.status == 'Unavailable'">
+            Expiration Time: <span class="is-pulled-right has-text-dark">2022.08.08 at 9:41(UTC)</span>
+          </p>
+          <div class="pt-6 mt-6" v-if="cnsResult.status == 'Available'">
             <b-button expanded outlined type="is-primary" @click="buy()">Buy it Now</b-button>
           </div>
         </div>

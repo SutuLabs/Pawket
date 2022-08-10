@@ -51,6 +51,7 @@
         <p v-if="result.price">
           Price: <span class="is-pulled-right">{{ result.price }} XCH</span>
         </p>
+        <p v-if="result.status == 'Unavailable'">Expiration Time: <span class="is-pulled-right">2022.08.08 at 9:41(UTC)</span></p>
         <div class="pt-5" v-if="result.status == 'Available'">
           <b-button expanded outlined type="is-primary" @click="buy()">Buy it Now</b-button>
         </div>
