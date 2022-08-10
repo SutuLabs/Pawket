@@ -96,7 +96,7 @@ export async function generateOffer(
       if (!req.symbol) throw new Error("symbol cannot be empty.");
 
       const assetId = req.id;
-      const catClvmTreehash = await modshash(catModName);
+      const catClvmTreehash = prefix0x(modshash[catModName]);
       const cat_mod = await curryMod(modsprog[catModName], catClvmTreehash, prefix0x(assetId), modsprog["settlement_payments"]);
       if (!cat_mod) throw new Error("cannot curry cat");
       const cat_settlement_tgt = prefix0x(await puzzle.getPuzzleHashFromPuzzle(cat_mod));

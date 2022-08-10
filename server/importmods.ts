@@ -1,11 +1,16 @@
 import { readdirSync, readFileSync, writeFileSync } from 'fs';
 import puzzle from '../src/services/crypto/puzzle';
 import { Instance } from "../src/services/util/instance";
+import { SExp } from "clvm";
+import { sha256tree } from 'clvm_tools';
+import { sexpAssemble } from '../src/services/coin/analyzer';
 
 const dirname = "../../ref/chia-blockchain/chia/wallet/puzzles/"
 const suffix = ".clvm.hex";
 const progdata: { [name: string]: string } = {};
 const hexdata: { [name: string]: string } = {};
+const sha256data: { [name: string]: string } = {};
+const names: string[] = [];
 
 Instance.init().then(async () => {
   const filenames = readdirSync(dirname);
@@ -21,15 +26,23 @@ Instance.init().then(async () => {
       const key = filename.slice(0, filename.length - suffix.length);
       progdata[key] = d;
       hexdata[key] = hex;
+      const prog = sexpAssemble(hex);
+      const hash = sha256tree(prog).hex();
+      sha256data[key] = hash;
+      names.push(key);
     }
     catch (err) {
       console.warn(`File ${filename} cannot be parsed!`);
     }
   };
 
-  const content = `export const importModsProg: { [name: string]: string} = ${JSON.stringify(progdata, null, 2)};
+  const content = `export type ImportModName = ${names.map(_ => `"${_}"`).join(" | ")};
 
-export const importModsHex: { [name: string]: string} = ${JSON.stringify(hexdata, null, 2)};
-  `;
-  writeFileSync("../src/services/coin/imports.ts", content)
+export const importModsProg: { [name in ImportModName]: string} = ${JSON.stringify(progdata, null, 2)};
+
+export const importModsHex: { [name in ImportModName]: string} = ${JSON.stringify(hexdata, null, 2)};
+
+export const importModsHash: { [name in ImportModName]: string} = ${JSON.stringify(sha256data, null, 2)};
+`;
+  writeFileSync("../src/services/coin/importMods.ts", content)
 });

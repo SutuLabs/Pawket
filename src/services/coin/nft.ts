@@ -7,7 +7,7 @@ import { curryMod } from "../offer/bundler";
 import { internalUncurry } from "../offer/summary";
 import transfer, { GetPuzzleApiCallback, SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { getNumber, prefix0x } from "./condition";
-import { modsdict, modshash, modsprog, modspuz } from "./mods";
+import { modsdict, modshash, modshex, modsprog } from "./mods";
 import utility, { bytesToHex0x } from "../crypto/utility";
 import catBundle, { LineageProof } from "../transfer/catBundle";
 import { getCoinName0x } from "./coinUtility";
@@ -62,7 +62,7 @@ export async function generateMintNftBundle(
   4. DidCoin: DID Tx -> DID Tx
   */
 
-  const bootstrapTgts: TransferTarget[] = [{ address: await modshash("singleton_launcher"), amount, symbol: baseSymbol }];
+  const bootstrapTgts: TransferTarget[] = [{ address: prefix0x(modshash["singleton_launcher"]), amount, symbol: baseSymbol }];
   const bootstrapSpendPlan = transfer.generateSpendPlan(availcoins, bootstrapTgts, change_hex, fee, baseSymbol);
   const bootstrapSpendBundle = await transfer.generateSpendBundleWithoutCat(bootstrapSpendPlan, requests, [], baseSymbol, chainId);
   const bootstrapCoin = bootstrapSpendBundle.coin_spends[0].coin;// get the primary coin
@@ -72,14 +72,14 @@ export async function generateMintNftBundle(
   const launcherCoin: OriginCoin = {
     parent_coin_info: bootstrapCoinId,
     amount,
-    puzzle_hash: await modshash("singleton_launcher"),
+    puzzle_hash: prefix0x(modshash["singleton_launcher"]),
   };
   const launcherCoinId = getCoinName0x(launcherCoin);
 
-  const sgnStruct = `(${await modshash("singleton_top_layer_v1_1")} ${prefix0x(launcherCoinId)} . ${prefix0x(await modshash("singleton_launcher"))})`;
+  const sgnStruct = `(${prefix0x(modshash["singleton_top_layer_v1_1"])} ${prefix0x(launcherCoinId)} . ${prefix0x(modshash["singleton_launcher"])})`;
   const nftPuzzle = await constructSingletonTopLayerPuzzle(
     launcherCoinId,
-    await modshash("singleton_launcher"),
+    prefix0x(modshash["singleton_launcher"]),
     await constructNftStatePuzzle(await constructMetadataString(metadata),
       await constructNftOwnershipPuzzle("()", // first creation, current owner in field is () instead of didAnalysis.launcherId, true owner is in the solution
         await constructNftTransferPuzzle(sgnStruct, royaltyAddressHex, tradePricePercentage),
@@ -100,7 +100,7 @@ export async function generateMintNftBundle(
 
   const launcherCoinSpend: CoinSpend = {
     coin: launcherCoin,
-    puzzle_reveal: await modspuz("singleton_launcher"),
+    puzzle_reveal: prefix0x(modshex["singleton_launcher"]),
     solution: prefix0x(await puzzle.encodePuzzle(launcherSolution)),
   };
 
@@ -281,12 +281,12 @@ export async function analyzeNftCoin(puzzle_reveal: string, hintPuzzle: string, 
 }
 
 export async function getTransferNftPuzzle(analysis: NftCoinAnalysisResult, inner_p2_puzzle: string): Promise<string> {
-  const sgnStruct = `(${await modshash("singleton_top_layer_v1_1")} ${prefix0x(analysis.launcherId)} . ${prefix0x(
-    await modshash("singleton_launcher")
+  const sgnStruct = `(${prefix0x(modshash["singleton_top_layer_v1_1"])} ${prefix0x(analysis.launcherId)} . ${prefix0x(
+    modshash["singleton_launcher"]
   )})`;
   const nftPuzzle = await constructSingletonTopLayerPuzzle(
     analysis.launcherId,
-    await modshash("singleton_launcher"),
+    prefix0x(modshash["singleton_launcher"]),
     await constructNftStatePuzzle(
       analysis.rawMetadata,
       await constructNftOwnershipPuzzle(
@@ -379,9 +379,9 @@ async function constructMetadataString(metadata: NftMetadataValues): Promise<str
 async function constructNftStatePuzzle(rawMetadata: string, inner_puzzle: string): Promise<string> {
   const curried_tail = await curryMod(
     modsprog["nft_state_layer"],
-    await modshash("nft_state_layer"),
+    prefix0x(modshash["nft_state_layer"]),
     rawMetadata,
-    await modshash("nft_metadata_updater_default"),
+    prefix0x(modshash["nft_metadata_updater_default"]),
     inner_puzzle
   );
   if (!curried_tail) throw new Error("failed to curry tail.");
@@ -392,7 +392,7 @@ async function constructNftStatePuzzle(rawMetadata: string, inner_puzzle: string
 async function constructNftOwnershipPuzzle(currentOwner: string, transfer_program: string, inner_puzzle: string): Promise<string> {
   const curried_tail = await curryMod(
     modsprog["nft_ownership_layer"],
-    await modshash("nft_ownership_layer"),
+    prefix0x(modshash["nft_ownership_layer"]),
     prefix0x(currentOwner),
     transfer_program,
     inner_puzzle,

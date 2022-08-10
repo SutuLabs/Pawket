@@ -6,7 +6,7 @@ import { combineSpendBundlePure } from "../mint/cat";
 import { internalUncurry } from "../offer/summary";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { prefix0x } from "./condition";
-import { modsdict, modshash, modsprog, modspuz } from "./mods";
+import { modsdict, modshash, modshex, modsprog } from "./mods";
 import { bytesToHex0x } from "../crypto/utility";
 import { getCoinName0x } from "./coinUtility";
 import { cloneAndChangeRequestPuzzleTemporary, constructSingletonTopLayerPuzzle, getPuzzleDetail, ParsedMetadata, parseMetadata, SingletonStructList } from "./singleton";
@@ -56,7 +56,7 @@ export async function generateMintDidBundle(
   3. DIDCoin: Genesis DID Tx -> Concealed DID Tx
   */
 
-  const bootstrapTgts: TransferTarget[] = [{ address: await modshash("singleton_launcher"), amount, symbol: baseSymbol }];
+  const bootstrapTgts: TransferTarget[] = [{ address: prefix0x(modshash["singleton_launcher"]), amount, symbol: baseSymbol }];
   const bootstrapSpendPlan = transfer.generateSpendPlan(availcoins, bootstrapTgts, change_hex, fee, baseSymbol);
   const bootstrapSpendBundle = await transfer.generateSpendBundleWithoutCat(bootstrapSpendPlan, requests, [], baseSymbol, chainId);
   const bootstrapCoin = bootstrapSpendBundle.coin_spends[0].coin;// get the primary coin
@@ -65,7 +65,7 @@ export async function generateMintDidBundle(
   const launcherCoin: OriginCoin = {
     parent_coin_info: bootstrapCoinId,
     amount,
-    puzzle_hash: await modshash("singleton_launcher"),
+    puzzle_hash: prefix0x(modshash["singleton_launcher"]),
   };
   const launcherCoinId = getCoinName0x(launcherCoin);
   // console.log("launcherCoinId", launcherCoinId)
@@ -73,7 +73,7 @@ export async function generateMintDidBundle(
   const didInnerPuzzle = await constructDidInnerPuzzle(inner_p2_puzzle.puzzle, "()", 0, launcherCoinId, "()");
   const didPuzzle = await constructSingletonTopLayerPuzzle(
     launcherCoinId,
-    await modshash("singleton_launcher"),
+    prefix0x(modshash["singleton_launcher"]),
     // inner_p2_puzzle.puzzle
     didInnerPuzzle,
   );
@@ -96,7 +96,7 @@ export async function generateMintDidBundle(
 
   const launcherCoinSpend: CoinSpend = {
     coin: launcherCoin,
-    puzzle_reveal: await modspuz("singleton_launcher"),
+    puzzle_reveal: prefix0x(modshex["singleton_launcher"]),
     solution: prefix0x(await puzzle.encodePuzzle(launcherSolution)),
   };
 
@@ -126,7 +126,7 @@ async function constructDidInnerPuzzle(
   launcherCoinId: string,
   metadata: string,
 ): Promise<string> {
-  const sgnStruct = `(${await modshash("singleton_top_layer_v1_1")} ${prefix0x(launcherCoinId)} . ${prefix0x(await modshash("singleton_launcher"))})`;
+  const sgnStruct = `(${prefix0x(modshash["singleton_top_layer_v1_1"])} ${prefix0x(launcherCoinId)} . ${prefix0x(modshash["singleton_launcher"])})`;
   if (numVerificationsRequired != 0) throw new Error("numVerificationsRequired only support 0");
   if (metadata != "()") throw new Error("metada only support ()");
 

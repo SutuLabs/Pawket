@@ -2,14 +2,14 @@ import 'dotenv/config'
 import { disassemble } from "clvm_tools/clvm_tools/binutils";
 import { SExp, Tuple, to_sexp_f, sexp_from_stream, Stream, Bytes } from "clvm";
 import { uncurry } from "clvm_tools/clvm_tools/curry";
-import { modshexdict, modspuz } from "./mods";
+import { ModName, modshex, modshexdict } from "./mods";
 import { getCoinName0x } from './coinUtility';
 import { prefix0x, unprefix0x } from './condition';
 import { sha256tree } from 'clvm_tools';
 import puzzle from '../crypto/puzzle';
 
 export interface SimplePuzzle {
-  mod: string,
+  mod: ModName,
   args: (CannotUncurryArgument | SimplePuzzle)[],
 }
 
@@ -78,7 +78,7 @@ export async function parseBlock(generator_hex: string, ref_hex_list: string[] |
   };
 
   const bg = ref_hex_list?.length ?? 0 > 0
-    ? await puzzle.calcPuzzleResult(await modspuz("generator"), getArgs(ref_hex_list ?? []).as_bin().hex(), "--hex", "--dump")
+    ? await puzzle.calcPuzzleResult(modshex["generator"], getArgs(ref_hex_list ?? []).as_bin().hex(), "--hex", "--dump")
     : await puzzle.calcPuzzleResult(generator_hex, "ff8080", "--hex", "--dump"); // ff8080 == "(())"
 
   return bg;
