@@ -97,7 +97,7 @@ import NftOffer from "../Detail/NftOffer.vue"
 import NftTransfer from "../Detail/NftTransfer.vue";
 import { CnsDetail } from "@/services/crypto/receive";
 import store from "@/store";
-import CnsNewAddress from "./cnsNewAddress.vue";
+import CnsNewAddress from "./CnsNewAddress.vue";
 import { crossOriginDownload } from "@/services/api/crossOriginDownload";
 
 @Component({

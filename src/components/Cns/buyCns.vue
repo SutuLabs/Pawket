@@ -86,7 +86,7 @@ import AddressField from "../AddressField.vue";
 import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
 import { getLineageProofPuzzle } from "@/services/transfer/call";
-import buyCnsSummary from "./buyCnsSummary.vue";
+import buyCnsSummary from "./BuyCnsSummary.vue";
 
 @Component({
   components: {

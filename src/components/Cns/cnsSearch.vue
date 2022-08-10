@@ -68,7 +68,7 @@ import { isMobile } from "@/services/view/responsive";
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import KeyBox from "../KeyBox.vue";
 import TopBar from "../TopBar.vue";
-import BuyCns from "./buyCns.vue";
+import BuyCns from "./BuyCns.vue";
 
 export type CnsStatus = "Available" | "Registering" | "Unavailable"
 

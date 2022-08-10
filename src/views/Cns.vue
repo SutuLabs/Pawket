@@ -3,7 +3,7 @@
     <div :class="{ box: !isMobile, 'pt-8': isMobile }" v-if="isMobile || (!isMobile && !showSearchResults)">
       <p class="is-hidden-tablet has-text-centered is-size-5 pt-5 pb-2 pr-2 border-bottom fixed-top">{{ $t("cns.title") }}</p>
       <div class="is-hidden-mobile has-text-left is-size-5 pl-2 border-bottom pt-6 pb-6">
-        <img src="@/assets/CNS.png" class="image is-96x96" style="margin: auto" />
+        <img src="@/assets/cns.jpg" class="image is-96x96" style="margin: auto" />
         <p class="cns-title has-text-centered is-size-3 pt-2 pb-6 has-text-weight-bold">Chia Name Service</p>
         <b-field>
           <b-input
@@ -76,9 +76,9 @@
   </div>
 </template>
 <script lang="ts">
-import CnsDesktopDetail from "@/components/Cns/cnsDesktopDetail.vue";
-import CnsDetailPanel from "@/components/Cns/cnsDetail.vue";
-import CnsSearch, { CnsResult } from "@/components/Cns/cnsSearch.vue";
+import CnsDesktopDetail from "@/components/Cns/CnsDesktopDetail.vue";
+import CnsDetailPanel from "@/components/Cns/CnsDetail.vue";
+import CnsSearch, { CnsResult } from "@/components/Cns/CnsSearch.vue";
 import { AccountEntity } from "@/models/account";
 import { crossOriginDownload } from "@/services/api/crossOriginDownload";
 import { CnsDetail } from "@/services/crypto/receive";
@@ -131,7 +131,6 @@ export default class Cns extends Vue {
       if (this.searchStr.charAt(i) == '-') {
         if (this.searchStr.charAt(i - 1) != '-' && this.searchStr.charAt(i + 1) != '-') continue;
       } else {
-        console.log(this.searchStr.charAt(i))
         return false;
       }
     }
