@@ -86,7 +86,7 @@ import AddressField from "../AddressField.vue";
 import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
 import { getLineageProofPuzzle } from "@/services/transfer/call";
-import buyCnsSummary from "./buyCnsSummary.vue";
+import BuyCnsSummary from "./BuyCnsSummary.vue";
 
 @Component({
   components: {
@@ -95,7 +95,7 @@ import buyCnsSummary from "./buyCnsSummary.vue";
     TokenAmountField,
     BundleSummary,
     AddressField,
-    buyCnsSummary
+    BuyCnsSummary
   },
 })
 export default class BuyCns extends Vue {

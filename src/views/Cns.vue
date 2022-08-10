@@ -1,48 +1,26 @@
 <template>
   <div class="column nav-box">
-    <div :class="{ box: !isMobile, 'pt-8': isMobile }">
+    <div :class="{ box: !isMobile, 'pt-8': isMobile }" v-if="isMobile || (!isMobile && !showSearchResults)">
       <p class="is-hidden-tablet has-text-centered is-size-5 pt-5 pb-2 pr-2 border-bottom fixed-top">{{ $t("cns.title") }}</p>
-      <div class="is-hidden-mobile has-text-left is-size-5 pl-2 border-bottom columns">
-        <div class="column is-2">{{ $t("cns.title") }}</div>
-        <div class="column is-offset-7">
-          <b-dropdown :triggers="[]" ref="searchBar">
-            <template #trigger>
-              <b-input
-                placeholder="Search"
-                type="search"
-                icon-right="magnify"
-                icon-right-clickable
-                :maxlength="40"
-                :minlength="4"
-                @icon-right-click="searchCns"
-                v-model="searchStr"
-                @keyup.native.enter="searchCns"
-              >
-              </b-input>
-            </template>
-            <p class="is-size-6 has-text-grey pl-2">Your CNS</p>
-            <p class="is-size-5 pl-4">cns1.chia</p>
-            <div v-if="result" class="pt-4">
-              <p class="is-size-6 has-text-grey pl-2">Search Result</p>
-              <b-dropdown-item @click="CnsDesktopDetail(result)">
-                <p class="is-size-5 is-clickable">
-                  {{ result.domainName }}
-                  <b-icon v-if="result.status == 'Available'" icon="check-circle" type="is-primary" size="is-small"></b-icon>
-                  <b-icon v-if="result.status == 'Unavailable'" icon="close-circle" type="is-danger" size="is-small"></b-icon>
-                  <b-icon
-                    v-if="result.status == 'Registering'"
-                    icon="dots-horizontal-circle"
-                    class="has-text-grey-light"
-                    size="is-small"
-                  ></b-icon>
-                </p>
-              </b-dropdown-item>
-            </div>
-          </b-dropdown>
-        </div>
+      <div class="is-hidden-mobile has-text-left is-size-5 pl-2 border-bottom pt-6 pb-6">
+        <img src="@/assets/cns.jpg" class="image is-96x96" style="margin: auto" />
+        <p class="cns-title has-text-centered is-size-3 pt-2 pb-6 has-text-weight-bold">Chia Name Service</p>
+        <b-field>
+          <b-input
+            expanded
+            placeholder="Search for a Chia Domain Name"
+            type="search"
+            size="is-medium"
+            icon="magnify"
+            :maxlength="40"
+            v-model="searchStr"
+            @keyup.native.enter="searchCns"
+          ></b-input>
+          <b-button @click="searchCns" class="control" :disabled="!legalSearch" type="is-info" size="is-medium">Search</b-button>
+        </b-field>
       </div>
-      <div>
-        <p class="is-size-5 py-2">Your CNS</p>
+      <div class="mb-6">
+        <p class="is-size-5 py-4">Your CNS</p>
         <ul class="is-flex columns is-multiline is-mobile is-vcentered" v-if="cnses">
           <li class="column is-4-tablet is-6-mobile" v-for="(cns, i) of cnses" :key="i">
             <div class="nft-image-container">
@@ -87,12 +65,20 @@
         </div>
       </div>
     </div>
+    <div v-if="showSearchResults">
+      <cns-desktop-detail
+        :cnsResult="this.result"
+        :cns="cnses[0]"
+        :account="account"
+        @close="showSearchResults = false"
+      ></cns-desktop-detail>
+    </div>
   </div>
 </template>
 <script lang="ts">
-import CnsDesktopDetail from "@/components/Cns/cnsDesktopDetail.vue";
-import CnsDetailPanel from "@/components/Cns/cnsDetail.vue";
-import CnsSearch, { CnsResult } from "@/components/Cns/cnsSearch.vue";
+import CnsDesktopDetail from "@/components/Cns/CnsDesktopDetail.vue";
+import CnsDetailPanel from "@/components/Cns/CnsDetail.vue";
+import CnsSearch, { CnsResult } from "@/components/Cns/CnsSearch.vue";
 import { AccountEntity } from "@/models/account";
 import { crossOriginDownload } from "@/services/api/crossOriginDownload";
 import { CnsDetail } from "@/services/crypto/receive";
@@ -100,10 +86,11 @@ import { isMobile } from "@/services/view/responsive";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 
-@Component
+@Component({ components: { CnsDesktopDetail } })
 export default class Cns extends Vue {
   public searchStr = "";
   public result: CnsResult | null = null;
+  public showSearchResults = false;
 
   get isMobile(): boolean {
     return isMobile();
@@ -133,6 +120,23 @@ export default class Cns extends Vue {
     ]
   }
 
+
+  get legalSearch(): boolean {
+    if (this.searchStr.length < 4 || this.searchStr.length > 40) return false;
+    if (this.searchStr.charAt(0) == '-' || this.searchStr.charAt(this.searchStr.length - 1) == '-') return false;
+    for (let i = 0; i < this.searchStr.length; i++) {
+      if (this.searchStr.charAt(i) >= 'A' && this.searchStr.charAt(i) <= 'Z') continue;
+      if (this.searchStr.charAt(i) >= 'a' && this.searchStr.charAt(i) <= 'z') continue;
+      if (this.searchStr.charAt(i) >= '0' && this.searchStr.charAt(i) <= '9') continue;
+      if (this.searchStr.charAt(i) == '-') {
+        if (this.searchStr.charAt(i - 1) != '-' && this.searchStr.charAt(i + 1) != '-') continue;
+      } else {
+        return false;
+      }
+    }
+    return true;
+  }
+
   async crossOriginDownload(url: string, filename: string | undefined): Promise<void> {
     const name = filename ?? "untitled";
     return crossOriginDownload(url, name);
@@ -143,7 +147,7 @@ export default class Cns extends Vue {
     const idx = this.cnsList.findIndex(cnses => cnses.domainName == this.searchStr);
     if (idx > -1) {
       this.result = this.cnsList[idx];
-      (this.$refs.searchBar as Vue & { toggle: () => void }).toggle();
+      this.showSearchResults = true;
     }
   }
 
@@ -230,5 +234,11 @@ export default class Cns extends Vue {
   justify-content: center;
   align-items: center;
   height: 100%;
+}
+
+.cns-title {
+  background: linear-gradient(to right, #60ebc2, #15cff5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 </style>

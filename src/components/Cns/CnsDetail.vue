@@ -41,6 +41,7 @@
               >{{ address }} <key-box icon="checkbox-multiple-blank-outline" :value="address" :showValue="false"></key-box
             ></span>
           </b-field>
+          <b-field label="Expiration Time:"> 2022.08.08 at 9:41(UTC) </b-field>
           <div class="buttons is-hidden-mobile">
             <b-button
               :label="$t('nftDetail.ui.button.transfer')"
@@ -56,7 +57,7 @@
               @click="offer()"
               icon-left="email-send-outline"
               outlined
-              disabled
+              :disabled="this.account.type == 'Address'"
             ></b-button>
           </div>
         </div>
@@ -96,7 +97,7 @@ import NftOffer from "../Detail/NftOffer.vue"
 import NftTransfer from "../Detail/NftTransfer.vue";
 import { CnsDetail } from "@/services/crypto/receive";
 import store from "@/store";
-import CnsNewAddress from "./cnsNewAddress.vue";
+import CnsNewAddress from "./CnsNewAddress.vue";
 import { crossOriginDownload } from "@/services/api/crossOriginDownload";
 
 @Component({
