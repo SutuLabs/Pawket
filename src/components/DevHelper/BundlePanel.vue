@@ -43,7 +43,8 @@
               <b-taglist attached>
                 <b-tag type="is-info">{{ key }}</b-tag>
                 <b-tag type="">
-                  {{ val }}
+                  <span v-if="key == 'Amount'" :title="val | demojo">{{ val }}</span>
+                  <span v-else>{{ val }}</span>
                   <key-box icon="checkbox-multiple-blank-outline" :value="val" tooltip="Copy"></key-box>
                 </b-tag>
               </b-taglist>
@@ -236,6 +237,7 @@ import { getCoinName, getCoinName0x } from "@/services/coin/coinUtility";
 import { ConditionOpcode } from "@/services/coin/opcode";
 import debug from "@/services/api/debug";
 import { Instance } from "@/services/util/instance";
+import { demojo } from "@/filters/unitConversion";
 
 interface AnnouncementCoin {
   coinIndex: number;
@@ -260,6 +262,7 @@ interface AggSigMessage {
     KeyBox,
     UncurryPuzzle,
   },
+  filters: { demojo },
 })
 export default class BundlePanel extends Vue {
   @Prop() private inputBundleText!: string;
