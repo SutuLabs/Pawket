@@ -12,7 +12,7 @@
         <b-radio-button
           v-for="(coin, idx) in bundle.coin_spends"
           :key="idx"
-          v-model="selectedCoin"
+          :value="selectedCoin"
           :native-value="idx"
           type="is-info"
           @input="changeCoin(idx)"
@@ -324,6 +324,14 @@ export default class BundlePanel extends Vue {
       this.bundle = null;
     }
 
+    this.puzzleAnnoCreates = [];
+    this.puzzleAnnoAsserted = [];
+    this.coinAnnoCreates = [];
+    this.coinAnnoAsserted = [];
+    this.coinAvailability = [];
+    this.aggSigMessages = [];
+    this.sigVerified = "None";
+
     await this.changeCoin(0);
     this.saveBundle();
   }
@@ -381,14 +389,6 @@ export default class BundlePanel extends Vue {
     this.solution_result = "";
     this.puzzle_hash = "";
     this.puzzle = "";
-
-    this.puzzleAnnoCreates = [];
-    this.puzzleAnnoAsserted = [];
-    this.coinAnnoCreates = [];
-    this.coinAnnoAsserted = [];
-    this.coinAvailability = [];
-    this.aggSigMessages = [];
-    this.sigVerified = "None";
 
     await this.update();
   }
