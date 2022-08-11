@@ -1,8 +1,17 @@
 <template>
-  <div class="column nav-box">
+  <div class="column nav-box mb-6">
     <div :class="{ box: !isMobile, 'pt-8': isMobile }">
-      <top-bar :title="$t('explore.title')" :showBack="mode == 'Offer'" @close="mode = 'List'"></top-bar>
-      <div v-if="mode == 'List'">
+      <p class="is-hidden-mobile has-text-left is-size-5 pb-2 pl-2 border-bottom">
+        <span @click="mode = 'List'" v-if="mode == 'Offer'"
+          ><b-icon class="is-pulled-left has-text-grey pr-3 is-clickable pt-1" icon="chevron-left"> </b-icon></span
+        >{{ $t("explore.title") }}
+      </p>
+      <p class="is-hidden-tablet has-text-centered is-size-5 pt-5 pb-2 pr-2 border-bottom fixed-top">
+        <span @click="mode = 'List'" v-if="mode == 'Offer'"
+          ><b-icon class="is-pulled-left has-text-grey pr-3 is-clickable pt-1" icon="chevron-left"> </b-icon></span
+        >{{ $t("explore.title") }}
+      </p>
+      <div v-if="mode == 'List'" class="pt-4">
         <div class="panel">
           <p class="panel-heading">
             CAT
@@ -47,7 +56,7 @@
             </div>
           </div>
         </div>
-        <div class="panel">
+        <div class="panel pt-4">
           <p class="panel-heading">
             NFT
             <span
@@ -58,7 +67,7 @@
           </p>
           <div class="panel-body">
             <div class="columns panel-block" v-for="(col, index) of nftList" :key="index">
-              <div class="column is-1">#1{{ index + 1 }}</div>
+              <div class="column is-1">#{{ index + 1 }}</div>
               <div class="column is-9">
                 <div class="is-flex">
                   <div class="mr-4">
@@ -86,11 +95,13 @@
         </div>
       </div>
       <div v-if="mode == 'Offer'">
-        <div class="columns py-4 has-text-centered">
+        <div class="columns py-4 has-text-centered is-mobile">
           <div class="column is-5">
             <b-tag type="is-primary" size="is-large">{{ offered }}</b-tag>
           </div>
-          <div class="column is-2 pt-4"><b-icon icon="arrow-right"></b-icon></div>
+          <div class="column is-2 pt-4">
+            <span @click="getOffers(requested, offered)" class="is-clickable"><b-icon icon="arrow-right"></b-icon></span>
+          </div>
           <div class="column is-5">
             <b-tag type="is-primary" size="is-large">{{ requested }}</b-tag>
           </div>
@@ -100,28 +111,30 @@
             <tr>
               <th>You Offer</th>
               <th>You Receive</th>
-              <th>Price</th>
+              <th class="is-hidden-mobile">Price</th>
               <th>Operation</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(offer, index) of offers" :key="index">
               <td>
-                <p v-for="offered of offer.offered" :key="offered.code">{{ offered.amount }} {{ offered.code }}</p>
-              </td>
-              <td>
-                <div v-for="(requested, idx) of offer.requested" :key="idx" class="has-text-right">
-                  <span v-if="requested.is_nft"
-                    >{{ requested.name }}<img class="image is-48x48 is-inline-block ml-3" :src="requested.preview.tiny"
-                  /></span>
-                  <span v-else>{{ requested.amount }} {{ requested.code }}</span>
+                <div v-for="(requested, idx) of offer.requested" :key="idx">
+                  <span>{{ requested.amount }} {{ requested.code }}</span>
                 </div>
               </td>
               <td>
-                <div v-if="offer.requested[0].is_nft">{{ offer.price }} {{ offered }}</div>
+                <p v-for="offered of offer.offered" :key="offered.code" :class="{ 'has-text-right': offered.is_nft }">
+                  <span v-if="offered.is_nft"
+                    >{{ offered.name }}<img class="image is-48x48 is-inline-block ml-3" :src="offered.preview.tiny"
+                  /></span>
+                  <span v-else> {{ offered.amount }} {{ offered.code }} </span>
+                </p>
+              </td>
+              <td class="is-hidden-mobile">
+                <div v-if="offer.offered[0].is_nft">{{ offer.price }} {{ offered }}</div>
                 <div v-else>
-                  <p>{{ offer.price }} {{ requested }}</p>
-                  <p>{{ 1 / offer.price }} {{ offered }}</p>
+                  <p>1 {{ requested }} = {{ offer.price }} {{ offered }}</p>
+                  <p>1 {{ offered }} = {{ 1 / offer.price }} {{ requested }}</p>
                 </div>
               </td>
               <td>
@@ -137,7 +150,6 @@
 <script lang="ts">
 import { isMobile } from "@/services/view/responsive";
 import { Component, Vue } from "vue-property-decorator";
-import TailDb from "@/services/api/tailDb"
 import { TailInfo } from "@/services/api/tailDb";
 import Dexie, { Offer } from "@/services/api/dexie"
 import TopBar from "@/components/TopBar.vue";
@@ -162,7 +174,9 @@ export default class Settings extends Vue {
   }
 
   get tailList(): TailInfo[] {
-    return this.showAllCats ? this.tails : this.tails.slice(0, 5);
+    return [{ code: "SBX", hash: "a628c1c2c6fcb74d53746157e438e108eab5c0bb3e5c80ff9b1910b3e4832913", logo_url: "https://images.taildatabase.com/tails/db5d19ef-c798-4f96-b448-2eea788dbe0e.png" },
+    { code: "TRTG", hash: "e0ed5a8e325a7dbadfefd760533afb37e89d17a3ffa05e681b1c4b897d5e86b7", logo_url: "https://images.taildatabase.com/tails/be1506db-d392-4adb-b21e-83714b1ebd4e.png" },
+    { code: "UFCG", hash: "d5cfbfadf873554d5184ebcb9dee86e69f8b11f44a0cc4e417871c4f7fb17b9a", logo_url: "https://images.taildatabase.com/tails/86b58642-7ae5-43b4-8efe-7425fe2a1fde.jpeg" }]
   }
 
   get nftList(): TailInfo[] {
@@ -183,15 +197,11 @@ export default class Settings extends Vue {
     return getAllCats(this.account);
   }
 
-  async mounted(): Promise<void> {
-    this.tails = await TailDb.getTails();
-  }
-
   async getOffers(offered: string, requested: string): Promise<void> {
     this.mode = "Offer"
     this.offered = offered;
     this.requested = requested;
-    this.offers = await Dexie.getOffer(offered, requested) ?? [];
+    this.offers = await Dexie.getOffer(requested, offered) ?? [];
   }
 
   takeOffer(offerText: string): void {
