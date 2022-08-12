@@ -89,20 +89,41 @@ export interface Preview {
   medium: string;
 }
 
-class DexieOffer {
+class Dexie {
   private dexieUrl = "https://api.dexie.space/v1/offers";
 
-  public async getOffer(offered: string | null, requested: string | null): Promise<Offer[] | null> {
+  public async getOffer(
+    offered: string | null,
+    requested: string | null,
+    page = 1,
+    pageSize = 20
+  ): Promise<DexieOfferResponse | null> {
     const params = new URLSearchParams();
     if (offered) params.append("offered", offered);
     if (requested) params.append("requested", requested);
+    params.append("page", page.toString());
+    params.append("page_size", pageSize.toString());
+    params.append("sort", "price_asc");
     const resp = await fetch(`${this.dexieUrl}?${params}`);
     if (resp.status !== 200) {
       throw new Error(await resp.text());
     }
-    const p = (await resp.json()) as DexieOfferResponse;
-    return p.offers;
+    return (await resp.json()) as DexieOfferResponse;
+  }
+
+  public async uploadOffer(offer: string): Promise<void> {
+    const resp = await fetch(this.dexieUrl, {
+      method: "POST",
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Method": "POST,GET",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ offer: offer }),
+    });
+    const res = await resp.json();
+    console.log(res);
   }
 }
 
-export default new DexieOffer();
+export default new Dexie();

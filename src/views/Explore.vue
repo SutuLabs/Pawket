@@ -1,30 +1,23 @@
 <template>
   <div class="column nav-box mb-6">
     <div :class="{ box: !isMobile, 'pt-8': isMobile }">
-      <p class="is-hidden-mobile has-text-left is-size-5 pb-2 pl-2 border-bottom">
+      <p class="is-hidden-mobile has-text-left is-size-5 pb-2 pl-2 border-bottom front" style="z-index: 99">
         <span @click="mode = 'List'" v-if="mode == 'Offer'"
           ><b-icon class="is-pulled-left has-text-grey pr-3 is-clickable pt-1" icon="chevron-left"> </b-icon></span
         >{{ $t("explore.title") }}
       </p>
-      <p class="is-hidden-tablet has-text-centered is-size-5 pt-5 pb-2 pr-2 border-bottom fixed-top">
+      <p class="is-hidden-tablet has-text-centered is-size-5 pt-5 pb-2 pr-2 border-bottom fixed-top" style="z-index: 99">
         <span @click="mode = 'List'" v-if="mode == 'Offer'"
           ><b-icon class="is-pulled-left has-text-grey pr-3 is-clickable pt-1" icon="chevron-left"> </b-icon></span
         >{{ $t("explore.title") }}
       </p>
       <div v-if="mode == 'List'" class="pt-4">
         <div class="panel">
-          <p class="panel-heading">
-            CAT
-            <span
-              class="is-pulled-right has-text-info has-text-weight-normal is-size-5 is-clickable"
-              @click="showAllCats = !showAllCats"
-              >{{ showAllCats ? "less" : "more" }}</span
-            >
-          </p>
+          <p class="panel-heading">{{ $t("explore.cat.title") }}</p>
           <div class="panel-body">
-            <div class="columns panel-block" v-for="(cat, index) of tailList" :key="cat.code">
+            <div class="columns panel-block is-mobile" v-for="(cat, index) of tailList" :key="cat.code">
               <div class="column is-1">#{{ index + 1 }}</div>
-              <div class="column is-9">
+              <div class="column is-8">
                 <div class="is-flex">
                   <div class="mr-4">
                     <span class="image is-32x32">
@@ -37,38 +30,33 @@
                   </div>
                 </div>
               </div>
-              <div class="column is-2 buttons">
+              <div class="column is-3 buttons">
                 <b-button
                   @click="
                     getOffers('XCH', cat.hash);
-                    requested = cat.code;
+                    offeredName = 'XCH';
+                    requestedName = cat.code;
                   "
-                  >Buy</b-button
+                  >{{ $t("explore.button.buy") }}</b-button
                 >
                 <b-button
                   @click="
                     getOffers(cat.hash, 'XCH');
-                    offered = cat.code;
+                    offeredName = cat.code;
+                    requestedName = 'XCH';
                   "
-                  >Sell</b-button
+                  >{{ $t("explore.button.sell") }}</b-button
                 >
               </div>
             </div>
           </div>
         </div>
         <div class="panel pt-4">
-          <p class="panel-heading">
-            NFT
-            <span
-              class="is-pulled-right has-text-info has-text-weight-normal is-size-5 is-clickable"
-              @click="showAllNfts = !showAllNfts"
-              >{{ showAllNfts ? "less" : "more" }}</span
-            >
-          </p>
+          <p class="panel-heading">{{ $t("explore.nft.title") }}</p>
           <div class="panel-body">
-            <div class="columns panel-block" v-for="(col, index) of nftList" :key="index">
+            <div class="columns panel-block is-mobile" v-for="(col, index) of nftList" :key="index">
               <div class="column is-1">#{{ index + 1 }}</div>
-              <div class="column is-9">
+              <div class="column is-8">
                 <div class="is-flex">
                   <div class="mr-4">
                     <span class="image is-32x32">
@@ -81,13 +69,14 @@
                   </div>
                 </div>
               </div>
-              <div class="column is-2 buttons">
+              <div class="column is-3 buttons">
                 <b-button
                   @click="
                     getOffers('XCH', col.hash);
-                    requested = col.code;
+                    requestedName = col.code;
+                    offeredName = 'XCH';
                   "
-                  >Buy</b-button
+                  >{{ $t("explore.button.buy") }}</b-button
                 >
               </div>
             </div>
@@ -97,22 +86,22 @@
       <div v-if="mode == 'Offer'">
         <div class="columns py-4 has-text-centered is-mobile">
           <div class="column is-5">
-            <b-tag type="is-primary" size="is-large">{{ offered }}</b-tag>
+            <b-tag type="is-primary" size="is-large">{{ offeredName }}</b-tag>
           </div>
           <div class="column is-2 pt-4">
-            <span @click="getOffers(requested, offered)" class="is-clickable"><b-icon icon="arrow-right"></b-icon></span>
+            <span @click="swap()" class="is-clickable"><b-icon icon="arrow-right"></b-icon></span>
           </div>
           <div class="column is-5">
-            <b-tag type="is-primary" size="is-large">{{ requested }}</b-tag>
+            <b-tag type="is-primary" size="is-large">{{ requestedName }}</b-tag>
           </div>
         </div>
         <table class="table is-fullwidth has-text-centered">
           <thead>
             <tr>
-              <th>You Offer</th>
-              <th>You Receive</th>
-              <th class="is-hidden-mobile">Price</th>
-              <th>Operation</th>
+              <th>{{ $t("explore.table.header.offer") }}</th>
+              <th>{{ $t("explore.table.header.offer") }}</th>
+              <th class="is-hidden-mobile">{{ $t("explore.table.header.price") }}</th>
+              <th>{{ $t("explore.table.header.operation") }}</th>
             </tr>
           </thead>
           <tbody>
@@ -131,25 +120,38 @@
                 </p>
               </td>
               <td class="is-hidden-mobile">
-                <div v-if="offer.offered[0].is_nft">{{ offer.price }} {{ offered }}</div>
+                <div v-if="offer.offered[0].is_nft">{{ offer.price }} {{ offeredName }}</div>
                 <div v-else>
-                  <p>1 {{ requested }} = {{ offer.price }} {{ offered }}</p>
-                  <p>1 {{ offered }} = {{ 1 / offer.price }} {{ requested }}</p>
+                  <p>1 {{ requested }} = {{ offer.price }} {{ offeredName }}</p>
+                  <p>1 {{ offered }} = {{ 1 / offer.price }} {{ requestedName }}</p>
                 </div>
               </td>
               <td>
-                <b-button @click="takeOffer(offer.offer)" size="is-small">Take Offer</b-button>
+                <b-button @click="takeOffer(offer.offer)" size="is-small">{{ $t("explore.button.takeOffer") }}</b-button>
               </td>
             </tr>
           </tbody>
         </table>
+        <b-pagination
+          :total="total"
+          v-model="current"
+          :per-page="pageSize"
+          icon-prev="chevron-left"
+          icon-next="chevron-right"
+          aria-next-label="Next page"
+          aria-previous-label="Previous page"
+          aria-page-label="Page"
+          aria-current-label="Current page"
+        >
+        </b-pagination>
       </div>
+      <p class="has-text-centered mt-6 pt-4 is-size-5 has-text-grey">{{ $t("explore.ascription") }}</p>
     </div>
   </div>
 </template>
 <script lang="ts">
 import { isMobile } from "@/services/view/responsive";
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import { TailInfo } from "@/services/api/tailDb";
 import Dexie, { Offer } from "@/services/api/dexie"
 import TopBar from "@/components/TopBar.vue";
@@ -161,13 +163,15 @@ import store from "@/store";
 type Mode = "List" | "Offer"
 @Component({ components: { TopBar } })
 export default class Settings extends Vue {
-  tails: TailInfo[] = [];
-  showAllCats = false;
-  showAllNfts = false;
   offers: Offer[] = [];
   mode: Mode = "List"
-  offered = "";
-  requested = "";
+  offeredName = "";
+  requestedName = "";
+  offeredHash = "";
+  requestedHash = "";
+  total = 0;
+  current = 1;
+  pageSize = 20;
 
   get isMobile(): boolean {
     return isMobile();
@@ -197,11 +201,27 @@ export default class Settings extends Vue {
     return getAllCats(this.account);
   }
 
+  @Watch("current")
+  onPagechange(): void {
+    this.getOffers(this.offeredHash, this.requestedHash);
+  }
+
+  async swap(): Promise<void> {
+    const temp = this.requestedName;
+    this.requestedName = this.offeredName;
+    this.offeredName = temp;
+    await this.getOffers(this.requestedHash, this.offeredHash);
+  }
+
   async getOffers(offered: string, requested: string): Promise<void> {
     this.mode = "Offer"
-    this.offered = offered;
-    this.requested = requested;
-    this.offers = await Dexie.getOffer(requested, offered) ?? [];
+    this.offeredHash = offered;
+    this.requestedHash = requested;
+    const resp = await Dexie.getOffer(requested, offered, this.current, this.pageSize);
+    if (resp?.success) {
+      this.offers = resp.offers;
+      this.total = resp.count;
+    }
   }
 
   takeOffer(offerText: string): void {
@@ -227,5 +247,9 @@ export default class Settings extends Vue {
 .nav-box {
   max-width: 1000px;
   margin: auto;
+}
+
+.front {
+  z-index: 99;
 }
 </style>

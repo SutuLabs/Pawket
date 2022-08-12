@@ -338,9 +338,9 @@
           "bundle": "数据包"
         },
         "button": {
-          "cancel": "取消",
+          "done": "完成",
           "sign": "签名",
-          "copy": "复制"
+          "uploadToDexie": "上传至Dexie"
         },
         "field": {
           "offer": "提供",
@@ -957,7 +957,27 @@
     "title": "CNS"
   },
   "explore": {
-    "title": "探索"
+    "title": "探索",
+    "nft": {
+      "title": "NFT"
+    },
+    "cat": {
+      "title": "CAT"
+    },
+    "button": {
+      "buy": "购买",
+      "sell": "出售",
+      "takeOffer": "接受 Offer"
+    },
+    "ascription": "由 Dexie 提供支持",
+    "table": {
+      "header": {
+        "offer": "提供",
+        "receive": "获得",
+        "price": "价格",
+        "operation": "操作"
+      }
+    }
   },
   "accountManagement": {
     "ui": {
