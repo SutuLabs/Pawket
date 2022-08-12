@@ -53,6 +53,11 @@ const routes: Array<RouteConfig> = [
     component: () => import(/* webpackChunkName: "simulator" */ "../views/Simulator.vue"),
   },
   {
+    path: "/developer",
+    name: "CoinDeveloper",
+    component: () => import(/* webpackChunkName: "developer" */ "../views/CoinDeveloper.vue"),
+  },
+  {
     path: "/cns",
     name: "Cns",
     component: () => import(/* webpackChunkName: "trade" */ "../views/Cns.vue"),
