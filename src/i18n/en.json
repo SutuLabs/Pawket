@@ -10,7 +10,8 @@
   "common": {
     "button": {
       "confirm": "Confirm",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "copy": "Copy"
     },
     "tooltip": {
       "copy": "Copy"
@@ -338,9 +339,9 @@
           "bundle": "Bundle"
         },
         "button": {
-          "cancel": "Cancel",
+          "done": "Done",
           "sign": "Sign",
-          "copy": "Copy"
+          "uploadToDexie": "Upload to Dexie"
         },
         "field": {
           "offer": "Offer",
@@ -957,7 +958,27 @@
     "title": "CNS"
   },
   "explore": {
-    "title": "Explore"
+    "title": "Explore",
+    "nft": {
+      "title": "NFT Trading"
+    },
+    "cat": {
+      "title": "CAT Trading"
+    },
+    "button": {
+      "buy": "Buy",
+      "sell": "Sell",
+      "takeOffer": "Take Offer"
+    },
+    "ascription": "Powered by Dexie",
+    "table": {
+      "header": {
+        "offer": "Offer",
+        "receive": "Receive",
+        "price": "Price",
+        "operation": "Operation"
+      }
+    }
   },
   "accountManagement": {
     "ui": {

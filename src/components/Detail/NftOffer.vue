@@ -52,7 +52,7 @@
     </section>
     <footer class="modal-card-foot is-block">
       <div>
-        <b-button :label="$t('offer.make.ui.button.cancel')" class="is-pulled-left" @click="close()"></b-button>
+        <b-button :label="$t('common.button.cancel')" class="is-pulled-left" @click="close()"></b-button>
         <b-button v-if="!bundle" type="is-primary" class="is-pulled-right" @click="sign()">
           {{ $t("offer.make.ui.button.sign") }}
           <b-loading :is-full-page="false" :active="!tokenPuzzles || !availcoins || signing"></b-loading>
@@ -60,7 +60,7 @@
       </div>
       <div>
         <b-button
-          :label="$t('offer.make.ui.button.copy')"
+          :label="$t('common.button.copy')"
           v-if="bundle"
           type="is-primary"
           class="is-pulled-right"
