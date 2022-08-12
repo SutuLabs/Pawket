@@ -10,7 +10,8 @@
   "common": {
     "button": {
       "confirm": "确认",
-      "cancel": "取消"
+      "cancel": "取消",
+      "copy": "复制"
     },
     "tooltip": {
       "copy": "复制"
@@ -959,10 +960,10 @@
   "explore": {
     "title": "探索",
     "nft": {
-      "title": "NFT"
+      "title": "NFT交易"
     },
     "cat": {
-      "title": "CAT"
+      "title": "CAT交易"
     },
     "button": {
       "buy": "购买",

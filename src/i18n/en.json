@@ -10,7 +10,8 @@
   "common": {
     "button": {
       "confirm": "Confirm",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "copy": "Copy"
     },
     "tooltip": {
       "copy": "Copy"
@@ -959,10 +960,10 @@
   "explore": {
     "title": "Explore",
     "nft": {
-      "title": "NFT"
+      "title": "NFT Trading"
     },
     "cat": {
-      "title": "CAT"
+      "title": "CAT Trading"
     },
     "button": {
       "buy": "Buy",

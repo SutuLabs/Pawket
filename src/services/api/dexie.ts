@@ -122,7 +122,6 @@ class Dexie {
       body: JSON.stringify({ offer: offer }),
     });
     const res = await resp.json();
-    console.log(res);
   }
 }
 
