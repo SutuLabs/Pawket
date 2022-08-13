@@ -23,3 +23,5 @@ pnpm-debug.log*
 
 /coverage
 /server/coverage
+
+main.sym

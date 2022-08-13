@@ -15,6 +15,9 @@
       "prettier": {
         "printWidth": 130
       }
+    },
+    "files.associations": {
+      "*.clvm":"lisp"
     }
   }
   
