@@ -275,6 +275,8 @@ interface AggSigMessage {
 interface CoinIndexInfo {
   coinIndex: number;
   coinName: string;
+  amount: bigint;
+  nextIndex?: number;
 }
 
 @Component({
@@ -540,6 +542,7 @@ export default class BundlePanel extends Vue {
             .filter((_) => _.op == ConditionOpcode.CREATE_COIN)
             .map((_) => ({
               coinIndex: ca.coinIndex,
+              amount: getNumber(_.args[1]),
               coinName: getCoinName0x({ parent_coin_info: ca.coinName, puzzle_hash: _.args[0], amount: getNumber(_.args[1]) }),
             }))
         );
@@ -561,6 +564,7 @@ export default class BundlePanel extends Vue {
 
         if (ca.availability == "Unexecutable") continue;
         if (this.createdCoins[ca.coinName]) {
+          this.createdCoins[ca.coinName].nextIndex = ca.coinIndex;
           ca.dependenceIndex = this.createdCoins[ca.coinName].coinIndex;
           ca.availability = "Ephemeral";
           continue;
@@ -648,6 +652,15 @@ export default class BundlePanel extends Vue {
       if (av.availability == "Ephemeral") {
         graphDefinition += `${av.coinIndex} -- CP --> ${av.dependenceIndex};`;
       }
+    }
+
+    const ccoins = Object.values(this.createdCoins)
+      .filter((_) => !_.nextIndex)
+      .map((_) => ({ name: _.coinName.slice(2, 8), amount: _.amount, coinIndex: _.coinIndex }));
+
+    if (ccoins.length > 0) {
+      graphDefinition += `subgraph UTXO;${ccoins.map((_) => _.name).join(";")};end;`;
+      graphDefinition += ccoins.map((coin) => `${coin.name} --> ${coin.coinIndex};`).join("");
     }
 
     mermaid.mermaidAPI.render("mgraph", graphDefinition, insertSvg);
