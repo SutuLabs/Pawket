@@ -607,50 +607,50 @@ export default class BundlePanel extends Vue {
     }
   }
 
-  public renderMermaid(): void {
+  public async renderMermaid(): Promise<void> {
     this.mgraphGenerated = true;
-    setTimeout(() => {
-      mermaid.mermaidAPI.initialize({ startOnLoad: false });
-      const el = this.$refs.mgraph as HTMLElement | undefined;
-      if (!el) return;
-      const insertSvg = function (svgCode: string) {
-        el.innerHTML = svgCode;
-      };
-      let graphDefinition = "graph LR;SIG(SIG);";
-      for (let i = 0; i < this.aggSigMessages.length; i++) {
-        const sig = this.aggSigMessages[i];
-        graphDefinition += `SIG -- SIG --> ${sig.coinIndex};`;
-      }
+    await new Promise((resolve) => setTimeout(resolve, 50));
 
-      for (let i = 0; i < this.puzzleAnnoAsserted.length; i++) {
-        const ass = this.puzzleAnnoAsserted[i];
-        const cre = this.puzzleAnnoCreates.find((_) => _.message == ass.message);
-        if (cre) {
-          graphDefinition += `${ass.coinIndex} -- PA --> ${cre.coinIndex};`;
-        } else {
-          graphDefinition += `${ass.coinIndex} -- PA --> ?;`;
-        }
-      }
+    mermaid.mermaidAPI.initialize({ startOnLoad: false });
+    const el = this.$refs.mgraph as HTMLElement | undefined;
+    if (!el) return;
+    const insertSvg = function (svgCode: string) {
+      el.innerHTML = svgCode;
+    };
+    let graphDefinition = "graph LR;SIG(SIG);";
+    for (let i = 0; i < this.aggSigMessages.length; i++) {
+      const sig = this.aggSigMessages[i];
+      graphDefinition += `SIG -- SIG --> ${sig.coinIndex};`;
+    }
 
-      for (let i = 0; i < this.coinAnnoAsserted.length; i++) {
-        const ass = this.coinAnnoAsserted[i];
-        const cre = this.coinAnnoCreates.find((_) => _.message == ass.message);
-        if (cre) {
-          graphDefinition += `${ass.coinIndex} -- CA --> ${cre.coinIndex};`;
-        } else {
-          graphDefinition += `${ass.coinIndex} -- CA --> ?;`;
-        }
+    for (let i = 0; i < this.puzzleAnnoAsserted.length; i++) {
+      const ass = this.puzzleAnnoAsserted[i];
+      const cre = this.puzzleAnnoCreates.find((_) => _.message == ass.message);
+      if (cre) {
+        graphDefinition += `${ass.coinIndex} -- PA --> ${cre.coinIndex};`;
+      } else {
+        graphDefinition += `${ass.coinIndex} -- PA --> ?;`;
       }
+    }
 
-      for (let i = 0; i < this.coinAvailability.length; i++) {
-        const av = this.coinAvailability[i];
-        if (av.availability == "Ephemeral") {
-          graphDefinition += `${av.coinIndex} -- CP --> ${av.dependenceIndex};`;
-        }
+    for (let i = 0; i < this.coinAnnoAsserted.length; i++) {
+      const ass = this.coinAnnoAsserted[i];
+      const cre = this.coinAnnoCreates.find((_) => _.message == ass.message);
+      if (cre) {
+        graphDefinition += `${ass.coinIndex} -- CA --> ${cre.coinIndex};`;
+      } else {
+        graphDefinition += `${ass.coinIndex} -- CA --> ?;`;
       }
+    }
 
-      mermaid.mermaidAPI.render("mgraph", graphDefinition, insertSvg);
-    }, 50);
+    for (let i = 0; i < this.coinAvailability.length; i++) {
+      const av = this.coinAvailability[i];
+      if (av.availability == "Ephemeral") {
+        graphDefinition += `${av.coinIndex} -- CP --> ${av.dependenceIndex};`;
+      }
+    }
+
+    mermaid.mermaidAPI.render("mgraph", graphDefinition, insertSvg);
   }
 }
 
