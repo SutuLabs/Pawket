@@ -215,6 +215,19 @@
               </li>
             </ul>
           </template>
+
+          <template v-if="mgraphGenerated">
+            <h3>Dependency Graph</h3>
+            <b-field grouped group-multiline>
+              <div v-for="leg in depGraphLegends" :key="leg.key" class="control">
+                <b-taglist attached>
+                  <b-tag type="is-info">{{ leg.key }}</b-tag>
+                  <b-tag type="is-info is-light">{{ leg.description }}</b-tag>
+                </b-taglist>
+              </div>
+            </b-field>
+            <div ref="mgraph"></div>
+          </template>
         </template>
       </b-field>
     </template>
@@ -238,6 +251,7 @@ import { ConditionOpcode } from "@/services/coin/opcode";
 import debug from "@/services/api/debug";
 import { Instance } from "@/services/util/instance";
 import { demojo } from "@/filters/unitConversion";
+import mermaid from "mermaid";
 
 interface AnnouncementCoin {
   coinIndex: number;
@@ -248,6 +262,7 @@ interface CoinAvailability {
   coinName: string;
   coinIndex: number;
   availability: "Unknown" | "Unexecutable" | "Available" | "Used" | "NotFound" | "Ephemeral";
+  dependenceIndex?: number;
 }
 
 interface AggSigMessage {
@@ -255,6 +270,11 @@ interface AggSigMessage {
   coinIndex: number;
   publicKey: string;
   message: string;
+}
+
+interface CoinIndexInfo {
+  coinIndex: number;
+  coinName: string;
 }
 
 @Component({
@@ -285,9 +305,27 @@ export default class BundlePanel extends Vue {
   public coinAnnoAsserted: AnnouncementCoin[] = [];
   public coinAvailability: CoinAvailability[] = [];
   public aggSigMessages: AggSigMessage[] = [];
-  public createdCoins: { [key: string]: boolean } = {};
+  public createdCoins: { [key: string]: CoinIndexInfo } = {};
   public sigVerified: "None" | "Verified" | "Failed" = "None";
-
+  public mgraphGenerated = false;
+  public depGraphLegends = [
+    {
+      key: "SIG",
+      description: "Signature",
+    },
+    {
+      key: "PA",
+      description: "Puzzle Anno.",
+    },
+    {
+      key: "CA",
+      description: "Coin Anno.",
+    },
+    {
+      key: "CP",
+      description: "Coin Puzzle (Creation)",
+    },
+  ];
   public readonly modsdict = modsdict;
   public readonly modsprog = modsprog;
 
@@ -334,6 +372,7 @@ export default class BundlePanel extends Vue {
     this.coinAvailability = [];
     this.aggSigMessages = [];
     this.sigVerified = "None";
+    this.mgraphGenerated = false;
 
     await this.changeCoin(0);
     this.saveBundle();
@@ -458,8 +497,8 @@ export default class BundlePanel extends Vue {
     this.coinAnnoAsserted = [];
     // this.coinAvailability = [];
     Vue.set(this, "coinAvailability", []);
-    const coinsForAvail = [];
-    const newCoins = [];
+    const coinsForAvail: CoinAvailability[] = [];
+    const newCoins: CoinIndexInfo[] = [];
     this.aggSigMessages = [];
     try {
       for (let i = 0; i < this.bundle.coin_spends.length; i++) {
@@ -492,14 +531,17 @@ export default class BundlePanel extends Vue {
         );
         this.coinAnnoAsserted.push(
           ...result.conditions
-            .filter((_) => _.op == ConditionOpcode.ASSERT_PUZZLE_ANNOUNCEMENT)
+            .filter((_) => _.op == ConditionOpcode.ASSERT_COIN_ANNOUNCEMENT)
             .map((_) => ({ coinIndex: i, message: _.args[0] }))
         );
 
         newCoins.push(
           ...result.conditions
             .filter((_) => _.op == ConditionOpcode.CREATE_COIN)
-            .map((_) => getCoinName0x({ parent_coin_info: ca.coinName, puzzle_hash: _.args[0], amount: getNumber(_.args[1]) }))
+            .map((_) => ({
+              coinIndex: ca.coinIndex,
+              coinName: getCoinName0x({ parent_coin_info: ca.coinName, puzzle_hash: _.args[0], amount: getNumber(_.args[1]) }),
+            }))
         );
         this.aggSigMessages.push(
           ...result.conditions
@@ -510,7 +552,7 @@ export default class BundlePanel extends Vue {
 
       Vue.set(this, "createdCoins", {});
       newCoins.forEach((c) => {
-        this.createdCoins[c] = true;
+        this.createdCoins[c.coinName] = c;
       });
 
       for (let i = 0; i < coinsForAvail.length; i++) {
@@ -519,6 +561,7 @@ export default class BundlePanel extends Vue {
 
         if (ca.availability == "Unexecutable") continue;
         if (this.createdCoins[ca.coinName]) {
+          ca.dependenceIndex = this.createdCoins[ca.coinName].coinIndex;
           ca.availability = "Ephemeral";
           continue;
         }
@@ -540,6 +583,7 @@ export default class BundlePanel extends Vue {
     }
 
     this.verifySig();
+    this.renderMermaid();
   }
 
   public verifySig(): void {
@@ -561,6 +605,52 @@ export default class BundlePanel extends Vue {
     } catch (err) {
       throw new Error("cannot verify sig: " + err);
     }
+  }
+
+  public renderMermaid(): void {
+    this.mgraphGenerated = true;
+    setTimeout(() => {
+      mermaid.mermaidAPI.initialize({ startOnLoad: false });
+      const el = this.$refs.mgraph as HTMLElement | undefined;
+      if (!el) return;
+      const insertSvg = function (svgCode: string) {
+        el.innerHTML = svgCode;
+      };
+      let graphDefinition = "graph LR;SIG(SIG);";
+      for (let i = 0; i < this.aggSigMessages.length; i++) {
+        const sig = this.aggSigMessages[i];
+        graphDefinition += `SIG -- SIG --> ${sig.coinIndex};`;
+      }
+
+      for (let i = 0; i < this.puzzleAnnoAsserted.length; i++) {
+        const ass = this.puzzleAnnoAsserted[i];
+        const cre = this.puzzleAnnoCreates.find((_) => _.message == ass.message);
+        if (cre) {
+          graphDefinition += `${ass.coinIndex} -- PA --> ${cre.coinIndex};`;
+        } else {
+          graphDefinition += `${ass.coinIndex} -- PA --> ?;`;
+        }
+      }
+
+      for (let i = 0; i < this.coinAnnoAsserted.length; i++) {
+        const ass = this.coinAnnoAsserted[i];
+        const cre = this.coinAnnoCreates.find((_) => _.message == ass.message);
+        if (cre) {
+          graphDefinition += `${ass.coinIndex} -- CA --> ${cre.coinIndex};`;
+        } else {
+          graphDefinition += `${ass.coinIndex} -- CA --> ?;`;
+        }
+      }
+
+      for (let i = 0; i < this.coinAvailability.length; i++) {
+        const av = this.coinAvailability[i];
+        if (av.availability == "Ephemeral") {
+          graphDefinition += `${av.coinIndex} -- CP --> ${av.dependenceIndex};`;
+        }
+      }
+
+      mermaid.mermaidAPI.render("mgraph", graphDefinition, insertSvg);
+    }, 50);
   }
 }
 
