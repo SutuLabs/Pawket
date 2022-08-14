@@ -209,7 +209,7 @@
                 <b-button tag="a" size="is-small" @click="changeCoin(ca.coinIndex)">
                   {{ ca.coinIndex }}
                 </b-button>
-                <b-tag v-if="!ca.coinName" type="is-info is-light">AGG_SIG_UNSAFE</b-tag>
+                <b-tag v-if="!ca.coinName" type="is-warning is-light">AGG_SIG_UNSAFE</b-tag>
                 <key-box v-if="ca.coinName" :value="ca.coinName" :showValue="true" tooltip="Coin Name"></key-box>
                 <key-box :value="ca.message" :showValue="true" tooltip="Message"></key-box>
                 <key-box :value="ca.publicKey" :showValue="true" tooltip="Public Key"></key-box>
@@ -222,8 +222,8 @@
             <b-field grouped group-multiline>
               <div v-for="leg in depGraphLegends" :key="leg.key" class="control">
                 <b-taglist attached>
-                  <b-tag type="is-info">{{ leg.key }}</b-tag>
-                  <b-tag type="is-info is-light">{{ leg.description }}</b-tag>
+                  <b-tag :type="leg.class ? leg.class : 'is-info'">{{ leg.key }}</b-tag>
+                  <b-tag :type="(leg.class ? leg.class : 'is-info') + ' is-light'">{{ leg.description }}</b-tag>
                 </b-taglist>
               </div>
             </b-field>
@@ -315,6 +315,12 @@ export default class BundlePanel extends Vue {
     {
       key: "SIG",
       description: "Signature",
+      class: "is-success",
+    },
+    {
+      key: "SIG_UNSAFE",
+      description: "Unsafe Signature",
+      class: "is-warning",
     },
     {
       key: "PA",
@@ -629,10 +635,12 @@ export default class BundlePanel extends Vue {
     const insertSvg = function (svgCode: string) {
       el.innerHTML = svgCode;
     };
-    let graphDefinition = "graph LR;SIG(SIG);";
+    let graphDefinition = "graph LR;";
+    // graphDefinition += "SIG(SIG);";
     for (let i = 0; i < this.aggSigMessages.length; i++) {
       const sig = this.aggSigMessages[i];
-      graphDefinition += `SIG -- SIG --> ${sig.coinIndex};`;
+      graphDefinition += `${sig.coinIndex}:::${sig.coinName ? "Sig" : "SigUnsafe"};`;
+      // graphDefinition += `SIG -- SIG --> ${sig.coinIndex};`;
     }
 
     for (let i = 0; i < this.puzzleAnnoAsserted.length; i++) {
@@ -671,6 +679,9 @@ export default class BundlePanel extends Vue {
       graphDefinition += ccoins.map((coin) => `${coin.name} --> ${coin.coinIndex};`).join("");
     }
 
+    graphDefinition += `\nclassDef Sig fill:#EFFAF5,stroke:#48C78E;`;
+    graphDefinition += `\nclassDef SigUnsafe fill:#FFFAEB,stroke:#FFE08A;`;
+    graphDefinition += `\nclassDef NoSig fill:#FEECF0,stroke:#F14668;`;
     mermaid.mermaidAPI.render("mgraph", graphDefinition, insertSvg);
   }
 }
