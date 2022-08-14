@@ -209,7 +209,8 @@
                 <b-button tag="a" size="is-small" @click="changeCoin(ca.coinIndex)">
                   {{ ca.coinIndex }}
                 </b-button>
-                <key-box :value="ca.coinName" :showValue="true" tooltip="Coin Name"></key-box>
+                <b-tag v-if="!ca.coinName" type="is-info is-light">AGG_SIG_UNSAFE</b-tag>
+                <key-box v-if="ca.coinName" :value="ca.coinName" :showValue="true" tooltip="Coin Name"></key-box>
                 <key-box :value="ca.message" :showValue="true" tooltip="Message"></key-box>
                 <key-box :value="ca.publicKey" :showValue="true" tooltip="Public Key"></key-box>
               </li>
@@ -551,6 +552,11 @@ export default class BundlePanel extends Vue {
             .filter((_) => _.op == ConditionOpcode.AGG_SIG_ME)
             .map((_) => ({ coinIndex: i, coinName: ca.coinName, publicKey: _.args[0], message: _.args[1] }))
         );
+        this.aggSigMessages.push(
+          ...result.conditions
+            .filter((_) => _.op == ConditionOpcode.AGG_SIG_UNSAFE)
+            .map((_) => ({ coinIndex: i, coinName: "", publicKey: _.args[0], message: _.args[1] }))
+        );
       }
 
       Vue.set(this, "createdCoins", {});
@@ -597,11 +603,13 @@ export default class BundlePanel extends Vue {
     try {
       const AGG_SIG_ME_ADDITIONAL_DATA = getUint8ArrayFromHexString(chainId());
       const msgs = this.aggSigMessages.map((_) =>
-        Uint8Array.from([
-          ...getUint8ArrayFromHexString(_.message),
-          ...getUint8ArrayFromHexString(_.coinName),
-          ...AGG_SIG_ME_ADDITIONAL_DATA,
-        ])
+        _.coinName
+          ? Uint8Array.from([
+              ...getUint8ArrayFromHexString(_.message),
+              ...getUint8ArrayFromHexString(_.coinName),
+              ...AGG_SIG_ME_ADDITIONAL_DATA,
+            ])
+          : getUint8ArrayFromHexString(_.message)
       );
       const pks = this.aggSigMessages.map((_) => BLS.G1Element.from_bytes(getUint8ArrayFromHexString(_.publicKey)));
       const aggsig = BLS.G2Element.from_bytes(getUint8ArrayFromHexString(this.bundle.aggregated_signature));
