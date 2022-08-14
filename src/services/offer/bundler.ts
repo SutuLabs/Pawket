@@ -231,7 +231,9 @@ export async function combineSpendBundle(spendbundles: SpendBundle[]): Promise<S
     if (summary.requested.length != 1) throw new Error("unexpected length of request");
     const req = summary.requested[0];
     const reqcs = spendbundles[i].coin_spends[0];
-    const offcs = spendbundles[(i + 1) % summaries.length].coin_spends[1];
+    const offcs = spendbundles[(i + 1) % summaries.length].coin_spends
+      .filter(_ => _.coin.puzzle_hash != "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79")
+      .slice(-1)[0];
     const sumoff = summaries[(i + 1) % summaries.length].offered[0];
     reqcs.coin.parent_coin_info = getCoinName0x(offcs.coin);
     reqcs.coin.amount = req.amount;
@@ -437,7 +439,7 @@ export async function generateNftOffer(
       const sp = await stdBundle.generateCoinSpends(off.plan, puzzleCopy, conds);
       spends.push(...sp);
       // create royalty coin
-      const parent = getCoinName0x(sp[0].coin);
+      const parent = getCoinName0x(sp[sp.length - 1].coin);
       // royalty_amount = uint64(offered_amount * royalty_percentage / 10000)
       const amount = (off.plan.targets[0].amount * BigInt(nft.tradePricePercentage)) / BigInt(10000);
       const solution_text = `((${prefix0x(nft.launcherId)} (${prefix0x(nft.royaltyAddress)} ${amount} (${prefix0x(
