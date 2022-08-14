@@ -252,7 +252,6 @@ import { ConditionOpcode } from "@/services/coin/opcode";
 import debug from "@/services/api/debug";
 import { Instance } from "@/services/util/instance";
 import { demojo } from "@/filters/unitConversion";
-import mermaid from "mermaid";
 
 interface AnnouncementCoin {
   coinIndex: number;
@@ -629,6 +628,7 @@ export default class BundlePanel extends Vue {
     this.mgraphGenerated = true;
     await new Promise((resolve) => setTimeout(resolve, 50));
 
+    const mermaid = (await import("mermaid")).default;
     mermaid.mermaidAPI.initialize({ startOnLoad: false });
     const el = this.$refs.mgraph as HTMLElement | undefined;
     if (!el) return;

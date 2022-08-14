@@ -92,7 +92,6 @@ import BatchSend from "./Transfer/BatchSend.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import Donate from "./Settings/Donate.vue";
 import { isMobile } from "@/services/view/responsive";
-import OfflineQrCode from "./OfflineQrCode.vue";
 import { xchPrefix } from "@/store/modules/network";
 
 @Component
@@ -180,13 +179,13 @@ export default class Dapp extends Vue {
     });
   }
 
-  showProxy(): void {
+  async showProxy(): Promise<void> {
     this.$buefy.modal.open({
       parent: this,
-      component: OfflineQrCode,
+      component: (await import("@/components/OfflineQrCode.vue")).default,
       hasModalCard: true,
       fullScreen: isMobile(),
-      canCancel: [""],
+      canCancel: ["escape", "outside"],
       trapFocus: true,
       props: { mode: "PROXY", prefix: xchPrefix() },
     });

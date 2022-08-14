@@ -1,13 +1,6 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 import Home from "../views/Home.vue";
-import Create from "../views/Create.vue";
-import Welcome from "../components/Create/Welcome.vue";
-import Disclaimer from "../components/Create/Disclaimer.vue";
-import CreatePassword from "../components/Create/CreatePassword.vue";
-import CreateWallet from "../components/Create/CreateWallet.vue";
-import Add from "../components/Create/Add.vue";
-import Import from "../components/Create/Import.vue";
 
 Vue.use(VueRouter);
 
@@ -19,43 +12,33 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: "/create",
-    component: Create,
+    component: () => import(/* webpackChunkName: "create" */ "../views/Create.vue"),
     children: [
       {
         path: "/",
-        component: Welcome,
+        component: () => import(/* webpackChunkName: "create" */ "../components/Create/Welcome.vue"),
       },
       {
         path: "disclaimer",
-        component: Disclaimer,
+        component: () => import(/* webpackChunkName: "create" */ "../components/Create/Disclaimer.vue"),
       },
       {
         path: "create-password",
-        component: CreatePassword,
+        component: () => import(/* webpackChunkName: "create" */ "../components/Create/CreatePassword.vue"),
       },
       {
         path: "create-wallet",
-        component: CreateWallet,
+        component: () => import(/* webpackChunkName: "create" */ "../components/Create/CreateWallet.vue"),
       },
       {
         path: "import",
-        component: Import,
+        component: () => import(/* webpackChunkName: "create" */ "../components/Create/Import.vue"),
       },
       {
         path: "add",
-        component: Add,
+        component: () => import(/* webpackChunkName: "create" */ "../components/Create/Add.vue"),
       },
     ],
-  },
-  {
-    path: "/clvm",
-    name: "Simulator",
-    component: () => import(/* webpackChunkName: "simulator" */ "../views/Simulator.vue"),
-  },
-  {
-    path: "/developer",
-    name: "CoinDeveloper",
-    component: () => import(/* webpackChunkName: "developer" */ "../views/CoinDeveloper.vue"),
   },
   {
     path: "/cns",

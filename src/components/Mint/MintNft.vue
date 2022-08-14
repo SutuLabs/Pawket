@@ -126,7 +126,6 @@ import { TokenPuzzleDetail } from "@/services/crypto/receive";
 import store from "@/store";
 import { SpendBundle } from "@/models/wallet";
 import bigDecimal from "js-big-decimal";
-import ScanQrCode from "@/components/ScanQrCode.vue";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import TokenAmountField from "@/components/TokenAmountField.vue";
 import coinHandler from "@/services/transfer/coin";
@@ -451,10 +450,10 @@ export default class MintNft extends Vue {
     debugBundle(this, this.bundle);
   }
 
-  scanQrCode(): void {
+  async scanQrCode(): Promise<void> {
     this.$buefy.modal.open({
       parent: this,
-      component: ScanQrCode,
+      component: (await import("@/components/ScanQrCode.vue")).default,
       hasModalCard: true,
       trapFocus: true,
       props: {},

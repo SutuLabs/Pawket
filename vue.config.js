@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
-const monacoWebpackPlugin = require('monaco-editor-webpack-plugin')
+const { IgnorePlugin } = require('webpack');
 
 module.exports = {
   outputDir: "dist/web",
@@ -12,7 +12,11 @@ module.exports = {
       },
     },
     plugins: [
-      new monacoWebpackPlugin()
+      new IgnorePlugin({
+        checkResource(resource) {
+          return /.*\/wordlists\/(?!english).*\.json/.test(resource)
+        }
+      }),
     ],
   },
 };
