@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const { IgnorePlugin } = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   outputDir: "dist/web",
@@ -17,6 +18,14 @@ module.exports = {
           return /.*\/wordlists\/(?!english).*\.json/.test(resource)
         }
       }),
+      new CopyWebpackPlugin([{ from: './static/pawket', to: './' }])
     ],
+  },
+  chainWebpack: config => {
+    config.plugin('prefetch').tap(options => {
+      options[0].fileBlacklist = options[0].fileBlacklist || []
+      options[0].fileBlacklist.push(/mermaid(.)+?\.js$/)
+      return options
+    })
   },
 };
