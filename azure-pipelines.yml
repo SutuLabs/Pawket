@@ -50,8 +50,8 @@ stages:
     - task: CmdLine@2
       inputs:
         workingDirectory: '$(Build.SourcesDirectory)'
-        script: 'yarn build'
-      displayName: 'yarn build'
+        script: 'yarn build:all'
+      displayName: 'yarn build:all'
 
     - task: CmdLine@2
       inputs:
@@ -62,20 +62,8 @@ stages:
     - task: CmdLine@2
       inputs:
         workingDirectory: '$(Build.SourcesDirectory)'
-        script: 'yarn build:mixch'
-      displayName: 'yarn build:mixch'
-
-    - task: CmdLine@2
-      inputs:
-        workingDirectory: '$(Build.SourcesDirectory)'
         script: 'echo $(versionNumber)>$(Build.SourcesDirectory)/dist/mixch/version.txt'
       displayName: 'write version file(mixch)'
-
-    # - task: CmdLine@2
-    #   inputs:
-    #     workingDirectory: '$(Build.SourcesDirectory)'
-    #     script: 'yarn build-ext'
-    #   displayName: 'yarn build-ext'
 
     # - task: CmdLine@2
     #   inputs:
