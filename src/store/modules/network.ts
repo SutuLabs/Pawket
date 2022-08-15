@@ -115,10 +115,12 @@ store.registerModule<INetworkState>("network", {
       state.network = network;
       state.symbol = network.symbol;
       state.prefix = network.prefix;
-      rootState.account.tokenInfo = network.tokenInfo;
-      for (let i = 0; i < rootState.account.accounts.length; i++) {
-        const account = rootState.account.accounts[i];
-        account.addressGenerated = 0;
+      if (rootState.account) {
+        rootState.account.tokenInfo = network.tokenInfo;
+        for (let i = 0; i < rootState.account.accounts.length; i++) {
+          const account = rootState.account.accounts[i];
+          account.addressGenerated = 0;
+        }
       }
       localStorage.setItem(NETWORK_ID_KEY, state.networkId);
     },
