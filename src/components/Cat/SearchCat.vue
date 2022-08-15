@@ -1,8 +1,13 @@
 <template>
   <div>
     <b-field>
-      <b-input :placeholder="$t('searchCat.ui.placeholder')" type="search" icon="magnify" v-model="searchInput"
-        @input.native.enter="scrollTop">
+      <b-input
+        :placeholder="$t('searchCat.ui.placeholder')"
+        type="search"
+        icon="magnify"
+        v-model="searchInput"
+        @input.native.enter="scrollTop"
+      >
       </b-input>
     </b-field>
     <div class="tail-list" id="tail-list">
@@ -20,8 +25,7 @@
             {{ item.code }}
           </div>
           <div class="column is-offset-4 is-4">
-            <b-tag rounded class="is-pulled-right has-background-grey-lighter">{{ $t("searchCat.ui.tag.imported") }}
-            </b-tag>
+            <b-tag rounded class="is-pulled-right has-background-grey-lighter">{{ $t("searchCat.ui.tag.imported") }} </b-tag>
           </div>
         </div>
         <div class="panel-block columns" v-else>
@@ -45,8 +49,15 @@
     </div>
     <div class="mt-5 pt-3">
       <div class="has-text-centered">
-        <b-button :label="$t('ManageCats.ui.button.add')" type="is-primary" rounded outlined class="mx-2"
-          :disabled="!checkedCat.length" @click="addCat()"></b-button>
+        <b-button
+          :label="$t('ManageCats.ui.button.add')"
+          type="is-primary"
+          rounded
+          outlined
+          class="mx-2"
+          :disabled="!checkedCat.length"
+          @click="addCat()"
+        ></b-button>
       </div>
       <p class="has-text-centered has-text-grey mt-2 mb-0 is-size-7">{{ $t("searchCat.ui.text.ascription") }}</p>
     </div>
