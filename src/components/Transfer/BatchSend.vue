@@ -83,18 +83,18 @@
 <script lang="ts">
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import { AccountEntity } from "@/models/account";
-import KeyBox from "@/components/KeyBox.vue";
+import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { TokenPuzzleDetail } from "@/services/crypto/receive";
 import { SpendBundle } from "@/models/wallet";
 import puzzle from "@/services/crypto/puzzle";
 import { prefix0x } from "@/services/coin/condition";
 import transfer, { SymbolCoins, TransferTarget } from "@/services/transfer/transfer";
-import TokenAmountField from "@/components/TokenAmountField.vue";
+import TokenAmountField from "@/components/Send/TokenAmountField.vue";
 import coinHandler from "@/services/transfer/coin";
 import { submitBundle } from "@/services/view/bundle";
-import FeeSelector from "@/components/FeeSelector.vue";
-import BundleSummary from "@/components/BundleSummary.vue";
+import FeeSelector from "@/components/Send/FeeSelector.vue";
+import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import { csvToArray } from "@/services/util/csv";
 import { chainId, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getLineageProofPuzzle } from "@/services/transfer/call";

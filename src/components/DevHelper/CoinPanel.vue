@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import KeyBox from "@/components/KeyBox.vue";
+import KeyBox from "@/components/Common/KeyBox.vue";
 import debug from "../../services/api/debug";
 import { CoinSpend } from "@/models/wallet";
 import BundlePanel from "@/components/DevHelper/BundlePanel.vue";

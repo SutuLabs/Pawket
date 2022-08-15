@@ -34,9 +34,9 @@
 import store from "@/store";
 import { AccountEntity } from "@/models/account";
 import { Component, Vue } from "vue-property-decorator";
-import KeyBox from "@/components/KeyBox.vue";
-import ChangePassword from "../ChangePassword.vue";
-import TopBar from "../TopBar.vue";
+import KeyBox from "@/components/Common/KeyBox.vue";
+import ChangePassword from "@/components/Settings/ChangePassword.vue";
+import TopBar from "@/components/Common/TopBar.vue";
 import { isPasswordCorrect } from "@/store/modules/vault";
 import { isMobile } from "@/services/view/responsive";
 

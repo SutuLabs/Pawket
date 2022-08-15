@@ -17,8 +17,8 @@ import store from "@/store";
 import { AccountEntity } from "@/models/account";
 import { xchPrefix } from "@/store/modules/network";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import Send from "../Send.vue";
-import TopBar from "../TopBar.vue";
+import Send from "@/components/Send/Send.vue";
+import TopBar from "@/components/Common/TopBar.vue";
 
 @Component({
   components: {

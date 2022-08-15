@@ -104,17 +104,17 @@
 
 <script lang="ts">
 import { Component, Vue, Prop, Emit } from "vue-property-decorator";
-import KeyBox from "@/components/KeyBox.vue";
+import KeyBox from "@/components/Common/KeyBox.vue";
 import { SpendBundle } from "@/models/wallet";
 import { AccountEntity } from "@/models/account";
 import { prefix0x } from "@/services/coin/condition";
 import store from "@/store";
-import TokenAmountField from "@/components/TokenAmountField.vue";
+import TokenAmountField from "@/components/Send/TokenAmountField.vue";
 import coinHandler from "@/services/transfer/coin";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import { TokenPuzzleDetail } from "@/services/crypto/receive";
 import puzzle from "@/services/crypto/puzzle";
-import DevHelper from "../DevHelper.vue";
+import DevHelper from "@/components/DevHelper/DevHelper.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { getOfferEntities, getOfferSummary, OfferEntity, OfferSummary, OfferTokenAmount } from "@/services/offer/summary";
 import { getCatIdDict, getCatNameDict, getCatNames } from "@/services/coin/cat";

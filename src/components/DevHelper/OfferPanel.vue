@@ -38,7 +38,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
-import KeyBox from "@/components/KeyBox.vue";
+import KeyBox from "@/components/Common/KeyBox.vue";
 import { SpendBundle } from "@/models/wallet";
 import BundlePanel from "@/components/DevHelper/BundlePanel.vue";
 import { getOfferSummary, OfferSummary } from "@/services/offer/summary";

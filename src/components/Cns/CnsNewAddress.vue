@@ -13,8 +13,8 @@
 
 <script lang="ts">
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
-import AddressField from "../AddressField.vue";
-import TopBar from "../TopBar.vue";
+import AddressField from "@/components/Common/AddressField.vue";
+import TopBar from "@/components/Common/TopBar.vue";
 
 @Component({
   components: {

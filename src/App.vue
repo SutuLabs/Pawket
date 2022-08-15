@@ -42,9 +42,9 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { NotificationProgrammatic as Notification } from "buefy";
 import store from "./store";
-import DevHelper from "@/components/DevHelper.vue";
+import DevHelper from "@/components/DevHelper/DevHelper.vue";
 import { xchPrefix } from "./store/modules/network";
-import VerifyPassword from "./components/VerifyPassword.vue";
+import VerifyPassword from "@/components/Login/VerifyPassword.vue";
 import MobileNav from "./components/Navigation/MobileNav.vue";
 import NavBar from "./components/Navigation/Navbar.vue";
 import { tc } from "./i18n/i18n";
@@ -128,7 +128,7 @@ export default class App extends Vue {
   async showProxy(): Promise<void> {
     this.$buefy.modal.open({
       parent: this,
-      component: (await import("@/components/OfflineQrCode.vue")).default,
+      component: (await import("@/components/Offline/OfflineQrCode.vue")).default,
       hasModalCard: true,
       trapFocus: true,
       fullScreen: isMobile(),

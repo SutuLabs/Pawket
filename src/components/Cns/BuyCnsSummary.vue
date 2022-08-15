@@ -70,7 +70,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component({
   filters: { demojo, shorten },
 })
-export default class buyCnsSummary extends Vue {
+export default class BuyCnsSummary extends Vue {
   @Prop() private leadingText!: string;
   @Prop() private contactName!: string;
   @Prop() public domainName!: string;

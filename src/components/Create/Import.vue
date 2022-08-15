@@ -38,7 +38,7 @@
 <script lang="ts">
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
-import TopBar from "../TopBar.vue";
+import TopBar from "@/components/Common/TopBar.vue";
 
 type Mode = "Menu" | "Import";
 type MnemonicLen = 12 | 24;

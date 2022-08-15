@@ -157,7 +157,7 @@ import { isMobile } from "@/services/view/responsive";
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { TailInfo } from "@/services/api/tailDb";
 import Dexie, { Offer } from "@/services/api/dexie"
-import TopBar from "@/components/TopBar.vue";
+import TopBar from "@/components/Common/TopBar.vue";
 import TakeOffer from "@/components/Offer/Take.vue";
 import { AccountEntity, CustomCat } from "@/models/account";
 import { getAllCats } from "@/store/modules/account";

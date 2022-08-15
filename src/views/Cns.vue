@@ -77,7 +77,7 @@
 </template>
 <script lang="ts">
 import CnsDesktopDetail from "@/components/Cns/CnsDesktopDetail.vue";
-import CnsDetailPanel from "@/components/Cns/CnsDetail.vue";
+import CnsDetailPanel from "@/components/Cns/CnsDetailPanel.vue";
 import CnsSearch, { CnsResult } from "@/components/Cns/CnsSearch.vue";
 import { AccountEntity } from "@/models/account";
 import { crossOriginDownload } from "@/services/api/crossOriginDownload";

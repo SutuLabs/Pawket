@@ -39,7 +39,7 @@ import SExpBox from "@/components/Simulator/SExpBox.vue";
 import * as monaco from "monaco-editor";
 import puzzle, { PuzzleDetail } from "@/services/crypto/puzzle";
 import BundlePanel from "@/components/DevHelper/BundlePanel.vue";
-import KeyBox from "@/components/KeyBox.vue";
+import KeyBox from "@/components/Common/KeyBox.vue";
 import coins from "@/services/developer/coins.json";
 import { getTestAccount } from "@/test/utility";
 import { getAccountAddressDetails } from "@/services/util/account";
