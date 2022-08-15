@@ -30,7 +30,6 @@
 import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import ScanQrCode from "../ScanQrCode.vue";
 
 @Component
 export default class AddressBookField extends Vue {
@@ -68,11 +67,11 @@ export default class AddressBookField extends Vue {
     this.$emit("cancel");
   }
 
-  scanQrCode(): void {
+  async scanQrCode(): Promise<void> {
     this.resetErr();
     this.$buefy.modal.open({
       parent: this,
-      component: ScanQrCode,
+      component: (await import("@/components/ScanQrCode.vue")).default,
       hasModalCard: true,
       trapFocus: true,
       props: {},

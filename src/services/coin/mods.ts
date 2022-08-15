@@ -1,7 +1,5 @@
-import puzzle from "../crypto/puzzle";
-import { prefix0x } from "./condition";
-import { importModsHex, importModsProg } from "./imports";
-import { otherModsHex, otherModsProg } from "./otherMods";
+import { importModsHex, importModsProg, importModsHash, ImportModName } from "./importMods";
+import { OtherModName, otherModsHash, otherModsHex, otherModsProg } from "./otherMods";
 
 export interface ModParameter {
   name: string;
@@ -9,7 +7,7 @@ export interface ModParameter {
 }
 
 export interface ModDetail {
-  name: string;
+  name: ModName;
   parameters: ModParameter[];
 }
 
@@ -438,16 +436,13 @@ export const mods: ModDetail[] = [
 
 const allModsProg = Object.assign({}, importModsProg, otherModsProg);
 const allModsHex = Object.assign({}, importModsHex, otherModsHex);
-export const modsdict: { [mod: string]: string } = mods.reduce((acc, cur) => ({ ...acc, [allModsProg[cur.name]]: cur.name }), {});
-export const modsprog: { [name: string]: string } = mods.reduce((acc, cur) => ({ ...acc, [cur.name]: allModsProg[cur.name] }), {});
-export const modsparams: { [name: string]: ModParameter[] } = mods.reduce((acc, cur) => ({ ...acc, [cur.name]: cur.parameters }), {});
-export const modshex: { [name: string]: string } = mods.reduce((acc, cur) => ({ ...acc, [cur.name]: allModsHex[cur.name] }), {});
-export const modshexdict: { [mod_hex: string]: string } = mods.reduce((acc, cur) => ({ ...acc, [allModsHex[cur.name]]: cur.name }), {});
+const allModsHash = Object.assign({}, importModsHash, otherModsHash);
 
-export async function modshash(name: string): Promise<string> {
-  return prefix0x(await puzzle.getPuzzleHashFromPuzzle(modsprog[name]));
-}
-export async function modspuz(name: string): Promise<string> {
-  // return prefix0x(await puzzle.encodePuzzle(modsprog[name]));
-  return prefix0x(modshex[name]);
-}
+export type ModName= ImportModName | OtherModName;
+export const modsdict: { [mod: string]: ModName } = mods.reduce((acc, cur) => ({ ...acc, [allModsProg[cur.name]]: cur.name }), {});
+export const modsprog: { [name in ModName]: string } = mods.reduce((acc, cur) => ({ ...acc, [cur.name]: allModsProg[cur.name] }), {} as { [name in ModName]: string });
+export const modsparams: { [name in ModName]: ModParameter[] } = mods.reduce((acc, cur) => ({ ...acc, [cur.name]: cur.parameters }), {} as { [name in ModName]: ModParameter[] });
+export const modshex: { [name in ModName]: string } = mods.reduce((acc, cur) => ({ ...acc, [cur.name]: allModsHex[cur.name] }), {} as { [name in ModName]: string });
+export const modshexdict: { [mod_hex: string]: ModName } = mods.reduce((acc, cur) => ({ ...acc, [allModsHex[cur.name]]: cur.name }), {});
+export const modshash: { [name in ModName]: string } = mods.reduce((acc, cur) => ({ ...acc, [cur.name]: allModsHash[cur.name] }), {} as { [name in ModName]: string });
+export const modshashdict: { [mod_hash: string]: ModName } = mods.reduce((acc, cur) => ({ ...acc, [allModsHash[cur.name]]: cur.name }), {});

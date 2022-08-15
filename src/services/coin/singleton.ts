@@ -15,7 +15,7 @@ export async function constructSingletonTopLayerPuzzle(
   launcherPuzzleHash: string,
   inner_state_puzzle: string
 ): Promise<string> {
-  const sgnStruct = `(${await modshash("singleton_top_layer_v1_1")} ${prefix0x(launcherId)} . ${prefix0x(launcherPuzzleHash)})`;
+  const sgnStruct = `(${prefix0x(modshash["singleton_top_layer_v1_1"])} ${prefix0x(launcherId)} . ${prefix0x(launcherPuzzleHash)})`;
   const curried_tail = await curryMod(modsprog["singleton_top_layer_v1_1"], sgnStruct, inner_state_puzzle);
   if (!curried_tail) throw new Error("failed to curry tail.");
 

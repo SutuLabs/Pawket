@@ -7,6 +7,7 @@
     "serve": "nodemon server.ts",
     "start": "ts-node server.ts",
     "importmods": "ts-node importmods.ts",
+    "brun": "ts-node brun.ts",
     "test": "jest --coverage=false"
   },
   "author": "Chiabee",

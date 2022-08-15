@@ -12,11 +12,16 @@ pool:
 variables:
   webArtifactName: chia-wallet
   extArtifactName: chia-wallet-ext
+  mixchArtifactName: chia-mixch
   versionNumber: '0.1.$(Build.BuildNumber)'
   qaEnvironment: 'chiabee_wallet_qa'
   qaFtp: 'chiabee_wallet_dev_ftp'
   prEnvironment: 'chiabee_wallet_pr'
   prFtp: 'chiabee_wallet_pr_ftp'
+  qaMixchEnvironment: 'chiabee_wallet_qa'
+  qaMixchFtp: 'mixch_dev_ftp'
+  prMixchEnvironment: 'chiabee_wallet_pr'
+  prMixchFtp: 'mixch_pr_ftp'
 
 stages:
 - stage: build
@@ -45,8 +50,8 @@ stages:
     - task: CmdLine@2
       inputs:
         workingDirectory: '$(Build.SourcesDirectory)'
-        script: 'yarn build'
-      displayName: 'yarn build'
+        script: 'yarn build:all'
+      displayName: 'yarn build:all'
 
     - task: CmdLine@2
       inputs:
@@ -54,11 +59,11 @@ stages:
         script: 'echo $(versionNumber)>$(Build.SourcesDirectory)/dist/web/version.txt'
       displayName: 'write version file'
 
-    # - task: CmdLine@2
-    #   inputs:
-    #     workingDirectory: '$(Build.SourcesDirectory)'
-    #     script: 'yarn build-ext'
-    #   displayName: 'yarn build-ext'
+    - task: CmdLine@2
+      inputs:
+        workingDirectory: '$(Build.SourcesDirectory)'
+        script: 'echo $(versionNumber)>$(Build.SourcesDirectory)/dist/mixch/version.txt'
+      displayName: 'write version file(mixch)'
 
     # - task: CmdLine@2
     #   inputs:
@@ -70,6 +75,12 @@ stages:
       inputs:
         PathtoPublish: '$(Build.SourcesDirectory)/dist/web'
         ArtifactName: '$(webArtifactName)'
+        publishLocation: 'Container'
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.SourcesDirectory)/dist/mixch'
+        ArtifactName: '$(mixchArtifactName)'
         publishLocation: 'Container'
 
     # - task: PublishBuildArtifacts@1
@@ -126,6 +137,60 @@ stages:
               credentialsOption: 'serviceEndpoint'
               serverEndpoint: '$(qaFtp)'
               rootDirectory: '$(Pipeline.Workspace)/$(webArtifactName)'
+              filePatterns: '**'
+              remoteDirectory: '/'
+              clean: false
+              cleanContents: false
+              preservePaths: true
+              trustSSL: false
+
+- stage: prMixch
+  displayName: prMixch
+  condition: and(succeeded(), eq(variables['system.pullrequest.targetbranch'], 'refs/heads/master'))
+  dependsOn:
+  - build
+  jobs:
+  - deployment: prMixchdeploy
+    displayName: prMixchDeploy
+    timeoutInMinutes: 10
+    cancelTimeoutInMinutes: 1
+    environment: $(prMixchEnvironment)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: FtpUpload@2
+            inputs:
+              credentialsOption: 'serviceEndpoint'
+              serverEndpoint: '$(prMixchFtp)'
+              rootDirectory: '$(Pipeline.Workspace)/$(mixchArtifactName)'
+              filePatterns: '**'
+              remoteDirectory: '/'
+              clean: false
+              cleanContents: false
+              preservePaths: true
+              trustSSL: false
+
+- stage: qaMixch
+  displayName: qaMixch
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  dependsOn:
+  - build
+  jobs:
+  - deployment: qaMixchdeploy
+    displayName: qaMixchDeploy
+    timeoutInMinutes: 10
+    cancelTimeoutInMinutes: 1
+    environment: $(qaMixchEnvironment)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: FtpUpload@2
+            inputs:
+              credentialsOption: 'serviceEndpoint'
+              serverEndpoint: '$(qaMixchFtp)'
+              rootDirectory: '$(Pipeline.Workspace)/$(mixchArtifactName)'
               filePatterns: '**'
               remoteDirectory: '/'
               clean: false

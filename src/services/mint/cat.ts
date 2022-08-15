@@ -73,7 +73,7 @@ async function constructCatPuzzle(
   ];
 
   const tempplan = transfer.generateSpendPlan(availcoins, itgts, change_hex, fee, tokenSymbol);
-  const catmod = await modshash(catModName);
+  const catmod = prefix0x(modshash[catModName]);
   const bootstrapCoin = getCoinName0x(tempplan[baseSymbol].coins[0]);
   const curried_tail = await curryMod(modsprog["genesis_by_coin_id"], bootstrapCoin);
   if (!curried_tail) throw new Error("failed to curry tail.");

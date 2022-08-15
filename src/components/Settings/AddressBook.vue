@@ -84,7 +84,6 @@ import store from "@/store";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import AddressBookField from "../AddressBook/AddressBookFields.vue";
 import AddressDetail from "../AddressDetail.vue";
-import ScanQrCode from "../ScanQrCode.vue";
 import TopBar from "../TopBar.vue";
 
 type Mode = "List" | "Add";
@@ -212,10 +211,10 @@ export default class AddressBook extends Vue {
     this.updateContacts();
   }
 
-  scanQrCode(): void {
+  async scanQrCode(): Promise<void> {
     this.$buefy.modal.open({
       parent: this,
-      component: ScanQrCode,
+      component: (await import("@/components/ScanQrCode.vue")).default,
       hasModalCard: true,
       trapFocus: true,
       props: {},

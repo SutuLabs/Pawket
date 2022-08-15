@@ -1,7 +1,7 @@
 <template>
   <div id="app" ref="container">
     <nav-bar></nav-bar>
-    <div v-if="unlocked == false && hasAccount && path != '/clvm'" class="pt-6 mt-6">
+    <div v-if="unlocked == false && hasAccount && path != '/clvm' && path != '/developer'" class="pt-6 mt-6">
       <verify-password></verify-password>
     </div>
     <div v-else>
@@ -43,7 +43,6 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 import { NotificationProgrammatic as Notification } from "buefy";
 import store from "./store";
 import DevHelper from "@/components/DevHelper.vue";
-import OfflineQrCode from "./components/OfflineQrCode.vue";
 import { xchPrefix } from "./store/modules/network";
 import VerifyPassword from "./components/VerifyPassword.vue";
 import MobileNav from "./components/Navigation/MobileNav.vue";
@@ -126,10 +125,10 @@ export default class App extends Vue {
     });
   }
 
-  showProxy(): void {
+  async showProxy(): Promise<void> {
     this.$buefy.modal.open({
       parent: this,
-      component: OfflineQrCode,
+      component: (await import("@/components/OfflineQrCode.vue")).default,
       hasModalCard: true,
       trapFocus: true,
       fullScreen: isMobile(),

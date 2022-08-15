@@ -1,0 +1,46 @@
+(mod (CURRENT_METADATA METADATA_UPDATER_PUZZLE_HASH (key . new_value))
+
+  ; METADATA and METADATA_UPDATER_PUZZLE_HASH are passed in as truths from the layer above
+  ; This program returns ((new_metadata new_metadata_updater_puzhash) conditions)
+
+  ; Add uri to a field
+  (defun update_field (METADATA key new_value)
+    (if METADATA
+      (if (= (f (f METADATA)) key)
+        (c (c key new_value) (r METADATA))
+        (c (f METADATA) (update_field (r METADATA) key new_value))
+      )
+      ()
+    )
+  )
+
+  ; main
+  ; returns ((new_metadata new_metadata_updater_puzhash) conditions)
+  ; "ad": address
+  ; "nm": name
+  ; "ch": content hash
+  ; "tt": text
+  ; "dns": dns record
+  ; "pk": public key
+  ; "rr": reserved
+  (list
+    (list
+        (if (all key new_value)
+            (if (any
+              (= key "ad")
+              (= key "nm")
+              (= key "ch")
+              (= key "tt")
+              (= key "dns")
+              (= key "pk")
+              (= key "rr")
+              )
+                (update_field CURRENT_METADATA key new_value)
+                CURRENT_METADATA
+            )
+            CURRENT_METADATA
+         )
+        METADATA_UPDATER_PUZZLE_HASH)
+    0
+  )
+)

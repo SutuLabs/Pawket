@@ -295,18 +295,18 @@
     "messages": {
       "error": {
         "DOUBLE_SPEND": "重复消费",
-        "UNKNOWN_UNSPENT": "未知，未使用",
-        "BAD_AGGREGATE_SIGNATURE": "坏的聚合签名",
+        "UNKNOWN_UNSPENT": "未知的UTXO被使用，可能前一笔交易尚未上链",
+        "BAD_AGGREGATE_SIGNATURE": "错误的聚合签名",
         "INVALID_CONDITION": "无效的条件",
-        "COIN_AMOUNT_EXCEEDS_MAXIMUM": "硬币数量超过最大值",
-        "INVALID_FEE_LOW_FEE": "无效的费用/低费用",
-        "MEMPOOL_NOT_INITIALIZED": "内存池未初始化",
-        "ALREADY_INCLUDING_TRANSACTION": "已经包括交易",
-        "INCOMPATIBLE_NETWORK_ID": "不兼容的网络ID",
-        "NO_TRANSACTIONS_WHILE_SYNCING": "同步时没有交易",
-        "INVALID_FEE_TOO_CLOSE_TO_ZERO": "无效的费用，太接近于零",
-        "COIN_AMOUNT_NEGATIVE": "币值为负数",
-        "INVALID_ADDRESS": "无效地址",
+        "COIN_AMOUNT_EXCEEDS_MAXIMUM": "硬币总量超过最大值",
+        "INVALID_FEE_LOW_FEE": "无效的费用，或费用太低",
+        "MEMPOOL_NOT_INITIALIZED": "内存池尚未完成初始化，稍等再试",
+        "ALREADY_INCLUDING_TRANSACTION": "该交易已经进入到内存池",
+        "INCOMPATIBLE_NETWORK_ID": "不兼容的网络ID，选错网络了？",
+        "NO_TRANSACTIONS_WHILE_SYNCING": "节点正在同步，稍等再试",
+        "INVALID_FEE_TOO_CLOSE_TO_ZERO": "无效的费用，或费用太低",
+        "COIN_AMOUNT_NEGATIVE": "硬币的金额无效，不能为负数",
+        "INVALID_ADDRESS": "无效的地址",
         "ADDRESS_NOT_MATCH_NETWORK": "所填写地址与当前网络不符，请填写正确的地址。"
       }
     }

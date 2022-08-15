@@ -102,14 +102,12 @@ import store from "@/store";
 import { OriginCoin, SpendBundle } from "@/models/wallet";
 import puzzle from "@/services/crypto/puzzle";
 import bigDecimal from "js-big-decimal";
-import ScanQrCode from "@/components/ScanQrCode.vue";
 import { prefix0x } from "../services/coin/condition";
 import transfer, { SymbolCoins, TransferTarget } from "../services/transfer/transfer";
 import TokenAmountField from "@/components/TokenAmountField.vue";
 import coinHandler from "../services/transfer/coin";
 import { debugBundle, submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/FeeSelector.vue";
-import OfflineQrCode from "@/components/OfflineQrCode.vue";
 import OfflineSendShowBundle from "./OfflineSendShowBundle.vue";
 import { CurrencyType } from "@/services/exchange/currencyType";
 import BundleSummary from "./BundleSummary.vue";
@@ -369,7 +367,14 @@ export default class Send extends Vue {
       const memo = this.memo.replace(/[&/\\#,+()$~%.'":*?<>{}\[\] ]/g, "_");
       const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: this.selectedToken, memos: [tgt_hex, memo] }];
       const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
-      this.bundle = await transfer.generateSpendBundleIncludingCat(plan, this.requests, [], xchSymbol(), chainId(), getLineageProofPuzzle);
+      this.bundle = await transfer.generateSpendBundleIncludingCat(
+        plan,
+        this.requests,
+        [],
+        xchSymbol(),
+        chainId(),
+        getLineageProofPuzzle
+      );
     } catch (error) {
       Notification.open({
         message: this.$tc("send.ui.messages.failedToSign") + error,
@@ -392,10 +397,10 @@ export default class Send extends Vue {
     debugBundle(this, this.bundle);
   }
 
-  scanQrCode(): void {
+  async scanQrCode(): Promise<void> {
     this.$buefy.modal.open({
       parent: this,
-      component: ScanQrCode,
+      component: (await import("@/components/ScanQrCode.vue")).default,
       hasModalCard: true,
       trapFocus: true,
       props: {},
@@ -443,10 +448,10 @@ export default class Send extends Vue {
     if (this.selectMax) this.setMax();
   }
 
-  offlineScan(): void {
+  async offlineScan(): Promise<void> {
     this.$buefy.modal.open({
       parent: this,
-      component: OfflineQrCode,
+      component: (await import("@/components/OfflineQrCode.vue")).default,
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],

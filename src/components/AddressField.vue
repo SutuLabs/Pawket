@@ -36,7 +36,6 @@
 import store from "@/store";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import AddressBook, { Contact } from "./Settings/AddressBook.vue";
-import ScanQrCode from "./ScanQrCode.vue";
 
 @Component
 export default class AddressField extends Vue {
@@ -115,10 +114,10 @@ export default class AddressField extends Vue {
     this.validAddress = true;
   }
 
-  scanQrCode(): void {
+  async scanQrCode(): Promise<void> {
     this.$buefy.modal.open({
       parent: this,
-      component: ScanQrCode,
+      component: (await import("@/components/ScanQrCode.vue")).default,
       hasModalCard: true,
       trapFocus: true,
       props: {},

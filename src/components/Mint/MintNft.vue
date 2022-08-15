@@ -79,6 +79,20 @@
     <footer class="modal-card-foot is-block">
       <div>
         <b-button :label="$t('mintNft.ui.button.cancel')" class="is-pulled-left" @click="cancel()"></b-button>
+        <template v-if="showTest && debugMode">
+          <b-button
+            class="is-pulled-left"
+            v-for="(c, idx) in testCases"
+            :key="idx"
+            type="is-primary is-light"
+            size="is-small"
+            :title="c.tip"
+            @click="setCase(c.info)"
+          >
+            <span>{{ c.name }}</span>
+          </b-button>
+        </template>
+        <button v-if="debugMode" class="test-btn is-pulled-left" @click="showTest = !showTest"></button>
         <b-button
           :label="$t('mintNft.ui.button.sign')"
           v-if="!bundle"
@@ -112,7 +126,6 @@ import { TokenPuzzleDetail } from "@/services/crypto/receive";
 import store from "@/store";
 import { SpendBundle } from "@/models/wallet";
 import bigDecimal from "js-big-decimal";
-import ScanQrCode from "@/components/ScanQrCode.vue";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import TokenAmountField from "@/components/TokenAmountField.vue";
 import coinHandler from "@/services/transfer/coin";
@@ -130,6 +143,19 @@ import { generateMintNftBundle } from "@/services/coin/nft";
 import { NftMetadataValues } from "@/models/nft";
 import puzzle from "@/services/crypto/puzzle";
 import { getLineageProofPuzzle } from "@/services/transfer/call";
+
+interface NftFormInfo {
+  uri: string;
+  hash: string;
+  metadataUri: string;
+  metadataHash: string;
+  licenseUri: string;
+  licenseHash: string;
+  royaltyAddress: string;
+  royaltyPercentage: number;
+  serialNumber: number;
+  serialTotal: number;
+}
 
 @Component({
   components: {
@@ -158,17 +184,6 @@ export default class MintNft extends Vue {
   public validity = false;
   public imageFile: File | null = null;
 
-  // public uri = "https://aws1.discourse-cdn.com/business4/uploads/chia/original/1X/682754dfb596e0b4ec08dc23442cc5a9192418e3.png";
-  // public hash = "76a1900b6931f7bf5f07ab310733270838b040385f285423f49e2f5518867335";
-  // public metadataUri = "https://ufzyuv55yicm3ev56cstqbmaayrkudmmjueyrd3nkolafxbe.arweave.net/oX--OKV73CBM2-SvfClOAWABiKqDYxNCYiPbVOWAtwk";
-  // public metadataHash = "44475cb971933e4545efad1337f3d68bc53523d987412df233f3b905ed1c5b3f";
-  // public licenseUri = "https://bafybeigzcazxeu7epmm4vtkuadrvysv74lbzzbl2evphtae6k57yhgynp4.ipfs.nftstorage.link/license.pdf";
-  // public licenseHash = "2267456bd2cef8ebc2f22a42947b068bc3b138284a587feda2edfe07a3577f50";
-  // public royaltyAddress = "txch10mg6zd4aksqkuc5j9e5shzt7shhpju83etmrc897yljwxtmhd5gqgt50km";
-  // public royaltyPercentage = 5;
-  // public serialNumber = 3;
-  // public serialTotal = 100;
-
   public uri = "";
   public hash = "";
   public metadataUri = "";
@@ -181,6 +196,27 @@ export default class MintNft extends Vue {
   public serialTotal = 0;
 
   public requests: TokenPuzzleDetail[] = [];
+
+  public showTest = false;
+  public testCases = [
+    {
+      name: "1",
+      tip: "temp case",
+      info: {
+        uri: "https://aws1.discourse-cdn.com/business4/uploads/chia/original/1X/682754dfb596e0b4ec08dc23442cc5a9192418e3.png",
+        hash: "76a1900b6931f7bf5f07ab310733270838b040385f285423f49e2f5518867335",
+        metadataUri:
+          "https://ufzyuv55yicm3ev56cstqbmaayrkudmmjueyrd3nkolafxbe.arweave.net/oX--OKV73CBM2-SvfClOAWABiKqDYxNCYiPbVOWAtwk",
+        metadataHash: "44475cb971933e4545efad1337f3d68bc53523d987412df233f3b905ed1c5b3f",
+        licenseUri: "https://bafybeigzcazxeu7epmm4vtkuadrvysv74lbzzbl2evphtae6k57yhgynp4.ipfs.nftstorage.link/license.pdf",
+        licenseHash: "2267456bd2cef8ebc2f22a42947b068bc3b138284a587feda2edfe07a3577f50",
+        royaltyAddress: "txch10mg6zd4aksqkuc5j9e5shzt7shhpju83etmrc897yljwxtmhd5gqgt50km",
+        royaltyPercentage: 5,
+        serialNumber: 3,
+        serialTotal: 100,
+      },
+    },
+  ];
 
   mounted(): void {
     this.loadCoins();
@@ -260,6 +296,19 @@ export default class MintNft extends Vue {
   changeValidity(valid: boolean): void {
     this.validity = valid;
     this.reset();
+  }
+
+  setCase(info: NftFormInfo): void {
+    this.uri = info.uri;
+    this.hash = info.hash;
+    this.metadataUri = info.metadataUri;
+    this.metadataHash = info.metadataHash;
+    this.licenseUri = info.licenseUri;
+    this.licenseHash = info.licenseHash;
+    this.royaltyAddress = info.royaltyAddress;
+    this.royaltyPercentage = info.royaltyPercentage;
+    this.serialNumber = info.serialNumber;
+    this.serialTotal = info.serialTotal;
   }
 
   async loadCoins(): Promise<void> {
@@ -401,10 +450,10 @@ export default class MintNft extends Vue {
     debugBundle(this, this.bundle);
   }
 
-  scanQrCode(): void {
+  async scanQrCode(): Promise<void> {
     this.$buefy.modal.open({
       parent: this,
-      component: ScanQrCode,
+      component: (await import("@/components/ScanQrCode.vue")).default,
       hasModalCard: true,
       trapFocus: true,
       props: {},
@@ -429,5 +478,15 @@ img.image-preview {
   height: 3rem;
   object-fit: cover;
   border: 1px solid;
+}
+.test-btn {
+  background-color: transparent;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: initial;
+  overflow: hidden;
+  outline: none;
+  min-width: 80px;
+  min-height: 35px;
 }
 </style>
