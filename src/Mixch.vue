@@ -4,11 +4,9 @@
       <div>
         <b-navbar>
           <template #brand>
-            <router-link to="/">
-              <b-navbar-item @click="home()">
-                <img src="@/assets/logo.svg" :alt="$t('verifyPassword.ui.alt.logoAlt')" />
-              </b-navbar-item>
-            </router-link>
+            <b-navbar-item tag="router-link" to="/">
+              <img src="@/assets/mixch.svg" :alt="$t('verifyPassword.ui.alt.logoAlt')" />
+            </b-navbar-item>
           </template>
           <template #start> </template>
           <template #end>
@@ -70,7 +68,7 @@
     <footer class="footer">
       <div class="content has-text-centered">
         <p>
-          <strong> {{ $t("footer.ui.productInfo.name") }}</strong>
+          <strong>Mixch</strong>
           <span>[{{ version }}]</span> by <b-icon icon="github" size="is-small"></b-icon
           ><a href="https://github.com/chiabee" target="_blank" class="has-color-link">{{ $t("footer.ui.productInfo.author") }}</a
           >.
