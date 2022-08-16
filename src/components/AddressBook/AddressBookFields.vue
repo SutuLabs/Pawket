@@ -71,7 +71,7 @@ export default class AddressBookField extends Vue {
     this.resetErr();
     this.$buefy.modal.open({
       parent: this,
-      component: (await import("@/components/ScanQrCode.vue")).default,
+      component: (await import("@/components/Common/ScanQrCode.vue")).default,
       hasModalCard: true,
       trapFocus: true,
       props: {},

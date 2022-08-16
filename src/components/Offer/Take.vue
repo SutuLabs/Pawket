@@ -170,7 +170,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop, Emit } from "vue-property-decorator";
-import KeyBox from "@/components/KeyBox.vue";
+import KeyBox from "@/components/Common/KeyBox.vue";
 import { SpendBundle } from "@/models/wallet";
 import { getCatIdDict, getCatNameDict, getTokenInfo } from "@/services/coin/cat";
 import { AccountEntity, CustomCat, TokenInfo } from "@/models/account";
@@ -186,9 +186,9 @@ import { prefix0x } from "@/services/coin/condition";
 import puzzle from "@/services/crypto/puzzle";
 import store from "@/store";
 import { debugBundle, submitBundle } from "@/services/view/bundle";
-import FeeSelector from "@/components/FeeSelector.vue";
-import ManageCats from "@/components/ManageCats.vue";
-import OfflineSendShowBundle from "../OfflineSendShowBundle.vue";
+import FeeSelector from "@/components/Send/FeeSelector.vue";
+import ManageCats from "@/components/Cat/ManageCats.vue";
+import OfflineSendShowBundle from "@/components/Offline/OfflineSendShowBundle.vue";
 import { chainId, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getLineageProofPuzzle } from "@/services/transfer/call";
 

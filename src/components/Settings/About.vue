@@ -37,7 +37,7 @@
 import { tc } from "@/i18n/i18n";
 import { isMobile } from "@/services/view/responsive";
 import { Component, Vue } from "vue-property-decorator";
-import TopBar from "../TopBar.vue";
+import TopBar from "@/components/Common/TopBar.vue";
 import Donate from "./Donate.vue";
 
 @Component({

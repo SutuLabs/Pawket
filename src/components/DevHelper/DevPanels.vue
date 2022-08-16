@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import KeyBox from "@/components/KeyBox.vue";
+import KeyBox from "@/components/Common/KeyBox.vue";
 import BundlePanel from "@/components/DevHelper/BundlePanel.vue";
 import CoinPanel from "@/components/DevHelper/CoinPanel.vue";
 import HashPanel from "@/components/DevHelper/HashPanel.vue";

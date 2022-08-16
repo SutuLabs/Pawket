@@ -3,7 +3,7 @@ import { ApiResponse } from "@/models/api";
 import { SpendBundle } from "@/models/wallet";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { ModalProgrammatic as Modal } from "buefy";
-import DevHelper from "@/components/DevHelper.vue";
+import DevHelper from "@/components/DevHelper/DevHelper.vue";
 import { rpcUrl } from "@/store/modules/network";
 export async function submitBundle(bundle: SpendBundle, setSubmitting: (state: boolean) => void, success: () => void): Promise<void> {
   setSubmitting(true);

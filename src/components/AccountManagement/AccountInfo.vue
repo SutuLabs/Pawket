@@ -110,8 +110,8 @@ import { AccountEntity } from "@/models/account";
 import { isPasswordCorrect } from "@/store/modules/vault";
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import { accountTypeConverter } from "@/filters/accountTypeConversion";
-import KeyBox from "../KeyBox.vue";
-import TopBar from "../TopBar.vue";
+import KeyBox from "@/components/Common/KeyBox.vue";
+import TopBar from "@/components/Common/TopBar.vue";
 
 @Component({
   components: { TopBar, KeyBox },

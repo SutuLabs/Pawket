@@ -99,9 +99,6 @@
   "createSeed": {
     "ui": {
       "button": {
-        "import": "导入",
-        "create": "创建",
-        "back": "后退",
         "confirm": "确认",
         "later": "稍后记录",
         "ready": "下一步",
@@ -111,11 +108,7 @@
         "import24": "通过 Chia 客户端助记词导入"
       },
       "text": {
-        "importMenu": {
-          "title": ""
-        },
         "create": {
-          "title": "助记词",
           "tip1": "欢迎使用薄荷钱包！以下是你的钱包助记词，用于备份和恢复你的钱包，请务必按照顺序记录在纸上。",
           "tip2": "切勿向他人透露你的助记词，任何人一旦持有该助记词，即可控制你账户内的资产！"
         },
@@ -231,19 +224,6 @@
       "tooltip": {
         "blockchainExplorer": "在区块链浏览器里查看",
         "receiveAddress": "如果将该数值调大，则可检索到更多地址和地址上的余额，但钱包响应时间会变长。"
-      }
-    }
-  },
-  "mnemonicExport": {
-    "ui": {
-      "title": {
-        "mnemonic": "助记词"
-      },
-      "button": {
-        "close": "关闭"
-      },
-      "tooltip": {
-        "copy": "复制"
       }
     }
   },

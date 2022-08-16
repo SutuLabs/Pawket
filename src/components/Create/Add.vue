@@ -32,7 +32,7 @@
 import account from "@/services/crypto/account";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
-import TopBar from "../TopBar.vue";
+import TopBar from "@/components/Common/TopBar.vue";
 
 @Component({
   components: {

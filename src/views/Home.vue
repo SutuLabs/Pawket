@@ -10,8 +10,8 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import AccountDetail from "@/components/AccountDetail.vue";
-import SelfTest from "@/components/SelfTest.vue";
+import AccountDetail from "@/components/Home/AccountDetail.vue";
+import SelfTest from "@/components/Common/SelfTest.vue";
 import store from "@/store";
 
 @Component({

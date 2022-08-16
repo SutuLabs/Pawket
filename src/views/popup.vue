@@ -21,7 +21,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import { NotificationProgrammatic as Notification } from "buefy";
 import store from "@/store";
-import DevHelper from "@/components/DevHelper.vue";
+import DevHelper from "@/components/DevHelper/DevHelper.vue";
 import UniStorage from '@/services/storage';
 
 @Component

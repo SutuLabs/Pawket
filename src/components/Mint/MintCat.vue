@@ -81,25 +81,25 @@
 <script lang="ts">
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import { AccountEntity, CustomCat, TokenInfo } from "@/models/account";
-import KeyBox from "@/components/KeyBox.vue";
+import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { TokenPuzzleDetail } from "@/services/crypto/receive";
 import store from "@/store";
 import { SpendBundle } from "@/models/wallet";
 import bigDecimal from "js-big-decimal";
 import { SymbolCoins } from "@/services/transfer/transfer";
-import TokenAmountField from "@/components/TokenAmountField.vue";
+import TokenAmountField from "@/components/Send/TokenAmountField.vue";
 import coinHandler from "@/services/transfer/coin";
 import { debugBundle, submitBundle } from "@/services/view/bundle";
-import FeeSelector from "@/components/FeeSelector.vue";
-import BundleSummary from "../BundleSummary.vue";
-import SendSummary from "../SendSummary.vue";
+import FeeSelector from "@/components/Send/FeeSelector.vue";
+import BundleSummary from "@/components/Bundle/BundleSummary.vue";
+import SendSummary from "@/components/Send/SendSummary.vue";
 import { generateMintCatBundle } from "@/services/mint/cat";
 import { chainId, ensureAddress, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
 import { getTokenInfo } from "@/services/coin/cat";
-import AddressField from "../AddressField.vue";
+import AddressField from "@/components/Common/AddressField.vue";
 
 @Component({
   components: {
@@ -379,7 +379,7 @@ export default class MintCat extends Vue {
   async scanQrCode(): Promise<void> {
     this.$buefy.modal.open({
       parent: this,
-      component: (await import("@/components/ScanQrCode.vue")).default,
+      component: (await import("@/components/Common/ScanQrCode.vue")).default,
       hasModalCard: true,
       trapFocus: true,
       props: {},

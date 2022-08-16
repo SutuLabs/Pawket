@@ -40,7 +40,7 @@ import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { NetworkInfo } from "@/store/modules/network";
-import TopBar from "../TopBar.vue";
+import TopBar from "@/components/Common/TopBar.vue";
 import { AccountEntity } from "@/models/account";
 
 @Component({

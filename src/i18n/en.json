@@ -99,9 +99,6 @@
   "createSeed": {
     "ui": {
       "button": {
-        "import": "Import",
-        "create": "Create",
-        "back": "Back",
         "confirm": "Confirm",
         "later": "Later",
         "ready": "Next",
@@ -111,11 +108,7 @@
         "import24": "Import Chia Official Mnemonic Words"
       },
       "text": {
-        "importMenu": {
-          "title": ""
-        },
         "create": {
-          "title": "Mnemonic",
           "tip1": "Welcome! The following words are used for your wallet backup. Without them, you will lose access to your wallet, keep them safe! Write down each word along with the order number next to them. (Order is important)",
           "tip2": "WARNING: NEVER DISCLOSE YOUR MNEMONIC WORDS. ANYONE WITH THIS MNEMONIC CAN TAKE YOUR XCH FOREVER!"
         },
@@ -231,19 +224,6 @@
       "tooltip": {
         "blockchainExplorer": "View on Block Explorer",
         "receiveAddress": "You can check the balance on more addresses if you increase the value, but the wallet will run slower."
-      }
-    }
-  },
-  "mnemonicExport": {
-    "ui": {
-      "title": {
-        "mnemonic": "Mnemonics"
-      },
-      "button": {
-        "close": "Close"
-      },
-      "tooltip": {
-        "copy": "Copy"
       }
     }
   },

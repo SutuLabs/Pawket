@@ -57,9 +57,9 @@ import { AccountEntity } from "@/models/account";
 import { CnsDetail } from "@/services/crypto/receive";
 import { isMobile } from "@/services/view/responsive";
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
-import KeyBox from "../KeyBox.vue";
-import TopBar from "../TopBar.vue";
-import BuyCns from "./BuyCns.vue";
+import KeyBox from "@/components/Common/KeyBox.vue";
+import TopBar from "@/components/Common/TopBar.vue";
+import BuyCns from "@/components/Cns/BuyCns.vue";
 import { CnsResult } from "./CnsSearch.vue";
 
 @Component({

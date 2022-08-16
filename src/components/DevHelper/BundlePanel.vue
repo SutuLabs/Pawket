@@ -237,7 +237,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import KeyBox from "@/components/KeyBox.vue";
+import KeyBox from "@/components/Common/KeyBox.vue";
 import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
 import puzzle, { ExecuteResult } from "@/services/crypto/puzzle";
 import { beautifyLisp } from "@/services/coin/lisp";

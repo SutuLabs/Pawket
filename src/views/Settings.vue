@@ -134,11 +134,11 @@
 </template>
 
 <script lang="ts">
-import DevHelper from "@/components/DevHelper.vue";
+import DevHelper from "@/components/DevHelper/DevHelper.vue";
 import About from "@/components/Settings/About.vue";
-import AddressBook from "@/components/Settings/AddressBook.vue";
+import AddressBook from "@/components/AddressBook/AddressBook.vue";
 import Advanced from "@/components/Settings/Advanced.vue";
-import Did from "@/components/Settings/Did.vue";
+import Did from "@/components/Did/Did.vue";
 import General from "@/components/Settings/General.vue";
 import Security from "@/components/Settings/Security.vue";
 import { isDesktop } from "@/services/view/responsive";
