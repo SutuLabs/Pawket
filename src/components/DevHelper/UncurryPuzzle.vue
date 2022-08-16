@@ -10,7 +10,13 @@
       </template>
       <div v-if="puzzle.length > 200" class="puzzle-content">
         <label>
-          <key-box icon="checkbox-multiple-blank-outline" :value="puzzle_hash" :showValue="true"></key-box>
+          <key-box
+            icon="checkbox-multiple-blank-outline"
+            :value="puzzle_hash"
+            :showValue="true"
+            position="is-left"
+            :delay="1000"
+          ></key-box>
         </label>
         {{ puzzle }}
       </div>
@@ -22,7 +28,13 @@
         <key-box icon="checkbox-multiple-blank-outline" :value="uncurried_module" tooltip="Copy"></key-box>
         <div v-if="puzzle.length > 200" class="puzzle-content">
           <label>
-            <key-box icon="checkbox-multiple-blank-outline" :value="uncurried_module_hash" :showValue="true"></key-box>
+            <key-box
+              icon="checkbox-multiple-blank-outline"
+              :value="uncurried_module_hash"
+              :showValue="true"
+              position="is-left"
+              :delay="1000"
+            ></key-box>
           </label>
           {{ uncurried_module }}
         </div>
