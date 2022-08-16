@@ -948,7 +948,9 @@
     "button": {
       "buy": "Buy",
       "sell": "Sell",
-      "takeOffer": "Take Offer"
+      "takeOffer": "Take Offer",
+      "more": "more",
+      "less": "less"
     },
     "ascription": "Powered by Dexie",
     "table": {
