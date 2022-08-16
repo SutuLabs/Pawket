@@ -948,7 +948,9 @@
     "button": {
       "buy": "购买",
       "sell": "出售",
-      "takeOffer": "接受 Offer"
+      "takeOffer": "接受 Offer",
+      "more": "更多",
+      "less": "收起"
     },
     "ascription": "由 Dexie 提供支持",
     "table": {

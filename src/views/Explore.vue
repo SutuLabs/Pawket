@@ -1,6 +1,7 @@
 <template>
   <div class="column nav-box mb-6">
     <div :class="{ box: !isMobile, 'pt-8': isMobile }">
+      <b-loading :is-full-page="true" :active="loading"></b-loading>
       <p class="is-hidden-mobile has-text-left is-size-5 pb-2 pl-2 border-bottom front" style="z-index: 99">
         <span @click="mode = 'List'" v-if="mode == 'Offer'"
           ><b-icon class="is-pulled-left has-text-grey pr-3 is-clickable pt-1" icon="chevron-left"> </b-icon></span
@@ -12,17 +13,61 @@
         >{{ title }}
       </p>
       <div v-if="mode == 'List'" class="pt-4">
-        <div class="panel">
-          <p class="panel-heading">{{ $t("explore.cat.title") }}</p>
+        <div class="panel pt-4">
+          <p class="panel-heading">
+            {{ $t("explore.nft.title") }}
+            <a @click="isNftFold = !isNftFold"
+              ><span class="is-pulled-right is-clickable">{{
+                isNftFold ? $t("explore.button.more") : $t("explore.button.less")
+              }}</span></a
+            >
+          </p>
           <div class="panel-body">
-            <div class="columns panel-block is-mobile" v-for="(cat, index) of tailList" :key="index">
+            <div class="columns panel-block is-mobile" v-for="(col, index) of nftMarket" :key="index">
               <div class="column">
                 <div class="is-flex">
                   <div class="mr-4 py-1">#{{ index + 1 }}</div>
                   <div class="mr-4">
                     <span class="image is-32x32">
-                      <img v-if="cat.logo_url" :src="cat.logo_url" />
-                      <img v-else class="is-rounded" src="@/assets/custom-cat.svg" />
+                      <img :src="col.icon" />
+                    </span>
+                  </div>
+                  <div class="py-1 has-text-grey-dark is-size-6">
+                    {{ col.name }}
+                  </div>
+                </div>
+              </div>
+              <div class="column buttons has-text-centered">
+                <b-button
+                  @click="
+                    getOffers('XCH', col.id);
+                    requestedName = col.code;
+                    offeredName = 'XCH';
+                    isNft = true;
+                  "
+                  >{{ $t("explore.button.buy") }}</b-button
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <p class="panel-heading">
+            {{ $t("explore.cat.title") }}
+            <a @click="isCatFold = !isCatFold"
+              ><span class="is-pulled-right is-clickable">{{
+                isCatFold ? $t("explore.button.more") : $t("explore.button.less")
+              }}</span></a
+            >
+          </p>
+          <div class="panel-body">
+            <div class="columns panel-block is-mobile" v-for="(cat, index) of catMarket" :key="index">
+              <div class="column">
+                <div class="is-flex">
+                  <div class="mr-4 py-1">#{{ index + 1 }}</div>
+                  <div class="mr-4">
+                    <span class="image is-32x32">
+                      <img class="is-rounded" :src="iconUrlPrefix + cat.id + '.jpg'" />
                     </span>
                   </div>
                   <div class="py-1 has-text-grey-dark is-size-6">
@@ -33,7 +78,7 @@
               <div class="column buttons has-text-centered">
                 <b-button
                   @click="
-                    getOffers('XCH', cat.hash);
+                    getOffers('XCH', cat.id);
                     offeredName = 'XCH';
                     requestedName = cat.code;
                     isNft = false;
@@ -42,44 +87,12 @@
                 >
                 <b-button
                   @click="
-                    getOffers(cat.hash, 'XCH');
-                    offeredName = cat.code;
+                    getOffers(cat.code, 'XCH');
+                    offeredName = cat.name;
                     requestedName = 'XCH';
                     isNft = false;
                   "
                   >{{ $t("explore.button.sell") }}</b-button
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="panel pt-4">
-          <p class="panel-heading">{{ $t("explore.nft.title") }}</p>
-          <div class="panel-body">
-            <div class="columns panel-block is-mobile" v-for="(col, index) of nftList" :key="index">
-              <div class="column">
-                <div class="is-flex">
-                  <div class="mr-4 py-1">#{{ index + 1 }}</div>
-                  <div class="mr-4">
-                    <span class="image is-32x32">
-                      <img v-if="col.logo_url" :src="col.logo_url" />
-                      <img v-else class="is-rounded" src="@/assets/custom-cat.svg" />
-                    </span>
-                  </div>
-                  <div class="py-1 has-text-grey-dark is-size-6">
-                    {{ col.code }}
-                  </div>
-                </div>
-              </div>
-              <div class="column buttons has-text-centered">
-                <b-button
-                  @click="
-                    getOffers('XCH', col.hash);
-                    requestedName = col.code;
-                    offeredName = 'XCH';
-                    isNft = true;
-                  "
-                  >{{ $t("explore.button.buy") }}</b-button
                 >
               </div>
             </div>
@@ -115,18 +128,18 @@
                 </div>
               </td>
               <td>
-                <p v-for="offered of offer.offered" :key="offered.code" :class="{ 'has-text-right': offered.is_nft }">
+                <p v-for="offered of offer.offered" :key="offered.code">
                   <span v-if="offered.is_nft"
-                    >{{ offered.name }}<img class="image is-48x48 is-inline-block ml-3" :src="offered.preview.tiny"
-                  /></span>
+                    ><img class="image is-48x48 is-inline-block ml-3" :src="offered.preview.tiny"
+                  />{{ offered.name }}</span>
                   <span v-else> {{ offered.amount }} {{ offered.code }} </span>
                 </p>
               </td>
               <td class="is-hidden-mobile">
-                <div v-if="offer.offered[0].is_nft">{{ offer.price }} {{ offeredName }}</div>
+                <div v-if="offer.offered[0].is_nft">{{ offer.price.toFixed(4) }} {{ offeredName }}</div>
                 <div v-else>
-                  <p>1 {{ requestedName }} = {{ offer.price }} {{ offeredName }}</p>
-                  <p>1 {{ offeredName }} = {{ 1 / offer.price }} {{ requestedName }}</p>
+                  <p>1 {{ requestedName }} = {{ offer.price.toFixed(4) }} {{ offeredName }}</p>
+                  <p>1 {{ offeredName }} = {{ (1 / offer.price).toFixed(4) }} {{ requestedName }}</p>
                 </div>
               </td>
               <td>
@@ -155,20 +168,21 @@
 <script lang="ts">
 import { isMobile } from "@/services/view/responsive";
 import { Component, Vue, Watch } from "vue-property-decorator";
-import { TailInfo } from "@/services/api/tailDb";
-import Dexie, { Offer } from "@/services/api/dexie"
+import Dexie from "@/services/api/dexie";
 import TopBar from "@/components/Common/TopBar.vue";
 import TakeOffer from "@/components/Offer/Take.vue";
 import { AccountEntity, CustomCat } from "@/models/account";
 import { getAllCats } from "@/store/modules/account";
 import store from "@/store";
 import { tc } from "@/i18n/i18n";
+import { MarketItem, Markets } from "@/models/market";
+import { Offer } from "@/models/dexieOffer";
 
-type Mode = "List" | "Offer"
+type Mode = "List" | "Offer";
 @Component({ components: { TopBar } })
 export default class Settings extends Vue {
   offers: Offer[] = [];
-  mode: Mode = "List"
+  mode: Mode = "List";
   offeredName = "";
   requestedName = "";
   offeredHash = "";
@@ -177,6 +191,11 @@ export default class Settings extends Vue {
   current = 1;
   pageSize = 20;
   isNft = false;
+  markets: Markets = { xch: [] };
+  nftMarkets: Markets = { xch: [] };
+  isCatFold = true;
+  isNftFold = true;
+  loading = false;
 
   get isMobile(): boolean {
     return isMobile();
@@ -191,16 +210,18 @@ export default class Settings extends Vue {
     }
   }
 
-  get tailList(): TailInfo[] {
-    return [{ code: "SBX", hash: "a628c1c2c6fcb74d53746157e438e108eab5c0bb3e5c80ff9b1910b3e4832913", logo_url: "https://images.taildatabase.com/tails/db5d19ef-c798-4f96-b448-2eea788dbe0e.png" },
-    { code: "TRTG", hash: "e0ed5a8e325a7dbadfefd760533afb37e89d17a3ffa05e681b1c4b897d5e86b7", logo_url: "https://images.taildatabase.com/tails/be1506db-d392-4adb-b21e-83714b1ebd4e.png" },
-    { code: "UFCG", hash: "d5cfbfadf873554d5184ebcb9dee86e69f8b11f44a0cc4e417871c4f7fb17b9a", logo_url: "https://images.taildatabase.com/tails/86b58642-7ae5-43b4-8efe-7425fe2a1fde.jpeg" }]
+  get iconUrlPrefix(): string {
+    return Dexie.dexieIconUrl;
   }
 
-  get nftList(): TailInfo[] {
-    return [{ code: "Chia Friends", hash: "col1z0ef7w5n4vq9qkue67y8jnwumd9799sm50t8fyle73c70ly4z0ws0p2rhl", logo_url: "" },
-    { code: "Farmers of the Marmot Kingdom", hash: "col1xmwdsfnd6jugf6mt5hake4d7k22vqyk99ysz493cczm6mxdd80qsqkf44u", logo_url: "" },
-    { code: "Chia World Flags", hash: "col1mf6tuzrmwru4dj44s32ncxqnluvtzt949kma07gx6llgxtrme8msatk8w2", logo_url: "" }]
+  get catMarket(): MarketItem[] {
+    if (this.isCatFold) return this.markets.xch.slice(0, 5);
+    return this.markets.xch;
+  }
+
+  get nftMarket(): MarketItem[] {
+    if (this.isNftFold) return this.nftMarkets.xch.slice(0, 5);
+    return this.nftMarkets.xch.slice(0, 30);
   }
 
   get selectedAccount(): number {
@@ -228,7 +249,8 @@ export default class Settings extends Vue {
   }
 
   async getOffers(offered: string, requested: string): Promise<void> {
-    this.mode = "Offer"
+    this.loading = true;
+    this.mode = "Offer";
     this.offeredHash = offered;
     this.requestedHash = requested;
     const resp = await Dexie.getOffer(requested, offered, this.current, this.pageSize);
@@ -236,6 +258,7 @@ export default class Settings extends Vue {
       this.offers = resp.offers;
       this.total = resp.count;
     }
+    this.loading = false;
   }
 
   takeOffer(offerText: string): void {
@@ -252,6 +275,13 @@ export default class Settings extends Vue {
         inputOfferText: offerText,
       },
     });
+  }
+
+  async mounted(): Promise<void> {
+    this.loading = true;
+    this.markets = await Dexie.getMarket();
+    this.nftMarkets = await Dexie.getNftMarket();
+    this.loading = false;
   }
 }
 </script>
