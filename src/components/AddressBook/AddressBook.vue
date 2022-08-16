@@ -85,6 +85,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import AddressBookField from "./AddressBookFields.vue";
 import AddressDetail from "./AddressDetail.vue";
 import TopBar from "@/components/Common/TopBar.vue";
+import { ensureAddress } from "@/store/modules/network";
 
 type Mode = "List" | "Add";
 type Parent = "Send" | "Configure";
@@ -127,7 +128,7 @@ export default class AddressBook extends Vue {
   get innerAccs(): Contact[] {
     const innerAccs: Contact[] = [];
     store.state.account.accounts.forEach((acc) => {
-      if (acc.firstAddress) innerAccs.push({ name: acc.name, address: acc.firstAddress });
+      if (acc.firstAddress) innerAccs.push({ name: acc.name, address: ensureAddress(acc.firstAddress) });
     });
     return innerAccs;
   }
