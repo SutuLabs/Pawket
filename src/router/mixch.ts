@@ -6,7 +6,12 @@ Vue.use(VueRouter);
 const routes: Array<RouteConfig> = [
   {
     path: "/",
-    redirect: "/tools",
+    redirect: "/home",
+  },
+  {
+    name: "home",
+    path: "/home",
+    component: () => import(/* webpackChunkName: "home" */ "../components/DevHelper/MixchHome.vue"),
   },
   {
     path: "/tools",

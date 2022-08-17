@@ -1,5 +1,5 @@
 <template>
-  <div class="simulator">
+  <div class="developer">
     <div class="puzzle_input" v-if="!started">
       <div class="card">
         <div class="card-content">
@@ -9,7 +9,10 @@
                 <b-field label="Editor">
                   <template #label>
                     Editor
-                    <b-button class="is-pulled-right" size="is-small" type="is-primary" @click="tryit()">try</b-button>
+                    <b-button class="is-pulled-right" size="is-small" type="is-primary" @click="tryit()">
+                      <b-icon icon="play" size="is-small"></b-icon>
+                      RUN
+                    </b-button>
                   </template>
 
                   <div ref="editor" class="monaco-editor"></div>
@@ -173,7 +176,7 @@ console.log(ex, coin_spends);
 
 <style scoped lang="scss">
 .monaco-editor {
-  height: 40vh;
+  height: 80vh;
   overflow: hidden;
 }
 </style>
