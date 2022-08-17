@@ -34,7 +34,8 @@
           </b-field>
           <b-field :label="$t('nftDetail.ui.label.collection')">{{ metadata.collection.name }}</b-field>
           <b-field :label="$t('nftDetail.ui.label.description')">
-            <div v-if="metadata.description.length < 100">{{ metadata.description }}</div>
+            <div v-if="!metadata.description" class="pb-6"></div>
+            <div v-else-if="metadata.description.length < 100">{{ metadata.description }}</div>
             <div v-else>
               <span>{{ metadata.description.slice(0, 100) }}</span
               ><span v-if="!showMore"
@@ -51,7 +52,7 @@
               type="is-primary"
               @click="transfer()"
               icon-left="share"
-              :disabled="this.account.type == 'Address'"
+              :disabled="account.type == 'Address'"
               outlined
             ></b-button>
             <b-button
@@ -78,7 +79,7 @@
               </div>
             </template>
             <div class="columns is-mobile is-multiline card-content is-justify-content-space-between">
-              <div class="column is-5 is-size-5 property m-2" v-for="(att, i) of metadata.attributes" :key="i">
+              <div class="column is-5 is-size-5 property m-2" v-for="(att, index) of metadata.attributes" :key="index">
                 <span class="has-text-grey is-size-7 line-height-normal">
                   <p>{{ att.trait_type }}</p>
                   <b-tooltip multilined :label="String(att.value)" style="word-break: break-all">
@@ -141,7 +142,7 @@
           type="is-primary"
           @click="transfer()"
           icon-left="share"
-          :disabled="this.account.type == 'Address'"
+          :disabled="account.type == 'Address'"
           outlined
         ></b-button>
         <b-button

@@ -10,14 +10,15 @@
   "common": {
     "button": {
       "confirm": "Confirm",
-      "cancel": "Cancel",
-      "copy": "Copy"
+      "cancel": "Cancel"
     },
     "tooltip": {
       "copy": "Copy"
     },
     "message": {
-      "saved": "Saved"
+      "saved": "Saved",
+      "noResult": "No Result",
+      "uploadSuccess": "Upload Successful"
     }
   },
   "app": {

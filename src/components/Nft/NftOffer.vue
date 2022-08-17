@@ -60,11 +60,12 @@
       </div>
       <div>
         <b-button
-          :label="$t('common.button.copy')"
+          :label="$t('offer.make.ui.button.uploadToDexie')"
+          :loading="uploading"
           v-if="bundle"
           type="is-primary"
           class="is-pulled-right"
-          @click="copy()"
+          @click="uploadToDexie()"
         ></b-button>
       </div>
     </footer>
@@ -90,6 +91,8 @@ import { prefix0x } from "@/services/coin/condition";
 import puzzle from "@/services/crypto/puzzle";
 import { generateNftOffer, generateOfferPlan } from "@/services/offer/bundler";
 import { getLineageProofPuzzle } from "@/services/transfer/call";
+import dexie from "@/services/api/dexie";
+import { tc } from "@/i18n/i18n";
 
 @Component({
   components: {
@@ -109,6 +112,7 @@ export default class NftOffer extends Vue {
   public availcoins: SymbolCoins | null = null;
   public tokenPuzzles: TokenPuzzleDetail[] = [];
   public signing = false;
+  public uploading = false;
 
   public requests: OfferTokenAmount[] = [{ token: xchSymbol(), amount: "0" }];
   // public requests: OfferTokenAmount[] = [{ token: xchSymbol(), amount: "0.000000000008" }];
@@ -225,8 +229,25 @@ export default class NftOffer extends Vue {
     });
   }
 
-  copy(): void {
-    store.dispatch("copy", this.offerText);
+  async uploadToDexie(): Promise<void> {
+    this.uploading = true;
+    try {
+      await dexie.uploadOffer(this.offerText);
+    } catch (error) {
+      if (error != null) {
+        Notification.open({
+          message: String(error),
+          type: "is-danger",
+        });
+        this.uploading = false;
+        return;
+      }
+    }
+    Notification.open({
+      message: tc('common.message.uploadSuccess'),
+      type: "is-primary",
+    });
+    this.uploading = false;
   }
 
   debugBundle(): void {
@@ -240,7 +261,6 @@ export default class NftOffer extends Vue {
     });
   }
 }
-
 </script>
 
 <style scoped lang="scss"></style>

@@ -92,6 +92,7 @@
       <div>
         <b-button
           :label="$t('offer.make.ui.button.uploadToDexie')"
+          :loading="uploading"
           v-if="bundle"
           type="is-primary"
           class="is-pulled-right"
@@ -124,6 +125,7 @@ import bigDecimal from "js-big-decimal";
 import { chainId, xchSymbol } from "@/store/modules/network";
 import { getLineageProofPuzzle } from "@/services/transfer/call";
 import dexie from "@/services/api/dexie";
+import { tc } from "@/i18n/i18n";
 
 @Component({
   components: {
@@ -141,6 +143,7 @@ export default class MakeOffer extends Vue {
   public availcoins: SymbolCoins | null = null;
   public tokenPuzzles: TokenPuzzleDetail[] = [];
   public signing = false;
+  public uploading = false;
 
   public requests: OfferTokenAmount[] = [{ token: xchSymbol(), amount: "0" }];
   public offers: OfferTokenAmount[] = [{ token: xchSymbol(), amount: "0" }];
@@ -293,7 +296,24 @@ export default class MakeOffer extends Vue {
   }
 
   async uploadToDexie(): Promise<void> {
-    await dexie.uploadOffer(this.offerText);
+    this.uploading = true;
+    try {
+      await dexie.uploadOffer(this.offerText);
+    } catch (error) {
+      if (error != null) {
+        Notification.open({
+          message: String(error),
+          type: "is-danger",
+        });
+        this.uploading = false;
+        return;
+      }
+    }
+    Notification.open({
+      message: tc("common.message.uploadSuccess"),
+      type: "is-primary",
+    });
+    this.uploading = false;
   }
 
   debugBundle(): void {
