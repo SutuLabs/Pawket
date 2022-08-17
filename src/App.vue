@@ -1,5 +1,8 @@
 <template>
   <div id="app" ref="container">
+    <b-notification type="is-primary" class="column is-6 is-offset-3">
+      {{ $t("accountDetail.message.notification.test") }}
+    </b-notification>
     <nav-bar></nav-bar>
     <div v-if="unlocked == false && hasAccount && path != '/clvm' && path != '/developer'" class="pt-6 mt-6">
       <verify-password></verify-password>
@@ -123,6 +126,10 @@ export default class App extends Vue {
       fullScreen: isMobile(),
       canCancel: [""],
     });
+  }
+
+  get test(): boolean {
+    return window.location.hostname == "kitten.pawket.app";
   }
 
   async showProxy(): Promise<void> {

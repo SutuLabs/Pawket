@@ -4,9 +4,6 @@
       <div class="notification has-background-grey-dark has-text-centered has-text-info-light py-2" v-if="offline">
         {{ $t("accountDetail.message.notification.offline") }}
       </div>
-      <b-notification type="is-primary" v-if="test">
-        {{ $t("accountDetail.message.notification.test") }}
-      </b-notification>
       <div class="container px-4">
         <div class="py-5 has-text-centered" v-if="account && account.key">
           <section>
@@ -279,10 +276,6 @@ export default class AccountDetail extends Vue {
 
   get offline(): boolean {
     return store.state.account.offline;
-  }
-
-  get test(): boolean {
-    return window.location.hostname == "kitten.pawket.app";
   }
 
   mounted(): void {
