@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-field>
+    <b-field v-if="domainName">
       <template #label>
         <span class="is-size-6">Domain</span>
         <span class="is-pulled-right">
@@ -19,12 +19,10 @@
         </span>
       </template>
     </b-field>
-    <b-field>
+    <b-field v-if="amount">
       <template #label>
         <span class="is-size-6">Price</span>
-        <span class="is-pulled-right">
-          10.00 XCH
-        </span>
+        <span class="is-pulled-right"> {{ amount }} XCH </span>
       </template>
     </b-field>
     <b-field>

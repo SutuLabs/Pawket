@@ -35,7 +35,15 @@
           <b-field label="Collection"> CNS </b-field>
           <b-field>
             <template #label>
-              Address <a @click="changeAddress"><b-icon icon="pencil" size="is-small" class="pl-2"></b-icon></a>
+              Registered Address
+            </template>
+            <span class="word-break"
+              >{{ address }} <key-box icon="checkbox-multiple-blank-outline" :value="address" :showValue="false"></key-box
+            ></span>
+          </b-field>
+          <b-field>
+            <template #label>
+              Binding Address <a @click="changeAddress()"><b-icon icon="pencil" size="is-small" class="pl-2"></b-icon></a>
             </template>
             <span class="word-break"
               >{{ address }} <key-box icon="checkbox-multiple-blank-outline" :value="address" :showValue="false"></key-box
@@ -111,8 +119,7 @@ export default class CnsDetailPanel extends Vue {
   @Prop() private account!: AccountEntity;
   @Prop() public cns!: CnsDetail;
 
-  address = "xch1xxxsssssjfoiej"
-
+  address = "xch1xxxsssssjfoiej";
 
   @Emit("close")
   close(): void {
@@ -143,8 +150,9 @@ export default class CnsDetailPanel extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
-      props: { defaultAddress: this.address },
-      events: { updateAddress: this.updateAddress }
+      fullScreen: this.isMobile,
+      props: { defaultAddress: this.address, cns: this.cns, account: this.account },
+      events: { updateAddress: this.updateAddress },
     });
     return;
   }
