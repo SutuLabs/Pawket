@@ -6,12 +6,7 @@
         <!-- <b-field :label="$t('send.ui.label.memo')">
           <b-input maxlength="100" v-model="memo" type="text" @input="reset()"></b-input>
         </b-field> -->
-        <b-notification
-          type="is-primary"
-          has-icon
-          icon="exclamation"
-          :closable="false"
-        >
+        <b-notification type="is-primary" has-icon icon="exclamation" :closable="false">
           Are you sure to create DID?
         </b-notification>
         <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
@@ -20,12 +15,7 @@
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
           <span v-html="$sanitize($t('send.ui.summary.notification'))"></span>
         </b-notification>
-        <send-summary
-          :amount="numericAmount"
-          :unit="selectedToken"
-          :fee="feeBigInt"
-          :address="address"
-        ></send-summary>
+        <send-summary :amount="numericAmount" :unit="selectedToken" :fee="feeBigInt" :address="address"></send-summary>
         <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
       </template>
     </section>
@@ -36,8 +26,8 @@
           :label="$t('send.ui.button.sign')"
           v-if="!bundle"
           type="is-primary"
-          class="is-pulled-right"
           @click="sign()"
+          :loading="submitting"
           :disabled="submitting"
         ></b-button>
       </div>
@@ -207,7 +197,7 @@ export default class MintDid extends Vue {
         this.submitting = false;
         return;
       }
-      const tgt =  this.account.firstAddress;
+      const tgt = this.account.firstAddress;
       const change = this.account.firstAddress;
 
       // there is error in checking this regular expression
@@ -216,8 +206,9 @@ export default class MintDid extends Vue {
       // const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: this.selectedToken, memos: [tgt_hex, memo] }];
       // const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
       // this.bundle = await transfer.generateSpendBundle(plan, this.requests, [], xchSymbol(), chainId());
-this.bundle = await (await generateMintDidBundle(tgt,change, this.feeBigInt,{},this.availcoins, this.requests, xchSymbol(),chainId())).spendBundle;
-
+      this.bundle = await (
+        await generateMintDidBundle(tgt, change, this.feeBigInt, {}, this.availcoins, this.requests, xchSymbol(), chainId())
+      ).spendBundle;
     } catch (error) {
       Notification.open({
         message: this.$tc("send.ui.messages.failedToSign") + error,

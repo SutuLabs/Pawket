@@ -60,8 +60,8 @@
           :label="$t('batchSend.ui.button.sign')"
           v-if="!bundle"
           type="is-primary"
-          class="is-pulled-right"
           @click="sign()"
+          :loading="submitting"
           :disabled="status == 'Loading' || submitting"
         ></b-button>
       </div>
@@ -209,7 +209,14 @@ export default class BatchSend extends Vue {
       }
 
       const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
-      this.bundle = await transfer.generateSpendBundleIncludingCat(plan, this.requests, [], xchSymbol(), chainId(), getLineageProofPuzzle);
+      this.bundle = await transfer.generateSpendBundleIncludingCat(
+        plan,
+        this.requests,
+        [],
+        xchSymbol(),
+        chainId(),
+        getLineageProofPuzzle
+      );
     } catch (error) {
       Notification.open({
         message: this.$tc("batchSend.ui.messages.failedToSign") + error,
