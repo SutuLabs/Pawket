@@ -1,9 +1,22 @@
 import { DexieOfferResponse } from "@/models/dexieOffer";
 import { Market, Markets } from "@/models/market";
+import store from "@/store";
+import { rpcUrl } from "@/store/modules/network";
 
 class Dexie {
-  private dexieUrl = "https://api.dexie.space/v1";
   public dexieIconUrl = "https://icons.dexie.space/";
+
+  private networkId(): string {
+    return store.state.network.networkId;
+  }
+
+  private dexieOfferUrl(): string {
+    return this.networkId() == "mainnet" ? "https://api.dexie.space/v1" : "https://api-testnet.dexie.space/v1";
+  }
+
+  private dexieMarketUrl(): string {
+    return this.networkId() == "mainnet" ? "https://api.dexie.space/v1" : "https://testnet.dexie.space/v1";
+  }
 
   public async getOffer(
     offered: string | null,
@@ -17,7 +30,7 @@ class Dexie {
     params.append("page", page.toString());
     params.append("page_size", pageSize.toString());
     params.append("sort", "price_asc");
-    const resp = await fetch(`${this.dexieUrl}/offers?${params}`);
+    const resp = await fetch(`${this.dexieOfferUrl()}/offers?${params}`);
     if (resp.status !== 200) {
       throw new Error(await resp.text());
     }
@@ -25,21 +38,20 @@ class Dexie {
   }
 
   public async uploadOffer(offer: string): Promise<unknown> {
-    const resp = await fetch(this.dexieUrl + "/offers", {
+    const resp = await fetch(rpcUrl() + "Wallet/offers", {
       method: "POST",
       headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Method": "POST,GET",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ offer: offer }),
     });
-    const res = (await resp.json()) as DexieOfferResponse;
-    return res;
+
+    if (resp.status != 200) throw new Error("error uploading offer, status: " + resp.status);
+    return null;
   }
 
   public async getMarket(): Promise<Markets> {
-    const resp = await fetch(this.dexieUrl + "/markets");
+    const resp = await fetch(this.dexieMarketUrl() + "/markets", { method: "GET", redirect: "follow" });
     if (resp.status !== 200) {
       throw new Error(await resp.text());
     }
@@ -49,7 +61,7 @@ class Dexie {
   }
 
   public async getNftMarket(): Promise<Markets> {
-    const resp = await fetch(this.dexieUrl + "/nft_markets");
+    const resp = await fetch(this.dexieMarketUrl() + "/nft_markets", { method: "GET", redirect: "follow" });
     if (resp.status !== 200) {
       throw new Error(await resp.text());
     }

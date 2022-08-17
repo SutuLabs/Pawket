@@ -17,13 +17,14 @@
           <p class="panel-heading">
             {{ $t("explore.nft.title") }}
             <a @click="isNftFold = !isNftFold"
-              ><span class="is-pulled-right is-clickable">{{
+              ><span class="is-pulled-right is-clickable" v-if="nftMarket.length > 5">{{
                 isNftFold ? $t("explore.button.more") : $t("explore.button.less")
               }}</span></a
             >
           </p>
           <div class="panel-body">
-            <div class="columns panel-block is-mobile" v-for="(col, index) of nftMarket" :key="index">
+            <div v-if="!catMarket.length" class="has-text-centered">{{ $t("common.message.noResult") }}</div>
+            <div v-else class="columns panel-block is-mobile" v-for="(col, index) of nftMarket" :key="index">
               <div class="column">
                 <div class="is-flex">
                   <div class="mr-4 py-1">#{{ index + 1 }}</div>
@@ -55,13 +56,14 @@
           <p class="panel-heading">
             {{ $t("explore.cat.title") }}
             <a @click="isCatFold = !isCatFold"
-              ><span class="is-pulled-right is-clickable">{{
+              ><span class="is-pulled-right is-clickable" v-if="catMarket.length > 5">{{
                 isCatFold ? $t("explore.button.more") : $t("explore.button.less")
               }}</span></a
             >
           </p>
           <div class="panel-body">
-            <div class="columns panel-block is-mobile" v-for="(cat, index) of catMarket" :key="index">
+            <div v-if="!catMarket.length" class="has-text-centered">{{ $t("common.message.noResult") }}</div>
+            <div v-else class="columns panel-block is-mobile" v-for="(cat, index) of catMarket" :key="index">
               <div class="column">
                 <div class="is-flex">
                   <div class="mr-4 py-1">#{{ index + 1 }}</div>
@@ -130,8 +132,8 @@
               <td>
                 <p v-for="offered of offer.offered" :key="offered.code">
                   <span v-if="offered.is_nft"
-                    ><img class="image is-48x48 is-inline-block ml-3" :src="offered.preview.tiny"
-                  />{{ offered.name }}</span>
+                    ><img class="image is-48x48 is-inline-block ml-3" :src="offered.preview.tiny" />{{ offered.name }}</span
+                  >
                   <span v-else> {{ offered.amount }} {{ offered.code }} </span>
                 </p>
               </td>
@@ -199,6 +201,10 @@ export default class Settings extends Vue {
 
   get isMobile(): boolean {
     return isMobile();
+  }
+
+  get network(): string {
+    return store.state.network.networkId;
   }
 
   get title(): string {
@@ -279,8 +285,11 @@ export default class Settings extends Vue {
 
   async mounted(): Promise<void> {
     this.loading = true;
-    this.markets = await Dexie.getMarket();
-    this.nftMarkets = await Dexie.getNftMarket();
+    if (this.network == "mainnet") {
+      this.nftMarkets = await Dexie.getNftMarket();
+      this.markets = await Dexie.getMarket();
+    }
+
     this.loading = false;
   }
 }

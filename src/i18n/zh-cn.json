@@ -10,14 +10,15 @@
   "common": {
     "button": {
       "confirm": "确认",
-      "cancel": "取消",
-      "copy": "复制"
+      "cancel": "取消"
     },
     "tooltip": {
       "copy": "复制"
     },
     "message": {
-      "saved": "已保存"
+      "saved": "已保存",
+      "noResult": "结果为空",
+      "uploadSuccess": "上传成功"
     }
   },
   "app": {
