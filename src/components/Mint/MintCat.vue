@@ -58,8 +58,8 @@
           :label="$t('mintCat.ui.button.sign')"
           v-if="!bundle"
           type="is-primary"
-          class="is-pulled-right"
           @click="sign()"
+          :loading="submitting"
           :disabled="!validity || submitting"
         ></b-button>
       </div>

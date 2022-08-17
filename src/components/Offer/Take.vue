@@ -147,11 +147,11 @@
             <span>{{ c.name }}</span>
           </b-button>
         </template>
-        <button v-if="debugMode" class="test-btn is-pulled-left" @click="showTest = !showTest"></button>
-        <b-button v-if="!bundle" type="is-primary" class="is-pulled-right" @click="sign()">
+        <b-button v-if="!bundle" type="is-primary" @click="sign()" :loading="signing" class="is-pulled-left">
           {{ $t("offer.take.ui.button.sign") }}
           <b-loading :is-full-page="false" :active="!tokenPuzzles || !availcoins"></b-loading>
         </b-button>
+        <button v-if="debugMode" class="test-btn is-pulled-left" @click="showTest = !showTest"></button>
       </div>
       <div>
         <b-button

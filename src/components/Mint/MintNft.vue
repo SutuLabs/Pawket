@@ -92,15 +92,16 @@
             <span>{{ c.name }}</span>
           </b-button>
         </template>
-        <button v-if="debugMode" class="test-btn is-pulled-left" @click="showTest = !showTest"></button>
         <b-button
           :label="$t('mintNft.ui.button.sign')"
           v-if="!bundle"
           type="is-primary"
-          class="is-pulled-right"
+          class="is-pulled-left"
           @click="sign()"
+          :loading="submitting"
           :disabled="!validity || submitting"
         ></b-button>
+        <button v-if="debugMode" class="test-btn is-pulled-left" @click="showTest = !showTest"></button>
       </div>
       <div>
         <b-button
