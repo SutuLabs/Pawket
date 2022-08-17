@@ -14,6 +14,7 @@
         </div>
         <address-field
           :inputAddress="address"
+          label="Registered Address"
           :addressEditable="addressEditable"
           @updateAddress="updateAddress"
           @updateContactName="updateContactName"

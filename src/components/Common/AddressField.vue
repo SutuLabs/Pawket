@@ -1,7 +1,7 @@
 <template>
   <b-field>
     <template #label>
-      {{ $t("addressField.ui.label.address") }}
+      {{ label ? label : $t("addressField.ui.label.address") }}
       <b-button v-if="isNewAddress" tag="a" type="is-primary is-light" size="is-small" @click="addAddress()">
         <span>
           {{ $t("addressField.ui.span.newAddress") }}
@@ -42,6 +42,7 @@ export default class AddressField extends Vue {
   @Prop() private inputAddress!: string;
   @Prop({ default: true }) private validAddress!: boolean;
   @Prop({ default: true }) private addressEditable!: boolean;
+  @Prop() public label!: string;
 
   public address = "";
   public contacts: Contact[] = [];
