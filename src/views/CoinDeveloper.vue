@@ -49,6 +49,14 @@ import { getAccountAddressDetails } from "@/services/util/account";
 import { prefix0x } from "@/services/coin/condition";
 import { CoinItem } from "@/models/wallet";
 
+interface MixchCodeFilePersistent {
+  name?: string;
+  code?: string;
+}
+interface MixchCodePersistent {
+  files?: MixchCodeFilePersistent[];
+}
+
 @Component({
   components: {
     SExpBox,
@@ -62,12 +70,7 @@ export default class CoinDeveloper extends Vue {
   started = false;
   bundleText = "";
   public editor: monaco.editor.IStandaloneCodeEditor | undefined = undefined;
-
-  async mounted(): Promise<void> {
-    const el = this.$refs.editor as HTMLElement | undefined;
-    if (!el) return;
-    this.editor = monaco.editor.create(el, {
-      value: `
+  defaultCode = `
 // console.log(coins);
 
 const coin = coins[0];
@@ -84,7 +87,21 @@ ex.bundle = {
   coin_spends
 };
 console.log(ex, coin_spends);
-`.trim(),
+`.trim();
+
+  async mounted(): Promise<void> {
+    const el = this.$refs.editor as HTMLElement | undefined;
+    if (!el) return;
+
+    const code = JSON.parse(
+      localStorage.getItem("MIXCH_CODE") ||
+        JSON.stringify({
+          files: [{ name: "default", code: this.defaultCode }],
+        })
+    ) as MixchCodePersistent;
+
+    this.editor = monaco.editor.create(el, {
+      value: code.files?.[0]?.code,
       language: "javascript",
     });
   }
@@ -97,8 +114,12 @@ console.log(ex, coin_spends);
   myEventHandler(): void {
     this.editor?.layout();
   }
+  save(): void {
+    localStorage.setItem("MIXCH_CODE", JSON.stringify({ files: [{ code: this.editor?.getValue() }] }));
+  }
   async tryit(): Promise<void> {
     if (!this.editor) return;
+    this.save();
     /* eslint-disable no-useless-escape */
     const text = `<script>async function __run() { ${this.editor.getValue()} }; __run().then(()=>{ex.finish=true;})
     .catch((msg)=>{console.error(msg);ex.finish=true;});<\/script>`;
