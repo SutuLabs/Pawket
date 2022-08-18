@@ -24,88 +24,81 @@
               <li>
                 <ol class="token-list">
                   <li class="pt-1" v-for="(ent, idx) in arr" :key="idx">
-                    <div class="columns">
-                      <div class="column">
-                        <b-taglist attached class="mb-0">
-                          <template v-if="ent.id && ent.nft_target">
-                            <b-tooltip multilined :label="getNftName(ent.id)" position="is-right" style="word-break: break-all">
-                              <b-tag
-                                type="is-info"
-                                class="nft-tag is-clickable"
-                                :title="getNftName(ent.id)"
-                                @click="copy(getNftName(ent.id))"
-                                >{{ getNftName(ent.id) }}</b-tag
-                              >
-                            </b-tooltip>
-                            <b-tooltip :label="$t('offer.take.ui.tooltip.spaceScan')">
-                              <a class="has-text-dark" :href="spaceScanUrl + getNftName(ent.id)" target="_blank">
-                                <b-tag><b-icon icon="open-in-new"></b-icon></b-tag
-                              ></a>
-                            </b-tooltip>
-                          </template>
-                          <template v-else-if="ent.id">
-                            <b-tag v-if="ent.id && cats[ent.id]" type="is-info" :title="cats[ent.id] + ' (' + ent.id + ')'">{{
-                              cats[ent.id]
-                            }}</b-tag>
-                            <a v-else-if="ent.id" @click="ManageCats(ent.id)">
-                              <b-tag type="is-info" :title="ent.id">
-                                {{ $t("offer.symbol.Cat") }} {{ ent.id.slice(0, 7) + "..." }}</b-tag
-                              >
-                            </a>
-                          </template>
-
-                          <template v-else>
-                            <b-tag type="is-info" :title="$t('offer.symbol.hint.XCH')">{{ xchSymbol }}</b-tag>
-                          </template>
-
-                          <b-tag v-if="!ent.nft_target" class="" :title="ent.amount + ' mojos'">{{
-                            ent.amount | demojo(ent.id && tokenInfo[cats[ent.id]])
-                          }}</b-tag>
-
-                          <b-tag v-if="sumkey == 'requested'" type="is-info is-light" :title="getAddress(ent.target)">
-                            <key-box :value="getAddress(ent.target)" :showValue="true"></key-box>
-                          </b-tag>
-                        </b-taglist>
-                        <a v-if="ent.id && !ent.nft_target && !cats[ent.id]" @click="ManageCats(ent.id)">
-                          <span v-if="ent.id && !cats[ent.id]" class="pl-1 pt-0 is-size-8 has-text-danger is-inline-block">
-                            {{ $t("offer.take.information.addCat") }}
-                          </span>
-                        </a>
-                      </div>
-                      <div v-if="ent.nft_uri" class="column">
-                        <a :href="ent.nft_uri" target="_blank">
-                          <b-tooltip :label="ent.nft_uri" multilined class="break-string" position="is-left">
-                            <img :src="ent.nft_uri" class="nft-image" />
+                    <div class="column">
+                      <b-taglist attached class="mb-0">
+                        <template v-if="ent.id && ent.nft_target">
+                          <b-tooltip multilined :label="getNftName(ent.id)" position="is-right" style="word-break: break-all">
+                            <b-tag
+                              type="is-info"
+                              class="nft-tag is-clickable"
+                              :title="getNftName(ent.id)"
+                              @click="copy(getNftName(ent.id))"
+                              >{{ getNftName(ent.id) }}</b-tag
+                            >
                           </b-tooltip>
-                        </a>
-                      </div>
+                          <b-tooltip :label="$t('offer.take.ui.tooltip.spaceScan')">
+                            <a class="has-text-dark" :href="spaceScanUrl + getNftName(ent.id)" target="_blank">
+                              <b-tag><b-icon icon="open-in-new"></b-icon></b-tag
+                            ></a>
+                          </b-tooltip>
+                        </template>
+                        <template v-else-if="ent.id">
+                          <b-tag v-if="ent.id && cats[ent.id]" type="is-info" :title="cats[ent.id] + ' (' + ent.id + ')'">{{
+                            cats[ent.id]
+                          }}</b-tag>
+                          <a v-else-if="ent.id" @click="ManageCats(ent.id)">
+                            <b-tag type="is-info" :title="ent.id">
+                              {{ $t("offer.symbol.Cat") }} {{ ent.id.slice(0, 7) + "..." }}</b-tag
+                            >
+                          </a>
+                        </template>
+
+                        <template v-else>
+                          <b-tag type="is-info" :title="$t('offer.symbol.hint.XCH')">{{ xchSymbol }}</b-tag>
+                        </template>
+
+                        <b-tag v-if="!ent.nft_target" class="" :title="ent.amount + ' mojos'">{{
+                          ent.amount | demojo(ent.id && tokenInfo[cats[ent.id]])
+                        }}</b-tag>
+
+                        <b-tag v-if="sumkey == 'requested'" type="is-info is-light" :title="getAddress(ent.target)">
+                          <key-box :value="getAddress(ent.target)" :showValue="true"></key-box>
+                        </b-tag>
+                      </b-taglist>
+                      <a v-if="ent.id && !ent.nft_target && !cats[ent.id]" @click="ManageCats(ent.id)">
+                        <span v-if="ent.id && !cats[ent.id]" class="pl-1 pt-0 is-size-8 has-text-danger is-inline-block">
+                          {{ $t("offer.take.information.addCat") }}
+                        </span>
+                      </a>
+                    </div>
+                    <div v-if="ent.nft_uri" class="column">
+                      <a :href="ent.nft_uri" target="_blank">
+                        <b-tooltip :label="ent.nft_uri" multilined class="break-string" position="is-left">
+                          <img :src="ent.nft_uri" class="nft-image" />
+                        </b-tooltip>
+                      </a>
                     </div>
                   </li>
                 </ol>
               </li>
             </ul>
             <template v-if="isOfferNftOffer">
-              <ul v-for="(arr, sumkey) in { royalty: summary.offered }" :key="sumkey" :class="sumkey">
-                <li>{{ $t("offer.take.information.royalty") }}</li>
-                <li>
-                  <ol class="token-list">
-                    <li class="pt-1" v-for="(ent, idx) in arr" :key="idx">
-                      <b-taglist attached class="mb-0">
-                        <template v-if="ent.id && ent.nft_target">
-                          <b-tag type="is-primary is-light" :title="getNftName(ent.id)">
-                            {{ (ent.nft_detail.analysis.tradePricePercentage / 100).toFixed(2) }}% =
-                            {{ royaltyAmount | demojo }}
-                            <key-box
-                              :value="getAddress(ent.nft_detail.analysis.royaltyAddress)"
-                              :display="$t('offer.take.ui.label.royaltyToCreator')"
-                            ></key-box>
-                          </b-tag>
-                        </template>
-                      </b-taglist>
-                    </li>
-                  </ol>
-                </li>
-              </ul>
+              <label class="label">{{ $t("offer.take.ui.label.totalRequested") }}</label>
+              <p class="is-size-7 has-text-grey label">
+                <span>{{ $t("offer.take.ui.label.nftPrice") }}</span
+                ><span class="is-pulled-right is-size-6 has-text-weight-bold has-text-dark">{{ nftPrice | demojo }}</span>
+              </p>
+              <p class="is-size-7 has-text-grey label">
+                <span>{{ $t("offer.take.ui.label.royalty") }}({{ tradePricePercentage }}%)</span
+                ><span class="is-pulled-right is-size-6 has-text-dark">
+                  <key-box :value="getAddress(royaltyAddress)" :display="$t('offer.take.ui.label.royaltyToCreator')"></key-box
+                  >{{ royaltyAmount | demojo }}</span
+                >
+              </p>
+              <p class="label has-text-grey label">
+                <span>{{ $t("offer.take.ui.label.total") }}</span
+                ><span class="is-pulled-right is-size-6 has-text-primary">{{ total | demojo }}</span>
+              </p>
             </template>
           </template>
         </b-field>
@@ -191,6 +184,7 @@ import ManageCats from "@/components/Cat/ManageCats.vue";
 import OfflineSendShowBundle from "@/components/Offline/OfflineSendShowBundle.vue";
 import { chainId, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getLineageProofPuzzle } from "@/services/transfer/call";
+import bigDecimal from "js-big-decimal";
 
 @Component({
   components: {
@@ -273,6 +267,28 @@ export default class TakeOffer extends Vue {
 
   get tokenInfo(): TokenInfo {
     return getTokenInfo(this.account);
+  }
+
+  get nftPrice(): bigint {
+    const s = this.summary;
+    if (!s) return -1n;
+    return s.requested[0].amount;
+  }
+
+  get tradePricePercentage(): bigint {
+    const s = this.summary;
+    if (!s) return 0n;
+    return BigInt((s.offered[0].nft_detail?.analysis.tradePricePercentage ?? 0) / 100);
+  }
+
+  get royaltyAddress(): string {
+    const s = this.summary;
+    if (!s) return "";
+    return s.offered[0].nft_detail?.analysis.royaltyAddress ?? "";
+  }
+
+  get total(): string {
+    return bigDecimal.add(this.nftPrice, this.royaltyAmount);
   }
 
   get bundleJson(): string {

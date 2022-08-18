@@ -351,7 +351,11 @@
         },
         "label": {
           "bundle": "Bundle",
-          "royaltyToCreator": "To Creator"
+          "royaltyToCreator": "Creator",
+          "totalRequested": "Total Requested",
+          "nftPrice": "NFT Price",
+          "royalty": "Royalty",
+          "total": "Total"
         },
         "button": {
           "cancel": "Cancel",
@@ -369,7 +373,6 @@
         "requested": "In exchange for",
         "offered": "You will receive",
         "addCat": "Add to CATs List.",
-        "royalty": "Royalty",
         "unsupportOfferNftOffer": "This type of offer is not supported yet."
       },
       "messages": {

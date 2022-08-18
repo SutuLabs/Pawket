@@ -17,7 +17,7 @@
           <p class="panel-heading">
             {{ $t("explore.nft.title") }}
             <a @click="isNftFold = !isNftFold"
-              ><span class="is-pulled-right is-clickable" v-if="nftMarket.length > 5">{{
+              ><span class="is-pulled-right is-clickable" v-if="nftMarkets.xch.length > 5">{{
                 isNftFold ? $t("explore.button.more") : $t("explore.button.less")
               }}</span></a
             >
@@ -56,7 +56,7 @@
           <p class="panel-heading">
             {{ $t("explore.cat.title") }}
             <a @click="isCatFold = !isCatFold"
-              ><span class="is-pulled-right is-clickable" v-if="catMarket.length > 5">{{
+              ><span class="is-pulled-right is-clickable" v-if="markets.xch.length > 5">{{
                 isCatFold ? $t("explore.button.more") : $t("explore.button.less")
               }}</span></a
             >
