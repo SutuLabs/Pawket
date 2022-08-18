@@ -367,6 +367,9 @@
         },
         "tooltip": {
           "spaceScan": "View on Spacescan.io"
+        },
+        "notification": {
+          "observation": "Currently in Observation Mode. Unable to trade."
         }
       },
       "information": {
