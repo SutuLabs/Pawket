@@ -100,7 +100,7 @@ import NavBar from "./components/Navigation/Navbar.vue";
 import { tc } from "./i18n/i18n";
 
 @Component({ components: { VerifyPassword, MobileNav, NavBar } })
-export default class App extends Vue {
+export default class MixchApp extends Vue {
   public debugClick = 9;
 
   @Watch("path")

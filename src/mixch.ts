@@ -1,5 +1,5 @@
 import Vue from "vue";
-import Mixch from "./Mixch.vue";
+import MixchApp from "./MixchApp.vue";
 import "./registerServiceWorker";
 import router from "./router/mixch";
 import Buefy from "buefy";
@@ -18,7 +18,7 @@ document.title = "Mixch - Pawket Developer";
 new Vue({
   router,
   i18n,
-  render: (h) => h(Mixch),
+  render: (h) => h(MixchApp),
 }).$mount("#app");
 
 import "./store/modules/network";
