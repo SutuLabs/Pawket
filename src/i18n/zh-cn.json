@@ -351,7 +351,11 @@
         },
         "label": {
           "bundle": "数据包",
-          "royaltyToCreator": "给创作者"
+          "royaltyToCreator": "创作者",
+          "totalRequested": "总请求",
+          "nftPrice": "NFT价格",
+          "royalty": "版权费",
+          "total": "总计"
         },
         "button": {
           "cancel": "取消",
@@ -369,7 +373,6 @@
         "requested": "付出",
         "offered": "获得",
         "addCat": "点击添加至 CATs 列表。",
-        "royalty": "版税",
         "unsupportOfferNftOffer": "这种类型的 NFT Offer 尚不支持"
       },
       "messages": {
