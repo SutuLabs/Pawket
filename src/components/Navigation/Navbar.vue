@@ -19,7 +19,7 @@
         }}</b-dropdown-item>
       </b-dropdown>
     </div>
-    <div class="logo is-hidden-tablet" v-if="!unlocked && hasAccount">
+    <div class="has-text-centered pt-6 is-hidden-tablet" v-if="!unlocked && hasAccount">
       <img width="200px" src="@/assets/logo.svg" />
     </div>
     <div class="is-hidden-mobile">
@@ -97,13 +97,6 @@ export default class NavBar extends Vue {
 .border-less {
   border: none;
 }
-
-.logo {
-  position: absolute;
-  top: 15%;
-  left: 20%;
-}
-
 .nav-box {
   max-width: 1000px;
   margin: auto;
