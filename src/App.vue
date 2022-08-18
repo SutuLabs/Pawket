@@ -1,10 +1,10 @@
 <template>
   <div id="app" ref="container">
-    <b-notification type="is-primary" class="column is-6 is-offset-3">
+    <b-notification type="is-primary" class="column is-6 is-offset-3" style="position: fixed; top: 0; z-index: 100;" v-if="test">
       {{ $t("accountDetail.message.notification.test") }}
     </b-notification>
     <nav-bar></nav-bar>
-    <div v-if="unlocked == false && hasAccount && path != '/clvm' && path != '/developer'" class="pt-6 mt-6">
+    <div v-if="unlocked == false && hasAccount && path != '/clvm' && path != '/developer'" :class="{'pt-6': !isMobile, 'mt-6': !isMobile}">
       <verify-password></verify-password>
     </div>
     <div v-else>
@@ -69,6 +69,10 @@ export default class App extends Vue {
 
   get debugMode(): boolean {
     return store.state.app.debug;
+  }
+
+  get isMobile():boolean {
+    return isMobile()
   }
 
   get unlocked(): boolean {
