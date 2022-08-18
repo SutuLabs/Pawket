@@ -93,6 +93,16 @@ console.log(ex, coin_spends);
     const el = this.$refs.editor as HTMLElement | undefined;
     if (!el) return;
 
+    const libSource = (await import("@/services/developer/editor/types/cdv.dev.ts")).default;
+    const libUri = "ts:filename/facts.d.ts";
+    const model = monaco.editor.getModel(monaco.Uri.parse(libUri));
+    if (!model) {
+      monaco.languages.typescript.javascriptDefaults.addExtraLib(libSource, libUri);
+      // When resolving definitions and references, the editor will try to use created models.
+      // Creating a model for the library allows "peek definition/references" commands to work with the library.
+      monaco.editor.createModel(libSource, "typescript", monaco.Uri.parse(libUri));
+    }
+
     const code = JSON.parse(
       localStorage.getItem("MIXCH_CODE") ||
         JSON.stringify({
@@ -103,6 +113,17 @@ console.log(ex, coin_spends);
     this.editor = monaco.editor.create(el, {
       value: code.files?.[0]?.code,
       language: "javascript",
+    });
+
+    this.editor.addAction({
+      id: "run",
+      label: "RUN",
+      keybindings: [monaco.KeyCode.F5],
+      contextMenuGroupId: "navigation",
+      contextMenuOrder: 1.5,
+      run: (_ed) => {
+        this.tryit();
+      },
     });
   }
   created(): void {
