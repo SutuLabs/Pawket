@@ -69,15 +69,16 @@
       <div class="content has-text-centered">
         <p>
           <strong>Mixch</strong>
-          <span>[{{ version }}]</span> by <b-icon icon="github" size="is-small"></b-icon
-          ><a href="https://github.com/chiabee" target="_blank" class="has-color-link">{{ $t("footer.ui.productInfo.author") }}</a
-          >.
-          <br />
-          <a href="https://info.pawket.app/" target="_blank" size="is-small" class="has-color-link">
-            <b-icon icon="home" size="is-small"></b-icon>
-            {{ $t("footer.ui.button.home") }}
+          <span>[{{ version }}]</span> by <b-icon icon="github" size="is-small"></b-icon>
+          <a href="https://github.com/chiabee" target="_blank" class="has-color-link">
+            {{ $t("footer.ui.productInfo.author") }}
             <b-icon icon="open-in-new" size="is-small"></b-icon>
           </a>
+          <br />
+          <router-link :to="{ name: 'home' }">
+            <b-icon icon="home" size="is-small"></b-icon>
+            {{ $t("footer.ui.button.home") }}
+          </router-link>
           |
           <a href="https://pawket.app/" target="_blank" size="is-small" class="has-color-link">
             <b-icon icon="paw" size="is-small"></b-icon>
