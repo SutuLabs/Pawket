@@ -367,6 +367,9 @@
         },
         "tooltip": {
           "spaceScan": "在Spacescan.io查看"
+        },
+        "notification": {
+          "observation": "目前处于观察模式。无法交易。"
         }
       },
       "information": {
