@@ -7,12 +7,12 @@
     </p>
     <p>
       <b>
-        This toolkit has been built to asisst the development of
+        This toolkit has been built to assist the development of
         <a target="_blank" href="https://pawket.app">Pawket Wallet</a> and Chia Name Service.
       </b>
       <br />
       With this toolkit, you can play around with different schemes and algorithms to understand how they work. Or you can create
-      a real chialisp program with visual audit tool.
+      a real chialisp program with a visual audit tool.
       <br />
       However, you should be warned, if you want to create strong cryptographic keys or paste sensitive information.
       <br />
