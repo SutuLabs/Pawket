@@ -1029,7 +1029,7 @@
     "ui": {
       "title": "Disclaimer",
       "tip": "Make sure to always backup your mnemonic phrase and private keys. We will never ask you to share your mnemonic phrase or private keys. NEVER trust anyone or any site that asks you to enter your mnemonic phrase or private keys.",
-      "privary": "We may change the Privacy Policy from time to time. We encourage you to periodically review it for the latest information on our privacy practices. If we make any changes to the Privacy Policy, we will change its Last Updated date.",
+      "privary": "We may change the Privacy Policy from time to time. We encourage you to periodically review it for the latest information on our Privacy Policy. If we make any changes to the Privacy Policy, we will change its Last Updated date.",
       "agreementPrefix": "I accept the ",
       "agreement": "Privacy Policy",
       "link": "https://info.pawket.app/privacy-policy/",
