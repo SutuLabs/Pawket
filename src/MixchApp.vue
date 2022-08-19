@@ -4,11 +4,9 @@
       <div>
         <b-navbar>
           <template #brand>
-            <router-link to="/">
-              <b-navbar-item @click="home()">
-                <img src="@/assets/logo.svg" :alt="$t('verifyPassword.ui.alt.logoAlt')" />
-              </b-navbar-item>
-            </router-link>
+            <b-navbar-item tag="router-link" to="/">
+              <img src="@/assets/mixch.svg" :alt="$t('verifyPassword.ui.alt.logoAlt')" />
+            </b-navbar-item>
           </template>
           <template #start> </template>
           <template #end>
@@ -70,16 +68,17 @@
     <footer class="footer">
       <div class="content has-text-centered">
         <p>
-          <strong> {{ $t("footer.ui.productInfo.name") }}</strong>
-          <span>[{{ version }}]</span> by <b-icon icon="github" size="is-small"></b-icon
-          ><a href="https://github.com/chiabee" target="_blank" class="has-color-link">{{ $t("footer.ui.productInfo.author") }}</a
-          >.
-          <br />
-          <a href="https://info.pawket.app/" target="_blank" size="is-small" class="has-color-link">
-            <b-icon icon="home" size="is-small"></b-icon>
-            {{ $t("footer.ui.button.home") }}
+          <strong>Mixch</strong>
+          <span>[{{ version }}]</span> by <b-icon icon="github" size="is-small"></b-icon>
+          <a href="https://github.com/chiabee" target="_blank" class="has-color-link">
+            {{ $t("footer.ui.productInfo.author") }}
             <b-icon icon="open-in-new" size="is-small"></b-icon>
           </a>
+          <br />
+          <router-link :to="{ name: 'home' }">
+            <b-icon icon="home" size="is-small"></b-icon>
+            {{ $t("footer.ui.button.home") }}
+          </router-link>
           |
           <a href="https://pawket.app/" target="_blank" size="is-small" class="has-color-link">
             <b-icon icon="paw" size="is-small"></b-icon>
@@ -101,7 +100,7 @@ import NavBar from "./components/Navigation/Navbar.vue";
 import { tc } from "./i18n/i18n";
 
 @Component({ components: { VerifyPassword, MobileNav, NavBar } })
-export default class App extends Vue {
+export default class MixchApp extends Vue {
   public debugClick = 9;
 
   @Watch("path")

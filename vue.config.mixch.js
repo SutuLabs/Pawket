@@ -2,6 +2,7 @@
 const path = require('path');
 const monacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 const { IgnorePlugin } = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   outputDir: "dist/mixch",
@@ -18,16 +19,25 @@ module.exports = {
           return /.*\/wordlists\/(?!english).*\.json/.test(resource)
         }
       }),
+      new CopyWebpackPlugin([{ from: './static/mixch', to: './' }]),
       new monacoWebpackPlugin()
     ],
+    module: {
+      rules: [
+        {
+          test: /\.dev\.ts$/i,
+          use: 'raw-loader',
+        },
+      ],
+    },
     entry: "./src/mixch.ts",
   },
   chainWebpack: config => {
     config
-        .plugin('html')
-        .tap(args => {
-            args[0].title = "Mixch - Pawket Developer";
-            return args;
-        })
-}
+      .plugin('html')
+      .tap(args => {
+        args[0].title = "Mixch - Pawket Developer";
+        return args;
+      })
+  }
 };

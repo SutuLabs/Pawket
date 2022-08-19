@@ -628,7 +628,7 @@ export default class BundlePanel extends Vue {
     this.mgraphGenerated = true;
     await new Promise((resolve) => setTimeout(resolve, 50));
 
-    const mermaid = (await import("mermaid")).default;
+    const mermaid = (await import(/* webpackChunkName: "mermaid" */ "mermaid")).default;
     mermaid.mermaidAPI.initialize({ startOnLoad: false });
     const el = this.$refs.mgraph as HTMLElement | undefined;
     if (!el) return;
