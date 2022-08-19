@@ -2,12 +2,12 @@
   <div class="column nav-box mb-6">
     <div :class="{ box: !isMobile, 'pt-8': isMobile }">
       <b-loading :is-full-page="true" :active="loading"></b-loading>
-      <p class="is-hidden-mobile has-text-left is-size-5 pb-2 pl-2 border-bottom front" style="z-index: 99">
+      <p class="is-hidden-mobile has-text-left is-size-5 pb-2 pl-2 border-bottom">
         <span @click="mode = 'List'" v-if="mode == 'Offer'"
           ><b-icon class="is-pulled-left has-text-grey pr-3 is-clickable pt-1" icon="chevron-left"> </b-icon></span
         >{{ title }}
       </p>
-      <p class="is-hidden-tablet has-text-centered is-size-5 pt-5 pb-2 pr-2 border-bottom fixed-top" style="z-index: 99">
+      <p class="is-hidden-tablet has-text-centered is-size-5 pt-5 pb-2 pr-2 border-bottom fixed-top" style="z-index: 10">
         <span @click="mode = 'List'" v-if="mode == 'Offer'"
           ><b-icon class="is-pulled-left has-text-grey pr-3 is-clickable pt-1" icon="chevron-left"> </b-icon></span
         >{{ title }}
@@ -300,9 +300,5 @@ export default class Settings extends Vue {
 .nav-box {
   max-width: 1000px;
   margin: auto;
-}
-
-.front {
-  z-index: 99;
 }
 </style>
