@@ -140,17 +140,20 @@ console.log(ex, coin_spends);
       },
     });
 
+    this.initEditorAction(this.editor);
+  }
+
+  initEditorAction(editor: monaco.editor.IStandaloneCodeEditor): void {
     /* eslint-disable @typescript-eslint/no-unused-vars */
-    this.editor.addAction({
+    editor.addAction({
       id: "run",
       label: "RUN",
       keybindings: [monaco.KeyCode.F5],
       contextMenuGroupId: "navigation",
       contextMenuOrder: 1.5,
       run: async (_ed) => {
-        if (!this.editor) return;
         this.save();
-        const ex = await executeCode(this.editor.getValue());
+        const ex = await executeCode(editor.getValue());
 
         // finished
         console.log("ex", ex);
@@ -163,7 +166,7 @@ console.log(ex, coin_spends);
       },
     });
 
-    this.editor.addAction({
+    editor.addAction({
       id: "next-tab",
       label: "NextTab",
       keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Digit6],
@@ -175,7 +178,7 @@ console.log(ex, coin_spends);
       },
     });
 
-    this.editor.addAction({
+    editor.addAction({
       id: "save",
       label: "Save",
       keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS],
