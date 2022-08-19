@@ -29,16 +29,11 @@
 import { Component, Vue } from "vue-property-decorator";
 import SExpBox from "@/components/Simulator/SExpBox.vue";
 import * as monaco from "monaco-editor";
-import puzzle, { PuzzleDetail } from "@/services/crypto/puzzle";
 import BundlePanel from "@/components/DevHelper/BundlePanel.vue";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import coins from "@/services/developer/coins.json";
-import { getTestAccount } from "@/test/utility";
-import { getAccountAddressDetails } from "@/services/util/account";
-import { prefix0x } from "@/services/coin/condition";
-import { CoinItem } from "@/models/wallet";
 import cdvdev from "@/services/developer/editor/types/cdv.dev.ts";
 import { registerClspLanguage, defineClspTheme } from "@/services/developer/editor/clspLanguage";
+import { executeCode } from "@/services/developer/editor/executor";
 
 interface MixchCodeFilePersistent {
   name?: string;
@@ -152,8 +147,19 @@ console.log(ex, coin_spends);
       keybindings: [monaco.KeyCode.F5],
       contextMenuGroupId: "navigation",
       contextMenuOrder: 1.5,
-      run: (_ed) => {
-        this.tryit();
+      run: async (_ed) => {
+        if (!this.editor) return;
+        this.save();
+        const ex = await executeCode(this.editor.getValue());
+
+        // finished
+        console.log("ex", ex);
+        if (ex.bundle) {
+          this.bundleText = "";
+          setTimeout(() => {
+            this.bundleText = JSON.stringify(ex.bundle);
+          }, 200);
+        }
       },
     });
 
@@ -216,81 +222,6 @@ console.log(ex, coin_spends);
       "MIXCH_CODE",
       JSON.stringify({ files: this.editorData.map((_) => _.data), selectedIndex: this.selectedFileIndex } as MixchCodePersistent)
     );
-  }
-  async tryit(): Promise<void> {
-    if (!this.editor) return;
-    this.save();
-    /* eslint-disable no-useless-escape */
-    const text = `<script>async function __run() { ${this.editor.getValue()} }; __run().then(()=>{ex.finish=true;})
-    .catch((msg)=>{console.error(msg);ex.finish=true;});<\/script>`;
-    /* eslint-enable no-useless-escape */
-    const ifr = document.createElement("iframe");
-    ifr.setAttribute("frameborder", "0");
-    ifr.setAttribute("id", "iframeResult");
-    ifr.setAttribute("name", "iframeResult");
-    ifr.setAttribute("allowfullscreen", "false");
-    document.body.appendChild(ifr);
-    const ifrw = ifr.contentWindow;
-    if (!ifrw) return;
-
-    // const tokenPuzzles = await getAccountAddressDetails(account, [], tokenInfo(), xchPrefix(), xchSymbol(), undefined, "cat_v1");
-    const account = getTestAccount("55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f");
-    const tokenPuzzles = await getAccountAddressDetails(account, [], {}, "txch", "TXCH", undefined, "cat_v2");
-    const puzzleDict: { [key: string]: PuzzleDetail } = Object.assign(
-      {},
-      ...tokenPuzzles.flatMap((_) => _.puzzles).map((x) => ({ [prefix0x(x.hash)]: x }))
-    );
-    const getPuzDetail = (hash: string) => {
-      const puz = puzzleDict[hash];
-      if (!puz) throw new Error("cannot find puzzle: " + hash);
-      return puz;
-    };
-
-    const ex = { bundle: undefined, finish: false };
-    /* eslint-disable @typescript-eslint/no-explicit-any */
-    (ifrw as any).puzzle = puzzle;
-    (ifrw as any).getPuzDetail = getPuzDetail;
-    (ifrw as any).ex = ex;
-    (ifrw as any).prefix0x = prefix0x;
-    (ifrw as any).coins = coins
-      .flatMap((_) => _.records)
-      .map((_) => _.coin as CoinItem)
-      .map((_) => ({
-        amount: BigInt(_.amount),
-        parent_coin_info: _.parentCoinInfo,
-        puzzle_hash: _.puzzleHash,
-      }));
-    /* eslint-enable @typescript-eslint/no-explicit-any */
-
-    // const ifrw = (ifr.contentWindow) ? ifr.contentWindow
-    // : (ifr.contentDocument && ifr.contentDocument.document) ? ifr.contentDocument.document
-    //  : ifr.contentDocument;
-    ifrw.document.open();
-    ifrw.document.write(text);
-    ifrw.document.close();
-
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const _this = this;
-    const refresh = function () {
-      if (!ex.finish) {
-        setTimeout(() => {
-          refresh();
-        }, 50);
-        return;
-      }
-
-      // finished
-      console.log("ex", ex);
-      if (ex.bundle) {
-        _this.bundleText = "";
-        setTimeout(() => {
-          _this.bundleText = JSON.stringify(ex.bundle);
-        }, 200);
-      }
-      document.body.removeChild(ifr);
-    };
-
-    refresh();
   }
 }
 </script>
