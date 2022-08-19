@@ -376,11 +376,11 @@
         "requested": "付出",
         "offered": "获得",
         "addCat": "点击添加至 CATs 列表。",
-        "unsupportOfferNftOffer": "此 Offer 暂不可用"
+        "unsupportOfferNftOffer": "这种类型的 NFT Offer 尚不支持"
       },
       "messages": {
         "failedToSign": "接受 Offer 失败",
-        "unsupportOfferNftOffer": "此 Offer 暂不可用"
+        "unsupportOfferNftOffer": "这种类型的 NFT Offer 尚不支持"
       }
     }
   },
