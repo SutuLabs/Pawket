@@ -376,11 +376,11 @@
         "requested": "In exchange for",
         "offered": "You will receive",
         "addCat": "Add to CATs List.",
-        "unsupportOfferNftOffer": "This type of offer is not yet available."
+        "unsupportOfferNftOffer": "This offer is not yet available."
       },
       "messages": {
         "failedToSign": "Failed to take offer.",
-        "unsupportOfferNftOffer": "This type of offer is not yet available."
+        "unsupportOfferNftOffer": "This offer is not yet available."
       }
     }
   },
