@@ -1,37 +1,26 @@
 <template>
   <div class="developer">
     <div class="puzzle_input" v-if="!started">
-      <div class="card">
-        <div class="card-content">
-          <div class="content">
-            <div class="columns">
-              <div class="column is-half">
-                <b-field label="Editor">
-                  <template #label>
-                    Editor
-                    <b-button class="is-pulled-right" size="is-small" type="is-primary" @click="tryit()">
-                      <b-icon icon="play" size="is-small"></b-icon>
-                      RUN
-                    </b-button>
-                  </template>
+      <div class="container">
+        <b-field label="Editor">
+          <template #label>
+            Editor
+            <b-button class="is-pulled-right" size="is-small" type="is-primary" @click="tryit()">
+              <b-icon icon="play" size="is-small"></b-icon>
+              RUN
+            </b-button>
+          </template>
 
-                  <div ref="editor" class="monaco-editor"></div>
-                </b-field>
-              </div>
-              <div class="column is-half">
+          <div ref="editor" class="monaco-editor"></div>
+        </b-field>
+      </div>
+      <!-- <div class="column is-half">
                 <b-field label="Analysis">
                   <template v-if="bundleText">
                     <bundle-panel :inputBundleText="bundleText"></bundle-panel>
                   </template>
                 </b-field>
-              </div>
-            </div>
-            <div class="columns">
-              <div class="column is-full"></div>
-            </div>
-          </div>
-        </div>
-      </div>
+              </div> -->
     </div>
   </div>
 </template>
@@ -48,6 +37,8 @@ import { getTestAccount } from "@/test/utility";
 import { getAccountAddressDetails } from "@/services/util/account";
 import { prefix0x } from "@/services/coin/condition";
 import { CoinItem } from "@/models/wallet";
+import cdvdev from "@/services/developer/editor/types/cdv.dev.ts";
+import { registerClspLanguage, defineClspTheme } from "@/services/developer/editor/clspLanguage";
 
 interface MixchCodeFilePersistent {
   name?: string;
@@ -55,6 +46,13 @@ interface MixchCodeFilePersistent {
 }
 interface MixchCodePersistent {
   files?: MixchCodeFilePersistent[];
+  selectedIndex?: number;
+}
+
+interface MonacoInMemoryFile {
+  data: MixchCodeFilePersistent;
+  model: monaco.editor.ITextModel;
+  state?: monaco.editor.ICodeEditorViewState | null;
 }
 
 @Component({
@@ -89,32 +87,65 @@ ex.bundle = {
 console.log(ex, coin_spends);
 `.trim();
 
+  public editorData: MonacoInMemoryFile[] = [];
+  public selectedFileIndex = 0;
+  load(): void {
+    const code = JSON.parse(
+      localStorage.getItem("MIXCH_CODE") ||
+        JSON.stringify({
+          files: [
+            { name: "default.js", code: this.defaultCode },
+            {
+              name: "default.clsp",
+              code: `(mod (password new_puzhash amount)
+  (defconstant CREATE_COIN 51)
+
+  (if (= (sha256 password) (q . 0x9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08))
+    (list (list CREATE_COIN new_puzhash amount))
+    (x)
+  )
+)`,
+            },
+          ],
+        })
+    ) as MixchCodePersistent;
+    if (!code.files) return;
+    this.editorData = code.files.map((_) => ({ data: _, model: this.createModel(_) }));
+    this.selectedFileIndex = code.selectedIndex ?? 0;
+  }
+  createModel(pers: MixchCodeFilePersistent): monaco.editor.ITextModel {
+    if (!pers.name || !pers.code) throw new Error("no name and no code");
+    if (pers.name.endsWith(".js")) {
+      const libSource = cdvdev;
+      // const libUri = ;
+      monaco.languages.typescript.javascriptDefaults.addExtraLib(libSource, "ts:filename/facts.d.ts");
+      // monaco.editor.createModel(libSource, "typescript", monaco.Uri.parse(libUri));
+      return monaco.editor.createModel(pers.code, "javascript");
+    } else if (pers.name.endsWith(".clsp")) {
+      return monaco.editor.createModel(pers.code, "clsp");
+      // return monaco.editor.createModel(pers.code, "scala");
+    } else {
+      throw new Error("type cannot be recognized: " + pers.name);
+    }
+  }
+
   async mounted(): Promise<void> {
     const el = this.$refs.editor as HTMLElement | undefined;
     if (!el) return;
 
-    const libSource = (await import("@/services/developer/editor/types/cdv.dev.ts")).default;
-    const libUri = "ts:filename/facts.d.ts";
-    const model = monaco.editor.getModel(monaco.Uri.parse(libUri));
-    if (!model) {
-      monaco.languages.typescript.javascriptDefaults.addExtraLib(libSource, libUri);
-      // When resolving definitions and references, the editor will try to use created models.
-      // Creating a model for the library allows "peek definition/references" commands to work with the library.
-      monaco.editor.createModel(libSource, "typescript", monaco.Uri.parse(libUri));
-    }
-
-    const code = JSON.parse(
-      localStorage.getItem("MIXCH_CODE") ||
-        JSON.stringify({
-          files: [{ name: "default", code: this.defaultCode }],
-        })
-    ) as MixchCodePersistent;
+    registerClspLanguage();
+    defineClspTheme("ClspTheme");
+    this.load();
 
     this.editor = monaco.editor.create(el, {
-      value: code.files?.[0]?.code,
-      language: "javascript",
+      model: this.editorData[this.selectedFileIndex].model,
+      theme: "ClspTheme",
+      minimap: {
+        enabled: false,
+      },
     });
 
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     this.editor.addAction({
       id: "run",
       label: "RUN",
@@ -125,7 +156,48 @@ console.log(ex, coin_spends);
         this.tryit();
       },
     });
+
+    this.editor.addAction({
+      id: "next-tab",
+      label: "NextTab",
+      keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Digit6],
+      // keybindings: [monaco.KeyCode.F6],
+      contextMenuGroupId: "navigation",
+      contextMenuOrder: 1.5,
+      run: (_ed) => {
+        this.changeTab((this.selectedFileIndex + 1) % this.editorData.length);
+      },
+    });
+
+    this.editor.addAction({
+      id: "save",
+      label: "Save",
+      keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS],
+      contextMenuGroupId: "navigation",
+      contextMenuOrder: 1.5,
+      run: (_ed) => {
+        this.save();
+      },
+    });
   }
+
+  changeTab(newIndex: number): void {
+    if (!this.editor) return;
+
+    var currentState = this.editor.saveViewState();
+
+    // var currentModel = this.editor.getModel();
+    const file = this.editorData[this.selectedFileIndex];
+    file.data.code = this.editor.getValue();
+    file.state = currentState;
+    const newFile = this.editorData[newIndex];
+    this.selectedFileIndex = newIndex;
+
+    this.editor.setModel(newFile.model);
+    if (newFile.state) this.editor.restoreViewState(newFile.state);
+    this.editor.focus();
+  }
+
   created(): void {
     window.addEventListener("resize", this.myEventHandler);
   }
@@ -136,7 +208,14 @@ console.log(ex, coin_spends);
     this.editor?.layout();
   }
   save(): void {
-    localStorage.setItem("MIXCH_CODE", JSON.stringify({ files: [{ code: this.editor?.getValue() }] }));
+    if (!this.editor) return;
+
+    const file = this.editorData[this.selectedFileIndex];
+    file.data.code = this.editor.getValue();
+    localStorage.setItem(
+      "MIXCH_CODE",
+      JSON.stringify({ files: this.editorData.map((_) => _.data), selectedIndex: this.selectedFileIndex } as MixchCodePersistent)
+    );
   }
   async tryit(): Promise<void> {
     if (!this.editor) return;
