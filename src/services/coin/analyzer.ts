@@ -21,6 +21,13 @@ export interface CannotParsePuzzle {
   raw: string,
 }
 
+export interface UncurriedPuzzle {
+  mod: ModName,
+  hex: string,
+  sexp: SExp,
+  args: (CannotUncurryArgument | UncurriedPuzzle)[],
+}
+
 export interface CoinInfo {
   parent: string;
   puzzle: string;
@@ -32,22 +39,40 @@ export interface CoinInfo {
   key_param?: string;
 }
 
-export async function simplifyPuzzle(origin: SExp, puz_hex: string | undefined = undefined): Promise<SimplePuzzle | CannotParsePuzzle> {
+export async function simplifyPuzzle(
+  origin: SExp,
+  puz_hex: string | undefined = undefined
+): Promise<SimplePuzzle | CannotParsePuzzle> {
+  return convertUncurriedPuzzle(await uncurryPuzzle(origin, puz_hex));
+}
+
+export function convertUncurriedPuzzle(
+  origin: UncurriedPuzzle | CannotParsePuzzle
+): SimplePuzzle | CannotParsePuzzle {
+  return "raw" in origin
+    ? { raw: origin.raw }
+    : { mod: origin.mod, args: origin.args.map(convertUncurriedPuzzle) };
+}
+
+export async function uncurryPuzzle(
+  origin: SExp,
+  puz_hex: string | undefined = undefined
+): Promise<UncurriedPuzzle | CannotParsePuzzle> {
   try {
     if (!puz_hex) puz_hex = origin.as_bin().hex();
     puz_hex = unprefix0x(puz_hex);
     const puremodname = modshexdict[puz_hex];
-    if (puremodname) return { mod: puremodname, args: [] };
+    if (puremodname) return { mod: puremodname, args: [], hex: puz_hex, sexp: origin };
 
     const [mod, args] = uncurry(origin) as Tuple<SExp, SExp>;
     const argarr: SExp[] = !args ? [] : Array.from(args.as_iter());
-    const simpargs = (await Promise.all(argarr.map(_ => simplifyPuzzle(_))))
-      .map((_: (SimplePuzzle | CannotParsePuzzle)) => "raw" in _ ? { raw: _.raw } : _);
+    const simpargs = (await Promise.all(argarr.map(_ => uncurryPuzzle(_))))
+      .map((_: (UncurriedPuzzle | CannotParsePuzzle)) => "raw" in _ ? { raw: _.raw } : _);
     const mod_hex: string = mod.as_bin().hex();
     const modname = modshexdict[mod_hex];
     if (!modname) return { raw: prefix0x(puz_hex) };
 
-    return { mod: modname, args: simpargs };
+    return { mod: modname, args: simpargs, hex: puz_hex, sexp: origin };
   } catch (err) {
     return { raw: puz_hex ? prefix0x(puz_hex) : "" };
   }
