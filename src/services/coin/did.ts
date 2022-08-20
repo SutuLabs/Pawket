@@ -1,16 +1,17 @@
 import { CoinRecord, CoinSpend, convertToOriginCoin, OriginCoin, SpendBundle } from "@/models/wallet";
-import { assemble } from "clvm_tools/clvm_tools/binutils";
+import { disassemble } from "clvm_tools/clvm_tools/binutils";
 import puzzle from "../crypto/puzzle";
 import { TokenPuzzleDetail } from "../crypto/receive";
 import { combineSpendBundlePure } from "../mint/cat";
-import { internalUncurry } from "../offer/summary";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { prefix0x } from "./condition";
-import { modsdict, modshash, modshex, modsprog } from "./mods";
+import { modshash, modshex, modsprog } from "./mods";
 import { bytesToHex0x } from "../crypto/utility";
 import { getCoinName0x } from "./coinUtility";
 import { cloneAndChangeRequestPuzzleTemporary, constructSingletonTopLayerPuzzle, getPuzzleDetail, ParsedMetadata, parseMetadata, SingletonStructList } from "./singleton";
 import { curryMod } from "../offer/bundler";
+import { CannotParsePuzzle, expectModArgs, sexpAssemble, UncurriedPuzzle, uncurryPuzzle } from "./analyzer";
+import { sha256tree } from "clvm_tools";
 
 export interface MintDidInfo {
   spendBundle: SpendBundle;
@@ -155,42 +156,62 @@ async function constructDidInnerPuzzle(
 }
 
 export async function analyzeDidCoin(
-  puzzle_reveal: string,
+  puz: string | (UncurriedPuzzle | CannotParsePuzzle),
   hintPuzzle: string,
   coinRecord: CoinRecord,
 ): Promise<DidCoinAnalysisResult | null> {
   // console.log(`const puzzle_reveal="${puzzle_reveal}";\nconst hintPuzzle="${hintPuzzle}";\nconst coinRecord=${JSON.stringify(coinRecord, null, 2)};`);
-  const puz = await puzzle.disassemblePuzzle(puzzle_reveal);
-  const { module, args } = await internalUncurry(puz);
-  if (modsdict[module] != "singleton_top_layer_v1_1" || args.length != 2) return null;
-  // console.log("args", args)
+  const parsed_puzzle = (typeof puz === "string")
+    ? await uncurryPuzzle(sexpAssemble(puz))
+    : puz;
 
-  const sgnStructlist: SingletonStructList = (assemble(args[0]).as_javascript() as SingletonStructList)
+  if ("raw" in parsed_puzzle) return null;
 
+  // singleton_top_layer_v1_1
+  if (!expectModArgs(parsed_puzzle, "singleton_top_layer_v1_1", 2)) return null;
+  const root_inner_puzzle = parsed_puzzle.args[1];
+  const root_sgn_struct = parsed_puzzle.args[0];
+
+  if ("raw" in root_inner_puzzle || !("raw" in root_sgn_struct)) return null;
+
+  const sgnStructProg = sexpAssemble(root_sgn_struct.raw);
+  const sgnStructlist: SingletonStructList = (sgnStructProg.as_javascript() as SingletonStructList)
   const singletonModHash = bytesToHex0x(sgnStructlist[0]);
   const launcherId = bytesToHex0x(sgnStructlist[1][0]);
   const launcherPuzzleHash = bytesToHex0x(sgnStructlist[1][1]);
-  const didInnerPuzzle = args[1];
-  const didInnerPuzzleHash = await puzzle.getPuzzleHashFromPuzzle(didInnerPuzzle);
 
-  const { module: smodule, args: sargs } = await internalUncurry(didInnerPuzzle);
-  if (modsdict[smodule] != "did_innerpuz" || sargs.length != 5) return null;
-  // console.log("sargs", sargs)
+  // did_innerpuz
+  if (!expectModArgs(root_inner_puzzle, "did_innerpuz", 5)) return null;
+  const p2InnerPuzzle_parse = root_inner_puzzle.args[0];
+  const recovery_did_list_hash_parse = root_inner_puzzle.args[1];
+  const num_verifications_requried_parse = root_inner_puzzle.args[2];
+  const inner_singleton_struct_parse = root_inner_puzzle.args[3];
+  const rawMetadata_parse = root_inner_puzzle.args[4];
+  const didInnerPuzzleHash = sha256tree(root_inner_puzzle.sexp).hex()
 
-  const p2InnerPuzzle = sargs[0];
-  const recovery_did_list_hash = sargs[1];
-  const num_verifications_requried = sargs[2];
-  const inner_singleton_struct: SingletonStructList = (assemble(sargs[3]).as_javascript() as SingletonStructList)
-  const rawMetadata = sargs[4];
-  const metadata = rawMetadata == "()" ? {} : parseMetadata(rawMetadata);
+  if ("raw" in p2InnerPuzzle_parse
+    || !("raw" in recovery_did_list_hash_parse)
+    || !("raw" in num_verifications_requried_parse)
+    || !("raw" in inner_singleton_struct_parse)
+    || !("raw" in rawMetadata_parse)
+  ) return null;
+
+  if (inner_singleton_struct_parse.raw != root_sgn_struct.raw)
+    throw new Error("abnormal, SINGLETON_STRUCT is different in top_layer and did_innerpuz");
+
+  const p2InnerPuzzle = disassemble(sexpAssemble(p2InnerPuzzle_parse.hex));
+  const recovery_did_list_hash = disassemble(sexpAssemble(recovery_did_list_hash_parse.raw));
+  const num_verifications_requried = disassemble(sexpAssemble(num_verifications_requried_parse.raw));
+  const sexpMetadata = sexpAssemble(rawMetadata_parse.raw);
+  const rawMetadata = disassemble(sexpMetadata);
+  const metadata = rawMetadata == "()" ? {} : parseMetadata(sexpMetadata);
 
   if (!recovery_did_list_hash
     || !singletonModHash
     || !launcherId
     || !launcherPuzzleHash
     || !metadata
-    || !inner_singleton_struct
-    || !p2InnerPuzzle
+    || !recovery_did_list_hash
     || !didInnerPuzzleHash
     || !coinRecord.coin
   ) return null;
@@ -206,7 +227,7 @@ export async function analyzeDidCoin(
     didInnerPuzzleHash,
     p2InnerPuzzle,
     hintPuzzle: prefix0x(hintPuzzle),
-    rawPuzzle: puz,
+    rawPuzzle: disassemble(sexpAssemble(parsed_puzzle.hex)),
     utxoCoin: convertToOriginCoin(coinRecord.coin),
   };
 }
