@@ -1,13 +1,11 @@
 import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
-import { assemble } from "clvm_tools/clvm_tools/binutils";
 import puzzle from "../crypto/puzzle";
 import { TokenPuzzleDetail } from "../crypto/receive";
 import { combineSpendBundlePure } from "../mint/cat";
 import { curryMod } from "../offer/bundler";
-import { internalUncurry } from "../offer/summary";
 import transfer, { GetPuzzleApiCallback, SymbolCoins, TransferTarget } from "../transfer/transfer";
-import { getNumber, prefix0x } from "./condition";
-import { modsdict, modshash, modshex, modsprog } from "./mods";
+import { prefix0x, skipFirstByte0x } from "./condition";
+import { ModName, modshash, modshex, modsprog } from "./mods";
 import utility, { bytesToHex0x } from "../crypto/utility";
 import catBundle, { LineageProof } from "../transfer/catBundle";
 import { getCoinName0x } from "./coinUtility";
@@ -16,6 +14,8 @@ import { findByPath } from "./lisp";
 import { ConditionOpcode } from "./opcode";
 import { DidCoinAnalysisResult } from "./did";
 import { NftCoinAnalysisResult, NftMetadataKeys, NftMetadataValues } from "@/models/nft";
+import { CannotParsePuzzle, sexpAssemble, SimplePuzzle, simplifyPuzzle } from "./analyzer";
+import { disassemble } from "clvm_tools";
 
 export interface MintNftInfo {
   spendBundle: SpendBundle;
@@ -207,14 +207,25 @@ export async function generateTransferNftBundle(
   return bundle;
 }
 
-export async function analyzeNftCoin(puzzle_reveal: string, hintPuzzle: string, solution_hex: string): Promise<NftCoinAnalysisResult | null> {
-  const puz = await puzzle.disassemblePuzzle(puzzle_reveal);
-  const solution = await puzzle.disassemblePuzzle(solution_hex);
-  const { module, args } = await internalUncurry(puz);
+export async function analyzeNftCoin(puz: string | (SimplePuzzle | CannotParsePuzzle), hintPuzzle: string, solution_hex: string): Promise<NftCoinAnalysisResult | null> {
+  const parsed_puzzle = (typeof puz === "string")
+    ? await simplifyPuzzle(sexpAssemble(puz))
+    : puz;
+
+  if ("raw" in parsed_puzzle) return null;
+
+  const expectModArgs = function (puz: SimplePuzzle, mod: ModName, argLength: number): boolean {
+    return puz.mod == mod && puz.args.length == argLength;
+  };
 
   // - singleton_top_layer_v1_1
-  if (modsdict[module] != "singleton_top_layer_v1_1" || args.length != 2) return null;
-  const sgnStructProg = assemble(args[0]);
+  if (!expectModArgs(parsed_puzzle, "singleton_top_layer_v1_1", 2)) return null;
+  const root_inner_puzzle = parsed_puzzle.args[1];
+  const root_sgn_struct = parsed_puzzle.args[0];
+
+  if ("raw" in root_inner_puzzle || !("raw" in root_sgn_struct)) return null;
+
+  const sgnStructProg = sexpAssemble(root_sgn_struct.raw);
   const sgnStructlist: SingletonStructList = (sgnStructProg.as_javascript() as SingletonStructList)
 
   const singletonModHash = bytesToHex0x(sgnStructlist[0]);
@@ -222,29 +233,65 @@ export async function analyzeNftCoin(puzzle_reveal: string, hintPuzzle: string, 
   const launcherPuzzleHash = bytesToHex0x(sgnStructlist[1][1]);
 
   // nft_state_layer
-  const { module: smodule, args: sargs } = await internalUncurry(args[1]);
-  if (modsdict[smodule] != "nft_state_layer" || sargs.length != 4) return null;
-  const nftStateModHash = sargs[0];
-  const metadataUpdaterPuzzleHash = sargs[2];
+  if (!expectModArgs(root_inner_puzzle, "nft_state_layer", 4)) return null;
+  const nftStateModHash_parsed = root_inner_puzzle.args[0];
+  const metadataUpdaterPuzzleHash_parsed = root_inner_puzzle.args[2];
+  const rawMetadata_parsed = root_inner_puzzle.args[1];
+  const nftStateInnerPuzzle = root_inner_puzzle.args[3];
 
-  const rawMetadata = sargs[1];
-  const parsed = parseMetadata(rawMetadata);
+  if ("raw" in nftStateInnerPuzzle
+    || !("raw" in nftStateModHash_parsed)
+    || !("raw" in metadataUpdaterPuzzleHash_parsed)
+    || !("raw" in rawMetadata_parsed)
+  ) return null;
+
+  const nftStateModHash = skipFirstByte0x(nftStateModHash_parsed.raw);
+  const metadataUpdaterPuzzleHash = skipFirstByte0x(metadataUpdaterPuzzleHash_parsed.raw);
+  const rawMetadata = await puzzle.disassemblePuzzle(rawMetadata_parsed.raw);
+  const parsed = parseMetadata(sexpAssemble(rawMetadata_parsed.raw));
   const metadata = getNftMetadataInfo(parsed);
 
   // nft_ownership_layer
-  const { module: omodule, args: oargs } = await internalUncurry(sargs[3]);
-  if (modsdict[omodule] != "nft_ownership_layer" || oargs.length != 4) return null;
-  const nftOwnershipModHash = oargs[0];
-  const previousOwner = oargs[1];
-  const p2InnerPuzzle = oargs[3];
+  if (!expectModArgs(nftStateInnerPuzzle, "nft_ownership_layer", 4)) return null;
+  const nftOwnershipModHash_parsed = nftStateInnerPuzzle.args[0];
+  const previousOwner_parsed = nftStateInnerPuzzle.args[1];
+  const transferInnerPuzzle_parsed = nftStateInnerPuzzle.args[2];
+  const p2InnerPuzzle_parsed = nftStateInnerPuzzle.args[3];
+
+  if ("raw" in transferInnerPuzzle_parsed
+    || "raw" in p2InnerPuzzle_parsed
+    || !("raw" in nftOwnershipModHash_parsed)
+    || !("raw" in previousOwner_parsed)
+  ) return null;
+
+  const nftOwnershipModHash = skipFirstByte0x(nftOwnershipModHash_parsed.raw);
+  const previousOwner = disassemble(sexpAssemble(previousOwner_parsed.raw));
+
+  // p2_delegated_puzzle_or_hidden_puzzle
+  if (!expectModArgs(p2InnerPuzzle_parsed, "p2_delegated_puzzle_or_hidden_puzzle", 1)) return null;
+  const syntheticKey_parsed = p2InnerPuzzle_parsed.args[0]
+
+  if (!("raw" in syntheticKey_parsed)) return null;
+
+  const p2InnerPuzzle = puzzle.getPuzzle(skipFirstByte0x(syntheticKey_parsed.raw));
 
   // nft_ownership_transfer_program_one_way_claim_with_royalties
-  const { module: tmodule, args: targs } = await internalUncurry(oargs[2]);
-  if (modsdict[tmodule] != "nft_ownership_transfer_program_one_way_claim_with_royalties" || targs.length != 3) return null;
-  if (args[0] != targs[0]) throw new Error("abnormal, SINGLETON_STRUCT is different in top_layer and ownership_transfer");
-  const royaltyAddress = targs[1];
-  const tradePricePercentage = Number(getNumber(targs[2]));
-  const { didOwner, p2Owner } = await getOwnerFromSolution(solution);
+  if (!expectModArgs(transferInnerPuzzle_parsed, "nft_ownership_transfer_program_one_way_claim_with_royalties", 3)) return null;
+  const transfer_sgn_struct_parsed = transferInnerPuzzle_parsed.args[0];
+  const royaltyAddress_parsed = transferInnerPuzzle_parsed.args[1];
+  const tradePricePercentage_parsed = transferInnerPuzzle_parsed.args[2];
+
+  if (!("raw" in transfer_sgn_struct_parsed)
+    || !("raw" in royaltyAddress_parsed)
+    || !("raw" in tradePricePercentage_parsed)
+  ) return null;
+
+  const transfer_sgn_struct = transfer_sgn_struct_parsed.raw;
+  const royaltyAddress = skipFirstByte0x(royaltyAddress_parsed.raw);
+  const tradePricePercentage = sexpAssemble(tradePricePercentage_parsed.raw).as_int();
+
+  if (transfer_sgn_struct != root_sgn_struct.raw) throw new Error("abnormal, SINGLETON_STRUCT is different in top_layer and ownership_transfer");
+  const { didOwner, p2Owner } = await getOwnerFromSolution(solution_hex);
 
   if (!metadata.imageUri
     || !metadata.imageHash
@@ -316,8 +363,8 @@ export async function getTransferNftInnerSolution(tgt_hex: string): Promise<stri
   return nftSolution;
 }
 
-async function getOwnerFromSolution(solution: string): Promise<{ didOwner: string | undefined, p2Owner: string | undefined }> {
-  const sol = assemble(solution);
+async function getOwnerFromSolution(solution_hex: string): Promise<{ didOwner: string | undefined, p2Owner: string | undefined }> {
+  const sol = sexpAssemble(solution_hex);
   /*
   example:
   (
