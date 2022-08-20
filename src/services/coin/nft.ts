@@ -14,7 +14,7 @@ import { findByPath } from "./lisp";
 import { ConditionOpcode } from "./opcode";
 import { DidCoinAnalysisResult } from "./did";
 import { NftCoinAnalysisResult, NftMetadataKeys, NftMetadataValues } from "@/models/nft";
-import { CannotParsePuzzle, expectModArgs, sexpAssemble, SimplePuzzle, simplifyPuzzle } from "./analyzer";
+import { CannotParsePuzzle, expectModArgs, sexpAssemble, UncurriedPuzzle, uncurryPuzzle } from "./analyzer";
 import { disassemble } from "clvm_tools";
 
 export interface MintNftInfo {
@@ -208,12 +208,12 @@ export async function generateTransferNftBundle(
 }
 
 export async function analyzeNftCoin(
-  puz: string | (SimplePuzzle | CannotParsePuzzle),
+  puz: string | (UncurriedPuzzle | CannotParsePuzzle),
   hintPuzzle: string,
   solution_hex: string
 ): Promise<NftCoinAnalysisResult | null> {
   const parsed_puzzle = (typeof puz === "string")
-    ? await simplifyPuzzle(sexpAssemble(puz))
+    ? await uncurryPuzzle(sexpAssemble(puz))
     : puz;
 
   if ("raw" in parsed_puzzle) return null;
@@ -259,21 +259,15 @@ export async function analyzeNftCoin(
   const p2InnerPuzzle_parsed = nftStateInnerPuzzle.args[3];
 
   if ("raw" in transferInnerPuzzle_parsed
-    || "raw" in p2InnerPuzzle_parsed
     || !("raw" in nftOwnershipModHash_parsed)
     || !("raw" in previousOwner_parsed)
   ) return null;
 
   const nftOwnershipModHash = skipFirstByte0x(nftOwnershipModHash_parsed.raw);
   const previousOwner = disassemble(sexpAssemble(previousOwner_parsed.raw));
-
-  // p2_delegated_puzzle_or_hidden_puzzle
-  if (!expectModArgs(p2InnerPuzzle_parsed, "p2_delegated_puzzle_or_hidden_puzzle", 1)) return null;
-  const syntheticKey_parsed = p2InnerPuzzle_parsed.args[0]
-
-  if (!("raw" in syntheticKey_parsed)) return null;
-
-  const p2InnerPuzzle = puzzle.getPuzzle(skipFirstByte0x(syntheticKey_parsed.raw));
+  const p2InnerPuzzle = "raw" in p2InnerPuzzle_parsed
+    ? await puzzle.disassemblePuzzle(p2InnerPuzzle_parsed.raw)
+    : disassemble(p2InnerPuzzle_parsed.sexp);
 
   // nft_ownership_transfer_program_one_way_claim_with_royalties
   if (!expectModArgs(transferInnerPuzzle_parsed, "nft_ownership_transfer_program_one_way_claim_with_royalties", 3)) return null;

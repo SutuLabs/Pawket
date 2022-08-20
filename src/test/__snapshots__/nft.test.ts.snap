@@ -143,6 +143,35 @@ Object {
 }
 `;
 
+exports[`Analyze Nft 5: nft analysis result 1`] = `
+Object {
+  "didOwner": "()",
+  "hintPuzzle": "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79",
+  "launcherId": "0x0bc26931dcb5cc6df2982657a906925667eb5a207766f98c90cb04c300b1b758",
+  "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+  "metadata": Object {
+    "imageHash": "b984ae995f4886ed8a07a6e4aa3c7374ae0d8974dfd6cf519f2b1e2b147e256e",
+    "imageUri": "https://ejk6hjgqnwntzbows52b53aqmc6bwjsdrg4zea4jm2gw5onnq4.arweave.net/IlX_jpNBtmzyF1pd0HuwQYLwbJkOJuZIDiWaNbrmth0",
+    "licenseHash": "00",
+    "licenseUri": "",
+    "metadataHash": "749a787f8672d31ceb68b1b6f3530dbc0772abf9c6e52bb9c03673e5441546df",
+    "metadataUri": "https://uzgsmccirvy7yw7aytqrg2nvbq3tchs3g45zxzocqf3umutkereq.arweave.net/pk0mCEiNcfxb4MThE2m1DDcxHls3O5vlwoF3RlJqJEk",
+    "serialNumber": "01",
+    "serialTotal": "01",
+  },
+  "metadataUpdaterPuzzleHash": "0xfe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b",
+  "nftOwnershipModHash": "0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
+  "nftStateModHash": "0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
+  "p2InnerPuzzle": "(a (q 2 10 (c 2 (c 3 ()))) (c (q (51 . 62) (a (i 5 (q 4 (c 12 (c (a 30 (c 2 (c 9 ()))) ())) (a 22 (c 2 (c 25 (c (a 10 (c 2 (c 13 ()))) ()))))) ()) 1) (a (i 5 (q 4 (c 8 9) (a 22 (c 2 (c 13 (c 11 ()))))) (q . 11)) 1) 2 (i (l 5) (q 11 (q . 2) (a 30 (c 2 (c 9 ()))) (a 30 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1))",
+  "p2Owner": "",
+  "previousOwner": "()",
+  "rawMetadata": "((117 \\"https://ejk6hjgqnwntzbows52b53aqmc6bwjsdrg4zea4jm2gw5onnq4.arweave.net/IlX_jpNBtmzyF1pd0HuwQYLwbJkOJuZIDiWaNbrmth0\\") (104 . 0xb984ae995f4886ed8a07a6e4aa3c7374ae0d8974dfd6cf519f2b1e2b147e256e) (28021 \\"https://uzgsmccirvy7yw7aytqrg2nvbq3tchs3g45zxzocqf3umutkereq.arweave.net/pk0mCEiNcfxb4MThE2m1DDcxHls3O5vlwoF3RlJqJEk\\") (28008 . 0x749a787f8672d31ceb68b1b6f3530dbc0772abf9c6e52bb9c03673e5441546df) (27765) (27752 . 0x00) (29550 . 1) (29556 . 1))",
+  "royaltyAddress": "0xe1e18f02b8ebf72e227ae11260ff34d417bbfd17a0198ae61fe4b6f3f6832875",
+  "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
+  "tradePricePercentage": 950,
+}
+`;
+
 exports[`Mint Did: spendbundle 1`] = `
 Object {
   "spendBundle": Object {
