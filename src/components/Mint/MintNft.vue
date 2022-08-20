@@ -135,7 +135,7 @@ import FeeSelector from "@/components/Send/FeeSelector.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import SendSummary from "@/components/Send/SendSummary.vue";
 import { chainId, ensureAddress, xchPrefix, xchSymbol } from "@/store/modules/network";
-import { getTokenInfo } from "@/services/coin/cat";
+import { getTokenInfo } from "@/services/view/cat";
 import AddressField from "@/components/Common/AddressField.vue";
 import { Bytes } from "clvm";
 import { bech32m } from "@scure/base";

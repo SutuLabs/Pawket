@@ -152,7 +152,7 @@ import Send from "@/components/Send/Send.vue";
 import { demojo } from "@/filters/unitConversion";
 import { xchToCurrency } from "@/filters/usdtConversion";
 import { TokenInfo, AccountEntity, CustomCat } from "@/models/account";
-import { getTokenInfo } from "@/services/coin/cat";
+import { getTokenInfo } from "@/services/view/cat";
 import { getExchangeRate } from "@/services/exchange/rates";
 import { CurrencyType } from "@/services/exchange/currencyType";
 import UtxoPanel from "@/components/Utxo/UtxoPanel.vue";

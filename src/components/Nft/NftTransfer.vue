@@ -81,7 +81,7 @@ import FeeSelector from "@/components/Send/FeeSelector.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import SendSummary from "@/components/Send/SendSummary.vue";
 import { chainId, xchPrefix, xchSymbol } from "@/store/modules/network";
-import { getTokenInfo } from "@/services/coin/cat";
+import { getTokenInfo } from "@/services/view/cat";
 import { generateTransferNftBundle } from "@/services/coin/nft";
 import AddressField from "@/components/Common/AddressField.vue";
 import { bech32m } from "@scure/base";

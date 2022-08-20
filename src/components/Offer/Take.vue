@@ -166,7 +166,7 @@
 import { Component, Vue, Prop, Emit } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { SpendBundle } from "@/models/wallet";
-import { getCatIdDict, getCatNameDict, getTokenInfo } from "@/services/coin/cat";
+import { getCatIdDict, getCatNameDict, getTokenInfo } from "@/services/view/cat";
 import { AccountEntity, CustomCat, TokenInfo } from "@/models/account";
 import { demojo } from "@/filters/unitConversion";
 import { SymbolCoins } from "@/services/transfer/transfer";

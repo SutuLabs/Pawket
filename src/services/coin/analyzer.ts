@@ -151,6 +151,7 @@ export const sexpAssemble = function (hexString: string): SExp {
   return input_sexp;
 };
 
-export const expectModArgs = function (puz: SimplePuzzle, mod: ModName, argLength: number): boolean {
-  return puz.mod == mod && puz.args.length == argLength;
+export const expectModArgs = function (puz: SimplePuzzle, mods: ModName | ModName[], argLength: number): boolean {
+  if (typeof mods === "string") mods = [mods];
+  return mods.some(mod => puz.mod == mod) && puz.args.length == argLength;
 };

@@ -113,7 +113,7 @@ import { CurrencyType } from "@/services/exchange/currencyType";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import SendSummary from "@/components/Send/SendSummary.vue";
 import { chainId, xchPrefix, xchSymbol } from "@/store/modules/network";
-import { getCatNames, getTokenInfo } from "@/services/coin/cat";
+import { getCatNames, getTokenInfo } from "@/services/view/cat";
 import AddressField from "@/components/Common/AddressField.vue";
 import TopBar from "@/components/Common/TopBar.vue";
 import AddressBook, { Contact } from "@/components/AddressBook/AddressBook.vue";
