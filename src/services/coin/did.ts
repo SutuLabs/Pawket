@@ -45,6 +45,17 @@ export async function generateMintDidBundle(
   baseSymbol: string,
   chainId: string,
 ): Promise<MintDidInfo> {
+  // console.log(
+  //   `const targetAddress="${targetAddress}";\n`
+  //   + `const changeAddress="${changeAddress}";\n`
+  //   + `const fee=${fee}n;\n`
+  //   + `const metadata=${JSON.stringify(metadata, null, 2)};\n`
+  //   + `const availcoins=${JSON.stringify(availcoins, null, 2)};\n`
+  //   + `const requests=${JSON.stringify(requests, null, 2)};\n`
+  //   + `const baseSymbol="${baseSymbol}";\n`
+  //   + `const chainId="${chainId}";\n`
+  // );
+
   const amount = 1n; // always 1 mojo for 1 DID
   const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(changeAddress));
@@ -110,7 +121,7 @@ export async function generateMintDidBundle(
   const extreqs = cloneAndChangeRequestPuzzleTemporary(baseSymbol, requests, inner_p2_puzzle.hash, didPuzzle, didPuzzleHash);
   // console.log("extreqs", extreqs, { coin_spends: [launcherCoinSpend, didCoinSpend] }, chainId);
 
-  const bundles = await transfer.getSpendBundle([launcherCoinSpend, didCoinSpend], extreqs, chainId);
+  const bundles = await transfer.getSpendBundle([launcherCoinSpend, didCoinSpend], extreqs, chainId, true);
   // console.log("bundles", bundles)
   const bundle = await combineSpendBundlePure(bootstrapSpendBundle, bundles);
 
@@ -148,6 +159,7 @@ export async function analyzeDidCoin(
   hintPuzzle: string,
   coinRecord: CoinRecord,
 ): Promise<DidCoinAnalysisResult | null> {
+  // console.log(`const puzzle_reveal="${puzzle_reveal}";\nconst hintPuzzle="${hintPuzzle}";\nconst coinRecord=${JSON.stringify(coinRecord, null, 2)};`);
   const puz = await puzzle.disassemblePuzzle(puzzle_reveal);
   const { module, args } = await internalUncurry(puz);
   if (modsdict[module] != "singleton_top_layer_v1_1" || args.length != 2) return null;

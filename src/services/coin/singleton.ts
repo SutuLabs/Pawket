@@ -50,7 +50,7 @@ export function cloneAndChangeRequestPuzzleTemporary(
   const nftReq = extreqs.find((_) => _.symbol == baseSymbol)?.puzzles.find((_) => unprefix0x(originalHash) == _.hash);
   if (!nftReq) throw new Error(`cannot find inner puzzle hash [${unprefix0x(originalHash)}] from ` + JSON.stringify(extreqs));
   nftReq.puzzle = newPuzzle;
-  nftReq.hash = newPuzzleHash;
+  nftReq.hash = unprefix0x(newPuzzleHash);
   nftReq.address = "";
   return extreqs;
 }
