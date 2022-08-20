@@ -197,7 +197,7 @@ class Receive {
           continue;
         }
 
-        const didResult = await analyzeDidCoin(scoin.puzzle_reveal, coinRecords.puzzleHash, coinRecord);
+        const didResult = await analyzeDidCoin(scoin.puzzle_reveal, coinRecords.puzzleHash, coinRecord.coin);
         if (didResult) {
           const did: DidDetail = {
             name: puzzle.getAddressFromPuzzleHash(didResult.launcherId, "did:chia:"),

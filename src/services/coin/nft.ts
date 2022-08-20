@@ -15,7 +15,7 @@ import { ConditionOpcode } from "./opcode";
 import { DidCoinAnalysisResult } from "./did";
 import { NftCoinAnalysisResult, NftMetadataKeys, NftMetadataValues } from "@/models/nft";
 import { CannotParsePuzzle, expectModArgs, sexpAssemble, UncurriedPuzzle, uncurryPuzzle } from "./analyzer";
-import { disassemble } from "clvm_tools";
+import { disassemble, sha256tree } from "clvm_tools";
 
 export interface MintNftInfo {
   spendBundle: SpendBundle;
@@ -209,7 +209,7 @@ export async function generateTransferNftBundle(
 
 export async function analyzeNftCoin(
   puz: string | (UncurriedPuzzle | CannotParsePuzzle),
-  hintPuzzle: string,
+  hintPuzzle: string | undefined,
   solution_hex: string
 ): Promise<NftCoinAnalysisResult | null> {
   const parsed_puzzle = (typeof puz === "string")
@@ -268,6 +268,9 @@ export async function analyzeNftCoin(
   const p2InnerPuzzle = "raw" in p2InnerPuzzle_parsed
     ? await puzzle.disassemblePuzzle(p2InnerPuzzle_parsed.raw)
     : disassemble(p2InnerPuzzle_parsed.sexp);
+  hintPuzzle = hintPuzzle ? hintPuzzle : sha256tree("raw" in p2InnerPuzzle_parsed
+    ? sexpAssemble(p2InnerPuzzle_parsed.raw)
+    : p2InnerPuzzle_parsed.sexp).hex();
 
   // nft_ownership_transfer_program_one_way_claim_with_royalties
   if (!expectModArgs(transferInnerPuzzle_parsed, "nft_ownership_transfer_program_one_way_claim_with_royalties", 3)) return null;

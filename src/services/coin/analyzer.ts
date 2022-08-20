@@ -7,6 +7,9 @@ import { getCoinName0x } from './coinUtility';
 import { prefix0x, unprefix0x } from './condition';
 import { sha256tree } from 'clvm_tools';
 import puzzle from '../crypto/puzzle';
+import { analyzeCatCoin } from './cat';
+import { analyzeDidCoin } from './did';
+import { analyzeNftCoin } from './nft';
 
 export interface SimplePuzzle {
   mod: ModName,
@@ -37,6 +40,7 @@ export interface CoinInfo {
   coin_name: string;
   mods: string;
   key_param?: string;
+  analysis?: string;
 }
 
 export async function simplifyPuzzle(
@@ -83,7 +87,8 @@ export async function parseCoin(all: SExp): Promise<CoinInfo> {
   let next = all.rest();
   const puz = next.first();
   const puz_hex = prefix0x(puz.as_bin().hex());
-  const decPuzzle = await simplifyPuzzle(puz, puz_hex);
+  const uncPuzzle = await uncurryPuzzle(puz, puz_hex);
+  const decPuzzle = convertUncurriedPuzzle(uncPuzzle);
   next = next.rest();
   const amount = next.first().as_bigint();
   next = next.rest();
@@ -94,7 +99,25 @@ export async function parseCoin(all: SExp): Promise<CoinInfo> {
   const mods = getModsPath(decPuzzle);
   const key_param = getKeyParam(decPuzzle)
 
-  return { parent, puzzle: puz_hex, parsed_puzzle: decPuzzle, amount: amount.toString(), solution, coin_name, mods, key_param };
+  const analysis = mods.startsWith("cat_v1(") ? await analyzeCatCoin(uncPuzzle)
+    : mods.startsWith("cat_v2(") ? await analyzeCatCoin(uncPuzzle)
+      : mods.startsWith("singleton_top_layer_v1_1(did_innerpuz(")
+        ? await analyzeDidCoin(uncPuzzle, undefined, { amount: Number(amount), parentCoinInfo: parent, puzzleHash: puzzle_hash })
+        : mods.startsWith("singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),")
+          ? await analyzeNftCoin(uncPuzzle, undefined, solution)
+          : undefined;
+
+  return {
+    parent,
+    puzzle: puz_hex,
+    parsed_puzzle: decPuzzle,
+    amount: amount.toString(),
+    solution,
+    coin_name,
+    mods,
+    key_param,
+    analysis: analysis ? JSON.stringify(analysis) : undefined,
+  };
 }
 
 export async function parseBlock(generator_hex: string, ref_hex_list: string[] | undefined): Promise<string> {

@@ -1,4 +1,4 @@
-import { CoinRecord, CoinSpend, convertToOriginCoin, OriginCoin, SpendBundle } from "@/models/wallet";
+import { CoinItem, CoinSpend, convertToOriginCoin, OriginCoin, SpendBundle } from "@/models/wallet";
 import { disassemble } from "clvm_tools/clvm_tools/binutils";
 import puzzle from "../crypto/puzzle";
 import { TokenPuzzleDetail } from "../crypto/receive";
@@ -157,8 +157,8 @@ async function constructDidInnerPuzzle(
 
 export async function analyzeDidCoin(
   puz: string | (UncurriedPuzzle | CannotParsePuzzle),
-  hintPuzzle: string,
-  coinRecord: CoinRecord,
+  hintPuzzle: string | undefined,
+  coin: CoinItem,
 ): Promise<DidCoinAnalysisResult | null> {
   // console.log(`const puzzle_reveal="${puzzle_reveal}";\nconst hintPuzzle="${hintPuzzle}";\nconst coinRecord=${JSON.stringify(coinRecord, null, 2)};`);
   const parsed_puzzle = (typeof puz === "string")
@@ -200,6 +200,7 @@ export async function analyzeDidCoin(
     throw new Error("abnormal, SINGLETON_STRUCT is different in top_layer and did_innerpuz");
 
   const p2InnerPuzzle = disassemble(sexpAssemble(p2InnerPuzzle_parse.hex));
+  hintPuzzle = hintPuzzle ? hintPuzzle : sha256tree(sexpAssemble(p2InnerPuzzle_parse.hex)).hex();
   const recovery_did_list_hash = disassemble(sexpAssemble(recovery_did_list_hash_parse.raw));
   const num_verifications_requried = disassemble(sexpAssemble(num_verifications_requried_parse.raw));
   const sexpMetadata = sexpAssemble(rawMetadata_parse.raw);
@@ -213,7 +214,7 @@ export async function analyzeDidCoin(
     || !metadata
     || !recovery_did_list_hash
     || !didInnerPuzzleHash
-    || !coinRecord.coin
+    || !coin
   ) return null;
 
   return {
@@ -228,6 +229,6 @@ export async function analyzeDidCoin(
     p2InnerPuzzle,
     hintPuzzle: prefix0x(hintPuzzle),
     rawPuzzle: disassemble(sexpAssemble(parsed_puzzle.hex)),
-    utxoCoin: convertToOriginCoin(coinRecord.coin),
+    utxoCoin: convertToOriginCoin(coin),
   };
 }

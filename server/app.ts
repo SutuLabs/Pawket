@@ -5,6 +5,11 @@ import { Instance } from "../src/services/util/instance";
 import { assemble } from "clvm_tools/clvm_tools/binutils";
 import { parseBlock, parseCoin, sexpAssemble, simplifyPuzzle } from "../src/services/coin/analyzer";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(BigInt.prototype as any).toJSON = function () {
+  return this.toString();
+};
+
 const app: express.Express = express()
 app.use(express.json({ limit: '3mb' }))
 app.use(express.urlencoded({ extended: true }))
