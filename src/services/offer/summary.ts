@@ -1,9 +1,9 @@
-import { CoinSpend, SpendBundle } from "@/models/wallet";
+import { CoinSpend, SpendBundle } from "../../models/wallet";
 import { Bytes, SExp, Tuple } from "clvm";
-import { getNumber, prefix0x } from '@/services/coin/condition';
+import { getNumber, prefix0x } from '../coin/condition';
 import { assemble, disassemble } from 'clvm_tools/clvm_tools/binutils';
 import puzzle from "../crypto/puzzle";
-import { modsdict, modsprog } from '@/services/coin/mods';
+import { modsdict, modsprog } from '../coin/mods';
 import { uncurry } from 'clvm_tools/clvm_tools/curry';
 import { ConditionOpcode } from "../coin/opcode";
 import { TokenSpendPlan } from "../transfer/transfer";

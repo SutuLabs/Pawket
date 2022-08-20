@@ -1,6 +1,6 @@
 import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
 import { Bytes } from "clvm";
-import { CoinConditions, ConditionType, prefix0x } from '@/services/coin/condition';
+import { CoinConditions, ConditionType, prefix0x } from '../coin/condition';
 import puzzle from "../crypto/puzzle";
 import { ConditionOpcode } from "../coin/opcode";
 import transfer, { GetPuzzleApiCallback, SymbolCoins, TransferTarget } from "../transfer/transfer";

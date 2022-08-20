@@ -1,4 +1,4 @@
-import { CoinItem, CoinSpend, convertToOriginCoin, OriginCoin, SpendBundle } from "@/models/wallet";
+import { CoinItem, CoinSpend, convertToOriginCoin, OriginCoin, SpendBundle } from "../../models/wallet";
 import { disassemble } from "clvm_tools/clvm_tools/binutils";
 import puzzle from "../crypto/puzzle";
 import { TokenPuzzleDetail } from "../crypto/receive";

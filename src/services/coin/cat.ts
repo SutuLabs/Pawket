@@ -1,4 +1,4 @@
-import { skipFirstByte0x } from "@/services/coin/condition";
+import { skipFirstByte0x } from "./condition";
 import { sha256tree } from "clvm_tools";
 import { disassemble } from "clvm_tools/clvm_tools/binutils";
 import { CannotParsePuzzle, expectModArgs, sexpAssemble, UncurriedPuzzle, uncurryPuzzle } from "./analyzer";
