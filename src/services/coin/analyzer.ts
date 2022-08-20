@@ -125,3 +125,7 @@ export const sexpAssemble = function (hexString: string): SExp {
   const input_sexp = sexp_from_stream(new Stream(bts as Bytes), to_sexp_f);
   return input_sexp;
 };
+
+export const expectModArgs = function (puz: SimplePuzzle, mod: ModName, argLength: number): boolean {
+  return puz.mod == mod && puz.args.length == argLength;
+};

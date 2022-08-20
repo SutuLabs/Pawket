@@ -5,7 +5,7 @@ import { combineSpendBundlePure } from "../mint/cat";
 import { curryMod } from "../offer/bundler";
 import transfer, { GetPuzzleApiCallback, SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { prefix0x, skipFirstByte0x } from "./condition";
-import { ModName, modshash, modshex, modsprog } from "./mods";
+import { modshash, modshex, modsprog } from "./mods";
 import utility, { bytesToHex0x } from "../crypto/utility";
 import catBundle, { LineageProof } from "../transfer/catBundle";
 import { getCoinName0x } from "./coinUtility";
@@ -14,7 +14,7 @@ import { findByPath } from "./lisp";
 import { ConditionOpcode } from "./opcode";
 import { DidCoinAnalysisResult } from "./did";
 import { NftCoinAnalysisResult, NftMetadataKeys, NftMetadataValues } from "@/models/nft";
-import { CannotParsePuzzle, sexpAssemble, SimplePuzzle, simplifyPuzzle } from "./analyzer";
+import { CannotParsePuzzle, expectModArgs, sexpAssemble, SimplePuzzle, simplifyPuzzle } from "./analyzer";
 import { disassemble } from "clvm_tools";
 
 export interface MintNftInfo {
@@ -207,16 +207,16 @@ export async function generateTransferNftBundle(
   return bundle;
 }
 
-export async function analyzeNftCoin(puz: string | (SimplePuzzle | CannotParsePuzzle), hintPuzzle: string, solution_hex: string): Promise<NftCoinAnalysisResult | null> {
+export async function analyzeNftCoin(
+  puz: string | (SimplePuzzle | CannotParsePuzzle),
+  hintPuzzle: string,
+  solution_hex: string
+): Promise<NftCoinAnalysisResult | null> {
   const parsed_puzzle = (typeof puz === "string")
     ? await simplifyPuzzle(sexpAssemble(puz))
     : puz;
 
   if ("raw" in parsed_puzzle) return null;
-
-  const expectModArgs = function (puz: SimplePuzzle, mod: ModName, argLength: number): boolean {
-    return puz.mod == mod && puz.args.length == argLength;
-  };
 
   // - singleton_top_layer_v1_1
   if (!expectModArgs(parsed_puzzle, "singleton_top_layer_v1_1", 2)) return null;
