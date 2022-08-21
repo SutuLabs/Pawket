@@ -179,8 +179,9 @@ class Receive {
         }
 
         const scoin = await debug.getCoinSolution(coinRecord.coin.parentCoinInfo, rpcUrl);
+        const ocoin = convertToOriginCoin(coinRecord.coin);
         // console.log("analyzing", getCoinName0x(convertToOriginCoin(coinRecord.coin)));
-        const nftResult = await analyzeNftCoin(scoin.puzzle_reveal, coinRecords.puzzleHash, scoin.solution);
+        const nftResult = await analyzeNftCoin(scoin.puzzle_reveal, coinRecords.puzzleHash, ocoin, scoin.solution);
         if (nftResult) {
           const nft: NftDetail = {
             metadata: {
@@ -197,7 +198,7 @@ class Receive {
           continue;
         }
 
-        const didResult = await analyzeDidCoin(scoin.puzzle_reveal, coinRecords.puzzleHash, coinRecord.coin);
+        const didResult = await analyzeDidCoin(scoin.puzzle_reveal, coinRecords.puzzleHash, ocoin, scoin.solution);
         if (didResult) {
           const did: DidDetail = {
             name: puzzle.getAddressFromPuzzleHash(didResult.launcherId, "did:chia:"),

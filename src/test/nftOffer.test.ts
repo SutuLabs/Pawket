@@ -54,6 +54,11 @@ test('create and accept nft offer for xch', async () => {
       "p2Owner": "",
       "royaltyAddress": "0x5662b49a357db4f05c2c141452b72fb91e7ec286e9b47d6c287210c63ae5cd3e",
       "tradePricePercentage": 800,
+      "coin": {
+        "amount": 1n,
+        "parent_coin_info": "0x81f9e36a5e45fe43b590eedb39db8fba322077885d9044d31378219ec988e8a0",
+        "puzzle_hash": "0x311524ea04195c124d0fa3cebc7c7118b99eaa2553284d7be4820cc52f6ce1c9"
+      },
       "hintPuzzle": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155"
     }
   };

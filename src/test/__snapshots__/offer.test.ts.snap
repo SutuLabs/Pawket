@@ -92,6 +92,11 @@ Object {
       "nft_detail": Object {
         "address": "nft1966h8jxn4jy0kmeey2vwv70762ecshcv3faa2aresedjl80u874sanvttk",
         "analysis": Object {
+          "coin": Object {
+            "amount": 1n,
+            "parent_coin_info": "0x65371424569b9594ae5fafaea14bd3cb8e684ab63f407952bf55905d61bdc63e",
+            "puzzle_hash": "0x4784d032061c04a66cf4ab01064171e4a13ebac57ee30017a6efb9190e68b4ac",
+          },
           "didOwner": "",
           "hintPuzzle": "0x4784d032061c04a66cf4ab01064171e4a13ebac57ee30017a6efb9190e68b4ac",
           "launcherId": "0x2eb573c8d3ac88fb6f392298e679fed2b3885f0c8a7bd57479865b2f9dfc3fab",
@@ -107,6 +112,7 @@ Object {
             "serialTotal": "01",
           },
           "metadataUpdaterPuzzleHash": "0xfe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b",
+          "nextCoinName": "0x2fc0a993706678836056ed68e0c8956ccc03924418509ba019eb63eeff36c8c8",
           "nftOwnershipModHash": "0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
           "nftStateModHash": "0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
           "p2InnerPuzzle": "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xb30f7badc62235fa6aed93f5f1bed66dbd4926ee14505f8185bca6f483bec0e1236e5e3333c73fa7e66a0bfd8a6c905d) 1))",

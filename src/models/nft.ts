@@ -1,4 +1,5 @@
 import { NftDetail } from "@/services/crypto/receive";
+import { OriginCoin } from "./wallet";
 
 export interface NftItemAttribute {
   trait_type: string;
@@ -57,6 +58,8 @@ export interface NftCoinAnalysisResult {
   tradePricePercentage: number;
   rawMetadata: string;
   metadata: NftMetadataValues;
+  coin: OriginCoin;
+  nextCoinName?: string;
 }
 
 export type NftDataKey = "imageUri" | "imageHash" | "metadataUri" | "metadataHash" | "licenseUri" | "licenseHash" | "serialNumber" | "serialTotal";

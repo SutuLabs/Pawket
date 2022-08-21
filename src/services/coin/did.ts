@@ -1,4 +1,4 @@
-import { CoinItem, CoinSpend, convertToOriginCoin, OriginCoin, SpendBundle } from "../../models/wallet";
+import { CoinSpend, OriginCoin, SpendBundle } from "../../models/wallet";
 import { disassemble } from "clvm_tools/clvm_tools/binutils";
 import puzzle from "../crypto/puzzle";
 import { TokenPuzzleDetail } from "../crypto/receive";
@@ -8,7 +8,7 @@ import { prefix0x } from "./condition";
 import { modshash, modshex, modsprog } from "./mods";
 import { bytesToHex0x } from "../crypto/utility";
 import { getCoinName0x } from "./coinUtility";
-import { cloneAndChangeRequestPuzzleTemporary, constructSingletonTopLayerPuzzle, getPuzzleDetail, ParsedMetadata, parseMetadata, SingletonStructList } from "./singleton";
+import { cloneAndChangeRequestPuzzleTemporary, constructSingletonTopLayerPuzzle, getNextCoinName0x, getPuzzleDetail, ParsedMetadata, parseMetadata, SingletonStructList } from "./singleton";
 import { curryMod } from "../offer/bundler";
 import { CannotParsePuzzle, expectModArgs, sexpAssemble, UncurriedPuzzle, uncurryPuzzle } from "./analyzer";
 import { sha256tree } from "clvm_tools";
@@ -33,7 +33,8 @@ export interface DidCoinAnalysisResult {
   recovery_did_list_hash: string;
   num_verifications_requried: string;
   rawPuzzle: string;
-  utxoCoin: OriginCoin;
+  coin: OriginCoin;
+  nextCoinName?: string;
 }
 
 export async function generateMintDidBundle(
@@ -158,7 +159,8 @@ async function constructDidInnerPuzzle(
 export async function analyzeDidCoin(
   puz: string | (UncurriedPuzzle | CannotParsePuzzle),
   hintPuzzle: string | undefined,
-  coin: CoinItem,
+  coin: OriginCoin,
+  solution_hex: string,
 ): Promise<DidCoinAnalysisResult | null> {
   // console.log(`const puzzle_reveal="${puzzle_reveal}";\nconst hintPuzzle="${hintPuzzle}";\nconst coinRecord=${JSON.stringify(coinRecord, null, 2)};`);
   const parsed_puzzle = (typeof puz === "string")
@@ -207,6 +209,8 @@ export async function analyzeDidCoin(
   const rawMetadata = disassemble(sexpMetadata);
   const metadata = rawMetadata == "()" ? {} : parseMetadata(sexpMetadata);
 
+  const nextCoinName = await getNextCoinName0x(parsed_puzzle.hex, solution_hex, getCoinName0x(coin));
+
   if (!recovery_did_list_hash
     || !singletonModHash
     || !launcherId
@@ -229,6 +233,7 @@ export async function analyzeDidCoin(
     p2InnerPuzzle,
     hintPuzzle: prefix0x(hintPuzzle),
     rawPuzzle: disassemble(sexpAssemble(parsed_puzzle.hex)),
-    utxoCoin: convertToOriginCoin(coin),
+    coin,
+    nextCoinName,
   };
 }

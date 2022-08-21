@@ -93,7 +93,7 @@ export async function getOfferSummary(bundle: SpendBundle): Promise<OfferSummary
         const tgt = prefix0x(Bytes.from(((cond.args[2] && cond.args[2]?.length > 0) ? cond.args[2][0] : cond.args[0]) as Uint8Array).hex());
         const id = assetId ? assetId : nftId;
         const wraptgt = id ? prefix0x(Bytes.from(cond.args[0] as Uint8Array).hex()) : undefined;
-        const analysis = await analyzeNftCoin(coin.puzzle_reveal, coin.coin.puzzle_hash, coin.solution);
+        const analysis = await analyzeNftCoin(coin.puzzle_reveal, coin.coin.puzzle_hash, coin.coin, coin.solution);
         const nft_detail: NftDetail | undefined = !analysis ? undefined :
           {
             metadata: {

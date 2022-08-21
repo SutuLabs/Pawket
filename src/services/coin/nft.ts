@@ -9,13 +9,14 @@ import { modshash, modshex, modsprog } from "./mods";
 import utility, { bytesToHex0x } from "../crypto/utility";
 import catBundle, { LineageProof } from "../transfer/catBundle";
 import { getCoinName0x } from "./coinUtility";
-import { cloneAndChangeRequestPuzzleTemporary, constructSingletonTopLayerPuzzle, getPuzzleDetail, hex2asc, ParsedMetadata, parseMetadata, SingletonStructList } from "./singleton";
+import { cloneAndChangeRequestPuzzleTemporary, constructSingletonTopLayerPuzzle, getNextCoinName0x, getPuzzleDetail, hex2asc, ParsedMetadata, parseMetadata, SingletonStructList } from "./singleton";
 import { findByPath } from "./lisp";
 import { ConditionOpcode } from "./opcode";
 import { DidCoinAnalysisResult } from "./did";
 import { NftCoinAnalysisResult, NftMetadataKeys, NftMetadataValues } from "@/models/nft";
 import { CannotParsePuzzle, expectModArgs, sexpAssemble, UncurriedPuzzle, uncurryPuzzle } from "./analyzer";
 import { disassemble, sha256tree } from "clvm_tools";
+import { SExp } from "clvm";
 
 export interface MintNftInfo {
   spendBundle: SpendBundle;
@@ -110,13 +111,13 @@ export async function generateMintNftBundle(
     solution: prefix0x(await puzzle.encodePuzzle(nftSolution)),
   };
 
-  const proof = await catBundle.getLineageProof(didAnalysis.utxoCoin.parent_coin_info, api, 2);
+  const proof = await catBundle.getLineageProof(didAnalysis.coin.parent_coin_info, api, 2);
   if (proof.proof != didInnerPuzzleHash0x)
     throw new Error(`proof[${proof.proof}] should equal to did_inner_puzzle_hash[${didInnerPuzzleHash0x}]`);
   const didP2InnerPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(didAnalysis.p2InnerPuzzle));
   const didSolution = `((${proof.coinId} ${proof.proof} ${proof.amount}) ${amount} (q (() (q (51 ${didInnerPuzzleHash0x} ${amount} (${didP2InnerPuzzleHash})) (62 ${launcherCoinId})) ())))`;
   const didCoinSpend: CoinSpend = {
-    coin: didAnalysis.utxoCoin,
+    coin: didAnalysis.coin,
     puzzle_reveal: prefix0x(await puzzle.encodePuzzle(didAnalysis.rawPuzzle)),
     solution: prefix0x(await puzzle.encodePuzzle(didSolution)),
   };
@@ -210,6 +211,7 @@ export async function generateTransferNftBundle(
 export async function analyzeNftCoin(
   puz: string | (UncurriedPuzzle | CannotParsePuzzle),
   hintPuzzle: string | undefined,
+  coin: OriginCoin,
   solution_hex: string
 ): Promise<NftCoinAnalysisResult | null> {
   const parsed_puzzle = (typeof puz === "string")
@@ -288,7 +290,10 @@ export async function analyzeNftCoin(
   const tradePricePercentage = sexpAssemble(tradePricePercentage_parsed.raw).as_int();
 
   if (transfer_sgn_struct != root_sgn_struct.raw) throw new Error("abnormal, SINGLETON_STRUCT is different in top_layer and ownership_transfer");
-  const { didOwner, p2Owner } = await getOwnerFromSolution(solution_hex);
+  const solsexp = sexpAssemble(solution_hex);
+  const { didOwner, p2Owner } = await getOwnerFromSolution(solsexp);
+
+  const nextCoinName = await getNextCoinName0x(parsed_puzzle.hex, solution_hex, getCoinName0x(coin));
 
   if (!metadata.imageUri
     || !metadata.imageHash
@@ -298,6 +303,7 @@ export async function analyzeNftCoin(
     || !nftStateModHash
     || !metadataUpdaterPuzzleHash
     || !p2InnerPuzzle
+    || !coin
   ) return null;
 
   // console.log(`NFT found: ${launcherId}`);
@@ -321,6 +327,8 @@ export async function analyzeNftCoin(
     royaltyAddress,
     tradePricePercentage,
     hintPuzzle: prefix0x(hintPuzzle),
+    nextCoinName,
+    coin,
   };
 }
 
@@ -360,8 +368,7 @@ export async function getTransferNftInnerSolution(tgt_hex: string): Promise<stri
   return nftSolution;
 }
 
-async function getOwnerFromSolution(solution_hex: string): Promise<{ didOwner: string | undefined, p2Owner: string | undefined }> {
-  const sol = sexpAssemble(solution_hex);
+async function getOwnerFromSolution(sol: SExp): Promise<{ didOwner: string | undefined, p2Owner: string | undefined }> {
   /*
   example:
   (

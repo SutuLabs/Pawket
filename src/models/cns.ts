@@ -1,19 +1,7 @@
-export interface CnsCoinAnalysisResult {
-  singletonModHash: string;
-  launcherId: string;
-  launcherPuzzleHash: string;
-  nftStateModHash: string;
-  metadataUpdaterPuzzleHash: string;
-  p2InnerPuzzle: string;
-  hintPuzzle: string;
-  nftOwnershipModHash: string;
-  previousOwner: string;
-  didOwner: string;
-  p2Owner: string;
-  royaltyAddress: string;
-  tradePricePercentage: number;
-  rawMetadata: string;
-  metadata: NftMetadataValues;
+import { NftCoinAnalysisResult } from "./nft";
+
+export interface CnsCoinAnalysisResult extends NftCoinAnalysisResult {
+  cns?: string;
 }
 
 export type NftMetadataValues = {

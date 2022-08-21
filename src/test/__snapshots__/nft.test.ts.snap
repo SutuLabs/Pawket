@@ -2,27 +2,33 @@
 
 exports[`Analyze Did: did analysis 1`] = `
 Object {
+  "coin": Object {
+    "amount": 1n,
+    "parent_coin_info": "0x3a004a7c4e900167f0807ed53cbbe3c2ca66d0edbeba2fa243aa849d2babd909",
+    "puzzle_hash": "0x86299c8970ffcaa41e38aca6f11739402206cd9e6934f5f320f460d35a00cd33",
+  },
   "didInnerPuzzleHash": "c80cb3644de1c9921520227e3c5bd7550709d602cce38c6887cc52538586635d",
   "hintPuzzle": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
   "launcherId": "0x3a004a7c4e900167f0807ed53cbbe3c2ca66d0edbeba2fa243aa849d2babd909",
   "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
   "metadata": Object {},
+  "nextCoinName": "0x632efa1d522090074d45e365e8988b001de48b2e9f700d20ff0c4931f78f2fab",
   "num_verifications_requried": "()",
   "p2InnerPuzzle": "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xa0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338) 1))",
   "rawMetadata": "()",
   "rawPuzzle": "(a (q 2 (q 2 (i (logand 47 52) (q 4 (c 32 (c 47 ())) (c (a 62 (c 2 (c 5 (c (a 42 (c 2 (c 39 (c (a (i 119 (q 2 54 (c 2 (c 9 (c 87 (c (a 46 (c 2 (c 5 ()))) ()))))) (q . 29)) 1) (c (a (i 119 (q . -73) (q . 87)) 1) ()))))) (c 119 ()))))) (a 58 (c 2 (c 5 (c (a 11 95) (q ()))))))) (q 8)) 1) (c (q (((73 . 71) 2 . 51) (c . 1) 1 . 2) ((not 2 (i 5 (q 2 50 (c 2 (c 13 (c (sha256 60 (sha256 52 36) (sha256 60 (sha256 60 (sha256 52 44) 9) (sha256 60 11 (sha256 52 ())))) ())))) (q . 11)) 1) (a (i (all (= (strlen 5) 34) (= (strlen 11) 34) (> 23 (q . -1))) (q 11 5 11 23) (q 8)) 1) 2 (i 11 (q 2 (i (a 38 (c 2 (c 19 ()))) (q 2 (i (not 23) (q 2 (i (= -77 (q . -113)) (q 2 58 (c 2 (c 5 (c 27 (c 52 ()))))) (q 4 (c 35 (c (a 54 (c 2 (c 9 (c 83 (c (a 46 (c 2 (c 5 ()))) ()))))) 115)) (a 58 (c 2 (c 5 (c 27 (c 52 ()))))))) 1) (q 8)) 1) (q 4 19 (a 58 (c 2 (c 5 (c 27 (c 23 ()))))))) 1) (q 2 (i 23 () (q 8)) 1)) 1) ((a (i (= 9 56) (q 2 (i (logand 45 (q . 1)) (q 1 . 1) ()) 1) ()) 1) 11 60 (sha256 52 40) (sha256 60 (sha256 60 (sha256 52 44) 5) (sha256 60 (a 50 (c 2 (c 7 (c (sha256 52 52) ())))) (sha256 52 ())))) (a (i (l 5) (q 11 (q . 2) (a 46 (c 2 (c 9 ()))) (a 46 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 2 (i (any 23 (= 11 21)) (q 4 48 (c 11 ())) (q 8)) 1) 1)) (c (q 0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f 0x3a004a7c4e900167f0807ed53cbbe3c2ca66d0edbeba2fa243aa849d2babd909 . 0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9) (c (q 2 (q 2 (q 2 (i -65 (q 2 5 383) (q 2 (i (all (= (a 126 (c 2 (c 6143 ()))) 11) (> 23 ())) (q 4 (c 40 (c 383 ())) (c (c 52 (c 767 (c 383 (c (c 767 ()) ())))) (c (c 56 (c 12287 ())) (a 38 (c 2 (c 47 (c 23 (c 6143 (c 12287 (c 767 (c 1535 (c 3071 (q ()))))))))))))) (q 8)) 1)) 1) (c (q (((49 . 61) 73 . 70) (a . 51) 60 . 4) ((q . 1) 2 2 (i 5 (q 2 58 (c 2 (c 13 (c (sha256 42 (sha256 34 60) (sha256 42 (sha256 42 (sha256 34 50) 9) (sha256 42 11 (sha256 34 ())))) ())))) (q . 11)) 1) ((a (i 23 (q 2 (i 319 (q 4 (c 48 (c (sha256 (sha256 (a 54 (c 2 (c 5 (c 39 (c 575 (c 1343 (c 2879 ()))))))) (a 126 (c 2 (c (a 46 (c 2 (c 47 (c 95 (c 383 ()))))) ())))) 47) ())) (a 38 (c 2 (c 5 (c 11 (c 55 (c 47 (c 95 (c 447 (c 383 (c (+ 767 (q . 1)) ()))))))))))) (q 2 38 (c 2 (c 5 (c 55 (c 47 (c 95 (c 447 (c 383 (c 767 ())))))))))) 1) (q 2 (i (> 767 (- 11 (q . 1))) (q 4 (c 32 (c 383 (c 95 ()))) ()) (q 8)) 1)) 1) 11 23 (a 94 (c 2 (c 9 (c 47 (c (a 126 (c 2 (c (c 9 (c 11 29)) ()))) ()))))) 95) (c (q . 1) (c (c 44 (c 5 ())) (c (c 32 (c 23 (c 11 ()))) ()))) (sha256 42 (sha256 34 36) (sha256 42 (sha256 42 (sha256 34 50) 5) (sha256 42 (a 58 (c 2 (c 7 (c (sha256 34 34) ())))) (sha256 34 ())))) 2 (i (l 5) (q 11 (q . 2) (a 126 (c 2 (c 9 ()))) (a 126 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q 2 (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xa0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338) 1)) (c (q) (c (q) (c (q 0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f 0x3a004a7c4e900167f0807ed53cbbe3c2ca66d0edbeba2fa243aa849d2babd909 . 0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9) (c (q) 1)))))) 1)))",
   "recovery_did_list_hash": "()",
   "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
-  "utxoCoin": Object {
-    "amount": 1n,
-    "parent_coin_info": "0x4d5956d62f1526682a762f6842efac4064b0fadbd2b07dd6e19045e32c672203",
-    "puzzle_hash": "0x86299c8970ffcaa41e38aca6f11739402206cd9e6934f5f320f460d35a00cd33",
-  },
 }
 `;
 
 exports[`Analyze Nft 1: nft analysis result 1`] = `
 Object {
+  "coin": Object {
+    "amount": 1,
+    "parent_coin_info": "0xed52525bcccb48416babccd02d76f9722cc30b1b54ffab4b44bb23617ef37d21",
+    "puzzle_hash": "0x15b4bd8aff6ecd59aa00cb412437fa838d9f6c81a19166ab41e4f860866a0266",
+  },
   "didOwner": "",
   "hintPuzzle": "0xdb308b6dcd4cd92a905934bc50d1e66f8788e876abe772c4c2b6bbe71e3b5f6f",
   "launcherId": "0xd6aae8561702bb0144752c01e2ebae7fbdeccdc0d4d6f1eda0100300dcf30bdc",
@@ -38,11 +44,12 @@ Object {
     "serialTotal": "05",
   },
   "metadataUpdaterPuzzleHash": "0xfe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b",
+  "nextCoinName": "0x0d3d0dbfd6b87c4bb6cabedab623784af1dddeb93181a8e00afc0105aaac96ec",
   "nftOwnershipModHash": "0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
   "nftStateModHash": "0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
-  "p2InnerPuzzle": "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0x92c7027d455e843b1226b757c1dd5e124e0e6ddab3549036a4684b410182fdfd1eee459eb76a4d6d73e94f90fbe6eb1d) 1))",
-  "p2Owner": "db308b6dcd4cd92a905934bc50d1e66f8788e876abe772c4c2b6bbe71e3b5f6f",
-  "previousOwner": "0x7b7f7ae9d65865d67a0305828e940b470a11f94e96568b5df98174147a92f0d6",
+  "p2InnerPuzzle": "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0x9609418cb2545f1faf0ec37359591012251f0e7e9b94bbad13ee79701307eb5b6b8d1f62646f925dcb6c24a132a71355) 1))",
+  "p2Owner": "8f972e809806a42ec005beb3019665bea4b3478c9582bf43708bb1c261916a51",
+  "previousOwner": "()",
   "rawMetadata": "((117 \\"https://guggero.github.io/cryptography-toolkit/images/fork-me-on-github-ribbon.png\\") (104 . 0xe62bcdc91903b07b7b86f1af11c5fdd9c3b545bfff90515976f9e8d67c91eb0f) (28021 \\"https://ufzyuv55yicm3ev56cstqbmaayrkudmmjueyrd3nkolafxbe.arweave.net/oX--OKV73CBM2-SvfClOAWABiKqDYxNCYiPbVOWAtwk\\") (27765 \\"https://bafybeigzcazxeu7epmm4vtkuadrvysv74lbzzbl2evphtae6k57yhgynp4.ipfs.nftstorage.link/license.pdf\\") (29550 . 7) (29556 . 5) (28008 . 0x44475cb971933e4545efad1337f3d68bc53523d987412df233f3b905ed1c5b3f) (27752 . 0x2267456bd2cef8ebc2f22a42947b068bc3b138284a587feda2edfe07a3577f50))",
   "royaltyAddress": "0x5662b49a357db4f05c2c141452b72fb91e7ec286e9b47d6c287210c63ae5cd3e",
   "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
@@ -52,7 +59,12 @@ Object {
 
 exports[`Analyze Nft 2: nft analysis result 1`] = `
 Object {
-  "didOwner": "7b7f7ae9d65865d67a0305828e940b470a11f94e96568b5df98174147a92f0d6",
+  "coin": Object {
+    "amount": 1,
+    "parent_coin_info": "0x250e8e8db0a28c72b5951d2f9572b582358451d649c8b4082bb6a5e867945115",
+    "puzzle_hash": "0xef2e6d51f3d15f544674728ff6dba1f23fb0bd273a93e516ef167f424e594d5b",
+  },
+  "didOwner": "",
   "hintPuzzle": "0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10",
   "launcherId": "0x74cc7e5904310477bae6e250910da9fee0e604b93d73a180cbd052d12f56769a",
   "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
@@ -67,11 +79,12 @@ Object {
     "serialTotal": "05",
   },
   "metadataUpdaterPuzzleHash": "0xfe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b",
+  "nextCoinName": "0x22344f85ad46eaff6831b78eb218bb5c74761ce5dbd29c1705aae0105a20273a",
   "nftOwnershipModHash": "0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
   "nftStateModHash": "0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
-  "p2InnerPuzzle": "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0x8cbd10b7fbd0d4b659974df886c3e095a56510de56f9017512c545649053bd7f8ebb08589277581dcfe82d95190cf03b) 1))",
-  "p2Owner": "7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10",
-  "previousOwner": "()",
+  "p2InnerPuzzle": "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0x92c7027d455e843b1226b757c1dd5e124e0e6ddab3549036a4684b410182fdfd1eee459eb76a4d6d73e94f90fbe6eb1d) 1))",
+  "p2Owner": "db308b6dcd4cd92a905934bc50d1e66f8788e876abe772c4c2b6bbe71e3b5f6f",
+  "previousOwner": "0x7b7f7ae9d65865d67a0305828e940b470a11f94e96568b5df98174147a92f0d6",
   "rawMetadata": "((117 \\"https://guggero.github.io/cryptography-toolkit/images/fork-me-on-github-ribbon.png\\") (104 . 0xe62bcdc91903b07b7b86f1af11c5fdd9c3b545bfff90515976f9e8d67c91eb0f) (28021 \\"https://ufzyuv55yicm3ev56cstqbmaayrkudmmjueyrd3nkolafxbe.arweave.net/oX--OKV73CBM2-SvfClOAWABiKqDYxNCYiPbVOWAtwk\\") (27765 \\"https://bafybeigzcazxeu7epmm4vtkuadrvysv74lbzzbl2evphtae6k57yhgynp4.ipfs.nftstorage.link/license.pdf\\") (29550 . 8) (29556 . 5) (28008 . 0x44475cb971933e4545efad1337f3d68bc53523d987412df233f3b905ed1c5b3f) (27752 . 0x2267456bd2cef8ebc2f22a42947b068bc3b138284a587feda2edfe07a3577f50))",
   "royaltyAddress": "0x5662b49a357db4f05c2c141452b72fb91e7ec286e9b47d6c287210c63ae5cd3e",
   "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
@@ -81,6 +94,11 @@ Object {
 
 exports[`Analyze Nft 3: nft analysis result 1`] = `
 Object {
+  "coin": Object {
+    "amount": 1,
+    "parent_coin_info": "0x5883c8c63817daef11bdf901714620752f24dfb05533be95f8d926c1cfd1a3fa",
+    "puzzle_hash": "0x26c70fae272ce7d625d81fcf058e19aadb6d6320d1186985ae2be9358eace3e3",
+  },
   "didOwner": "",
   "hintPuzzle": "0x4c61cafe5965913de3655cc6a5015ec196a1cf8fe1652e2951245f4dac9e01c6",
   "launcherId": "0x8ec91e9bb35b5ab71d788868968c2a16a7b861d844c3e773671758b45ef94832",
@@ -96,10 +114,11 @@ Object {
     "serialTotal": "01",
   },
   "metadataUpdaterPuzzleHash": "0xfe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b",
+  "nextCoinName": "0x0431b9444fa63a0c98d96ceb22a25da3f11b2b560bd304cc7ae0ef75c0033cd1",
   "nftOwnershipModHash": "0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
   "nftStateModHash": "0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
   "p2InnerPuzzle": "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0x95e5a8c571f8456090ac42a023254327203ba32066c91cb754acf09e8995120a981a71f10547507cb203f2edb397e9d4) 1))",
-  "p2Owner": "4c61cafe5965913de3655cc6a5015ec196a1cf8fe1652e2951245f4dac9e01c6",
+  "p2Owner": "934b1b7a0a50e0f01a60513f66af90694359fe7e14ae184ff1c4a4436bf4f8b1",
   "previousOwner": "()",
   "rawMetadata": "((117 \\"https://q4njcsrgfilv6fqjyi4mxlwjvuawoaavnfdyqkqk3zqadfwy.arweave.net/hxqRSiYqF18WCcI4-y67JrQFnABVp__R4gqCt5gAZbY\\") (104 . 0xcc7f660e33a5450077105e3803dd463192e28dc7a79b37b34ad7499073b50b8b) (28021 \\"https://bbsboguf32iha4zaeoy36oyvlftyycbtdhhhojffh3jskfc6xy.arweave.net/CGQXGoXekHBzICOxvzsVWWeMCDMZz-nckpT7TJRRevk\\") (28008 . 0x4277d4ad83d402d7d41c1ec689c929b7e6b2ca04ceca25e1b29d4c876738c8da) (27765) (27752 . 0x00) (29550 . 1) (29556 . 1))",
   "royaltyAddress": "0x50c065d539852dc1a51a735fa37a6d29598ad4c01248854269521c31617143be",
@@ -110,6 +129,11 @@ Object {
 
 exports[`Analyze Nft 4: nft analysis result 1`] = `
 Object {
+  "coin": Object {
+    "amount": 1,
+    "parent_coin_info": "0xef584d9698144dc3ece1fd25873b76d9bf3891b540f890f7e10b564731cc4829",
+    "puzzle_hash": "0x9aef2a2cb3d72ab0458595fa43d4aadccad4838a24fee002e86c89ca14022ee0",
+  },
   "didOwner": "",
   "hintPuzzle": "0x0000000000000000000000000000000000000000000000000000000000000000",
   "launcherId": "0x5293c873037e8dc8000519a86ab8ed2f60d9d53db49aca3316859057954ea0a9",
@@ -131,6 +155,7 @@ Object {
     "serialTotal": "01",
   },
   "metadataUpdaterPuzzleHash": "0xfe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b",
+  "nextCoinName": "0x19d6781708289fec2534ff1d906369a157d020f17870b5d0fa952e463c9f6cd0",
   "nftOwnershipModHash": "0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
   "nftStateModHash": "0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
   "p2InnerPuzzle": "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0x9684f017a0b02928260108206a96ed3c66c724b69005c05626109435f184ca980960c1a008437c5d118f016f16c3d51e) 1))",
@@ -145,6 +170,11 @@ Object {
 
 exports[`Analyze Nft 5: nft analysis result 1`] = `
 Object {
+  "coin": Object {
+    "amount": 1,
+    "parent_coin_info": "0x7430a0a17cf513f030e49b7efd426043b1b41a26b64557da634baadc2057a992",
+    "puzzle_hash": "0x973967aaf282b85c918121050c91da3d55fb09a2169bad5ff8da2836a78bd9e6",
+  },
   "didOwner": "()",
   "hintPuzzle": "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79",
   "launcherId": "0x0bc26931dcb5cc6df2982657a906925667eb5a207766f98c90cb04c300b1b758",
@@ -160,6 +190,7 @@ Object {
     "serialTotal": "01",
   },
   "metadataUpdaterPuzzleHash": "0xfe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b",
+  "nextCoinName": "0xef0462dec44a72f33a960749a55c5ecb5fab81a7e5f7d319ca9c4ef191adf87c",
   "nftOwnershipModHash": "0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
   "nftStateModHash": "0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
   "p2InnerPuzzle": "(a (q 2 10 (c 2 (c 3 ()))) (c (q (51 . 62) (a (i 5 (q 4 (c 12 (c (a 30 (c 2 (c 9 ()))) ())) (a 22 (c 2 (c 25 (c (a 10 (c 2 (c 13 ()))) ()))))) ()) 1) (a (i 5 (q 4 (c 8 9) (a 22 (c 2 (c 13 (c 11 ()))))) (q . 11)) 1) 2 (i (l 5) (q 11 (q . 2) (a 30 (c 2 (c 9 ()))) (a 30 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1))",
@@ -255,6 +286,11 @@ Object {
 
 exports[`Transfer Nft: analysis 1`] = `
 Object {
+  "coin": Object {
+    "amount": 1n,
+    "parent_coin_info": "0x7daa37d920abd727414982a6e62cf79826f3973553dc4f1859fbdf25f4c425e6",
+    "puzzle_hash": "0x9bbadfe19aa71a623b778d4bfd4ecadd17a556336d09759423e1c662eeabb3ae",
+  },
   "didOwner": "",
   "hintPuzzle": "0x8f972e809806a42ec005beb3019665bea4b3478c9582bf43708bb1c261916a51",
   "launcherId": "0xd6aae8561702bb0144752c01e2ebae7fbdeccdc0d4d6f1eda0100300dcf30bdc",
@@ -270,10 +306,11 @@ Object {
     "serialTotal": "05",
   },
   "metadataUpdaterPuzzleHash": "0xfe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b",
+  "nextCoinName": "0x9a8545778a55197ec78cf3e33582f9e64fefa7a0d4a7160ac8d9e29103566bfe",
   "nftOwnershipModHash": "0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
   "nftStateModHash": "0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
-  "p2InnerPuzzle": "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0x9609418cb2545f1faf0ec37359591012251f0e7e9b94bbad13ee79701307eb5b6b8d1f62646f925dcb6c24a132a71355) 1))",
-  "p2Owner": "8f972e809806a42ec005beb3019665bea4b3478c9582bf43708bb1c261916a51",
+  "p2InnerPuzzle": "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xad9ed4658693028c56be1f4c4fee4f8b8fb8c9ecc48e01f2e6e61727d3a6f9441896e3340f55cd8cbf1270dd5de969fd) 1))",
+  "p2Owner": "db308b6dcd4cd92a905934bc50d1e66f8788e876abe772c4c2b6bbe71e3b5f6f",
   "previousOwner": "()",
   "rawMetadata": "((117 \\"https://guggero.github.io/cryptography-toolkit/images/fork-me-on-github-ribbon.png\\") (104 . 0xe62bcdc91903b07b7b86f1af11c5fdd9c3b545bfff90515976f9e8d67c91eb0f) (28021 \\"https://ufzyuv55yicm3ev56cstqbmaayrkudmmjueyrd3nkolafxbe.arweave.net/oX--OKV73CBM2-SvfClOAWABiKqDYxNCYiPbVOWAtwk\\") (27765 \\"https://bafybeigzcazxeu7epmm4vtkuadrvysv74lbzzbl2evphtae6k57yhgynp4.ipfs.nftstorage.link/license.pdf\\") (29550 . 7) (29556 . 5) (28008 . 0x44475cb971933e4545efad1337f3d68bc53523d987412df233f3b905ed1c5b3f) (27752 . 0x2267456bd2cef8ebc2f22a42947b068bc3b138284a587feda2edfe07a3577f50))",
   "royaltyAddress": "0x5662b49a357db4f05c2c141452b72fb91e7ec286e9b47d6c287210c63ae5cd3e",

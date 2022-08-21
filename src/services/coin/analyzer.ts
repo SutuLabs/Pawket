@@ -99,12 +99,13 @@ export async function parseCoin(all: SExp): Promise<CoinInfo> {
   const mods = getModsPath(decPuzzle);
   const key_param = getKeyParam(decPuzzle)
 
+  const coin = { amount, parent_coin_info: parent, puzzle_hash: puzzle_hash };
   const analysis = mods.startsWith("cat_v1(") ? await analyzeCatCoin(uncPuzzle)
     : mods.startsWith("cat_v2(") ? await analyzeCatCoin(uncPuzzle)
       : mods.startsWith("singleton_top_layer_v1_1(did_innerpuz(")
-        ? await analyzeDidCoin(uncPuzzle, undefined, { amount: Number(amount), parentCoinInfo: parent, puzzleHash: puzzle_hash })
+        ? await analyzeDidCoin(uncPuzzle, undefined, coin, solution)
         : mods.startsWith("singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),")
-          ? await analyzeNftCoin(uncPuzzle, undefined, solution)
+          ? await analyzeNftCoin(uncPuzzle, undefined, coin, solution)
           : undefined;
 
   return {
@@ -174,7 +175,7 @@ export const sexpAssemble = function (hexString: string): SExp {
   return input_sexp;
 };
 
-export const expectModArgs = function (puz: SimplePuzzle, mods: ModName | ModName[], argLength: number): boolean {
-  if (typeof mods === "string") mods = [mods];
-  return mods.some(mod => puz.mod == mod) && puz.args.length == argLength;
+export const expectModArgs = function (puz: SimplePuzzle, mods: (ModName | ModName[]), argLength: number): boolean {
+  if (!Array.isArray(mods)) mods = [mods];
+  return mods.some((mod: ModName) => puz.mod == mod) && puz.args.length == argLength;
 };
