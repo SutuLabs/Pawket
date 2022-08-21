@@ -62,7 +62,9 @@ export interface NftCoinAnalysisResult {
   nextCoinName?: string;
 }
 
-export type NftDataKey = "imageUri" | "imageHash" | "metadataUri" | "metadataHash" | "licenseUri" | "licenseHash" | "serialNumber" | "serialTotal";
+export type NftDataKey = "imageUri" | "imageHash" | "metadataUri" | "metadataHash" | "licenseUri" | "licenseHash" | "serialNumber" | "serialTotal"
+  // CNS related keys
+  | "address" | "name";
 export type NftMetadataValues = {
   imageUri: string | string[] | undefined;
   imageHash: string | undefined;
@@ -72,5 +74,8 @@ export type NftMetadataValues = {
   licenseHash: string | undefined;
   serialNumber: string | undefined;
   serialTotal: string | undefined;
+  // CNS related keys
+  address?: string ;
+  name?: string ;
 };
 export type NftMetadataKeys = { [key in NftDataKey]: string; };

@@ -79,6 +79,24 @@
     <footer class="modal-card-foot is-block">
       <div>
         <b-button :label="$t('mintNft.ui.button.cancel')" class="is-pulled-left" @click="cancel()"></b-button>
+        <b-button
+          :label="$t('mintNft.ui.button.sign')"
+          v-if="!bundle"
+          type="is-primary"
+          class="is-pulled-left"
+          @click="sign()"
+          :loading="submitting"
+          :disabled="!validity || submitting"
+        ></b-button>
+        <b-button
+          label="Sign CNS"
+          v-if="!bundle"
+          type="is-primary"
+          class="is-pulled-left"
+          @click="signCns()"
+          :loading="submitting"
+          :disabled="!validity || submitting"
+        ></b-button>
         <template v-if="showTest && debugMode">
           <b-button
             class="is-pulled-left"
@@ -92,15 +110,6 @@
             <span>{{ c.name }}</span>
           </b-button>
         </template>
-        <b-button
-          :label="$t('mintNft.ui.button.sign')"
-          v-if="!bundle"
-          type="is-primary"
-          class="is-pulled-left"
-          @click="sign()"
-          :loading="submitting"
-          :disabled="!validity || submitting"
-        ></b-button>
         <button v-if="debugMode" class="test-btn is-pulled-left" @click="showTest = !showTest"></button>
       </div>
       <div>
@@ -144,6 +153,7 @@ import { generateMintNftBundle } from "@/services/coin/nft";
 import { NftMetadataValues } from "@/models/nft";
 import puzzle from "@/services/crypto/puzzle";
 import { getLineageProofPuzzle } from "@/services/transfer/call";
+import { prefix0x } from "@/services/coin/condition";
 
 interface NftFormInfo {
   uri: string;
@@ -204,14 +214,13 @@ export default class MintNft extends Vue {
       name: "1",
       tip: "temp case",
       info: {
-        uri: "https://aws1.discourse-cdn.com/business4/uploads/chia/original/1X/682754dfb596e0b4ec08dc23442cc5a9192418e3.png",
-        hash: "76a1900b6931f7bf5f07ab310733270838b040385f285423f49e2f5518867335",
-        metadataUri:
-          "https://ufzyuv55yicm3ev56cstqbmaayrkudmmjueyrd3nkolafxbe.arweave.net/oX--OKV73CBM2-SvfClOAWABiKqDYxNCYiPbVOWAtwk",
-        metadataHash: "44475cb971933e4545efad1337f3d68bc53523d987412df233f3b905ed1c5b3f",
+        uri: "https://ipfs.io/ipfs/Qmf4AyDewBSyAAqjy52CN9sW86Wx33pxGLsX4PaSVdJMvG",
+        hash: "21abefc9338c4d94a7d29c4c4d91ebd12b34549053e4d0bef8d9a052f6836b7c",
+        metadataUri: "https://ipfs.io/ipfs/QmcvzMotNFbcCPnJodHZL2G38NFvQtBkHUcMKQcmHWbkGV",
+        metadataHash: "ba6f6c49c2e19c533b5feffa004f2acd8e776fe35b95337a39d801da711153f6",
         licenseUri: "https://bafybeigzcazxeu7epmm4vtkuadrvysv74lbzzbl2evphtae6k57yhgynp4.ipfs.nftstorage.link/license.pdf",
         licenseHash: "2267456bd2cef8ebc2f22a42947b068bc3b138284a587feda2edfe07a3577f50",
-        royaltyAddress: "txch10mg6zd4aksqkuc5j9e5shzt7shhpju83etmrc897yljwxtmhd5gqgt50km",
+        royaltyAddress: "xch1p6mjpkgetll9j6ztv2cj64rer0n66wakypl4awfwpcd5pm9uz92szpcen7",
         royaltyPercentage: 5,
         serialNumber: 3,
         serialTotal: 100,
@@ -353,7 +362,11 @@ export default class MintNft extends Vue {
     this.changeValidity(true);
   }
 
-  async sign(): Promise<void> {
+  async signCns(): Promise<void> {
+    await this.sign(true);
+  }
+
+  async sign(isCns = false): Promise<void> {
     this.submitting = true;
     try {
       if (!this.account.firstAddress) {
@@ -410,6 +423,11 @@ export default class MintNft extends Vue {
         serialTotal: Math.floor(this.serialTotal).toString(16),
       };
 
+      if (isCns) {
+        md.address = prefix0x(puzzle.getPuzzleHashFromAddress(this.address));
+        md.name = "hiya.xch";
+      }
+
       const { spendBundle } = await generateMintNftBundle(
         this.address,
         this.account.firstAddress,
@@ -422,7 +440,8 @@ export default class MintNft extends Vue {
         puzzle.getPuzzleHashFromAddress(this.royaltyAddress),
         this.royaltyPercentage * 100,
         did.analysis,
-        getLineageProofPuzzle
+        getLineageProofPuzzle,
+        isCns
       );
 
       this.bundle = spendBundle;
