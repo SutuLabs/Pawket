@@ -83,7 +83,13 @@ export function hex2asc(hex: string | string[] | undefined): string | string[] |
   return hex.map(_ => Buffer.from(_, "hex").toString());
 }
 
-export async function getNextCoinName0x(puzzle_hex: string, solution_hex: string, thisCoinName:string): Promise<string | undefined> {
+export function hex2ascSingle(hex: string | string[] | undefined): string | undefined {
+  const result = hex2asc(hex);
+  if (!result || typeof result === "string") return result;
+  return result[0];
+}
+
+export async function getNextCoinName0x(puzzle_hex: string, solution_hex: string, thisCoinName: string): Promise<string | undefined> {
   let result: ExecuteResult;
   try {
     result = await puzzle.executePuzzleHex(puzzle_hex, solution_hex);

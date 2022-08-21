@@ -9,7 +9,7 @@ import { modshash, modshex, modsprog } from "./mods";
 import utility, { bytesToHex0x } from "../crypto/utility";
 import catBundle, { LineageProof } from "../transfer/catBundle";
 import { getCoinName0x } from "./coinUtility";
-import { cloneAndChangeRequestPuzzleTemporary, constructSingletonTopLayerPuzzle, getNextCoinName0x, getPuzzleDetail, hex2asc, ParsedMetadata, parseMetadata, SingletonStructList } from "./singleton";
+import { cloneAndChangeRequestPuzzleTemporary, constructSingletonTopLayerPuzzle, getNextCoinName0x, getPuzzleDetail, hex2asc, hex2ascSingle, ParsedMetadata, parseMetadata, SingletonStructList } from "./singleton";
 import { findByPath } from "./lisp";
 import { ConditionOpcode } from "./opcode";
 import { DidCoinAnalysisResult } from "./did";
@@ -519,8 +519,8 @@ export function getNftMetadataInfo(parsed: ParsedMetadata): NftMetadataValues {
     serialNumber: getScalar(parsed[mkeys.serialNumber]),
     serialTotal: getScalar(parsed[mkeys.serialTotal]),
     address: getScalar(parsed[mkeys.address]),
-    name: getScalar(parsed[mkeys.name]),
-    text: getScalar(parsed[mkeys.text]),
+    name: hex2ascSingle(parsed[mkeys.name]),
+    text: hex2ascSingle(parsed[mkeys.text]),
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
