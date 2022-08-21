@@ -430,6 +430,7 @@ async function constructMetadataString(metadata: NftMetadataValues): Promise<str
     `${toNumber(mkeys.serialTotal)} . ${toNumber(metadata.serialTotal)}`,
     metadata.address ? `${toNumber(mkeys.address)} . ${prefix0x(metadata.address)}` : undefined,
     metadata.name ? `${toNumber(mkeys.name)} . "${metadata.name}"` : undefined,
+    metadata.text ? `${toNumber(mkeys.text)} . "${metadata.text}"` : undefined,
   ]
     .filter(_ => _)
     .map(_ => `(${_})`).join(" ") + ")";
@@ -495,6 +496,7 @@ function getNftMetadataKeys(): NftMetadataKeys {
     "serialTotal": getHex("st"),
     "address": getHex("ad"),
     "name": getHex("nm"),
+    "text": getHex("tt"),
   };
 }
 
@@ -518,6 +520,7 @@ export function getNftMetadataInfo(parsed: ParsedMetadata): NftMetadataValues {
     serialTotal: getScalar(parsed[mkeys.serialTotal]),
     address: getScalar(parsed[mkeys.address]),
     name: getScalar(parsed[mkeys.name]),
+    text: getScalar(parsed[mkeys.text]),
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -28,7 +28,6 @@
         (if (all key new_value)
             (if (any
               (= key "ad")
-              (= key "nm")
               (= key "ch")
               (= key "tt")
               (= key "dns")
