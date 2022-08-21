@@ -10,6 +10,7 @@ import bcase6 from "./cases/block_case6.json"
 import bcase7 from "./cases/block_case7.json"
 import bcase8 from "./cases/block_case8.json"
 import pcase1 from "./cases/puzzle_case1.json"
+import txcase1 from "./cases/tx_case1.json"
 
 beforeAll(async () => {
   await Instance.init();
@@ -28,10 +29,11 @@ describe("Parsing API test", () => {
   test('Block Parsing Case 8', () => testCase("/parse_block", bcase8));
 
   test('Puzzle Parsing Case 1', () => testCase("/parse_puzzle", pcase1));
+  test('Analyze Tx Case 1', () => Promise.all(txcase1.map(ca => testCase("/analyze_tx", ca, ca.coin_name))));
 });
 
-async function testCase(url: string, cs: any): Promise<void> {
+async function testCase(url: string, cs: any, name: string | undefined = undefined): Promise<void> {
   const resp = await request(app).post(url).send(cs);
   expect(resp.status).toBe(200);
-  expect(JSON.parse(resp.text)).toMatchSnapshot("response");
+  expect(JSON.parse(resp.text)).toMatchSnapshot(name ? `${name} response` : "response");
 }

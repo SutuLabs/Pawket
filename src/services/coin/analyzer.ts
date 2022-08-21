@@ -10,6 +10,7 @@ import puzzle from '../crypto/puzzle';
 import { analyzeCatCoin } from './cat';
 import { analyzeDidCoin } from './did';
 import { analyzeNftCoin } from './nft';
+import { OriginCoin } from '@/models/wallet';
 
 export interface SimplePuzzle {
   mod: ModName,
@@ -87,26 +88,20 @@ export async function parseCoin(all: SExp): Promise<CoinInfo> {
   let next = all.rest();
   const puz = next.first();
   const puz_hex = prefix0x(puz.as_bin().hex());
-  const uncPuzzle = await uncurryPuzzle(puz, puz_hex);
-  const decPuzzle = convertUncurriedPuzzle(uncPuzzle);
   next = next.rest();
   const amount = next.first().as_bigint();
   next = next.rest();
   const solution = prefix0x(next.first().as_bin().hex());
 
   const puzzle_hash = sha256tree(puz).hex();
-  const coin_name = getCoinName0x({ parent_coin_info: parent, puzzle_hash, amount });
+  const coin = { amount, parent_coin_info: parent, puzzle_hash };
+  const coin_name = getCoinName0x(coin);
+
+  const uncPuzzle = await uncurryPuzzle(puz, puz_hex);
+  const decPuzzle = convertUncurriedPuzzle(uncPuzzle);
   const mods = getModsPath(decPuzzle);
   const key_param = getKeyParam(decPuzzle)
-
-  const coin = { amount, parent_coin_info: parent, puzzle_hash: puzzle_hash };
-  const analysis = mods.startsWith("cat_v1(") ? await analyzeCatCoin(uncPuzzle)
-    : mods.startsWith("cat_v2(") ? await analyzeCatCoin(uncPuzzle)
-      : mods.startsWith("singleton_top_layer_v1_1(did_innerpuz(")
-        ? await analyzeDidCoin(uncPuzzle, undefined, coin, solution)
-        : mods.startsWith("singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),")
-          ? await analyzeNftCoin(uncPuzzle, undefined, coin, solution)
-          : undefined;
+  const analysis = await analyzeCoin(mods, uncPuzzle, coin, solution);
 
   return {
     parent,
@@ -117,8 +112,25 @@ export async function parseCoin(all: SExp): Promise<CoinInfo> {
     coin_name,
     mods,
     key_param,
-    analysis: analysis ? JSON.stringify(analysis) : undefined,
+    analysis,
   };
+}
+
+export async function analyzeCoin(
+  mods: string,
+  uncPuzzle: UncurriedPuzzle | CannotParsePuzzle,
+  coin: OriginCoin,
+  solution_hex: string,
+): Promise<string | undefined> {
+  const analysis = mods.startsWith("cat_v1(") ? await analyzeCatCoin(uncPuzzle)
+    : mods.startsWith("cat_v2(") ? await analyzeCatCoin(uncPuzzle)
+      : mods.startsWith("singleton_top_layer_v1_1(did_innerpuz(")
+        ? await analyzeDidCoin(uncPuzzle, undefined, coin, solution_hex)
+        : mods.startsWith("singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),")
+          ? await analyzeNftCoin(uncPuzzle, undefined, coin, solution_hex)
+          : undefined;
+
+  return analysis ? JSON.stringify(analysis) : undefined;
 }
 
 export async function parseBlock(generator_hex: string, ref_hex_list: string[] | undefined): Promise<string> {
@@ -170,7 +182,7 @@ function getKeyParam(parsed_puzzle: SimplePuzzle | CannotParsePuzzle): string | 
 }
 
 export const sexpAssemble = function (hexString: string): SExp {
-  const bts = Bytes.from(hexString, "hex")
+  const bts = Bytes.from(unprefix0x(hexString), "hex")
   const input_sexp = sexp_from_stream(new Stream(bts as Bytes), to_sexp_f);
   return input_sexp;
 };
