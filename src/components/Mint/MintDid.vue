@@ -72,7 +72,7 @@ import OfflineSendShowBundle from "@/components/Offline/OfflineSendShowBundle.vu
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import SendSummary from "@/components/Send/SendSummary.vue";
 import { chainId, xchSymbol } from "@/store/modules/network";
-import { getCatNames } from "@/services/coin/cat";
+import { getCatNames } from "@/services/view/cat";
 import TopBar from "@/components/Common/TopBar.vue";
 import { generateMintDidBundle } from "@/services/coin/did";
 

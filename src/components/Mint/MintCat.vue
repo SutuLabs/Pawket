@@ -98,7 +98,7 @@ import { generateMintCatBundle } from "@/services/mint/cat";
 import { chainId, ensureAddress, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
-import { getTokenInfo } from "@/services/coin/cat";
+import { getTokenInfo } from "@/services/view/cat";
 import AddressField from "@/components/Common/AddressField.vue";
 
 @Component({

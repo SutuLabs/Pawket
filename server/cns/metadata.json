@@ -1,0 +1,41 @@
+{
+    "format": "CHIP-0007",
+    "name": "{{name}}.xch",
+    "description": "{{name}}.xch, a CNS name.",
+    "minting_tool": "Pawket/0.1",
+    "sensitive_content": "false",
+    "series_number": 1,
+    "series_total": 1,
+    "attributes": [
+      {
+        "trait_type": "Length",
+        "value": "{{name.length}}"
+      }
+    ],
+    "collection": {
+      "name": "Chia Name Service",
+      "id": "Qmf4AyDewBSyAAqjy52CN9sW86Wx33pxGLsX4PaSVdJMvG",
+      "attributes": [
+        {
+          "type": "icon",
+          "value": "https://xch.cool/image/icon.jpg"
+        },
+        {
+          "type": "banner",
+          "value": "https://xch.cool/image/banner.jpg"
+        },
+        {
+          "type": "description",
+          "value": "Chia Name Service (CNS) domains are secure domain names for the decentralized world. CNS domains provide a way for users to map human readable names to blockchain and non-blockchain resources, like receive addresses, IPFS hashes, or website URLs. CNS domains can be bought and sold via standard offer mechanism."
+        },
+        {
+          "type": "twitter",
+          "value": "https://twitter.com/chianameservice"
+        },
+        {
+          "type": "website",
+          "value": "https://xch.cool"
+        }
+      ]
+    }
+  }

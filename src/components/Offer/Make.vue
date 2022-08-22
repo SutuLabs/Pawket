@@ -118,7 +118,7 @@ import puzzle from "@/services/crypto/puzzle";
 import DevHelper from "@/components/DevHelper/DevHelper.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { getOfferEntities, getOfferSummary, OfferEntity, OfferSummary, OfferTokenAmount } from "@/services/offer/summary";
-import { getCatIdDict, getCatNameDict, getCatNames } from "@/services/coin/cat";
+import { getCatIdDict, getCatNameDict, getCatNames } from "@/services/view/cat";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
 import { generateOffer, generateOfferPlan } from "@/services/offer/bundler";
 import bigDecimal from "js-big-decimal";

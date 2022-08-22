@@ -3,7 +3,12 @@ import express from 'express'
 import puzzle from "../src/services/crypto/puzzle";
 import { Instance } from "../src/services/util/instance";
 import { assemble } from "clvm_tools/clvm_tools/binutils";
-import { parseBlock, parseCoin, sexpAssemble, simplifyPuzzle } from "../src/services/coin/analyzer";
+import { analyzeCoin, convertUncurriedPuzzle, getModsPath, parseBlock, parseCoin, sexpAssemble, simplifyPuzzle, uncurryPuzzle } from "../src/services/coin/analyzer";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(BigInt.prototype as any).toJSON = function () {
+  return this.toString();
+};
 
 const app: express.Express = express()
 app.use(express.json({ limit: '3mb' }))
@@ -16,6 +21,15 @@ interface ParseBlockRequest {
 
 interface ParsePuzzleRequest {
   puzzle: string,
+}
+
+interface AnalyzeTxRequest {
+  coin_name: string;
+  puzzle: string;
+  solution: string;
+  amount: number;
+  coin_parent: string;
+  puzzle_hash: string;
 }
 
 Instance.init().then(() => {
@@ -54,6 +68,31 @@ Instance.init().then(() => {
       const puz = await puzzle.disassemblePuzzle(r.puzzle);
       const decPuzzle = await simplifyPuzzle(assemble(puz));
       res.send(JSON.stringify(decPuzzle))
+    }
+    catch (err) {
+      console.warn(err);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      res.status(500).send(JSON.stringify({ success: false, error: (<any>err).message }))
+    }
+  });
+
+  app.post('/analyze_tx', async (req: express.Request, res: express.Response) => {
+    try {
+      const r = req.body as AnalyzeTxRequest;
+      // console.log(`${JSON.stringify(r)},`);
+      const coin = { amount: BigInt(r.amount), parent_coin_info: r.coin_parent, puzzle_hash: r.puzzle_hash };
+
+      const uncPuzzle = await uncurryPuzzle(sexpAssemble(r.puzzle), r.puzzle);
+      const decPuzzle = convertUncurriedPuzzle(uncPuzzle);
+      const mods = getModsPath(decPuzzle);
+      const analysis = await analyzeCoin(mods, uncPuzzle, coin, r.solution);
+
+      res.send(JSON.stringify({
+        coin_name: r.coin_name,
+        parsed_puzzle: decPuzzle,
+        mods,
+        analysis: analysis,
+      }))
     }
     catch (err) {
       console.warn(err);

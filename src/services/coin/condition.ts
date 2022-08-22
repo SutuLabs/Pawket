@@ -37,6 +37,10 @@ export function unprefix0x(str: string | undefined): string {
   return str && str.startsWith("0x") ? str.substring(2) : (str ?? "");
 }
 
+export function skipFirstByte0x(str: string): string {
+  return "0x" + (str.slice(str.startsWith("0x") ? 4 : 2));
+}
+
 export function formatAmount(amount: bigint): string {
   return prefix0x(Bytes.from(bigint_to_bytes(amount, { signed: true })).hex());
 }

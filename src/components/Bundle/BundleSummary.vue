@@ -79,7 +79,7 @@ import { ConditionOpcode } from "@/services/coin/opcode";
 import { uncurry } from "clvm_tools/clvm_tools/curry";
 import { SExp, Tuple } from "clvm";
 import { AccountEntity } from "@/models/account";
-import { getCatNameDict } from "@/services/coin/cat";
+import { getCatNameDict } from "@/services/view/cat";
 import { demojo } from "@/filters/unitConversion";
 import BundleText from "@/components/Bundle/BundelText.vue";
 import { xchPrefix, xchSymbol } from "@/store/modules/network";

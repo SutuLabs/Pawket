@@ -1,9 +1,9 @@
-import { CoinSpend, SpendBundle } from "@/models/wallet";
+import { CoinSpend, SpendBundle } from "../../models/wallet";
 import { Bytes, SExp, Tuple } from "clvm";
-import { getNumber, prefix0x } from '@/services/coin/condition';
+import { getNumber, prefix0x } from '../coin/condition';
 import { assemble, disassemble } from 'clvm_tools/clvm_tools/binutils';
 import puzzle from "../crypto/puzzle";
-import { modsdict, modsprog } from '@/services/coin/mods';
+import { modsdict, modsprog } from '../coin/mods';
 import { uncurry } from 'clvm_tools/clvm_tools/curry';
 import { ConditionOpcode } from "../coin/opcode";
 import { TokenSpendPlan } from "../transfer/transfer";
@@ -93,7 +93,7 @@ export async function getOfferSummary(bundle: SpendBundle): Promise<OfferSummary
         const tgt = prefix0x(Bytes.from(((cond.args[2] && cond.args[2]?.length > 0) ? cond.args[2][0] : cond.args[0]) as Uint8Array).hex());
         const id = assetId ? assetId : nftId;
         const wraptgt = id ? prefix0x(Bytes.from(cond.args[0] as Uint8Array).hex()) : undefined;
-        const analysis = await analyzeNftCoin(coin.puzzle_reveal, coin.coin.puzzle_hash, coin.solution);
+        const analysis = await analyzeNftCoin(coin.puzzle_reveal, coin.coin.puzzle_hash, coin.coin, coin.solution);
         const nft_detail: NftDetail | undefined = !analysis ? undefined :
           {
             metadata: {

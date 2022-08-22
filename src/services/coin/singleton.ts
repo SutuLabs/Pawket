@@ -1,10 +1,12 @@
-import { PuzzleDetail } from "../crypto/puzzle";
+import puzzle, { ExecuteResult, PuzzleDetail } from "../crypto/puzzle";
 import { TokenPuzzleDetail } from "../crypto/receive";
 import { curryMod } from "../offer/bundler";
-import { prefix0x, unprefix0x } from "./condition";
+import { getNumber, prefix0x, unprefix0x } from "./condition";
 import { modshash, modsprog } from "./mods";
 import { Bytes, SExp } from "clvm";
 import { assemble } from "clvm_tools/clvm_tools/binutils";
+import { ConditionOpcode } from "./opcode";
+import { getCoinName0x } from "./coinUtility";
 
 export type SingletonStructList = [Bytes, [Bytes, Bytes]];
 
@@ -50,7 +52,7 @@ export function cloneAndChangeRequestPuzzleTemporary(
   const nftReq = extreqs.find((_) => _.symbol == baseSymbol)?.puzzles.find((_) => unprefix0x(originalHash) == _.hash);
   if (!nftReq) throw new Error(`cannot find inner puzzle hash [${unprefix0x(originalHash)}] from ` + JSON.stringify(extreqs));
   nftReq.puzzle = newPuzzle;
-  nftReq.hash = newPuzzleHash;
+  nftReq.hash = unprefix0x(newPuzzleHash);
   nftReq.address = "";
   return extreqs;
 }
@@ -79,4 +81,31 @@ export function hex2asc(hex: string | string[] | undefined): string | string[] |
   if (!hex) return hex;
   if (typeof hex === "string") return Buffer.from(hex, "hex").toString();
   return hex.map(_ => Buffer.from(_, "hex").toString());
+}
+
+export function hex2ascSingle(hex: string | string[] | undefined): string | undefined {
+  const result = hex2asc(hex);
+  if (!result || typeof result === "string") return result;
+  return result[0];
+}
+
+export async function getNextCoinName0x(puzzle_hex: string, solution_hex: string, thisCoinName: string): Promise<string | undefined> {
+  let result: ExecuteResult;
+  try {
+    result = await puzzle.executePuzzleHex(puzzle_hex, solution_hex);
+  } catch (err) {
+    return undefined; // when puzzle is settlement hint in offer, it is invalid to execute, just ignore
+  }
+
+  try {
+    const coinCond = result.conditions
+      .filter((_) => _.op == ConditionOpcode.CREATE_COIN && getNumber(_.args[1]) == 1n)[0];
+    const nextcoin_puzhash = coinCond.args[0];
+    const nextCoinName = getCoinName0x({ parent_coin_info: thisCoinName, amount: 1n, puzzle_hash: nextcoin_puzhash });
+    return nextCoinName;
+  } catch (err) {
+    if (process.env.NODE_ENV !== "production") {
+      throw new Error("failed to get next coin name: " + err);
+    }
+  }
 }

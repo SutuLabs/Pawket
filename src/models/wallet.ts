@@ -49,10 +49,16 @@ export interface SpendBundle {
     coin_spends: CoinSpend[];
 }
 
-export function convertToOriginCoin(coin: CoinItem): OriginCoin {
-    return {
-        amount: BigInt(coin.amount),
-        parent_coin_info: coin.parentCoinInfo,
-        puzzle_hash: coin.puzzleHash,
-    };
+export function convertToOriginCoin(coin: CoinItem | { amount: number, parent_coin_info: string, puzzle_hash: string }): OriginCoin {
+    return "parentCoinInfo" in coin
+        ? {
+            amount: BigInt(coin.amount),
+            parent_coin_info: coin.parentCoinInfo,
+            puzzle_hash: coin.puzzleHash,
+        }
+        : {
+            amount: BigInt(coin.amount),
+            parent_coin_info: coin.parent_coin_info,
+            puzzle_hash: coin.puzzle_hash,
+        };
 }

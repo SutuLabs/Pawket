@@ -290,3 +290,12 @@ class PuzzleMaker {
 }
 
 export default new PuzzleMaker();
+
+/*
+| from\to | clvm        | hex             | hash                | sexp         |
+| --      | --          | --              | --                  | --           |
+| clvm    | -           | opc             | opc -H              | assemble     |
+| hex     | opd         | -               | ?                   | sexpAssemble |
+| hash    | -           | -               | -                   | -            |
+| sexp    | disassemble | .as_bin().hex() | sha256tree(_).hex() | -            |
+*/

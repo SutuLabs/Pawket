@@ -1,5 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Analyze Cat 1: analysis 1`] = `
+Object {
+  "hintPuzzle": "972c1f059996722a23b289b9eade0c9a2b3a442c82418dcb5323d7996c8bf5aa",
+  "innerPuzzle": "(q (51 () -113 (a (q 2 (i 47 (q 8) (q 2 (i (= 45 2) () (q 8)) 1)) 1) (c (q . 0x2e7f1caa0325f7844a4c098d7cc5a79b5dd36e29fe0eb1e6ac904d97e4f1cfa5) 1)) ()) (51 0xd87f6df7c1473f33f5abb1d42d117712d4346c4431225daf51cf4f9f8954181b 0x17538308 (0xd87f6df7c1473f33f5abb1d42d117712d4346c4431225daf51cf4f9f8954181b)))",
+  "modHash": "0x37bef360ee858133b69d595a906dc45d01af50379dad515eb9518abb7c1d2a7a",
+  "tailProgramHash": "0xb3867458a6af107794a09b6083e3f0f05fbece0adae328f4df9ade53a60ca1b3",
+}
+`;
+
+exports[`Analyze Cat 2: analysis 1`] = `
+Object {
+  "hintPuzzle": "3eb239190ce59b4af1e461291b9185cea62d6072fd3718051a530fd8a8218bc0",
+  "innerPuzzle": "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xb5c7539888af59f601be0ea2eddd32c06a80d932170eec55ef7a7640cbc5b37b81c4258644229eca2322298a9bf0189f) 1))",
+  "modHash": "0x37bef360ee858133b69d595a906dc45d01af50379dad515eb9518abb7c1d2a7a",
+  "tailProgramHash": "0xb3867458a6af107794a09b6083e3f0f05fbece0adae328f4df9ade53a60ca1b3",
+}
+`;
+
 exports[`Mint Cat: assetid 1`] = `"0x3d65a20099e84ac0d5a061d74814ea76bbe786783588707211e3d95c5a78e7a2"`;
 
 exports[`Mint Cat: spendbundle 1`] = `

@@ -130,7 +130,7 @@ export default class UncurryPuzzle extends Vue {
         const pn = modsparams[puz.mod];
         for (let i = 0; i < puz.args.length; i++) {
           const arg = puz.args[i];
-          await recOutput(level + 1, arg, pn[i].name.trim());
+          await recOutput(level + 1, arg, pn?.[i].name.trim() ?? "");
         }
       }
     };
