@@ -10,7 +10,9 @@
   "common": {
     "button": {
       "confirm": "确认",
-      "cancel": "取消"
+      "cancel": "取消",
+      "save": "保存",
+      "delete": "删除"
     },
     "tooltip": {
       "copy": "复制"
@@ -857,6 +859,10 @@
           "title": "地址簿",
           "description": "添加、编辑、删除、管理你的联系人地址"
         },
+        "collection": {
+          "title": "收藏集",
+          "description": "创建、编辑、删除和管理您的收藏集"
+        },
         "did": {
           "title": "DID",
           "description": "添加、编辑、删除、管理你的DID"
@@ -1155,6 +1161,57 @@
       "description": "你将把这个 NFT 转送给他人。",
       "summary": {
         "confirmation": "确定要转发这个 NFT 吗？<br>请检查您的交易。"
+      }
+    }
+  },
+  "collection": {
+    "myCollection": {
+      "title": "我的收藏集",
+      "specialNote": "特别提示：收藏集信息不会上链，数据保存在你本地设备中，更换设备后，收藏集将不会同步至账户中。",
+      "button": {
+        "newCollection": "新建收藏集"
+      },
+      "tooltip": {
+        "edit": "编辑",
+        "remove": "删除"
+      },
+      "messages": {
+        "confirmation": {
+          "delete": "确定删除该收藏集吗？"
+        },
+        "information": {
+          "NO_COLLECTION": "无收藏集"
+        }
+      }
+    },
+    "createCollection": {
+      "title": "创建收藏集",
+      "label": {
+        "id": "ID",
+        "name": "名称",
+        "description": "描述",
+        "icon": "图标",
+        "uploadImage": "上传图片:",
+        "url": "链接:",
+        "hash": "哈希:",
+        "fillUrl": "填写图片 URL",
+        "iconUrl": "图标 URL",
+        "iconHash": "图标哈希",
+        "properties": "属性",
+        "creator": "创作者",
+        "address": "地址",
+        "royaltyPercentage": "版权费",
+        "royaltyAddress": "版权费地址",
+        "licenseUrl": "许可协议 URL"
+      },
+      "button": {
+        "upload": "上传"
+      },
+      "messages": {
+        "error": {
+          "INVALID_PROPERTY": "属性信息不合法",
+          "INVALID_ADDRESS": "地址不合法"
+        }
       }
     }
   }

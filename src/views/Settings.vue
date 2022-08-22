@@ -12,6 +12,9 @@
         <b-tab-item :label="$t('settings.menu.items.addressBook.title')" icon="account-box-multiple-outline">
           <address-book class="width-auto"></address-book>
         </b-tab-item>
+        <b-tab-item :label="$t('settings.menu.items.collection.title')" icon="account-box-multiple-outline">
+          <collection class="width-auto"></collection>
+        </b-tab-item>
         <b-tab-item :label="$t('settings.menu.items.did.title')" icon="account-box-multiple-outline" v-if="debugMode">
           <did class="width-auto"></did>
         </b-tab-item>
@@ -64,6 +67,20 @@
           <div class="py-1">
             <p>{{ $t("settings.menu.items.addressBook.title") }}</p>
             <p class="is-size-7 pt-2 has-text-grey">{{ $t("settings.menu.items.addressBook.description") }}</p>
+          </div>
+        </div>
+        <div class="column py-1">
+          <b-icon class="is-pulled-right has-text-grey" icon="chevron-right"> </b-icon>
+        </div>
+      </div>
+      <div class="panel-block py-0 my-0" @click="goToCollection()">
+        <div class="is-11 is-flex my-1 py-1">
+          <div class="mr-2 py-1">
+            <b-icon icon="account-box-multiple-outline"></b-icon>
+          </div>
+          <div class="py-1">
+            <p>{{ $t("settings.menu.items.collection.title") }}</p>
+            <p class="is-size-7 pt-2 has-text-grey">{{ $t("settings.menu.items.collection.description") }}</p>
           </div>
         </div>
         <div class="column py-1">
@@ -144,9 +161,10 @@ import Security from "@/components/Settings/Security.vue";
 import { isDesktop } from "@/services/view/responsive";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
+import Collection from "@/components/Collection/Collection.vue";
 
 @Component({
-  components: { General, Security, Advanced, AddressBook, About, DevHelper, Did },
+  components: { General, Security, Advanced, AddressBook, About, DevHelper, Did, Collection },
 })
 export default class Settings extends Vue {
   goToGeneral(): void {
@@ -186,6 +204,17 @@ export default class Settings extends Vue {
     this.$buefy.modal.open({
       parent: this,
       component: Did,
+      trapFocus: true,
+      canCancel: [""],
+      fullScreen: true,
+      props: {},
+    });
+  }
+
+  goToCollection(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: Collection,
       trapFocus: true,
       canCancel: [""],
       fullScreen: true,
