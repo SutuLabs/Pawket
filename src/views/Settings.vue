@@ -12,7 +12,7 @@
         <b-tab-item :label="$t('settings.menu.items.addressBook.title')" icon="account-box-multiple-outline">
           <address-book class="width-auto"></address-book>
         </b-tab-item>
-        <b-tab-item :label="$t('settings.menu.items.collection.title')" icon="account-box-multiple-outline">
+        <b-tab-item :label="$t('settings.menu.items.collection.title')" icon="account-box-multiple-outline" v-if="debugMode">
           <collection class="width-auto"></collection>
         </b-tab-item>
         <b-tab-item :label="$t('settings.menu.items.did.title')" icon="account-box-multiple-outline" v-if="debugMode">
@@ -73,7 +73,7 @@
           <b-icon class="is-pulled-right has-text-grey" icon="chevron-right"> </b-icon>
         </div>
       </div>
-      <div class="panel-block py-0 my-0" @click="goToCollection()">
+      <div class="panel-block py-0 my-0" @click="goToCollection()" v-if="debugMode">
         <div class="is-11 is-flex my-1 py-1">
           <div class="mr-2 py-1">
             <b-icon icon="account-box-multiple-outline"></b-icon>
