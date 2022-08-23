@@ -952,20 +952,20 @@
   },
   "explore": {
     "title": "Explore",
+    "loading": "Loading",
     "nft": {
-      "title": "NFT Trading"
+      "title": "NFT Markets",
+      "ascription": "For more NFTs, please visit "
     },
     "cat": {
-      "title": "CAT Trading"
+      "title": "CAT Markets",
+      "ascription": "Powered by Dexie"
     },
     "button": {
       "buy": "Buy",
       "sell": "Sell",
-      "takeOffer": "Take Offer",
-      "more": "more",
-      "less": "less"
+      "takeOffer": "Take Offer"
     },
-    "ascription": "Powered by Dexie",
     "table": {
       "header": {
         "offer": "Offer",
