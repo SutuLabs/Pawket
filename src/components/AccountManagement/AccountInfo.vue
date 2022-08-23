@@ -59,10 +59,14 @@
         </span>
       </div>
       <div class="border-bottom py-2">
-        <a href="javascript:void(0)" class="is-size-6 has-text-weight-bold has-text-dark is-clickable" @click="showDetail = !showDetail">
+        <a
+          href="javascript:void(0)"
+          class="is-size-6 has-text-weight-bold has-text-dark is-clickable"
+          @click="showDetail = !showDetail"
+        >
           <div>
-             {{ $t("accountInfo.ui.label.details") }}
-          <span class="is-pulled-right"><b-icon :icon="showDetail ? 'menu-up' : 'menu-down'"></b-icon></span>
+            {{ $t("accountInfo.ui.label.details") }}
+            <span class="is-pulled-right"><b-icon :icon="showDetail ? 'menu-up' : 'menu-down'"></b-icon></span>
           </div>
         </a>
         <ul v-if="showDetail">

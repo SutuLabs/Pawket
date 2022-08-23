@@ -10,7 +10,9 @@
   "common": {
     "button": {
       "confirm": "Confirm",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "save": "Save",
+      "delete": "Delete"
     },
     "tooltip": {
       "copy": "Copy"
@@ -857,6 +859,10 @@
           "title": "Address Book",
           "description": "Add, edit, remove, and manage your contact addresses"
         },
+        "collection": {
+          "title": "Collection",
+          "description": "Create, edit, remove, and manage your collection"
+        },
         "did": {
           "title": "DID",
           "description": "Add, edit, remove, and manage your DIDs"
@@ -1155,6 +1161,57 @@
       "description": "You will transfer this NFT to a new owner.",
       "summary": {
         "confirmation": "Are you sure to transfer the NFT?<br>Please review your transaction."
+      }
+    }
+  },
+  "collection": {
+    "myCollection": {
+      "title": "My Collection",
+      "specialNote": "Special Note: Collection information will not be uploaded to the blockchain, and the data will be stored in your local device. After changing the device, the Collection will not be synchronized to the account.",
+      "button": {
+        "newCollection": "New Collection"
+      },
+      "tooltip": {
+        "edit": "Edit",
+        "remove": "Remove"
+      },
+      "messages": {
+        "confirmation": {
+          "delete": "Are you sure to remove the Collection?"
+        },
+        "information": {
+          "NO_COLLECTION": "No Collection"
+        }
+      }
+    },
+    "createCollection": {
+      "title": "Create Collection",
+      "label": {
+        "id": "*ID",
+        "name": "*Name",
+        "description": "Description",
+        "icon": "*Icon",
+        "uploadImage": "Upload Image:",
+        "url": "URL:",
+        "hash": "Hash:",
+        "fillUrl": "Fill in Image URL",
+        "iconUrl": "Icon URL",
+        "iconHash": "Icon Hash",
+        "properties": "*Properties",
+        "creator": "Creator",
+        "address": "*Address",
+        "royaltyPercentage": "*Royalty Percentage",
+        "royaltyAddress": "*Royalty Address",
+        "licenseUrl": "*License URL"
+      },
+      "button": {
+        "upload": "Upload"
+      },
+      "messages": {
+        "error": {
+          "INVALID_PROPERTY": "Invalid Property",
+          "INVALID_ADDRESS": "Invalid Address"
+        }
       }
     }
   }
