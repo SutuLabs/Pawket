@@ -61,9 +61,9 @@ export function parseMetadata(
   rawmeta: string | SExp,
 ): ParsedMetadata {
   const metaprog = typeof rawmeta === "string" ? assemble(rawmeta) : rawmeta;
-  const metalist: string[][] = (metaprog.as_javascript() as Bytes[][])
+  const metalist = (metaprog.as_javascript() as (Bytes[] | [Bytes, Bytes[]])[])
     .map(_ => Array.from(_))
-    .map(_ => _.map(it => it.hex()));
+    .map(_ => _.flatMap(it => Array.isArray(it) ? it.map(a => a.hex()) : it.hex()));
 
   const parsed: ParsedMetadata = {};
   for (let i = 0; i < metalist.length; i++) {

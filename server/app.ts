@@ -77,8 +77,9 @@ Instance.init().then(() => {
   });
 
   app.post('/analyze_tx', async (req: express.Request, res: express.Response) => {
+    let r: AnalyzeTxRequest | null = null;
     try {
-      const r = req.body as AnalyzeTxRequest;
+      r = req.body as AnalyzeTxRequest;
       // console.log(`${JSON.stringify(r)},`);
       const coin = { amount: BigInt(r.amount), parent_coin_info: r.coin_parent, puzzle_hash: r.puzzle_hash };
 
@@ -96,6 +97,7 @@ Instance.init().then(() => {
     }
     catch (err) {
       console.warn(err);
+      if (r) console.log(`${JSON.stringify(r)},`);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       res.status(500).send(JSON.stringify({ success: false, error: (<any>err).message }))
     }
