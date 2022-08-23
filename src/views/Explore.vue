@@ -1,7 +1,6 @@
 <template>
   <div class="column nav-box mb-6">
     <div :class="{ box: !isMobile, 'pt-8': isMobile }">
-      <b-loading :is-full-page="true" :active="loading"></b-loading>
       <p class="is-hidden-mobile has-text-left is-size-5 pb-2 pl-2 border-bottom">
         <span @click="mode = 'List'" v-if="mode == 'Offer'"
           ><b-icon class="is-pulled-left has-text-grey pr-3 is-clickable pt-1" icon="chevron-left"> </b-icon></span
@@ -13,16 +12,9 @@
         >{{ title }}
       </p>
       <div v-if="mode == 'List'" class="pt-4">
-        <div class="panel pt-4">
-          <p class="panel-heading">
-            {{ $t("explore.nft.title") }}
-            <a @click="isNftFold = !isNftFold"
-              ><span class="is-pulled-right is-clickable" v-if="nftMarkets.xch.length > 5">{{
-                isNftFold ? $t("explore.button.more") : $t("explore.button.less")
-              }}</span></a
-            >
-          </p>
-          <div class="panel-body">
+        <b-progress size="is-large" type="is-primary" v-if="loading" show-value>{{ $t("explore.loading") }}</b-progress>
+        <b-tabs expanded>
+          <b-tab-item :label="$t('explore.nft.title')">
             <div v-if="!catMarket.length" class="has-text-centered">{{ $t("common.message.noResult") }}</div>
             <div v-else class="columns panel-block is-mobile" v-for="(col, index) of nftMarket" :key="index">
               <div class="column">
@@ -38,9 +30,11 @@
                   </div>
                 </div>
               </div>
-              <div class="column buttons has-text-centered">
+              <div class="column buttons has-text-right">
                 <b-button
+                  :size="isMobile ? 'is-small' : 'is-normal'"
                   @click="
+                    current = 1;
                     getOffers('XCH', col.id);
                     requestedName = col.code;
                     offeredName = 'XCH';
@@ -50,56 +44,58 @@
                 >
               </div>
             </div>
-          </div>
-        </div>
-        <div class="panel">
-          <p class="panel-heading">
-            {{ $t("explore.cat.title") }}
-            <a @click="isCatFold = !isCatFold"
-              ><span class="is-pulled-right is-clickable" v-if="markets.xch.length > 5">{{
-                isCatFold ? $t("explore.button.more") : $t("explore.button.less")
-              }}</span></a
-            >
-          </p>
-          <div class="panel-body">
-            <div v-if="!catMarket.length" class="has-text-centered">{{ $t("common.message.noResult") }}</div>
-            <div v-else class="columns panel-block is-mobile" v-for="(cat, index) of catMarket" :key="index">
-              <div class="column">
-                <div class="is-flex">
-                  <div class="mr-4 py-1">#{{ index + 1 }}</div>
-                  <div class="mr-4">
-                    <span class="image is-32x32">
-                      <img class="is-rounded" :src="iconUrlPrefix + cat.id + '.jpg'" />
-                    </span>
-                  </div>
-                  <div class="py-1 has-text-grey-dark is-size-6">
-                    {{ cat.code }}
+            <p class="has-text-centered mt-6 pt-4 is-size-7 has-text-grey">
+              {{ $t("explore.nft.ascription") }}<a href="https://dexie.space/nft" target="_blank">Dexie</a>
+            </p>
+          </b-tab-item>
+          <b-tab-item :label="$t('explore.cat.title')">
+            <div class="panel-body">
+              <div v-if="!catMarket.length" class="has-text-centered">{{ $t("common.message.noResult") }}</div>
+              <div v-else class="columns panel-block is-mobile" v-for="(cat, index) of catMarket" :key="index">
+                <div class="column">
+                  <div class="is-flex">
+                    <div class="mr-4 py-1">#{{ index + 1 }}</div>
+                    <div class="mr-4">
+                      <span class="image is-32x32">
+                        <img class="is-rounded" :src="iconUrlPrefix + cat.id + '.jpg'" />
+                      </span>
+                    </div>
+                    <div class="py-1 has-text-grey-dark is-size-6">
+                      {{ cat.code }}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="column buttons has-text-centered">
-                <b-button
-                  @click="
-                    getOffers('XCH', cat.id);
-                    offeredName = 'XCH';
-                    requestedName = cat.code;
-                    isNft = false;
-                  "
-                  >{{ $t("explore.button.buy") }}</b-button
-                >
-                <b-button
-                  @click="
-                    getOffers(cat.code, 'XCH');
-                    offeredName = cat.name;
-                    requestedName = 'XCH';
-                    isNft = false;
-                  "
-                  >{{ $t("explore.button.sell") }}</b-button
-                >
+                <div class="column buttons has-text-right">
+                  <b-button
+                    :size="isMobile ? 'is-small' : 'is-normal'"
+                    @click="
+                      current = 1;
+                      getOffers('XCH', cat.id);
+                      offeredName = 'XCH';
+                      requestedName = cat.code;
+                      isNft = false;
+                    "
+                    >{{ $t("explore.button.buy") }}</b-button
+                  >
+                  <b-button
+                    :size="isMobile ? 'is-small' : 'is-normal'"
+                    @click="
+                      current = 1;
+                      getOffers(cat.code, 'XCH');
+                      offeredName = cat.name;
+                      requestedName = 'XCH';
+                      isNft = false;
+                    "
+                    >{{ $t("explore.button.sell") }}</b-button
+                  >
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+            <p class="has-text-centered mt-6 pt-4 is-size-7 has-text-grey">
+              {{ $t("explore.cat.ascription") }}<a href="https://dexie.space" target="_blank">Dexie</a>
+            </p>
+          </b-tab-item>
+        </b-tabs>
       </div>
       <div v-if="mode == 'Offer'">
         <div class="columns py-4 has-text-centered is-mobile" v-if="!isNft">
@@ -117,7 +113,7 @@
           <thead>
             <tr>
               <th>{{ $t("explore.table.header.offer") }}</th>
-              <th>{{ $t("explore.table.header.receive") }}</th>
+              <th class="has-text-left">{{ $t("explore.table.header.receive") }}</th>
               <th class="is-hidden-mobile">{{ $t("explore.table.header.price") }}</th>
               <th>{{ $t("explore.table.header.operation") }}</th>
             </tr>
@@ -130,7 +126,7 @@
                 </div>
               </td>
               <td>
-                <p v-for="offered of offer.offered" :key="offered.code">
+                <p v-for="offered of offer.offered" :key="offered.code" class="has-text-left">
                   <span v-if="offered.is_nft"
                     ><img class="image is-48x48 is-inline-block ml-3" :src="offered.preview.tiny" />{{ offered.name }}</span
                   >
@@ -145,7 +141,9 @@
                 </div>
               </td>
               <td>
-                <b-button @click="takeOffer(offer.offer)" size="is-small">{{ $t("explore.button.takeOffer") }}</b-button>
+                <b-button @click="takeOffer(offer.offer)" :size="isMobile ? 'is-small' : 'is-normal'">{{
+                  $t("explore.button.takeOffer")
+                }}</b-button>
               </td>
             </tr>
           </tbody>
@@ -163,7 +161,6 @@
         >
         </b-pagination>
       </div>
-      <p class="has-text-centered mt-6 pt-4 is-size-7 has-text-grey">{{ $t("explore.ascription") }}</p>
     </div>
   </div>
 </template>
@@ -221,12 +218,10 @@ export default class Settings extends Vue {
   }
 
   get catMarket(): MarketItem[] {
-    if (this.isCatFold) return this.markets.xch.slice(0, 5);
     return this.markets.xch;
   }
 
   get nftMarket(): MarketItem[] {
-    if (this.isNftFold) return this.nftMarkets.xch.slice(0, 5);
     return this.nftMarkets.xch.slice(0, 30);
   }
 
@@ -283,14 +278,23 @@ export default class Settings extends Vue {
     });
   }
 
-  async mounted(): Promise<void> {
+  async updateMarket(): Promise<void> {
     this.loading = true;
-    if (this.network == "mainnet") {
-      this.nftMarkets = await Dexie.getNftMarket();
-      this.markets = await Dexie.getMarket();
-    }
-
+    this.nftMarkets = await Dexie.getNftMarket();
+    this.markets = await Dexie.getMarket();
     this.loading = false;
+    localStorage.setItem("NFT_MARKET", JSON.stringify(this.nftMarkets));
+    localStorage.setItem("CAT_MARKET", JSON.stringify(this.markets));
+  }
+
+  mounted(): void {
+    if (this.network == "mainnet") {
+      const nft = localStorage.getItem("NFT_MARKET");
+      const cat = localStorage.getItem("CAT_MARKET");
+      if (nft) this.nftMarkets = JSON.parse(nft) as Markets;
+      if (cat) this.markets = JSON.parse(cat) as Markets;
+      this.updateMarket();
+    }
   }
 }
 </script>

@@ -952,20 +952,20 @@
   },
   "explore": {
     "title": "探索",
+    "loading": "加载中",
     "nft": {
-      "title": "NFT交易"
+      "title": "NFT市场",
+      "ascription": "更多NFT, 请访问"
     },
     "cat": {
-      "title": "CAT交易"
+      "title": "CAT市场",
+      "ascription": "Powered by "
     },
     "button": {
       "buy": "购买",
       "sell": "出售",
-      "takeOffer": "接受 Offer",
-      "more": "更多",
-      "less": "收起"
+      "takeOffer": "接受 Offer"
     },
-    "ascription": "由 Dexie 提供支持",
     "table": {
       "header": {
         "offer": "提供",
