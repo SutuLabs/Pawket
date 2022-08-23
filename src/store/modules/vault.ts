@@ -176,6 +176,7 @@ store.registerModule<IVaultState>("vault", {
               <PersistentAccount>{
                 key: _.key,
                 name: _.name,
+                profilePic: _.profilePic,
                 type: _.type,
                 serial: _.serial,
                 addressRetrievalCount: _.addressRetrievalCount,

@@ -1133,7 +1133,8 @@
       },
       "dropdown": {
         "spaceScan": "在Spacescan.io查看",
-        "download": "下载"
+        "download": "下载",
+        "setAsProfilePic": "设为头像"
       }
     }
   },

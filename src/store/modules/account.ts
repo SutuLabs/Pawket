@@ -102,6 +102,10 @@ store.registerModule<IAccountState>("account", {
       await dispatch("initWalletAddress");
       await dispatch("persistent");
     },
+    setProfilePic({ state, dispatch }, { idx, profilePic }: { idx: number; profilePic: string }) {
+      state.accounts.splice(idx, 1, Object.assign({}, state.accounts[idx], { profilePic }));
+      dispatch("persistent");
+    },
     renameAccount({ state, dispatch }, { idx, name }: { idx: number; name: string }) {
       // following two assignment failed to update value;
       // state.accounts[idx].name == name;
@@ -167,7 +171,7 @@ store.registerModule<IAccountState>("account", {
     async refreshDids({ dispatch }, parameters: { idx: number; maxId: number }) {
       await dispatch("refreshAssets", Object.assign({ coinType: "DidV1" }, parameters));
     },
-    async refreshAssets({ state }, parameters: { idx: number; maxId: number, coinType: CoinClassType }) {
+    async refreshAssets({ state }, parameters: { idx: number; maxId: number; coinType: CoinClassType }) {
       if (!parameters) parameters = { idx: state.selectedAccount, maxId: -1, coinType: "DidV1" };
       let idx = parameters.idx;
       if (typeof idx !== "number" || idx <= 0) idx = state.selectedAccount;
@@ -179,11 +183,11 @@ store.registerModule<IAccountState>("account", {
       const assets = await receive.getAssets(assetRecords, rpcUrl(), (_) => {
         if (_.did) {
           if (!account.dids) Vue.set(account, "dids", []);
-          if (account.dids && account.dids.findIndex(d => d.did == _.did?.did) == -1) account.dids.push(_.did);
+          if (account.dids && account.dids.findIndex((d) => d.did == _.did?.did) == -1) account.dids.push(_.did);
         }
         if (_.nft) {
           if (!account.nfts) Vue.set(account, "nfts", []);
-          if (account.nfts && account.nfts.findIndex(d => d.address == _.nft?.address) == -1) account.nfts.push(_.nft);
+          if (account.nfts && account.nfts.findIndex((d) => d.address == _.nft?.address) == -1) account.nfts.push(_.nft);
         }
       });
       setDidName(assets.dids);
@@ -233,21 +237,20 @@ export async function getAccountAddressDetails(
   account: AccountEntity,
   maxId: number | undefined = undefined
 ): Promise<TokenPuzzleAddress[]> {
-
   const requests: TokenPuzzleAddress[] =
     account.type == "Address"
       ? <TokenPuzzleAddress[]>[
-        { symbol: xchSymbol(), puzzles: [{ hash: account.puzzleHash, type: "Unknown", address: account.firstAddress }] },
-      ]
+          { symbol: xchSymbol(), puzzles: [{ hash: account.puzzleHash, type: "Unknown", address: account.firstAddress }] },
+        ]
       : await getAccountAddressDetailsExternal(
-        account,
-        getAccountCats(account),
-        store.state.account.tokenInfo,
-        xchPrefix(),
-        xchSymbol(),
-        maxId,
-        "cat_v2",
-      );
+          account,
+          getAccountCats(account),
+          store.state.account.tokenInfo,
+          xchPrefix(),
+          xchSymbol(),
+          maxId,
+          "cat_v2"
+        );
 
   return requests;
 }
