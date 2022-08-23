@@ -32,7 +32,9 @@
               </div>
               <div class="column buttons has-text-right">
                 <b-button
+                  :size="isMobile ? 'is-small' : 'is-normal'"
                   @click="
+                    current = 1;
                     getOffers('XCH', col.id);
                     requestedName = col.code;
                     offeredName = 'XCH';
@@ -65,7 +67,9 @@
                 </div>
                 <div class="column buttons has-text-right">
                   <b-button
+                    :size="isMobile ? 'is-small' : 'is-normal'"
                     @click="
+                      current = 1;
                       getOffers('XCH', cat.id);
                       offeredName = 'XCH';
                       requestedName = cat.code;
@@ -74,7 +78,9 @@
                     >{{ $t("explore.button.buy") }}</b-button
                   >
                   <b-button
+                    :size="isMobile ? 'is-small' : 'is-normal'"
                     @click="
+                      current = 1;
                       getOffers(cat.code, 'XCH');
                       offeredName = cat.name;
                       requestedName = 'XCH';
@@ -85,7 +91,9 @@
                 </div>
               </div>
             </div>
-            <p class="has-text-centered mt-6 pt-4 is-size-7 has-text-grey">{{ $t("explore.cat.ascription") }}</p>
+            <p class="has-text-centered mt-6 pt-4 is-size-7 has-text-grey">
+              {{ $t("explore.cat.ascription") }}<a href="https://dexie.space" target="_blank">Dexie</a>
+            </p>
           </b-tab-item>
         </b-tabs>
       </div>
@@ -105,7 +113,7 @@
           <thead>
             <tr>
               <th>{{ $t("explore.table.header.offer") }}</th>
-              <th>{{ $t("explore.table.header.receive") }}</th>
+              <th class="has-text-left">{{ $t("explore.table.header.receive") }}</th>
               <th class="is-hidden-mobile">{{ $t("explore.table.header.price") }}</th>
               <th>{{ $t("explore.table.header.operation") }}</th>
             </tr>
@@ -118,7 +126,7 @@
                 </div>
               </td>
               <td>
-                <p v-for="offered of offer.offered" :key="offered.code">
+                <p v-for="offered of offer.offered" :key="offered.code" class="has-text-left">
                   <span v-if="offered.is_nft"
                     ><img class="image is-48x48 is-inline-block ml-3" :src="offered.preview.tiny" />{{ offered.name }}</span
                   >
@@ -133,7 +141,9 @@
                 </div>
               </td>
               <td>
-                <b-button @click="takeOffer(offer.offer)" size="is-small">{{ $t("explore.button.takeOffer") }}</b-button>
+                <b-button @click="takeOffer(offer.offer)" :size="isMobile ? 'is-small' : 'is-normal'">{{
+                  $t("explore.button.takeOffer")
+                }}</b-button>
               </td>
             </tr>
           </tbody>

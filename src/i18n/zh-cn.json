@@ -955,11 +955,11 @@
     "loading": "加载中",
     "nft": {
       "title": "NFT市场",
-      "ascription": "交易更多NFT, 请访问"
+      "ascription": "更多NFT, 请访问"
     },
     "cat": {
       "title": "CAT市场",
-      "ascription": "由 Dexie 提供支持"
+      "ascription": "Powered by "
     },
     "button": {
       "buy": "购买",
