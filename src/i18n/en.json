@@ -261,7 +261,7 @@
         "insufficientFunds": "Insufficient funds."
       },
       "tooltip": {
-        "singleCoinExplanation": "Currently only support one coin mode, mix coin send is under development.",
+        "singleCoinExplanation": "Currently it only supports one coin mode, mix coin send is under development.",
         "offlineScan": "You are in offline mode, communicate with proxy via QR code to send transaction."
       },
       "span": {
@@ -278,7 +278,7 @@
     "messages": {
       "error": {
         "DOUBLE_SPEND": "Double Spend",
-        "UNKNOWN_UNSPENT": "Unknown Unspent",
+        "UNKNOWN_UNSPENT": "An unknown UTXO has been used, maybe the previous transaction has not been confirmed on the blockchain.",
         "BAD_AGGREGATE_SIGNATURE": "Bad Aggregate Signature",
         "INVALID_CONDITION": "Invalid Condition",
         "COIN_AMOUNT_EXCEEDS_MAXIMUM": "Coin Amount Exceeds Maximum",
@@ -354,7 +354,7 @@
         "label": {
           "bundle": "Bundle",
           "royaltyToCreator": "Creator",
-          "totalRequested": "Total Requested",
+          "totalRequested": "Total Amount Requested",
           "nftPrice": "NFT Price",
           "royalty": "Royalty",
           "total": "Total"
@@ -483,7 +483,7 @@
       "message": {
         "nameRequired": "Account name is required.",
         "mnemonicRequired": "Mnemonic is required.",
-        "invalidMnemonic": "Import failed. Please check your mnemonic words."
+        "invalidMnemonic": "Import failed. Please check your Mnemonic Words."
       },
       "button": {
         "back": "Back",
@@ -495,7 +495,7 @@
     },
     "message": {
       "error": {
-        "accountMnemonicExists": "An account with the same mnemonic already exists."
+        "accountMnemonicExists": "An account with the same Mnemonic Words already exists."
       }
     }
   },
@@ -740,7 +740,7 @@
   "addressDetail": {
     "ui": {
       "title": {
-        "detail": "Detail",
+        "detail": "Details",
         "edit": "Edit"
       },
       "label": {
@@ -895,13 +895,13 @@
         "reset": "Reset Wallet"
       },
       "message": {
-        "clear": "Resetting wallet will permanently remove all data (including mnemonics and passwords) from your device, make sure that wallet mnemonics have been backed up. Are you sure to reset?",
+        "clear": "Resetting wallet will permanently remove all data (including Mnemonic Words and passwords) from your device, make sure that wallet Mnemonic Words have been backed up. Are you sure to reset?",
         "inputPassword": "Enter Password to Continue",
         "passwordNotCorrect": "Incorrect password."
       },
       "button": {
-        "showMnemonic": "Reveal Mnemonics",
-        "hideMnemonic": "Hide Mnemonics",
+        "showMnemonic": "Reveal Mnemonic Words",
+        "hideMnemonic": "Hide Mnemonic Words",
         "password": "Change Password",
         "export": "Export Private Information",
         "reset": "Reset Wallet"
@@ -1078,7 +1078,7 @@
         "farmerPublicKey": "Farmer public key (m/12381/8444/0/0)",
         "poolPublicKey": "Pool public key (m/12381/8444/1/0)",
         "firstWalletAddress": "First wallet address",
-        "mnemonicSeed": "Mnemonic seed (24-word)",
+        "mnemonicSeed": "Mnemonic Words (24-word)",
         "details": "Details"
       },
       "tooltip": {
@@ -1129,14 +1129,14 @@
       },
       "dropdown": {
         "spaceScan": "View on Spacescan.io",
-        "setAsProfilePic": "Set As Profile Picture"
+        "setAsProfilePic": "Set as Account Avatar"
       }
     }
   },
   "did": {
     "ui": {
       "title": {
-        "detail": "Detail"
+        "detail": "Details"
       },
       "button": {
         "addDid": "Add DID"
