@@ -22,11 +22,6 @@
                     >{{ $t("nftDetail.ui.dropdown.spaceScan") }}
                   </b-dropdown-item>
                 </a>
-                <a class="has-text-dark" @click="crossOriginDownload(cns.analysis.metadata.imageUri, cns.metadata.name)">
-                  <b-dropdown-item aria-role="listitem">
-                    <b-icon class="media-left" icon="download" size="is-small"></b-icon>{{ $t("nftDetail.ui.dropdown.download") }}
-                  </b-dropdown-item>
-                </a>
               </b-dropdown>
             </template>
             {{ $t("nftDetail.ui.label.nftId") }}
@@ -34,9 +29,7 @@
           </b-field>
           <b-field label="Collection"> CNS </b-field>
           <b-field>
-            <template #label>
-              Registered Address
-            </template>
+            <template #label> Registered Address </template>
             <span class="word-break"
               >{{ address }} <key-box icon="checkbox-multiple-blank-outline" :value="address" :showValue="false"></key-box
             ></span>
@@ -106,7 +99,6 @@ import NftTransfer from "@/components/Nft/NftTransfer.vue";
 import { CnsDetail } from "@/services/crypto/receive";
 import store from "@/store";
 import CnsNewAddress from "@/components/Cns/CnsNewAddress.vue";
-import { crossOriginDownload } from "@/services/api/crossOriginDownload";
 
 @Component({
   components: {
@@ -132,11 +124,6 @@ export default class CnsDetailPanel extends Vue {
 
   get spaceScanUrl(): string {
     return store.state.network.network.spaceScanUrl;
-  }
-
-  async crossOriginDownload(url: string, filename: string | undefined): Promise<void> {
-    const name = filename ?? "untitled";
-    return crossOriginDownload(url, name);
   }
 
   updateAddress(value: string): void {

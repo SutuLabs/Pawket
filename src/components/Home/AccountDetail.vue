@@ -23,7 +23,7 @@
               icon-left="paw"
               @click="selectAccount()"
               rounded
-              ><span class="has-text-grey">{{ account.name | nameOmit }}</span></b-button
+              ><span class="has-text-grey">{{ account.key.fingerprint }}</span></b-button
             >
             <b-dropdown v-model="networkId" aria-role="list" :mobile-modal="false" class="is-pulled-left">
               <template #trigger>
@@ -53,11 +53,11 @@
             <div class="mt-6">
               <div class="is-size-3 py-5">
                 <figure class="image is-96x96" style="margin: auto">
-                  <img v-if="account.profilePic" class="is-rounded max-h-100" :src="account.profilePic" />
-                  <img v-else class="is-rounded max-h-100" src="@/assets/account-circle.svg" />
+                  <img v-if="account.profilePic" class="is-rounded cover" :src="account.profilePic" />
+                  <img v-else class="is-rounded" src="@/assets/account-circle.svg" />
                 </figure>
                 <p>
-                  <span class="pl-5">{{ account.name | nameOmit }}</span
+                  <span class="pl-5 is-size-4">{{ account.name | nameOmit }}</span
                   ><b-tooltip :label="$t('accountDetail.ui.tooltip.refresh')">
                     <a class="is-size-6" href="javascript:void(0)" @click="refresh()" :disabled="refreshing">
                       <b-icon
@@ -439,7 +439,9 @@ export default class AccountDetail extends Vue {
   border: 0;
 }
 
-.max-h-100 {
-  max-height: 100%;
+.cover {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
 }
 </style>

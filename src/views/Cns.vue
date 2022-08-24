@@ -38,12 +38,6 @@
                         >{{ $t("nftDetail.ui.dropdown.spaceScan") }}
                       </b-dropdown-item>
                     </a>
-                    <a class="has-text-dark" @click="crossOriginDownload(cns.metadata.uri, cns.metadata.name)">
-                      <b-dropdown-item aria-role="listitem">
-                        <b-icon class="media-left" icon="download" size="is-small"></b-icon
-                        >{{ $t("nftDetail.ui.dropdown.download") }}
-                      </b-dropdown-item>
-                    </a>
                   </b-dropdown>
                 </span>
               </p>
@@ -80,7 +74,6 @@ import CnsDesktopDetail from "@/components/Cns/CnsDesktopDetail.vue";
 import CnsDetailPanel from "@/components/Cns/CnsDetailPanel.vue";
 import CnsSearch, { CnsResult } from "@/components/Cns/CnsSearch.vue";
 import { AccountEntity } from "@/models/account";
-import { crossOriginDownload } from "@/services/api/crossOriginDownload";
 import { CnsDetail } from "@/services/crypto/receive";
 import { isMobile } from "@/services/view/responsive";
 import store from "@/store";
@@ -135,11 +128,6 @@ export default class Cns extends Vue {
       }
     }
     return true;
-  }
-
-  async crossOriginDownload(url: string, filename: string | undefined): Promise<void> {
-    const name = filename ?? "untitled";
-    return crossOriginDownload(url, name);
   }
 
   searchCns(): void {
