@@ -181,7 +181,7 @@
         "donate": "你正在向开发者捐赠",
         "observeMode": "观察模式下无法使用交互功能。",
         "offline": "当前处于离线模式",
-        "test": "注意：kitten.pawket.app是一个测试站点，你可以在此体验一些未发布的新功能。"
+        "test": "注意：kitten.pawket.app 是一个测试站点，你可以在此体验一些未发布的新功能。"
       }
     }
   },
@@ -257,7 +257,7 @@
         "failedToSubmit": "提交至交易池失败: ",
         "failedToSign": "签名失败: ",
         "submitted": "已经提交至交易池，请等待确认。",
-        "invalidAmount": "无效金额",
+        "invalidAmount": "金额无效",
         "insufficientFunds": "余额不足"
       },
       "tooltip": {
@@ -278,18 +278,18 @@
     "messages": {
       "error": {
         "DOUBLE_SPEND": "重复消费",
-        "UNKNOWN_UNSPENT": "未知的UTXO被使用，可能前一笔交易尚未上链",
+        "UNKNOWN_UNSPENT": "未知的 UTXO 被使用，可能前一笔交易尚未上链",
         "BAD_AGGREGATE_SIGNATURE": "错误的聚合签名",
         "INVALID_CONDITION": "无效的条件",
         "COIN_AMOUNT_EXCEEDS_MAXIMUM": "硬币总量超过最大值",
-        "INVALID_FEE_LOW_FEE": "无效的费用，或费用太低",
+        "INVALID_FEE_LOW_FEE": "费用无效，或费用太低",
         "MEMPOOL_NOT_INITIALIZED": "内存池尚未完成初始化，稍等再试",
         "ALREADY_INCLUDING_TRANSACTION": "该交易已经进入到内存池",
-        "INCOMPATIBLE_NETWORK_ID": "不兼容的网络ID，选错网络了？",
+        "INCOMPATIBLE_NETWORK_ID": "不兼容的网络 ID，选错网络了？",
         "NO_TRANSACTIONS_WHILE_SYNCING": "节点正在同步，稍等再试",
-        "INVALID_FEE_TOO_CLOSE_TO_ZERO": "无效的费用，或费用太低",
+        "INVALID_FEE_TOO_CLOSE_TO_ZERO": "费用无效，或费用太低",
         "COIN_AMOUNT_NEGATIVE": "硬币的金额无效，不能为负数",
-        "INVALID_ADDRESS": "无效的地址",
+        "INVALID_ADDRESS": "地址无效",
         "ADDRESS_NOT_MATCH_NETWORK": "所填写地址与当前网络不符，请填写正确的地址。"
       }
     }
@@ -324,7 +324,7 @@
         "button": {
           "done": "完成",
           "sign": "签名",
-          "uploadToDexie": "上传至Dexie"
+          "uploadToDexie": "上传至 Dexie"
         },
         "field": {
           "offer": "提供",
@@ -355,7 +355,7 @@
           "bundle": "数据包",
           "royaltyToCreator": "创作者",
           "totalRequested": "总请求",
-          "nftPrice": "NFT价格",
+          "nftPrice": "NFT 价格",
           "royalty": "版权费",
           "total": "总计"
         },
@@ -368,7 +368,7 @@
           "offer": "Offer 信息"
         },
         "tooltip": {
-          "spaceScan": "在Spacescan.io查看"
+          "spaceScan": "在 spacescan.io 查看"
         },
         "notification": {
           "observation": "目前处于观察模式。无法交易。"
@@ -465,7 +465,7 @@
         "hint": "用离线代理扫描该二维码来发送交易",
         "overflow": "数据过长, 无法生成二维码",
         "bundle": "数据包",
-        "copy": "拷贝"
+        "copy": "复制"
       }
     },
     "ui": {
@@ -510,7 +510,7 @@
         "nameRequired": "账户名不能为空",
         "addressRequired": "地址不能为空",
         "illegalAddress": "地址不正确",
-        "duplicateAddress": "重复地址"
+        "duplicateAddress": "地址重复"
       },
       "button": {
         "back": "返回",
@@ -950,11 +950,11 @@
     "title": "探索",
     "loading": "加载中",
     "nft": {
-      "title": "NFT市场",
-      "ascription": "更多NFT, 请访问"
+      "title": "NFT 市场",
+      "ascription": "更多 NFT, 请访问"
     },
     "cat": {
-      "title": "CAT市场",
+      "title": "CAT 市场",
       "ascription": "Powered by "
     },
     "button": {
@@ -1128,8 +1128,8 @@
         "series": "Series"
       },
       "dropdown": {
-        "spaceScan": "在Spacescan.io查看",
-        "setAsProfilePic": "设为头像"
+        "spaceScan": "在 spacescan.io 查看",
+        "setAsProfilePic": "设置为账户头像"
       }
     }
   },
@@ -1139,7 +1139,7 @@
         "detail": "详情"
       },
       "button": {
-        "addDid": "添加DID"
+        "addDid": "添加 DID"
       },
       "label": {
         "name": "名称",
@@ -1153,7 +1153,7 @@
   "nftTransfer": {
     "ui": {
       "title": "转发",
-      "description": "你将把这个 NFT 转送给他人。",
+      "description": "你将把这个 NFT 转发给他人。",
       "summary": {
         "confirmation": "确定要转发这个 NFT 吗？<br>请检查您的交易。"
       }
@@ -1204,8 +1204,8 @@
       },
       "messages": {
         "error": {
-          "INVALID_PROPERTY": "属性信息不合法",
-          "INVALID_ADDRESS": "地址不合法"
+          "INVALID_PROPERTY": "属性信息无效",
+          "INVALID_ADDRESS": "地址无效"
         }
       }
     }
