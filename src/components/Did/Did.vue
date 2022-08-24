@@ -1,32 +1,27 @@
 <template>
-  <div class="modal-card m-0">
-    <header>
-      <top-bar :title="$t('did.ui.title.did')" @close="$emit('close')"></top-bar>
-    </header>
-    <section class="modal-card-body">
-      <b-button @click="refresh()">Refresh</b-button>
-      <div class="mb-3">
-        <b-button type="is-primary" expanded @click="addDid()">
-          <b-icon icon="plus" size="is-small" class="mr-1"></b-icon>
-          {{ $t("did.ui.button.addDid") }}
-        </b-button>
-      </div>
-      <div class="mt-4 border-bottom" v-for="(did, i) in dids" :key="i">
-        <a href="javascript:void(0)" @click="showDetail(did)" class="panel-block columns is-mobile">
-          <div class="column is-flex">
-            <div class="mr-2">
-              <b-icon icon="account-circle" size="is-medium" class="has-text-primary"></b-icon>
-            </div>
-            <div>
-              <p class="has-text-grey-dark is-size-6">{{ did.name | nameOmit }}</p>
-              <p>
-                <span class="is-size-7 has-text-grey-light word-break">{{ did.did }}</span>
-              </p>
-            </div>
+  <div>
+    <b-button @click="refresh()">Refresh</b-button>
+    <div class="mb-3">
+      <b-button type="is-primary" expanded @click="addDid()">
+        <b-icon icon="plus" size="is-small" class="mr-1"></b-icon>
+        {{ $t("did.ui.button.addDid") }}
+      </b-button>
+    </div>
+    <div class="mt-4 border-bottom" v-for="(did, i) in dids" :key="i">
+      <a href="javascript:void(0)" @click="showDetail(did)" class="panel-block columns is-mobile">
+        <div class="column is-flex">
+          <div class="mr-2">
+            <b-icon icon="account-circle" size="is-medium" class="has-text-primary"></b-icon>
           </div>
-        </a>
-      </div>
-    </section>
+          <div>
+            <p class="has-text-grey-dark is-size-6">{{ did.name | nameOmit }}</p>
+            <p>
+              <span class="is-size-7 has-text-grey-light word-break">{{ did.did }}</span>
+            </p>
+          </div>
+        </div>
+      </a>
+    </div>
   </div>
 </template>
 

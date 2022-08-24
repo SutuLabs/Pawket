@@ -1,5 +1,5 @@
 <template>
-  <div class="column nav-box mb-6">
+  <div class="column nav-box mb-6" ref="anchor">
     <div :class="{ box: !isMobile, 'pt-8': isMobile }">
       <p class="is-hidden-mobile has-text-left is-size-5 pb-2 pl-2 border-bottom">
         <span @click="mode = 'List'" v-if="mode == 'Offer'"
@@ -259,6 +259,8 @@ export default class Settings extends Vue {
       this.offers = resp.offers;
       this.total = resp.count;
     }
+    const anchor = this.$refs.anchor as Element;
+    if (anchor) anchor.scrollIntoView();
     this.loading = false;
   }
 

@@ -55,7 +55,7 @@
             <div class="mt-6">
               <figure class="image is-96x96 is-clickable" style="margin: auto" @click="selectAccount()">
                 <img v-if="account.profilePic" class="is-rounded cover" :src="account.profilePic" />
-                <img v-else class="is-rounded" src="@/assets/account-circle.svg" />
+                <img v-else class="is-rounded cover" src="@/assets/account-circle.svg" />
               </figure>
               <p>
                 <span class="pl-5 is-size-4">{{ account.name | nameOmit }}</span
@@ -70,7 +70,7 @@
                   </a>
                 </b-tooltip>
               </p>
-              <p v-if="networkId == 'mainnet'" class="is-size-7 py-2">
+              <p v-if="networkId == 'mainnet'" class="is-size-7 py-2 has-text-grey">
                 {{ account.tokens["XCH"].amount | xchToCurrency(rate, currency) }}
               </p>
             </div>
@@ -135,6 +135,9 @@
           <b-tab-item :label="$t('accountDetail.ui.tab.nft')" class="min-height-20">
             <nft-panel :account="account" @changePage="changePage"></nft-panel>
           </b-tab-item>
+           <b-tab-item :label="$t('accountDetail.ui.tab.did')" class="min-height-20" v-if="debugMode">
+            <did></did>
+          </b-tab-item>
           <b-tab-item :label="$t('accountDetail.ui.tab.utxos')" class="min-height-20">
             <utxo-panel :tokenInfo="tokenInfo" v-model="activities" @changePage="changePage"></utxo-panel>
           </b-tab-item>
@@ -155,6 +158,7 @@ import ManageCats from "@/components/Cat/ManageCats.vue";
 import ExplorerLink from "@/components/Home/ExplorerLink.vue";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import Send from "@/components/Send/Send.vue";
+import Did from "@/components/Did/Did.vue";
 import { demojo } from "@/filters/unitConversion";
 import { xchToCurrency } from "@/filters/usdtConversion";
 import { TokenInfo, AccountEntity, CustomCat } from "@/models/account";
@@ -185,6 +189,7 @@ type Mode = "Verify" | "Create";
     NftPanel,
     DidPanel,
     Dapp,
+    Did,
   },
   filters: { demojo, xchToCurrency, nameOmit },
 })

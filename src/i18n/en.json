@@ -143,7 +143,8 @@
       "tab": {
         "asset": "Asset",
         "utxos": "UTXOs",
-        "nft": "NFT"
+        "nft": "NFT",
+        "did": "DID"
       },
       "tooltip": {
         "lock": "Lock Wallet",
@@ -862,10 +863,6 @@
           "title": "Collection",
           "description": "Create, edit, remove, and manage your collection"
         },
-        "did": {
-          "title": "DID",
-          "description": "Add, edit, remove, and manage your DIDs"
-        },
         "advanced": {
           "title": "Advanced",
           "description": "Experimental"
@@ -1139,7 +1136,6 @@
   "did": {
     "ui": {
       "title": {
-        "did": "DID",
         "detail": "Detail"
       },
       "button": {
