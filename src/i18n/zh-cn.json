@@ -368,7 +368,7 @@
           "offer": "Offer 信息"
         },
         "tooltip": {
-          "spaceScan": "在 spacescan.io 查看"
+          "spaceScan": "在 Spacescan.io 查看"
         },
         "notification": {
           "observation": "目前处于观察模式。无法交易。"
@@ -1128,7 +1128,7 @@
         "series": "Series"
       },
       "dropdown": {
-        "spaceScan": "在 spacescan.io 查看",
+        "spaceScan": "在 Spacescan.io 查看",
         "setAsProfilePic": "设置为账户头像"
       }
     }
