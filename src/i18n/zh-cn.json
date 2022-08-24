@@ -143,7 +143,8 @@
       "tab": {
         "asset": "资产",
         "utxos": "UTXOs",
-        "nft": "NFT"
+        "nft": "NFT",
+        "did": "DID"
       },
       "tooltip": {
         "lock": "锁定",
@@ -862,10 +863,6 @@
           "title": "收藏集",
           "description": "创建、编辑、删除和管理您的收藏集"
         },
-        "did": {
-          "title": "DID",
-          "description": "添加、编辑、删除、管理你的DID"
-        },
         "advanced": {
           "title": "高级",
           "description": "实验模式"
@@ -1139,7 +1136,6 @@
   "did": {
     "ui": {
       "title": {
-        "did": "DID",
         "detail": "详情"
       },
       "button": {
