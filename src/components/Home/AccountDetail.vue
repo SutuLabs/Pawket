@@ -4,7 +4,7 @@
       <div class="notification has-background-grey-dark has-text-centered has-text-info-light py-2" v-if="offline">
         {{ $t("accountDetail.message.notification.offline") }}
       </div>
-      <div class="container px-4">
+      <div class="container">
         <div class="py-5 has-text-centered" v-if="account && account.key">
           <section>
             <b-tooltip :label="$t('accountDetail.ui.tooltip.lock')" class="is-pulled-right is-hidden-mobile">
@@ -19,6 +19,7 @@
                 'has-text-grey': offline,
                 'is-pulled-right': true,
                 'border-less': true,
+                'pr-1': true,
               }"
               icon-left="paw"
               @click="selectAccount()"
@@ -33,6 +34,7 @@
                     'has-text-info': !offline && networkId == 'testnet10',
                     'has-text-grey': offline,
                     'border-less': true,
+                    'pl-2': true,
                   }"
                   icon-left="brightness-1"
                   icon-right="menu-down"
@@ -51,43 +53,44 @@
             </b-tooltip>
             <br />
             <div class="mt-6">
-              <div class="is-size-3 py-5">
-                <figure class="image is-96x96" style="margin: auto">
-                  <img v-if="account.profilePic" class="is-rounded cover" :src="account.profilePic" />
-                  <img v-else class="is-rounded" src="@/assets/account-circle.svg" />
-                </figure>
-                <p>
-                  <span class="pl-5 is-size-4">{{ account.name | nameOmit }}</span
-                  ><b-tooltip :label="$t('accountDetail.ui.tooltip.refresh')">
-                    <a class="is-size-6" href="javascript:void(0)" @click="refresh()" :disabled="refreshing">
-                      <b-icon
-                        :icon="refreshing ? 'autorenew' : 'refresh'"
-                        :class="refreshing ? 'rotate' : 'has-text-primary'"
-                        custom-size="mdi-18px"
-                      >
-                      </b-icon>
-                    </a>
-                  </b-tooltip>
-                </p>
+              <figure class="image is-96x96 is-clickable" style="margin: auto" @click="selectAccount()">
+                <img v-if="account.profilePic" class="is-rounded cover" :src="account.profilePic" />
+                <img v-else class="is-rounded" src="@/assets/account-circle.svg" />
+              </figure>
+              <p>
+                <span class="pl-5 is-size-4">{{ account.name | nameOmit }}</span
+                ><b-tooltip :label="$t('accountDetail.ui.tooltip.refresh')">
+                  <a class="is-size-6" href="javascript:void(0)" @click="refresh()" :disabled="refreshing">
+                    <b-icon
+                      :icon="refreshing ? 'autorenew' : 'refresh'"
+                      :class="refreshing ? 'rotate' : 'has-text-primary'"
+                      custom-size="mdi-12px"
+                    >
+                    </b-icon>
+                  </a>
+                </b-tooltip>
+              </p>
+              <p v-if="networkId == 'mainnet'" class="is-size-7 py-2">
+                {{ account.tokens["XCH"].amount | xchToCurrency(rate, currency) }}
+              </p>
+            </div>
+            <div class="pt-1">
+              <div class="b-tooltip">
+                <a @click="openLink()" href="javascript:void(0)" class="has-text-primary">
+                  <div class="mx-5">
+                    <b-icon icon="download-circle" size="is-medium"> </b-icon>
+                    <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.receive") }}</p>
+                  </div>
+                </a>
               </div>
-            </div>
-            <div class="b-tooltip mx-5">
-              <a @click="openLink()" href="javascript:void(0)" class="has-text-primary">
-                <b-icon icon="download-circle" size="is-medium"> </b-icon>
-                <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.receive") }}</p>
-              </a>
-            </div>
-            <div class="b-tooltip mr-5">
-              <a @click="showSend()" href="javascript:void(0)" class="has-text-primary">
-                <b-icon icon="arrow-right-circle" size="is-medium"> </b-icon>
-                <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.send") }}</p>
-              </a>
-            </div>
-            <div v-if="debugMode" class="b-tooltip mr-5">
-              <a @click="showExport()" href="javascript:void(0)" class="has-text-primary">
-                <b-icon icon="alpha-e-circle" size="is-medium"> </b-icon>
-                <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.export") }}</p>
-              </a>
+              <div class="b-tooltip">
+                <a @click="showSend()" href="javascript:void(0)" class="has-text-primary">
+                  <div class="mr-5">
+                    <b-icon icon="arrow-right-circle" size="is-medium"> </b-icon>
+                    <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.send") }}</p>
+                  </div>
+                </a>
+              </div>
             </div>
           </section>
         </div>
@@ -407,7 +410,7 @@ export default class AccountDetail extends Vue {
 @import "~bulma/sass/utilities/derived-variables";
 
 .w-3 {
-  width: 3rem;
+  width: 3.5rem;
 }
 .rotate {
   animation: rotation 2s infinite linear;

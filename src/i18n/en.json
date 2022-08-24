@@ -136,7 +136,6 @@
       "button": {
         "receive": "Receive",
         "send": "Send",
-        "export": "Export",
         "confirm": "Confirm",
         "cancel": "Cancel",
         "manageCats": "Manage CATs"
