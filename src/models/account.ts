@@ -23,6 +23,7 @@ export interface AccountTokens {
 export interface PersistentAccount {
   key: AccountKey;
   name: string;
+  profilePic?: string;
   type: AccountType;
   serial?: number;
   puzzleHash?: string;
@@ -36,7 +37,7 @@ export interface AccountEntity extends PersistentAccount {
   activities?: CoinRecord[];
   tokens: AccountTokens;
   nfts?: NftDetail[];
-  extraInfo: DonwloadedNftCollection
+  extraInfo: DonwloadedNftCollection;
   dids?: DidDetail[];
   addressPuzzles: TokenPuzzleDetail[];
   addressGenerated: number;

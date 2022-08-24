@@ -28,10 +28,10 @@
                         >{{ $t("nftDetail.ui.dropdown.spaceScan") }}
                       </b-dropdown-item>
                     </a>
-                    <a class="has-text-dark" @click="crossOriginDownload(nft.metadata.uri, nft.metadata.name)">
+                    <a class="has-text-dark" @click="setAsProfilePic(nft.metadata.uri)">
                       <b-dropdown-item aria-role="listitem">
-                        <b-icon class="media-left" icon="download" size="is-small"></b-icon
-                        >{{ $t("nftDetail.ui.dropdown.download") }}
+                        <b-icon class="media-left" icon="account-box" size="is-small"></b-icon
+                        >{{ $t("nftDetail.ui.dropdown.setAsProfilePic") }}
                       </b-dropdown-item>
                     </a>
                   </b-dropdown>
@@ -55,8 +55,8 @@ import { NftDetail } from "@/services/crypto/receive";
 import { DonwloadedNftCollection, NftOffChainMetadata } from "@/models/nft";
 import utility from "@/services/crypto/utility";
 import { unprefix0x } from "@/services/coin/condition";
-import { crossOriginDownload } from "@/services/api/crossOriginDownload";
 import { getScalarString } from "@/services/coin/nft";
+import { notifyPrimary } from "@/notification/notification";
 
 interface CollectionNfts {
   name: string;
@@ -104,14 +104,17 @@ export default class NftPanel extends Vue {
     return this.account.extraInfo ?? {};
   }
 
-
   get networkId(): string {
     return store.state.network.networkId;
   }
 
-  async crossOriginDownload(url: string, filename: string | undefined): Promise<void> {
-    const name = filename ?? "untitled";
-    return crossOriginDownload(url, name);
+  get accountId(): number {
+    return store.state.account.selectedAccount;
+  }
+
+  setAsProfilePic(url: string): void {
+    store.dispatch("setProfilePic", { idx: this.accountId, profilePic: url });
+    notifyPrimary(this.$tc("common.message.saved"));
   }
 
   @Watch("networkId")

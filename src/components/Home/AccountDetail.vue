@@ -8,7 +8,9 @@
         <div class="py-5 has-text-centered" v-if="account && account.key">
           <section>
             <b-tooltip :label="$t('accountDetail.ui.tooltip.lock')" class="is-pulled-right is-hidden-mobile">
-              <b-button @click="lock()" rounded><b-icon icon="lock" class="has-text-grey"> </b-icon></b-button>
+              <b-button @click="lock()" rounded class="border-less"
+                ><b-icon icon="lock" class="has-text-grey"> </b-icon
+              ></b-button>
             </b-tooltip>
             <b-button
               :class="{
@@ -16,12 +18,12 @@
                 'has-text-info': !offline && networkId == 'testnet10',
                 'has-text-grey': offline,
                 'is-pulled-right': true,
+                'border-less': true,
               }"
-              icon-left="account"
-              icon-right="menu-down"
+              icon-left="paw"
               @click="selectAccount()"
               rounded
-              ><span class="has-text-grey">{{ account.name | nameOmit }}</span></b-button
+              ><span class="has-text-grey">{{ account.key.fingerprint }}</span></b-button
             >
             <b-dropdown v-model="networkId" aria-role="list" :mobile-modal="false" class="is-pulled-left">
               <template #trigger>
@@ -30,6 +32,7 @@
                     'has-text-primary': !offline && networkId == 'mainnet',
                     'has-text-info': !offline && networkId == 'testnet10',
                     'has-text-grey': offline,
+                    'border-less': true,
                   }"
                   icon-left="brightness-1"
                   icon-right="menu-down"
@@ -48,14 +51,14 @@
             </b-tooltip>
             <br />
             <div class="mt-6">
-              <h2 class="is-size-3 py-5">
-                <span class="pl-4">
-                  <span v-if="account.tokens && account.tokens.hasOwnProperty(xchSymbol)">
-                    <span v-if="account.tokens[xchSymbol].amount < 0">- {{ xchSymbol }}</span>
-                    <span v-else>{{ account.tokens[xchSymbol].amount | demojo(null, 6) }}</span>
-                  </span>
-                  <span v-else>- {{ xchSymbol }}</span>
-                  <b-tooltip :label="$t('accountDetail.ui.tooltip.refresh')">
+              <div class="is-size-3 py-5">
+                <figure class="image is-96x96" style="margin: auto">
+                  <img v-if="account.profilePic" class="is-rounded cover" :src="account.profilePic" />
+                  <img v-else class="is-rounded" src="@/assets/account-circle.svg" />
+                </figure>
+                <p>
+                  <span class="pl-5 is-size-4">{{ account.name | nameOmit }}</span
+                  ><b-tooltip :label="$t('accountDetail.ui.tooltip.refresh')">
                     <a class="is-size-6" href="javascript:void(0)" @click="refresh()" :disabled="refreshing">
                       <b-icon
                         :icon="refreshing ? 'autorenew' : 'refresh'"
@@ -65,8 +68,8 @@
                       </b-icon>
                     </a>
                   </b-tooltip>
-                </span>
-              </h2>
+                </p>
+              </div>
             </div>
             <div class="b-tooltip mx-5">
               <a @click="openLink()" href="javascript:void(0)" class="has-text-primary">
@@ -430,5 +433,15 @@ export default class AccountDetail extends Vue {
 
 .min-height-20 {
   min-height: 20vh;
+}
+
+.border-less {
+  border: 0;
+}
+
+.cover {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
 }
 </style>

@@ -4,7 +4,10 @@
     <div class="modal-card-body">
       <a v-for="(account, idx) in accounts" :key="idx" class="panel-block" @click="select(idx)">
         <b-icon icon="check" v-if="idx == selectedAccount" style="margin-left: -15px" size="is-small" type="is-primary"></b-icon>
-        <b-icon icon="account" class="has-text-grey"></b-icon>
+        <figure class="image is-32x32" style="margin: auto">
+          <img v-if="account.profilePic" class="is-rounded cover" :src="account.profilePic" />
+          <img v-else class="is-rounded" src="@/assets/account-circle.svg" />
+        </figure>
         <div class="column is-flex my-0 py-0">
           <div class="py-1">
             <p class="is-size-6">{{ account.name }}</p>
@@ -237,5 +240,11 @@ export default class AccountManagement extends Vue {
 
 .hover-info:hover {
   color: $info !important;
+}
+
+.cover {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
 }
 </style>
