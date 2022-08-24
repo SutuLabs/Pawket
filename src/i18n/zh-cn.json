@@ -354,7 +354,7 @@
         "label": {
           "bundle": "数据包",
           "royaltyToCreator": "创作者",
-          "totalRequested": "总请求",
+          "totalRequested": "请求的总金额",
           "nftPrice": "NFT 价格",
           "royalty": "版权费",
           "total": "总计"
