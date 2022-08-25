@@ -5,7 +5,9 @@
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
-      <b-notification type="is-warning" :closable="false" v-if="observeMode">{{$t("offer.take.ui.notification.observation")}}</b-notification>
+      <b-notification type="is-warning" :closable="false" v-if="observeMode">{{
+        $t("offer.take.ui.notification.observation")
+      }}</b-notification>
       <template v-if="step == 'Input'">
         <b-field
           :label="$t('offer.take.ui.field.offer')"
@@ -141,7 +143,14 @@
             <span>{{ c.name }}</span>
           </b-button>
         </template>
-        <b-button v-if="!bundle" type="is-primary" @click="sign()" :loading="signing" class="is-pulled-left" :disabed="observeMode">
+        <b-button
+          v-if="!bundle"
+          type="is-primary"
+          @click="sign()"
+          :loading="signing"
+          class="is-pulled-left"
+          :disabed="observeMode"
+        >
           {{ $t("offer.take.ui.button.sign") }}
           <b-loading :is-full-page="false" :active="!tokenPuzzles || !availcoins"></b-loading>
         </b-button>
@@ -276,10 +285,10 @@ export default class TakeOffer extends Vue {
     return s.requested[0].amount;
   }
 
-  get tradePricePercentage(): bigint {
+  get tradePricePercentage(): number {
     const s = this.summary;
-    if (!s) return 0n;
-    return BigInt((s.offered[0].nft_detail?.analysis.tradePricePercentage ?? 0) / 100);
+    if (!s) return 0;
+    return (s.offered[0].nft_detail?.analysis.tradePricePercentage ?? 0) / 100;
   }
 
   get observeMode(): boolean {

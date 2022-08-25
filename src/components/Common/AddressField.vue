@@ -36,6 +36,7 @@
 import store from "@/store";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import AddressBook, { Contact } from "@/components/AddressBook/AddressBook.vue";
+import { ensureAddress } from "@/store/modules/network";
 
 @Component
 export default class AddressField extends Vue {
@@ -83,7 +84,7 @@ export default class AddressField extends Vue {
   get innerAccs(): Contact[] {
     const innerAccs: Contact[] = [];
     store.state.account.accounts.forEach((acc) => {
-      if (acc.firstAddress) innerAccs.push({ name: acc.name, address: acc.firstAddress });
+      if (acc.firstAddress) innerAccs.push({ name: acc.name, address: ensureAddress(acc.firstAddress) });
     });
     return innerAccs;
   }

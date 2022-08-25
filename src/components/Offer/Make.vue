@@ -65,7 +65,7 @@
         <b-field :message="$t('offer.make.ui.panel.hint.thisIsYourOffer')">
           <template #label>
             {{ $t("offer.make.ui.label.yourOfferTitle") }}
-            <key-box icon="checkbox-multiple-blank-outline" :value="offerText" tooltip="Copy"></key-box>
+            <key-box icon="checkbox-multiple-blank-outline" :value="offerText" tooltip="Copy" position="is-right"></key-box>
             <a href="javascript:void(0)" v-if="debugMode || true" @click="debugOffer()">🐞</a>
           </template>
           <b-input type="textarea" :value="offerText" disabled></b-input>
