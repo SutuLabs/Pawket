@@ -1,5 +1,5 @@
 <template>
-  <b-tooltip v-if="value" :multilined="effectiveMultilined" :delay="delay" :position="position" size="is-small">
+  <b-tooltip v-if="value" :multilined="effectiveMultilined" :delay="delay" :position="position" :size="tooltipSize">
     <template v-slot:content>
       <p class="break-all">{{ effectiveTooltip }}</p>
     </template>
@@ -33,6 +33,7 @@ export default class KeyBox extends Vue {
   @Prop() private multilined!: boolean | undefined;
   @Prop({ default: 0 }) public delay!: number;
   @Prop({ default: "is-top" }) public position!: "is-top" | "is-bottom" | "is-left" | "is-right";
+  @Prop({ default: "is-medium" }) public tooltipSize!: "is-small" | "is-medium" | "is-large";
 
   get effectiveMultilined(): boolean {
     return this.multilined === undefined ? this.effectiveTooltip?.length > 30 : this.multilined;

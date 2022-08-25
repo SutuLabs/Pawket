@@ -13,7 +13,7 @@
         </div>
         <div class="column is-3">{{ asset.name | nameOmit(true) }}</div>
         <div class="column is-6">
-          <b-tooltip :label="asset.id" multilined style="word-break: break-all"  size="is-small" position="is-left">
+          <b-tooltip :label="asset.id" multilined style="word-break: break-all" size="is-small" position="is-left">
             <div>{{ asset.id | shorten }}</div>
           </b-tooltip>
           <key-box icon="checkbox-multiple-blank-outline" :value="asset.id" :tooltip="$t('ManageCats.ui.tooltip.copy')"></key-box>
