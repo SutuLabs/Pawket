@@ -299,8 +299,7 @@ export async function analyzeNftCoin(
 
   const nextCoinName = await getNextCoinName0x(parsed_puzzle.hex, solution_hex, getCoinName0x(coin));
 
-  if (!metadata.imageUri
-    || !metadata.imageHash
+  if (!metadata
     || !singletonModHash
     || !launcherId
     || !launcherPuzzleHash
