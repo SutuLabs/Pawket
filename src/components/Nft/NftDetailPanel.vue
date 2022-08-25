@@ -31,7 +31,7 @@
               </b-dropdown>
             </template>
             {{ $t("nftDetail.ui.label.nftId") }}
-            <key-box icon="checkbox-multiple-blank-outline" :value="nft.address" :showValue="true"></key-box>
+            <key-box icon="checkbox-multiple-blank-outline" :value="nft.address" :showValue="true" position="is-bottom"></key-box>
           </b-field>
           <b-field :label="$t('nftDetail.ui.label.collection')">{{ metadata.collection.name }}</b-field>
           <b-field :label="$t('nftDetail.ui.label.description')">
@@ -107,27 +107,27 @@
               <!-- prettier-ignore -->
               <ul>
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.nftId") }}</span><span class="is-pulled-right">
-                  <key-box :value="nft.address" :showValue="true"></key-box></span></li>
+                  <key-box :value="nft.address" :showValue="true" position="is-left"></key-box></span></li>
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.launcherId") }}</span><span class="is-pulled-right">
-                  <key-box :value="nft.analysis.launcherId" :showValue="true"></key-box></span></li>
+                  <key-box :value="nft.analysis.launcherId" :showValue="true" position="is-left"></key-box></span></li>
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.ownerDid") }}</span><span class="is-pulled-right">
-                  <key-box :value="nft.analysis.didOwner" :showValue="true"></key-box></span></li>
+                  <key-box :value="nft.analysis.didOwner" :showValue="true" position="is-left"></key-box></span></li>
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.ownerAddress") }}</span><span class="is-pulled-right">
-                  <key-box :value="nft.analysis.p2Owner" :showValue="true"></key-box></span></li>
+                  <key-box :value="nft.analysis.p2Owner" :showValue="true" position="is-left"></key-box></span></li>
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.royaltyPercentage") }}</span><span class="is-pulled-right">
                   {{ nft.analysis.tradePricePercentage/100 }}%</span></li>
                 <li v-for="(data, index) of dataUrls" :key="index"><span class="has-text-grey">{{ $t("nftDetail.ui.details.dataUrl", {index: index + 1})}}</span><span class="is-pulled-right">
                   <a :href="data" target="_blank"><b-icon icon="open-in-new" size="is-small"></b-icon></a></span></li>
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.dataHash") }}</span><span class="is-pulled-right">
-                  <key-box :value="nft.analysis.metadata.imageHash" :showValue="true"></key-box></span></li>
+                  <key-box :value="nft.analysis.metadata.imageHash" :showValue="true" position="is-left"></key-box></span></li>
                 <li v-for="(url, index) of metadataUrls" :key="index"><span class="has-text-grey">{{ $t("nftDetail.ui.details.metadataUrl", {index: index + 1}) }}</span><span class="is-pulled-right">
                   <a :href="url" target="_blank"><b-icon icon="open-in-new" size="is-small"></b-icon></a></span></li>
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.metadataHash") }}</span><span class="is-pulled-right">
-                  <key-box :value="nft.analysis.metadata.metadataHash" :showValue="true"></key-box></span></li>
+                  <key-box :value="nft.analysis.metadata.metadataHash" :showValue="true" position="is-left"></key-box></span></li>
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.licenseUrl") }}</span><span class="is-pulled-right">
                   <a :href="nft.analysis.metadata.licenseUri" target="_blank"><b-icon icon="open-in-new" size="is-small"></b-icon></a></span></li>
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.licenseHash") }}</span><span class="is-pulled-right">
-                  <key-box :value="nft.analysis.metadata.licenseHash" :showValue="true"></key-box></span></li>
+                  <key-box :value="nft.analysis.metadata.licenseHash" :showValue="true" position="is-left"></key-box></span></li>
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.series") }}</span><span class="is-pulled-right">
                   {{ parseInt(nft.analysis.metadata.serialNumber, 16) }} / {{ parseInt(nft.analysis.metadata.serialTotal,16) }}</span></li>
               </ul>

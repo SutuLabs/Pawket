@@ -1,5 +1,5 @@
 <template>
-  <b-tooltip v-if="value" :multilined="effectiveMultilined" :delay="delay" :position="position">
+  <b-tooltip v-if="value" :multilined="effectiveMultilined" :delay="delay" :position="position" size="is-small">
     <template v-slot:content>
       <p class="break-all">{{ effectiveTooltip }}</p>
     </template>
