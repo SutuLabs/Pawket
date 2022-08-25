@@ -70,7 +70,7 @@
                   </a>
                 </b-tooltip>
               </p>
-              <p v-if="networkId == 'mainnet'" class="is-size-6 pt-2 has-text-grey">
+              <p v-if="account.tokens && account.tokens.hasOwnProperty('XCH')" class="is-size-6 pt-2 has-text-grey">
                 {{ account.tokens["XCH"].amount | xchToCurrency(rate, currency) }}
               </p>
             </div>
@@ -135,7 +135,7 @@
           <b-tab-item :label="$t('accountDetail.ui.tab.nft')" class="min-height-20">
             <nft-panel :account="account" @changePage="changePage"></nft-panel>
           </b-tab-item>
-           <b-tab-item :label="$t('accountDetail.ui.tab.did')" class="min-height-20" v-if="debugMode">
+          <b-tab-item :label="$t('accountDetail.ui.tab.did')" class="min-height-20" v-if="debugMode">
             <did></did>
           </b-tab-item>
           <b-tab-item :label="$t('accountDetail.ui.tab.utxos')" class="min-height-20">

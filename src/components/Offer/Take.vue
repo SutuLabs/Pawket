@@ -28,7 +28,7 @@
                     <div class="column">
                       <b-taglist attached class="mb-0">
                         <template v-if="ent.id && ent.nft_target">
-                          <b-tooltip multilined :label="getNftName(ent.id)" position="is-right" style="word-break: break-all">
+                          <b-tooltip multilined :label="getNftName(ent.id)" position="is-top" style="word-break: break-all">
                             <b-tag
                               type="is-info"
                               class="nft-tag is-clickable"
