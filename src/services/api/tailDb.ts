@@ -52,11 +52,13 @@ class TailDb {
       throw new Error(await resp.text());
     }
     const p = (await resp.json()) as TailDbResponse;
-    const tails: TailInfo[] = p.tails.map((tail) => ({
-      hash: tail.hash,
-      code: tail.code,
-      logo_url: tail.logo_url,
-    }));
+    const tails: TailInfo[] = p.tails
+      .filter((t) => t.hash && t.code && t.logo_url)
+      .map((tail) => ({
+        hash: tail.hash,
+        code: tail.code,
+        logo_url: tail.logo_url,
+      }));
     tails.sort((a, b) => a.code.localeCompare(b.code));
     this.ustore.setItem(this.storageKey, JSON.stringify(tails));
     this.ustore.setItem(this.lastUpdateKey, Date.now().toString());

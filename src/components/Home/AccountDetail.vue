@@ -57,7 +57,7 @@
                 <img v-if="account.profilePic" class="is-rounded cover" :src="account.profilePic" />
                 <img v-else class="is-rounded cover" src="@/assets/account-circle.svg" />
               </figure>
-              <p>
+              <p class="pt-2">
                 <span class="pl-5 is-size-4">{{ account.name | nameOmit }}</span
                 ><b-tooltip :label="$t('accountDetail.ui.tooltip.refresh')">
                   <a class="is-size-6" href="javascript:void(0)" @click="refresh()" :disabled="refreshing">
@@ -70,11 +70,11 @@
                   </a>
                 </b-tooltip>
               </p>
-              <p v-if="networkId == 'mainnet'" class="is-size-7 py-2 has-text-grey">
+              <p v-if="account.tokens && account.tokens.hasOwnProperty('XCH')" class="is-size-6 pt-2 has-text-grey">
                 {{ account.tokens["XCH"].amount | xchToCurrency(rate, currency) }}
               </p>
             </div>
-            <div class="pt-1">
+            <div class="pt-3">
               <div class="b-tooltip">
                 <a @click="openLink()" href="javascript:void(0)" class="has-text-primary">
                   <div class="mx-5">
@@ -135,7 +135,7 @@
           <b-tab-item :label="$t('accountDetail.ui.tab.nft')" class="min-height-20">
             <nft-panel :account="account" @changePage="changePage"></nft-panel>
           </b-tab-item>
-           <b-tab-item :label="$t('accountDetail.ui.tab.did')" class="min-height-20" v-if="debugMode">
+          <b-tab-item :label="$t('accountDetail.ui.tab.did')" class="min-height-20" v-if="debugMode">
             <did></did>
           </b-tab-item>
           <b-tab-item :label="$t('accountDetail.ui.tab.utxos')" class="min-height-20">

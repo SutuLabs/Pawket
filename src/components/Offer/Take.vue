@@ -28,7 +28,7 @@
                     <div class="column">
                       <b-taglist attached class="mb-0">
                         <template v-if="ent.id && ent.nft_target">
-                          <b-tooltip multilined :label="getNftName(ent.id)" position="is-right" style="word-break: break-all">
+                          <b-tooltip multilined :label="getNftName(ent.id)" position="is-top" style="word-break: break-all">
                             <b-tag
                               type="is-info"
                               class="nft-tag is-clickable"
@@ -74,7 +74,7 @@
                     </div>
                     <div v-if="ent.nft_uri" class="column">
                       <a :href="ent.nft_uri" target="_blank">
-                        <b-tooltip :label="ent.nft_uri" multilined class="break-string" position="is-left">
+                        <b-tooltip :label="ent.nft_uri" multilined class="break-string" position="is-top">
                           <img :src="ent.nft_uri" class="nft-image" />
                         </b-tooltip>
                       </a>
