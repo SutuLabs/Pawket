@@ -7,7 +7,7 @@ import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
 import { Instance } from "../util/instance";
 import { modsdict, modsprog } from "../coin/mods";
 import { prefix0x, unprefix0x } from "../coin/condition";
-import { SExp, isAtom } from "clvm";
+import { SExp, isAtom, TToJavascript } from "clvm";
 import { sexpAssemble } from "../coin/analyzer";
 
 export interface ExecuteResultCondition {
@@ -244,10 +244,21 @@ class PuzzleMaker {
   public parseConditions(conditon: string | SExp): ConditionEntity[] {
     try {
       const program = typeof conditon === "string" ? assemble(conditon) : conditon;
-      const conds = Array.from(program.as_iter())
-        .map(cond => ({
-          code: cond.first().atom?.at(0) ?? 0,
-          args: Array.from(cond.rest().as_iter()).map(_ => _.listp() ? Array.from(_.as_iter()).map(_ => _.atom?.raw()) : _.atom?.raw())
+      const prog = program.as_javascript();
+      if (!Array.isArray(prog)) return [];
+      const conds = prog
+        .map<ConditionEntity>((cond: TToJavascript) => ({
+          code: (!Array.isArray(cond) ? cond.raw()[0]
+            : !Array.isArray(cond[0]) ? cond[0].raw()[0]
+              : !Array.isArray(cond[0][0]) ? cond[0][0].raw()[0] : -1),
+          args: Array.isArray(cond)
+            ? cond.slice(1)
+              .map((_: TToJavascript) => Array.isArray(_)
+                ? Array.from(_).map((c: TToJavascript) => Array.isArray(c) // utilize Array.from to convert Tuple to Array, otherwise `object is not extensible` error thrown
+                  ? Array.isArray(c[0]) ? undefined : c[0].raw()
+                  : c.raw())
+                : _.raw())
+            : [],
         }));
 
       return conds;

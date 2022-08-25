@@ -60,6 +60,7 @@ export interface NftCoinAnalysisResult {
   metadata: NftMetadataValues;
   coin: OriginCoin;
   nextCoinName?: string;
+  updaterInSolution?: boolean;
 }
 
 export type NftDataKey = "imageUri" | "imageHash" | "metadataUri" | "metadataHash" | "licenseUri" | "licenseHash" | "serialNumber" | "serialTotal"

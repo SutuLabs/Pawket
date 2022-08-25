@@ -295,7 +295,7 @@ export async function analyzeNftCoin(
 
   if (transfer_sgn_struct != root_sgn_struct.raw) throw new Error("abnormal, SINGLETON_STRUCT is different in top_layer and ownership_transfer");
   const solsexp = sexpAssemble(solution_hex);
-  const { didOwner, p2Owner } = await getOwnerFromSolution(solsexp);
+  const { didOwner, p2Owner, updaterInSolution } = await getOwnerFromSolution(solsexp);
 
   const nextCoinName = await getNextCoinName0x(parsed_puzzle.hex, solution_hex, getCoinName0x(coin));
 
@@ -315,7 +315,7 @@ export async function analyzeNftCoin(
   // console.log(`const hintPuzzle="${hintPuzzle}";`);
   // console.log(`const solution="${solution_hex}";`);
 
-  return {
+  const obj: NftCoinAnalysisResult = {
     metadata,
     rawMetadata,
     singletonModHash,
@@ -333,7 +333,10 @@ export async function analyzeNftCoin(
     hintPuzzle: prefix0x(hintPuzzle),
     nextCoinName,
     coin,
+    updaterInSolution,
   };
+  if (!obj.updaterInSolution) delete obj.updaterInSolution;
+  return obj;
 }
 
 export async function getTransferNftPuzzle(analysis: NftCoinAnalysisResult, inner_p2_puzzle: string, isCns = false): Promise<string> {
@@ -374,7 +377,11 @@ export async function getTransferNftInnerSolution(tgt_hex: string): Promise<stri
   return nftSolution;
 }
 
-async function getOwnerFromSolution(sol: SExp): Promise<{ didOwner: string | undefined, p2Owner: string | undefined }> {
+async function getOwnerFromSolution(sol: SExp): Promise<{
+  didOwner: string | undefined,
+  p2Owner: string | undefined,
+  updaterInSolution: boolean,
+}> {
   /*
   example:
   (
@@ -396,11 +403,12 @@ async function getOwnerFromSolution(sol: SExp): Promise<{ didOwner: string | und
   const prog = findByPath(sol, "rrfffrfr");
   const conds = puzzle.parseConditions(prog);
   const did = conds.find(_ => _.code == 246) // magic number: 246 == -10
+  const updaterInSolution = !!conds.find(_ => _.code == 232) // magic number: 232 == -24
   const p2 = conds.find(_ => _.code == ConditionOpcode.CREATE_COIN);
   const didOwner = (!did || !(did.args[0] instanceof Uint8Array)) ? undefined : utility.toHexString(did.args[0]);
   const p2Owner = (!p2 || !(p2.args[2] instanceof Array) || !(p2.args[2][0] instanceof Uint8Array)) ? undefined : utility.toHexString(p2.args[2][0]);
 
-  return { didOwner, p2Owner };
+  return { didOwner, p2Owner, updaterInSolution };
 }
 
 async function constructMetadataString(metadata: NftMetadataValues): Promise<string> {
