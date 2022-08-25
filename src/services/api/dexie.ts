@@ -61,7 +61,10 @@ class Dexie {
   }
 
   public async getNftMarket(): Promise<Markets> {
-    const resp = await fetch(this.dexieMarketUrl() + "/nft_markets", { method: "GET", redirect: "follow" });
+    const params = new URLSearchParams();
+    params.append("by", "volume");
+    params.append("interval", "weekly");
+    const resp = await fetch(this.dexieMarketUrl() + `/nft_markets?${params}`, { method: "GET", redirect: "follow" });
     if (resp.status !== 200) {
       throw new Error(await resp.text());
     }
