@@ -20,7 +20,9 @@
             </b-field>
             <p class="help is-danger" v-if="!isCorrect">{{ $t("verifyPassword.message.error.incorrectPassword") }}</p>
             <div class="buttons">
-              <b-button @click="confirm()" type="is-primary">{{ $t("verifyPassword.ui.button.confirm") }}</b-button>
+              <b-button @click="confirm()" type="is-primary" :loading="isLoading">{{
+                $t("verifyPassword.ui.button.confirm")
+              }}</b-button>
               <b-button v-if="!isCorrect" type="is-danger" @click="clear()">{{ $t("verifyPassword.ui.button.clear") }}</b-button>
             </div>
           </section>
@@ -46,6 +48,7 @@ export default class VerifyPassword extends Vue {
   public strengthMsg = "";
   public strengthClass: "is-danger" | "is-warning" | "is-primary" = "is-danger";
   public showStrength = false;
+  public isLoading = false;
 
   @Watch("mode")
   onModeChanged(): void {
@@ -64,13 +67,16 @@ export default class VerifyPassword extends Vue {
   }
 
   async confirm(): Promise<void> {
+    this.isLoading = true;
     if (!(await isPasswordCorrect(this.password))) {
       this.isCorrect = false;
+      this.isLoading = false;
       return;
     }
     this.isCorrect = true;
     if (this.$route.path != "/") this.$router.push("/");
     await store.dispatch("unlock", this.password);
+    this.isLoading = false;
   }
 
   clearErrorMsg(): void {

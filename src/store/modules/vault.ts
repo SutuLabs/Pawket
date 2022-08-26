@@ -139,11 +139,11 @@ store.registerModule<IVaultState>("vault", {
         Vue.set(_, "balance", -1);
         Vue.set(_, "activities", []);
       });
+      state.unlocked = true;
       state.seedMnemonic = await encryption.decrypt(state.encryptedSeed, encryptKey);
 
       // initialize upgraded salt
       await dispatch("ensureSalt", password);
-      state.unlocked = true;
       await dispatch("initWalletAddress");
       await dispatch("persistent");
     },
