@@ -9,7 +9,8 @@
       <div v-show="!bundle">
         <div class="has-text-centered">
           <p class="has-text-grey pb-3">{{ $t("nftTransfer.ui.description") }}</p>
-          <img :src="uri" class="image is-128x128" />
+          <img v-if="uri" :src="uri" class="image is-128x128" />
+          <img v-else src="@/assets/nft-no-image.png" class="image is-128x128" />
           <p>{{ nft.name }}</p>
         </div>
         <address-field

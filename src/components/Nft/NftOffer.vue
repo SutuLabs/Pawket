@@ -10,7 +10,8 @@
           <b-input :value="nft.address" disabled></b-input>
         </b-field>
         <b-field>
-          <img :src="nft.metadata.uri" class="image is-64x64" />
+          <img v-if="nft.metadata.uri" :src="nft.metadata.uri" class="image is-64x64" />
+          <img v-else src="@/assets/nft-no-image.png" class="image is-64x64" />
           <span class="pl-2 has-text-grey"
             ><p>{{ nft.metadata.name }}</p>
           </span>
@@ -52,10 +53,10 @@
     </section>
     <footer class="modal-card-foot is-block">
       <div>
-        <b-button :label="$t('common.button.cancel')" class="is-pulled-left" @click="close()"></b-button>
+        <b-button v-if="bundle" :label="$t('offer.make.ui.button.done')" class="is-pulled-left" @click="close()"></b-button>
+        <b-button v-else :label="$t('common.button.cancel')" class="is-pulled-left" @click="close()"></b-button>
         <b-button v-if="!bundle" type="is-primary" :loading="signing" @click="sign()">
           {{ $t("offer.make.ui.button.sign") }}
-          <b-loading :is-full-page="false" :active="!tokenPuzzles || !availcoins || signing"></b-loading>
         </b-button>
       </div>
       <div>
@@ -244,7 +245,7 @@ export default class NftOffer extends Vue {
       }
     }
     Notification.open({
-      message: tc('common.message.uploadSuccess'),
+      message: tc("common.message.uploadSuccess"),
       type: "is-primary",
     });
     this.uploading = false;

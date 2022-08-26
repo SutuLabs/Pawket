@@ -5,7 +5,8 @@
       <div class="columns is-mobile is-multiline">
         <div class="column is-6-tablet is-12-mobile">
           <span @click="preview(nft.metadata.uri)"
-            ><b-image :src="nft.metadata.uri" alt="A random image" ratio="6by4"></b-image
+            ><b-image v-if="nft.metadata.uri" :src="nft.metadata.uri" alt="NFT image" ratio="6by4"></b-image
+            ><b-image v-else :src="require('@/assets/nft-no-image.png')" alt="NFT image" ratio="6by4"></b-image
           ></span>
         </div>
         <div class="column is-6-tablet is-12-mobile">
@@ -31,7 +32,13 @@
               </b-dropdown>
             </template>
             {{ $t("nftDetail.ui.label.nftId") }}
-            <key-box icon="checkbox-multiple-blank-outline" :value="nft.address" :showValue="true" position="is-bottom" tooltipSize="is-small"></key-box>
+            <key-box
+              icon="checkbox-multiple-blank-outline"
+              :value="nft.address"
+              :showValue="true"
+              position="is-bottom"
+              tooltipSize="is-small"
+            ></key-box>
           </b-field>
           <b-field :label="$t('nftDetail.ui.label.collection')">{{ metadata.collection.name }}</b-field>
           <b-field :label="$t('nftDetail.ui.label.description')">
