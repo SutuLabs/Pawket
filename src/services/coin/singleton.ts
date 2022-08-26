@@ -1,4 +1,4 @@
-import puzzle, { ExecuteResult, PuzzleDetail } from "../crypto/puzzle";
+import puzzle, { ExecuteResult, ExecuteResultCondition, PuzzleDetail } from "../crypto/puzzle";
 import { TokenPuzzleDetail } from "../crypto/receive";
 import { curryMod } from "../offer/bundler";
 import { getNumber, prefix0x, unprefix0x } from "./condition";
@@ -99,9 +99,11 @@ export async function getNextCoinName0x(puzzle_hex: string, solution_hex: string
 
   try {
     const coinCond = result.conditions
-      .filter((_) => _.op == ConditionOpcode.CREATE_COIN && getNumber(_.args[1]) == 1n)[0];
-    const nextcoin_puzhash = coinCond.args[0];
-    const nextCoinName = getCoinName0x({ parent_coin_info: thisCoinName, amount: 1n, puzzle_hash: nextcoin_puzhash });
+      .filter((_) => _.op == ConditionOpcode.CREATE_COIN && getNumber(_.args.at(1) ?? "0") % 2n == 1n).at(0);
+    if (!coinCond) return undefined;
+    const nextcoin_puzhash = coinCond.args.at(0);
+    const amount = getNumber(coinCond.args.at(1) ?? "0");
+    const nextCoinName = getCoinName0x({ parent_coin_info: thisCoinName, amount, puzzle_hash: nextcoin_puzhash ?? "" });
     return nextCoinName;
   } catch (err) {
     if (process.env.NODE_ENV !== "production") {
