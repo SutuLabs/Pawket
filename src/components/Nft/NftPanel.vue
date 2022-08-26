@@ -14,7 +14,8 @@
         <ul class="is-flex columns is-multiline is-mobile my-2" v-if="col.nfts">
           <li class="column is-4-tablet is-6-mobile" v-for="(nft, i) of col.nfts" :key="i">
             <div class="nft-image-container">
-              <img class="nft-image is-clickable" :src="nft.metadata.uri" :alt="nft.metadata.hash" @click="showDetail(nft)" />
+              <img class="nft-image is-clickable cover" v-if="nft.metadata.uri" :src="nft.metadata.uri" :alt="nft.metadata.hash" @click="showDetail(nft)" />
+              <img class="nft-image is-clickable cover" v-else src="@/assets/nft-no-image.png" :alt="nft.metadata.hash" @click="showDetail(nft)" />
               <p class="nft-name has-background-white-ter pt-2 pl-3 is-hidden-mobile">
                 <span class="is-inline-block truncate">{{ nft.metadata.name }}</span>
                 <span class="is-pulled-right">
@@ -206,5 +207,12 @@ export default class NftPanel extends Vue {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.cover {
+  object-fit: cover;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  height: 100%;
 }
 </style>

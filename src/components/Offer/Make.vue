@@ -86,7 +86,6 @@
         <b-button v-if="bundle" :label="$t('offer.make.ui.button.done')" class="is-pulled-left" @click="close()"></b-button>
         <b-button v-if="!bundle" type="is-primary" :loading="signing" @click="sign()">
           {{ $t("offer.make.ui.button.sign") }}
-          <b-loading :is-full-page="false" :active="!tokenPuzzles || !availcoins || signing"></b-loading>
         </b-button>
       </div>
       <div>
