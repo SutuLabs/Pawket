@@ -1,4 +1,4 @@
-import puzzle, { ExecuteResult, ExecuteResultCondition, PuzzleDetail } from "../crypto/puzzle";
+import puzzle, { ExecuteResult, PuzzleDetail } from "../crypto/puzzle";
 import { TokenPuzzleDetail } from "../crypto/receive";
 import { curryMod } from "../offer/bundler";
 import { getNumber, prefix0x, unprefix0x } from "./condition";
