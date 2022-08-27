@@ -9,8 +9,22 @@
       </template>
       <b-input v-model="origin_address" type="text" @input="changeAddress()"></b-input>
     </b-field>
-    <b-field label="Hash" :message="hash_address">
+    <b-field label="Hash">
       <b-input v-model="origin_hash" type="text" @input="changeHash()"></b-input>
+    </b-field>
+    <b-field :message="hash_address">
+      <p class="control">
+        <b-dropdown v-model="prefix" @change="changeHash()" @active-change="changeHash()">
+          <template #trigger>
+            <b-button label="Prefixes" icon-right="menu-down" />
+          </template>
+
+          <b-dropdown-item value="xch">xch</b-dropdown-item>
+          <b-dropdown-item value="did:chia:">did:chia:</b-dropdown-item>
+          <b-dropdown-item value="txch">txch</b-dropdown-item>
+        </b-dropdown>
+      </p>
+      <b-input v-model="prefix" type="text" @input="changeHash()" placeholder="prefix"></b-input>
     </b-field>
   </div>
 </template>
@@ -31,12 +45,13 @@ export default class HashPanel extends Vue {
   public origin_address = "";
   public hash_address = "";
   public origin_hash = "";
+  public prefix = xchPrefix();
 
   changeAddress(): void {
     this.address_hash = puzzle.getPuzzleHashFromAddress(this.origin_address);
   }
   changeHash(): void {
-    this.hash_address = puzzle.getAddressFromPuzzleHash(this.origin_hash, xchPrefix());
+    this.hash_address = puzzle.getAddressFromPuzzleHash(this.origin_hash, this.prefix);
   }
   search(hash: string): void {
     this.$emit("search", hash);
