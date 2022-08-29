@@ -10,8 +10,27 @@
               RUN
             </b-button>
           </template>
+          <div>
+            <div class="tabs">
+              <ul>
+                <li :class="idx == selectedFileIndex ? 'is-active' : ''" v-for="(file, idx) in editorData" :key="'file' + idx">
+                  <a @click="changeTab(idx)">
+                    {{ file.data.name }}
+                  </a>
+                </li>
+                <li v-if="false">
+                  <a href="javascript:void(0)" @click="create()">
+                    <b-icon size="is-small" icon="plus"></b-icon>
+                    New
+                  </a>
+                </li>
+              </ul>
+            </div>
 
-          <div ref="editor" class="monaco-editor"></div>
+            <div>
+              <div ref="editor" class="monaco-editor"></div>
+            </div>
+          </div>
         </b-field>
       </div>
       <!-- <div class="column is-half">
