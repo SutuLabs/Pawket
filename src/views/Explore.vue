@@ -45,7 +45,7 @@
               </div>
             </div>
             <p class="has-text-centered mt-6 pt-4 is-size-7 has-text-grey">
-              {{ $t("explore.ascription") }}<a href="https://dexie.space/nft" target="_blank">Dexie</a>
+              {{ $t("explore.ascription") }}
             </p>
           </b-tab-item>
           <b-tab-item :label="$t('explore.cat.title')">
@@ -92,7 +92,7 @@
               </div>
             </div>
             <p class="has-text-centered mt-6 pt-4 is-size-7 has-text-grey">
-              {{ $t("explore.ascription") }}<a href="https://dexie.space" target="_blank">Dexie</a>
+              {{ $t("explore.ascription") }}
             </p>
           </b-tab-item>
         </b-tabs>
