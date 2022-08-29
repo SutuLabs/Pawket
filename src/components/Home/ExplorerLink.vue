@@ -90,15 +90,11 @@ export default class ExplorerLink extends Vue {
   public addressType: AddressType = "Observed";
 
   get externalExplorerPrefix(): string {
-    return store.state.app.externalExplorerPrefix;
+    return store.state.network.network.explorerUrl;
   }
 
   get token(): AccountToken {
     return this.account.tokens[xchSymbol()];
-  }
-
-  get explorerUrl(): string {
-    return store.state.network.network.explorerUrl;
   }
 
   get addresses(): AccountTokenAddress[] {

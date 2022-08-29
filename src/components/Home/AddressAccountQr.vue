@@ -38,10 +38,6 @@ export default class AddressAccountQr extends Vue {
   public address = "";
 
   get externalExplorerPrefix(): string {
-    return store.state.app.externalExplorerPrefix;
-  }
-
-  get explorerUrl(): string {
     return store.state.network.network.explorerUrl;
   }
 

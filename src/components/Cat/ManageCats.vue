@@ -64,7 +64,7 @@ import store from "@/store/index";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { sortable } from "@/directives/sortable";
 import { AccountEntity, CustomCat } from "@/models/account";
-import { getAccountCats, getDefaultCats } from "@/store/modules/account";
+import { getAccountCats } from "@/store/modules/account";
 import TokenItem from "@/components/Cat/TokenItem.vue";
 import { Bytes } from "clvm";
 import { shorten } from "@/filters/addressConversion";
@@ -108,7 +108,6 @@ export default class ManageCats extends Vue {
       return;
     }
     this.assetIds = getAccountCats(this.account);
-    this.defaultCats = getDefaultCats();
 
     this.name = this.defaultName;
     this.assetId = this.defaultAssetId;

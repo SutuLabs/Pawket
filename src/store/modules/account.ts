@@ -224,7 +224,20 @@ function getAccountEntity(
     serial: serial,
     tokens: {},
     addressRetrievalCount: DEFAULT_ADDRESS_RETRIEVAL_COUNT,
-    allCats: [],
+    allCats: [
+      {
+        name: "USDS",
+        id: "6d95dae356e32a71db5ddcb42224754a02524c615c5fc35f568c2af04774e589",
+        img: "https://images.taildatabase.com/tails/86b8ebab-7d76-4321-972a-a57b23dbf5b4.jpeg",
+        network: "mainnet",
+      },
+      {
+        name: "BSH",
+        id: "6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b",
+        img: "https://images.taildatabase.com/tails/cd864a92-facb-48a5-a02e-6344425538c8.png",
+        network: "mainnet",
+      },
+    ],
     nfts: [],
     dids: [],
     extraInfo: {},
