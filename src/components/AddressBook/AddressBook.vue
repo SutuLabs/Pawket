@@ -79,7 +79,7 @@
 
 <script lang="ts">
 import { nameOmit } from "@/filters/nameConversion";
-import { notifyPrimary } from "@/notification/notification";
+import { notifyPrimary } from "@/services/notification/notification";
 import store from "@/store";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import AddressBookField from "./AddressBookFields.vue";

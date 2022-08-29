@@ -73,7 +73,7 @@ import QrcodeVue from "qrcode.vue";
 import { shorten } from "@/filters/addressConversion";
 import TopBar from "@/components/Common/TopBar.vue";
 import { AddressType } from "@/services/crypto/puzzle";
-import { notifyPrimary } from "@/notification/notification";
+import { notifyPrimary } from "@/services/notification/notification";
 import { xchSymbol } from "@/store/modules/network";
 
 @Component({

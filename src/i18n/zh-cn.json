@@ -949,7 +949,7 @@
   "explore": {
     "title": "探索",
     "loading": "加载中",
-    "ascription": "Powered by ",
+    "ascription": "Powered by Dexie",
     "nft": {
       "title": "NFT 市场"
     },

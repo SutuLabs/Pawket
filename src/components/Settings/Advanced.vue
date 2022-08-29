@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { notifyPrimary } from "@/notification/notification";
+import { notifyPrimary } from "@/services/notification/notification";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import TopBar from "@/components/Common/TopBar.vue";

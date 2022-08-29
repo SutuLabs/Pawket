@@ -64,7 +64,7 @@ import store from "@/store/index";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { sortable } from "@/directives/sortable";
 import { AccountEntity, CustomCat } from "@/models/account";
-import { getAccountCats } from "@/store/modules/account";
+import { getAccountCats, getAllCats } from "@/store/modules/account";
 import TokenItem from "@/components/Cat/TokenItem.vue";
 import { Bytes } from "clvm";
 import { shorten } from "@/filters/addressConversion";
@@ -114,7 +114,7 @@ export default class ManageCats extends Vue {
   }
 
   get allCats(): CustomCat[] {
-    return this.defaultCats.concat(this.assetIds);
+    return getAllCats(this.account);
   }
 
   close(): void {
@@ -136,8 +136,7 @@ export default class ManageCats extends Vue {
   }
 
   isExisted(name: string, id: string): boolean {
-    const allCats = this.defaultCats.concat(this.assetIds);
-    for (let t of allCats) {
+    for (let t of this.allCats) {
       if (t.id === id || t.name.toUpperCase() === name.toUpperCase()) {
         return true;
       }
