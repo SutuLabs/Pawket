@@ -45,7 +45,7 @@
               </div>
             </div>
             <p class="has-text-centered mt-6 pt-4 is-size-7 has-text-grey">
-              {{ $t("explore.nft.ascription") }}<a href="https://dexie.space/nft" target="_blank">Dexie</a>
+              {{ $t("explore.ascription") }}
             </p>
           </b-tab-item>
           <b-tab-item :label="$t('explore.cat.title')">
@@ -92,7 +92,7 @@
               </div>
             </div>
             <p class="has-text-centered mt-6 pt-4 is-size-7 has-text-grey">
-              {{ $t("explore.cat.ascription") }}<a href="https://dexie.space" target="_blank">Dexie</a>
+              {{ $t("explore.ascription") }}
             </p>
           </b-tab-item>
         </b-tabs>
@@ -222,7 +222,7 @@ export default class Settings extends Vue {
   }
 
   get nftMarket(): MarketItem[] {
-    return this.nftMarkets.xch.slice(0, 30);
+    return this.nftMarkets.xch;
   }
 
   get selectedAccount(): number {

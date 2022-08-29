@@ -178,7 +178,7 @@ import NftTransfer from "@/components/Nft/NftTransfer.vue";
 import { NftDetail } from "@/services/crypto/receive";
 import { NftOffChainMetadata } from "@/models/nft";
 import store from "@/store";
-import { notifyPrimary } from "@/notification/notification";
+import { notifyPrimary } from "@/services/notification/notification";
 
 @Component({
   components: {

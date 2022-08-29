@@ -42,6 +42,7 @@ import { prefix0x } from "@/services/coin/condition";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { getCoinName } from "@/services/coin/coinUtility";
 import { rpcUrl } from "@/store/modules/network";
+import store from "@/store";
 
 interface CoinSearchType {
   coinId: string;
@@ -71,8 +72,7 @@ export default class CoinPanel extends Vue {
   }
 
   get externalExplorerPrefix(): string {
-    // return store.state.app.externalExplorerPrefix;
-    return "https://chia.tt/info/coin/";
+    return store.state.network.network.explorerUrl;
   }
 
   tryDecode(str: string): string {

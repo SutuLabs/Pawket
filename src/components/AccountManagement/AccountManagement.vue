@@ -81,7 +81,7 @@ import { AccountEntity } from "@/models/account";
 import { Component, Vue } from "vue-property-decorator";
 import AccountInfo from "./AccountInfo.vue";
 import TopBar from "@/components/Common/TopBar.vue";
-import { notifyPrimary } from "@/notification/notification";
+import { notifyPrimary } from "@/services/notification/notification";
 import AddByAddress from "./AddAccount/AddByAddress.vue";
 import AddByMnemonic from "./AddAccount/AddByMnemonic.vue";
 import AddBySerial from "./AddAccount/AddBySerial.vue";

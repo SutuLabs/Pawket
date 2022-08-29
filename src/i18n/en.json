@@ -949,13 +949,12 @@
   "explore": {
     "title": "Explore",
     "loading": "Loading",
+    "ascription": "Powered by Dexie",
     "nft": {
-      "title": "NFT Market",
-      "ascription": "For more NFTs, please visit "
+      "title": "NFT Market"
     },
     "cat": {
-      "title": "CAT Market",
-      "ascription": "Powered by "
+      "title": "CAT Market"
     },
     "button": {
       "buy": "Buy",

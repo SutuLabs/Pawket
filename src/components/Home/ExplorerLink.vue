@@ -73,7 +73,7 @@ import QrcodeVue from "qrcode.vue";
 import { shorten } from "@/filters/addressConversion";
 import TopBar from "@/components/Common/TopBar.vue";
 import { AddressType } from "@/services/crypto/puzzle";
-import { notifyPrimary } from "@/notification/notification";
+import { notifyPrimary } from "@/services/notification/notification";
 import { xchSymbol } from "@/store/modules/network";
 
 @Component({
@@ -90,15 +90,11 @@ export default class ExplorerLink extends Vue {
   public addressType: AddressType = "Observed";
 
   get externalExplorerPrefix(): string {
-    return store.state.app.externalExplorerPrefix;
+    return store.state.network.network.explorerUrl;
   }
 
   get token(): AccountToken {
     return this.account.tokens[xchSymbol()];
-  }
-
-  get explorerUrl(): string {
-    return store.state.network.network.explorerUrl;
   }
 
   get addresses(): AccountTokenAddress[] {

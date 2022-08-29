@@ -57,7 +57,7 @@ import { DonwloadedNftCollection, NftOffChainMetadata } from "@/models/nft";
 import utility from "@/services/crypto/utility";
 import { unprefix0x } from "@/services/coin/condition";
 import { getScalarString } from "@/services/coin/nft";
-import { notifyPrimary } from "@/notification/notification";
+import { notifyPrimary } from "@/services/notification/notification";
 
 interface CollectionNfts {
   name: string;

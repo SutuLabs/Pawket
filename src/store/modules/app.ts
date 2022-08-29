@@ -10,7 +10,6 @@ export interface IAppState {
   bls?: ModuleInstance;
   clvmInitialized: boolean;
   debug: boolean;
-  externalExplorerPrefix: string;
   selfTestStatus: SelfTestStatus;
   selfTestError: string;
 }
@@ -19,7 +18,6 @@ store.registerModule<IAppState>('app', {
   state() {
     return {
       clvmInitialized: false,
-      externalExplorerPrefix: 'https://chia.tt/info/address/',
       debug: false,
       bls: undefined,
       selfTestStatus: "Checking",
