@@ -179,7 +179,7 @@ interface NftFormInfo {
   },
 })
 export default class MintNft extends Vue {
-  @Prop() private account!: AccountEntity;
+  @Prop() public account!: AccountEntity;
   public addressEditable = true;
   public submitting = false;
   public fee = 0;

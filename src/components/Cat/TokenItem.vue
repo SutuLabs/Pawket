@@ -11,10 +11,10 @@
             <img v-else class="is-rounded" src="@/assets/custom-cat.svg" />
           </span>
         </div>
-        <div class="column is-3">{{ asset.name | nameOmit(true) }}</div>
+        <div class="column is-3">{{ nameOmit(asset.name, true) }}</div>
         <div class="column is-6">
           <b-tooltip :label="asset.id" multilined style="word-break: break-all" size="is-small" position="is-left">
-            <div>{{ asset.id | shorten }}</div>
+            <div>{{ shorten(asset.id) }}</div>
           </b-tooltip>
           <key-box icon="checkbox-multiple-blank-outline" :value="asset.id" :tooltip="$t('ManageCats.ui.tooltip.copy')"></key-box>
         </div>
@@ -41,10 +41,9 @@ import KeyBox from "@/components/Common/KeyBox.vue";
   components: {
     KeyBox,
   },
-  filters: { shorten, nameOmit },
 })
 export default class TokenItem extends Vue {
-  @Prop() private catList!: CustomCat[];
+  @Prop() public catList!: CustomCat[];
 
   remove(id: string): void {
     this.$emit("remove", id);
@@ -52,6 +51,14 @@ export default class TokenItem extends Vue {
 
   updateOrder(newOrder: CustomCat[]): void {
     this.$emit("updateOrder", newOrder);
+  }
+
+  nameOmit(name: string, upperCase = false): string {
+    return nameOmit(name, upperCase);
+  }
+
+  shorten(name: string): string {
+    return shorten(name);
   }
 }
 </script>

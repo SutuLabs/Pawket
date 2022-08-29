@@ -28,8 +28,11 @@
         </div>
       </div>
       <div class="column has-text-right has-text-grey-dark is-5">
-        <span v-if="tokenInfo[activity.symbol]" :class="activity.spent ? '' : 'has-text-primary'">
-          {{ activity.spent ? "-" : "+" }}{{ activity.coin.amount | demojo(tokenInfo[activity.symbol]) }}</span
+        <span
+          v-if="activity.coin && activity.symbol && tokenInfo[activity.symbol]"
+          :class="activity.spent ? '' : 'has-text-primary'"
+        >
+          {{ activity.spent ? "-" : "+" }}{{ demojo(activity.coin.amount, tokenInfo[activity.symbol]) }}</span
         >
       </div>
     </a>
@@ -47,20 +50,18 @@
 <script lang="ts">
 import { demojo } from "@/filters/unitConversion";
 import { CoinRecord } from "@/models/wallet";
-import { TokenInfo } from "@/models/account";
+import { OneTokenInfo, TokenInfo } from "@/models/account";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import UtxoDetail from "@/components/Utxo/UtxoDetail.vue";
 import { isMobile } from "@/services/view/responsive";
 
-@Component({
-  filters: { demojo },
-})
+@Component({})
 export default class UtxoPanel extends Vue {
-  @Prop() private value!: CoinRecord[];
-  @Prop() private tokenInfo!: TokenInfo;
-  @Prop({ default: 10 }) private perPage!: number;
-  @Prop({ default: 1 }) private rangeBefore!: number;
-  @Prop({ default: 1 }) private rangeAfter!: number;
+  @Prop() public value!: CoinRecord[];
+  @Prop() public tokenInfo!: TokenInfo;
+  @Prop({ default: 10 }) public perPage!: number;
+  @Prop({ default: 1 }) public rangeBefore!: number;
+  @Prop({ default: 1 }) public rangeAfter!: number;
   current = 1;
 
   showUtxo(activity: CoinRecord): void {
@@ -108,6 +109,10 @@ export default class UtxoPanel extends Vue {
   // eslint-disable-next-line
   changePage(value: number): void {
     this.$emit("changePage");
+  }
+
+  demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null, digits = -1): string {
+    return demojo(mojo, token, digits);
   }
 }
 </script>

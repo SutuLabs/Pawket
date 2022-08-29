@@ -43,7 +43,7 @@
               <b-taglist attached>
                 <b-tag type="is-info">{{ key }}</b-tag>
                 <b-tag type="">
-                  <span v-if="key == 'Amount'" :title="val | demojo">{{ val }}</span>
+                  <span v-if="key == 'Amount'" :title="demojo(BigInt(val))">{{ val }}</span>
                   <span v-else>{{ val }}</span>
                   <key-box icon="checkbox-multiple-blank-outline" :value="val" tooltip="Copy"></key-box>
                 </b-tag>
@@ -252,6 +252,7 @@ import { ConditionOpcode } from "@/services/coin/opcode";
 import debug from "@/services/api/debug";
 import { Instance } from "@/services/util/instance";
 import { demojo } from "@/filters/unitConversion";
+import { OneTokenInfo } from "@/models/account";
 
 interface AnnouncementCoin {
   coinIndex: number;
@@ -284,10 +285,9 @@ interface CoinIndexInfo {
     KeyBox,
     UncurryPuzzle,
   },
-  filters: { demojo },
 })
 export default class BundlePanel extends Vue {
-  @Prop() private inputBundleText!: string;
+  @Prop() public inputBundleText!: string;
   public bundleText = "";
   public used_coin_name = "";
   public used_coin_tgt_address = "";
@@ -421,6 +421,11 @@ export default class BundlePanel extends Vue {
 
   async loadSettings(): Promise<void> {
     this.autoCalculation = localStorage.getItem("BUNDLE_AUTO_CALCULATION") === "true";
+  }
+
+  
+  demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null, digits = -1): string {
+    return demojo(mojo, token, digits);
   }
 
   saveBundle(): void {

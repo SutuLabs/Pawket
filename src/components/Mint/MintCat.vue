@@ -112,8 +112,8 @@ import AddressField from "@/components/Common/AddressField.vue";
   },
 })
 export default class MintCat extends Vue {
-  @Prop() private account!: AccountEntity;
-  @Prop() private tokenList!: CustomCat[];
+  @Prop() public account!: AccountEntity;
+  @Prop() public tokenList!: CustomCat[];
   public addressEditable = true;
   public submitting = false;
   public fee = 0;

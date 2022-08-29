@@ -133,7 +133,7 @@ import { tc } from "@/i18n/i18n";
   },
 })
 export default class MakeOffer extends Vue {
-  @Prop() private account!: AccountEntity;
+  @Prop() public account!: AccountEntity;
   public offerText = "";
   public offerBundle: SpendBundle | null = null;
   public summary: OfferSummary | null = null;

@@ -64,19 +64,19 @@ import { xchSymbol } from "@/store/modules/network";
   },
 })
 export default class TokenAmountField extends Vue {
-  @Prop({ default: "0" }) private value!: string;
-  @Prop({ default: -1 }) private rate!: number;
-  @Prop({ default: CurrencyType.USDT }) private currency!: CurrencyType;
-  @Prop() private tokenNames!: string[];
-  @Prop({ default: 0 }) private fee!: number;
+  @Prop({ default: "0" }) public value!: string;
+  @Prop({ default: -1 }) public rate!: number;
+  @Prop({ default: CurrencyType.USDT }) public currency!: CurrencyType;
+  @Prop() public tokenNames!: string[];
+  @Prop({ default: 0 }) public fee!: number;
 
-  @Prop({ default: true }) private amountEditable!: boolean;
-  @Prop({ default: true }) private showMaxAmount!: boolean;
-  @Prop({ default: "-1" }) private maxAmount!: string;
-  @Prop({ default: "-1" }) private totalAmount!: string;
-  @Prop({ default: xchSymbol() }) private selectedToken!: string;
-  @Prop({ default: tc("send.ui.label.amount") }) private label!: string;
-  @Prop({ default: false }) private offline!: boolean;
+  @Prop({ default: true }) public amountEditable!: boolean;
+  @Prop({ default: true }) public showMaxAmount!: boolean;
+  @Prop({ default: "-1" }) public maxAmount!: string;
+  @Prop({ default: "-1" }) public totalAmount!: string;
+  @Prop({ default: xchSymbol() }) public selectedToken!: string;
+  @Prop({ default: tc("send.ui.label.amount") }) public label!: string;
+  @Prop({ default: false }) public offline!: boolean;
 
   public INVALID_AMOUNT_MESSAGE = tc("send.ui.messages.invalidAmount");
   public INSUFFICIENT_FUNDS = tc("send.ui.messages.insufficientFunds");

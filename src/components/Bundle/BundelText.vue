@@ -29,7 +29,7 @@ import { SpendBundle } from "@/models/wallet";
   },
 })
 export default class BundleText extends Vue {
-  @Prop() private value!: string;
+  @Prop() public value!: string;
   @Prop() public bundleObject!: SpendBundle;
 
   public showBundleText = false;

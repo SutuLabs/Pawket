@@ -57,11 +57,11 @@ import { SExpWithId } from "@/services/simulator/opVm";
   name: "SExpBox",
 })
 export default class SExpBox extends Vue {
-  @Prop() private value!: SExpWithId;
-  @Prop() private autoCollapse!: number;
-  @Prop() private highlightIds!: number[];
+  @Prop() public value!: SExpWithId;
+  @Prop() public autoCollapse!: number;
+  @Prop() public highlightIds!: number[];
 
-  private manualCollapse = false;
+  public manualCollapse = false;
 
   mounted(): void {
     this.manualCollapse = this.autoCollapse == 1;

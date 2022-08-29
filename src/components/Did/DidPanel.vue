@@ -10,7 +10,6 @@
   </section>
 </template>
 <script lang="ts">
-import { demojo } from "@/filters/unitConversion";
 import { AccountEntity } from "@/models/account";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import store from "@/store";
@@ -18,11 +17,9 @@ import MintDid from "@/components/Mint/MintDid.vue";
 import { isMobile } from "@/services/view/responsive";
 import { DidDetail } from "@/services/crypto/receive";
 
-@Component({
-  filters: { demojo },
-})
+@Component({})
 export default class DidPanel extends Vue {
-  @Prop() private account!: AccountEntity;
+  @Prop() public account!: AccountEntity;
   public isOpen: number | string = 0;
 
   get dids(): DidDetail[] {

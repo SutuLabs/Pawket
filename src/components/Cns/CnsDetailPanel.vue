@@ -49,7 +49,7 @@
               type="is-primary"
               @click="transfer()"
               icon-left="share"
-              :disabled="this.account.type == 'Address'"
+              :disabled="account.type == 'Address'"
               outlined
             ></b-button>
             <b-button
@@ -58,7 +58,7 @@
               @click="offer()"
               icon-left="email-send-outline"
               outlined
-              :disabled="this.account.type == 'Address'"
+              :disabled="account.type == 'Address'"
             ></b-button>
           </div>
         </div>
@@ -71,7 +71,7 @@
           type="is-primary"
           @click="transfer()"
           icon-left="share"
-          :disabled="this.account.type == 'Address'"
+          :disabled="account.type == 'Address'"
           outlined
         ></b-button>
         <b-button
@@ -88,7 +88,6 @@
 </template>
 
 <script lang="ts">
-import { demojo } from "@/filters/unitConversion";
 import { isMobile } from "@/services/view/responsive";
 import { AccountEntity } from "@/models/account";
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
@@ -105,10 +104,9 @@ import CnsNewAddress from "@/components/Cns/CnsNewAddress.vue";
     KeyBox,
     TopBar,
   },
-  filters: { demojo },
 })
 export default class CnsDetailPanel extends Vue {
-  @Prop() private account!: AccountEntity;
+  @Prop() public account!: AccountEntity;
   @Prop() public cns!: CnsDetail;
 
   address = "xch1xxxsssssjfoiej";

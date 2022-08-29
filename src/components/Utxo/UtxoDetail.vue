@@ -7,8 +7,8 @@
     </header>
     <section class="modal-card-body">
       <b-field :label="$t('utxoDetail.ui.label.amount')" custom-class="is-medium has-text-weight-normal">
-        <span v-if="tokenInfo[activity.symbol]" class="has-text-dark is-size-5 has-text-right">
-          {{ activity.spent ? "-" : "+" }}{{ activity.coin.amount | demojo(tokenInfo[activity.symbol]) }}
+        <span v-if="activity.coin && activity.symbol && tokenInfo[activity.symbol]" class="has-text-dark is-size-5 has-text-right">
+          {{ activity.spent ? "-" : "+" }}{{ demojo(activity.coin.amount, tokenInfo[activity.symbol]) }}
           <span class="has-text-grey is-size-7">{{ activity.coin.amount }} mojos</span>
         </span>
       </b-field>
@@ -25,7 +25,7 @@
       <b-field custom-class="is-medium has-text-weight-normal" :label="$t('utxoDetail.ui.label.confirmedHeight')">
         <p class="has-text-grey">{{ activity.confirmedBlockIndex }}</p>
       </b-field>
-      <b-field :label="$t('utxoDetail.ui.label.parentCoinInfo')" custom-class="is-medium has-text-weight-normal">
+      <b-field :label="$t('utxoDetail.ui.label.parentCoinInfo')" custom-class="is-medium has-text-weight-normal" v-if="activity.coin">
         <p class="long-text-wrapper has-text-grey">
           {{ activity.coin.parentCoinInfo }}
           <key-box
@@ -35,7 +35,7 @@
           ></key-box>
         </p>
       </b-field>
-      <b-field :label="$t('utxoDetail.ui.label.puzzleHash')" custom-class="is-medium has-text-weight-normal">
+      <b-field :label="$t('utxoDetail.ui.label.puzzleHash')" custom-class="is-medium has-text-weight-normal" v-if="activity.coin">
         <p class="long-text-wrapper has-text-grey">
           {{ activity.coin.puzzleHash }}
           <key-box
@@ -52,7 +52,7 @@
 <script lang="ts">
 import { demojo } from "@/filters/unitConversion";
 import { CoinRecord } from "@/models/wallet";
-import { TokenInfo } from "@/models/account";
+import { OneTokenInfo, TokenInfo } from "@/models/account";
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
 
@@ -60,16 +60,19 @@ import KeyBox from "@/components/Common/KeyBox.vue";
   components: {
     KeyBox,
   },
-  filters: { demojo },
 })
 export default class UtxoDetail extends Vue {
-  @Prop() private activity!: CoinRecord;
-  @Prop() private tokenInfo!: TokenInfo;
+  @Prop() public activity!: CoinRecord;
+  @Prop() public tokenInfo!: TokenInfo;
   public showDetail = false;
 
   @Emit("close")
   close(): void {
     return;
+  }
+
+  demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null, digits = -1): string {
+    return demojo(mojo, token, digits);
   }
 }
 </script>

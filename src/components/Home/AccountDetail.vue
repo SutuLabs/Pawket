@@ -58,7 +58,7 @@
                 <img v-else class="is-rounded cover" src="@/assets/account-circle.svg" />
               </figure>
               <p class="pt-2">
-                <span class="pl-5 is-size-4">{{ account.name | nameOmit }}</span
+                <span class="pl-5 is-size-4">{{ nameOmit(account.name) }}</span
                 ><b-tooltip :label="$t('accountDetail.ui.tooltip.refresh')">
                   <a class="is-size-6" href="javascript:void(0)" @click="refresh()" :disabled="refreshing">
                     <b-icon
@@ -71,7 +71,7 @@
                 </b-tooltip>
               </p>
               <p v-if="account.tokens && account.tokens.hasOwnProperty('XCH')" class="is-size-6 pt-2 has-text-grey">
-                {{ account.tokens["XCH"].amount | xchToCurrency(rate, currency) }}
+                {{ xchToCurrency(account.tokens["XCH"].amount, rate, currency) }}
               </p>
             </div>
             <div class="pt-3">
@@ -116,11 +116,11 @@
                 <div class="py-1">
                   <p class="has-text-grey-dark is-size-6" v-if="tokenInfo[cat.name]">
                     <span v-if="account.tokens[cat.name].amount < 0">- {{ cat.name }}</span>
-                    <span v-else>{{ account.tokens[cat.name].amount | demojo(tokenInfo[cat.name]) }}</span>
+                    <span v-else>{{ demojo(account.tokens[cat.name].amount, tokenInfo[cat.name]) }}</span>
                   </p>
                   <p>
                     <span class="mr-2 is-size-7 has-text-grey" v-if="cat.name === xchSymbol">{{
-                      account.tokens[cat.name].amount | xchToCurrency(rate, currency)
+                      xchToCurrency(account.tokens[cat.name].amount, rate, currency)
                     }}</span>
                   </p>
                 </div>
@@ -161,7 +161,7 @@ import Send from "@/components/Send/Send.vue";
 import Did from "@/components/Did/Did.vue";
 import { demojo } from "@/filters/unitConversion";
 import { xchToCurrency } from "@/filters/usdtConversion";
-import { TokenInfo, AccountEntity, CustomCat } from "@/models/account";
+import { TokenInfo, AccountEntity, CustomCat, OneTokenInfo } from "@/models/account";
 import { getTokenInfo } from "@/services/view/cat";
 import { getExchangeRate } from "@/services/exchange/rates";
 import { CurrencyType } from "@/services/exchange/currencyType";
@@ -191,11 +191,10 @@ type Mode = "Verify" | "Create";
     Dapp,
     Did,
   },
-  filters: { demojo, xchToCurrency, nameOmit },
 })
 export default class AccountDetail extends Vue {
   public mode: Mode = "Verify";
-  private exchangeRate = -1;
+  public exchangeRate = -1;
   public showOfflineNotification = true;
   public timeoutId?: ReturnType<typeof setTimeout>;
 
@@ -249,6 +248,18 @@ export default class AccountDetail extends Vue {
 
   get isMobile(): boolean {
     return isMobile();
+  }
+
+  nameOmit(name: string, upperCase = false): string {
+    return nameOmit(name, upperCase);
+  }
+
+  xchToCurrency(mojo: null | number | bigint, rate = -1, currency: CurrencyType = CurrencyType.USDT): string {
+    return xchToCurrency(mojo, rate, currency);
+  }
+
+  demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null, digits = -1): string {
+    return demojo(mojo, token, digits);
   }
 
   checkObserveMode(): void {

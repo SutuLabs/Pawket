@@ -14,7 +14,7 @@
             <b-icon icon="account-circle" size="is-medium" class="has-text-primary"></b-icon>
           </div>
           <div>
-            <p class="has-text-grey-dark is-size-6">{{ did.name | nameOmit }}</p>
+            <p class="has-text-grey-dark is-size-6">{{ nameOmit(did.name) }}</p>
             <p>
               <span class="is-size-7 has-text-grey-light word-break">{{ did.did }}</span>
             </p>
@@ -37,7 +37,7 @@ import MintDid from "@/components/Mint/MintDid.vue";
 import DidDetails from "@/components/Did/DidDetails.vue";
 import TopBar from "@/components/Common/TopBar.vue";
 
-@Component({ filters: { nameOmit }, components: { TopBar } })
+@Component({ components: { TopBar } })
 export default class Did extends Vue {
   get selectedAccount(): number {
     return store.state.account.selectedAccount;
@@ -60,6 +60,10 @@ export default class Did extends Vue {
 
   async refresh(): Promise<void> {
     store.dispatch("refreshDids");
+  }
+
+  nameOmit(name: string, upperCase = false): string {
+    return nameOmit(name, upperCase);
   }
 
   showDetail(did: DidDetail): void {

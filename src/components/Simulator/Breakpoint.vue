@@ -17,7 +17,7 @@ import { SExpWithId } from "@/services/simulator/opVm";
   components: {},
 })
 export default class Breakpoint extends Vue {
-  @Prop() private value!: SExpWithId;
+  @Prop() public value!: SExpWithId;
 
   toggleBreakpoint(sexp: SExpWithId, status: boolean): void {
     sexp.breakpoint = status;

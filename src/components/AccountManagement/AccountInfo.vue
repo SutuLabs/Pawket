@@ -29,7 +29,7 @@
         <li class="pb-2">
           <span class="is-size-6 has-text-weight-bold">{{ $t("accountInfo.ui.label.type") }}:</span>
           <span class="is-size-6 is-pulled-right">
-            {{ account.type | accountTypeConverter }}
+            {{ accountTypeConverter(account.type) }}
           </span>
         </li>
       </ul>
@@ -119,7 +119,6 @@ import TopBar from "@/components/Common/TopBar.vue";
 
 @Component({
   components: { TopBar, KeyBox },
-  filters: { accountTypeConverter },
 })
 export default class AccountDetail extends Vue {
   @Prop() public idx!: number;
@@ -156,6 +155,10 @@ export default class AccountDetail extends Vue {
 
   get debugMode(): boolean {
     return store.state.app.debug;
+  }
+
+  accountTypeConverter(accountType: string): string {
+    return accountTypeConverter(accountType);
   }
 
   @Emit("close")

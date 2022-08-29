@@ -135,7 +135,7 @@
                   <a :href="nft.analysis.metadata.licenseUri" target="_blank"><b-icon icon="open-in-new" size="is-small"></b-icon></a></span></li>
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.licenseHash") }}</span><span class="is-pulled-right">
                   <key-box :value="nft.analysis.metadata.licenseHash" :showValue="true" position="is-left" tooltipSize="is-small"></key-box></span></li>
-                <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.series") }}</span><span class="is-pulled-right">
+                <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.series") }}</span><span class="is-pulled-right" v-if="nft.analysis.metadata.serialNumber && nft.analysis.metadata.serialTotal">
                   {{ parseInt(nft.analysis.metadata.serialNumber, 16) }} / {{ parseInt(nft.analysis.metadata.serialTotal,16) }}</span></li>
               </ul>
             </div>
@@ -167,7 +167,6 @@
 </template>
 
 <script lang="ts">
-import { demojo } from "@/filters/unitConversion";
 import { isMobile } from "@/services/view/responsive";
 import { AccountEntity } from "@/models/account";
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
@@ -185,10 +184,9 @@ import { notifyPrimary } from "@/services/notification/notification";
     KeyBox,
     TopBar,
   },
-  filters: { demojo },
 })
 export default class NftDetailPanel extends Vue {
-  @Prop() private account!: AccountEntity;
+  @Prop() public account!: AccountEntity;
   @Prop() public nft!: NftDetail;
   @Prop() public metadata!: NftOffChainMetadata;
   public showMore = false;

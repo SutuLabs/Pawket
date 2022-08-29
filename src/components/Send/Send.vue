@@ -131,17 +131,17 @@ import { getLineageProofPuzzle } from "@/services/transfer/call";
   },
 })
 export default class Send extends Vue {
-  @Prop() private account!: AccountEntity;
-  @Prop({ default: -1 }) private rate!: number;
-  @Prop({ default: CurrencyType.USDT }) private currency!: CurrencyType;
-  @Prop() private inputAddress!: string;
-  @Prop() private inputAmount!: string;
-  @Prop({ default: true }) private addressEditable!: boolean;
-  @Prop({ default: true }) private amountEditable!: boolean;
-  @Prop() private notificationMessage!: string;
-  @Prop() private notificationType!: string;
-  @Prop() private notificationIcon!: string;
-  @Prop() private notificationClosable!: boolean;
+  @Prop() public account!: AccountEntity;
+  @Prop({ default: -1 }) public rate!: number;
+  @Prop({ default: CurrencyType.USDT }) public currency!: CurrencyType;
+  @Prop() public inputAddress!: string;
+  @Prop() public inputAmount!: string;
+  @Prop({ default: true }) public addressEditable!: boolean;
+  @Prop({ default: true }) public amountEditable!: boolean;
+  @Prop() public notificationMessage!: string;
+  @Prop() public notificationType!: string;
+  @Prop() public notificationIcon!: string;
+  @Prop() public notificationClosable!: boolean;
   @Prop({ default: true }) public showClose!: boolean;
 
   public submitting = false;

@@ -40,9 +40,9 @@ import { ensureAddress } from "@/store/modules/network";
 
 @Component
 export default class AddressField extends Vue {
-  @Prop() private inputAddress!: string;
-  @Prop({ default: true }) private validAddress!: boolean;
-  @Prop({ default: true }) private addressEditable!: boolean;
+  @Prop() public inputAddress!: string;
+  @Prop({ default: true }) public validAddress!: boolean;
+  @Prop({ default: true }) public addressEditable!: boolean;
   @Prop() public label!: string;
 
   public address = "";

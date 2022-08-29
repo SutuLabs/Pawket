@@ -60,8 +60,8 @@
                           <b-tag type="is-info" :title="$t('offer.symbol.hint.XCH')">{{ xchSymbol }}</b-tag>
                         </template>
 
-                        <b-tag v-if="!ent.nft_target" class="" :title="ent.amount + ' mojos'">{{
-                          ent.amount | demojo(ent.id && tokenInfo[cats[ent.id]])
+                        <b-tag v-if="!ent.nft_target && ent.id" class="" :title="ent.amount + ' mojos'">{{
+                          demojo(ent.amount, tokenInfo[cats[ent.id]])
                         }}</b-tag>
 
                         <b-tag v-if="sumkey == 'requested'" type="is-info is-light" :title="getAddress(ent.target)">
@@ -89,18 +89,18 @@
               <label class="label">{{ $t("offer.take.ui.label.totalRequested") }}</label>
               <p class="is-size-7 has-text-grey label">
                 <span>{{ $t("offer.take.ui.label.nftPrice") }}</span
-                ><span class="is-pulled-right is-size-6 has-text-weight-bold has-text-dark">{{ nftPrice | demojo }}</span>
+                ><span class="is-pulled-right is-size-6 has-text-weight-bold has-text-dark">{{ demojo(nftPrice) }}</span>
               </p>
               <p class="is-size-7 has-text-grey label">
                 <span>{{ $t("offer.take.ui.label.royalty") }}({{ tradePricePercentage }}%)</span
                 ><span class="is-pulled-right is-size-6 has-text-dark">
                   <key-box :value="getAddress(royaltyAddress)" :display="$t('offer.take.ui.label.royaltyToCreator')"></key-box
-                  >{{ royaltyAmount | demojo }}</span
+                  >{{ demojo(royaltyAmount) }}</span
                 >
               </p>
               <p class="label has-text-grey label">
                 <span>{{ $t("offer.take.ui.label.total") }}</span
-                ><span class="is-pulled-right is-size-6 has-text-primary">{{ total | demojo }}</span>
+                ><span class="is-pulled-right is-size-6 has-text-primary">{{ demojo(BigInt(total)) }}</span>
               </p>
             </template>
           </template>
@@ -176,7 +176,7 @@ import { Component, Vue, Prop, Emit } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { SpendBundle } from "@/models/wallet";
 import { getCatIdDict, getCatNameDict, getTokenInfo } from "@/services/view/cat";
-import { AccountEntity, CustomCat, TokenInfo } from "@/models/account";
+import { AccountEntity, CustomCat, OneTokenInfo, TokenInfo } from "@/models/account";
 import { demojo } from "@/filters/unitConversion";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import { TokenPuzzleDetail } from "@/services/crypto/receive";
@@ -201,16 +201,15 @@ import bigDecimal from "js-big-decimal";
     KeyBox,
     FeeSelector,
   },
-  filters: { demojo },
 })
 export default class TakeOffer extends Vue {
-  @Prop() private account!: AccountEntity;
+  @Prop() public account!: AccountEntity;
   // @Prop({
   //   default:
   //     "offer1qqz83wcsltt6wcmqvpsxygqqwc7hynr6hum6e0mnf72sn7uvvkpt68eyumkhelprk0adeg42nlelk2mpafs8tkhg2qa9qmzphgzr85cmhln3ntar8v8razh2j3ejucf6za70898u9xhcd72hs02gr2t3q80hdpvmjtcl7g3nhjfnd65x239r7hmth4x6z0nw5u0fldxrnv7c9g0lnvvyuy9ppnjqsfgnlltt2m40len3smh0mvjtzwax53xwd60dfdeugk2h85ggs5jskuepg4tec53pjglyewll3hy7nfpgn80n265sv6lc2clknc3e420l8upyxs9pncwdargcjq8uakddrzvq6xycplur0s3qpy4kzl227vs2mell0c5r0wnnnkfkm4yh9hmau37yyluyfxkt340dust4k6hxla04qu4x96fvty990ntmx3cpzdu40lnm7zxxtfmd78pgd5chsghw4pu4e4d0pljr4xfxwsxzsx6xl72xdv8zmtankg46uwk4h4hvn3t90e9uu845t5ym2z4e7qvf6l4qf5pp38t7rzldxrlqqjlkpq00lncr9lusy4mquphm0manvv89kke54tj6jekt9m58s9ljeulygwc8c506laq9q3jff9qmr9d70eaxj7n6dfgmuhn6vey5v6vjtentulnj29j5zjt70fgkys2x54hyjln7femxdzt7vehxy7n2k9l95lj3kehxa2nw060zu3yrdegkv5jj0609us278tgp2xgtne5e70ffex72rw46ah3h4sdr0ah3ahh2htlllpxqezef7taw64x8en0llal4xtkslgpf3ad9d92etft956nftxwfh8r2jedxvmyu2fv9fxucnzv4ghv622deh9v6t2v4g55uv7welyucj6g4fx5h4z29uk5cjedf0fu6jf06lygm4wh7mes7d3kwf6lydwkpv45uuw073mscun5em6zjayg40m8frxgpf9slacvwyhjajsx8xhjsqt2ws9vee9yc26vefx5et62eckz4j9dx48j6jzdkk5jkjfwe4xzj23t9jhrxd6ffx4z4jk2x89z6qe6xcc42txm2j7t9geax2h5p390xvs26k909ukjfw9yhuyfstr68yvhnkt6hxv5n20ec55l4pffdysykzhnhrqxgzftfprenz6ut33lv9jwxeel2lfl2mv8eua4a636dj4hmvwl20ce0a0yn7kk5edpaepu3jzu56fwmxtual0cl45p89knjn4tvmkrnwkng0pzaf06a7nmpl7lz7raqqkzyll4l9ajntl6x3940lhchxuur4fhf7w4nd0da43gndn89ht6uneu7j73hjef82arxpgjl8rxwfjxuunq3wr8ll5ve993w8zf7xdfepvh0ar49090t2uc53pagma0hpc4u6w5heza09hfp20ehru9z4dkmw3846rdzp3tgag04ffrkw7zxvauqdlgvealn4aa7z6zz2mvev4dthe2r3j8gsjxswm7e6un4sld9um4fehgjsy3cvm6lftqag3v38vczepus6w9j66cd6ucpxeuv8qjhwwllnh5gh3m0mxw8h7faafh0tzza97fjp6ktqz0z7juz8ekmtp4hnpyfg9m787wzn32u9fjv8tx3dvzjkyqet7hl0aq7pu3eelvzd6zey7chh8mhwmy4afljtzjmve9l73xfhqhd8kavy56wle0kqf5hm6cysak00hysx8c0cew3z4mke9kf3fmlhaexrafk67948pykdcptkrp57sz8vv9s0yrv468q7y0w8lctpqxm4qn5zp2qfnmqd5ajaeadpulatkuudcmr24h0yr87ldt4ek8egu5n6jmel84gjpf8tm8x6nn087jtnvm8knreksah35fptxq36htzzvk38l3ualke59wyl92lpc885nnukg7t9uay2m43ekwlw60n0ayklj7c8e4l6je8ka0xf5tvtvpqpp6pcsss00l0pg",
   // })
-  // private inputOfferText!: string;
-  @Prop() private inputOfferText!: string;
+  // public inputOfferText!: string;
+  @Prop() public inputOfferText!: string;
   @Prop() tokenList!: CustomCat[];
   public offerText = "";
   public makerBundle: SpendBundle | null = null;
@@ -327,6 +326,10 @@ export default class TakeOffer extends Vue {
       this.updateOffer();
     }
     await this.loadCoins();
+  }
+
+  demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null, digits = -1): string {
+    return demojo(mojo, token, digits);
   }
 
   async refresh(): Promise<void> {
