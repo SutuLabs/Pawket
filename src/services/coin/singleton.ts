@@ -61,9 +61,9 @@ export function parseMetadata(
   rawmeta: string | SExp,
 ): ParsedMetadata {
   const metaprog = typeof rawmeta === "string" ? assemble(rawmeta) : rawmeta;
-  const metalist: string[][] = (metaprog.as_javascript() as Bytes[][])
+  const metalist = (metaprog.as_javascript() as (Bytes[] | [Bytes, Bytes[]])[])
     .map(_ => Array.from(_))
-    .map(_ => _.map(it => it.hex()));
+    .map(_ => _.flatMap(it => Array.isArray(it) ? it.map(a => a.hex()) : it.hex()));
 
   const parsed: ParsedMetadata = {};
   for (let i = 0; i < metalist.length; i++) {
@@ -99,9 +99,11 @@ export async function getNextCoinName0x(puzzle_hex: string, solution_hex: string
 
   try {
     const coinCond = result.conditions
-      .filter((_) => _.op == ConditionOpcode.CREATE_COIN && getNumber(_.args[1]) == 1n)[0];
-    const nextcoin_puzhash = coinCond.args[0];
-    const nextCoinName = getCoinName0x({ parent_coin_info: thisCoinName, amount: 1n, puzzle_hash: nextcoin_puzhash });
+      .filter((_) => _.op == ConditionOpcode.CREATE_COIN && getNumber(_.args.at(1) ?? "0") % 2n == 1n).at(0);
+    if (!coinCond) return undefined;
+    const nextcoin_puzhash = coinCond.args.at(0);
+    const amount = getNumber(coinCond.args.at(1) ?? "0");
+    const nextCoinName = getCoinName0x({ parent_coin_info: thisCoinName, amount, puzzle_hash: nextcoin_puzhash ?? "" });
     return nextCoinName;
   } catch (err) {
     if (process.env.NODE_ENV !== "production") {

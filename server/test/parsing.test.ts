@@ -29,7 +29,10 @@ describe("Parsing API test", () => {
   test('Block Parsing Case 8', () => testCase("/parse_block", bcase8));
 
   test('Puzzle Parsing Case 1', () => testCase("/parse_puzzle", pcase1));
-  test('Analyze Tx Case 1', () => Promise.all(txcase1.map(ca => testCase("/analyze_tx", ca, ca.coin_name))));
+  test.each(txcase1.map(_ => Object.assign(_, { toString: function () { return this.id; } })))(
+    "Analyze Tx Case %s",
+    (ca) => testCase("/analyze_tx", ca)
+  );
 });
 
 async function testCase(url: string, cs: any, name: string | undefined = undefined): Promise<void> {

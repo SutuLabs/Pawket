@@ -1,6 +1,236 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Parsing API test Analyze Tx Case 1: 0x0ac5606b816b75e21b2e823ea4a9539ee60672c53cc309a9dd6283de50440110 response 1`] = `
+exports[`Parsing API test Analyze Tx Case 3346427: response 1`] = `
+Object {
+  "analysis": "{\\"singletonModHash\\":\\"0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f\\",\\"launcherId\\":\\"0x761e2e1a297da0a6a0c396e898db8dfaed6f6b6ac6668d40ce930c0734ddef12\\",\\"launcherPuzzleHash\\":\\"0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9\\",\\"recovery_did_list_hash\\":\\"0x4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a\\",\\"num_verifications_requried\\":\\"()\\",\\"metadata\\":{},\\"rawMetadata\\":\\"()\\",\\"didInnerPuzzleHash\\":\\"5cca4fca0d3e50e8ce3d24c154fa80b41284640f631c5f54e9c8567fc7ccb505\\",\\"p2InnerPuzzle\\":\\"(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xaa41b6d8e1fe4945f968bf78caae9a9d0f52e535b3494b8ec91e4b2d97c809348b1eb54018c96fa64c1577addeeeaaab) 1))\\",\\"hintPuzzle\\":\\"0x4f5a3ce27421cba02f70d68104f56b49526ac7cf084ea247c4772e76c4b2731d\\",\\"rawPuzzle\\":\\"(a (q 2 (q 2 (i (logand 47 52) (q 4 (c 32 (c 47 ())) (c (a 62 (c 2 (c 5 (c (a 42 (c 2 (c 39 (c (a (i 119 (q 2 54 (c 2 (c 9 (c 87 (c (a 46 (c 2 (c 5 ()))) ()))))) (q . 29)) 1) (c (a (i 119 (q . -73) (q . 87)) 1) ()))))) (c 119 ()))))) (a 58 (c 2 (c 5 (c (a 11 95) (q ()))))))) (q 8)) 1) (c (q (((73 . 71) 2 . 51) (c . 1) 1 . 2) ((not 2 (i 5 (q 2 50 (c 2 (c 13 (c (sha256 60 (sha256 52 36) (sha256 60 (sha256 60 (sha256 52 44) 9) (sha256 60 11 (sha256 52 ())))) ())))) (q . 11)) 1) (a (i (all (= (strlen 5) 34) (= (strlen 11) 34) (> 23 (q . -1))) (q 11 5 11 23) (q 8)) 1) 2 (i 11 (q 2 (i (a 38 (c 2 (c 19 ()))) (q 2 (i (not 23) (q 2 (i (= -77 (q . -113)) (q 2 58 (c 2 (c 5 (c 27 (c 52 ()))))) (q 4 (c 35 (c (a 54 (c 2 (c 9 (c 83 (c (a 46 (c 2 (c 5 ()))) ()))))) 115)) (a 58 (c 2 (c 5 (c 27 (c 52 ()))))))) 1) (q 8)) 1) (q 4 19 (a 58 (c 2 (c 5 (c 27 (c 23 ()))))))) 1) (q 2 (i 23 () (q 8)) 1)) 1) ((a (i (= 9 56) (q 2 (i (logand 45 (q . 1)) (q 1 . 1) ()) 1) ()) 1) 11 60 (sha256 52 40) (sha256 60 (sha256 60 (sha256 52 44) 5) (sha256 60 (a 50 (c 2 (c 7 (c (sha256 52 52) ())))) (sha256 52 ())))) (a (i (l 5) (q 11 (q . 2) (a 46 (c 2 (c 9 ()))) (a 46 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 2 (i (any 23 (= 11 21)) (q 4 48 (c 11 ())) (q 8)) 1) 1)) (c (q 0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f 0x761e2e1a297da0a6a0c396e898db8dfaed6f6b6ac6668d40ce930c0734ddef12 . 0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9) (c (q 2 (q 2 (q 2 (i -65 (q 2 5 383) (q 2 (i (all (= (a 126 (c 2 (c 6143 ()))) 11) (> 23 ())) (q 4 (c 40 (c 383 ())) (c (c 52 (c 767 (c 383 (c (c 767 ()) ())))) (c (c 56 (c 12287 ())) (a 38 (c 2 (c 47 (c 23 (c 6143 (c 12287 (c 767 (c 1535 (c 3071 (q ()))))))))))))) (q 8)) 1)) 1) (c (q (((49 . 61) 73 . 70) (a . 51) 60 . 4) ((q . 1) 2 2 (i 5 (q 2 58 (c 2 (c 13 (c (sha256 42 (sha256 34 60) (sha256 42 (sha256 42 (sha256 34 50) 9) (sha256 42 11 (sha256 34 ())))) ())))) (q . 11)) 1) ((a (i 23 (q 2 (i 319 (q 4 (c 48 (c (sha256 (sha256 (a 54 (c 2 (c 5 (c 39 (c 575 (c 1343 (c 2879 ()))))))) (a 126 (c 2 (c (a 46 (c 2 (c 47 (c 95 (c 383 ()))))) ())))) 47) ())) (a 38 (c 2 (c 5 (c 11 (c 55 (c 47 (c 95 (c 447 (c 383 (c (+ 767 (q . 1)) ()))))))))))) (q 2 38 (c 2 (c 5 (c 55 (c 47 (c 95 (c 447 (c 383 (c 767 ())))))))))) 1) (q 2 (i (> 767 (- 11 (q . 1))) (q 4 (c 32 (c 383 (c 95 ()))) ()) (q 8)) 1)) 1) 11 23 (a 94 (c 2 (c 9 (c 47 (c (a 126 (c 2 (c (c 9 (c 11 29)) ()))) ()))))) 95) (c (q . 1) (c (c 44 (c 5 ())) (c (c 32 (c 23 (c 11 ()))) ()))) (sha256 42 (sha256 34 36) (sha256 42 (sha256 42 (sha256 34 50) 5) (sha256 42 (a 58 (c 2 (c 7 (c (sha256 34 34) ())))) (sha256 34 ())))) 2 (i (l 5) (q 11 (q . 2) (a 126 (c 2 (c 9 ()))) (a 126 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q 2 (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xaa41b6d8e1fe4945f968bf78caae9a9d0f52e535b3494b8ec91e4b2d97c809348b1eb54018c96fa64c1577addeeeaaab) 1)) (c (q . 0x4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a) (c (q) (c (q 0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f 0x761e2e1a297da0a6a0c396e898db8dfaed6f6b6ac6668d40ce930c0734ddef12 . 0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9) (c (q) 1)))))) 1)))\\",\\"coin\\":{\\"amount\\":\\"3\\",\\"parent_coin_info\\":\\"0x761e2e1a297da0a6a0c396e898db8dfaed6f6b6ac6668d40ce930c0734ddef12\\",\\"puzzle_hash\\":\\"0xf63feeaad0680796758ab2edffa5eae9615842a5f503ebf5eba559b0ce464500\\"},\\"nextCoinName\\":\\"0x76ca8c3c5fc851adbd9b29a972284fdea2bd3a57f3d2dc061e4ba0ee62c93605\\"}",
+  "coin_name": "0xae07204b701dd97fa3b11368b06312c8d5c5d6960b2d6280ca30641e749cd77e",
+  "mods": "singleton_top_layer_v1_1(did_innerpuz(p2_delegated_puzzle_or_hidden_puzzle()))",
+  "parsed_puzzle": Object {
+    "args": Array [
+      Object {
+        "raw": "0xffa07faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9fffa0761e2e1a297da0a6a0c396e898db8dfaed6f6b6ac6668d40ce930c0734ddef12a0eff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+      },
+      Object {
+        "args": Array [
+          Object {
+            "args": Array [
+              Object {
+                "raw": "0xb0aa41b6d8e1fe4945f968bf78caae9a9d0f52e535b3494b8ec91e4b2d97c809348b1eb54018c96fa64c1577addeeeaaab",
+              },
+            ],
+            "mod": "p2_delegated_puzzle_or_hidden_puzzle",
+          },
+          Object {
+            "raw": "0xa04bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+          },
+          Object {
+            "raw": "0x80",
+          },
+          Object {
+            "raw": "0xffa07faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9fffa0761e2e1a297da0a6a0c396e898db8dfaed6f6b6ac6668d40ce930c0734ddef12a0eff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+          },
+          Object {
+            "raw": "0x80",
+          },
+        ],
+        "mod": "did_innerpuz",
+      },
+    ],
+    "mod": "singleton_top_layer_v1_1",
+  },
+}
+`;
+
+exports[`Parsing API test Analyze Tx Case 56896094: response 1`] = `
+Object {
+  "analysis": "{\\"metadata\\":{\\"imageUri\\":\\"https://ipfs.io/ipfs/QmY3D9eyK2CbK1einrVpWYRAPMjfQTcQCNNqQcdtmFQKWR\\",\\"imageHash\\":\\"7de8f76ed99eaabcbe145486c1adda5415c6c1a4215d0a00ff1312d6793e7f89\\",\\"metadataUri\\":\\"https://pastebin.com/raw/gbpd4mNs\\",\\"metadataHash\\":\\"8408fdc4ffc26c71755aa36d530bb5ab071b323a8fd678ff2d082f22f2f01bcc\\",\\"licenseUri\\":\\"https://raw.githubusercontent.com/Chia-Network/chia-blockchain/main/LICENSE\\",\\"licenseHash\\":\\"30a358857da6b49f57cfe819c1ca43bfe007f528eb784df5da5cb64577e0ffc6\\",\\"serialNumber\\":\\"3b\\",\\"serialTotal\\":\\"64\\"},\\"rawMetadata\\":\\"((117 \\\\\\"https://ipfs.io/ipfs/QmY3D9eyK2CbK1einrVpWYRAPMjfQTcQCNNqQcdtmFQKWR\\\\\\") (104 . 0x7de8f76ed99eaabcbe145486c1adda5415c6c1a4215d0a00ff1312d6793e7f89) (28021 \\\\\\"https://pastebin.com/raw/gbpd4mNs\\\\\\") (27765 \\\\\\"https://raw.githubusercontent.com/Chia-Network/chia-blockchain/main/LICENSE\\\\\\") (29550 . 59) (29556 . 100) (28008 . 0x8408fdc4ffc26c71755aa36d530bb5ab071b323a8fd678ff2d082f22f2f01bcc) (27752 . 0x30a358857da6b49f57cfe819c1ca43bfe007f528eb784df5da5cb64577e0ffc6))\\",\\"singletonModHash\\":\\"0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f\\",\\"launcherId\\":\\"0x33b3b827e0f903b098cc7928d7575ca8e9eedf7bdbc243e6bba832607e73adf5\\",\\"launcherPuzzleHash\\":\\"0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9\\",\\"nftStateModHash\\":\\"0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2\\",\\"metadataUpdaterPuzzleHash\\":\\"0xfe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b\\",\\"p2InnerPuzzle\\":\\"(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0x87992678fb509a241e6d081082adb6c8236c83889c6a11988ae52dfc0a0c7b09dcb62813997f8500ca6670959d7aa496) 1))\\",\\"nftOwnershipModHash\\":\\"0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726\\",\\"previousOwner\\":\\"0x4af7d07bf577aa2094d732f765746efc534b532d0748ebaf484f2ade49fab924\\",\\"didOwner\\":\\"0x4af7d07bf577aa2094d732f765746efc534b532d0748ebaf484f2ade49fab924\\",\\"p2Owner\\":\\"e0d4301a7b8aaae20d69652b2c11b6c3b84b6c030e053b0693e713a9a41b5447\\",\\"royaltyAddress\\":\\"0xc8828c97dcd48061b47f467f127458d91b0bab861c142f7d64ae93503b7da721\\",\\"tradePricePercentage\\":300,\\"hintPuzzle\\":\\"0xe0d4301a7b8aaae20d69652b2c11b6c3b84b6c030e053b0693e713a9a41b5447\\",\\"nextCoinName\\":\\"0xe030ff009198ee086a9a09a4bf3145a46db3271dcb6cd6c27efbd1096aa01e6c\\",\\"coin\\":{\\"amount\\":\\"1\\",\\"parent_coin_info\\":\\"0x608010234c9573dbf7abc699e197e33a4a9fcc97cf72056b5ac80baa9f174050\\",\\"puzzle_hash\\":\\"0x2831068faa2c66e4c3a17032d5c6fa13a5cb49bed3b1ef4938cf78abd28b8c31\\"},\\"updaterInSolution\\":true}",
+  "coin_name": "0x6ba6bf3109a5a5b8af7c334e3bbcb211fa1dbd0ee7b73527a6613025fc352c83",
+  "mods": "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),p2_delegated_puzzle_or_hidden_puzzle())))",
+  "parsed_puzzle": Object {
+    "args": Array [
+      Object {
+        "raw": "0xffa07faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9fffa033b3b827e0f903b098cc7928d7575ca8e9eedf7bdbc243e6bba832607e73adf5a0eff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+      },
+      Object {
+        "args": Array [
+          Object {
+            "raw": "0xa0a04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
+          },
+          Object {
+            "raw": "0xffff75ffc04368747470733a2f2f697066732e696f2f697066732f516d5933443965794b3243624b3165696e72567057595241504d6a6651546351434e4e71516364746d46514b575280ffff68a07de8f76ed99eaabcbe145486c1adda5415c6c1a4215d0a00ff1312d6793e7f89ffff826d75ffa168747470733a2f2f706173746562696e2e636f6d2f7261772f67627064346d4e7380ffff826c75ffc04b68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f436869612d4e6574776f726b2f636869612d626c6f636b636861696e2f6d61696e2f4c4943454e534580ffff82736e3bffff82737464ffff826d68a08408fdc4ffc26c71755aa36d530bb5ab071b323a8fd678ff2d082f22f2f01bccffff826c68a030a358857da6b49f57cfe819c1ca43bfe007f528eb784df5da5cb64577e0ffc680",
+          },
+          Object {
+            "raw": "0xa0fe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b",
+          },
+          Object {
+            "args": Array [
+              Object {
+                "raw": "0xa0c5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
+              },
+              Object {
+                "raw": "0xa04af7d07bf577aa2094d732f765746efc534b532d0748ebaf484f2ade49fab924",
+              },
+              Object {
+                "args": Array [
+                  Object {
+                    "raw": "0xffa07faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9fffa033b3b827e0f903b098cc7928d7575ca8e9eedf7bdbc243e6bba832607e73adf5a0eff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+                  },
+                  Object {
+                    "raw": "0xa0c8828c97dcd48061b47f467f127458d91b0bab861c142f7d64ae93503b7da721",
+                  },
+                  Object {
+                    "raw": "0x82012c",
+                  },
+                ],
+                "mod": "nft_ownership_transfer_program_one_way_claim_with_royalties",
+              },
+              Object {
+                "args": Array [
+                  Object {
+                    "raw": "0xb087992678fb509a241e6d081082adb6c8236c83889c6a11988ae52dfc0a0c7b09dcb62813997f8500ca6670959d7aa496",
+                  },
+                ],
+                "mod": "p2_delegated_puzzle_or_hidden_puzzle",
+              },
+            ],
+            "mod": "nft_ownership_layer",
+          },
+        ],
+        "mod": "nft_state_layer",
+      },
+    ],
+    "mod": "singleton_top_layer_v1_1",
+  },
+}
+`;
+
+exports[`Parsing API test Analyze Tx Case 57203975: response 1`] = `
+Object {
+  "analysis": "{\\"metadata\\":{\\"imageUri\\":\\"https://bafybeibcfilzo7sekkoxcd745b7qxjyfidphar3zvjq5a5cyvas7ne5fmi.ipfs.nftstorage.link\\",\\"metadataUri\\":\\"https://bafkreigfzdvc7uqqheb4n2ksgvgzvjnyw5we7ycuirt2gmbl72uyhza7oe.ipfs.nftstorage.link\\",\\"metadataHash\\":\\"c5c8ea2fd2103903c6e952354d9aa5b8b76c4fe0544467a3302bfea983e41f71\\",\\"licenseUri\\":[\\"https://bafkreib7k22osgdetdpktjbie72seu4eurd2ifgzlnncnbeliw7bi3sh4y.ipfs.nftstorage.link/\\",\\"https://bafkreib7k22osgdetdpktjbie72seu4eurd2ifgzlnncnbeliw7bi3sh4y.ipfs.nftstorage.link/\\"],\\"licenseHash\\":\\"3f56b4e9186498dea9a42827f5225384a447a414d95b5a26848b45be146e47e6\\",\\"serialNumber\\":\\"01\\",\\"serialTotal\\":\\"01\\"},\\"rawMetadata\\":\\"((117 \\\\\\"https://bafybeibcfilzo7sekkoxcd745b7qxjyfidphar3zvjq5a5cyvas7ne5fmi.ipfs.nftstorage.link\\\\\\") (104) (28021 \\\\\\"https://bafkreigfzdvc7uqqheb4n2ksgvgzvjnyw5we7ycuirt2gmbl72uyhza7oe.ipfs.nftstorage.link\\\\\\") (27765 \\\\\\"https://bafkreib7k22osgdetdpktjbie72seu4eurd2ifgzlnncnbeliw7bi3sh4y.ipfs.nftstorage.link/\\\\\\" \\\\\\"https://bafkreib7k22osgdetdpktjbie72seu4eurd2ifgzlnncnbeliw7bi3sh4y.ipfs.nftstorage.link/\\\\\\") (29550 . 1) (29556 . 1) (28008 . 0xc5c8ea2fd2103903c6e952354d9aa5b8b76c4fe0544467a3302bfea983e41f71) (27752 . 0x3f56b4e9186498dea9a42827f5225384a447a414d95b5a26848b45be146e47e6))\\",\\"singletonModHash\\":\\"0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f\\",\\"launcherId\\":\\"0x99a6631c38100a650294d63b90af7c4fc3e264de67d617ccbc8bea28f8cc0a60\\",\\"launcherPuzzleHash\\":\\"0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9\\",\\"nftStateModHash\\":\\"0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2\\",\\"metadataUpdaterPuzzleHash\\":\\"0xfe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b\\",\\"p2InnerPuzzle\\":\\"(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xacbe8d7b4024181a50a0355f79efabbfe0e63daae08fefb0438e530bea6597e82e46f929d405fe8cfdcb8667e9c10917) 1))\\",\\"nftOwnershipModHash\\":\\"0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726\\",\\"previousOwner\\":\\"()\\",\\"didOwner\\":\\"64e6b2de127faef0a402d71c34e25c319ca7043b5abbf761eaa2d6cc3a54425b\\",\\"p2Owner\\":\\"17d0a0e33abdd6252d0311f836cb777913009011d8d2a0a01e2dfda42a824e92\\",\\"royaltyAddress\\":\\"0x4a9079d8349a12c9b48440f57e0fe5167db4d82b63b7a78a8b69ac1201f75aff\\",\\"tradePricePercentage\\":1000,\\"hintPuzzle\\":\\"0xcb421af0f77dc0288934e6d3b6f67827d9972bf03bb2346b76c1789ab499dda4\\",\\"nextCoinName\\":\\"0x4bc2a40dfc1baa335973c2a9b2956d73222969e6f8afb4aec7cc3e0315927434\\",\\"coin\\":{\\"amount\\":\\"1\\",\\"parent_coin_info\\":\\"0x99a6631c38100a650294d63b90af7c4fc3e264de67d617ccbc8bea28f8cc0a60\\",\\"puzzle_hash\\":\\"0xe9f4d5ef93119b6702cd5a18a3e4c8819f7259e2acde030aede343aa87fcad30\\"}}",
+  "coin_name": "0xe1f6ec2a38dc9df2f6b9277af90a3d9279d5daf8e2fa1a3be5addd49e28ed374",
+  "mods": "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),p2_delegated_puzzle_or_hidden_puzzle())))",
+  "parsed_puzzle": Object {
+    "args": Array [
+      Object {
+        "raw": "0xffa07faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9fffa099a6631c38100a650294d63b90af7c4fc3e264de67d617ccbc8bea28f8cc0a60a0eff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+      },
+      Object {
+        "args": Array [
+          Object {
+            "raw": "0xa0a04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
+          },
+          Object {
+            "raw": "0xffff75ffc05868747470733a2f2f62616679626569626366696c7a6f3773656b6b6f786364373435623771786a7966696470686172337a766a713561356379766173376e6535666d692e697066732e6e667473746f726167652e6c696e6b80ffff6880ffff826d75ffc05868747470733a2f2f6261666b72656967667a64766337757171686562346e326b736776677a766a6e79773577653779637569727432676d626c37327579687a61376f652e697066732e6e667473746f726167652e6c696e6b80ffff826c75ffc05968747470733a2f2f6261666b72656962376b32326f736764657464706b746a62696537327365753465757264326966677a6c6e6e636e62656c697737626933736834792e697066732e6e667473746f726167652e6c696e6b2fffc05968747470733a2f2f6261666b72656962376b32326f736764657464706b746a62696537327365753465757264326966677a6c6e6e636e62656c697737626933736834792e697066732e6e667473746f726167652e6c696e6b2f80ffff82736e01ffff82737401ffff826d68a0c5c8ea2fd2103903c6e952354d9aa5b8b76c4fe0544467a3302bfea983e41f71ffff826c68a03f56b4e9186498dea9a42827f5225384a447a414d95b5a26848b45be146e47e680",
+          },
+          Object {
+            "raw": "0xa0fe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b",
+          },
+          Object {
+            "args": Array [
+              Object {
+                "raw": "0xa0c5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
+              },
+              Object {
+                "raw": "0x80",
+              },
+              Object {
+                "args": Array [
+                  Object {
+                    "raw": "0xffa07faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9fffa099a6631c38100a650294d63b90af7c4fc3e264de67d617ccbc8bea28f8cc0a60a0eff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+                  },
+                  Object {
+                    "raw": "0xa04a9079d8349a12c9b48440f57e0fe5167db4d82b63b7a78a8b69ac1201f75aff",
+                  },
+                  Object {
+                    "raw": "0x8203e8",
+                  },
+                ],
+                "mod": "nft_ownership_transfer_program_one_way_claim_with_royalties",
+              },
+              Object {
+                "args": Array [
+                  Object {
+                    "raw": "0xb0acbe8d7b4024181a50a0355f79efabbfe0e63daae08fefb0438e530bea6597e82e46f929d405fe8cfdcb8667e9c10917",
+                  },
+                ],
+                "mod": "p2_delegated_puzzle_or_hidden_puzzle",
+              },
+            ],
+            "mod": "nft_ownership_layer",
+          },
+        ],
+        "mod": "nft_state_layer",
+      },
+    ],
+    "mod": "singleton_top_layer_v1_1",
+  },
+}
+`;
+
+exports[`Parsing API test Analyze Tx Case 57317475: response 1`] = `
+Object {
+  "analysis": "{\\"metadata\\":{\\"imageUri\\":[\\"https://nftr.pro/images/NFTr-logo.svg\\",\\"https://nftr.pro/images/NFTr-logo.svg\\"],\\"imageHash\\":\\"e04c5b119bc4ab5f899c3d2af8d25bfe8e295ef5c5b0367c29b406dea46e645a\\",\\"metadataUri\\":\\"https://nftr.pro/tests/testMeta.json\\",\\"metadataHash\\":\\"f4b4f9a055dde716870a72e99aa3a61748cbe31f300a6fc533699300822755f8\\",\\"licenseUri\\":[\\"https://nftr.pro/tests/testLicense.md\\",\\"https://nftr.pro/tests/testLicense.md\\"],\\"licenseHash\\":\\"6738c0576f1ba0f7aa41f687ceb97bbabc361380e73e75b6abbce6a718146c6e\\",\\"serialNumber\\":\\"01\\",\\"serialTotal\\":\\"01\\"},\\"rawMetadata\\":\\"((117 (\\\\\\"https://nftr.pro/images/NFTr-logo.svg\\\\\\" \\\\\\"https://nftr.pro/images/NFTr-logo.svg\\\\\\")) (104 . 0xe04c5b119bc4ab5f899c3d2af8d25bfe8e295ef5c5b0367c29b406dea46e645a) (28021 (\\\\\\"https://nftr.pro/tests/testMeta.json\\\\\\")) (27765 (\\\\\\"https://nftr.pro/tests/testLicense.md\\\\\\" \\\\\\"https://nftr.pro/tests/testLicense.md\\\\\\")) (29550 . 1) (29556 . 1) (28008 . 0xf4b4f9a055dde716870a72e99aa3a61748cbe31f300a6fc533699300822755f8) (27752 . 0x6738c0576f1ba0f7aa41f687ceb97bbabc361380e73e75b6abbce6a718146c6e))\\",\\"singletonModHash\\":\\"0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f\\",\\"launcherId\\":\\"0x5178fee53abdb8a54b43d0018ee399cb815f4198440d6ecd2bc11991e136c011\\",\\"launcherPuzzleHash\\":\\"0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9\\",\\"nftStateModHash\\":\\"0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2\\",\\"metadataUpdaterPuzzleHash\\":\\"0xfe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b\\",\\"p2InnerPuzzle\\":\\"(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xacb034c7c2485d941cd7d9ba55e9a76c8783e04fe2aa470431bcdd2f8042a895532c2d481503b6c910c7d071730ba64d) 1))\\",\\"nftOwnershipModHash\\":\\"0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726\\",\\"previousOwner\\":\\"()\\",\\"didOwner\\":\\"024c913b3416488eff23fc33969f551a2438ce688b9fb14ac7f920d052617dd9\\",\\"p2Owner\\":\\"d2244135378b8e1e80fe0714a44b8f3fb4b027a133c8821118bec6bfee3af768\\",\\"royaltyAddress\\":\\"0xd2244135378b8e1e80fe0714a44b8f3fb4b027a133c8821118bec6bfee3af768\\",\\"tradePricePercentage\\":500,\\"hintPuzzle\\":\\"0x6dde443ed1000222ce51250df3b0ab19297bca7b88ae3aca32c582c97a0a799b\\",\\"nextCoinName\\":\\"0x0f24658c1f1a5ed7eded20fb9ae575a44f9c00555c0611810b35c674a94b417e\\",\\"coin\\":{\\"amount\\":\\"1\\",\\"parent_coin_info\\":\\"0x5178fee53abdb8a54b43d0018ee399cb815f4198440d6ecd2bc11991e136c011\\",\\"puzzle_hash\\":\\"0xa159ee1ded4b50fabfdded26bfa833caa5dbcfd8f5b0c1e80abc5d14aca998cb\\"}}",
+  "coin_name": "0x434f9c949ac6a6e314d44d17238664bf190cabc8dfea0d33cf3e8914300ffbc3",
+  "mods": "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),p2_delegated_puzzle_or_hidden_puzzle())))",
+  "parsed_puzzle": Object {
+    "args": Array [
+      Object {
+        "raw": "0xffa07faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9fffa05178fee53abdb8a54b43d0018ee399cb815f4198440d6ecd2bc11991e136c011a0eff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+      },
+      Object {
+        "args": Array [
+          Object {
+            "raw": "0xa0a04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
+          },
+          Object {
+            "raw": "0xffff75ffffa568747470733a2f2f6e6674722e70726f2f696d616765732f4e4654722d6c6f676f2e737667ffa568747470733a2f2f6e6674722e70726f2f696d616765732f4e4654722d6c6f676f2e7376678080ffff68a0e04c5b119bc4ab5f899c3d2af8d25bfe8e295ef5c5b0367c29b406dea46e645affff826d75ffffa468747470733a2f2f6e6674722e70726f2f74657374732f746573744d6574612e6a736f6e8080ffff826c75ffffa568747470733a2f2f6e6674722e70726f2f74657374732f746573744c6963656e73652e6d64ffa568747470733a2f2f6e6674722e70726f2f74657374732f746573744c6963656e73652e6d648080ffff82736e01ffff82737401ffff826d68a0f4b4f9a055dde716870a72e99aa3a61748cbe31f300a6fc533699300822755f8ffff826c68a06738c0576f1ba0f7aa41f687ceb97bbabc361380e73e75b6abbce6a718146c6e80",
+          },
+          Object {
+            "raw": "0xa0fe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b",
+          },
+          Object {
+            "args": Array [
+              Object {
+                "raw": "0xa0c5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
+              },
+              Object {
+                "raw": "0x80",
+              },
+              Object {
+                "args": Array [
+                  Object {
+                    "raw": "0xffa07faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9fffa05178fee53abdb8a54b43d0018ee399cb815f4198440d6ecd2bc11991e136c011a0eff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+                  },
+                  Object {
+                    "raw": "0xa0d2244135378b8e1e80fe0714a44b8f3fb4b027a133c8821118bec6bfee3af768",
+                  },
+                  Object {
+                    "raw": "0x8201f4",
+                  },
+                ],
+                "mod": "nft_ownership_transfer_program_one_way_claim_with_royalties",
+              },
+              Object {
+                "args": Array [
+                  Object {
+                    "raw": "0xb0acb034c7c2485d941cd7d9ba55e9a76c8783e04fe2aa470431bcdd2f8042a895532c2d481503b6c910c7d071730ba64d",
+                  },
+                ],
+                "mod": "p2_delegated_puzzle_or_hidden_puzzle",
+              },
+            ],
+            "mod": "nft_ownership_layer",
+          },
+        ],
+        "mod": "nft_state_layer",
+      },
+    ],
+    "mod": "singleton_top_layer_v1_1",
+  },
+}
+`;
+
+exports[`Parsing API test Analyze Tx Case 57441272: response 1`] = `
 Object {
   "analysis": "{\\"metadata\\":{\\"imageUri\\":\\"https://bafybeid6gjuthx5eihrtk6l7wkuflcnsjjao3phlnx7gha7ibdssmx2e3i.ipfs.nftstorage.link/images/026.png\\",\\"imageHash\\":\\"b622f241178c01b3b0ee98801888484af6bf547caf0b46394f0aa1d3d83c2a39\\",\\"metadataUri\\":\\"https://bafybeih2jlqcshiebm4prip7ytofztof3cond2ygoqmjgpsaqabukxymam.ipfs.nftstorage.link/json/26.json\\",\\"metadataHash\\":\\"04139dda91b01453f2fdbc6eade7172becf5f5842a7ac04af794f1e4f67d5444\\",\\"licenseUri\\":\\"\\",\\"licenseHash\\":\\"\\",\\"serialNumber\\":\\"01\\",\\"serialTotal\\":\\"01\\"},\\"rawMetadata\\":\\"((117 \\\\\\"https://bafybeid6gjuthx5eihrtk6l7wkuflcnsjjao3phlnx7gha7ibdssmx2e3i.ipfs.nftstorage.link/images/026.png\\\\\\") (104 . 0xb622f241178c01b3b0ee98801888484af6bf547caf0b46394f0aa1d3d83c2a39) (28021 \\\\\\"https://bafybeih2jlqcshiebm4prip7ytofztof3cond2ygoqmjgpsaqabukxymam.ipfs.nftstorage.link/json/26.json\\\\\\") (27765) (29550 . 1) (29556 . 1) (28008 . 0x04139dda91b01453f2fdbc6eade7172becf5f5842a7ac04af794f1e4f67d5444))\\",\\"singletonModHash\\":\\"0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f\\",\\"launcherId\\":\\"0x596fa95f109fd884752167e1eedca45edabb82a88e6bd5a079e6b207d2757576\\",\\"launcherPuzzleHash\\":\\"0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9\\",\\"nftStateModHash\\":\\"0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2\\",\\"metadataUpdaterPuzzleHash\\":\\"0xfe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b\\",\\"p2InnerPuzzle\\":\\"(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xb73040d4d98d85b7402e93062eb70e4c1ff01385603cd9f61a5665cbd8c89b21c3c73b2da1e9fffdc072a9981622b6a5) 1))\\",\\"nftOwnershipModHash\\":\\"0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726\\",\\"previousOwner\\":\\"0x19f73abc52985d5a43c2d6f91a13d2776c3f82d0ce3a8b4b27526ce6658ad776\\",\\"didOwner\\":\\"\\",\\"p2Owner\\":\\"498defa9b1d42737a9d58dbce66a15dcabd5cedec752942de6ec388ad3b7ffeb\\",\\"royaltyAddress\\":\\"0x8ec3255e69c1297c7d51d534c973d471e137a2300d5893f344d15966eadd56fa\\",\\"tradePricePercentage\\":400,\\"hintPuzzle\\":\\"0x24f4f68dc64f6d602e24c6286874a2ea412e32bde0cb13dcdaccb7a92f51665b\\",\\"nextCoinName\\":\\"0xb74ccd7c3a82b559992b0997e8405420431e46e4e843ee01943f6d1668922085\\",\\"coin\\":{\\"amount\\":\\"1\\",\\"parent_coin_info\\":\\"0x774e03d3d1682eb38a32235e0aa222a6abf5e14cf9d49752b839e8645f677757\\",\\"puzzle_hash\\":\\"0x81dc73233741a7fa4034ece555df53d31c2b634ac1806e40e6ff27f37af1bd4e\\"}}",
   "coin_name": "0x0ac5606b816b75e21b2e823ea4a9539ee60672c53cc309a9dd6283de50440110",
@@ -63,170 +293,7 @@ Object {
 }
 `;
 
-exports[`Parsing API test Analyze Tx Case 1: 0x2d3531da41267a9686642621bd8a2c8a1bf453915bd9c565d36c841c23d10f13 response 1`] = `
-Object {
-  "analysis": "{\\"metadata\\":{\\"imageUri\\":\\"https://bafybeialb6lxafyacjc7unyoahnzlzsjjp47u4vu37dj4xks2vsif2f6uu.ipfs.nftstorage.link/3404.png\\",\\"imageHash\\":\\"e13d988c6761676842dd3d139c68009d389e13850f22715aff28878027eb1d59\\",\\"metadataUri\\":\\"https://bafybeifcypkkalj4qcp3qlt3mvycryp42h47jydkwmgufnwkaf3qvdxwza.ipfs.nftstorage.link/3404.json\\",\\"metadataHash\\":\\"7d454c0270b2cbcdbc93c082d6a16d463b4f1f2821a49199f30788dd05e2e404\\",\\"licenseUri\\":\\"\\",\\"licenseHash\\":\\"\\",\\"serialNumber\\":\\"0d4c\\",\\"serialTotal\\":\\"1388\\"},\\"rawMetadata\\":\\"((117 \\\\\\"https://bafybeialb6lxafyacjc7unyoahnzlzsjjp47u4vu37dj4xks2vsif2f6uu.ipfs.nftstorage.link/3404.png\\\\\\") (104 . 0xe13d988c6761676842dd3d139c68009d389e13850f22715aff28878027eb1d59) (28021 \\\\\\"https://bafybeifcypkkalj4qcp3qlt3mvycryp42h47jydkwmgufnwkaf3qvdxwza.ipfs.nftstorage.link/3404.json\\\\\\") (27765) (29550 . 3404) (29556 . 5000) (28008 . 0x7d454c0270b2cbcdbc93c082d6a16d463b4f1f2821a49199f30788dd05e2e404))\\",\\"singletonModHash\\":\\"0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f\\",\\"launcherId\\":\\"0x47f8a233bfbc855f502859a2dd8397dfd16e05cb569bed4e3c6dce5f53b5bcd4\\",\\"launcherPuzzleHash\\":\\"0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9\\",\\"nftStateModHash\\":\\"0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2\\",\\"metadataUpdaterPuzzleHash\\":\\"0xfe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b\\",\\"p2InnerPuzzle\\":\\"(a (q 2 10 (c 2 (c 3 ()))) (c (q (51 . 62) (a (i 5 (q 4 (c 12 (c (a 30 (c 2 (c 9 ()))) ())) (a 22 (c 2 (c 25 (c (a 10 (c 2 (c 13 ()))) ()))))) ()) 1) (a (i 5 (q 4 (c 8 9) (a 22 (c 2 (c 13 (c 11 ()))))) (q . 11)) 1) 2 (i (l 5) (q 11 (q . 2) (a 30 (c 2 (c 9 ()))) (a 30 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1))\\",\\"nftOwnershipModHash\\":\\"0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726\\",\\"previousOwner\\":\\"()\\",\\"didOwner\\":\\"()\\",\\"p2Owner\\":\\"\\",\\"royaltyAddress\\":\\"0xbbf1b345c0b011911dd2b1d5b6f125366dbf60e05593cf6b18ba62d63b0bc934\\",\\"tradePricePercentage\\":500,\\"hintPuzzle\\":\\"0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79\\",\\"nextCoinName\\":\\"0x3fc8c448a2ea76e782f9385956bb9c1d9d504f0764e40ef9ca1acf4a4f3d6fa1\\",\\"coin\\":{\\"amount\\":\\"1\\",\\"parent_coin_info\\":\\"0x441f0363a3345ec4768f127b1f7a16c3d023ddf4dd94d56ac43f11760f732d77\\",\\"puzzle_hash\\":\\"0x43509b8be4f0b41e57f3ceff2359112bce90f53fe9466dc70d4792f4e302a42d\\"}}",
-  "coin_name": "0x2d3531da41267a9686642621bd8a2c8a1bf453915bd9c565d36c841c23d10f13",
-  "mods": "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),settlement_payments())))",
-  "parsed_puzzle": Object {
-    "args": Array [
-      Object {
-        "raw": "0xffa07faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9fffa047f8a233bfbc855f502859a2dd8397dfd16e05cb569bed4e3c6dce5f53b5bcd4a0eff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
-      },
-      Object {
-        "args": Array [
-          Object {
-            "raw": "0xa0a04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
-          },
-          Object {
-            "raw": "0xffff75ffc06168747470733a2f2f62616679626569616c62366c7861667961636a6337756e796f61686e7a6c7a736a6a703437753476753337646a34786b73327673696632663675752e697066732e6e667473746f726167652e6c696e6b2f333430342e706e6780ffff68a0e13d988c6761676842dd3d139c68009d389e13850f22715aff28878027eb1d59ffff826d75ffc06268747470733a2f2f62616679626569666379706b6b616c6a3471637033716c74336d76796372797034326834376a79646b776d6775666e776b61663371766478777a612e697066732e6e667473746f726167652e6c696e6b2f333430342e6a736f6e80ffff826c7580ffff82736e820d4cffff827374821388ffff826d68a07d454c0270b2cbcdbc93c082d6a16d463b4f1f2821a49199f30788dd05e2e40480",
-          },
-          Object {
-            "raw": "0xa0fe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b",
-          },
-          Object {
-            "args": Array [
-              Object {
-                "raw": "0xa0c5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
-              },
-              Object {
-                "raw": "0x80",
-              },
-              Object {
-                "args": Array [
-                  Object {
-                    "raw": "0xffa07faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9fffa047f8a233bfbc855f502859a2dd8397dfd16e05cb569bed4e3c6dce5f53b5bcd4a0eff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
-                  },
-                  Object {
-                    "raw": "0xa0bbf1b345c0b011911dd2b1d5b6f125366dbf60e05593cf6b18ba62d63b0bc934",
-                  },
-                  Object {
-                    "raw": "0x8201f4",
-                  },
-                ],
-                "mod": "nft_ownership_transfer_program_one_way_claim_with_royalties",
-              },
-              Object {
-                "args": Array [],
-                "mod": "settlement_payments",
-              },
-            ],
-            "mod": "nft_ownership_layer",
-          },
-        ],
-        "mod": "nft_state_layer",
-      },
-    ],
-    "mod": "singleton_top_layer_v1_1",
-  },
-}
-`;
-
-exports[`Parsing API test Analyze Tx Case 1: 0x3be45df01919a3069cd71478ec2278d1ccc7d6005910952ba8c7daeb76d275d8 response 1`] = `
-Object {
-  "analysis": "{\\"singletonModHash\\":\\"0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f\\",\\"launcherId\\":\\"0x45a9d685143ed08147aec6db83bd129d85f7a1cbd2ba6e5cc7e9de0174182eae\\",\\"launcherPuzzleHash\\":\\"0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9\\",\\"recovery_did_list_hash\\":\\"0x4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a\\",\\"num_verifications_requried\\":\\"()\\",\\"metadata\\":{},\\"rawMetadata\\":\\"()\\",\\"didInnerPuzzleHash\\":\\"11bd5b407f56d0f8d1bbb4d7982b770d9ee0615a75e6f2c4b99e500dfde0ec46\\",\\"p2InnerPuzzle\\":\\"(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xb880edf34966e68a44d17e5973f0f28cf79e75a42fc461be12070b6c0890225df2ee7e9ec2b89a52fa07ef184a9f2a7b) 1))\\",\\"hintPuzzle\\":\\"0xadb6ba5eb5ef65880c383e76894de1a2a09e9406ddf853b86d6c55f6aeb43e0a\\",\\"rawPuzzle\\":\\"(a (q 2 (q 2 (i (logand 47 52) (q 4 (c 32 (c 47 ())) (c (a 62 (c 2 (c 5 (c (a 42 (c 2 (c 39 (c (a (i 119 (q 2 54 (c 2 (c 9 (c 87 (c (a 46 (c 2 (c 5 ()))) ()))))) (q . 29)) 1) (c (a (i 119 (q . -73) (q . 87)) 1) ()))))) (c 119 ()))))) (a 58 (c 2 (c 5 (c (a 11 95) (q ()))))))) (q 8)) 1) (c (q (((73 . 71) 2 . 51) (c . 1) 1 . 2) ((not 2 (i 5 (q 2 50 (c 2 (c 13 (c (sha256 60 (sha256 52 36) (sha256 60 (sha256 60 (sha256 52 44) 9) (sha256 60 11 (sha256 52 ())))) ())))) (q . 11)) 1) (a (i (all (= (strlen 5) 34) (= (strlen 11) 34) (> 23 (q . -1))) (q 11 5 11 23) (q 8)) 1) 2 (i 11 (q 2 (i (a 38 (c 2 (c 19 ()))) (q 2 (i (not 23) (q 2 (i (= -77 (q . -113)) (q 2 58 (c 2 (c 5 (c 27 (c 52 ()))))) (q 4 (c 35 (c (a 54 (c 2 (c 9 (c 83 (c (a 46 (c 2 (c 5 ()))) ()))))) 115)) (a 58 (c 2 (c 5 (c 27 (c 52 ()))))))) 1) (q 8)) 1) (q 4 19 (a 58 (c 2 (c 5 (c 27 (c 23 ()))))))) 1) (q 2 (i 23 () (q 8)) 1)) 1) ((a (i (= 9 56) (q 2 (i (logand 45 (q . 1)) (q 1 . 1) ()) 1) ()) 1) 11 60 (sha256 52 40) (sha256 60 (sha256 60 (sha256 52 44) 5) (sha256 60 (a 50 (c 2 (c 7 (c (sha256 52 52) ())))) (sha256 52 ())))) (a (i (l 5) (q 11 (q . 2) (a 46 (c 2 (c 9 ()))) (a 46 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 2 (i (any 23 (= 11 21)) (q 4 48 (c 11 ())) (q 8)) 1) 1)) (c (q 0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f 0x45a9d685143ed08147aec6db83bd129d85f7a1cbd2ba6e5cc7e9de0174182eae . 0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9) (c (q 2 (q 2 (q 2 (i -65 (q 2 5 383) (q 2 (i (all (= (a 126 (c 2 (c 6143 ()))) 11) (> 23 ())) (q 4 (c 40 (c 383 ())) (c (c 52 (c 767 (c 383 (c (c 767 ()) ())))) (c (c 56 (c 12287 ())) (a 38 (c 2 (c 47 (c 23 (c 6143 (c 12287 (c 767 (c 1535 (c 3071 (q ()))))))))))))) (q 8)) 1)) 1) (c (q (((49 . 61) 73 . 70) (a . 51) 60 . 4) ((q . 1) 2 2 (i 5 (q 2 58 (c 2 (c 13 (c (sha256 42 (sha256 34 60) (sha256 42 (sha256 42 (sha256 34 50) 9) (sha256 42 11 (sha256 34 ())))) ())))) (q . 11)) 1) ((a (i 23 (q 2 (i 319 (q 4 (c 48 (c (sha256 (sha256 (a 54 (c 2 (c 5 (c 39 (c 575 (c 1343 (c 2879 ()))))))) (a 126 (c 2 (c (a 46 (c 2 (c 47 (c 95 (c 383 ()))))) ())))) 47) ())) (a 38 (c 2 (c 5 (c 11 (c 55 (c 47 (c 95 (c 447 (c 383 (c (+ 767 (q . 1)) ()))))))))))) (q 2 38 (c 2 (c 5 (c 55 (c 47 (c 95 (c 447 (c 383 (c 767 ())))))))))) 1) (q 2 (i (> 767 (- 11 (q . 1))) (q 4 (c 32 (c 383 (c 95 ()))) ()) (q 8)) 1)) 1) 11 23 (a 94 (c 2 (c 9 (c 47 (c (a 126 (c 2 (c (c 9 (c 11 29)) ()))) ()))))) 95) (c (q . 1) (c (c 44 (c 5 ())) (c (c 32 (c 23 (c 11 ()))) ()))) (sha256 42 (sha256 34 36) (sha256 42 (sha256 42 (sha256 34 50) 5) (sha256 42 (a 58 (c 2 (c 7 (c (sha256 34 34) ())))) (sha256 34 ())))) 2 (i (l 5) (q 11 (q . 2) (a 126 (c 2 (c 9 ()))) (a 126 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q 2 (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xb880edf34966e68a44d17e5973f0f28cf79e75a42fc461be12070b6c0890225df2ee7e9ec2b89a52fa07ef184a9f2a7b) 1)) (c (q . 0x4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a) (c (q) (c (q 0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f 0x45a9d685143ed08147aec6db83bd129d85f7a1cbd2ba6e5cc7e9de0174182eae . 0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9) (c (q) 1)))))) 1)))\\",\\"coin\\":{\\"amount\\":\\"1\\",\\"parent_coin_info\\":\\"0x9302f00cc7f737b5064be018199a6ba5aa520f1015254817820b6782914da701\\",\\"puzzle_hash\\":\\"0x9702c02ecc1416ec2def3550be550ad54310ab7c9a35caee7b3c93d0661c8b8a\\"},\\"nextCoinName\\":\\"0xf7e1ee85414607965a1ecce6a95aaec9fbe54ab691354747574802f9bd3390db\\"}",
-  "coin_name": "0x3be45df01919a3069cd71478ec2278d1ccc7d6005910952ba8c7daeb76d275d8",
-  "mods": "singleton_top_layer_v1_1(did_innerpuz(p2_delegated_puzzle_or_hidden_puzzle()))",
-  "parsed_puzzle": Object {
-    "args": Array [
-      Object {
-        "raw": "0xffa07faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9fffa045a9d685143ed08147aec6db83bd129d85f7a1cbd2ba6e5cc7e9de0174182eaea0eff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
-      },
-      Object {
-        "args": Array [
-          Object {
-            "args": Array [
-              Object {
-                "raw": "0xb0b880edf34966e68a44d17e5973f0f28cf79e75a42fc461be12070b6c0890225df2ee7e9ec2b89a52fa07ef184a9f2a7b",
-              },
-            ],
-            "mod": "p2_delegated_puzzle_or_hidden_puzzle",
-          },
-          Object {
-            "raw": "0xa04bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
-          },
-          Object {
-            "raw": "0x80",
-          },
-          Object {
-            "raw": "0xffa07faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9fffa045a9d685143ed08147aec6db83bd129d85f7a1cbd2ba6e5cc7e9de0174182eaea0eff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
-          },
-          Object {
-            "raw": "0x80",
-          },
-        ],
-        "mod": "did_innerpuz",
-      },
-    ],
-    "mod": "singleton_top_layer_v1_1",
-  },
-}
-`;
-
-exports[`Parsing API test Analyze Tx Case 1: 0x90c44cc139cfb554a85a5ffc33fcee5dfa133fd4b4dd670009860f5bb027f258 response 1`] = `
-Object {
-  "analysis": "{\\"metadata\\":{\\"imageUri\\":\\"https://bafybeideeec3ucy2jdr4k5ur6diz3gkz6d2ywjvedcfdlqufmzd7dvhosi.ipfs.nftstorage.link/072.png\\",\\"imageHash\\":\\"b807a19120291316730699cef72bc7a6f5669055cfa16b50635e8099871b78fe\\",\\"metadataUri\\":\\"https://bafybeideeec3ucy2jdr4k5ur6diz3gkz6d2ywjvedcfdlqufmzd7dvhosi.ipfs.nftstorage.link/072.json\\",\\"metadataHash\\":\\"7c7b8bc7b7e295c8e05406049f45a992975e875ea0e9ae53cf5ba5c97b82c079\\",\\"licenseUri\\":\\"https://bafybeifj5lgk64dc5uuole3cydjpg7xxopsyfgq3xge3xcapz6lvy3ohhq.ipfs.nftstorage.link/\\",\\"licenseHash\\":\\"212862baa262b5e671d79334982ad60e23e523bd9ecabdf243039d31645d9eaf\\",\\"serialNumber\\":\\"01\\",\\"serialTotal\\":\\"01\\"},\\"rawMetadata\\":\\"((117 \\\\\\"https://bafybeideeec3ucy2jdr4k5ur6diz3gkz6d2ywjvedcfdlqufmzd7dvhosi.ipfs.nftstorage.link/072.png\\\\\\") (104 . 0xb807a19120291316730699cef72bc7a6f5669055cfa16b50635e8099871b78fe) (28021 \\\\\\"https://bafybeideeec3ucy2jdr4k5ur6diz3gkz6d2ywjvedcfdlqufmzd7dvhosi.ipfs.nftstorage.link/072.json\\\\\\") (27765 \\\\\\"https://bafybeifj5lgk64dc5uuole3cydjpg7xxopsyfgq3xge3xcapz6lvy3ohhq.ipfs.nftstorage.link/\\\\\\") (29550 . 1) (29556 . 1) (28008 . 0x7c7b8bc7b7e295c8e05406049f45a992975e875ea0e9ae53cf5ba5c97b82c079) (27752 . 0x212862baa262b5e671d79334982ad60e23e523bd9ecabdf243039d31645d9eaf))\\",\\"singletonModHash\\":\\"0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f\\",\\"launcherId\\":\\"0xfbc91b4599e9a3ffaa046a5775a4e276db078cb48c52894f75928c6821630283\\",\\"launcherPuzzleHash\\":\\"0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9\\",\\"nftStateModHash\\":\\"0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2\\",\\"metadataUpdaterPuzzleHash\\":\\"0xfe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b\\",\\"p2InnerPuzzle\\":\\"(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xb55301f5b570d5c7f2f9340736aa0120a24edc6bf8cbed39ff0e6c3a0766c5ba80053fb3dba62b56b23ea87a04e6269c) 1))\\",\\"nftOwnershipModHash\\":\\"0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726\\",\\"previousOwner\\":\\"()\\",\\"didOwner\\":\\"45a9d685143ed08147aec6db83bd129d85f7a1cbd2ba6e5cc7e9de0174182eae\\",\\"p2Owner\\":\\"787bf3f860a4e6b378283cbb3ffb3dd0697d58530c6d76290d80b0d4cb2df452\\",\\"royaltyAddress\\":\\"0x787bf3f860a4e6b378283cbb3ffb3dd0697d58530c6d76290d80b0d4cb2df452\\",\\"tradePricePercentage\\":800,\\"hintPuzzle\\":\\"0xcf80fadb8fd7c7e65ce32f53a228aa6b7d64f38479c2ca90f1ac5766e1dda015\\",\\"nextCoinName\\":\\"0xda228f6768b51a33886fbd21e4c2a1ed5ad184d7c61c085b3a342c6718367438\\",\\"coin\\":{\\"amount\\":\\"1\\",\\"parent_coin_info\\":\\"0xfbc91b4599e9a3ffaa046a5775a4e276db078cb48c52894f75928c6821630283\\",\\"puzzle_hash\\":\\"0xec28e94818c557a25b1db3d8d0f79c5b71e0ee28d0bc6f63f1ecd2e3ed334d32\\"}}",
-  "coin_name": "0x90c44cc139cfb554a85a5ffc33fcee5dfa133fd4b4dd670009860f5bb027f258",
-  "mods": "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),p2_delegated_puzzle_or_hidden_puzzle())))",
-  "parsed_puzzle": Object {
-    "args": Array [
-      Object {
-        "raw": "0xffa07faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9fffa0fbc91b4599e9a3ffaa046a5775a4e276db078cb48c52894f75928c6821630283a0eff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
-      },
-      Object {
-        "args": Array [
-          Object {
-            "raw": "0xa0a04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
-          },
-          Object {
-            "raw": "0xffff75ffc06068747470733a2f2f62616679626569646565656333756379326a6472346b3575723664697a33676b7a36643279776a7665646366646c7175666d7a64376476686f73692e697066732e6e667473746f726167652e6c696e6b2f3037322e706e6780ffff68a0b807a19120291316730699cef72bc7a6f5669055cfa16b50635e8099871b78feffff826d75ffc06168747470733a2f2f62616679626569646565656333756379326a6472346b3575723664697a33676b7a36643279776a7665646366646c7175666d7a64376476686f73692e697066732e6e667473746f726167652e6c696e6b2f3037322e6a736f6e80ffff826c75ffc05968747470733a2f2f62616679626569666a356c676b363464633575756f6c65336379646a70673778786f7073796667713378676533786361707a366c7679336f6868712e697066732e6e667473746f726167652e6c696e6b2f80ffff82736e01ffff82737401ffff826d68a07c7b8bc7b7e295c8e05406049f45a992975e875ea0e9ae53cf5ba5c97b82c079ffff826c68a0212862baa262b5e671d79334982ad60e23e523bd9ecabdf243039d31645d9eaf80",
-          },
-          Object {
-            "raw": "0xa0fe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b",
-          },
-          Object {
-            "args": Array [
-              Object {
-                "raw": "0xa0c5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
-              },
-              Object {
-                "raw": "0x80",
-              },
-              Object {
-                "args": Array [
-                  Object {
-                    "raw": "0xffa07faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9fffa0fbc91b4599e9a3ffaa046a5775a4e276db078cb48c52894f75928c6821630283a0eff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
-                  },
-                  Object {
-                    "raw": "0xa0787bf3f860a4e6b378283cbb3ffb3dd0697d58530c6d76290d80b0d4cb2df452",
-                  },
-                  Object {
-                    "raw": "0x820320",
-                  },
-                ],
-                "mod": "nft_ownership_transfer_program_one_way_claim_with_royalties",
-              },
-              Object {
-                "args": Array [
-                  Object {
-                    "raw": "0xb0b55301f5b570d5c7f2f9340736aa0120a24edc6bf8cbed39ff0e6c3a0766c5ba80053fb3dba62b56b23ea87a04e6269c",
-                  },
-                ],
-                "mod": "p2_delegated_puzzle_or_hidden_puzzle",
-              },
-            ],
-            "mod": "nft_ownership_layer",
-          },
-        ],
-        "mod": "nft_state_layer",
-      },
-    ],
-    "mod": "singleton_top_layer_v1_1",
-  },
-}
-`;
-
-exports[`Parsing API test Analyze Tx Case 1: 0x441f0363a3345ec4768f127b1f7a16c3d023ddf4dd94d56ac43f11760f732d77 response 1`] = `
+exports[`Parsing API test Analyze Tx Case 57441275: response 1`] = `
 Object {
   "analysis": "{\\"metadata\\":{\\"imageUri\\":\\"https://bafybeialb6lxafyacjc7unyoahnzlzsjjp47u4vu37dj4xks2vsif2f6uu.ipfs.nftstorage.link/3404.png\\",\\"imageHash\\":\\"e13d988c6761676842dd3d139c68009d389e13850f22715aff28878027eb1d59\\",\\"metadataUri\\":\\"https://bafybeifcypkkalj4qcp3qlt3mvycryp42h47jydkwmgufnwkaf3qvdxwza.ipfs.nftstorage.link/3404.json\\",\\"metadataHash\\":\\"7d454c0270b2cbcdbc93c082d6a16d463b4f1f2821a49199f30788dd05e2e404\\",\\"licenseUri\\":\\"\\",\\"licenseHash\\":\\"\\",\\"serialNumber\\":\\"0d4c\\",\\"serialTotal\\":\\"1388\\"},\\"rawMetadata\\":\\"((117 \\\\\\"https://bafybeialb6lxafyacjc7unyoahnzlzsjjp47u4vu37dj4xks2vsif2f6uu.ipfs.nftstorage.link/3404.png\\\\\\") (104 . 0xe13d988c6761676842dd3d139c68009d389e13850f22715aff28878027eb1d59) (28021 \\\\\\"https://bafybeifcypkkalj4qcp3qlt3mvycryp42h47jydkwmgufnwkaf3qvdxwza.ipfs.nftstorage.link/3404.json\\\\\\") (27765) (29550 . 3404) (29556 . 5000) (28008 . 0x7d454c0270b2cbcdbc93c082d6a16d463b4f1f2821a49199f30788dd05e2e404))\\",\\"singletonModHash\\":\\"0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f\\",\\"launcherId\\":\\"0x47f8a233bfbc855f502859a2dd8397dfd16e05cb569bed4e3c6dce5f53b5bcd4\\",\\"launcherPuzzleHash\\":\\"0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9\\",\\"nftStateModHash\\":\\"0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2\\",\\"metadataUpdaterPuzzleHash\\":\\"0xfe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b\\",\\"p2InnerPuzzle\\":\\"(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0x8a2dc6244f0d34331227b75a5885ca6f3dfb769edaa53812c4c365259e6b0e078381b3eb11c6fa2f5d9afb0d7a1d7af3) 1))\\",\\"nftOwnershipModHash\\":\\"0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726\\",\\"previousOwner\\":\\"0xdcfd237214a1d87a468e854e9675bb607d0d2b4747e937310d350b7b4a14607d\\",\\"didOwner\\":\\"\\",\\"p2Owner\\":\\"bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79\\",\\"royaltyAddress\\":\\"0xbbf1b345c0b011911dd2b1d5b6f125366dbf60e05593cf6b18ba62d63b0bc934\\",\\"tradePricePercentage\\":500,\\"hintPuzzle\\":\\"0x8dc6019afb13e7457447b03fd84709e607c9fcce087d1d55a9f3b1c9df54cba6\\",\\"nextCoinName\\":\\"0x2d3531da41267a9686642621bd8a2c8a1bf453915bd9c565d36c841c23d10f13\\",\\"coin\\":{\\"amount\\":\\"1\\",\\"parent_coin_info\\":\\"0x42a7219b53113cc18f2c1853046444b9b1cf5288862e115d8c5b2213fc3f0746\\",\\"puzzle_hash\\":\\"0x8bbe9ff3d457c6dc709821afb64548682eccd221581cbeb4731138c40c1f10f8\\"}}",
   "coin_name": "0x441f0363a3345ec4768f127b1f7a16c3d023ddf4dd94d56ac43f11760f732d77",
@@ -289,7 +356,211 @@ Object {
 }
 `;
 
-exports[`Parsing API test Analyze Tx Case 1: 0x63601fee4f70c0246517848ceb2b49abe2e2bdb7c552e8b12b47a67f46f2cc03 response 1`] = `
+exports[`Parsing API test Analyze Tx Case 57441276: response 1`] = `
+Object {
+  "analysis": "{\\"metadata\\":{\\"imageUri\\":\\"https://bafybeialb6lxafyacjc7unyoahnzlzsjjp47u4vu37dj4xks2vsif2f6uu.ipfs.nftstorage.link/3404.png\\",\\"imageHash\\":\\"e13d988c6761676842dd3d139c68009d389e13850f22715aff28878027eb1d59\\",\\"metadataUri\\":\\"https://bafybeifcypkkalj4qcp3qlt3mvycryp42h47jydkwmgufnwkaf3qvdxwza.ipfs.nftstorage.link/3404.json\\",\\"metadataHash\\":\\"7d454c0270b2cbcdbc93c082d6a16d463b4f1f2821a49199f30788dd05e2e404\\",\\"licenseUri\\":\\"\\",\\"licenseHash\\":\\"\\",\\"serialNumber\\":\\"0d4c\\",\\"serialTotal\\":\\"1388\\"},\\"rawMetadata\\":\\"((117 \\\\\\"https://bafybeialb6lxafyacjc7unyoahnzlzsjjp47u4vu37dj4xks2vsif2f6uu.ipfs.nftstorage.link/3404.png\\\\\\") (104 . 0xe13d988c6761676842dd3d139c68009d389e13850f22715aff28878027eb1d59) (28021 \\\\\\"https://bafybeifcypkkalj4qcp3qlt3mvycryp42h47jydkwmgufnwkaf3qvdxwza.ipfs.nftstorage.link/3404.json\\\\\\") (27765) (29550 . 3404) (29556 . 5000) (28008 . 0x7d454c0270b2cbcdbc93c082d6a16d463b4f1f2821a49199f30788dd05e2e404))\\",\\"singletonModHash\\":\\"0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f\\",\\"launcherId\\":\\"0x47f8a233bfbc855f502859a2dd8397dfd16e05cb569bed4e3c6dce5f53b5bcd4\\",\\"launcherPuzzleHash\\":\\"0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9\\",\\"nftStateModHash\\":\\"0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2\\",\\"metadataUpdaterPuzzleHash\\":\\"0xfe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b\\",\\"p2InnerPuzzle\\":\\"(a (q 2 10 (c 2 (c 3 ()))) (c (q (51 . 62) (a (i 5 (q 4 (c 12 (c (a 30 (c 2 (c 9 ()))) ())) (a 22 (c 2 (c 25 (c (a 10 (c 2 (c 13 ()))) ()))))) ()) 1) (a (i 5 (q 4 (c 8 9) (a 22 (c 2 (c 13 (c 11 ()))))) (q . 11)) 1) 2 (i (l 5) (q 11 (q . 2) (a 30 (c 2 (c 9 ()))) (a 30 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1))\\",\\"nftOwnershipModHash\\":\\"0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726\\",\\"previousOwner\\":\\"()\\",\\"didOwner\\":\\"()\\",\\"p2Owner\\":\\"\\",\\"royaltyAddress\\":\\"0xbbf1b345c0b011911dd2b1d5b6f125366dbf60e05593cf6b18ba62d63b0bc934\\",\\"tradePricePercentage\\":500,\\"hintPuzzle\\":\\"0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79\\",\\"nextCoinName\\":\\"0x3fc8c448a2ea76e782f9385956bb9c1d9d504f0764e40ef9ca1acf4a4f3d6fa1\\",\\"coin\\":{\\"amount\\":\\"1\\",\\"parent_coin_info\\":\\"0x441f0363a3345ec4768f127b1f7a16c3d023ddf4dd94d56ac43f11760f732d77\\",\\"puzzle_hash\\":\\"0x43509b8be4f0b41e57f3ceff2359112bce90f53fe9466dc70d4792f4e302a42d\\"}}",
+  "coin_name": "0x2d3531da41267a9686642621bd8a2c8a1bf453915bd9c565d36c841c23d10f13",
+  "mods": "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),settlement_payments())))",
+  "parsed_puzzle": Object {
+    "args": Array [
+      Object {
+        "raw": "0xffa07faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9fffa047f8a233bfbc855f502859a2dd8397dfd16e05cb569bed4e3c6dce5f53b5bcd4a0eff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+      },
+      Object {
+        "args": Array [
+          Object {
+            "raw": "0xa0a04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
+          },
+          Object {
+            "raw": "0xffff75ffc06168747470733a2f2f62616679626569616c62366c7861667961636a6337756e796f61686e7a6c7a736a6a703437753476753337646a34786b73327673696632663675752e697066732e6e667473746f726167652e6c696e6b2f333430342e706e6780ffff68a0e13d988c6761676842dd3d139c68009d389e13850f22715aff28878027eb1d59ffff826d75ffc06268747470733a2f2f62616679626569666379706b6b616c6a3471637033716c74336d76796372797034326834376a79646b776d6775666e776b61663371766478777a612e697066732e6e667473746f726167652e6c696e6b2f333430342e6a736f6e80ffff826c7580ffff82736e820d4cffff827374821388ffff826d68a07d454c0270b2cbcdbc93c082d6a16d463b4f1f2821a49199f30788dd05e2e40480",
+          },
+          Object {
+            "raw": "0xa0fe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b",
+          },
+          Object {
+            "args": Array [
+              Object {
+                "raw": "0xa0c5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
+              },
+              Object {
+                "raw": "0x80",
+              },
+              Object {
+                "args": Array [
+                  Object {
+                    "raw": "0xffa07faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9fffa047f8a233bfbc855f502859a2dd8397dfd16e05cb569bed4e3c6dce5f53b5bcd4a0eff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+                  },
+                  Object {
+                    "raw": "0xa0bbf1b345c0b011911dd2b1d5b6f125366dbf60e05593cf6b18ba62d63b0bc934",
+                  },
+                  Object {
+                    "raw": "0x8201f4",
+                  },
+                ],
+                "mod": "nft_ownership_transfer_program_one_way_claim_with_royalties",
+              },
+              Object {
+                "args": Array [],
+                "mod": "settlement_payments",
+              },
+            ],
+            "mod": "nft_ownership_layer",
+          },
+        ],
+        "mod": "nft_state_layer",
+      },
+    ],
+    "mod": "singleton_top_layer_v1_1",
+  },
+}
+`;
+
+exports[`Parsing API test Analyze Tx Case 57441283: response 1`] = `
+Object {
+  "analysis": "{\\"singletonModHash\\":\\"0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f\\",\\"launcherId\\":\\"0x9096b735730e604042e6834b1d5c6d258fb8163a09ced93f344b1da21166df94\\",\\"launcherPuzzleHash\\":\\"0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9\\",\\"recovery_did_list_hash\\":\\"0xafaf6be2f74c5406a98af4ead04022375be55b579da66f5484f930812028fa93\\",\\"num_verifications_requried\\":\\"1\\",\\"metadata\\":{},\\"rawMetadata\\":\\"()\\",\\"didInnerPuzzleHash\\":\\"abeea3235922d134958335d50a9684b03ec3249b1f365e6c6bf9d0ea74b140a4\\",\\"p2InnerPuzzle\\":\\"(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xb4b1d3a11ee32259bf6fb74cad56d4d7b28d9bcde7a1854d0f71bee051e133518d926ac71903cd59b902460da3bf3079) 1))\\",\\"hintPuzzle\\":\\"0x24def1d5ec05f462ed13dd5449e8e7ab2199200e3e6c72378397f7ccf6cbb084\\",\\"rawPuzzle\\":\\"(a (q 2 (q 2 (i (logand 47 52) (q 4 (c 32 (c 47 ())) (c (a 62 (c 2 (c 5 (c (a 42 (c 2 (c 39 (c (a (i 119 (q 2 54 (c 2 (c 9 (c 87 (c (a 46 (c 2 (c 5 ()))) ()))))) (q . 29)) 1) (c (a (i 119 (q . -73) (q . 87)) 1) ()))))) (c 119 ()))))) (a 58 (c 2 (c 5 (c (a 11 95) (q ()))))))) (q 8)) 1) (c (q (((73 . 71) 2 . 51) (c . 1) 1 . 2) ((not 2 (i 5 (q 2 50 (c 2 (c 13 (c (sha256 60 (sha256 52 36) (sha256 60 (sha256 60 (sha256 52 44) 9) (sha256 60 11 (sha256 52 ())))) ())))) (q . 11)) 1) (a (i (all (= (strlen 5) 34) (= (strlen 11) 34) (> 23 (q . -1))) (q 11 5 11 23) (q 8)) 1) 2 (i 11 (q 2 (i (a 38 (c 2 (c 19 ()))) (q 2 (i (not 23) (q 2 (i (= -77 (q . -113)) (q 2 58 (c 2 (c 5 (c 27 (c 52 ()))))) (q 4 (c 35 (c (a 54 (c 2 (c 9 (c 83 (c (a 46 (c 2 (c 5 ()))) ()))))) 115)) (a 58 (c 2 (c 5 (c 27 (c 52 ()))))))) 1) (q 8)) 1) (q 4 19 (a 58 (c 2 (c 5 (c 27 (c 23 ()))))))) 1) (q 2 (i 23 () (q 8)) 1)) 1) ((a (i (= 9 56) (q 2 (i (logand 45 (q . 1)) (q 1 . 1) ()) 1) ()) 1) 11 60 (sha256 52 40) (sha256 60 (sha256 60 (sha256 52 44) 5) (sha256 60 (a 50 (c 2 (c 7 (c (sha256 52 52) ())))) (sha256 52 ())))) (a (i (l 5) (q 11 (q . 2) (a 46 (c 2 (c 9 ()))) (a 46 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 2 (i (any 23 (= 11 21)) (q 4 48 (c 11 ())) (q 8)) 1) 1)) (c (q 0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f 0x9096b735730e604042e6834b1d5c6d258fb8163a09ced93f344b1da21166df94 . 0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9) (c (q 2 (q 2 (q 2 (i -65 (q 2 5 383) (q 2 (i (all (= (a 126 (c 2 (c 6143 ()))) 11) (> 23 ())) (q 4 (c 40 (c 383 ())) (c (c 52 (c 767 (c 383 (c (c 767 ()) ())))) (c (c 56 (c 12287 ())) (a 38 (c 2 (c 47 (c 23 (c 6143 (c 12287 (c 767 (c 1535 (c 3071 (q ()))))))))))))) (q 8)) 1)) 1) (c (q (((49 . 61) 73 . 70) (a . 51) 60 . 4) ((q . 1) 2 2 (i 5 (q 2 58 (c 2 (c 13 (c (sha256 42 (sha256 34 60) (sha256 42 (sha256 42 (sha256 34 50) 9) (sha256 42 11 (sha256 34 ())))) ())))) (q . 11)) 1) ((a (i 23 (q 2 (i 319 (q 4 (c 48 (c (sha256 (sha256 (a 54 (c 2 (c 5 (c 39 (c 575 (c 1343 (c 2879 ()))))))) (a 126 (c 2 (c (a 46 (c 2 (c 47 (c 95 (c 383 ()))))) ())))) 47) ())) (a 38 (c 2 (c 5 (c 11 (c 55 (c 47 (c 95 (c 447 (c 383 (c (+ 767 (q . 1)) ()))))))))))) (q 2 38 (c 2 (c 5 (c 55 (c 47 (c 95 (c 447 (c 383 (c 767 ())))))))))) 1) (q 2 (i (> 767 (- 11 (q . 1))) (q 4 (c 32 (c 383 (c 95 ()))) ()) (q 8)) 1)) 1) 11 23 (a 94 (c 2 (c 9 (c 47 (c (a 126 (c 2 (c (c 9 (c 11 29)) ()))) ()))))) 95) (c (q . 1) (c (c 44 (c 5 ())) (c (c 32 (c 23 (c 11 ()))) ()))) (sha256 42 (sha256 34 36) (sha256 42 (sha256 42 (sha256 34 50) 5) (sha256 42 (a 58 (c 2 (c 7 (c (sha256 34 34) ())))) (sha256 34 ())))) 2 (i (l 5) (q 11 (q . 2) (a 126 (c 2 (c 9 ()))) (a 126 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q 2 (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xb4b1d3a11ee32259bf6fb74cad56d4d7b28d9bcde7a1854d0f71bee051e133518d926ac71903cd59b902460da3bf3079) 1)) (c (q . 0xafaf6be2f74c5406a98af4ead04022375be55b579da66f5484f930812028fa93) (c (q . 1) (c (q 0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f 0x9096b735730e604042e6834b1d5c6d258fb8163a09ced93f344b1da21166df94 . 0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9) (c (q) 1)))))) 1)))\\",\\"coin\\":{\\"amount\\":\\"1\\",\\"parent_coin_info\\":\\"0x83deb94d10705282940857fe1ad5e61080a0af7b26dce2df589aa7aeb735acd0\\",\\"puzzle_hash\\":\\"0x663882a825342953352189f1eeb69020300a3fda2519c089e2b5136956b0e4a5\\"},\\"nextCoinName\\":\\"0xf33d91dfbc9b69192b9b4c2542890aa35de767c2a2bdc864e80e8ace38367b5b\\"}",
+  "coin_name": "0xf4339199c4cce7a0c914e3e465136be8716a1f15df2053cf7f3bf249917364d7",
+  "mods": "singleton_top_layer_v1_1(did_innerpuz(p2_delegated_puzzle_or_hidden_puzzle()))",
+  "parsed_puzzle": Object {
+    "args": Array [
+      Object {
+        "raw": "0xffa07faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9fffa09096b735730e604042e6834b1d5c6d258fb8163a09ced93f344b1da21166df94a0eff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+      },
+      Object {
+        "args": Array [
+          Object {
+            "args": Array [
+              Object {
+                "raw": "0xb0b4b1d3a11ee32259bf6fb74cad56d4d7b28d9bcde7a1854d0f71bee051e133518d926ac71903cd59b902460da3bf3079",
+              },
+            ],
+            "mod": "p2_delegated_puzzle_or_hidden_puzzle",
+          },
+          Object {
+            "raw": "0xa0afaf6be2f74c5406a98af4ead04022375be55b579da66f5484f930812028fa93",
+          },
+          Object {
+            "raw": "0x01",
+          },
+          Object {
+            "raw": "0xffa07faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9fffa09096b735730e604042e6834b1d5c6d258fb8163a09ced93f344b1da21166df94a0eff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+          },
+          Object {
+            "raw": "0x80",
+          },
+        ],
+        "mod": "did_innerpuz",
+      },
+    ],
+    "mod": "singleton_top_layer_v1_1",
+  },
+}
+`;
+
+exports[`Parsing API test Analyze Tx Case 57441287: response 1`] = `
+Object {
+  "analysis": "{\\"singletonModHash\\":\\"0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f\\",\\"launcherId\\":\\"0x45a9d685143ed08147aec6db83bd129d85f7a1cbd2ba6e5cc7e9de0174182eae\\",\\"launcherPuzzleHash\\":\\"0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9\\",\\"recovery_did_list_hash\\":\\"0x4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a\\",\\"num_verifications_requried\\":\\"()\\",\\"metadata\\":{},\\"rawMetadata\\":\\"()\\",\\"didInnerPuzzleHash\\":\\"11bd5b407f56d0f8d1bbb4d7982b770d9ee0615a75e6f2c4b99e500dfde0ec46\\",\\"p2InnerPuzzle\\":\\"(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xb880edf34966e68a44d17e5973f0f28cf79e75a42fc461be12070b6c0890225df2ee7e9ec2b89a52fa07ef184a9f2a7b) 1))\\",\\"hintPuzzle\\":\\"0xadb6ba5eb5ef65880c383e76894de1a2a09e9406ddf853b86d6c55f6aeb43e0a\\",\\"rawPuzzle\\":\\"(a (q 2 (q 2 (i (logand 47 52) (q 4 (c 32 (c 47 ())) (c (a 62 (c 2 (c 5 (c (a 42 (c 2 (c 39 (c (a (i 119 (q 2 54 (c 2 (c 9 (c 87 (c (a 46 (c 2 (c 5 ()))) ()))))) (q . 29)) 1) (c (a (i 119 (q . -73) (q . 87)) 1) ()))))) (c 119 ()))))) (a 58 (c 2 (c 5 (c (a 11 95) (q ()))))))) (q 8)) 1) (c (q (((73 . 71) 2 . 51) (c . 1) 1 . 2) ((not 2 (i 5 (q 2 50 (c 2 (c 13 (c (sha256 60 (sha256 52 36) (sha256 60 (sha256 60 (sha256 52 44) 9) (sha256 60 11 (sha256 52 ())))) ())))) (q . 11)) 1) (a (i (all (= (strlen 5) 34) (= (strlen 11) 34) (> 23 (q . -1))) (q 11 5 11 23) (q 8)) 1) 2 (i 11 (q 2 (i (a 38 (c 2 (c 19 ()))) (q 2 (i (not 23) (q 2 (i (= -77 (q . -113)) (q 2 58 (c 2 (c 5 (c 27 (c 52 ()))))) (q 4 (c 35 (c (a 54 (c 2 (c 9 (c 83 (c (a 46 (c 2 (c 5 ()))) ()))))) 115)) (a 58 (c 2 (c 5 (c 27 (c 52 ()))))))) 1) (q 8)) 1) (q 4 19 (a 58 (c 2 (c 5 (c 27 (c 23 ()))))))) 1) (q 2 (i 23 () (q 8)) 1)) 1) ((a (i (= 9 56) (q 2 (i (logand 45 (q . 1)) (q 1 . 1) ()) 1) ()) 1) 11 60 (sha256 52 40) (sha256 60 (sha256 60 (sha256 52 44) 5) (sha256 60 (a 50 (c 2 (c 7 (c (sha256 52 52) ())))) (sha256 52 ())))) (a (i (l 5) (q 11 (q . 2) (a 46 (c 2 (c 9 ()))) (a 46 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 2 (i (any 23 (= 11 21)) (q 4 48 (c 11 ())) (q 8)) 1) 1)) (c (q 0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f 0x45a9d685143ed08147aec6db83bd129d85f7a1cbd2ba6e5cc7e9de0174182eae . 0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9) (c (q 2 (q 2 (q 2 (i -65 (q 2 5 383) (q 2 (i (all (= (a 126 (c 2 (c 6143 ()))) 11) (> 23 ())) (q 4 (c 40 (c 383 ())) (c (c 52 (c 767 (c 383 (c (c 767 ()) ())))) (c (c 56 (c 12287 ())) (a 38 (c 2 (c 47 (c 23 (c 6143 (c 12287 (c 767 (c 1535 (c 3071 (q ()))))))))))))) (q 8)) 1)) 1) (c (q (((49 . 61) 73 . 70) (a . 51) 60 . 4) ((q . 1) 2 2 (i 5 (q 2 58 (c 2 (c 13 (c (sha256 42 (sha256 34 60) (sha256 42 (sha256 42 (sha256 34 50) 9) (sha256 42 11 (sha256 34 ())))) ())))) (q . 11)) 1) ((a (i 23 (q 2 (i 319 (q 4 (c 48 (c (sha256 (sha256 (a 54 (c 2 (c 5 (c 39 (c 575 (c 1343 (c 2879 ()))))))) (a 126 (c 2 (c (a 46 (c 2 (c 47 (c 95 (c 383 ()))))) ())))) 47) ())) (a 38 (c 2 (c 5 (c 11 (c 55 (c 47 (c 95 (c 447 (c 383 (c (+ 767 (q . 1)) ()))))))))))) (q 2 38 (c 2 (c 5 (c 55 (c 47 (c 95 (c 447 (c 383 (c 767 ())))))))))) 1) (q 2 (i (> 767 (- 11 (q . 1))) (q 4 (c 32 (c 383 (c 95 ()))) ()) (q 8)) 1)) 1) 11 23 (a 94 (c 2 (c 9 (c 47 (c (a 126 (c 2 (c (c 9 (c 11 29)) ()))) ()))))) 95) (c (q . 1) (c (c 44 (c 5 ())) (c (c 32 (c 23 (c 11 ()))) ()))) (sha256 42 (sha256 34 36) (sha256 42 (sha256 42 (sha256 34 50) 5) (sha256 42 (a 58 (c 2 (c 7 (c (sha256 34 34) ())))) (sha256 34 ())))) 2 (i (l 5) (q 11 (q . 2) (a 126 (c 2 (c 9 ()))) (a 126 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q 2 (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xb880edf34966e68a44d17e5973f0f28cf79e75a42fc461be12070b6c0890225df2ee7e9ec2b89a52fa07ef184a9f2a7b) 1)) (c (q . 0x4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a) (c (q) (c (q 0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f 0x45a9d685143ed08147aec6db83bd129d85f7a1cbd2ba6e5cc7e9de0174182eae . 0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9) (c (q) 1)))))) 1)))\\",\\"coin\\":{\\"amount\\":\\"1\\",\\"parent_coin_info\\":\\"0x9302f00cc7f737b5064be018199a6ba5aa520f1015254817820b6782914da701\\",\\"puzzle_hash\\":\\"0x9702c02ecc1416ec2def3550be550ad54310ab7c9a35caee7b3c93d0661c8b8a\\"},\\"nextCoinName\\":\\"0xf7e1ee85414607965a1ecce6a95aaec9fbe54ab691354747574802f9bd3390db\\"}",
+  "coin_name": "0x3be45df01919a3069cd71478ec2278d1ccc7d6005910952ba8c7daeb76d275d8",
+  "mods": "singleton_top_layer_v1_1(did_innerpuz(p2_delegated_puzzle_or_hidden_puzzle()))",
+  "parsed_puzzle": Object {
+    "args": Array [
+      Object {
+        "raw": "0xffa07faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9fffa045a9d685143ed08147aec6db83bd129d85f7a1cbd2ba6e5cc7e9de0174182eaea0eff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+      },
+      Object {
+        "args": Array [
+          Object {
+            "args": Array [
+              Object {
+                "raw": "0xb0b880edf34966e68a44d17e5973f0f28cf79e75a42fc461be12070b6c0890225df2ee7e9ec2b89a52fa07ef184a9f2a7b",
+              },
+            ],
+            "mod": "p2_delegated_puzzle_or_hidden_puzzle",
+          },
+          Object {
+            "raw": "0xa04bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
+          },
+          Object {
+            "raw": "0x80",
+          },
+          Object {
+            "raw": "0xffa07faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9fffa045a9d685143ed08147aec6db83bd129d85f7a1cbd2ba6e5cc7e9de0174182eaea0eff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+          },
+          Object {
+            "raw": "0x80",
+          },
+        ],
+        "mod": "did_innerpuz",
+      },
+    ],
+    "mod": "singleton_top_layer_v1_1",
+  },
+}
+`;
+
+exports[`Parsing API test Analyze Tx Case 57441290: response 1`] = `
+Object {
+  "analysis": "{\\"metadata\\":{\\"imageUri\\":\\"https://bafybeideeec3ucy2jdr4k5ur6diz3gkz6d2ywjvedcfdlqufmzd7dvhosi.ipfs.nftstorage.link/072.png\\",\\"imageHash\\":\\"b807a19120291316730699cef72bc7a6f5669055cfa16b50635e8099871b78fe\\",\\"metadataUri\\":\\"https://bafybeideeec3ucy2jdr4k5ur6diz3gkz6d2ywjvedcfdlqufmzd7dvhosi.ipfs.nftstorage.link/072.json\\",\\"metadataHash\\":\\"7c7b8bc7b7e295c8e05406049f45a992975e875ea0e9ae53cf5ba5c97b82c079\\",\\"licenseUri\\":\\"https://bafybeifj5lgk64dc5uuole3cydjpg7xxopsyfgq3xge3xcapz6lvy3ohhq.ipfs.nftstorage.link/\\",\\"licenseHash\\":\\"212862baa262b5e671d79334982ad60e23e523bd9ecabdf243039d31645d9eaf\\",\\"serialNumber\\":\\"01\\",\\"serialTotal\\":\\"01\\"},\\"rawMetadata\\":\\"((117 \\\\\\"https://bafybeideeec3ucy2jdr4k5ur6diz3gkz6d2ywjvedcfdlqufmzd7dvhosi.ipfs.nftstorage.link/072.png\\\\\\") (104 . 0xb807a19120291316730699cef72bc7a6f5669055cfa16b50635e8099871b78fe) (28021 \\\\\\"https://bafybeideeec3ucy2jdr4k5ur6diz3gkz6d2ywjvedcfdlqufmzd7dvhosi.ipfs.nftstorage.link/072.json\\\\\\") (27765 \\\\\\"https://bafybeifj5lgk64dc5uuole3cydjpg7xxopsyfgq3xge3xcapz6lvy3ohhq.ipfs.nftstorage.link/\\\\\\") (29550 . 1) (29556 . 1) (28008 . 0x7c7b8bc7b7e295c8e05406049f45a992975e875ea0e9ae53cf5ba5c97b82c079) (27752 . 0x212862baa262b5e671d79334982ad60e23e523bd9ecabdf243039d31645d9eaf))\\",\\"singletonModHash\\":\\"0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f\\",\\"launcherId\\":\\"0xfbc91b4599e9a3ffaa046a5775a4e276db078cb48c52894f75928c6821630283\\",\\"launcherPuzzleHash\\":\\"0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9\\",\\"nftStateModHash\\":\\"0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2\\",\\"metadataUpdaterPuzzleHash\\":\\"0xfe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b\\",\\"p2InnerPuzzle\\":\\"(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xb55301f5b570d5c7f2f9340736aa0120a24edc6bf8cbed39ff0e6c3a0766c5ba80053fb3dba62b56b23ea87a04e6269c) 1))\\",\\"nftOwnershipModHash\\":\\"0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726\\",\\"previousOwner\\":\\"()\\",\\"didOwner\\":\\"45a9d685143ed08147aec6db83bd129d85f7a1cbd2ba6e5cc7e9de0174182eae\\",\\"p2Owner\\":\\"787bf3f860a4e6b378283cbb3ffb3dd0697d58530c6d76290d80b0d4cb2df452\\",\\"royaltyAddress\\":\\"0x787bf3f860a4e6b378283cbb3ffb3dd0697d58530c6d76290d80b0d4cb2df452\\",\\"tradePricePercentage\\":800,\\"hintPuzzle\\":\\"0xcf80fadb8fd7c7e65ce32f53a228aa6b7d64f38479c2ca90f1ac5766e1dda015\\",\\"nextCoinName\\":\\"0xda228f6768b51a33886fbd21e4c2a1ed5ad184d7c61c085b3a342c6718367438\\",\\"coin\\":{\\"amount\\":\\"1\\",\\"parent_coin_info\\":\\"0xfbc91b4599e9a3ffaa046a5775a4e276db078cb48c52894f75928c6821630283\\",\\"puzzle_hash\\":\\"0xec28e94818c557a25b1db3d8d0f79c5b71e0ee28d0bc6f63f1ecd2e3ed334d32\\"}}",
+  "coin_name": "0x90c44cc139cfb554a85a5ffc33fcee5dfa133fd4b4dd670009860f5bb027f258",
+  "mods": "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),p2_delegated_puzzle_or_hidden_puzzle())))",
+  "parsed_puzzle": Object {
+    "args": Array [
+      Object {
+        "raw": "0xffa07faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9fffa0fbc91b4599e9a3ffaa046a5775a4e276db078cb48c52894f75928c6821630283a0eff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+      },
+      Object {
+        "args": Array [
+          Object {
+            "raw": "0xa0a04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
+          },
+          Object {
+            "raw": "0xffff75ffc06068747470733a2f2f62616679626569646565656333756379326a6472346b3575723664697a33676b7a36643279776a7665646366646c7175666d7a64376476686f73692e697066732e6e667473746f726167652e6c696e6b2f3037322e706e6780ffff68a0b807a19120291316730699cef72bc7a6f5669055cfa16b50635e8099871b78feffff826d75ffc06168747470733a2f2f62616679626569646565656333756379326a6472346b3575723664697a33676b7a36643279776a7665646366646c7175666d7a64376476686f73692e697066732e6e667473746f726167652e6c696e6b2f3037322e6a736f6e80ffff826c75ffc05968747470733a2f2f62616679626569666a356c676b363464633575756f6c65336379646a70673778786f7073796667713378676533786361707a366c7679336f6868712e697066732e6e667473746f726167652e6c696e6b2f80ffff82736e01ffff82737401ffff826d68a07c7b8bc7b7e295c8e05406049f45a992975e875ea0e9ae53cf5ba5c97b82c079ffff826c68a0212862baa262b5e671d79334982ad60e23e523bd9ecabdf243039d31645d9eaf80",
+          },
+          Object {
+            "raw": "0xa0fe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b",
+          },
+          Object {
+            "args": Array [
+              Object {
+                "raw": "0xa0c5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
+              },
+              Object {
+                "raw": "0x80",
+              },
+              Object {
+                "args": Array [
+                  Object {
+                    "raw": "0xffa07faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9fffa0fbc91b4599e9a3ffaa046a5775a4e276db078cb48c52894f75928c6821630283a0eff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+                  },
+                  Object {
+                    "raw": "0xa0787bf3f860a4e6b378283cbb3ffb3dd0697d58530c6d76290d80b0d4cb2df452",
+                  },
+                  Object {
+                    "raw": "0x820320",
+                  },
+                ],
+                "mod": "nft_ownership_transfer_program_one_way_claim_with_royalties",
+              },
+              Object {
+                "args": Array [
+                  Object {
+                    "raw": "0xb0b55301f5b570d5c7f2f9340736aa0120a24edc6bf8cbed39ff0e6c3a0766c5ba80053fb3dba62b56b23ea87a04e6269c",
+                  },
+                ],
+                "mod": "p2_delegated_puzzle_or_hidden_puzzle",
+              },
+            ],
+            "mod": "nft_ownership_layer",
+          },
+        ],
+        "mod": "nft_state_layer",
+      },
+    ],
+    "mod": "singleton_top_layer_v1_1",
+  },
+}
+`;
+
+exports[`Parsing API test Analyze Tx Case 57458579: response 1`] = `
 Object {
   "analysis": "{\\"metadata\\":{\\"imageUri\\":\\"https://ipfs.io/ipfs/Qmf4AyDewBSyAAqjy52CN9sW86Wx33pxGLsX4PaSVdJMvG\\",\\"imageHash\\":\\"21abefc9338c4d94a7d29c4c4d91ebd12b34549053e4d0bef8d9a052f6836b7c\\",\\"metadataUri\\":\\"https://ipfs.io/ipfs/QmcvzMotNFbcCPnJodHZL2G38NFvQtBkHUcMKQcmHWbkGV\\",\\"metadataHash\\":\\"ba6f6c49c2e19c533b5feffa004f2acd8e776fe35b95337a39d801da711153f6\\",\\"licenseUri\\":\\"https://bafybeigzcazxeu7epmm4vtkuadrvysv74lbzzbl2evphtae6k57yhgynp4.ipfs.nftstorage.link/license.pdf\\",\\"licenseHash\\":\\"2267456bd2cef8ebc2f22a42947b068bc3b138284a587feda2edfe07a3577f50\\",\\"serialNumber\\":\\"03\\",\\"serialTotal\\":\\"64\\",\\"address\\":\\"0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155\\",\\"name\\":\\"hiya.xch\\"},\\"rawMetadata\\":\\"((117 \\\\\\"https://ipfs.io/ipfs/Qmf4AyDewBSyAAqjy52CN9sW86Wx33pxGLsX4PaSVdJMvG\\\\\\") (104 . 0x21abefc9338c4d94a7d29c4c4d91ebd12b34549053e4d0bef8d9a052f6836b7c) (28021 \\\\\\"https://ipfs.io/ipfs/QmcvzMotNFbcCPnJodHZL2G38NFvQtBkHUcMKQcmHWbkGV\\\\\\") (28008 . 0xba6f6c49c2e19c533b5feffa004f2acd8e776fe35b95337a39d801da711153f6) (27765 \\\\\\"https://bafybeigzcazxeu7epmm4vtkuadrvysv74lbzzbl2evphtae6k57yhgynp4.ipfs.nftstorage.link/license.pdf\\\\\\") (27752 . 0x2267456bd2cef8ebc2f22a42947b068bc3b138284a587feda2edfe07a3577f50) (29550 . 3) (29556 . 100) (24932 . 0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155) (28269 . \\\\\\"hiya.xch\\\\\\"))\\",\\"singletonModHash\\":\\"0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f\\",\\"launcherId\\":\\"0xc6c878106f2d3871703ef8bf52b383d6b05bec7cca95bf251902473635ae5300\\",\\"launcherPuzzleHash\\":\\"0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9\\",\\"nftStateModHash\\":\\"0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2\\",\\"metadataUpdaterPuzzleHash\\":\\"0x0b1ffba1601777c06b78ab38636e9624f2f8da73be9b36e0ce17c8d8ef3bad9f\\",\\"p2InnerPuzzle\\":\\"(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xa0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338) 1))\\",\\"nftOwnershipModHash\\":\\"0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726\\",\\"previousOwner\\":\\"()\\",\\"didOwner\\":\\"3a004a7c4e900167f0807ed53cbbe3c2ca66d0edbeba2fa243aa849d2babd909\\",\\"p2Owner\\":\\"0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155\\",\\"royaltyAddress\\":\\"0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155\\",\\"tradePricePercentage\\":500,\\"hintPuzzle\\":\\"0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155\\",\\"nextCoinName\\":\\"0x10e148cb6123ff299949d29068a6199acb7cf4997244f5129ffda6d260e36a4d\\",\\"coin\\":{\\"amount\\":\\"1\\",\\"parent_coin_info\\":\\"0xc6c878106f2d3871703ef8bf52b383d6b05bec7cca95bf251902473635ae5300\\",\\"puzzle_hash\\":\\"0x5f261915240e4a34197fecf42fe3158a031628e2ffab92240a984aa844313dfe\\"}}",
   "coin_name": "0x63601fee4f70c0246517848ceb2b49abe2e2bdb7c552e8b12b47a67f46f2cc03",
@@ -345,47 +616,6 @@ Object {
           },
         ],
         "mod": "nft_state_layer",
-      },
-    ],
-    "mod": "singleton_top_layer_v1_1",
-  },
-}
-`;
-
-exports[`Parsing API test Analyze Tx Case 1: 0xf4339199c4cce7a0c914e3e465136be8716a1f15df2053cf7f3bf249917364d7 response 1`] = `
-Object {
-  "analysis": "{\\"singletonModHash\\":\\"0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f\\",\\"launcherId\\":\\"0x9096b735730e604042e6834b1d5c6d258fb8163a09ced93f344b1da21166df94\\",\\"launcherPuzzleHash\\":\\"0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9\\",\\"recovery_did_list_hash\\":\\"0xafaf6be2f74c5406a98af4ead04022375be55b579da66f5484f930812028fa93\\",\\"num_verifications_requried\\":\\"1\\",\\"metadata\\":{},\\"rawMetadata\\":\\"()\\",\\"didInnerPuzzleHash\\":\\"abeea3235922d134958335d50a9684b03ec3249b1f365e6c6bf9d0ea74b140a4\\",\\"p2InnerPuzzle\\":\\"(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xb4b1d3a11ee32259bf6fb74cad56d4d7b28d9bcde7a1854d0f71bee051e133518d926ac71903cd59b902460da3bf3079) 1))\\",\\"hintPuzzle\\":\\"0x24def1d5ec05f462ed13dd5449e8e7ab2199200e3e6c72378397f7ccf6cbb084\\",\\"rawPuzzle\\":\\"(a (q 2 (q 2 (i (logand 47 52) (q 4 (c 32 (c 47 ())) (c (a 62 (c 2 (c 5 (c (a 42 (c 2 (c 39 (c (a (i 119 (q 2 54 (c 2 (c 9 (c 87 (c (a 46 (c 2 (c 5 ()))) ()))))) (q . 29)) 1) (c (a (i 119 (q . -73) (q . 87)) 1) ()))))) (c 119 ()))))) (a 58 (c 2 (c 5 (c (a 11 95) (q ()))))))) (q 8)) 1) (c (q (((73 . 71) 2 . 51) (c . 1) 1 . 2) ((not 2 (i 5 (q 2 50 (c 2 (c 13 (c (sha256 60 (sha256 52 36) (sha256 60 (sha256 60 (sha256 52 44) 9) (sha256 60 11 (sha256 52 ())))) ())))) (q . 11)) 1) (a (i (all (= (strlen 5) 34) (= (strlen 11) 34) (> 23 (q . -1))) (q 11 5 11 23) (q 8)) 1) 2 (i 11 (q 2 (i (a 38 (c 2 (c 19 ()))) (q 2 (i (not 23) (q 2 (i (= -77 (q . -113)) (q 2 58 (c 2 (c 5 (c 27 (c 52 ()))))) (q 4 (c 35 (c (a 54 (c 2 (c 9 (c 83 (c (a 46 (c 2 (c 5 ()))) ()))))) 115)) (a 58 (c 2 (c 5 (c 27 (c 52 ()))))))) 1) (q 8)) 1) (q 4 19 (a 58 (c 2 (c 5 (c 27 (c 23 ()))))))) 1) (q 2 (i 23 () (q 8)) 1)) 1) ((a (i (= 9 56) (q 2 (i (logand 45 (q . 1)) (q 1 . 1) ()) 1) ()) 1) 11 60 (sha256 52 40) (sha256 60 (sha256 60 (sha256 52 44) 5) (sha256 60 (a 50 (c 2 (c 7 (c (sha256 52 52) ())))) (sha256 52 ())))) (a (i (l 5) (q 11 (q . 2) (a 46 (c 2 (c 9 ()))) (a 46 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 2 (i (any 23 (= 11 21)) (q 4 48 (c 11 ())) (q 8)) 1) 1)) (c (q 0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f 0x9096b735730e604042e6834b1d5c6d258fb8163a09ced93f344b1da21166df94 . 0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9) (c (q 2 (q 2 (q 2 (i -65 (q 2 5 383) (q 2 (i (all (= (a 126 (c 2 (c 6143 ()))) 11) (> 23 ())) (q 4 (c 40 (c 383 ())) (c (c 52 (c 767 (c 383 (c (c 767 ()) ())))) (c (c 56 (c 12287 ())) (a 38 (c 2 (c 47 (c 23 (c 6143 (c 12287 (c 767 (c 1535 (c 3071 (q ()))))))))))))) (q 8)) 1)) 1) (c (q (((49 . 61) 73 . 70) (a . 51) 60 . 4) ((q . 1) 2 2 (i 5 (q 2 58 (c 2 (c 13 (c (sha256 42 (sha256 34 60) (sha256 42 (sha256 42 (sha256 34 50) 9) (sha256 42 11 (sha256 34 ())))) ())))) (q . 11)) 1) ((a (i 23 (q 2 (i 319 (q 4 (c 48 (c (sha256 (sha256 (a 54 (c 2 (c 5 (c 39 (c 575 (c 1343 (c 2879 ()))))))) (a 126 (c 2 (c (a 46 (c 2 (c 47 (c 95 (c 383 ()))))) ())))) 47) ())) (a 38 (c 2 (c 5 (c 11 (c 55 (c 47 (c 95 (c 447 (c 383 (c (+ 767 (q . 1)) ()))))))))))) (q 2 38 (c 2 (c 5 (c 55 (c 47 (c 95 (c 447 (c 383 (c 767 ())))))))))) 1) (q 2 (i (> 767 (- 11 (q . 1))) (q 4 (c 32 (c 383 (c 95 ()))) ()) (q 8)) 1)) 1) 11 23 (a 94 (c 2 (c 9 (c 47 (c (a 126 (c 2 (c (c 9 (c 11 29)) ()))) ()))))) 95) (c (q . 1) (c (c 44 (c 5 ())) (c (c 32 (c 23 (c 11 ()))) ()))) (sha256 42 (sha256 34 36) (sha256 42 (sha256 42 (sha256 34 50) 5) (sha256 42 (a 58 (c 2 (c 7 (c (sha256 34 34) ())))) (sha256 34 ())))) 2 (i (l 5) (q 11 (q . 2) (a 126 (c 2 (c 9 ()))) (a 126 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q 2 (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xb4b1d3a11ee32259bf6fb74cad56d4d7b28d9bcde7a1854d0f71bee051e133518d926ac71903cd59b902460da3bf3079) 1)) (c (q . 0xafaf6be2f74c5406a98af4ead04022375be55b579da66f5484f930812028fa93) (c (q . 1) (c (q 0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f 0x9096b735730e604042e6834b1d5c6d258fb8163a09ced93f344b1da21166df94 . 0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9) (c (q) 1)))))) 1)))\\",\\"coin\\":{\\"amount\\":\\"1\\",\\"parent_coin_info\\":\\"0x83deb94d10705282940857fe1ad5e61080a0af7b26dce2df589aa7aeb735acd0\\",\\"puzzle_hash\\":\\"0x663882a825342953352189f1eeb69020300a3fda2519c089e2b5136956b0e4a5\\"},\\"nextCoinName\\":\\"0xf33d91dfbc9b69192b9b4c2542890aa35de767c2a2bdc864e80e8ace38367b5b\\"}",
-  "coin_name": "0xf4339199c4cce7a0c914e3e465136be8716a1f15df2053cf7f3bf249917364d7",
-  "mods": "singleton_top_layer_v1_1(did_innerpuz(p2_delegated_puzzle_or_hidden_puzzle()))",
-  "parsed_puzzle": Object {
-    "args": Array [
-      Object {
-        "raw": "0xffa07faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9fffa09096b735730e604042e6834b1d5c6d258fb8163a09ced93f344b1da21166df94a0eff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
-      },
-      Object {
-        "args": Array [
-          Object {
-            "args": Array [
-              Object {
-                "raw": "0xb0b4b1d3a11ee32259bf6fb74cad56d4d7b28d9bcde7a1854d0f71bee051e133518d926ac71903cd59b902460da3bf3079",
-              },
-            ],
-            "mod": "p2_delegated_puzzle_or_hidden_puzzle",
-          },
-          Object {
-            "raw": "0xa0afaf6be2f74c5406a98af4ead04022375be55b579da66f5484f930812028fa93",
-          },
-          Object {
-            "raw": "0x01",
-          },
-          Object {
-            "raw": "0xffa07faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9fffa09096b735730e604042e6834b1d5c6d258fb8163a09ced93f344b1da21166df94a0eff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
-          },
-          Object {
-            "raw": "0x80",
-          },
-        ],
-        "mod": "did_innerpuz",
       },
     ],
     "mod": "singleton_top_layer_v1_1",
