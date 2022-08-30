@@ -23,7 +23,7 @@
                 'pr-1': true,
               }"
               icon-left="paw"
-              @click="selectAccount()"
+              @click="$router.push('/accounts')"
               rounded
               ><span class="has-text-grey">{{ account.key.fingerprint }}</span></b-button
             >
@@ -77,7 +77,7 @@
             </div>
             <div class="pt-3">
               <div class="b-tooltip">
-                <a @click="openLink()" href="javascript:void(0)" class="has-text-primary">
+                <a @click="$router.push('/receive')" href="javascript:void(0)" class="has-text-primary">
                   <div class="mx-5">
                     <b-icon icon="download-circle" size="is-medium"> </b-icon>
                     <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.receive") }}</p>
@@ -85,7 +85,7 @@
                 </a>
               </div>
               <div class="b-tooltip">
-                <a @click="showSend()" href="javascript:void(0)" class="has-text-primary">
+                <a @click="$router.push('/send')" href="javascript:void(0)" class="has-text-primary">
                   <div class="mr-5">
                     <b-icon icon="arrow-right-circle" size="is-medium"> </b-icon>
                     <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.send") }}</p>
@@ -98,7 +98,7 @@
       </div>
       <div id="tab"></div>
       <div class="p-2">
-        <b-tabs position="is-centered" class="block" expanded>
+        <b-tabs position="is-centered" class="block" expanded v-model="activeTab">
           <b-tab-item :label="$t('accountDetail.ui.tab.asset')" class="min-height-20">
             <a
               v-for="cat of tokenList"
@@ -128,13 +128,13 @@
               </div>
             </a>
             <div class="column is-full has-text-centered pt-5 mt-2">
-              <a @click="ManageCats()"
+              <a @click="$router.push('/cats')"
                 ><span class="has-color-link">{{ $t("accountDetail.ui.button.manageCats") }}</span></a
               >
             </div>
           </b-tab-item>
           <b-tab-item :label="$t('accountDetail.ui.tab.nft')" class="min-height-20">
-            <nft-panel :account="account" @changePage="changePage"></nft-panel>
+            <nft-panel :account="account"></nft-panel>
           </b-tab-item>
           <b-tab-item :label="$t('accountDetail.ui.tab.did')" class="min-height-20" v-if="debugMode">
             <did></did>
@@ -154,7 +154,6 @@
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
 import store from "@/store";
-import AccountInfo from "@/components/AccountManagement/AccountInfo.vue";
 import ManageCats from "@/components/Cat/ManageCats.vue";
 import ExplorerLink from "@/components/Home/ExplorerLink.vue";
 import KeyBox from "@/components/Common/KeyBox.vue";
@@ -179,6 +178,7 @@ import AccountManagement from "@/components/AccountManagement/AccountManagement.
 import { isMobile } from "@/services/view/responsive";
 import AddressAccountQr from "./AddressAccountQr.vue";
 import { getAllCats } from "@/store/modules/account";
+import { active } from "sortablejs";
 
 type Mode = "Verify" | "Create";
 
@@ -198,6 +198,7 @@ export default class AccountDetail extends Vue {
   public exchangeRate = -1;
   public showOfflineNotification = true;
   public timeoutId?: ReturnType<typeof setTimeout>;
+  public activeTab = 0;
 
   get refreshing(): boolean {
     return store.state.account.refreshing;
@@ -255,6 +256,57 @@ export default class AccountDetail extends Vue {
     return isMobile();
   }
 
+  get path(): string {
+    return this.$route.path;
+  }
+
+  @Watch("path")
+  onPathChange(): void {
+    switch (this.path) {
+      case "/cats":
+        this.ManageCats();
+        break;
+      case "/accounts":
+        this.selectAccount();
+        break;
+      case "/send":
+        this.showSend();
+        break;
+      case "/receive":
+        this.openLink();
+        break;
+      case "/errorLog":
+        this.openErrorLog();
+        break;
+      case "/nfts":
+        if (this.activeTab != 1) this.activeTab = 1;
+        break;
+      case "/utxos":
+        if (this.activeTab != 2) this.activeTab = 2;
+        break;
+      case "/":
+        if (this.activeTab != 0) this.activeTab = 0;
+        break;
+      default:
+        break;
+    }
+  }
+
+  @Watch("activeTab")
+  onTabChange(): void {
+    switch (this.activeTab) {
+      case 1:
+        if (this.path != "/nfts") this.$router.push("/nfts");
+        break;
+      case 2:
+        if (this.path != "/utxos") this.$router.push("/utxos");
+        break;
+      default:
+        if (this.path != "/") this.$router.push("/");
+        break;
+    }
+  }
+
   nameOmit(name: string, upperCase = false): string {
     return nameOmit(name, upperCase);
   }
@@ -305,6 +357,10 @@ export default class AccountDetail extends Vue {
     return store.state.account.offline;
   }
 
+  handleModalClose(): void {
+    if (this.path != "/") this.$router.push("/");
+  }
+
   mounted(): void {
     this.mode = store.state.vault.passwordHash ? "Verify" : "Create";
     this.autoRefresh(60);
@@ -343,18 +399,6 @@ export default class AccountDetail extends Vue {
     });
   }
 
-  showExport(): void {
-    this.$buefy.modal.open({
-      parent: this,
-      component: AccountInfo,
-      hasModalCard: true,
-      trapFocus: true,
-      canCancel: [""],
-      fullScreen: isMobile(),
-      props: { idx: this.selectedAccount },
-    });
-  }
-
   openErrorLog(): void {
     this.$buefy.modal.open({
       parent: this,
@@ -363,6 +407,7 @@ export default class AccountDetail extends Vue {
       trapFocus: true,
       fullScreen: isMobile(),
       canCancel: ["outside"],
+      events: { close: this.handleModalClose },
     });
   }
 
@@ -376,7 +421,7 @@ export default class AccountDetail extends Vue {
       fullScreen: isMobile(),
       canCancel: [""],
       props: { account: this.account },
-      events: { refresh: this.refresh },
+      events: { refresh: this.refresh, close: this.handleModalClose },
     });
   }
 
@@ -388,6 +433,7 @@ export default class AccountDetail extends Vue {
       canCancel: ["outside"],
       fullScreen: isMobile(),
       props: {},
+      events: { close: this.handleModalClose },
     });
   }
 
@@ -401,6 +447,7 @@ export default class AccountDetail extends Vue {
       fullScreen: isMobile(),
       canCancel: [""],
       props: { account: this.account, rate: this.rate, currency: this.currency },
+      events: { close: this.handleModalClose },
     });
   }
 
@@ -413,6 +460,7 @@ export default class AccountDetail extends Vue {
       canCancel: ["outside"],
       fullScreen: isMobile(),
       props: { account: this.account },
+      events: { close: this.handleModalClose },
     });
   }
 

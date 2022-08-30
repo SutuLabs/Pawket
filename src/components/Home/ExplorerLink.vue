@@ -65,7 +65,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Emit } from "vue-property-decorator";
+import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
 import store from "@/store/index";
 import { AccountEntity, AccountToken, AccountTokenAddress } from "@/models/account";
 import KeyBox from "@/components/Common/KeyBox.vue";
@@ -111,6 +111,15 @@ export default class ExplorerLink extends Vue {
       store.dispatch("refreshAddress");
       notifyPrimary(this.$tc("common.message.saved"));
     }
+  }
+
+  get path(): string {
+    return this.$route.path;
+  }
+
+  @Watch("path")
+  onPathChange():void {
+    if(this.path == "/") this.close();
   }
 
   changeAddressType(): void {

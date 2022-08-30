@@ -8,6 +8,29 @@ const routes: Array<RouteConfig> = [
     path: "/",
     name: "Home",
     component: () => import(/* webpackChunkName: "home" */ "../views/Home.vue"),
+    children: [
+      {
+        path: "cats",
+      },
+      {
+        path: "accounts",
+      },
+      {
+        path: "send",
+      },
+      {
+        path: "receive",
+      },
+      {
+        path: "errorLog",
+      },
+      {
+        path: "nfts",
+      },
+      {
+        path: "utxos",
+      },
+    ],
   },
   {
     path: "/create",
@@ -48,6 +71,20 @@ const routes: Array<RouteConfig> = [
     path: "/explore",
     name: "Explore",
     component: () => import(/* webpackChunkName: "explore" */ "../views/Explore.vue"),
+    children: [
+      {
+        path: "/",
+        component: () => import(/* webpackChunkName: "explore" */ "../components/Dexie/Market.vue"),
+      },
+      {
+        path: "market/:type",
+        component: () => import(/* webpackChunkName: "explore-market-nfts" */ "../components/Dexie/Market.vue"),
+      },
+      {
+        path: "offers/:type/:offered/:requested/:page",
+        component: () => import(/* webpackChunkName: "explore-offer" */ "../components/Dexie/Offer.vue"),
+      },
+    ],
   },
   {
     path: "/settings",

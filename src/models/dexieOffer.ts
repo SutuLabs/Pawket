@@ -31,6 +31,7 @@ export interface DexieOfferResponse {
   
   export interface Requested {
     is_nft: boolean;
+    code:string;
     id: string;
     name: string;
     preview: Preview;
