@@ -119,7 +119,7 @@ store.registerModule<IAccountState>("account", {
       state.accounts.splice(idx, 1);
       dispatch("persistent");
     },
-    async refreshBalance({ state }, parameters: { idx: number; maxId: number }) {
+    async refreshBalance({ state, rootState }, parameters: { idx: number; maxId: number }) {
       if (state.refreshing) return;
       state.refreshing = true;
       const to = setTimeout(function () {
@@ -141,6 +141,7 @@ store.registerModule<IAccountState>("account", {
       const requests = await getAccountAddressDetails(account, parameters.maxId);
       try {
         const records = await receive.getCoinRecords(requests, true, rpcUrl());
+        rootState.network.peekHeight = records.peekHeight;
         const activities = receive.convertActivities(requests, records);
         const tokenBalances = receive.getTokenBalance(requests, records);
 
@@ -258,17 +259,17 @@ export async function getAccountAddressDetails(
   const requests: TokenPuzzleAddress[] =
     account.type == "Address"
       ? <TokenPuzzleAddress[]>[
-          { symbol: xchSymbol(), puzzles: [{ hash: account.puzzleHash, type: "Unknown", address: account.firstAddress }] },
-        ]
+        { symbol: xchSymbol(), puzzles: [{ hash: account.puzzleHash, type: "Unknown", address: account.firstAddress }] },
+      ]
       : await getAccountAddressDetailsExternal(
-          account,
-          getAccountCats(account),
-          store.state.account.tokenInfo,
-          xchPrefix(),
-          xchSymbol(),
-          maxId,
-          "cat_v2"
-        );
+        account,
+        getAccountCats(account),
+        store.state.account.tokenInfo,
+        xchPrefix(),
+        xchSymbol(),
+        maxId,
+        "cat_v2"
+      );
 
   return requests;
 }
