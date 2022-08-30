@@ -50,7 +50,7 @@
             @click="address = addr.address"
             :class="{ 'hover-primary': true, 'is-clickable': true, 'is-selected': address == addr.address }"
           >
-            <td>{{ addr.address | shorten }}</td>
+            <td>{{ shorten(addr.address) }}</td>
             <td>{{ addr.coins.filter((_) => _.coin && !_.spent).length }}</td>
             <td>
               <a target="_blank" :href="externalExplorerPrefix + addr.address">
@@ -82,10 +82,9 @@ import { xchSymbol } from "@/store/modules/network";
     QrcodeVue,
     TopBar,
   },
-  filters: { shorten },
 })
 export default class ExplorerLink extends Vue {
-  @Prop() private account!: AccountEntity;
+  @Prop() public account!: AccountEntity;
   public address = "";
   public addressType: AddressType = "Observed";
 
@@ -106,7 +105,7 @@ export default class ExplorerLink extends Vue {
   }
 
   set maxAddress(value: number) {
-    if(this.maxAddress == value) return;
+    if (this.maxAddress == value) return;
     if (value && value < 13) {
       this.account.addressRetrievalCount = value;
       store.dispatch("refreshAddress");
@@ -116,6 +115,10 @@ export default class ExplorerLink extends Vue {
 
   changeAddressType(): void {
     this.address = this.addresses[0].address;
+  }
+
+  shorten(name: string): string {
+    return shorten(name);
   }
 
   mounted(): void {

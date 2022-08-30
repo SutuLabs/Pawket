@@ -52,7 +52,6 @@
 </template>
 
 <script lang="ts">
-import { demojo } from "@/filters/unitConversion";
 import { AccountEntity } from "@/models/account";
 import { CnsDetail } from "@/services/crypto/receive";
 import { isMobile } from "@/services/view/responsive";
@@ -67,7 +66,6 @@ import { CnsResult } from "./CnsSearch.vue";
     KeyBox,
     TopBar,
   },
-  filters: { demojo },
 })
 export default class CnsDesktopDetail extends Vue {
   @Prop() cnsResult!: CnsResult;

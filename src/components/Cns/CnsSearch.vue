@@ -61,7 +61,6 @@
 </template>
 
 <script lang="ts">
-import { shorten } from "@/filters/addressConversion";
 import { AccountEntity } from "@/models/account";
 import { CnsDetail } from "@/services/crypto/receive";
 import { isMobile } from "@/services/view/responsive";
@@ -70,28 +69,26 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import TopBar from "@/components/Common/TopBar.vue";
 import BuyCns from "@/components/Cns/BuyCns.vue";
 
-export type CnsStatus = "Available" | "Registering" | "Unavailable"
+export type CnsStatus = "Available" | "Registering" | "Unavailable";
 
 export type CnsResult = {
   domainName: string;
   address?: string;
   price?: number;
   status: CnsStatus;
-}
+};
 
 @Component({
   components: {
     TopBar,
-    KeyBox
+    KeyBox,
   },
-  filters: { shorten }
 })
 export default class CnsSearch extends Vue {
   public searchStr = "";
   public result: CnsResult | null = null;
   @Prop() public cns!: CnsDetail;
   @Prop() public account!: AccountEntity;
-
 
   @Emit("close")
   close(): void {
@@ -106,13 +103,13 @@ export default class CnsSearch extends Vue {
     return [
       { domainName: "cns1", status: "Available", price: 100 },
       { domainName: "cns2", status: "Registering", address: "yyyy" },
-      { domainName: "cns3", status: "Unavailable", address: "xxxx" }
-    ]
+      { domainName: "cns3", status: "Unavailable", address: "xxxx" },
+    ];
   }
 
   search(): void {
     this.result = null;
-    const idx = this.cnses.findIndex(cnses => cnses.domainName == this.searchStr);
+    const idx = this.cnses.findIndex((cnses) => cnses.domainName == this.searchStr);
     if (idx > -1) this.result = this.cnses[idx];
   }
 
@@ -129,5 +126,4 @@ export default class CnsSearch extends Vue {
   }
 }
 </script>
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

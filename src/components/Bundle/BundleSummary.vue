@@ -26,10 +26,10 @@
                 <ul>
                   <li v-for="(amount, unit) in coinTotals" :key="unit">
                     <span v-if="unit == xchSymbol">
-                      {{ amount | demojo }}
+                      {{ demojo(amount) }}
                     </span>
                     <span v-else>
-                      {{ amount | demojo({ unit: unit, decimal: 3 }) }}
+                      {{ demojo(amount, { unit: unit.toString(), decimal: 3, symbol: "" }) }}
                     </span>
                     <span class="has-text-grey">
                       <small>({{ amount }} mojos)</small>
@@ -43,10 +43,10 @@
               <ul>
                 <li v-for="(coin, id) in newCoins" :key="id">
                   <span v-if="coin.unit == xchSymbol">
-                    {{ coin.amount | demojo }}
+                    {{ demojo(coin.amount) }}
                   </span>
-                  <span v-else>
-                    {{ coin.amount | demojo({ unit: coin.unit, decimal: 3 }) }}
+                  <span v-else-if="coin.unit">
+                    {{ demojo(coin.amount, { unit: coin.unit, decimal: 3, symbol: "" }) }}
                   </span>
                   <span class="has-text-grey">
                     <small>({{ coin.amount }} mojos)</small>
@@ -78,7 +78,7 @@ import { debugBundle } from "@/services/view/bundle";
 import { ConditionOpcode } from "@/services/coin/opcode";
 import { uncurry } from "clvm_tools/clvm_tools/curry";
 import { SExp, Tuple } from "clvm";
-import { AccountEntity } from "@/models/account";
+import { AccountEntity, OneTokenInfo } from "@/models/account";
 import { getCatNameDict } from "@/services/view/cat";
 import { demojo } from "@/filters/unitConversion";
 import BundleText from "@/components/Bundle/BundelText.vue";
@@ -103,12 +103,11 @@ interface TotalCoinType {
     KeyBox,
     BundleText,
   },
-  filters: { demojo },
 })
 export default class BundleSummary extends Vue {
-  @Prop() private bundle!: string | SpendBundle | null;
-  @Prop({ default: null }) private account!: AccountEntity | undefined;
-  @Prop({ default: false }) private ignoreError!: boolean;
+  @Prop() public bundle!: string | SpendBundle | null;
+  @Prop({ default: null }) public account!: AccountEntity | undefined;
+  @Prop({ default: false }) public ignoreError!: boolean;
 
   public showDetail = false;
   public bundleText = "";
@@ -218,6 +217,10 @@ export default class BundleSummary extends Vue {
         others: _.args.slice(2),
       }));
     return coins;
+  }
+
+  demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null, digits = -1): string {
+    return demojo(mojo, token, digits);
   }
 
   tryGetHintAddress(hex: string | undefined): string | undefined {

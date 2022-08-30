@@ -70,11 +70,11 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import TailDb, { TailInfo } from "@/services/api/tailDb";
 @Component
 export default class SearchCat extends Vue {
-  @Prop({ default: [] }) private allCats!: CustomCat[];
+  @Prop({ default: [] }) public allCats!: CustomCat[];
 
   public searchInput = "";
   public checkedCat: TailInfo[] = [];
-  private tails: TailInfo[] = [];
+  public tails: TailInfo[] = [];
 
   get filteredData(): TailInfo[] {
     if (!this.searchInput.length) return this.tails;

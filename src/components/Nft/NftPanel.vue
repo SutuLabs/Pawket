@@ -14,8 +14,20 @@
         <ul class="is-flex columns is-multiline is-mobile my-2" v-if="col.nfts">
           <li class="column is-4-tablet is-6-mobile" v-for="(nft, i) of col.nfts" :key="i">
             <div class="nft-image-container">
-              <img class="nft-image is-clickable cover" v-if="nft.metadata.uri" :src="nft.metadata.uri" :alt="nft.metadata.hash" @click="showDetail(nft)" />
-              <img class="nft-image is-clickable cover" v-else src="@/assets/nft-no-image.png" :alt="nft.metadata.hash" @click="showDetail(nft)" />
+              <img
+                class="nft-image is-clickable cover"
+                v-if="nft.metadata.uri"
+                :src="nft.metadata.uri"
+                :alt="nft.metadata.hash"
+                @click="showDetail(nft)"
+              />
+              <img
+                class="nft-image is-clickable cover"
+                v-else
+                src="@/assets/nft-no-image.png"
+                :alt="nft.metadata.hash"
+                @click="showDetail(nft)"
+              />
               <p class="nft-name has-background-white-ter pt-2 pl-3 is-hidden-mobile">
                 <span class="is-inline-block truncate">{{ nft.metadata.name }}</span>
                 <span class="is-pulled-right">
@@ -46,7 +58,6 @@
   </section>
 </template>
 <script lang="ts">
-import { demojo } from "@/filters/unitConversion";
 import { AccountEntity } from "@/models/account";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import store from "@/store";
@@ -67,11 +78,9 @@ interface CollectionNfts {
 
 type CollectionDict = { [name: string]: CollectionNfts };
 
-@Component({
-  filters: { demojo },
-})
+@Component({})
 export default class NftPanel extends Vue {
-  @Prop() private account!: AccountEntity;
+  @Prop() public account!: AccountEntity;
   public isOpen: number | string = 0;
   public refreshing = false;
 

@@ -67,7 +67,6 @@ import { AccountEntity, CustomCat } from "@/models/account";
 import { getAccountCats, getAllCats } from "@/store/modules/account";
 import TokenItem from "@/components/Cat/TokenItem.vue";
 import { Bytes } from "clvm";
-import { shorten } from "@/filters/addressConversion";
 import SearchCat from "@/components/Cat/SearchCat.vue";
 import { TailInfo } from "@/services/api/tailDb";
 import { unprefix0x } from "@/services/coin/condition";
@@ -76,16 +75,13 @@ import { unprefix0x } from "@/services/coin/condition";
   directives: {
     sortable,
   },
-  filters: {
-    shorten,
-  },
   components: {
     TokenItem,
     SearchCat,
   },
 })
 export default class ManageCats extends Vue {
-  @Prop() private account!: AccountEntity;
+  @Prop() public account!: AccountEntity;
   @Prop({ default: "" }) defaultName!: string;
   @Prop({ default: "" }) defaultAssetId!: string;
   @Prop({ default: 0 }) activeTab!: number;

@@ -33,8 +33,8 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class AddressBookField extends Vue {
-  @Prop({ default: "" }) private defaultName!: string;
-  @Prop({ default: "" }) private defaultAddress!: string;
+  @Prop({ default: "" }) public defaultName!: string;
+  @Prop({ default: "" }) public defaultAddress!: string;
   @Prop({ default: false }) public isEdit!: boolean;
 
   public name = "";

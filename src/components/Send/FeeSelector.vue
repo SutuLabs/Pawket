@@ -45,7 +45,7 @@ export default class FeeSelector extends Vue {
   @Prop() value!: number;
   public fee = 0;
   public feeType: FeeType = "Custom";
-  private fees: { [type in FeeType]: number } = {
+  public fees: { [type in FeeType]: number } = {
     Custom: 0,
     Low: 5,
     Medium: 100,

@@ -44,7 +44,7 @@ import TopBar from "@/components/Common/TopBar.vue";
 
 @Component({ components: { TopBar } })
 export default class AddByPassword extends Vue {
-  @Prop({ default: 24 }) private mnemonicLen!: number;
+  @Prop({ default: 24 }) public mnemonicLen!: number;
   @Prop() public title!: string;
   public name = "";
   public password = "";

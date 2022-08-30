@@ -88,8 +88,8 @@ import { generateMintDidBundle } from "@/services/coin/did";
 })
 export default class MintDid extends Vue {
   @Prop() public account!: AccountEntity;
-  @Prop() private inputAddress!: string;
-  @Prop() private inputAmount!: string;
+  @Prop() public inputAddress!: string;
+  @Prop() public inputAmount!: string;
   @Prop({ default: true }) public showClose!: boolean;
 
   public submitting = false;

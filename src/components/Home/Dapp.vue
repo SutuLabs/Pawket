@@ -96,7 +96,7 @@ import { xchPrefix } from "@/store/modules/network";
 
 @Component
 export default class Dapp extends Vue {
-  @Prop() private account!: AccountEntity;
+  @Prop() public account!: AccountEntity;
   @Prop() tokenList!: CustomCat[];
 
   public displayDapp = true;

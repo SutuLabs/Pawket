@@ -108,7 +108,7 @@ import { getLineageProofPuzzle } from "@/services/transfer/call";
   },
 })
 export default class BatchSend extends Vue {
-  @Prop() private account!: AccountEntity;
+  @Prop() public account!: AccountEntity;
   public submitting = false;
   public fee = 0;
   public bundle: SpendBundle | null = null;

@@ -48,7 +48,7 @@ import TopBar from "@/components/Common/TopBar.vue";
 
 @Component({ components: { TopBar } })
 export default class AddByMnemonic extends Vue {
-  @Prop({ default: 24 }) private mnemonicLen!: number;
+  @Prop({ default: 24 }) public mnemonicLen!: number;
   @Prop() public title!: string;
   public name = "";
   public mnemonic = "";

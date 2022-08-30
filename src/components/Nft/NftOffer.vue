@@ -102,7 +102,7 @@ import { tc } from "@/i18n/i18n";
   },
 })
 export default class NftOffer extends Vue {
-  @Prop() private account!: AccountEntity;
+  @Prop() public account!: AccountEntity;
   @Prop() public nft!: NftDetail;
 
   public offerText = "";

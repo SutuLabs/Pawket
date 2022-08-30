@@ -21,16 +21,14 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import store from "@/store";
 import { shorten } from "@/filters/addressConversion";
 
-@Component({
-  filters: { shorten },
-})
+@Component({})
 export default class KeyBox extends Vue {
-  @Prop() private value!: string;
-  @Prop() private display!: string;
-  @Prop({ default: false }) private showValue!: boolean;
-  @Prop() private icon!: string;
-  @Prop() private tooltip!: string;
-  @Prop() private multilined!: boolean | undefined;
+  @Prop() public value!: string;
+  @Prop() public display!: string;
+  @Prop({ default: false }) public showValue!: boolean;
+  @Prop() public icon!: string;
+  @Prop() public tooltip!: string;
+  @Prop() public multilined!: boolean | undefined;
   @Prop({ default: 0 }) public delay!: number;
   @Prop({ default: "is-top" }) public position!: "is-top" | "is-bottom" | "is-left" | "is-right";
   @Prop({ default: "is-medium" }) public tooltipSize!: "is-small" | "is-medium" | "is-large";

@@ -21,10 +21,10 @@ type KeyDict = { [key: string]: string };
   },
 })
 export default class AtomBox extends Vue {
-  @Prop() private atom!: Bytes;
-  @Prop() private sexp!: SExpWithId;
+  @Prop() public atom!: Bytes;
+  @Prop() public sexp!: SExpWithId;
 
-  private conditionDict: KeyDict = {};
+  public conditionDict: KeyDict = {};
 
   public keywords: KeyDict = {};
 

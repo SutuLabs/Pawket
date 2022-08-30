@@ -28,7 +28,7 @@ import TopBar from "@/components/Common/TopBar.vue";
 
 @Component({ components: { TopBar } })
 export default class AddBySerial extends Vue {
-  @Prop({ default: "" }) private defaultName!: string;
+  @Prop({ default: "" }) public defaultName!: string;
   public name = "";
   public submitting = false;
 

@@ -14,7 +14,7 @@
         <span class="is-size-6 is-pulled-right">
           <span v-if="contactName" class="tag is-primary is-light">{{ contactName }}</span>
           <b-tooltip :label="address" multilined class="break-string" position="is-left">
-            {{ address | shorten }}
+            {{ shorten(address) }}
           </b-tooltip>
         </span>
       </template>
@@ -29,7 +29,7 @@
       <template #label>
         <span class="is-size-6 has-text-grey">{{ $t("sendSummary.ui.label.fee") }}</span>
         <span class="is-size-6 is-pulled-right has-text-grey">
-          {{ fee | demojo }}
+          {{ demojo(fee) }}
         </span>
       </template>
     </b-field>
@@ -38,7 +38,7 @@
         <span class="is-size-5">{{ $t("sendSummary.ui.label.total") }}</span>
         <span class="is-pulled-right is-size-5 has-text-primary">
           <span>
-            {{ total | demojo }}
+            {{ demojo(total) }}
           </span>
         </span>
       </template>
@@ -48,11 +48,11 @@
         <span class="is-size-5">{{ $t("sendSummary.ui.label.total") }}</span>
         <span class="is-pulled-right is-size-5 has-text-primary">
           <span v-if="unit == xchSymbol">
-            {{ (amount + fee) | demojo }}
+            {{ demojo(BigInt(amount) + fee) }}
           </span>
           <span v-else>
-            {{ amount | demojo({ unit: unit, decimal: 3 }) }}
-            <span v-if="fee > 0"> + {{ fee | demojo }} </span>
+            {{ demojo(amount, { unit: unit, decimal: 3, symbol: "" }) }}
+            <span v-if="fee > 0"> + {{ demojo(fee) }} </span>
           </span>
         </span>
       </template>
@@ -62,27 +62,34 @@
 <script lang="ts">
 import { shorten } from "@/filters/addressConversion";
 import { demojo } from "@/filters/unitConversion";
+import { OneTokenInfo } from "@/models/account";
 import { xchSymbol } from "@/store/modules/network";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
-@Component({
-  filters: { demojo, shorten },
-})
+@Component({})
 export default class BuyCnsSummary extends Vue {
-  @Prop() private leadingText!: string;
-  @Prop() private contactName!: string;
+  @Prop() public leadingText!: string;
+  @Prop() public contactName!: string;
   @Prop() public domainName!: string;
-  @Prop() private amount!: number;
-  @Prop() private fee!: bigint;
-  @Prop() private unit!: string;
-  @Prop() private address!: string;
-  @Prop() private assetId!: string;
-  @Prop() private total!: bigint;
-  @Prop() private nftUri!: string;
-  @Prop() private nftHash!: string;
+  @Prop() public amount!: number;
+  @Prop() public fee!: bigint;
+  @Prop() public unit!: string;
+  @Prop() public address!: string;
+  @Prop() public assetId!: string;
+  @Prop() public total!: bigint;
+  @Prop() public nftUri!: string;
+  @Prop() public nftHash!: string;
 
   get xchSymbol(): string {
     return xchSymbol();
+  }
+
+  demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null, digits = -1): string {
+    return demojo(mojo, token, digits);
+  }
+
+  shorten(name: string): string {
+    return shorten(name);
   }
 }
 </script>

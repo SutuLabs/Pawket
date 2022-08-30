@@ -11,24 +11,18 @@
       </b-field>
       <b-field :label="$t('did.ui.label.did')">
         <span class="word-break"
-          >{{ did.did }}
-          <key-box
-            icon="checkbox-multiple-blank-outline"
-            :value="did.did"
-            :showValue="false"
-          ></key-box
+          >{{ did.did }} <key-box icon="checkbox-multiple-blank-outline" :value="did.did" :showValue="false"></key-box
         ></span>
       </b-field>
     </section>
   </div>
 </template>
 <script lang="ts">
-import { nameOmit } from "@/filters/nameConversion";
 import { tc } from "@/i18n/i18n";
 import { DidDetail } from "@/services/crypto/receive";
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
-@Component({ filters: { nameOmit }, components: { KeyBox } })
+@Component({ components: { KeyBox } })
 export default class DidDetails extends Vue {
   @Prop() public did!: DidDetail;
   @Emit("close")
@@ -38,13 +32,13 @@ export default class DidDetails extends Vue {
 
   editName(name: string): void {
     this.$buefy.dialog.prompt({
-      message: tc('did.ui.prompt.newName'),
+      message: tc("did.ui.prompt.newName"),
       inputAttrs: {
         value: name,
       },
       trapFocus: true,
-      confirmText: tc('common.button.confirm'),
-      cancelText: tc('common.button.cancel'),
+      confirmText: tc("common.button.confirm"),
+      cancelText: tc("common.button.cancel"),
       onConfirm: (value) => this.$emit("edit", this.did.did, value),
     });
   }

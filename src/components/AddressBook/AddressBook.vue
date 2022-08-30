@@ -35,7 +35,7 @@
               <b-icon icon="account-circle" size="is-medium" class="has-text-primary"></b-icon>
             </div>
             <div>
-              <p class="has-text-grey-dark is-size-6">{{ contact.name | nameOmit }}</p>
+              <p class="has-text-grey-dark is-size-6">{{ nameOmit(contact.name) }}</p>
               <p>
                 <span class="is-size-7 has-text-grey-light word-break">{{ contact.address }}</span>
               </p>
@@ -57,7 +57,7 @@
               <b-icon icon="account-circle" size="is-medium" class="has-text-primary"></b-icon>
             </div>
             <div>
-              <p class="has-text-grey-dark is-size-6">{{ contact.name | nameOmit }}</p>
+              <p class="has-text-grey-dark is-size-6">{{ nameOmit(contact.name) }}</p>
               <p>
                 <span class="is-size-7 has-text-grey-light word-break">{{ contact.address }}</span>
               </p>
@@ -95,13 +95,12 @@ export type Contact = {
   network?: string;
 };
 @Component({
-  filters: { nameOmit },
   components: { AddressBookField, TopBar },
 })
 export default class AddressBook extends Vue {
   @Prop({ default: "Configure" }) public parent!: Parent;
-  @Prop({ default: "List" }) private defaultMode!: Mode;
-  @Prop({ default: "" }) private defaultAddress!: string;
+  @Prop({ default: "List" }) public defaultMode!: Mode;
+  @Prop({ default: "" }) public defaultAddress!: string;
   public mode: Mode = "List";
   public name = "";
   public address = "";
@@ -138,6 +137,10 @@ export default class AddressBook extends Vue {
       if (c.network === this.network) return true;
     }
     return false;
+  }
+
+  nameOmit(name: string, upperCase = false): string {
+    return nameOmit(name, upperCase);
   }
 
   removeConfirm(idx: number): void {

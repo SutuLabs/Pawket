@@ -53,7 +53,7 @@ import puzzle from "@/services/crypto/puzzle";
   },
 })
 export default class OfferPanel extends Vue {
-  @Prop() private inputOfferText!: string;
+  @Prop() public inputOfferText!: string;
   public offerText = "";
   public bundle: SpendBundle | null = null;
   public summary: OfferSummary | null = null;

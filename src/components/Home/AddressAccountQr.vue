@@ -21,7 +21,6 @@ import store from "@/store/index";
 import { AccountEntity } from "@/models/account";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import QrcodeVue from "qrcode.vue";
-import { shorten } from "@/filters/addressConversion";
 import TopBar from "@/components/Common/TopBar.vue";
 import { ensureAddress } from "@/store/modules/network";
 
@@ -31,10 +30,9 @@ import { ensureAddress } from "@/store/modules/network";
     QrcodeVue,
     TopBar,
   },
-  filters: { shorten },
 })
 export default class AddressAccountQr extends Vue {
-  @Prop() private account!: AccountEntity;
+  @Prop() public account!: AccountEntity;
   public address = "";
 
   get externalExplorerPrefix(): string {
