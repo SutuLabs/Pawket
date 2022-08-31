@@ -1,7 +1,10 @@
 // utilize $tc to workaround vue-i18n-extract cannot recognize `callback(tc('key'))`
 import { tc as $tc } from "@/i18n/i18n";
 
-export async function initCameraHandleError(promise: Promise<void>, errorCallback: (err: string) => Promise<void>): Promise<void> {
+export async function initCameraHandleError(
+  promise: Promise<void>,
+  errorCallback: (err: string) => Promise<void>
+): Promise<void> {
   try {
     await promise;
   } catch (error) {
@@ -30,12 +33,12 @@ export async function initCameraHandleError(promise: Promise<void>, errorCallbac
 }
 
 export function decodeAddress(prefix: string, qrcode: string): string | null {
-  const p = prefix + "1";
-  const reg = new RegExp(p + ".*");
+  const p = prefix;
+  //eslint-disable-next-line
+  const reg = new RegExp("/([^/]*)$");
   const r = qrcode.match(reg);
-  if (!r || r.length != 1) return null;
-  const rr = r[0];
-
+  if (!r || r.length != 2) return null;
+  const rr = r[1];
   if (rr.startsWith(p)) {
     return rr;
   }

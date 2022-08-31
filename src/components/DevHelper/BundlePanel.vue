@@ -411,6 +411,10 @@ export default class BundlePanel extends Vue {
     return beautifyLisp(text);
   }
 
+  BigInt(n: string | number | bigint | boolean): bigint {
+    return BigInt(n);
+  }
+
   async loadBundle(): Promise<void> {
     const bd = localStorage.getItem("BUNDLE_DEBUG");
     if (bd) {

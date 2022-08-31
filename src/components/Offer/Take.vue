@@ -60,7 +60,7 @@
                           <b-tag type="is-info" :title="$t('offer.symbol.hint.XCH')">{{ xchSymbol }}</b-tag>
                         </template>
 
-                        <b-tag v-if="!ent.nft_target && ent.id" class="" :title="ent.amount + ' mojos'">{{
+                        <b-tag v-if="!ent.nft_target" class="" :title="ent.amount + ' mojos'">{{
                           demojo(ent.amount, tokenInfo[cats[ent.id]])
                         }}</b-tag>
 
@@ -330,6 +330,10 @@ export default class TakeOffer extends Vue {
 
   demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null, digits = -1): string {
     return demojo(mojo, token, digits);
+  }
+
+  BigInt(n: string | number | bigint | boolean): bigint {
+    return BigInt(n);
   }
 
   async refresh(): Promise<void> {

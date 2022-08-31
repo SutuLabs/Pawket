@@ -91,6 +91,10 @@ export default class BuyCnsSummary extends Vue {
   shorten(name: string): string {
     return shorten(name);
   }
+
+  BigInt(n: string | number | bigint | boolean): bigint {
+    return BigInt(n);
+  }
 }
 </script>
 
