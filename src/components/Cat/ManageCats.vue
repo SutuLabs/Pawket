@@ -120,8 +120,8 @@ export default class ManageCats extends Vue {
   }
 
   @Watch("path")
-  onPathChange():void {
-    if(this.path == "/") this.close();
+  onPathChange(): void {
+    if (this.path == "/home") this.close();
   }
 
   close(): void {
@@ -130,7 +130,11 @@ export default class ManageCats extends Vue {
         message: this.$tc("ManageCats.message.confirmation.closeWithContent"),
         confirmText: this.$tc("ManageCats.message.confirmation.confirm"),
         cancelText: this.$tc("ManageCats.message.confirmation.cancel"),
-        onConfirm: () => this.$emit("close"),
+        onConfirm: () => {
+          this.name = "";
+          this.assetId = "";
+          this.$emit("close");
+        },
       });
     } else {
       this.$emit("close");

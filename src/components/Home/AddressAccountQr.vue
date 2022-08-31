@@ -45,7 +45,7 @@ export default class AddressAccountQr extends Vue {
 
   @Watch("path")
   onPathChange():void {
-    if(this.path == "/") this.close();
+    if(this.path == "/home") this.close();
   }
 
   mounted(): void {

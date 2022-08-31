@@ -102,7 +102,7 @@ export default class AccountManagement extends Vue {
 
   @Watch("path")
   onPathChange():void {
-    if(this.path == "/") this.close();
+    if(this.path == "/home") this.close();
   }
 
   get experimentMode(): boolean {

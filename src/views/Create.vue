@@ -24,7 +24,7 @@ export default class Create extends Vue {
   }
 
   mounted(): void {
-    if (this.hasAccount) this.$router.push("/");
+    if (this.hasAccount) this.$router.push("/home");
   }
 }
 </script>

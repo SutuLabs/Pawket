@@ -23,7 +23,7 @@
                 'pr-1': true,
               }"
               icon-left="paw"
-              @click="$router.push('/accounts')"
+              @click="$router.push('/home/accounts')"
               rounded
               ><span class="has-text-grey">{{ account.key.fingerprint }}</span></b-button
             >
@@ -48,13 +48,13 @@
               }}</b-dropdown-item>
             </b-dropdown>
             <b-tooltip :label="$t('accountDetail.ui.tooltip.errorLog')" class="is-pulled-right">
-              <b-button v-if="debugMode && hasError" @click="openErrorLog()"
+              <b-button v-if="debugMode && hasError" @click="$router.push('/home/errorLog')"
                 ><b-icon icon="bug" class="has-text-grey"> </b-icon
               ></b-button>
             </b-tooltip>
             <br />
             <div class="mt-6">
-              <figure class="image is-96x96 is-clickable" style="margin: auto" @click="selectAccount()">
+              <figure class="image is-96x96 is-clickable" style="margin: auto" @click="$router.push('/home/accounts')">
                 <img v-if="account.profilePic" class="is-rounded cover" :src="account.profilePic" />
                 <img v-else class="is-rounded cover" src="@/assets/account-circle.svg" />
               </figure>
@@ -77,7 +77,7 @@
             </div>
             <div class="pt-3">
               <div class="b-tooltip">
-                <a @click="$router.push('/receive')" href="javascript:void(0)" class="has-text-primary">
+                <a @click="$router.push('/home/receive')" href="javascript:void(0)" class="has-text-primary">
                   <div class="mx-5">
                     <b-icon icon="download-circle" size="is-medium"> </b-icon>
                     <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.receive") }}</p>
@@ -85,7 +85,7 @@
                 </a>
               </div>
               <div class="b-tooltip">
-                <a @click="$router.push('/send')" href="javascript:void(0)" class="has-text-primary">
+                <a @click="$router.push('/home/send')" href="javascript:void(0)" class="has-text-primary">
                   <div class="mr-5">
                     <b-icon icon="arrow-right-circle" size="is-medium"> </b-icon>
                     <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.send") }}</p>
@@ -98,7 +98,7 @@
       </div>
       <div id="tab"></div>
       <div class="p-2">
-        <b-tabs position="is-centered" class="block" expanded v-model="activeTab">
+        <b-tabs position="is-centered" class="block" expanded>
           <b-tab-item :label="$t('accountDetail.ui.tab.asset')" class="min-height-20">
             <a
               v-for="cat of tokenList"
@@ -128,7 +128,7 @@
               </div>
             </a>
             <div class="column is-full has-text-centered pt-5 mt-2">
-              <a @click="$router.push('/cats')"
+              <a @click="$router.push('/home/cats')"
                 ><span class="has-color-link">{{ $t("accountDetail.ui.button.manageCats") }}</span></a
               >
             </div>
@@ -178,7 +178,6 @@ import AccountManagement from "@/components/AccountManagement/AccountManagement.
 import { isMobile } from "@/services/view/responsive";
 import AddressAccountQr from "./AddressAccountQr.vue";
 import { getAllCats } from "@/store/modules/account";
-import { active } from "sortablejs";
 
 type Mode = "Verify" | "Create";
 
@@ -263,46 +262,22 @@ export default class AccountDetail extends Vue {
   @Watch("path")
   onPathChange(): void {
     switch (this.path) {
-      case "/cats":
+      case "/home/cats":
         this.ManageCats();
         break;
-      case "/accounts":
+      case "/home/accounts":
         this.selectAccount();
         break;
-      case "/send":
+      case "/home/send":
         this.showSend();
         break;
-      case "/receive":
+      case "/home/receive":
         this.openLink();
         break;
-      case "/errorLog":
+      case "/home/errorLog":
         this.openErrorLog();
         break;
-      case "/nfts":
-        if (this.activeTab != 1) this.activeTab = 1;
-        break;
-      case "/utxos":
-        if (this.activeTab != 2) this.activeTab = 2;
-        break;
-      case "/":
-        if (this.activeTab != 0) this.activeTab = 0;
-        break;
       default:
-        break;
-    }
-  }
-
-  @Watch("activeTab")
-  onTabChange(): void {
-    switch (this.activeTab) {
-      case 1:
-        if (this.path != "/nfts") this.$router.push("/nfts");
-        break;
-      case 2:
-        if (this.path != "/utxos") this.$router.push("/utxos");
-        break;
-      default:
-        if (this.path != "/") this.$router.push("/");
         break;
     }
   }
@@ -358,7 +333,7 @@ export default class AccountDetail extends Vue {
   }
 
   handleModalClose(): void {
-    if (this.path != "/") this.$router.push("/");
+    if (this.path != "/home") this.$router.push("/home");
   }
 
   mounted(): void {
@@ -458,6 +433,7 @@ export default class AccountDetail extends Vue {
       component: component,
       trapFocus: true,
       canCancel: ["outside"],
+      onCancel: this.handleModalClose,
       fullScreen: isMobile(),
       props: { account: this.account },
       events: { close: this.handleModalClose },

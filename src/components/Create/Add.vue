@@ -58,7 +58,7 @@ export default class Add extends Vue {
   ready(): void {
     // TODO: go to verify seed page
     store.dispatch("importSeed", this.seedMnemonic);
-    this.$router.push("/");
+    this.$router.push("/home");
   }
 
   back(): void {

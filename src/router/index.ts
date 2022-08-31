@@ -5,7 +5,7 @@ Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
-    path: "/",
+    path: "/home",
     name: "Home",
     component: () => import(/* webpackChunkName: "home" */ "../views/Home.vue"),
     children: [
@@ -23,12 +23,6 @@ const routes: Array<RouteConfig> = [
       },
       {
         path: "errorLog",
-      },
-      {
-        path: "nfts",
-      },
-      {
-        path: "utxos",
       },
     ],
   },
@@ -74,11 +68,23 @@ const routes: Array<RouteConfig> = [
     children: [
       {
         path: "/",
-        component: () => import(/* webpackChunkName: "explore" */ "../components/Dexie/Market.vue"),
+        redirect: () => {
+          return { path: "/explore/market/nft" };
+        },
       },
       {
-        path: "market/:type",
+        path: "market",
         component: () => import(/* webpackChunkName: "explore-market-nfts" */ "../components/Dexie/Market.vue"),
+        children: [
+          {
+            path: "nft",
+            component: () => import(/* webpackChunkName: "explore-market-nfts" */ "../components/Dexie/NftMarket.vue"),
+          },
+          {
+            path: "cat",
+            component: () => import(/* webpackChunkName: "explore-market-nfts" */ "../components/Dexie/CatMarket.vue"),
+          },
+        ],
       },
       {
         path: "offers/:type/:offered/:requested/:page",
@@ -92,7 +98,7 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: "*",
-    redirect: "/",
+    redirect: "/home",
   },
 ];
 

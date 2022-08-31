@@ -1,14 +1,14 @@
 <template>
   <div class="py-4" v-if="showNavigation">
     <b-button
-      @click="$router.push('/')"
+      @click="$router.push('/home')"
       icon-left="wallet"
       type="is-primary"
       outlined
       :class="{
         'border-less': true,
-        'has-background-primary': path == '/',
-        'has-text-white': path == '/',
+        'has-background-primary': path.match(/^\/home\/?/),
+        'has-text-white': path.match(/^\/home\/?/),
       }"
     >
       {{ $t("app.ui.navigation.wallet") }}
@@ -21,8 +21,8 @@
       v-if="debugMode"
       :class="{
         'border-less': true,
-        'has-background-primary': path == '/cns',
-        'has-text-white': path == '/cns',
+        'has-background-primary': path.match(/^\/cns\/?/),
+        'has-text-white': path.match(/^\/cns\/?/),
       }"
     >
       {{ $t("app.ui.navigation.cns") }}
@@ -34,8 +34,8 @@
       outlined
       :class="{
         'border-less': true,
-        'has-background-primary': path == '/explore',
-        'has-text-white': path == '/explore',
+        'has-background-primary': path.match(/^\/explore\/?/),
+        'has-text-white': path.match(/^\/explore\/?/),
       }"
     >
       {{ $t("app.ui.navigation.explore") }}
@@ -46,8 +46,8 @@
       type="is-primary"
       :class="{
         'border-less': true,
-        'has-background-primary': path == '/settings',
-        'has-text-white': path == '/settings',
+        'has-background-primary': path.match(/^\/settings\/?/),
+        'has-text-white': path.match(/^\/settings\/?/),
       }"
       outlined
     >

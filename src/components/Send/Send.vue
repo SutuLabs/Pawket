@@ -178,7 +178,7 @@ export default class Send extends Vue {
 
   @Watch("path")
   onPathChange():void {
-    if(this.path == "/") this.close();
+    if(this.path == "/home") this.close();
   }
 
   @Emit("close")

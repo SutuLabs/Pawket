@@ -60,8 +60,8 @@ export default class NavBar extends Vue {
   }
 
   home(): void {
-    if (this.$route.path.startsWith("/create") || this.$route.path == "/") return;
-    this.$router.push("/");
+    if (this.$route.path.startsWith("/create") || this.$route.path == "/home") return;
+    this.$router.push("/home");
   }
 
   get unlocked(): boolean {

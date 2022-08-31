@@ -55,8 +55,8 @@ export default class ErrorLog extends Vue {
   }
 
   @Watch("path")
-  onPathChange(): void {
-    if (this.path == "/") this.close();
+  onPathChange():void {
+    if(this.path == "/home") this.close();
   }
 }
 </script>

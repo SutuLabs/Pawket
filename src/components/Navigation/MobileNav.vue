@@ -2,15 +2,15 @@
   <nav class="navbar is-link is-fixed-bottom is-hidden-tablet top-border" role="navigation">
     <div class="navbar-brand">
       <router-link
-        :to="'/'"
+        :to="'/home'"
         :class="{
           'navbar-item': true,
           'is-expanded': true,
           'is-block': true,
           'has-text-centered': true,
           'has-background-white': true,
-          'has-text-grey': path != '/',
-          'has-text-primary': path == '/',
+          'has-text-grey': !path.match(/^\/home\/?/),
+          'has-text-primary': path.match(/^\/home\/?/),
         }"
       >
         <b-icon icon="wallet"></b-icon>
@@ -25,8 +25,8 @@
           'is-block': true,
           'has-text-centered': true,
           'has-background-white': true,
-          'has-text-grey': path != '/cns',
-          'has-text-primary': path == '/cns',
+          'has-text-grey': !path.match(/^\/cns\/?/),
+          'has-text-primary': path.match(/^\/cns\/?/),
         }"
       >
         <b-icon icon="dns"></b-icon>
@@ -40,8 +40,8 @@
           'is-block': true,
           'has-text-centered': true,
           'has-background-white': true,
-          'has-text-grey': path != '/explore',
-          'has-text-primary': path == '/explore',
+          'has-text-grey': !path.match(/^\/explore\/?/),
+          'has-text-primary': path.match(/^\/explore\/?/),
         }"
       >
         <b-icon icon="earth"></b-icon>
@@ -56,8 +56,8 @@
           'is-block': true,
           'has-text-centered': true,
           'has-background-white': true,
-          'has-text-grey': path != '/settings',
-          'has-text-primary': path == '/settings',
+          'has-text-grey': !path.match(/^\/settings\/?/),
+          'has-text-primary': path.match(/^\/settings\/?/),
         }"
       >
         <b-icon icon="cog"></b-icon>
