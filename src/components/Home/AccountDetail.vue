@@ -1,5 +1,6 @@
 <template>
   <div class="column nav-box">
+    <b-loading :active="!token" :is-full-page="false"></b-loading>
     <div :class="{ box: !isMobile }">
       <div class="notification has-background-grey-dark has-text-centered has-text-info-light py-2" v-if="offline">
         {{ $t("accountDetail.message.notification.offline") }}
@@ -161,7 +162,7 @@ import Send from "@/components/Send/Send.vue";
 import Did from "@/components/Did/Did.vue";
 import { demojo } from "@/filters/unitConversion";
 import { xchToCurrency } from "@/filters/usdtConversion";
-import { TokenInfo, AccountEntity, CustomCat, OneTokenInfo } from "@/models/account";
+import { TokenInfo, AccountEntity, CustomCat, OneTokenInfo, AccountToken } from "@/models/account";
 import { getTokenInfo } from "@/services/view/cat";
 import { getExchangeRate } from "@/services/exchange/rates";
 import { CurrencyType } from "@/services/exchange/currencyType";
@@ -220,6 +221,10 @@ export default class AccountDetail extends Vue {
 
   get account(): AccountEntity {
     return store.state.account.accounts[this.selectedAccount] ?? {};
+  }
+
+  get token(): AccountToken | null {
+    return this.account.tokens ? this.account.tokens[xchSymbol()] : null;
   }
 
   get activities(): CoinRecord[] {
@@ -405,7 +410,7 @@ export default class AccountDetail extends Vue {
       parent: this,
       component: component,
       trapFocus: true,
-      canCancel: [""],
+      canCancel: ["outside"],
       fullScreen: isMobile(),
       props: { account: this.account },
     });
@@ -462,5 +467,9 @@ export default class AccountDetail extends Vue {
   height: 100%;
   width: 100%;
   object-fit: cover;
+}
+
+.disabled {
+  pointer-events: none;
 }
 </style>
