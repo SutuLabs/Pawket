@@ -34,12 +34,11 @@ export async function initCameraHandleError(
 
 export function decodeAddress(prefix: string, qrcode: string): string | null {
   const p = prefix;
-  //eslint-disable-next-line 
-  const reg = new RegExp(`${p}.{2}(?!\/).*`);
+  //eslint-disable-next-line
+  const reg = new RegExp("/([^/]*)$");
   const r = qrcode.match(reg);
-  if (!r || r.length != 1) return null;
-  const rr = r[0];
-
+  if (!r || r.length != 2) return null;
+  const rr = r[1];
   if (rr.startsWith(p)) {
     return rr;
   }
