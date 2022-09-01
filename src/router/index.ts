@@ -1,9 +1,15 @@
+import store from "@/store";
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
+  {
+    path: "/login",
+    name: "Login",
+    component: () => import(/* webpackChunkName: "home" */ "@/components/Login/VerifyPassword.vue"),
+  },
   {
     path: "/home",
     name: "Home",
@@ -28,30 +34,37 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: "/create",
+    name: "Create",
     component: () => import(/* webpackChunkName: "create" */ "../views/Create.vue"),
     children: [
       {
         path: "/",
+        name: "Create",
         component: () => import(/* webpackChunkName: "create" */ "../components/Create/Welcome.vue"),
       },
       {
         path: "disclaimer",
+        name: "Create",
         component: () => import(/* webpackChunkName: "create" */ "../components/Create/Disclaimer.vue"),
       },
       {
         path: "create-password",
+        name: "Create",
         component: () => import(/* webpackChunkName: "create" */ "../components/Create/CreatePassword.vue"),
       },
       {
         path: "create-wallet",
+        name: "Create",
         component: () => import(/* webpackChunkName: "create" */ "../components/Create/CreateWallet.vue"),
       },
       {
         path: "import",
+        name: "Create",
         component: () => import(/* webpackChunkName: "create" */ "../components/Create/Import.vue"),
       },
       {
         path: "add",
+        name: "Create",
         component: () => import(/* webpackChunkName: "create" */ "../components/Create/Add.vue"),
       },
     ],
@@ -94,11 +107,14 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: "/settings",
+    name: "Settings",
     component: () => import(/* webpackChunkName: "settings" */ "../views/Settings.vue"),
   },
   {
-    path: "*",
-    redirect: "/home",
+    path: "/",
+    redirect: () => {
+      return { path: "/create" };
+    },
   },
 ];
 
@@ -106,4 +122,10 @@ const router = new VueRouter({
   routes,
 });
 
+router.beforeEach((to, from, next) => {
+  if (to.path == from.path) return;
+  if (to.name == "Create" || to.name == "Login" || store.state.vault.unlocked) next();
+  else if (localStorage.getItem("SETTINGS") == null) next({ name: "Create" });
+  else next({ name: "Login" });
+});
 export default router;

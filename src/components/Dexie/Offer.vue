@@ -143,6 +143,7 @@ export default class DexieOffer extends Vue {
   @Watch("currentPage")
   onPageChange(): void {
     this.$router.push(`/explore/offers/${this.offerType}/${this.offered}/${this.requested}/${this.currentPage}`);
+    this.getOffers(this.offered, this.requested);
   }
 
   swap(): void {

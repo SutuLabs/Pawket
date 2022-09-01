@@ -1,30 +1,28 @@
 <template>
-  <div class="column is-6 is-offset-3" v-if="!loading">
-    <div class="box is-hidden-mobile">
-      <router-view></router-view>
-    </div>
-    <div class="is-hidden-tablet">
+  <div class="column is-6 is-offset-3">
+    <div :class="{ box: !isMobile }">
       <router-view></router-view>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import { isMobile } from "@/services/view/responsive";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component
 export default class Create extends Vue {
-  get hasAccount(): boolean {
-    return !!store.state.vault.passwordHash && !!store.state.vault.seedMnemonic;
+  get isMobile(): boolean {
+    return isMobile();
   }
 
-  get loading(): boolean {
-    return store.state.vault.loading;
+  get hasAccount(): boolean {
+    return store.state.vault.passwordHash != null;
   }
 
   mounted(): void {
-    if (this.hasAccount) this.$router.push("/home");
+    if (this.hasAccount) this.$router.push("/home").catch(() => undefined);
   }
 }
 </script>

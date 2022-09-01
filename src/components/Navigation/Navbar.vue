@@ -60,8 +60,8 @@ export default class NavBar extends Vue {
   }
 
   home(): void {
-    if (this.$route.path.startsWith("/create") || this.$route.path == "/home") return;
-    this.$router.push("/home");
+    if (this.$route.path.startsWith("/create") || this.$route.path.startsWith("/home")) return;
+    this.$router.push("/home").catch(() => undefined);
   }
 
   get unlocked(): boolean {
@@ -69,7 +69,7 @@ export default class NavBar extends Vue {
   }
 
   get hasAccount(): boolean {
-    return store.state.vault.passwordHash != null;
+    return localStorage.getItem("SETTINGS") != null;
   }
 
   async switchNetwork(networkId: string): Promise<void> {

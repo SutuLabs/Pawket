@@ -1,58 +1,62 @@
 <template>
   <div class="py-4" v-if="showNavigation">
-    <b-button
-      @click="$router.push('/home')"
-      icon-left="wallet"
-      type="is-primary"
-      outlined
-      :class="{
-        'border-less': true,
-        'has-background-primary': path.match(/^\/home\/?/),
-        'has-text-white': path.match(/^\/home\/?/),
-      }"
-    >
-      {{ $t("app.ui.navigation.wallet") }}
-    </b-button>
-    <b-button
-      @click="$router.push('/cns')"
-      icon-left="dns"
-      type="is-primary"
-      outlined
-      v-if="debugMode"
-      :class="{
-        'border-less': true,
-        'has-background-primary': path.match(/^\/cns\/?/),
-        'has-text-white': path.match(/^\/cns\/?/),
-      }"
-    >
-      {{ $t("app.ui.navigation.cns") }}
-    </b-button>
-    <b-button
-      @click="$router.push('/explore')"
-      icon-left="earth"
-      type="is-primary"
-      outlined
-      :class="{
-        'border-less': true,
-        'has-background-primary': path.match(/^\/explore\/?/),
-        'has-text-white': path.match(/^\/explore\/?/),
-      }"
-    >
-      {{ $t("app.ui.navigation.explore") }}
-    </b-button>
-    <b-button
-      @click="$router.push('/settings')"
-      icon-left="cog"
-      type="is-primary"
-      :class="{
-        'border-less': true,
-        'has-background-primary': path.match(/^\/settings\/?/),
-        'has-text-white': path.match(/^\/settings\/?/),
-      }"
-      outlined
-    >
-      {{ $t("app.ui.navigation.settings") }}
-    </b-button>
+    <router-link to="/home">
+      <b-button
+        icon-left="wallet"
+        type="is-primary"
+        outlined
+        :class="{
+          'border-less': true,
+          'has-background-primary': path.match(/^\/home\/?/),
+          'has-text-white': path.match(/^\/home\/?/),
+        }"
+      >
+        {{ $t("app.ui.navigation.wallet") }}
+      </b-button>
+    </router-link>
+    <router-link to="/cns">
+      <b-button
+        icon-left="dns"
+        type="is-primary"
+        outlined
+        v-if="debugMode"
+        :class="{
+          'border-less': true,
+          'has-background-primary': path.match(/^\/cns\/?/),
+          'has-text-white': path.match(/^\/cns\/?/),
+        }"
+      >
+        {{ $t("app.ui.navigation.cns") }}
+      </b-button>
+    </router-link>
+    <router-link to="/explore">
+      <b-button
+        icon-left="earth"
+        type="is-primary"
+        outlined
+        :class="{
+          'border-less': true,
+          'has-background-primary': path.match(/^\/explore\/?/),
+          'has-text-white': path.match(/^\/explore\/?/),
+        }"
+      >
+        {{ $t("app.ui.navigation.explore") }}
+      </b-button>
+    </router-link>
+    <router-link to="/settings">
+      <b-button
+        icon-left="cog"
+        type="is-primary"
+        :class="{
+          'border-less': true,
+          'has-background-primary': path.match(/^\/settings\/?/),
+          'has-text-white': path.match(/^\/settings\/?/),
+        }"
+        outlined
+      >
+        {{ $t("app.ui.navigation.settings") }}
+      </b-button>
+    </router-link>
   </div>
 </template>
 <script lang="ts">

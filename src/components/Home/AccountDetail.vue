@@ -333,7 +333,7 @@ export default class AccountDetail extends Vue {
   }
 
   handleModalClose(): void {
-    if (this.path != "/home") this.$router.push("/home");
+    if (this.path != "/home") this.$router.push("/home").catch(() => undefined);
   }
 
   mounted(): void {
@@ -405,6 +405,8 @@ export default class AccountDetail extends Vue {
       parent: this,
       component: AccountManagement,
       trapFocus: true,
+      onCancel: this.handleModalClose,
+      width: 700,
       canCancel: ["outside"],
       fullScreen: isMobile(),
       props: {},
@@ -432,6 +434,7 @@ export default class AccountDetail extends Vue {
       parent: this,
       component: component,
       trapFocus: true,
+      width: 700,
       canCancel: ["outside"],
       onCancel: this.handleModalClose,
       fullScreen: isMobile(),
@@ -491,9 +494,5 @@ export default class AccountDetail extends Vue {
   height: 100%;
   width: 100%;
   object-fit: cover;
-}
-
-.disabled {
-  pointer-events: none;
 }
 </style>
