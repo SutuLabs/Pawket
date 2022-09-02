@@ -4,7 +4,7 @@
       <b-button @click="refresh()" :loading="refreshing">
         <b-icon icon="refresh"></b-icon>
       </b-button>
-      <b-collapse animation="slide" v-for="(col, key) of collection" :key="key" :open="true">
+      <b-collapse animation="slide" v-for="(col, key) of collection" :key="key" :open="false">
         <template #trigger="props">
           <p class="is-size-5 mb-1">
             <span><b-icon class="is-pulled-left pt-1" :icon="props.open ? 'chevron-down' : 'chevron-right'"></b-icon></span>
@@ -17,17 +17,12 @@
               <img
                 class="nft-image is-clickable cover"
                 v-if="nft.metadata.uri"
-                :src="nft.metadata.uri"
-                :alt="nft.metadata.hash"
+                :data-src="nft.metadata.uri"
                 @click="showDetail(nft)"
+                src="@/assets/loading.svg"
+                loading="lazy"
               />
-              <img
-                class="nft-image is-clickable cover"
-                v-else
-                src="@/assets/nft-no-image.png"
-                :alt="nft.metadata.hash"
-                @click="showDetail(nft)"
-              />
+              <img class="nft-image is-clickable cover" v-else src="@/assets/nft-no-image.png" @click="showDetail(nft)" />
               <p class="nft-name has-background-white-ter pt-2 pl-3 is-hidden-mobile">
                 <span class="is-inline-block truncate">{{ nft.metadata.name }}</span>
                 <span class="is-pulled-right">
@@ -188,6 +183,30 @@ export default class NftPanel extends Vue {
 
   async mounted(): Promise<void> {
     await this.refresh();
+    this.lazyLoading();
+  }
+
+  preloadImage(img: Element): void {
+    const src = img.getAttribute("data-src");
+    if (!src) return;
+    img.setAttribute("src", src);
+  }
+
+  lazyLoading(): void {
+    const images = document.querySelectorAll("[data-src]");
+    const imageOberserver = new IntersectionObserver((entries, imageOberserver) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) {
+          return;
+        } else {
+          this.preloadImage(entry.target);
+          imageOberserver.unobserve(entry.target);
+        }
+      });
+    }, {});
+    images.forEach((image) => {
+      imageOberserver.observe(image);
+    });
   }
 }
 </script>
@@ -195,10 +214,12 @@ export default class NftPanel extends Vue {
 <style scoped lang="scss">
 .nft-image-container {
   position: relative;
+  aspect-ratio: 1 / 1;
 }
 .nft-image {
   border-radius: 0.5vw;
   width: 100%;
+  border: 0;
 }
 
 .nft-name {
