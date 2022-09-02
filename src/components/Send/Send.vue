@@ -93,7 +93,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Emit } from "vue-property-decorator";
+import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
 import { AccountEntity, TokenInfo } from "@/models/account";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
@@ -170,6 +170,15 @@ export default class Send extends Vue {
     if (this.inputAmount) this.amount = this.inputAmount;
     this.loadCoins();
     this.updateContacts();
+  }
+
+  get path(): string {
+    return this.$route.path;
+  }
+
+  @Watch("path")
+  onPathChange():void {
+    if(this.path == "/home") this.close();
   }
 
   @Emit("close")

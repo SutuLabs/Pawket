@@ -509,7 +509,7 @@ export default class TakeOffer extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
-      props: { account: this.account, defaultAssetId: id, activeTab: 1 },
+      props: { account: this.account, defaultAssetId: id, defaultTab: 1 },
       events: { refresh: this.refresh },
     });
   }

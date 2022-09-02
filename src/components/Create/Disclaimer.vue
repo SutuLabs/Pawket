@@ -15,7 +15,7 @@
           {{ $t("disclaimer.ui.agreementSuffix") }}
         </b-checkbox>
       </div>
-      <p class="pt-4 has-text-centered">
+      <p class="pt-4 mb-6 has-text-centered">
         <b-button :disabled="!isAccept" @click="next()" type="is-primary"
           ><span class="px-5"> {{ $t("disclaimer.ui.button.continue") }}</span></b-button
         >

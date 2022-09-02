@@ -78,7 +78,7 @@
 <script lang="ts">
 import store from "@/store";
 import { AccountEntity } from "@/models/account";
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import AccountInfo from "./AccountInfo.vue";
 import TopBar from "@/components/Common/TopBar.vue";
 import { notifyPrimary } from "@/services/notification/notification";
@@ -94,6 +94,15 @@ import { isMobile } from "@/services/view/responsive";
 export default class AccountManagement extends Vue {
   get accounts(): AccountEntity[] {
     return store.state.account.accounts;
+  }
+
+  get path(): string {
+    return this.$route.path;
+  }
+
+  @Watch("path")
+  onPathChange():void {
+    if(this.path == "/home") this.close();
   }
 
   get experimentMode(): boolean {

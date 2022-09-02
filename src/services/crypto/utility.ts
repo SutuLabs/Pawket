@@ -1,7 +1,7 @@
 import { PrivateKey, ModuleInstance } from "@chiamine/bls-signatures";
 import { prefix0x, unprefix0x } from "../coin/condition";
 import { Bytes } from "clvm";
-import crypto from "./isoCrypto"
+import crypto from "./isoCrypto";
 import { Instance } from "../util/instance";
 
 type deriveCallback = (path: number[]) => PrivateKey;

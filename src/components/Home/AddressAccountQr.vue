@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Emit } from "vue-property-decorator";
+import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
 import store from "@/store/index";
 import { AccountEntity } from "@/models/account";
 import KeyBox from "@/components/Common/KeyBox.vue";
@@ -37,6 +37,15 @@ export default class AddressAccountQr extends Vue {
 
   get externalExplorerPrefix(): string {
     return store.state.network.network.explorerUrl;
+  }
+
+  get path(): string {
+    return this.$route.path;
+  }
+
+  @Watch("path")
+  onPathChange():void {
+    if(this.path == "/home") this.close();
   }
 
   mounted(): void {

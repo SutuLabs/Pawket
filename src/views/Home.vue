@@ -46,7 +46,7 @@ export default class Home extends Vue {
   }
 
   mounted(): void {
-    if (!this.hasAccount) this.$router.push("/create");
+    if (!this.hasAccount) this.$router.push("/create").catch(() => undefined);
   }
 }
 </script>

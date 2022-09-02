@@ -59,7 +59,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import store from "@/store/index";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { sortable } from "@/directives/sortable";
@@ -84,12 +84,13 @@ export default class ManageCats extends Vue {
   @Prop() public account!: AccountEntity;
   @Prop({ default: "" }) defaultName!: string;
   @Prop({ default: "" }) defaultAssetId!: string;
-  @Prop({ default: 0 }) activeTab!: number;
+  @Prop({ default: 0 }) defaultTab!: number;
 
   public name = "";
   public assetId = "";
   public assetIds: CustomCat[] = [];
   public defaultCats: CustomCat[] = [];
+  public activeTab = 0;
 
   sortableOptions = {
     chosenClass: "box",
@@ -107,10 +108,20 @@ export default class ManageCats extends Vue {
 
     this.name = this.defaultName;
     this.assetId = this.defaultAssetId;
+    this.activeTab = this.defaultTab;
   }
 
   get allCats(): CustomCat[] {
     return getAllCats(this.account);
+  }
+
+  get path(): string {
+    return this.$route.path;
+  }
+
+  @Watch("path")
+  onPathChange(): void {
+    if (this.path == "/home") this.close();
   }
 
   close(): void {
@@ -119,7 +130,11 @@ export default class ManageCats extends Vue {
         message: this.$tc("ManageCats.message.confirmation.closeWithContent"),
         confirmText: this.$tc("ManageCats.message.confirmation.confirm"),
         cancelText: this.$tc("ManageCats.message.confirmation.cancel"),
-        onConfirm: () => this.$emit("close"),
+        onConfirm: () => {
+          this.name = "";
+          this.assetId = "";
+          this.$emit("close");
+        },
       });
     } else {
       this.$emit("close");

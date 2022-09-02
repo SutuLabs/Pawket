@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-card" style="width: 80vw">
+  <div class="modal-card">
     <header class="modal-card-head">
       <p class="modal-card-title">
         {{ $tc("errorLog.ui.title") }}
@@ -33,7 +33,7 @@
 <script lang="ts">
 import store from "@/store";
 import { errorLog } from "@/store/modules/error";
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 
 @Component
 export default class ErrorLog extends Vue {
@@ -49,14 +49,16 @@ export default class ErrorLog extends Vue {
   close(): void {
     this.$emit("close");
   }
+
+  get path(): string {
+    return this.$route.path;
+  }
+
+  @Watch("path")
+  onPathChange():void {
+    if(this.path == "/home") this.close();
+  }
 }
 </script>
 
-<style scoped lang="scss">
-.message-title {
-  font-size: 16px;
-  color: #333;
-  font-weight: bold;
-  padding-right: 8px;
-}
-</style>
+<style scoped lang="scss"></style>

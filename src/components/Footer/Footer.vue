@@ -1,0 +1,117 @@
+<template>
+  <footer class="footer py-4" :class="{ 'is-hidden-mobile': unlocked }">
+    <div class="content has-text-centered">
+      <p>
+        <strong> {{ $t("footer.ui.productInfo.name") }}</strong>
+        <span @click="versionClick()">[{{ version }}]</span><span v-if="debugMode" @click="disableDebug()">[DEBUG]</span> by
+        <b-icon icon="github" size="is-small"></b-icon
+        ><a href="https://github.com/chiabee" target="_blank" class="has-color-link">{{ $t("footer.ui.productInfo.author") }}</a
+        >.
+        <br />
+        <a href="https://info.pawket.app/" target="_blank" size="is-small" class="has-color-link">
+          <b-icon icon="home" size="is-small"></b-icon>
+          {{ $t("footer.ui.button.home") }}
+          <b-icon icon="open-in-new" size="is-small"></b-icon>
+        </a>
+        |
+        <a href="javascript:void(0)" size="is-small" @click="showDebugHelper()" class="has-color-link">
+          <b-icon icon="developer-board" size="is-small"></b-icon>
+          {{ $t("footer.ui.button.developer") }}
+        </a>
+        |
+        <a href="javascript:void(0)" size="is-small" @click="showProxy()" class="has-color-link">
+          <b-icon icon="router-network" size="is-small"></b-icon>
+          {{ $t("footer.ui.button.proxy") }}
+        </a>
+      </p>
+    </div>
+  </footer>
+</template>
+<script lang="ts">
+import { tc } from "@/i18n/i18n";
+import { isMobile } from "@/services/view/responsive";
+import store from "@/store";
+import { xchPrefix } from "@/store/modules/network";
+import { NotificationProgrammatic as Notification } from "buefy";
+import { Component, Vue } from "vue-property-decorator";
+import DevHelper from "../DevHelper/DevHelper.vue";
+
+@Component({})
+export default class PawketFooter extends Vue {
+  public debugClick = 9;
+
+  get version(): string {
+    return process.env.VUE_APP_VERSION || tc("footer.ui.error.READ_VERSION_FAILED");
+  }
+
+  showDebugHelper(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: DevHelper,
+      hasModalCard: true,
+      trapFocus: true,
+      fullScreen: isMobile(),
+      canCancel: [""],
+    });
+  }
+
+  async showProxy(): Promise<void> {
+    this.$buefy.modal.open({
+      parent: this,
+      component: (await import("@/components/Offline/OfflineQrCode.vue")).default,
+      hasModalCard: true,
+      trapFocus: true,
+      fullScreen: isMobile(),
+      canCancel: [""],
+      props: { mode: "PROXY", prefix: xchPrefix() },
+    });
+  }
+
+  versionClick(): void {
+    this.debugClick--;
+    if (this.debugClick == 0) {
+      store.state.app.debug = true;
+      Notification.open({
+        message: `Debug mode enabled`,
+        type: "is-primary",
+      });
+      localStorage.setItem("DEBUG_MODE", "true");
+    }
+  }
+
+  disableDebug(): void {
+    this.debugClick = 9;
+    store.state.app.debug = false;
+    Notification.open({
+      message: `Debug mode disabled`,
+      type: "is-primary",
+    });
+    localStorage.setItem("DEBUG_MODE", "false");
+  }
+
+  get unlocked(): boolean {
+    return store.state.vault.unlocked;
+  }
+
+  get debugMode(): boolean {
+    return store.state.app.debug;
+  }
+}
+</script>
+<style scoped lang="scss">
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100vw;
+  animation: fadeIn 2s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+</style>

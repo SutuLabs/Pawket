@@ -22,7 +22,7 @@
     </div>
     <div class="has-text-centered">
       <b-button v-if="debugMode" rounded @click="later()">{{ $t("createSeed.ui.button.later") }}</b-button>
-      <b-button icon-right="chevron-right" type="is-primary" @click="ready()" class="px-6">{{
+      <b-button icon-right="chevron-right" type="is-primary" @click="ready()" :loading="isLoading" class="px-6">{{
         $t("createSeed.ui.button.ready")
       }}</b-button>
     </div>
@@ -40,6 +40,8 @@ import TopBar from "@/components/Common/TopBar.vue";
   },
 })
 export default class Add extends Vue {
+  isLoading = false;
+
   get seedMnemonic(): string {
     return account.generateSeed();
   }
@@ -55,10 +57,11 @@ export default class Add extends Vue {
     store.dispatch("importSeed", this.seedMnemonic);
   }
 
-  ready(): void {
-    // TODO: go to verify seed page
-    store.dispatch("importSeed", this.seedMnemonic);
-    this.$router.push("/");
+  async ready(): Promise<void> {
+    this.isLoading = true;
+    await store.dispatch("importSeed", this.seedMnemonic);
+    this.$router.push("/home").catch(() => undefined);
+    this.isLoading = false;
   }
 
   back(): void {

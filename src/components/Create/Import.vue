@@ -82,7 +82,7 @@ export default class Add extends Vue {
     }
     await store.dispatch("importSeed", this.seedMnemonic).catch((error) => (this.isLegal = error == null));
     this.submitting = false;
-    this.$router.push("/");
+    this.$router.push("/home").catch(() => undefined);
   }
 
   backToImportMenu(): void {

@@ -8,6 +8,7 @@ import i18n, { tc } from "@/i18n/i18n";
 import UniStorage from "@/services/storage";
 import { CurrencyType } from "@/services/exchange/currencyType";
 import { xchPrefix } from "./network";
+import router from "@/router";
 
 export interface IVaultState {
   passwordHash: string;
@@ -141,6 +142,7 @@ store.registerModule<IVaultState>("vault", {
       });
       state.unlocked = true;
       state.seedMnemonic = await encryption.decrypt(state.encryptedSeed, encryptKey);
+      router.push("/home").catch(() => undefined);
 
       // initialize upgraded salt
       await dispatch("ensureSalt", password);
@@ -164,6 +166,7 @@ store.registerModule<IVaultState>("vault", {
       state.seedMnemonic = "";
       state.unlocked = false;
       await dispatch("saveState");
+      router.push("/login").catch(() => undefined);
     },
     async persistent({ state, rootState, dispatch }) {
       if (!state.unlocked) return;

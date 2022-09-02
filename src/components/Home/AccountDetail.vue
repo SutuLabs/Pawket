@@ -23,7 +23,7 @@
                 'pr-1': true,
               }"
               icon-left="paw"
-              @click="selectAccount()"
+              @click="$router.push('/home/accounts')"
               rounded
               ><span class="has-text-grey">{{ account.key.fingerprint }}</span></b-button
             >
@@ -48,13 +48,13 @@
               }}</b-dropdown-item>
             </b-dropdown>
             <b-tooltip :label="$t('accountDetail.ui.tooltip.errorLog')" class="is-pulled-right">
-              <b-button v-if="debugMode && hasError" @click="openErrorLog()"
+              <b-button v-if="debugMode && hasError" @click="$router.push('/home/errorLog')"
                 ><b-icon icon="bug" class="has-text-grey"> </b-icon
               ></b-button>
             </b-tooltip>
             <br />
             <div class="mt-6">
-              <figure class="image is-96x96 is-clickable" style="margin: auto" @click="selectAccount()">
+              <figure class="image is-96x96 is-clickable" style="margin: auto" @click="$router.push('/home/accounts')">
                 <img v-if="account.profilePic" class="is-rounded cover" :src="account.profilePic" />
                 <img v-else class="is-rounded cover" src="@/assets/account-circle.svg" />
               </figure>
@@ -77,7 +77,7 @@
             </div>
             <div class="pt-3">
               <div class="b-tooltip">
-                <a @click="openLink()" href="javascript:void(0)" class="has-text-primary">
+                <a @click="$router.push('/home/receive')" href="javascript:void(0)" class="has-text-primary">
                   <div class="mx-5">
                     <b-icon icon="download-circle" size="is-medium"> </b-icon>
                     <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.receive") }}</p>
@@ -85,7 +85,7 @@
                 </a>
               </div>
               <div class="b-tooltip">
-                <a @click="showSend()" href="javascript:void(0)" class="has-text-primary">
+                <a @click="$router.push('/home/send')" href="javascript:void(0)" class="has-text-primary">
                   <div class="mr-5">
                     <b-icon icon="arrow-right-circle" size="is-medium"> </b-icon>
                     <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.send") }}</p>
@@ -128,13 +128,13 @@
               </div>
             </a>
             <div class="column is-full has-text-centered pt-5 mt-2">
-              <a @click="ManageCats()"
+              <a @click="$router.push('/home/cats')"
                 ><span class="has-color-link">{{ $t("accountDetail.ui.button.manageCats") }}</span></a
               >
             </div>
           </b-tab-item>
           <b-tab-item :label="$t('accountDetail.ui.tab.nft')" class="min-height-20">
-            <nft-panel :account="account" @changePage="changePage"></nft-panel>
+            <nft-panel :account="account"></nft-panel>
           </b-tab-item>
           <b-tab-item :label="$t('accountDetail.ui.tab.did')" class="min-height-20" v-if="debugMode">
             <did></did>
@@ -154,7 +154,6 @@
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
 import store from "@/store";
-import AccountInfo from "@/components/AccountManagement/AccountInfo.vue";
 import ManageCats from "@/components/Cat/ManageCats.vue";
 import ExplorerLink from "@/components/Home/ExplorerLink.vue";
 import KeyBox from "@/components/Common/KeyBox.vue";
@@ -198,6 +197,7 @@ export default class AccountDetail extends Vue {
   public exchangeRate = -1;
   public showOfflineNotification = true;
   public timeoutId?: ReturnType<typeof setTimeout>;
+  public activeTab = 0;
 
   get refreshing(): boolean {
     return store.state.account.refreshing;
@@ -255,6 +255,33 @@ export default class AccountDetail extends Vue {
     return isMobile();
   }
 
+  get path(): string {
+    return this.$route.path;
+  }
+
+  @Watch("path")
+  onPathChange(): void {
+    switch (this.path) {
+      case "/home/cats":
+        this.ManageCats();
+        break;
+      case "/home/accounts":
+        this.selectAccount();
+        break;
+      case "/home/send":
+        this.showSend();
+        break;
+      case "/home/receive":
+        this.openLink();
+        break;
+      case "/home/errorLog":
+        this.openErrorLog();
+        break;
+      default:
+        break;
+    }
+  }
+
   nameOmit(name: string, upperCase = false): string {
     return nameOmit(name, upperCase);
   }
@@ -305,6 +332,10 @@ export default class AccountDetail extends Vue {
     return store.state.account.offline;
   }
 
+  handleModalClose(): void {
+    if (this.path != "/home") this.$router.push("/home").catch(() => undefined);
+  }
+
   mounted(): void {
     this.mode = store.state.vault.passwordHash ? "Verify" : "Create";
     this.autoRefresh(60);
@@ -343,18 +374,6 @@ export default class AccountDetail extends Vue {
     });
   }
 
-  showExport(): void {
-    this.$buefy.modal.open({
-      parent: this,
-      component: AccountInfo,
-      hasModalCard: true,
-      trapFocus: true,
-      canCancel: [""],
-      fullScreen: isMobile(),
-      props: { idx: this.selectedAccount },
-    });
-  }
-
   openErrorLog(): void {
     this.$buefy.modal.open({
       parent: this,
@@ -363,6 +382,7 @@ export default class AccountDetail extends Vue {
       trapFocus: true,
       fullScreen: isMobile(),
       canCancel: ["outside"],
+      events: { close: this.handleModalClose },
     });
   }
 
@@ -376,7 +396,7 @@ export default class AccountDetail extends Vue {
       fullScreen: isMobile(),
       canCancel: [""],
       props: { account: this.account },
-      events: { refresh: this.refresh },
+      events: { refresh: this.refresh, close: this.handleModalClose },
     });
   }
 
@@ -385,9 +405,12 @@ export default class AccountDetail extends Vue {
       parent: this,
       component: AccountManagement,
       trapFocus: true,
+      onCancel: this.handleModalClose,
+      width: 700,
       canCancel: ["outside"],
       fullScreen: isMobile(),
       props: {},
+      events: { close: this.handleModalClose },
     });
   }
 
@@ -401,6 +424,7 @@ export default class AccountDetail extends Vue {
       fullScreen: isMobile(),
       canCancel: [""],
       props: { account: this.account, rate: this.rate, currency: this.currency },
+      events: { close: this.handleModalClose },
     });
   }
 
@@ -410,9 +434,12 @@ export default class AccountDetail extends Vue {
       parent: this,
       component: component,
       trapFocus: true,
+      width: 700,
       canCancel: ["outside"],
+      onCancel: this.handleModalClose,
       fullScreen: isMobile(),
       props: { account: this.account },
+      events: { close: this.handleModalClose },
     });
   }
 
@@ -467,9 +494,5 @@ export default class AccountDetail extends Vue {
   height: 100%;
   width: 100%;
   object-fit: cover;
-}
-
-.disabled {
-  pointer-events: none;
 }
 </style>
