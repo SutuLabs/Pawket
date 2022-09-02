@@ -19,6 +19,7 @@
                 v-if="nft.metadata.uri"
                 :data-src="nft.metadata.uri"
                 @click="showDetail(nft)"
+                src="@/assets/loading.svg"
                 loading="lazy"
               />
               <img class="nft-image is-clickable cover" v-else src="@/assets/nft-no-image.png" @click="showDetail(nft)" />
@@ -218,6 +219,7 @@ export default class NftPanel extends Vue {
 .nft-image {
   border-radius: 0.5vw;
   width: 100%;
+  border: 0;
 }
 
 .nft-name {
