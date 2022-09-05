@@ -166,6 +166,7 @@ export default class NftPanel extends Vue {
       console.warn(err);
     }
     this.refreshing = false;
+    this.lazyLoading();
   }
 
   showDetail(nft: NftDetail): void {
@@ -183,7 +184,6 @@ export default class NftPanel extends Vue {
 
   async mounted(): Promise<void> {
     await this.refresh();
-    this.lazyLoading();
   }
 
   preloadImage(img: Element): void {
