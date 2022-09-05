@@ -12,7 +12,7 @@
     </b-field>
     <div class="tail-list" id="tail-list">
       <div v-for="item of filteredData" :key="item.code" aria-role="listitem" class="has-background-white-ter">
-        <div class="panel-block columns" v-if="isImported(item.code)">
+        <div class="panel-block columns" v-if="isImported(item.hash)">
           <div class="column is-1 is-narrow-mobile">
             <b-checkbox :value="true" disabled> </b-checkbox>
           </div>
@@ -91,8 +91,8 @@ export default class SearchCat extends Vue {
     return;
   }
 
-  isImported(symbol: string): boolean {
-    return this.allCats.findIndex((a) => a.name.toUpperCase() === symbol) > -1;
+  isImported(id: string): boolean {
+    return this.allCats.findIndex((a) => a.id === id) > -1;
   }
 
   scrollTop(): void {
