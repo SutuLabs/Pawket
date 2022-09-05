@@ -11,43 +11,45 @@
             <span>{{ col.name }}</span>
           </p>
         </template>
-        <ul class="is-flex columns is-multiline is-mobile my-2" v-if="col.nfts">
-          <li class="column is-4-tablet is-6-mobile" v-for="(nft, i) of col.nfts" :key="i">
-            <div class="nft-image-container">
-              <img
-                class="nft-image is-clickable cover"
-                v-if="nft.metadata.uri"
-                :data-src="nft.metadata.uri"
-                @click="showDetail(nft)"
-                src="@/assets/loading.svg"
-                loading="lazy"
-              />
-              <img class="nft-image is-clickable cover" v-else src="@/assets/nft-no-image.png" @click="showDetail(nft)" />
-              <p class="nft-name has-background-white-ter pt-2 pl-3 is-hidden-mobile">
-                <span class="is-inline-block truncate">{{ nft.metadata.name }}</span>
-                <span class="is-pulled-right">
-                  <b-dropdown aria-role="list" class="is-pulled-right" :mobile-modal="false" position="is-bottom-left">
-                    <template #trigger>
-                      <b-icon icon="dots-vertical" class="is-clickable"></b-icon>
-                    </template>
-                    <a class="has-text-dark" :href="spaceScanUrl + nft.address" target="_blank">
-                      <b-dropdown-item aria-role="listitem"
-                        ><b-icon class="media-left" icon="open-in-new" size="is-small"></b-icon
-                        >{{ $t("nftDetail.ui.dropdown.spaceScan") }}
-                      </b-dropdown-item>
-                    </a>
-                    <a class="has-text-dark" @click="setAsProfilePic(nft.metadata.uri)">
-                      <b-dropdown-item aria-role="listitem">
-                        <b-icon class="media-left" icon="account-box" size="is-small"></b-icon
-                        >{{ $t("nftDetail.ui.dropdown.setAsProfilePic") }}
-                      </b-dropdown-item>
-                    </a>
-                  </b-dropdown>
-                </span>
-              </p>
-            </div>
-          </li>
-        </ul>
+        <div>
+          <ul class="is-flex columns is-multiline is-mobile my-2" v-if="col.nfts">
+            <li class="column is-4-tablet is-6-mobile" v-for="(nft, i) of col.nfts" :key="i">
+              <div class="nft-image-container">
+                <img
+                  class="nft-image is-clickable cover"
+                  v-if="nft.metadata.uri"
+                  :data-src="nft.metadata.uri"
+                  @click="showDetail(nft)"
+                  src="@/assets/loading.svg"
+                  loading="lazy"
+                />
+                <img class="nft-image is-clickable cover" v-else src="@/assets/nft-no-image.png" @click="showDetail(nft)" />
+                <p class="nft-name has-background-white-ter pt-2 pl-3 is-hidden-mobile">
+                  <span class="is-inline-block truncate">{{ nft.metadata.name }}</span>
+                  <span class="is-pulled-right">
+                    <b-dropdown aria-role="list" class="is-pulled-right" :mobile-modal="false" position="is-bottom-left">
+                      <template #trigger>
+                        <b-icon icon="dots-vertical" class="is-clickable"></b-icon>
+                      </template>
+                      <a class="has-text-dark" :href="spaceScanUrl + nft.address" target="_blank">
+                        <b-dropdown-item aria-role="listitem"
+                          ><b-icon class="media-left" icon="open-in-new" size="is-small"></b-icon
+                          >{{ $t("nftDetail.ui.dropdown.spaceScan") }}
+                        </b-dropdown-item>
+                      </a>
+                      <a class="has-text-dark" @click="setAsProfilePic(nft.metadata.uri)">
+                        <b-dropdown-item aria-role="listitem">
+                          <b-icon class="media-left" icon="account-box" size="is-small"></b-icon
+                          >{{ $t("nftDetail.ui.dropdown.setAsProfilePic") }}
+                        </b-dropdown-item>
+                      </a>
+                    </b-dropdown>
+                  </span>
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
       </b-collapse>
     </div>
   </section>
@@ -166,6 +168,7 @@ export default class NftPanel extends Vue {
       console.warn(err);
     }
     this.refreshing = false;
+    this.lazyLoading();
   }
 
   showDetail(nft: NftDetail): void {
@@ -183,7 +186,6 @@ export default class NftPanel extends Vue {
 
   async mounted(): Promise<void> {
     await this.refresh();
-    this.lazyLoading();
   }
 
   preloadImage(img: Element): void {
