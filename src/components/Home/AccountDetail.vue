@@ -171,7 +171,6 @@ import { nameOmit } from "@/filters/nameConversion";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { NetworkInfo, xchSymbol } from "@/store/modules/network";
 import NftPanel from "@/components/Nft/NftPanel.vue";
-import DidPanel from "@/components/Did/DidPanel.vue";
 import Dapp from "./Dapp.vue";
 import ErrorLog from "@/components/ErrorLog/ErrorLog.vue";
 import AccountManagement from "@/components/AccountManagement/AccountManagement.vue";
@@ -187,7 +186,6 @@ type Mode = "Verify" | "Create";
     Send,
     UtxoPanel,
     NftPanel,
-    DidPanel,
     Dapp,
     Did,
   },

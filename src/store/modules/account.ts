@@ -180,19 +180,24 @@ store.registerModule<IAccountState>("account", {
 
       const requests = await getAccountAddressDetails(account, parameters.maxId);
       const assetRecords = await receive.getCoinRecords(requests, false, rpcUrl(), false, parameters.coinType);
-      const assets = await receive.getAssets(assetRecords, rpcUrl(), (_) => {
-        if (_.did) {
-          if (!account.dids) Vue.set(account, "dids", []);
-          if (account.dids && account.dids.findIndex((d) => d.did == _.did?.did) == -1) account.dids.push(_.did);
-        }
-        if (_.nft) {
-          if (!account.nfts) Vue.set(account, "nfts", []);
-          if (account.nfts && account.nfts.findIndex((d) => d.address == _.nft?.address) == -1) account.nfts.push(_.nft);
-        }
-      });
-      setDidName(assets.dids);
-      Vue.set(account, "nfts", assets.nfts);
-      Vue.set(account, "dids", assets.dids);
+      if (parameters.coinType == "DidV1") {
+        const assets = await receive.getAssets(assetRecords, rpcUrl(), (_) => {
+          if (_.did) {
+            if (!account.dids) Vue.set(account, "dids", []);
+            if (account.dids && account.dids.findIndex((d) => d.did == _.did?.did) == -1) account.dids.push(_.did);
+          }
+        });
+        setDidName(assets.dids);
+        Vue.set(account, "dids", assets.dids);
+      } else {
+        const assets = await receive.getAssets(assetRecords, rpcUrl(), (_) => {
+          if (_.nft) {
+            if (!account.nfts) Vue.set(account, "nfts", []);
+            if (account.nfts && account.nfts.findIndex((d) => d.address == _.nft?.address) == -1) account.nfts.push(_.nft);
+          }
+        });
+        Vue.set(account, "nfts", assets.nfts);
+      }
     },
     async refreshAddress({ state }, parameters: { idx: number; maxId: number }) {
       if (!parameters) parameters = { idx: state.selectedAccount, maxId: -1 };

@@ -1,6 +1,8 @@
 <template>
   <div>
-    <b-button @click="refresh()">Refresh</b-button>
+    <b-button @click="refresh()" :loading="refreshing">
+      <b-icon icon="refresh"></b-icon>
+    </b-button>
     <div class="mb-3">
       <b-button type="is-primary" expanded @click="addDid()">
         <b-icon icon="plus" size="is-small" class="mr-1"></b-icon>
@@ -39,6 +41,8 @@ import TopBar from "@/components/Common/TopBar.vue";
 
 @Component({ components: { TopBar } })
 export default class Did extends Vue {
+  public refreshing = false;
+
   get selectedAccount(): number {
     return store.state.account.selectedAccount;
   }
@@ -59,7 +63,9 @@ export default class Did extends Vue {
   }
 
   async refresh(): Promise<void> {
-    store.dispatch("refreshDids");
+    this.refreshing = true;
+    await store.dispatch("refreshDids");
+    this.refreshing = false;
   }
 
   nameOmit(name: string, upperCase = false): string {
