@@ -376,6 +376,7 @@ export default class AccountDetail extends Vue {
     this.$buefy.modal.open({
       parent: this,
       component: ErrorLog,
+      onCancel: this.handleModalClose,
       hasModalCard: true,
       trapFocus: true,
       fullScreen: isMobile(),
