@@ -6,7 +6,7 @@
       </b-button>
       <b-collapse animation="slide" v-for="(col, key) of collection" :key="key" :open="false">
         <template #trigger="props">
-          <p class="is-size-5 mb-1">
+          <p class="is-size-5 mb-1" @click="lazyLoading()">
             <span><b-icon class="is-pulled-left pt-1" :icon="props.open ? 'chevron-down' : 'chevron-right'"></b-icon></span>
             <span>{{ col.name }}</span>
           </p>
@@ -168,7 +168,6 @@ export default class NftPanel extends Vue {
       console.warn(err);
     }
     this.refreshing = false;
-    this.lazyLoading();
   }
 
   showDetail(nft: NftDetail): void {
