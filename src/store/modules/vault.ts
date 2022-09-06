@@ -141,8 +141,8 @@ store.registerModule<IVaultState>("vault", {
         Vue.set(_, "activities", []);
       });
       state.unlocked = true;
-      state.seedMnemonic = await encryption.decrypt(state.encryptedSeed, encryptKey);
       router.push("/home").catch(() => undefined);
+      state.seedMnemonic = await encryption.decrypt(state.encryptedSeed, encryptKey);
 
       // initialize upgraded salt
       await dispatch("ensureSalt", password);

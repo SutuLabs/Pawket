@@ -98,7 +98,7 @@
       </div>
       <div id="tab"></div>
       <div class="p-2">
-        <b-tabs position="is-centered" class="block" expanded>
+        <b-tabs position="is-centered" class="block" expanded :destroy-on-hide="true">
           <b-tab-item :label="$t('accountDetail.ui.tab.asset')" class="min-height-20">
             <a
               v-for="cat of tokenList"
@@ -442,9 +442,9 @@ export default class AccountDetail extends Vue {
     });
   }
 
-  async refresh(): Promise<void> {
+  refresh(): void {
+    store.dispatch("refreshBalance");
     this.refreshRate();
-    await store.dispatch("refreshBalance");
   }
 
   changePage(): void {
