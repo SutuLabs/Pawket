@@ -184,10 +184,6 @@ export default class NftPanel extends Vue {
     });
   }
 
-  async mounted(): Promise<void> {
-    await this.refresh();
-  }
-
   preloadImage(img: Element): void {
     const src = img.getAttribute("data-src");
     if (!src) return;
