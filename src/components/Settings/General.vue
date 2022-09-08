@@ -1,6 +1,6 @@
 <template>
   <div class="modal-card m-0">
-    <top-bar :title="$t('settings.general.title')" @close="$emit('close')"></top-bar>
+    <top-bar :title="$t('settings.general.title')" @close="$router.back()"></top-bar>
     <section class="modal-card-body">
       <b-field :label="$t('settings.general.label.language')">
         <b-select v-model="lang" expanded>

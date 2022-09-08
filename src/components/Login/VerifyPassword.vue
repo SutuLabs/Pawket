@@ -40,14 +40,7 @@ import { isPasswordCorrect } from "@/store/modules/vault";
 @Component
 export default class VerifyPassword extends Vue {
   public password = "";
-  public repassword = "";
   public isCorrect = true;
-  public isMatch = true;
-  public isEmpty = false;
-  public passwordStrength = 0;
-  public strengthMsg = "";
-  public strengthClass: "is-danger" | "is-warning" | "is-primary" = "is-danger";
-  public showStrength = false;
   public isLoading = false;
 
   @Watch("mode")
@@ -81,73 +74,6 @@ export default class VerifyPassword extends Vue {
 
   clearErrorMsg(): void {
     this.isCorrect = true;
-  }
-
-  checkStrength(): void {
-    this.passwordStrength = 0;
-    if (this.password == "") {
-      this.isEmpty = true;
-      return;
-    }
-    this.isEmpty = false;
-    if (this.password.length > 6) {
-      this.passwordStrength += 60;
-    }
-    if (this.hasSpecialCharacter(this.password)) {
-      this.passwordStrength += 20;
-    }
-    if (this.hasCapital(this.password)) {
-      this.passwordStrength += 10;
-    }
-    if (this.hasLower(this.password)) {
-      this.passwordStrength += 10;
-    }
-    this.strengthMsg = this.generateStrengthMsg(this.passwordStrength);
-    this.showStrength = true;
-  }
-
-  hasSpecialCharacter(s: string): boolean {
-    for (var i = 0; i < s.length; i++) {
-      if ((s[i] < "a" || s[i] > "z") && (s[i] < "A" || s[i] > "Z") && (s[i] < "0" || s[i] > "9")) return true;
-    }
-    return false;
-  }
-
-  hasCapital(s: string): boolean {
-    for (var i = 0; i < s.length; i++) {
-      if (s[i] >= "A" && s[i] <= "Z") {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  hasLower(s: string): boolean {
-    for (var i = 0; i < s.length; i++) {
-      if (s[i] >= "a" && s[i] <= "z") {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  generateStrengthMsg(strength: number): string {
-    if (strength < 60) {
-      this.strengthClass = "is-danger";
-      return this.$tc("verifyPassword.message.tip.weakPassword");
-    }
-    if (strength <= 80) {
-      this.strengthClass = "is-warning";
-      return this.$tc("verifyPassword.message.tip.mediumPassword");
-    }
-    this.strengthClass = "is-primary";
-    return this.$tc("verifyPassword.message.tip.strongPassword");
-  }
-
-  checkMatch(): void {
-    this.showStrength = false;
-    this.isMatch = this.password === this.repassword;
-    return;
   }
 
   clear(): void {

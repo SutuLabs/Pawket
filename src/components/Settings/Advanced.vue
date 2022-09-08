@@ -1,11 +1,11 @@
 <template>
   <div class="modal-card m-0">
-    <top-bar :title="$t('settings.advanced.title')" @close="$emit('close')"></top-bar>
+    <top-bar :title="$t('settings.advanced.title')" @close="$router.back()"></top-bar>
     <section class="modal-card-body">
       <b-field>
         <template #label>
           <p class="is-size-4">{{ $t("settings.advanced.label.experimental") }}</p>
-          <div class="is-size-7 has-text-grey py-3 text-width-400">
+          <div class="is-size-7 has-text-grey py-3">
             <p>{{ $t("settings.advanced.description") }}</p>
             <p>{{ $t("settings.advanced.warning") }}</p>
           </div>
@@ -51,8 +51,4 @@ export default class Advanced extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-.text-width-400 {
-  max-width: 400px;
-}
-</style>
+<style scoped lang="scss"></style>

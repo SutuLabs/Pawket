@@ -82,8 +82,8 @@
     </section>
     <footer class="modal-card-foot is-block">
       <div>
-        <b-button v-if="!bundle" :label="$t('common.button.cancel')" class="is-pulled-left" @click="close()"></b-button>
-        <b-button v-if="bundle" :label="$t('offer.make.ui.button.done')" class="is-pulled-left" @click="close()"></b-button>
+        <b-button v-if="!bundle" :label="$t('common.button.cancel')" class="is-pulled-left" @click="$router.push('/home')"></b-button>
+        <b-button v-if="bundle" :label="$t('offer.make.ui.button.done')" class="is-pulled-left" @click="$router.push('/home')"></b-button>
         <b-button v-if="!bundle" type="is-primary" :loading="signing" @click="sign()">
           {{ $t("offer.make.ui.button.sign") }}
         </b-button>
@@ -103,7 +103,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Emit } from "vue-property-decorator";
+import { Component, Vue, Prop, Emit, Watch } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { SpendBundle } from "@/models/wallet";
 import { AccountEntity } from "@/models/account";
@@ -164,6 +164,15 @@ export default class MakeOffer extends Vue {
   @Emit("close")
   close(): void {
     return;
+  }
+
+  get path(): string {
+    return this.$route.path;
+  }
+
+  @Watch("path")
+  onPathChange():void {
+    if(this.path == "/home") this.close();
   }
 
   get cats(): { [id: string]: string } {

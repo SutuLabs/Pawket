@@ -126,7 +126,7 @@
     </section>
     <footer class="modal-card-foot is-block">
       <div>
-        <b-button :label="$t('offer.take.ui.button.cancel')" class="is-pulled-left" @click="close()"></b-button>
+        <b-button :label="$t('offer.take.ui.button.cancel')" class="is-pulled-left" @click="$router.push('/home')"></b-button>
         <template v-if="showTest && debugMode">
           <b-button
             class="is-pulled-left"
@@ -172,7 +172,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Emit } from "vue-property-decorator";
+import { Component, Vue, Prop, Emit, Watch } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { SpendBundle } from "@/models/wallet";
 import { getCatIdDict, getCatNameDict, getTokenInfo } from "@/services/view/cat";
@@ -260,6 +260,15 @@ export default class TakeOffer extends Vue {
   @Emit("close")
   close(): void {
     return;
+  }
+
+  get path(): string {
+    return this.$route.path;
+  }
+
+  @Watch("path")
+  onPathChange():void {
+    if(this.path == "/home") this.close();
   }
 
   get cats(): { [id: string]: string } {

@@ -81,7 +81,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Emit } from "vue-property-decorator";
+import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
 import { AccountEntity } from "@/models/account";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
@@ -126,6 +126,15 @@ export default class BatchSend extends Vue {
     this.loadCoins();
   }
 
+  get path(): string {
+    return this.$route.path;
+  }
+
+  @Watch("path")
+  onPathChange(): void {
+    if (this.path == "/home") this.close();
+  }
+
   @Emit("close")
   close(): void {
     return;
@@ -139,7 +148,7 @@ export default class BatchSend extends Vue {
     if (this.bundle) {
       this.reset();
     } else {
-      this.close();
+      this.$router.push("/home");
     }
   }
 

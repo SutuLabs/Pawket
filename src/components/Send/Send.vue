@@ -1,6 +1,6 @@
 <template>
   <div class="modal-card m-0">
-    <top-bar :title="$t('send.ui.title.send')" @close="$emit('close')" :showClose="showClose"></top-bar>
+    <top-bar :title="$t('send.ui.title.send')" @close="$router.back()" :showClose="showClose"></top-bar>
     <section class="modal-card-body">
       <div v-show="!bundle">
         <b-notification
@@ -239,7 +239,7 @@ export default class Send extends Vue {
     if (this.bundle) {
       this.reset();
     } else {
-      this.close();
+      this.$router.push("/home");
     }
   }
 
