@@ -2,33 +2,57 @@
   <div class="column nav-box">
     <div class="box is-hidden-mobile">
       <p class="has-text-left is-size-5 pb-2 pl-2 border-bottom">{{ $t("settings.menu.title") }}</p>
-      <b-tabs type="is-boxed" vertical>
-        <b-tab-item :label="$t('settings.menu.items.general.title')" icon="tune" class="pt-0 mt-0">
-          <general class="width-auto"></general>
-        </b-tab-item>
-        <b-tab-item :label="$t('settings.menu.items.security.title')" icon="key">
-          <security class="width-auto"></security>
-        </b-tab-item>
-        <b-tab-item :label="$t('settings.menu.items.addressBook.title')" icon="account-box-multiple-outline">
-          <address-book class="width-auto"></address-book>
-        </b-tab-item>
-        <b-tab-item :label="$t('settings.menu.items.collection.title')" icon="account-box-multiple-outline" v-if="debugMode">
-          <collection class="width-auto"></collection>
-        </b-tab-item>
-        <b-tab-item :label="$t('settings.menu.items.advanced.title')" icon="lightbulb-outline">
-          <advanced class="width-auto"></advanced>
-        </b-tab-item>
-        <b-tab-item :label="$t('settings.menu.items.devhelper.title')" icon="developer-board">
-          <dev-helper class="width-auto" :showClose="false"></dev-helper>
-        </b-tab-item>
-        <b-tab-item :label="$t('settings.menu.items.about.title')" icon="information-outline">
-          <about class="width-auto"></about>
-        </b-tab-item>
-      </b-tabs>
+      <div class="b-tabs is-vertical">
+        <nav role="tablist" aria-orientation="vertical" class="tabs is-boxed">
+          <ul>
+            <li role="presentation" :class="{ 'is-active': path == '/settings/general' }">
+              <router-link role="tab" :to="{ path: 'general' }"
+                ><b-icon icon="tune"></b-icon>{{ $t("settings.menu.items.general.title") }}</router-link
+              >
+            </li>
+            <li role="presentation" :class="{ 'is-active': path == '/settings/security' }">
+              <router-link role="tab" :to="{ path: 'security' }"
+                ><b-icon icon="key"></b-icon>{{ $t("settings.menu.items.security.title") }}</router-link
+              >
+            </li>
+            <li role="presentation" :class="{ 'is-active': path == '/settings/addressBook' }">
+              <router-link role="tab" :to="{ path: 'addressBook' }"
+                ><b-icon icon="account-box-multiple-outline"></b-icon
+                >{{ $t("settings.menu.items.addressBook.title") }}</router-link
+              >
+            </li>
+            <li role="presentation" :class="{ 'is-active': path == '/settings/collection' }">
+              <router-link role="tab" :to="{ path: 'collection' }"
+                ><b-icon icon="account-box-multiple-outline"></b-icon
+                >{{ $t("settings.menu.items.collection.title") }}</router-link
+              >
+            </li>
+            <li role="presentation" :class="{ 'is-active': path == '/settings/advanced' }">
+              <router-link role="tab" :to="{ path: 'advanced' }"
+                ><b-icon icon="lightbulb-outline"></b-icon>{{ $t("settings.menu.items.advanced.title") }}</router-link
+              >
+            </li>
+            <li role="presentation" :class="{ 'is-active': path == '/settings/devhelper' }">
+              <router-link role="tab" :to="{ path: 'devhelper' }"
+                ><b-icon icon="developer-board"></b-icon>{{ $t("settings.menu.items.devhelper.title") }}</router-link
+              >
+            </li>
+            <li role="presentation" :class="{ 'is-active': path == '/settings/about' }">
+              <router-link role="tab" :to="{ path: 'about' }"
+                ><b-icon icon="information-outline"></b-icon>{{ $t("settings.menu.items.about.title") }}</router-link
+              >
+            </li>
+          </ul>
+        </nav>
+        <section style="width: 70%">
+          <router-view class="width-auto"></router-view>
+        </section>
+      </div>
     </div>
-    <div class="is-hidden-tablet pb-4 pt-8">
+    <router-view class="is-hidden-tablet"></router-view>
+    <div class="is-hidden-tablet pb-4 pt-8" v-if="path == '/settings'">
       <p class="has-text-centered is-size-5 pt-5 pb-2 pr-2 border-bottom fixed-top">{{ $t("settings.menu.title") }}</p>
-      <div class="panel-block py-0 my-0" @click="goToGeneral()">
+      <router-link role="tab" :to="{ path: '/settings/general' }" class="panel-block py-0 my-0">
         <div class="is-11 is-flex my-1 py-1">
           <div class="mr-2 py-1">
             <b-icon icon="tune"></b-icon>
@@ -41,8 +65,8 @@
         <div class="column py-1">
           <b-icon class="is-pulled-right has-text-grey" icon="chevron-right"> </b-icon>
         </div>
-      </div>
-      <div class="panel-block py-0 my-0" @click="goToSecurity()">
+      </router-link>
+      <router-link role="tab" :to="{ path: '/settings/security' }" class="panel-block py-0 my-0">
         <div class="is-11 is-flex my-1 py-1">
           <div class="mr-2 py-1">
             <b-icon icon="key"></b-icon>
@@ -55,8 +79,8 @@
         <div class="column py-1">
           <b-icon class="is-pulled-right has-text-grey" icon="chevron-right"> </b-icon>
         </div>
-      </div>
-      <div class="panel-block py-0 my-0" @click="goToAddressBook()">
+      </router-link>
+      <router-link role="tab" :to="{ path: '/settings/addressBook' }" class="panel-block py-0 my-0">
         <div class="is-11 is-flex my-1 py-1">
           <div class="mr-2 py-1">
             <b-icon icon="account-box-multiple-outline"></b-icon>
@@ -69,8 +93,8 @@
         <div class="column py-1">
           <b-icon class="is-pulled-right has-text-grey" icon="chevron-right"> </b-icon>
         </div>
-      </div>
-      <div class="panel-block py-0 my-0" @click="goToCollection()" v-if="debugMode">
+      </router-link>
+      <router-link role="tab" :to="{ path: '/settings/collection' }" class="panel-block py-0 my-0">
         <div class="is-11 is-flex my-1 py-1">
           <div class="mr-2 py-1">
             <b-icon icon="account-box-multiple-outline"></b-icon>
@@ -83,8 +107,8 @@
         <div class="column py-1">
           <b-icon class="is-pulled-right has-text-grey" icon="chevron-right"> </b-icon>
         </div>
-      </div>
-      <div class="panel-block py-0 my-0" @click="goToAdvanced()">
+      </router-link>
+      <router-link role="tab" :to="{ path: '/settings/advanced' }" class="panel-block py-0 my-0">
         <div class="is-11 is-flex my-1 py-1">
           <div class="mr-2 py-1">
             <b-icon icon="lightbulb-outline"></b-icon>
@@ -97,8 +121,8 @@
         <div class="column py-1">
           <b-icon class="is-pulled-right has-text-grey" icon="chevron-right"> </b-icon>
         </div>
-      </div>
-      <div class="panel-block py-0 my-0" @click="goToDevHelper()">
+      </router-link>
+      <router-link role="tab" :to="{ path: '/settings/devhelper' }" class="panel-block py-0 my-0">
         <div class="is-11 is-flex my-1 py-1">
           <div class="mr-2 py-1">
             <b-icon icon="developer-board"></b-icon>
@@ -111,8 +135,8 @@
         <div class="column py-1">
           <b-icon class="is-pulled-right has-text-grey" icon="chevron-right"> </b-icon>
         </div>
-      </div>
-      <div class="panel-block py-0 my-0 border-bottom" @click="goToAbout()">
+      </router-link>
+      <router-link role="tab" :to="{ path: '/settings/about' }" class="panel-block py-0 my-0 border-bottom">
         <div class="is-11 is-flex my-1 py-1">
           <div class="mr-2 py-1">
             <b-icon icon="information-outline"></b-icon>
@@ -125,7 +149,7 @@
         <div class="column py-1">
           <b-icon class="is-pulled-right has-text-grey" icon="chevron-right"> </b-icon>
         </div>
-      </div>
+      </router-link>
       <div class="panel-block my-4">
         <b-button type="is-info" expanded outlined @click="lock()">{{ $t("settings.menu.items.lock") }}</b-button>
       </div>
@@ -134,116 +158,38 @@
 </template>
 
 <script lang="ts">
-import DevHelper from "@/components/DevHelper/DevHelper.vue";
-import About from "@/components/Settings/About.vue";
-import AddressBook from "@/components/AddressBook/AddressBook.vue";
-import Advanced from "@/components/Settings/Advanced.vue";
-import General from "@/components/Settings/General.vue";
-import Security from "@/components/Settings/Security.vue";
-import { isDesktop } from "@/services/view/responsive";
+import Lock from "@/components/Settings/Lock.vue";
+import { isMobile } from "@/services/view/responsive";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
-import Collection from "@/components/Collection/Collection.vue";
 
-@Component({
-  components: { General, Security, Advanced, AddressBook, About, DevHelper, Collection },
-})
+@Component({})
 export default class Settings extends Vue {
-  goToGeneral(): void {
-    this.$buefy.modal.open({
-      parent: this,
-      component: General,
-      trapFocus: true,
-      canCancel: [""],
-      fullScreen: true,
-      props: {},
-    });
-  }
-
-  goToSecurity(): void {
-    this.$buefy.modal.open({
-      parent: this,
-      component: Security,
-      trapFocus: true,
-      canCancel: [""],
-      fullScreen: true,
-      props: {},
-    });
-  }
-
-  goToAddressBook(): void {
-    this.$buefy.modal.open({
-      parent: this,
-      component: AddressBook,
-      trapFocus: true,
-      canCancel: [""],
-      fullScreen: true,
-      props: {},
-    });
-  }
-
-  goToCollection(): void {
-    this.$buefy.modal.open({
-      parent: this,
-      component: Collection,
-      trapFocus: true,
-      canCancel: [""],
-      fullScreen: true,
-      props: {},
-    });
-  }
-
-  goToAdvanced(): void {
-    this.$buefy.modal.open({
-      parent: this,
-      component: Advanced,
-      trapFocus: true,
-      canCancel: [""],
-      fullScreen: true,
-      props: {},
-    });
-  }
-
-  goToDevHelper(): void {
-    this.$buefy.modal.open({
-      parent: this,
-      component: DevHelper,
-      trapFocus: true,
-      canCancel: [""],
-      fullScreen: true,
-      props: {},
-    });
-  }
-
-  goToAbout(): void {
-    this.$buefy.modal.open({
-      parent: this,
-      component: About,
-      trapFocus: true,
-      canCancel: [""],
-      fullScreen: true,
-      props: {},
-    });
-  }
-
   lock(): void {
-    this.$buefy.dialog.confirm({
-      message: this.$tc("accountDetail.message.confirmation.lock"),
-      confirmText: this.$tc("accountDetail.ui.button.confirm"),
-      cancelText: this.$tc("accountDetail.ui.button.cancel"),
+    this.$buefy.modal.open({
+      parent: this,
+      component: Lock,
+      hasModalCard: true,
+      canCancel: ["outside"],
+      events: { lock: () => store.dispatch("lock") },
       trapFocus: true,
-      onConfirm: () => {
-        store.dispatch("lock");
-      },
     });
   }
 
-  get isDesktop(): boolean {
-    return isDesktop();
+  get path(): string {
+    return this.$route.path;
   }
 
   get debugMode(): boolean {
     return store.state.app.debug;
+  }
+
+  get isMobile(): boolean {
+    return isMobile();
+  }
+
+  mounted(): void {
+    if (!this.isMobile) this.$router.push("/settings/general");
   }
 }
 </script>

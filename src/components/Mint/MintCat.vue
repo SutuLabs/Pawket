@@ -79,7 +79,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Emit } from "vue-property-decorator";
+import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
 import { AccountEntity, CustomCat, TokenInfo } from "@/models/account";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
@@ -136,6 +136,15 @@ export default class MintCat extends Vue {
   mounted(): void {
     this.loadCoins();
     this.address = ensureAddress(this.account.firstAddress);
+  }
+
+  get path(): string {
+    return this.$route.path;
+  }
+
+  @Watch("path")
+  onPathChange(): void {
+    if (this.path == "/home") this.close();
   }
 
   @Emit("close")
@@ -202,7 +211,7 @@ export default class MintCat extends Vue {
     if (this.bundle) {
       this.reset();
     } else {
-      this.close();
+      this.$router.back();
     }
   }
 

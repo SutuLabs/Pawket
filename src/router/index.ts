@@ -30,6 +30,24 @@ const routes: Array<RouteConfig> = [
       {
         path: "errorLog",
       },
+      {
+        path: "proxy",
+      },
+      {
+        path: "make-offer",
+      },
+      {
+        path: "batch-send",
+      },
+      {
+        path: "issue-cat",
+      },
+      {
+        path: "mint-nft",
+      },
+      {
+        path: "take-offer",
+      },
     ],
   },
   {
@@ -109,6 +127,36 @@ const routes: Array<RouteConfig> = [
     path: "/settings",
     name: "Settings",
     component: () => import(/* webpackChunkName: "settings" */ "../views/Settings.vue"),
+    children: [
+      {
+        path: "general",
+        component: () => import(/* webpackChunkName: "settings" */ "@/components/Settings/General.vue"),
+      },
+      {
+        path: "security",
+        component: () => import(/* webpackChunkName: "settings" */ "@/components/Settings/Security.vue"),
+      },
+      {
+        path: "addressBook",
+        component: () => import(/* webpackChunkName: "settings" */ "@/components/AddressBook/AddressBook.vue"),
+      },
+      {
+        path: "collection",
+        component: () => import(/* webpackChunkName: "settings" */ "@/components/Collection/Collection.vue"),
+      },
+      {
+        path: "advanced",
+        component: () => import(/* webpackChunkName: "settings" */ "@/components/Settings/Advanced.vue"),
+      },
+      {
+        path: "devhelper",
+        component: () => import(/* webpackChunkName: "settings" */ "@/components/DevHelper/DevHelper.vue"),
+      },
+      {
+        path: "about",
+        component: () => import(/* webpackChunkName: "settings" */ "@/components/Settings/About.vue"),
+      }
+    ],
   },
   {
     path: "/",

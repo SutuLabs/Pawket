@@ -2,7 +2,7 @@
   <div class="modal-card">
     <header class="modal-card-head">
       <p class="modal-card-title">{{ $t("mintNft.ui.title") }}</p>
-      <button type="button" class="delete" @click="close()"></button>
+      <button type="button" class="delete" @click="$router.back()"></button>
     </header>
     <section class="modal-card-body">
       <div v-show="!bundle">
@@ -128,7 +128,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Emit } from "vue-property-decorator";
+import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
 import { AccountEntity, TokenInfo } from "@/models/account";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
@@ -235,6 +235,15 @@ export default class MintNft extends Vue {
     store.dispatch("refreshDids");
   }
 
+  get path(): string {
+    return this.$route.path;
+  }
+
+  @Watch("path")
+  onPathChange():void {
+    if(this.path == "/home") this.close();
+  }
+
   @Emit("close")
   close(): void {
     return;
@@ -286,7 +295,7 @@ export default class MintNft extends Vue {
     if (this.bundle) {
       this.reset();
     } else {
-      this.close();
+      this.$router.back();
     }
   }
 

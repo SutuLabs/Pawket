@@ -19,7 +19,7 @@
       </div>
       <div v-if="experimentMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.takeOffer')" position="is-right">
-          <a href="javascript:void(0)" @click="openTakeOffer()" class="has-text-link">
+          <a href="javascript:void(0)" @click="$router.push('/home/take-offer')" class="has-text-link">
             <div class="has-text-centered">
               <b-icon icon="email-check-outline" size="is-medium"></b-icon>
               <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.takeOffer") }}</p>
@@ -29,7 +29,7 @@
       </div>
       <div v-if="experimentMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.makeOffer')" position="is-right">
-          <a href="javascript:void(0)" @click="openMakeOffer()" class="has-text-link">
+          <a href="javascript:void(0)" @click="$router.push('/home/make-offer')" class="has-text-link">
             <div class="has-text-centered">
               <b-icon icon="email-send-outline" size="is-medium"></b-icon>
               <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.makeOffer") }}</p>
@@ -39,7 +39,7 @@
       </div>
       <div v-if="experimentMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.batchSend')" position="is-right">
-          <a href="javascript:void(0)" @click="openBatchSend()" class="has-text-link">
+          <a href="javascript:void(0)" @click="$router.push('/home/batch-send')" class="has-text-link">
             <div class="has-text-centered">
               <b-icon icon="share-all-outline" size="is-medium"></b-icon>
               <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.batchSend") }}</p>
@@ -49,7 +49,7 @@
       </div>
       <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.proxy')" position="is-right">
-          <a href="javascript:void(0)" @click="showProxy()" class="has-text-link">
+          <a href="javascript:void(0)" @click="$router.push('/home/proxy')" class="has-text-link">
             <div class="has-text-centered">
               <b-icon icon="router-network" size="is-medium"></b-icon>
               <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.proxy") }}</p>
@@ -59,7 +59,7 @@
       </div>
       <div v-if="experimentMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.mintCat')" position="is-right">
-          <a href="javascript:void(0)" @click="openMintCat()" class="has-text-link">
+          <a href="javascript:void(0)" @click="$router.push('/home/issue-cat')" class="has-text-link">
             <div class="has-text-centered">
               <b-icon icon="cat" size="is-medium"></b-icon>
               <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.mintCat") }}</p>
@@ -69,7 +69,7 @@
       </div>
       <div v-if="experimentMode && debugMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.mintNft')" position="is-right">
-          <a href="javascript:void(0)" @click="openMintNft()" class="has-text-link">
+          <a href="javascript:void(0)" @click="$router.push('/home/mint-nft')" class="has-text-link">
             <div class="has-text-centered">
               <b-icon icon="tag-faces" size="is-medium"></b-icon>
               <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.mintNft") }}</p>
@@ -83,7 +83,7 @@
 <script lang="ts">
 import store from "@/store";
 import { AccountEntity, CustomCat } from "@/models/account";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import MintCat from "@/components/Mint/MintCat.vue";
 import MintNft from "@/components/Mint/MintNft.vue";
 import MakeOffer from "@/components/Offer/Make.vue";
@@ -115,6 +115,36 @@ export default class Dapp extends Vue {
 
   get observeMode(): boolean {
     return this.account.type == "Address";
+  }
+
+  get path(): string {
+    return this.$route.path;
+  }
+
+  @Watch("path")
+  onPathChange(): void {
+    switch (this.path) {
+      case "/home/take-offer":
+        this.openTakeOffer();
+        break;
+      case "/home/make-offer":
+        this.openMakeOffer();
+        break;
+      case "/home/proxy":
+        this.showProxy();
+        break;
+      case "/home/batch-send":
+        this.openBatchSend();
+        break;
+      case "/home/issue-cat":
+        this.openMintCat();
+        break;
+      case "/home/mint-nft":
+        this.openMintNft();
+        break;
+      default:
+        break;
+    }
   }
 
   mounted(): void {
@@ -185,6 +215,7 @@ export default class Dapp extends Vue {
       component: (await import("@/components/Offline/OfflineQrCode.vue")).default,
       hasModalCard: true,
       fullScreen: isMobile(),
+      onCancel: () => this.$router.back(),
       canCancel: ["escape", "outside"],
       trapFocus: true,
       props: { mode: "PROXY", prefix: xchPrefix() },
@@ -239,5 +270,4 @@ export default class Dapp extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

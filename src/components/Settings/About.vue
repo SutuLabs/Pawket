@@ -1,6 +1,6 @@
 <template>
   <div class="modal-card m-0">
-    <top-bar :title="$t('settings.about.title')" @close="$emit('close')"></top-bar>
+    <top-bar :title="$t('settings.about.title')" @close="$router.back()"></top-bar>
     <section class="modal-card-body">
       <div class="has-text-centered py-2">
         <img width="200px" src="@/assets/logo.svg" />

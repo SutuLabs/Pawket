@@ -7,7 +7,7 @@
           <b-icon icon="help-circle" size="is-small" class="px-5"></b-icon>
         </b-tooltip>
       </p>
-      <button type="button" class="delete" @click="close()"></button>
+      <button type="button" class="delete" @click="$router.push('/home')"></button>
     </header>
     <section class="modal-card-body">
       <div class="columns">
@@ -37,7 +37,7 @@
     </section>
     <footer class="modal-card-foot is-justify-content-space-between">
       <div>
-        <b-button :label="$t('offline.ui.button.cancel')" @click="close()"></b-button>
+        <b-button :label="$t('offline.ui.button.cancel')" @click="$router.push('/home')"></b-button>
         <b-button
           :label="$t('offline.client.button.finish')"
           v-if="mode == 'OFFLINE_CLIENT'"
@@ -64,7 +64,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Emit } from "vue-property-decorator";
+import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import QrcodeVue from "qrcode.vue";
 import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from "vue-qrcode-reader";
@@ -112,6 +112,15 @@ export default class OfflineQrCode extends Vue {
 
     console.warn("unknown mode", this.mode);
     return [];
+  }
+
+  get path(): string {
+    return this.$route.path;
+  }
+
+  @Watch("path")
+  onPathChange():void {
+    if(this.path == "/home") this.close();
   }
 
   mounted(): void {

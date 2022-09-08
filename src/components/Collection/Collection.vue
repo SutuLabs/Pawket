@@ -2,7 +2,7 @@
   <div class="modal-card m-0">
     <header>
       <top-bar :title="$t('collection.myCollection.title')" @close="close()"></top-bar>
-      <div class="has-text-grey is-size-6 pl-4" style="max-width: 400px">{{ $t("collection.myCollection.specialNote") }}</div>
+      <div class="has-text-grey is-size-6 pl-4">{{ $t("collection.myCollection.specialNote") }}</div>
     </header>
     <section class="modal-card-body">
       <div class="mb-3">
@@ -55,6 +55,7 @@ export default class Collection extends Vue {
 
   @Emit("close")
   close(): void {
+    this.$router.back()
     return;
   }
 
