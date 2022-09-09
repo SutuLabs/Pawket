@@ -132,6 +132,9 @@ export default class AccountDetail extends Vue {
   public showDetail = false;
 
   mounted(): void {
+    window.history.pushState(null, "", "#/home/accounts/detail");
+    window.onpopstate = () => this.$emit("close");
+    
     var privkey = utility.fromHexString(this.account.key.privateKey);
     utility.getPrivateKey(privkey).then((sk) => {
       this.masterprikey = utility.toHexString(sk.serialize());

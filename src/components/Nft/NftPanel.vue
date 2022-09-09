@@ -205,6 +205,10 @@ export default class NftPanel extends Vue {
       imageOberserver.observe(image);
     });
   }
+
+  mounted(): void {
+    this.refresh();
+  }
 }
 </script>
 
