@@ -1,21 +1,24 @@
 <template>
   <div class="modal-card m-0">
-    <top-bar :title="$t('send.ui.title.send')" @close="$emit('close')" :showClose="showClose"></top-bar>
+    <top-bar :title="$t('did.addDid.title')" @close="$emit('close')" :showClose="showClose"></top-bar>
     <section class="modal-card-body">
       <div v-show="!bundle">
         <!-- <b-field :label="$t('send.ui.label.memo')">
           <b-input maxlength="100" v-model="memo" type="text" @input="reset()"></b-input>
         </b-field> -->
         <b-notification type="is-primary" has-icon icon="exclamation" :closable="false">
-          Are you sure to create DID?
+          <p>{{ $t("did.addDid.tip") }}</p>
+          <p class="is-size-7" v-if="account.tokens && account.tokens.hasOwnProperty(xchSymbol)">
+            {{ $t("did.addDid.balance") }}:{{ demojo(account.tokens[xchSymbol].amount) }}
+          </p>
         </b-notification>
         <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
       </div>
       <template v-if="bundle">
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($t('send.ui.summary.notification'))"></span>
+          <span v-html="$sanitize($t('did.addDid.confirmation'))"></span>
         </b-notification>
-        <send-summary :amount="numericAmount" :unit="selectedToken" :fee="feeBigInt" :address="address"></send-summary>
+        <send-summary :leadingText="$t('did.addDid.spend')" :amount="amount" :unit="selectedToken" :fee="feeBigInt" :address="address"></send-summary>
         <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
       </template>
     </section>
@@ -56,13 +59,12 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
-import { AccountEntity } from "@/models/account";
+import { AccountEntity, OneTokenInfo } from "@/models/account";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { TokenPuzzleDetail } from "@/services/crypto/receive";
 import store from "@/store";
 import { SpendBundle } from "@/models/wallet";
-import bigDecimal from "js-big-decimal";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
 import coinHandler from "@/services/transfer/coin";
@@ -75,6 +77,7 @@ import { chainId, xchSymbol } from "@/store/modules/network";
 import { getCatNames } from "@/services/view/cat";
 import TopBar from "@/components/Common/TopBar.vue";
 import { generateMintDidBundle } from "@/services/coin/did";
+import { demojo } from "@/filters/unitConversion";
 
 @Component({
   components: {
@@ -88,8 +91,6 @@ import { generateMintDidBundle } from "@/services/coin/did";
 })
 export default class MintDid extends Vue {
   @Prop() public account!: AccountEntity;
-  @Prop() public inputAddress!: string;
-  @Prop() public inputAmount!: string;
   @Prop({ default: true }) public showClose!: boolean;
 
   public submitting = false;
@@ -99,21 +100,23 @@ export default class MintDid extends Vue {
   public bundle: SpendBundle | null = null;
   public availcoins: SymbolCoins | null = null;
   public maxStatus: "Loading" | "Loaded" = "Loading";
-  public amount = "";
+  public amount = 1n;
   public selectedToken = xchSymbol();
   public offline = false;
 
   public requests: TokenPuzzleDetail[] = [];
 
   mounted(): void {
-    if (this.inputAddress) this.address = this.inputAddress;
-    if (this.inputAmount) this.amount = this.inputAmount;
     this.loadCoins();
   }
 
   @Emit("close")
   close(): void {
     return;
+  }
+
+  demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null, digits = -1): string {
+    return demojo(mojo, token, digits);
   }
 
   get decimal(): number {
@@ -130,11 +133,6 @@ export default class MintDid extends Vue {
 
   get bundleJson(): string {
     return JSON.stringify(this.bundle, null, 4);
-  }
-
-  get numericAmount(): bigint {
-    const decimal = this.selectedToken == xchSymbol() ? 12 : 3;
-    return BigInt(bigDecimal.multiply(this.amount, Math.pow(10, decimal)));
   }
 
   get feeBigInt(): bigint {
@@ -163,7 +161,6 @@ export default class MintDid extends Vue {
 
   async loadCoins(): Promise<void> {
     this.bundle = null;
-    this.amount = "0";
     this.maxStatus = "Loading";
 
     if (!this.requests || this.requests.length == 0) {

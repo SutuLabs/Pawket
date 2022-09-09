@@ -1147,6 +1147,13 @@
       "prompt": {
         "newName": "输入新名称"
       }
+    },
+    "addDid": {
+      "title": "添加 DID",
+      "tip": "你将使用 1 mojo 创建一个 DID。",
+      "balance": "余额",
+      "confirmation": "确定要创建 DID 吗？<br>请务必再次检查你的交易内容。",
+      "spend": "花费"
     }
   },
   "nftTransfer": {

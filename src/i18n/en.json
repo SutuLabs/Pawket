@@ -1147,6 +1147,13 @@
       "prompt": {
         "newName": "Enter New Name"
       }
+    },
+    "addDid": {
+      "title": "Add DID",
+      "tip": "You will use 1 mojo to create a DID.",
+      "balance": "Balance",
+      "confirmation": "Are you sure to create a DID?<br>Please review your transaction.",
+      "spend": "Spend"
     }
   },
   "nftTransfer": {
