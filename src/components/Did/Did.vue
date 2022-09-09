@@ -34,7 +34,7 @@ import { DidDetail } from "@/services/crypto/receive";
 import { isMobile } from "@/services/view/responsive";
 import store from "@/store";
 import { DidName } from "@/store/modules/account";
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import MintDid from "@/components/Mint/MintDid.vue";
 import DidDetails from "@/components/Did/DidDetails.vue";
 import TopBar from "@/components/Common/TopBar.vue";
@@ -60,6 +60,19 @@ export default class Did extends Vue {
     if (didNames == null) return [];
     const names: DidName[] = JSON.parse(didNames);
     return names;
+  }
+  
+  get networkId(): string {
+    return store.state.network.networkId;
+  }
+
+  @Watch("networkId")
+  onNetworkChange(): void {
+    this.refresh();
+  }
+
+  mounted(): void {
+    this.refresh();
   }
 
   async refresh(): Promise<void> {
