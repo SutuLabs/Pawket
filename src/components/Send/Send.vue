@@ -1,6 +1,6 @@
 <template>
   <div class="modal-card m-0">
-    <top-bar :title="$t('send.ui.title.send')" @close="$router.back()" :showClose="showClose"></top-bar>
+    <top-bar :title="title ? title : $t('send.ui.title.send')" @close="$router.back()" :showClose="showClose"></top-bar>
     <section class="modal-card-body">
       <div v-show="!bundle">
         <b-notification
@@ -143,6 +143,7 @@ export default class Send extends Vue {
   @Prop() public notificationIcon!: string;
   @Prop() public notificationClosable!: boolean;
   @Prop({ default: true }) public showClose!: boolean;
+  @Prop() public title!: string;
 
   public submitting = false;
   public validAddress = true;
@@ -177,8 +178,8 @@ export default class Send extends Vue {
   }
 
   @Watch("path")
-  onPathChange():void {
-    if(this.path == "/home") this.close();
+  onPathChange(): void {
+    if (this.path == "/home") this.close();
   }
 
   @Emit("close")
@@ -488,8 +489,4 @@ export default class Send extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-.field ::v-deep textarea {
-  font-size: 0.6em;
-}
-</style>
+<style scoped lang="scss"></style>

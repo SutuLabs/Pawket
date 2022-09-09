@@ -1,6 +1,7 @@
 <template>
   <send
     :account="account"
+    :title="$t('settings.about.links.label.donate')"
     :showClose="showClose"
     :inputAddress="donationAddress"
     :addressEditable="false"
@@ -28,7 +29,7 @@ import TopBar from "@/components/Common/TopBar.vue";
 })
 export default class Donate extends Vue {
   @Prop({ default: true }) public showClose!: boolean;
-  
+
   get account(): AccountEntity {
     return store.state.account.accounts[store.state.account.selectedAccount] ?? {};
   }

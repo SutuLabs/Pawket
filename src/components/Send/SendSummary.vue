@@ -35,7 +35,7 @@
         </span>
       </template>
     </b-field>
-    <b-field>
+    <b-field v-if="address">
       <template #label>
         <span class="is-size-6">{{ $t("sendSummary.ui.label.to") }}</span>
         <span class="is-size-6 is-pulled-right">
