@@ -63,7 +63,9 @@
       </div>
     </div>
     <div class="content-wrapper">
-      <router-view />
+      <keep-alive>
+        <router-view :key="$route.fullPath"></router-view>
+      </keep-alive>
     </div>
     <footer class="footer">
       <div class="content has-text-centered">
@@ -101,8 +103,6 @@ import { tc } from "./i18n/i18n";
 
 @Component({ components: { VerifyPassword, MobileNav, NavBar } })
 export default class MixchApp extends Vue {
-  public debugClick = 9;
-
   @Watch("path")
   scrollTop(): void {
     const container = this.$refs.container as Element;
