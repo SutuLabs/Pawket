@@ -1,5 +1,5 @@
 <template>
-  <footer class="footer py-4" :class="{ 'is-hidden-mobile': unlocked }">
+  <footer class="footer py-4" :class="{ 'is-hidden-mobile': unlocked, 'position-relative': isMobile }">
     <div class="content has-text-centered">
       <p>
         <strong> {{ $t("footer.ui.productInfo.name") }}</strong>
@@ -42,6 +42,10 @@ export default class PawketFooter extends Vue {
 
   get version(): string {
     return process.env.VUE_APP_VERSION || tc("footer.ui.error.READ_VERSION_FAILED");
+  }
+
+  get isMobile(): boolean {
+    return isMobile();
   }
 
   showDebugHelper(): void {
@@ -104,6 +108,10 @@ export default class PawketFooter extends Vue {
   bottom: 0;
   width: 100vw;
   animation: fadeIn 2s;
+}
+
+.position-relative {
+  position: relative;
 }
 
 @keyframes fadeIn {
