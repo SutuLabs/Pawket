@@ -122,7 +122,7 @@ store.registerModule<IVaultState>("vault", {
         }
 
         const privkey = utility.fromHexString(account.key.privateKey);
-        const derive = await utility.derive(privkey, true);
+        const derive = await utility.derive(privkey, false);
         const firstWalletAddressPubkey = utility.toHexString(derive([12381, 8444, 2, 0]).get_g1().serialize());
         Vue.set(account, "firstAddress", await puzzle.getAddress(firstWalletAddressPubkey, xchPrefix()));
       }

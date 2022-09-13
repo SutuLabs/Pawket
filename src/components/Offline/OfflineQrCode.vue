@@ -7,7 +7,7 @@
           <b-icon icon="help-circle" size="is-small" class="px-5"></b-icon>
         </b-tooltip>
       </p>
-      <button type="button" class="delete" @click="$router.push('/home')"></button>
+      <button type="button" class="delete" @click="$router.push('/home'); $emit('close')"></button>
     </header>
     <section class="modal-card-body">
       <div class="columns">
