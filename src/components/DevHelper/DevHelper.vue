@@ -1,6 +1,6 @@
 <template>
   <div class="modal-card">
-    <top-bar :title="$t('settings.devhelper.title')" :tag="network" @close="$router.back()" :showClose="showClose"></top-bar>
+    <top-bar :title="$t('settings.devhelper.title')" :tag="network" @close="close()" :showClose="showClose"></top-bar>
     <section class="modal-card-body">
       <b-tabs position="is-centered" class="block" v-model="selectedTab">
         <b-tab-item label="Bech32m">
@@ -63,6 +63,15 @@ export default class DevHelper extends Vue {
     if (this.inputOfferText) {
       this.selectedTab = 3;
     }
+  }
+
+  get path(): string {
+    return this.$route.path;
+  }
+
+  close(): void {
+    this.$emit("close");
+    if (this.path.endsWith("devhelper")) this.$router.back();
   }
 
   get debugMode(): boolean {
