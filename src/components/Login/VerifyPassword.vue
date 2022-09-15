@@ -50,6 +50,7 @@ export default class VerifyPassword extends Vue {
 
   mounted(): void {
     if (localStorage.getItem("SETTINGS") == null) this.$router.push("/create");
+    else if (this.unlocked) this.$router.push("/home");
     else this.focus();
   }
 
@@ -58,6 +59,10 @@ export default class VerifyPassword extends Vue {
       const pswElm = this.$refs.password as HTMLInputElement | undefined;
       if (pswElm) pswElm.focus();
     }, 300);
+  }
+
+  get unlocked(): boolean {
+    return store.state.vault.unlocked;
   }
 
   async confirm(): Promise<void> {
