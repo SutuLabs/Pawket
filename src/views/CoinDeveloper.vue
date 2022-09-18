@@ -79,15 +79,7 @@ import cdvdev from "@/services/developer/editor/types/cdv.dev.ts";
 import { registerClspLanguage, defineClspTheme } from "@/services/developer/editor/clspLanguage";
 import { executeCode } from "@/services/developer/editor/executor";
 import JsonViewer from "vue-json-viewer";
-
-interface MixchCodeFilePersistent {
-  name?: string;
-  code?: string;
-}
-interface MixchCodePersistent {
-  files?: MixchCodeFilePersistent[];
-  selectedIndex?: number;
-}
+import { MixchCodeFilePersistent, MixchCodePersistent, persistent, retrieve } from "@/services/developer/editor/persistence";
 
 interface MonacoInMemoryFile {
   data: MixchCodeFilePersistent;
@@ -130,51 +122,9 @@ export default class CoinDeveloper extends Vue {
   public inspectJson: unknown | null = null;
   public inspectorType: "SpendBundle" | "Offer" | "Json" | "Unknown" = "Unknown";
 
-  defaultCode = `
-// console.log(coins);
-
-const coin = coins[0];
-console.log(coin);
-const puz = getPuzDetail(coin.puzzle_hash);
-
-const solution = "(() () ())";
-const puzzle_reveal = prefix0x(await puzzle.encodePuzzle(puz.puzzle));
-const solution_hex = prefix0x(await puzzle.encodePuzzle(solution));
-const coin_spends = [];
-coin_spends.push({ coin, puzzle_reveal, solution: solution_hex })
-ex.bundle = {
-  aggregated_signature: "",
-  coin_spends
-};
-console.log(ex, coin_spends, ex.bundle);
-`.trim();
-
   public editorData: MonacoInMemoryFile[] = [];
   public selectedFileIndex = 0;
-  load(): void {
-    const code = JSON.parse(
-      localStorage.getItem("MIXCH_CODE") ||
-        JSON.stringify({
-          files: [
-            { name: "default.js", code: this.defaultCode },
-            {
-              name: "default.clsp",
-              code: `(mod (password new_puzhash amount)
-  (defconstant CREATE_COIN 51)
 
-  (if (= (sha256 password) (q . 0x9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08))
-    (list (list CREATE_COIN new_puzhash amount))
-    (x)
-  )
-)`,
-            },
-          ],
-        })
-    ) as MixchCodePersistent;
-    if (!code.files) return;
-    this.editorData = code.files.map((_) => ({ data: _, model: this.createModel(_) }));
-    this.selectedFileIndex = code.selectedIndex ?? 0;
-  }
   createModel(pers: MixchCodeFilePersistent): monaco.editor.ITextModel {
     if (!pers.name || !pers.code) throw new Error("no name and no code");
     if (pers.name.endsWith(".js")) {
@@ -253,14 +203,6 @@ console.log(ex, coin_spends, ex.bundle);
     this.save();
     const ex = await executeCode(this.editor.getValue());
     if (ex.result) this.outputList = ex.result.map((_) => _.map((_) => ({ value: _, type: this.getType(_) })));
-
-    // finished
-    // if (ex.bundle) {
-    //   this.bundleText = "";
-    //   setTimeout(() => {
-    //     this.bundleText = JSON.stringify(ex.bundle);
-    //   }, 200);
-    // }
   }
 
   changeTab(newIndex: number): void {
@@ -301,15 +243,23 @@ console.log(ex, coin_spends, ex.bundle);
     this.editor?.layout();
   }
 
+  load(): void {
+    const code = retrieve();
+    if (!code.files) return;
+    this.editorData = code.files.map((_) => ({ data: _, model: this.createModel(_) }));
+    this.selectedFileIndex = code.selectedIndex ?? 0;
+  }
+
   save(): void {
     if (!this.editor) return;
 
     const file = this.editorData[this.selectedFileIndex];
     file.data.code = this.editor.getValue();
-    localStorage.setItem(
-      "MIXCH_CODE",
-      JSON.stringify({ files: this.editorData.map((_) => _.data), selectedIndex: this.selectedFileIndex } as MixchCodePersistent)
-    );
+    const info: MixchCodePersistent = {
+      files: this.editorData.map((_) => _.data),
+      selectedIndex: this.selectedFileIndex,
+    };
+    persistent(info);
   }
 
   inspect(value: unknown): void {
