@@ -49,50 +49,19 @@
           </div>
         </b-field>
       </div>
-      <!-- <div class="column is-half">
-                <b-field label="Analysis">
-                  <template v-if="bundleText">
-                    <bundle-panel :inputBundleText="bundleText"></bundle-panel>
-                  </template>
-                </b-field>
-              </div> -->
     </div>
-    <b-modal v-model="isSpendBundleInspectorActive" has-modal-card>
+    <b-modal v-model="isInspectorActive" has-modal-card>
       <div class="modal-card" style="width: auto">
         <header class="modal-card-head">
           <p class="modal-card-title">Inspect</p>
         </header>
         <section class="modal-card-body">
-          <bundle-panel :inputBundleText="inspectSpendBundle"></bundle-panel>
+          <bundle-panel v-if="inspectorType == 'SpendBundle'" :inputBundleText="inspectSpendBundle"></bundle-panel>
+          <offer-panel v-if="inspectorType == 'Offer'" :inputOfferText="inspectOffer"></offer-panel>
+          <json-viewer v-if="inspectorType == 'Json'" :value="inspectJson" :expand-depth="5" copyable boxed sort></json-viewer>
         </section>
         <footer class="modal-card-foot">
-          <b-button label="Close" @click="isSpendBundleInspectorActive = false" />
-        </footer>
-      </div>
-    </b-modal>
-    <b-modal v-model="isOfferInspectorActive" has-modal-card>
-      <div class="modal-card" style="width: auto">
-        <header class="modal-card-head">
-          <p class="modal-card-title">Inspect</p>
-        </header>
-        <section class="modal-card-body">
-          <offer-panel :inputOfferText="inspectOffer"></offer-panel>
-        </section>
-        <footer class="modal-card-foot">
-          <b-button label="Close" @click="isOfferInspectorActive = false" />
-        </footer>
-      </div>
-    </b-modal>
-    <b-modal v-model="isJsonInspectorActive" has-modal-card>
-      <div class="modal-card" style="width: auto">
-        <header class="modal-card-head">
-          <p class="modal-card-title">Inspect</p>
-        </header>
-        <section class="modal-card-body">
-          <json-viewer :value="inspectJson" :expand-depth="5" copyable boxed sort></json-viewer>
-        </section>
-        <footer class="modal-card-foot">
-          <b-button label="Close" @click="isJsonInspectorActive = false" />
+          <b-button label="Close" @click="isInspectorActive = false" />
         </footer>
       </div>
     </b-modal>
@@ -155,12 +124,11 @@ export default class CoinDeveloper extends Vue {
   public outputList: { value: unknown; type: LogType }[][] = [];
   public editor: monaco.editor.IStandaloneCodeEditor | null = null;
 
-  public isSpendBundleInspectorActive = false;
+  public isInspectorActive = false;
   public inspectSpendBundle: string | null = null;
-  public isJsonInspectorActive = false;
-  public inspectJson: unknown | null = null;
-  public isOfferInspectorActive = false;
   public inspectOffer: unknown | null = null;
+  public inspectJson: unknown | null = null;
+  public inspectorType: "SpendBundle" | "Offer" | "Json" | "Unknown" = "Unknown";
 
   defaultCode = `
 // console.log(coins);
@@ -349,16 +317,19 @@ console.log(ex, coin_spends, ex.bundle);
     switch (type) {
       case "spendbundle":
         this.inspectSpendBundle = JSON.stringify(value);
-        this.isSpendBundleInspectorActive = true;
+        this.inspectorType = "SpendBundle";
+        this.isInspectorActive = true;
         break;
       case "object":
         this.inspectJson = JSON.parse(JSON.stringify(value));
-        this.isJsonInspectorActive = true;
+        this.inspectorType = "Json";
+        this.isInspectorActive = true;
         break;
 
       case "offer":
         this.inspectOffer = value;
-        this.isOfferInspectorActive = true;
+        this.inspectorType = "Offer";
+        this.isInspectorActive = true;
         break;
 
       default:
