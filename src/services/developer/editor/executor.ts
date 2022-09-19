@@ -12,8 +12,16 @@ interface ExecuteResultObject {
 
 export async function executeCode(code: string): Promise<ExecuteResultObject> {
   /* eslint-disable no-useless-escape */
-  const text = `<script>async function __run() { ${code} }; __run().then(()=>{__ex.finish=true;})
-    .catch((msg)=>{console.error(msg);__ex.finish=true;});<\/script>`;
+  const text = `<script>
+async function __run() { ${code} };
+__run()
+  .then(()=>{__ex.finish=true;})
+  .catch((msg)=>{
+    console.error(msg);
+    __ex.result?.push(["error", msg.message]);
+    __ex.finish=true;
+  });
+<\/script>`;
   /* eslint-enable no-useless-escape */
   const ifr = document.createElement("iframe");
   ifr.setAttribute("frameborder", "0");
