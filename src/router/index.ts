@@ -52,7 +52,6 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: "/create",
-    name: "Create",
     component: () => import(/* webpackChunkName: "create" */ "../views/Create.vue"),
     children: [
       {
@@ -62,27 +61,22 @@ const routes: Array<RouteConfig> = [
       },
       {
         path: "disclaimer",
-        name: "Create",
         component: () => import(/* webpackChunkName: "create" */ "../components/Create/Disclaimer.vue"),
       },
       {
         path: "create-password",
-        name: "Create",
         component: () => import(/* webpackChunkName: "create" */ "../components/Create/CreatePassword.vue"),
       },
       {
         path: "create-wallet",
-        name: "Create",
         component: () => import(/* webpackChunkName: "create" */ "../components/Create/CreateWallet.vue"),
       },
       {
         path: "import",
-        name: "Create",
         component: () => import(/* webpackChunkName: "create" */ "../components/Create/Import.vue"),
       },
       {
         path: "add",
-        name: "Create",
         component: () => import(/* webpackChunkName: "create" */ "../components/Create/Add.vue"),
       },
     ],
@@ -94,11 +88,11 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: "/explore",
-    name: "Explore",
     component: () => import(/* webpackChunkName: "explore" */ "../views/Explore.vue"),
     children: [
       {
         path: "/",
+        name: "Explore",
         redirect: () => {
           return { path: "/explore/market/nft" };
         },
@@ -155,7 +149,7 @@ const routes: Array<RouteConfig> = [
       {
         path: "about",
         component: () => import(/* webpackChunkName: "settings" */ "@/components/Settings/About.vue"),
-      }
+      },
     ],
   },
   {
@@ -172,7 +166,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.path == from.path) return;
-  if (to.name == "Create" || to.name == "Login" || store.state.vault.unlocked) next();
+  if (to.path.startsWith("/create") || to.name == "Login" || store.state.vault.unlocked) next();
   else if (localStorage.getItem("SETTINGS") == null) next({ name: "Create" });
   else next({ name: "Login" });
 });
