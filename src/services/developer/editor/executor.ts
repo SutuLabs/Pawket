@@ -46,13 +46,14 @@ __run()
   };
 
   const __ex: ExecuteResultObject = { result: [], finish: false };
-  // const __ex: ExecuteResultObject = JSON.parse(JSON.stringify({ result: [], finish: false }));
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  (ifrw as any).puzzle = puzzle;
-  (ifrw as any).getPuzDetail = getPuzDetail;
-  (ifrw as any).__ex = __ex;
-  (ifrw as any).prefix0x = prefix0x;
-  (ifrw as any).coins = coins
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const fw = ifrw as any;
+
+  fw.puzzle = puzzle;
+  fw.getPuzDetail = getPuzDetail;
+  fw.__ex = __ex;
+  fw.prefix0x = prefix0x;
+  fw.coins = coins
     .flatMap((_) => _.records)
     .map((_) => _.coin as CoinItem)
     .map((_) => ({
@@ -61,15 +62,15 @@ __run()
       puzzle_hash: _.puzzleHash,
     }));
 
-  (ifrw as any).console.log = (function () {
+  fw.console.log = (function () {
     const log = console.log;
 
-    return function (...args: any) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return function (...args: any[]) {
       __ex.result?.push(args);
       log.apply(console, args);
     }
   })();
-  /* eslint-enable @typescript-eslint/no-explicit-any */
 
   // const ifrw = (ifr.contentWindow) ? ifr.contentWindow
   // : (ifr.contentDocument && ifr.contentDocument.document) ? ifr.contentDocument.document
