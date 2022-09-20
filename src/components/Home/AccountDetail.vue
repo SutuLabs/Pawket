@@ -326,6 +326,10 @@ export default class AccountDetail extends Vue {
     return xchSymbol();
   }
 
+  get unlocked(): boolean {
+    return store.state.vault.unlocked;
+  }
+
   get offline(): boolean {
     return store.state.account.offline;
   }
@@ -356,7 +360,9 @@ export default class AccountDetail extends Vue {
 
   autoRefresh(sec = 60): void {
     this.refresh();
-    this.timeoutId = setTimeout(() => this.autoRefresh(sec), 1000 * sec);
+    if (this.unlocked && this.path.startsWith("/home")) {
+      this.timeoutId = setTimeout(() => this.autoRefresh(sec), 1000 * sec);
+    }
   }
 
   lock(): void {

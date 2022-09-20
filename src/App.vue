@@ -21,10 +21,16 @@ import PawketFooter from "./components/Footer/Footer.vue";
 
 @Component({ components: { VerifyPassword, MobileNav, NavBar, PawketFooter } })
 export default class App extends Vue {
+  public timeoutId?: ReturnType<typeof setTimeout>;
+
   @Watch("path")
   scrollTop(): void {
     const container = this.$refs.container as Element;
     if (container) container.scrollIntoView();
+  }
+
+  refreshActiveTime(): void {
+    localStorage.setItem("LAST_ACTIVE", Date.now().toString());
   }
 
   get debugMode(): boolean {
@@ -35,12 +41,45 @@ export default class App extends Vue {
     return store.state.vault.unlocked;
   }
 
+  @Watch("unlocked")
+  onUnlockedChange(): void {
+    if (this.unlocked) {
+      this.timeoutId = setTimeout(() => this.checkLock(60), 1000 * 60);
+    } else {
+      if (this.timeoutId) clearTimeout(this.timeoutId);
+    }
+  }
+
   get showNavigation(): boolean {
     return !this.$route.path.startsWith("/create") && this.unlocked;
   }
 
   mounted(): void {
     store.state.app.debug = localStorage.getItem("DEBUG_MODE") ? localStorage.getItem("DEBUG_MODE") === "true" : false;
+    document.body.addEventListener("mouseover", this.refreshActiveTime);
+  }
+
+  get autoLockTime(): number {
+    return Number(localStorage.getItem("AUTO_LOCK_TIME") ?? "900");
+  }
+
+  autoLock(): void {
+    if (localStorage.getItem("LAST_ACTIVE")) {
+      const last = Number(localStorage.getItem("LAST_ACTIVE"));
+      const diff = Date.now() - last;
+      console.log(diff);
+      if (diff > this.autoLockTime * 1000) {
+        if (this.timeoutId) clearTimeout(this.timeoutId);
+        store.dispatch("lock");
+      }
+    }
+  }
+
+  checkLock(sec = 30): void {
+    this.autoLock();
+    if (this.unlocked) {
+      this.timeoutId = setTimeout(() => this.checkLock(sec), 1000 * sec);
+    }
   }
 
   get test(): boolean {
