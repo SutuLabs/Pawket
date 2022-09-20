@@ -82,8 +82,18 @@
     </section>
     <footer class="modal-card-foot is-block">
       <div>
-        <b-button v-if="!bundle" :label="$t('common.button.cancel')" class="is-pulled-left" @click="$router.push('/home')"></b-button>
-        <b-button v-if="bundle" :label="$t('offer.make.ui.button.done')" class="is-pulled-left" @click="$router.push('/home')"></b-button>
+        <b-button
+          v-if="!bundle"
+          :label="$t('common.button.cancel')"
+          class="is-pulled-left"
+          @click="$router.push('/home')"
+        ></b-button>
+        <b-button
+          v-if="bundle"
+          :label="$t('offer.make.ui.button.done')"
+          class="is-pulled-left"
+          @click="$router.push('/home')"
+        ></b-button>
         <b-button v-if="!bundle" type="is-primary" :loading="signing" @click="sign()">
           {{ $t("offer.make.ui.button.sign") }}
         </b-button>
@@ -163,6 +173,7 @@ export default class MakeOffer extends Vue {
 
   @Emit("close")
   close(): void {
+    if (this.path.endsWith("make-offer")) this.$router.back();
     return;
   }
 

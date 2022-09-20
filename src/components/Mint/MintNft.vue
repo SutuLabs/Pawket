@@ -2,7 +2,7 @@
   <div class="modal-card">
     <header class="modal-card-head">
       <p class="modal-card-title">{{ $t("mintNft.ui.title") }}</p>
-      <button type="button" class="delete" @click="$router.back()"></button>
+      <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
       <div v-show="!bundle">
@@ -240,12 +240,13 @@ export default class MintNft extends Vue {
   }
 
   @Watch("path")
-  onPathChange():void {
-    if(this.path == "/home") this.close();
+  onPathChange(): void {
+    if (this.path == "/home") this.close();
   }
 
   @Emit("close")
   close(): void {
+    if (this.path.endsWith("mint-nft")) this.$router.back();
     return;
   }
 

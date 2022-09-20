@@ -137,6 +137,7 @@ export default class BatchSend extends Vue {
 
   @Emit("close")
   close(): void {
+    if (this.path.endsWith("batch-send")) this.$router.back();
     return;
   }
 
