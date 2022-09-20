@@ -126,7 +126,7 @@
     </section>
     <footer class="modal-card-foot is-block">
       <div>
-        <b-button :label="$t('offer.take.ui.button.cancel')" class="is-pulled-left" @click="$router.push('/home')"></b-button>
+        <b-button :label="$t('offer.take.ui.button.cancel')" class="is-pulled-left" @click="close()"></b-button>
         <template v-if="showTest && debugMode">
           <b-button
             class="is-pulled-left"
@@ -259,6 +259,7 @@ export default class TakeOffer extends Vue {
 
   @Emit("close")
   close(): void {
+    if(this.path.endsWith("take-offer")) this.$router.back();
     return;
   }
 
@@ -268,7 +269,7 @@ export default class TakeOffer extends Vue {
 
   @Watch("path")
   onPathChange():void {
-    if(this.path == "/home") this.close();
+    this.close();
   }
 
   get cats(): { [id: string]: string } {

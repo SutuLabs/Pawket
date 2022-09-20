@@ -149,6 +149,7 @@ export default class MintCat extends Vue {
 
   @Emit("close")
   close(): void {
+    if (this.path.endsWith("issue-cat")) this.$router.back();
     return;
   }
 
