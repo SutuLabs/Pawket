@@ -330,6 +330,11 @@ export default class AccountDetail extends Vue {
     return store.state.vault.unlocked;
   }
 
+  @Watch("unlocked")
+  onUnlockedChange(): void {
+    if (!this.unlocked && this.timeoutId) clearTimeout(this.timeoutId);
+  }
+
   get offline(): boolean {
     return store.state.account.offline;
   }
@@ -344,9 +349,7 @@ export default class AccountDetail extends Vue {
   }
 
   unmounted(): void {
-    if (this.timeoutId) {
-      clearTimeout(this.timeoutId);
-    }
+    if (this.timeoutId) clearTimeout(this.timeoutId);
   }
 
   @Watch("xchSymbol")

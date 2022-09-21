@@ -22,6 +22,7 @@ import PawketFooter from "./components/Footer/Footer.vue";
 @Component({ components: { VerifyPassword, MobileNav, NavBar, PawketFooter } })
 export default class App extends Vue {
   public timeoutId?: ReturnType<typeof setTimeout>;
+  public lastActive = Date.now();
 
   @Watch("path")
   scrollTop(): void {
@@ -30,7 +31,7 @@ export default class App extends Vue {
   }
 
   refreshActiveTime(): void {
-    localStorage.setItem("LAST_ACTIVE", Date.now().toString());
+    this.lastActive = Date.now();
   }
 
   get debugMode(): boolean {
@@ -64,14 +65,9 @@ export default class App extends Vue {
   }
 
   autoLock(): void {
-    if (localStorage.getItem("LAST_ACTIVE")) {
-      const last = Number(localStorage.getItem("LAST_ACTIVE"));
-      const diff = Date.now() - last;
-      console.log(diff);
-      if (diff > this.autoLockTime * 1000) {
-        if (this.timeoutId) clearTimeout(this.timeoutId);
-        store.dispatch("lock");
-      }
+    const diff = Date.now() - this.lastActive;
+    if (diff > this.autoLockTime * 1000) {
+      store.dispatch("lock");
     }
   }
 
