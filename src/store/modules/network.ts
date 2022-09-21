@@ -42,6 +42,7 @@ export interface INetworkState {
   symbol: string;
   prefix: string;
   defaultNetworkId: string;
+  peekHeight?: number;
 }
 const NETWORK_ID_KEY = "NETWORK_ID";
 

@@ -2,26 +2,69 @@
   <div class="developer">
     <div class="puzzle_input" v-if="!started">
       <div class="container">
-        <b-field label="Editor">
+        <b-field>
           <template #label>
             Editor
-            <b-button class="is-pulled-right" size="is-small" type="is-primary" @click="tryit()">
+            <b-button class="is-pulled-right" size="is-small" type="is-primary" @click="run()">
               <b-icon icon="play" size="is-small"></b-icon>
               RUN
             </b-button>
           </template>
+          <div>
+            <div class="tabs">
+              <ul>
+                <li :class="idx == selectedFileIndex ? 'is-active' : ''" v-for="(file, idx) in editorData" :key="'file' + idx">
+                  <a @click="changeTab(idx)">
+                    {{ file.data.name }}
+                  </a>
+                </li>
+                <li v-if="false">
+                  <a href="javascript:void(0)" @click="create()">
+                    <b-icon size="is-small" icon="plus"></b-icon>
+                    New
+                  </a>
+                </li>
+              </ul>
+            </div>
 
-          <div ref="editor" class="monaco-editor"></div>
+            <div>
+              <div ref="editor" class="monaco-editor"></div>
+              <ul class="console-output">
+                <li v-for="(items, idx) in outputList" :key="idx">
+                  <span v-for="({ value, type }, j) in items" :key="idx + '-' + j" @click="inspect(value)" class="item">
+                    <!-- ): "string" | "number" | "bigint" | "boolean" | "symbol" | "undefined" | "object" | "function" | "spendbundle" | "offer" { -->
+                    <span v-if="type == 'spendbundle'" class="spendbundle"> SpendBundle </span>
+                    <span v-else-if="type == 'offer' && typeof value === 'string'" class="offer">
+                      {{ value.slice(0, 20) }}...
+                    </span>
+                    <span v-else-if="type == 'object' && Array.isArray(value)" class="array"> Array </span>
+                    <span v-else-if="type == 'object'" class="object"> Object </span>
+                    <span v-else>
+                      {{ value }}
+                    </span>
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
         </b-field>
       </div>
-      <!-- <div class="column is-half">
-                <b-field label="Analysis">
-                  <template v-if="bundleText">
-                    <bundle-panel :inputBundleText="bundleText"></bundle-panel>
-                  </template>
-                </b-field>
-              </div> -->
     </div>
+    <b-modal v-model="isInspectorActive" has-modal-card>
+      <div class="modal-card" style="width: auto">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Inspect</p>
+        </header>
+        <section class="modal-card-body">
+          <bundle-panel v-if="inspectorType == 'SpendBundle'" :inputBundleText="inspectSpendBundle"></bundle-panel>
+          <offer-panel v-if="inspectorType == 'Offer'" :inputOfferText="inspectOffer"></offer-panel>
+          <json-viewer v-if="inspectorType == 'Json'" :value="inspectJson" :expand-depth="5" copyable boxed sort></json-viewer>
+        </section>
+        <footer class="modal-card-foot">
+          <b-button label="Close" @click="isInspectorActive = false" />
+        </footer>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -30,19 +73,13 @@ import { Component, Vue } from "vue-property-decorator";
 import SExpBox from "@/components/Simulator/SExpBox.vue";
 import * as monaco from "monaco-editor";
 import BundlePanel from "@/components/DevHelper/BundlePanel.vue";
+import OfferPanel from "@/components/DevHelper/OfferPanel.vue";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import cdvdev from "@/services/developer/editor/types/cdv.dev.ts";
 import { registerClspLanguage, defineClspTheme } from "@/services/developer/editor/clspLanguage";
 import { executeCode } from "@/services/developer/editor/executor";
-
-interface MixchCodeFilePersistent {
-  name?: string;
-  code?: string;
-}
-interface MixchCodePersistent {
-  files?: MixchCodeFilePersistent[];
-  selectedIndex?: number;
-}
+import JsonViewer from "vue-json-viewer";
+import { MixchCodeFilePersistent, MixchCodePersistent, persistent, retrieve } from "@/services/developer/editor/persistence";
 
 interface MonacoInMemoryFile {
   data: MixchCodeFilePersistent;
@@ -50,11 +87,25 @@ interface MonacoInMemoryFile {
   state?: monaco.editor.ICodeEditorViewState | null;
 }
 
+type LogType =
+  | "string"
+  | "number"
+  | "bigint"
+  | "boolean"
+  | "symbol"
+  | "undefined"
+  | "object"
+  | "function"
+  | "spendbundle"
+  | "offer";
+
 @Component({
   components: {
     SExpBox,
     KeyBox,
     BundlePanel,
+    OfferPanel,
+    JsonViewer,
   },
 })
 export default class CoinDeveloper extends Vue {
@@ -62,52 +113,18 @@ export default class CoinDeveloper extends Vue {
   solutioncl = "";
   started = false;
   bundleText = "";
-  public editor: monaco.editor.IStandaloneCodeEditor | undefined = undefined;
-  defaultCode = `
-// console.log(coins);
+  public outputList: { value: unknown; type: LogType }[][] = [];
+  public editor: monaco.editor.IStandaloneCodeEditor | null = null;
 
-const coin = coins[0];
-console.log(coin);
-const puz = getPuzDetail(coin.puzzle_hash);
-
-const solution = "(() () ())";
-const puzzle_reveal = prefix0x(await puzzle.encodePuzzle(puz.puzzle));
-const solution_hex = prefix0x(await puzzle.encodePuzzle(solution));
-const coin_spends = [];
-coin_spends.push({ coin, puzzle_reveal, solution: solution_hex })
-ex.bundle = {
-  aggregated_signature: "",
-  coin_spends
-};
-console.log(ex, coin_spends);
-`.trim();
+  public isInspectorActive = false;
+  public inspectSpendBundle: string | null = null;
+  public inspectOffer: unknown | null = null;
+  public inspectJson: unknown | null = null;
+  public inspectorType: "SpendBundle" | "Offer" | "Json" | "Unknown" = "Unknown";
 
   public editorData: MonacoInMemoryFile[] = [];
   public selectedFileIndex = 0;
-  load(): void {
-    const code = JSON.parse(
-      localStorage.getItem("MIXCH_CODE") ||
-        JSON.stringify({
-          files: [
-            { name: "default.js", code: this.defaultCode },
-            {
-              name: "default.clsp",
-              code: `(mod (password new_puzhash amount)
-  (defconstant CREATE_COIN 51)
 
-  (if (= (sha256 password) (q . 0x9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08))
-    (list (list CREATE_COIN new_puzhash amount))
-    (x)
-  )
-)`,
-            },
-          ],
-        })
-    ) as MixchCodePersistent;
-    if (!code.files) return;
-    this.editorData = code.files.map((_) => ({ data: _, model: this.createModel(_) }));
-    this.selectedFileIndex = code.selectedIndex ?? 0;
-  }
   createModel(pers: MixchCodeFilePersistent): monaco.editor.ITextModel {
     if (!pers.name || !pers.code) throw new Error("no name and no code");
     if (pers.name.endsWith(".js")) {
@@ -152,17 +169,7 @@ console.log(ex, coin_spends);
       contextMenuGroupId: "navigation",
       contextMenuOrder: 1.5,
       run: async (_ed) => {
-        this.save();
-        const ex = await executeCode(editor.getValue());
-
-        // finished
-        console.log("ex", ex);
-        if (ex.bundle) {
-          this.bundleText = "";
-          setTimeout(() => {
-            this.bundleText = JSON.stringify(ex.bundle);
-          }, 200);
-        }
+        await this.run();
       },
     });
 
@@ -190,6 +197,14 @@ console.log(ex, coin_spends);
     });
   }
 
+  async run(): Promise<void> {
+    if (!this.editor) return;
+
+    this.save();
+    const ex = await executeCode(this.editor.getValue());
+    if (ex.result) this.outputList = ex.result.map((_) => _.map((_) => ({ value: _, type: this.getType(_) })));
+  }
+
   changeTab(newIndex: number): void {
     if (!this.editor) return;
 
@@ -207,31 +222,114 @@ console.log(ex, coin_spends);
     this.editor.focus();
   }
 
+  getType(input: unknown): LogType {
+    const type = typeof input;
+    if (typeof input === "string" && input.startsWith("offer1")) return "offer";
+    if (typeof input === "object" && input != null && "aggregated_signature" in input && "coin_spends" in input)
+      return "spendbundle";
+    return type;
+  }
+
   created(): void {
     window.addEventListener("resize", this.myEventHandler);
   }
+
   destroyed(): void {
+    console.log("destry");
     window.removeEventListener("resize", this.myEventHandler);
   }
+
   myEventHandler(): void {
     this.editor?.layout();
   }
+
+  load(): void {
+    const code = retrieve();
+    if (!code.files) return;
+    this.editorData = code.files.map((_) => ({ data: _, model: this.createModel(_) }));
+    this.selectedFileIndex = code.selectedIndex ?? 0;
+  }
+
   save(): void {
     if (!this.editor) return;
 
     const file = this.editorData[this.selectedFileIndex];
     file.data.code = this.editor.getValue();
-    localStorage.setItem(
-      "MIXCH_CODE",
-      JSON.stringify({ files: this.editorData.map((_) => _.data), selectedIndex: this.selectedFileIndex } as MixchCodePersistent)
-    );
+    const info: MixchCodePersistent = {
+      files: this.editorData.map((_) => _.data),
+      selectedIndex: this.selectedFileIndex,
+    };
+    persistent(info);
+  }
+
+  inspect(value: unknown): void {
+    const type = this.getType(value);
+    switch (type) {
+      case "spendbundle":
+        this.inspectSpendBundle = JSON.stringify(value);
+        this.inspectorType = "SpendBundle";
+        this.isInspectorActive = true;
+        break;
+      case "object":
+        this.inspectJson = JSON.parse(JSON.stringify(value));
+        this.inspectorType = "Json";
+        this.isInspectorActive = true;
+        break;
+
+      case "offer":
+        this.inspectOffer = value;
+        this.inspectorType = "Offer";
+        this.isInspectorActive = true;
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  create(): void {
+    //
   }
 }
 </script>
 
 <style scoped lang="scss">
+@import "~bulma/sass/utilities/derived-variables";
 .monaco-editor {
-  height: 80vh;
+  height: 60vh;
   overflow: hidden;
+}
+
+$items: (
+  spendbundle: $green,
+  offer: $blue,
+  array: $grey,
+  object: $grey,
+);
+
+ul.console-output {
+  height: 20vh;
+  overflow: hidden;
+  border: 1px solid #bbb;
+
+  > li {
+    padding: 0 0.5em;
+    border-bottom: 1px solid #eee;
+
+    span.item {
+      margin-right: 0.5em;
+    }
+
+    span.item > span {
+      @each $item, $color in $items {
+        &.#{$item} {
+          text-decoration: underline;
+          cursor: pointer;
+          font-style: italic;
+          color: $color;
+        }
+      }
+    }
+  }
 }
 </style>

@@ -6,14 +6,22 @@ import coins from "@/services/developer/coins.json";
 import { CoinItem } from "@/models/wallet";
 
 interface ExecuteResultObject {
-  bundle?: unknown;
+  result?: unknown[][];
   finish: boolean;
 }
 
 export async function executeCode(code: string): Promise<ExecuteResultObject> {
   /* eslint-disable no-useless-escape */
-  const text = `<script>async function __run() { ${code} }; __run().then(()=>{ex.finish=true;})
-    .catch((msg)=>{console.error(msg);ex.finish=true;});<\/script>`;
+  const text = `<script>
+async function __run() { ${code} };
+__run()
+  .then(()=>{__ex.finish=true;})
+  .catch((msg)=>{
+    console.error(msg);
+    __ex.result?.push(["error", msg.message]);
+    __ex.finish=true;
+  });
+<\/script>`;
   /* eslint-enable no-useless-escape */
   const ifr = document.createElement("iframe");
   ifr.setAttribute("frameborder", "0");
@@ -37,13 +45,15 @@ export async function executeCode(code: string): Promise<ExecuteResultObject> {
     return puz;
   };
 
-  const ex: ExecuteResultObject = { bundle: undefined, finish: false };
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  (ifrw as any).puzzle = puzzle;
-  (ifrw as any).getPuzDetail = getPuzDetail;
-  (ifrw as any).ex = ex;
-  (ifrw as any).prefix0x = prefix0x;
-  (ifrw as any).coins = coins
+  const __ex: ExecuteResultObject = { result: [], finish: false };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const fw = ifrw as any;
+
+  fw.puzzle = puzzle;
+  fw.getPuzDetail = getPuzDetail;
+  fw.__ex = __ex;
+  fw.prefix0x = prefix0x;
+  fw.coins = coins
     .flatMap((_) => _.records)
     .map((_) => _.coin as CoinItem)
     .map((_) => ({
@@ -51,7 +61,16 @@ export async function executeCode(code: string): Promise<ExecuteResultObject> {
       parent_coin_info: _.parentCoinInfo,
       puzzle_hash: _.puzzleHash,
     }));
-  /* eslint-enable @typescript-eslint/no-explicit-any */
+
+  fw.console.log = (function () {
+    const log = console.log;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return function (...args: any[]) {
+      __ex.result?.push(args);
+      log.apply(console, args);
+    }
+  })();
 
   // const ifrw = (ifr.contentWindow) ? ifr.contentWindow
   // : (ifr.contentDocument && ifr.contentDocument.document) ? ifr.contentDocument.document
@@ -62,14 +81,14 @@ export async function executeCode(code: string): Promise<ExecuteResultObject> {
 
   return await new Promise(resolve => {
     const refresh = function () {
-      if (!ex.finish) {
+      if (!__ex.finish) {
         setTimeout(() => {
           refresh();
         }, 50);
         return;
       }
 
-      resolve(ex);
+      resolve(__ex);
       document.body.removeChild(ifr);
     };
 

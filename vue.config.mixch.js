@@ -5,6 +5,9 @@ const { IgnorePlugin } = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
+  devServer: {
+    host: 'localhost'
+  },
   outputDir: "dist/mixch",
   productionSourceMap: false,
   configureWebpack: {

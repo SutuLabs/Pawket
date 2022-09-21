@@ -393,23 +393,23 @@ const modsParameters: ModDetail[] = [
       },
     ],
   },
-  {
-    name: "generator_for_single_coin",
-    parameters: [
-      {
-        name: "block_program",
-        desc: "",
-      },
-      {
-        name: "(block_ref)",
-        desc: "",
-      },
-      {
-        name: "coinname",
-        desc: "",
-      },
-    ],
-  },
+  // {
+  //   name: "generator_for_single_coin",
+  //   parameters: [
+  //     {
+  //       name: "block_program",
+  //       desc: "",
+  //     },
+  //     {
+  //       name: "(block_ref)",
+  //       desc: "",
+  //     },
+  //     {
+  //       name: "coinname",
+  //       desc: "",
+  //     },
+  //   ],
+  // },
   {
     name: "chialisp_deserialisation",
     parameters: [
