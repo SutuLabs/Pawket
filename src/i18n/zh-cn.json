@@ -155,6 +155,7 @@
         "title": "应用",
         "tooltip": {
           "donate": "向开发者捐赠",
+          "scanAssets": "资产扫描",
           "proxy": "离线代理",
           "takeOffer": "接受 Offer",
           "makeOffer": "发起 Offer",
@@ -164,6 +165,7 @@
         },
         "button": {
           "donate": "捐赠",
+          "scanAssets": "资产扫描",
           "proxy": "离线代理",
           "takeOffer": "接受 Offer",
           "makeOffer": "发起 Offer",
@@ -1214,6 +1216,11 @@
           "INVALID_ADDRESS": "地址无效"
         }
       }
+    }
+  },
+  "scanAssets": {
+    "ui": {
+      "title": "扫描资产"
     }
   }
 }
