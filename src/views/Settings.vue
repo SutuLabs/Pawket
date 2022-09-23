@@ -21,7 +21,7 @@
                 >{{ $t("settings.menu.items.addressBook.title") }}</router-link
               >
             </li>
-            <li role="presentation" :class="{ 'is-active': path == '/settings/collection' }">
+            <li role="presentation" :class="{ 'is-active': path == '/settings/collection' }" v-if="debugMode">
               <router-link role="tab" :to="{ path: 'collection' }"
                 ><b-icon icon="account-box-multiple-outline"></b-icon
                 >{{ $t("settings.menu.items.collection.title") }}</router-link
@@ -94,7 +94,7 @@
           <b-icon class="is-pulled-right has-text-grey" icon="chevron-right"> </b-icon>
         </div>
       </router-link>
-      <router-link role="tab" :to="{ path: '/settings/collection' }" class="panel-block py-0 my-0">
+      <router-link role="tab" :to="{ path: '/settings/collection' }" class="panel-block py-0 my-0" v-if="debugMode">
         <div class="is-11 is-flex my-1 py-1">
           <div class="mr-2 py-1">
             <b-icon icon="account-box-multiple-outline"></b-icon>
