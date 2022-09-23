@@ -145,7 +145,7 @@ export default class AddressBook extends Vue {
 
   @Emit("close")
   close(): void {
-    if (this.path.endsWith("address-book")) this.$router.back();
+    if (this.path.endsWith("addressBook")) this.$router.back();
     return;
   }
 
