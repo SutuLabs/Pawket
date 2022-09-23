@@ -67,7 +67,7 @@ export default class App extends Vue {
   autoLock(): void {
     const diff = Date.now() - this.lastActive;
     if (diff > this.autoLockTime * 1000) {
-      store.dispatch("lock");
+      location.reload();
     }
   }
 

@@ -81,7 +81,7 @@
 import { nameOmit } from "@/filters/nameConversion";
 import { notifyPrimary } from "@/services/notification/notification";
 import store from "@/store";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import AddressBookField from "./AddressBookFields.vue";
 import AddressDetail from "./AddressDetail.vue";
 import TopBar from "@/components/Common/TopBar.vue";
@@ -139,6 +139,16 @@ export default class AddressBook extends Vue {
     return false;
   }
 
+  get path(): string {
+    return this.$route.path;
+  }
+
+  @Emit("close")
+  close(): void {
+    if (this.path.endsWith("address-book")) this.$router.back();
+    return;
+  }
+
   nameOmit(name: string, upperCase = false): string {
     return nameOmit(name, upperCase);
   }
@@ -176,7 +186,7 @@ export default class AddressBook extends Vue {
   }
 
   back(): void {
-    this.mode === "Add" ? (this.mode = "List") : this.$router.back();
+    this.mode === "Add" ? (this.mode = "List") : this.close();
   }
 
   cancel(): void {
