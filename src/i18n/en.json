@@ -1220,7 +1220,39 @@
   },
   "scanAssets": {
     "ui": {
-      "title": "Scan Assets"
+      "title": "Scan Assets",
+      "prompt": {
+        "selectAssetType": "You can scan more addresses to find your XCH, CAT and NFT that are not displayed in the list. And collect them into a common address for easy management.",
+        "scanning": "Scanning...",
+        "wait": "for Please be patient for a few minutes.",
+        "paused": "Paused...",
+        "canceled": "Canceled",
+        "finished": "Finished!",
+        "scanned": "Scanned"
+      },
+      "label": {
+        "scan": "Scan",
+        "token": "Token",
+        "nft": "NFT",
+        "myCats": "My CATs",
+        "maxAddress": "Maximum number of scan addresses",
+        "scanning": "Scanning",
+        "result": "Result",
+        "name": "Name",
+        "id": "ID",
+        "balance": "Balance",
+        "action": "Action",
+        "imported": "Imported"
+      },
+      "button": {
+        "start": "Start Scan",
+        "pause": "Pause",
+        "cancel": "Cancel",
+        "continue": "Continue",
+        "reScan": "Rescan",
+        "add": "Add",
+        "send": "Send"
+      }
     }
   }
 }

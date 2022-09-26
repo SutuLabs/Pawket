@@ -136,6 +136,8 @@ export default class Send extends Vue {
   @Prop({ default: CurrencyType.USDT }) public currency!: CurrencyType;
   @Prop() public inputAddress!: string;
   @Prop() public inputAmount!: string;
+  @Prop() public inputAvailableCoins!: SymbolCoins;
+  @Prop() public inputSelectedToken!: string;
   @Prop({ default: true }) public addressEditable!: boolean;
   @Prop({ default: true }) public amountEditable!: boolean;
   @Prop() public notificationMessage!: string;
@@ -169,6 +171,10 @@ export default class Send extends Vue {
   mounted(): void {
     if (this.inputAddress) this.address = this.inputAddress;
     if (this.inputAmount) this.amount = this.inputAmount;
+    if (this.inputAvailableCoins && this.inputSelectedToken) {
+      this.availcoins = this.inputAvailableCoins;
+      this.selectedToken = this.inputSelectedToken;
+    }
     this.loadCoins();
     this.updateContacts();
   }

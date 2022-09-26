@@ -63,7 +63,7 @@ export type CoinClassType = "CatV2" | "DidV1" | "NftV1";
 export type OptionalOneFoundParameterType = { did?: DidDetail, nft?: NftDetail };
 
 class Receive {
-  async getAssetsRequestDetail(sk_hex: string, startId = 0, maxId: number, customCats: CustomCat[], tokenInfo: TokenInfo, prefix: string, symbol: string, catModName: "cat_v1" | "cat_v2"): Promise<TokenPuzzleDetail[]> {
+  async getAssetsRequestDetail(sk_hex: string, startId: number, maxId: number, customCats: CustomCat[], tokenInfo: TokenInfo, prefix: string, symbol: string, catModName: "cat_v1" | "cat_v2"): Promise<TokenPuzzleDetail[]> {
 
     const privkey = utility.fromHexString(sk_hex);
     const xchToken = { symbol, puzzles: await puzzle.getPuzzleDetails(privkey, prefix, startId, maxId) };

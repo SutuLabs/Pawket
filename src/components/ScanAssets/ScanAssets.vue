@@ -6,12 +6,11 @@
     </header>
     <section class="modal-card-body" v-if="mode == 'option'">
       <div class="is-size-6 has-text-info">
-        You can scan more addresses to find your XCH, CAT and NFT that are not displayed in the list. And collect them into a
-        common address for easy management.
+        {{ $t("scanAssets.ui.prompt.selectAssetType") }}
       </div>
       <div>
-        <b-field label="Scan">
-          <b-radio v-model="option" native-value="Token"> Token </b-radio>
+        <b-field :label="$t('scanAssets.ui.label.scan')">
+          <b-radio v-model="option" native-value="Token"> {{ $t("scanAssets.ui.label.token") }} </b-radio>
         </b-field>
         <b-field>
           <b-select v-model="token" expanded :disabled="option != 'Token'">
@@ -21,12 +20,12 @@
           </b-select>
         </b-field>
         <b-field>
-          <b-radio v-model="option" native-value="NftV1"> NFT </b-radio>
+          <b-radio v-model="option" native-value="NftV1"> {{ $t("scanAssets.ui.label.nft") }} </b-radio>
         </b-field>
         <b-field>
-          <b-radio v-model="option" native-value="CatV2"> My CATs </b-radio>
+          <b-radio v-model="option" native-value="CatV2"> {{ $t("scanAssets.ui.label.myCats") }}</b-radio>
         </b-field>
-        <b-field label="Maximum number of scan addresses">
+        <b-field :label="$t('scanAssets.ui.label.maxAddress')">
           <b-select v-model="addressNumber" expanded>
             <option v-for="number in addressNumberOptions" :key="number" :value="number">
               {{ number }}
@@ -36,40 +35,56 @@
       </div>
     </section>
     <section class="modal-card-body" v-if="mode == 'result'">
-      <div class="is-size-6 has-text-info">Scanning...</div>
-      <div class="is-size-6 has-text-info">for Please be patient for a few minutes.</div>
-      <div>
-        <b-field label="Scanning">
-          <b-progress size="is-large" type="is-primary" :value="progress"></b-progress>
-        </b-field>
-        <div class="is-size-6" v-if="status == 'Scanning'">Scanned: {{ current }}/{{ addressNumber }}</div>
-        <div class="is-size-6" v-if="status == 'Finished'">Finished!</div>
-        <div class="is-size-6" v-if="status == 'Canceled'">Canceled.</div>
-        <div class="is-size-6" v-if="status == 'Paused'">Paused..</div>
-        <div class="buttons">
-          <b-button type="is-info" outlined v-if="status == 'Scanning'" @click="pause()">Pause</b-button>
-          <b-button type="is-info" outlined v-if="status == 'Paused'" @click="start()">Continue</b-button>
-          <b-button type="is-info" outlined v-if="status == 'Finished' || status == 'Canceled'" @click="start()">Rescan</b-button>
-          <b-button v-if="status == 'Scanning' || status == 'Paused'" @click="cancel()">Cancel</b-button>
-        </div>
+      <div v-if="status == 'Scanning'">
+        <div class="is-size-6 has-text-info">{{ $t("scanAssets.ui.prompt.scanning") }}</div>
+        <div class="is-size-6 has-text-info">{{ $t("scanAssets.ui.prompt.wait") }}</div>
       </div>
       <div>
-        <b-field label="Result">
+        <b-field :label="$t('scanAssets.ui.label.scanning')">
+          <b-progress size="is-large" type="is-primary" :value="progress"></b-progress>
+        </b-field>
+        <div class="is-size-6" v-if="status == 'Scanning'">
+          {{ $t("scanAssets.ui.prompt.scanned") }} {{ current }}/{{ addressNumber }}
+        </div>
+        <div class="is-size-6" v-if="status == 'Finished'">{{ $t("scanAssets.ui.prompt.finished") }}</div>
+        <div class="is-size-6" v-if="status == 'Canceled'">{{ $t("scanAssets.ui.prompt.canceled") }}</div>
+        <div class="is-size-6" v-if="status == 'Paused'">{{ $t("scanAssets.ui.prompt.paused") }}</div>
+        <div class="buttons">
+          <b-button type="is-info" outlined v-if="status == 'Scanning'" @click="pause()">{{
+            $t("scanAssets.ui.button.pause")
+          }}</b-button>
+          <b-button type="is-info" outlined v-if="status == 'Paused'" @click="start()">{{
+            $t("scanAssets.ui.button.continue")
+          }}</b-button>
+          <b-button type="is-info" outlined v-if="status == 'Finished' || status == 'Canceled'" @click="reScan()">{{
+            $t("scanAssets.ui.button.reScan")
+          }}</b-button>
+          <b-button v-if="status == 'Scanning' || status == 'Paused'" @click="cancel()">{{
+            $t("scanAssets.ui.button.cancel")
+          }}</b-button>
+        </div>
+      </div>
+      <div class="pt-6">
+        <b-field :label="$t('scanAssets.ui.label.result')">
           <table class="table is-fullwidth has-text-centered">
             <thead>
               <tr>
-                <th>Name</th>
-                <th v-if="option == 'Token'">Balance</th>
-                <th>ID</th>
-                <th>Action</th>
+                <th>{{ $t("scanAssets.ui.label.name") }}</th>
+                <th v-if="option == 'Token'">{{ $t("scanAssets.ui.label.balance") }}</th>
+                <th>{{ $t("scanAssets.ui.label.id") }}</th>
+                <th>{{ $t("scanAssets.ui.label.action") }}</th>
               </tr>
             </thead>
             <tbody v-if="option == 'Token'">
-              <tr v-if="current">
+              <tr v-if="tokenBalance[token]">
                 <td>{{ token }}</td>
                 <td>{{ demojo(tokenBalance[token].amount, tokenInfo[token]) }}</td>
                 <td>{{ token == "XCH" ? "Orignal Coin" : shorten(catIds[token]) }}</td>
-                <td><b-button type="is-primary" size="is-small" outlined>Send</b-button></td>
+                <td>
+                  <b-button type="is-primary" size="is-small" outlined @click="send()">{{
+                    $t("scanAssets.ui.button.send")
+                  }}</b-button>
+                </td>
               </tr>
             </tbody>
             <tbody v-if="option == 'NftV1'">
@@ -80,15 +95,24 @@
                   </span>
                 </td>
                 <td>{{ shorten(nft.address) }}</td>
-                <td><b-button type="is-primary" size="is-small" outlined @click="transfer(nft)">Send</b-button></td>
+                <td>
+                  <b-button type="is-primary" size="is-small" outlined @click="transfer(nft)">{{
+                    $t("scanAssets.ui.button.send")
+                  }}</b-button>
+                </td>
               </tr>
             </tbody>
             <tbody v-if="option == 'CatV2'">
               <tr v-for="(cat, index) of catList" :key="index">
-                <td>{{ getCatName(cat.tailProgramHash) }}</td>
-                <td>{{ shorten(cat.tailProgramHash.slice(2)) }}</td>
                 <td>
-                  <b-button type="is-primary" size="is-small" outlined @click="Add(cat.tailProgramHash)">Add</b-button>
+                  {{ getCatName(cat.tailProgramHash) }}
+                  <b-tag v-if="isImported(unprefix0x(cat.tailProgramHash))">{{ $t("scanAssets.ui.label.imported") }}</b-tag>
+                </td>
+                <td>{{ shorten(unprefix0x(cat.tailProgramHash)) }}</td>
+                <td>
+                  <b-button type="is-primary" size="is-small" outlined @click="add(unprefix0x(cat.tailProgramHash))">{{
+                    $t("scanAssets.ui.button.add")
+                  }}</b-button>
                 </td>
               </tr>
             </tbody>
@@ -97,17 +121,17 @@
       </div>
     </section>
     <footer class="is-block buttons modal-card-foot pb-2 my-0" v-if="mode == 'option'">
-      <b-button class="is-pulled-right" type="is-primary" @click="start()">Start Scan</b-button>
+      <b-button class="is-pulled-right" type="is-primary" @click="start()">{{ $t("scanAssets.ui.button.start") }}</b-button>
     </footer>
   </div>
 </template>
 <script lang="ts">
-import { AccountEntity, AccountTokens, OneTokenInfo, TokenInfo } from "@/models/account";
+import { AccountEntity, AccountTokens, CustomCat, OneTokenInfo, TokenInfo } from "@/models/account";
 import { getCatIdDict, getCatNames, getTokenInfo } from "@/services/view/cat";
 import { Component, Emit, Prop, Vue, Watch } from "vue-property-decorator";
-import receive, { NftDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
+import receive, { NftDetail, TokenPuzzleAddress, TokenPuzzleDetail } from "@/services/crypto/receive";
 import { rpcUrl, xchPrefix, xchSymbol } from "@/store/modules/network";
-import { convertToOriginCoin, GetRecordsResponse } from "@/models/wallet";
+import { CoinRecord, convertToOriginCoin, GetRecordsResponse } from "@/models/wallet";
 import debug from "@/services/api/debug";
 import { analyzeNftCoin, getScalarString } from "@/services/coin/nft";
 import puzzle, { PuzzleDetail } from "@/services/crypto/puzzle";
@@ -119,6 +143,10 @@ import { shorten } from "@/filters/addressConversion";
 import ManageCats from "../Cat/ManageCats.vue";
 import NftTransfer from "../Nft/NftTransfer.vue";
 import { isMobile } from "@/services/view/responsive";
+import { unprefix0x } from "@/services/coin/condition";
+import coin from "@/services/transfer/coin";
+import Send from "../Send/Send.vue";
+import { getAllCats } from "@/store/modules/account";
 
 type Option = "Token" | "NftV1" | "CatV2";
 type Mode = "option" | "result";
@@ -137,6 +165,8 @@ export default class ScanAssets extends Vue {
   nftList: NftDetail[] = [];
   catList: CatCoinAnalysisResult[] = [];
   tokenBalance: AccountTokens = {};
+  allRequests: TokenPuzzleAddress[] = [];
+  allRecords: CoinRecord[] = [];
 
   async mounted(): Promise<void> {
     this.tails = await TailDb.getTails();
@@ -170,13 +200,25 @@ export default class ScanAssets extends Vue {
   }
 
   getCatName(hash: string): string {
-    const idx = this.tails.findIndex((t) => t.hash == hash.slice(2));
+    const idx = this.tails.findIndex((t) => t.hash == unprefix0x(hash));
     if (idx > -1) return this.tails[idx].code;
     return "Unknown CAT";
   }
 
+  unprefix0x(str: string | undefined): string {
+    return unprefix0x(str);
+  }
+
   get tokenInfo(): TokenInfo {
     return getTokenInfo(this.account);
+  }
+
+  get allCats(): CustomCat[] {
+    return getAllCats(this.account);
+  }
+
+  isImported(id: string): boolean {
+    return this.allCats.findIndex((a) => a.id === id) > -1;
   }
 
   get tokenNames(): string[] {
@@ -195,16 +237,27 @@ export default class ScanAssets extends Vue {
     return shorten(name);
   }
 
+  reScan(): void {
+    this.reset();
+    this.mode = "option";
+  }
+
+  reset(): void {
+    this.nftList = [];
+    this.catList = [];
+    this.tokenBalance = {};
+    this.allRecords = [];
+    this.allRequests = [];
+    this.current = 0;
+    this.status = "Scanning";
+  }
+
   start(): void {
     this.mode = "result";
-    if (this.status == "Finished" || this.status == "Canceled") {
-      this.nftList = [];
-      this.catList = [];
-      this.tokenBalance = {};
-      this.current = 0;
-    }
     this.status = "Scanning";
-    this.scan();
+    setTimeout(() => {
+      this.scan();
+    }, 50);
   }
 
   async scan(): Promise<void> {
@@ -230,7 +283,9 @@ export default class ScanAssets extends Vue {
       requests = [{ symbol: symbol, puzzles: ps }];
       let records;
       if (this.option == "Token") {
-        records = await receive.getCoinRecords(requests, true, rpcUrl());
+        records = await receive.getCoinRecords(requests, false, rpcUrl());
+        this.allRecords = this.allRecords.concat(receive.convertActivities(requests, records));
+        this.allRequests = this.allRequests.concat(requests);
         const tokenBalance = receive.getTokenBalance(requests, records);
         if (this.tokenBalance[this.token]) {
           this.tokenBalance[this.token] = {
@@ -240,22 +295,20 @@ export default class ScanAssets extends Vue {
         } else {
           this.tokenBalance = tokenBalance;
         }
-        console.log(tokenBalance, this.tokenBalance);
       } else {
-        records = await receive.getCoinRecords(requests, true, rpcUrl(), false, this.option);
+        records = await receive.getCoinRecords(requests, false, rpcUrl(), false, this.option);
         this.analyse(records, rpcUrl());
       }
     } catch (error) {
       console.log(error);
     }
     if (this.current < this.addressNumber && this.status == "Scanning") {
+      this.current += 100;
       setTimeout(() => {
-        console.log(this.current, this.nftList, this.catList, this.tokenBalance);
-        this.current += 100;
         this.scan();
       }, 5000);
     } else {
-      if (this.current == this.addressNumber) this.status = "Finished";
+      if (this.current >= this.addressNumber) this.status = "Finished";
     }
   }
 
@@ -299,7 +352,7 @@ export default class ScanAssets extends Vue {
     }
   }
 
-  Add(id: string): void {
+  add(id: string): void {
     this.$buefy.modal.open({
       parent: this,
       component: ManageCats,
@@ -307,6 +360,18 @@ export default class ScanAssets extends Vue {
       trapFocus: true,
       canCancel: [""],
       props: { account: this.account, defaultName: this.getCatName(id), defaultAssetId: id, defaultTab: 1 },
+    });
+  }
+
+  send(): void {
+    const availableCoins = coin.getAvailableCoinFromRecords(this.allRequests, this.allRecords, [this.token]);
+    this.$buefy.modal.open({
+      parent: this,
+      component: Send,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      props: { account: this.account, inputAvailableCoins: availableCoins, inputSelectedToken: this.token },
     });
   }
 

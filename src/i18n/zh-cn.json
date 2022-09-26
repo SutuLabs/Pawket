@@ -1220,7 +1220,39 @@
   },
   "scanAssets": {
     "ui": {
-      "title": "扫描资产"
+      "title": "扫描资产",
+      "prompt": {
+        "selectAssetType": "扫描更多地址，找到未显示在列表中的 XCH、CAT、NFT，并将它们收集到一个共同的地址，以便于管理。",
+        "scanning": "正在扫描...",
+        "wait": "请耐心等待几分钟。",
+        "paused": "暂停中...",
+        "canceled": "已取消",
+        "finished": "完成!",
+        "scanned": "已扫描"
+      },
+      "label": {
+        "scan": "扫描",
+        "token": "代币",
+        "nft": "NFT",
+        "myCats": "持有的 CAT",
+        "maxAddress": "最大扫描地址数量",
+        "scanning": "扫描",
+        "result": "扫描结果",
+        "name": "名称",
+        "balance": "余额",
+        "id": "ID",
+        "action": "操作",
+        "imported": "已导入"
+      },
+      "button": {
+        "start": "开始扫描",
+        "pause": "暂停",
+        "cancel": "取消",
+        "continue": "继续",
+        "reScan": "重新扫描",
+        "add": "添加",
+        "send": "发送"
+      }
     }
   }
 }
