@@ -17,6 +17,16 @@
           </a>
         </b-tooltip>
       </div>
+      <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.scanAssets')" position="is-right">
+          <a href="javascript:void(0)" @click="$router.push('/home/scan-assets')" class="has-text-link">
+            <div class="has-text-centered">
+              <b-icon icon="credit-card-scan" size="is-medium"></b-icon>
+              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.scanAssets") }}</p>
+            </div>
+          </a>
+        </b-tooltip>
+      </div>
       <div v-if="experimentMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.takeOffer')" position="is-right">
           <a href="javascript:void(0)" @click="$router.push('/home/take-offer')" class="has-text-link">
@@ -88,6 +98,7 @@ import MintCat from "@/components/Mint/MintCat.vue";
 import MintNft from "@/components/Mint/MintNft.vue";
 import MakeOffer from "@/components/Offer/Make.vue";
 import TakeOffer from "@/components/Offer/Take.vue";
+import ScanAssets from "@/components/ScanAssets/ScanAssets.vue";
 import BatchSend from "@/components/Transfer/BatchSend.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import Donate from "@/components/Settings/Donate.vue";
@@ -141,6 +152,9 @@ export default class Dapp extends Vue {
         break;
       case "/home/mint-nft":
         this.openMintNft();
+        break;
+      case "/home/scan-assets":
+        this.openScanAssets();
         break;
       default:
         break;
@@ -258,6 +272,21 @@ export default class Dapp extends Vue {
     this.$buefy.modal.open({
       parent: this,
       component: MintNft,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      fullScreen: isMobile(),
+      props: {
+        account: this.account,
+      },
+    });
+  }
+
+  openScanAssets(): void {
+    this.checkObserveMode();
+    this.$buefy.modal.open({
+      parent: this,
+      component: ScanAssets,
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],

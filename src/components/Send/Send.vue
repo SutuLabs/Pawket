@@ -1,6 +1,6 @@
 <template>
   <div class="modal-card m-0">
-    <top-bar :title="title ? title : $t('send.ui.title.send')" @close="$router.back()" :showClose="showClose"></top-bar>
+    <top-bar :title="title ? title : $t('send.ui.title.send')" @close="close()" :showClose="showClose"></top-bar>
     <section class="modal-card-body">
       <div v-show="!bundle">
         <b-notification
@@ -93,7 +93,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
+import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import { AccountEntity, TokenInfo } from "@/models/account";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
@@ -136,6 +136,9 @@ export default class Send extends Vue {
   @Prop({ default: CurrencyType.USDT }) public currency!: CurrencyType;
   @Prop() public inputAddress!: string;
   @Prop() public inputAmount!: string;
+  @Prop() public inputAvailableCoins!: SymbolCoins;
+  @Prop() public inputRequests!: TokenPuzzleDetail[]
+  @Prop() public inputSelectedToken!: string;
   @Prop({ default: true }) public addressEditable!: boolean;
   @Prop({ default: true }) public amountEditable!: boolean;
   @Prop() public notificationMessage!: string;
@@ -169,6 +172,11 @@ export default class Send extends Vue {
   mounted(): void {
     if (this.inputAddress) this.address = this.inputAddress;
     if (this.inputAmount) this.amount = this.inputAmount;
+    if (this.inputAvailableCoins && this.inputSelectedToken && this.inputRequests) {
+      this.availcoins = this.inputAvailableCoins;
+      this.selectedToken = this.inputSelectedToken;
+      this.requests = this.inputRequests;
+    }
     this.loadCoins();
     this.updateContacts();
   }
@@ -177,13 +185,9 @@ export default class Send extends Vue {
     return this.$route.path;
   }
 
-  @Watch("path")
-  onPathChange(): void {
-    if (this.path == "/home") this.close();
-  }
-
   @Emit("close")
   close(): void {
+    if (this.path.endsWith("/send")) this.$router.back();
     return;
   }
 
@@ -240,7 +244,7 @@ export default class Send extends Vue {
     if (this.bundle) {
       this.reset();
     } else {
-      this.$router.push("/home");
+      this.close();
     }
   }
 

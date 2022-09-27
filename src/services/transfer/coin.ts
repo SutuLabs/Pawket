@@ -1,4 +1,4 @@
-import { CoinItem, OriginCoin } from "@/models/wallet";
+import { CoinItem, CoinRecord, OriginCoin } from "@/models/wallet";
 import store from "@/store";
 import { prefix0x } from "../coin/condition";
 import receive, { TokenPuzzleAddress, TokenPuzzleDetail } from "../crypto/receive";
@@ -10,14 +10,13 @@ import { getAccountAddressDetails } from "../util/account";
 
 
 class CoinHandler {
-
   public async getAssetsRequestDetail(account: AccountEntity): Promise<TokenPuzzleDetail[]> {
     return await getAccountAddressDetails(
       account,
       getAccountCats(account),
       store.state.account.tokenInfo,
       xchPrefix(),
-      xchSymbol(),
+      xchSymbol()
     );
   }
 
@@ -41,10 +40,27 @@ class CoinHandler {
     return availcoins;
   }
 
+  public getAvailableCoinFromRecords(requests: TokenPuzzleAddress[], records: CoinRecord[], tokenNames: string[]): SymbolCoins {
+    const coins = records
+      .filter((_) => _.coin)
+      .map((_) => _.coin as CoinItem)
+      .map((_) => ({
+        amount: BigInt(_.amount),
+        parent_coin_info: _.parentCoinInfo,
+        puzzle_hash: _.puzzleHash,
+      }));
+    const availcoins = tokenNames
+      .map((symbol) => {
+        const tgtpuzs = requests.filter((_) => _.symbol == symbol)[0].puzzles.map((_) => prefix0x(_.hash));
+        return { symbol, coins: coins.filter((_) => tgtpuzs.findIndex((p) => p == _.puzzle_hash) > -1) };
+      })
+      .reduce((a, c) => ({ ...a, [c.symbol]: c.coins }), {});
+
+    return availcoins;
+  }
+
   getTokenNames(account: AccountEntity): string[] {
-    return Object.keys(store.state.account.tokenInfo).concat(
-      getAccountCats(account).map((_) => _.name)
-    );
+    return Object.keys(store.state.account.tokenInfo).concat(getAccountCats(account).map((_) => _.name));
   }
 }
 

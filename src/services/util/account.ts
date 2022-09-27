@@ -20,7 +20,7 @@ export async function getAccountAddressDetails(
     return account.addressPuzzles;
   }
 
-  account.addressPuzzles = await receive.getAssetsRequestDetail(account.key.privateKey, maxId, cats, tokenInfo, prefix, symbol, catModName);
+  account.addressPuzzles = await receive.getAssetsRequestDetail(account.key.privateKey, 0, maxId, cats, tokenInfo, prefix, symbol, catModName);
   account.addressGenerated = maxId;
   return account.addressPuzzles;
 }
