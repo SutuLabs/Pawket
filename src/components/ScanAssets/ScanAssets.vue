@@ -81,7 +81,7 @@
                 <td>{{ demojo(tokenBalance[token].amount, tokenInfo[token]) }}</td>
                 <td>{{ token == "XCH" ? "Orignal Coin" : shorten(catIds[token]) }}</td>
                 <td>
-                  <b-button type="is-primary" size="is-small" outlined @click="send()">{{
+                  <b-button type="is-primary" size="is-small" outlined @click="send()" :disabled="status == 'Scanning'">{{
                     $t("scanAssets.ui.button.send")
                   }}</b-button>
                 </td>
@@ -96,7 +96,7 @@
                 </td>
                 <td>{{ shorten(nft.address) }}</td>
                 <td>
-                  <b-button type="is-primary" size="is-small" outlined @click="transfer(nft)">{{
+                  <b-button type="is-primary" size="is-small" outlined @click="transfer(nft)" :disabled="status == 'Scanning'">{{
                     $t("scanAssets.ui.button.send")
                   }}</b-button>
                 </td>
@@ -110,9 +110,14 @@
                 </td>
                 <td>{{ shorten(unprefix0x(cat.tailProgramHash)) }}</td>
                 <td>
-                  <b-button type="is-primary" size="is-small" outlined @click="add(unprefix0x(cat.tailProgramHash))">{{
-                    $t("scanAssets.ui.button.add")
-                  }}</b-button>
+                  <b-button
+                    type="is-primary"
+                    size="is-small"
+                    outlined
+                    @click="add(unprefix0x(cat.tailProgramHash))"
+                    :disabled="status == 'Scanning'"
+                    >{{ $t("scanAssets.ui.button.add") }}</b-button
+                  >
                 </td>
               </tr>
             </tbody>
@@ -128,9 +133,9 @@
 <script lang="ts">
 import { AccountEntity, AccountTokens, CustomCat, OneTokenInfo, TokenInfo } from "@/models/account";
 import { getCatIdDict, getCatNames, getTokenInfo } from "@/services/view/cat";
-import { Component, Emit, Prop, Vue, Watch } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import receive, { NftDetail, TokenPuzzleAddress, TokenPuzzleDetail } from "@/services/crypto/receive";
-import { rpcUrl, xchPrefix, xchSymbol } from "@/store/modules/network";
+import { ensureAddress, rpcUrl, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { CoinRecord, convertToOriginCoin, GetRecordsResponse } from "@/models/wallet";
 import debug from "@/services/api/debug";
 import { analyzeNftCoin, getScalarString } from "@/services/coin/nft";
@@ -147,35 +152,50 @@ import { unprefix0x } from "@/services/coin/condition";
 import coin from "@/services/transfer/coin";
 import Send from "../Send/Send.vue";
 import { getAllCats } from "@/store/modules/account";
+import { NotificationProgrammatic as Notification } from "buefy";
 
 type Option = "Token" | "NftV1" | "CatV2";
 type Mode = "option" | "result";
-type Status = "Scanning" | "Paused" | "Canceled" | "Finished";
+type Status = "Configuring" | "Scanning" | "Paused" | "Canceled" | "Finished";
 @Component({})
 export default class ScanAssets extends Vue {
   @Prop() public account!: AccountEntity;
   option: Option = "Token";
   mode: Mode = "option";
-  status: Status = "Scanning";
+  status: Status = "Configuring";
   token = "XCH";
   addressNumber = 100;
   current = 0;
   tails: TailInfo[] = [];
-  addressNumberOptions = [100, 500, 1000, 1500, 2000];
+  addressNumberOptions = [100, 500, 1000];
   nftList: NftDetail[] = [];
   catList: CatCoinAnalysisResult[] = [];
   tokenBalance: AccountTokens = {};
   allRequests: TokenPuzzleAddress[] = [];
+  puzCache: { [symbol: string]: PuzzleDetail[] } = {};
   allRecords: CoinRecord[] = [];
 
   async mounted(): Promise<void> {
     this.tails = await TailDb.getTails();
   }
 
-  @Emit("close")
   close(): void {
-    if (this.path.endsWith("scan-assets")) this.$router.back();
-    return;
+    if (this.status == "Scanning") {
+      this.$buefy.dialog.confirm({
+        message: this.$tc("scanAssets.message.confirmation.close"),
+        confirmText: this.$tc("common.button.confirm"),
+        cancelText: this.$tc("common.button.cancel"),
+        onConfirm: () => {
+          this.status = "Canceled";
+          if (this.path.endsWith("scan-assets")) this.$router.back();
+          this.$emit("close");
+        },
+      });
+    } else {
+      this.status = "Canceled";
+      if (this.path.endsWith("scan-assets")) this.$router.back();
+      this.$emit("close");
+    }
   }
 
   get path(): string {
@@ -184,7 +204,8 @@ export default class ScanAssets extends Vue {
 
   @Watch("path")
   onPathChange(): void {
-    this.close();
+    if (this.path.endsWith("scan-assets")) this.$router.back();
+    this.$emit("close");
   }
 
   pause(): void {
@@ -192,7 +213,18 @@ export default class ScanAssets extends Vue {
   }
 
   cancel(): void {
-    this.status = "Canceled";
+    if (this.status == "Scanning") {
+      this.$buefy.dialog.confirm({
+        message: this.$tc("scanAssets.message.confirmation.cancel"),
+        confirmText: this.$tc("common.button.confirm"),
+        cancelText: this.$tc("common.button.cancel"),
+        onConfirm: () => {
+          this.status = "Canceled";
+        },
+      });
+    } else {
+      this.status = "Canceled";
+    }
   }
 
   demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null, digits = -1): string {
@@ -249,7 +281,7 @@ export default class ScanAssets extends Vue {
     this.allRecords = [];
     this.allRequests = [];
     this.current = 0;
-    this.status = "Scanning";
+    this.status = "Configuring";
   }
 
   start(): void {
@@ -268,17 +300,28 @@ export default class ScanAssets extends Vue {
       let requests: TokenPuzzleDetail[] = [];
       let ps: PuzzleDetail[] = [];
       if (this.option == "Token" && this.token != "XCH") {
-        ps = await puzzle.getCatPuzzleDetails(
-          privatekey,
-          this.catIds[this.token],
-          prefix,
-          this.current,
-          this.current + 100,
-          "cat_v2"
-        );
+        console.log(this.puzCache[this.token]?.length, 2 * (this.current + 100));
+        if (this.puzCache[this.token] && this.puzCache[this.token].length >= 2 * (this.current + 100)) {
+          ps = this.puzCache[this.token].slice(this.current, this.current + 200);
+        } else {
+          ps = await puzzle.getCatPuzzleDetails(
+            privatekey,
+            this.catIds[this.token],
+            prefix,
+            this.current,
+            this.current + 100,
+            "cat_v2"
+          );
+          this.puzCache[this.token] = this.puzCache[this.token] ? this.puzCache[this.token].concat(ps) : ps;
+        }
         symbol = this.token;
       } else {
-        ps = await puzzle.getPuzzleDetails(privatekey, prefix, this.current, this.current + 100);
+        if (this.puzCache["XCH"] && this.puzCache["XCH"].length >= 2 * (this.current + 100)) {
+          ps = this.puzCache["XCH"].slice(this.current, this.current + 200);
+        } else {
+          ps = await puzzle.getPuzzleDetails(privatekey, prefix, this.current, this.current + 100);
+          this.puzCache["XCH"] = this.puzCache["XCH"] ? this.puzCache["XCH"].concat(ps) : ps;
+        }
       }
       requests = [{ symbol: symbol, puzzles: ps }];
       let records;
@@ -300,10 +343,21 @@ export default class ScanAssets extends Vue {
         this.analyse(records, rpcUrl());
       }
     } catch (error) {
-      console.log(error);
+      if (error) {
+        this.status = "Canceled";
+        const err = String(error);
+        if (err.match(/OOM/)) {
+          Notification.open({
+            message: this.$tc("scanAssets.message.error.ABORT_OOM"),
+            type: "is-danger",
+            duration: 5000,
+          });
+        }
+        console.log(error);
+      }
     }
+    this.current += 100;
     if (this.current < this.addressNumber && this.status == "Scanning") {
-      this.current += 100;
       setTimeout(() => {
         this.scan();
       }, 5000);
@@ -371,7 +425,13 @@ export default class ScanAssets extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
-      props: { account: this.account, inputAvailableCoins: availableCoins, inputSelectedToken: this.token },
+      props: {
+        account: this.account,
+        inputAddress: ensureAddress(this.account.firstAddress),
+        inputAvailableCoins: availableCoins,
+        inputRequests: this.allRequests,
+        inputSelectedToken: this.token,
+      },
     });
   }
 

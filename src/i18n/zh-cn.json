@@ -1253,6 +1253,15 @@
         "add": "添加",
         "send": "发送"
       }
+    },
+    "message": {
+      "confirmation": {
+        "close": "还未扫描完成，确定关闭此页面吗？",
+        "cancel": "还未扫描完成，确定取消吗？"
+      },
+      "error": {
+        "ABORT_OOM": "abort(OOM), 请刷新页面后重试"
+      }
     }
   }
 }

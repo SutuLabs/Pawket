@@ -1253,6 +1253,15 @@
         "add": "Add",
         "send": "Send"
       }
+    },
+    "message": {
+      "confirmation": {
+        "close": "Scanning has not completed, are you sure to close this page?",
+        "cancel": "Scanning has not been completed, are you sure to cancel?"
+      },
+      "error": {
+        "ABORT_OOM": "abort(OOM), please refresh the page and try again"
+      }
     }
   }
 }
