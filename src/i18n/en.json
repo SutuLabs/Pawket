@@ -18,9 +18,9 @@
       "copy": "Copy"
     },
     "message": {
-      "saved": "Saved",
-      "noResult": "No Result",
-      "uploadSuccess": "Upload Successful"
+      "saved": "Saved.",
+      "noResult": "No result.",
+      "uploadSuccess": "Upload successfully."
     }
   },
   "app": {
@@ -54,7 +54,7 @@
         "proxy": "Proxy"
       },
       "error": {
-        "READ_VERSION_FAILED": "failed to read version"
+        "READ_VERSION_FAILED": "Failed to read version."
       }
     }
   },
@@ -348,7 +348,7 @@
         "title": "Take Offer",
         "hint": {
           "pasteOffer": "Paste your offer here, e.g. offer1...",
-          "error": "You offer string is incorrect."
+          "error": "Your offer string is incorrect."
         },
         "panel": {
           "information": "Information"
@@ -968,7 +968,7 @@
         "offer": "Offer",
         "receive": "Receive",
         "price": "Price",
-        "operation": "Operation"
+        "operation": "Action"
       }
     }
   },
@@ -1222,11 +1222,11 @@
     "ui": {
       "title": "Scan Assets",
       "prompt": {
-        "selectAssetType": "You can scan more addresses to find your XCH, CAT and NFT that are not displayed in the list. And collect them into a common address for easy management.",
+        "selectAssetType": "By scanning more addresses, you can discover assets not shown in the list (including XCH, CAT, NFT) and transfer them to a commonly used address.",
         "scanning": "Scanning...",
-        "wait": "for Please be patient for a few minutes.",
+        "wait": "Please be patient for a few minutes.",
         "paused": "Paused...",
-        "canceled": "Canceled",
+        "canceled": "Canceled.",
         "finished": "Finished!",
         "scanned": "Scanned"
       },
@@ -1260,7 +1260,7 @@
         "cancel": "Scanning has not been completed, are you sure to cancel?"
       },
       "error": {
-        "ABORT_OOM": "abort(OOM), please refresh the page and try again"
+        "ABORT_OOM": "Scan was aborted. Please refresh the page and try again."
       }
     }
   }

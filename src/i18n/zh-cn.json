@@ -348,7 +348,7 @@
         "title": "接受 Offer",
         "hint": {
           "pasteOffer": "在此处粘贴 Offer 信息",
-          "error": "您的 Offer 信息有误"
+          "error": "你的 Offer 信息有误"
         },
         "panel": {
           "information": "信息"
@@ -951,7 +951,7 @@
   "explore": {
     "title": "探索",
     "loading": "加载中",
-    "ascription": "由Dexie提供支持",
+    "ascription": "由 Dexie 提供支持",
     "nft": {
       "title": "NFT 市场"
     },
@@ -1222,12 +1222,12 @@
     "ui": {
       "title": "扫描资产",
       "prompt": {
-        "selectAssetType": "扫描更多地址，找到未显示在列表中的 XCH、CAT、NFT，并将它们收集到一个共同的地址，以便于管理。",
+        "selectAssetType": "通过扫描更多地址，发现未显示在列表中的资产（包括 XCH、CAT、NFT），并将它们转移到一个常用地址。",
         "scanning": "正在扫描...",
         "wait": "请耐心等待几分钟。",
         "paused": "暂停中...",
         "canceled": "已取消",
-        "finished": "完成!",
+        "finished": "扫描完成！",
         "scanned": "已扫描"
       },
       "label": {
@@ -1260,7 +1260,7 @@
         "cancel": "还未扫描完成，确定取消吗？"
       },
       "error": {
-        "ABORT_OOM": "abort(OOM), 请刷新页面后重试"
+        "ABORT_OOM": "扫描已中止，请刷新页面后重试。"
       }
     }
   }
