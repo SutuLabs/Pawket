@@ -1260,7 +1260,7 @@
         "cancel": "Scanning has not been completed, are you sure to cancel?"
       },
       "error": {
-        "ABORT_OOM": "Please refresh the page and try again."
+        "ABORT_OOM": "Scan was aborted. Please refresh the page and try again."
       }
     }
   }
