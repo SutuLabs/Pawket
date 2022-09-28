@@ -4,7 +4,9 @@
       {{ $t("accountDetail.message.notification.test") }}
     </b-notification>
     <nav-bar></nav-bar>
-    <router-view />
+    <keep-alive>
+      <router-view />
+    </keep-alive>
     <mobile-nav v-if="showNavigation"></mobile-nav>
     <div class="my-3 is-hidden-tablet">&nbsp;</div>
     <div class="my-6 is-hidden-mobile">&nbsp;</div>

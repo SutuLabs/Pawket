@@ -49,8 +49,8 @@ const routes: Array<RouteConfig> = [
         path: "take-offer",
       },
       {
-        path: "scan-assets"
-      }
+        path: "scan-assets",
+      },
     ],
   },
   {
@@ -158,7 +158,7 @@ const routes: Array<RouteConfig> = [
   {
     path: "/",
     redirect: () => {
-      return { path: "/create" };
+      return { path: "/home" };
     },
   },
 ];

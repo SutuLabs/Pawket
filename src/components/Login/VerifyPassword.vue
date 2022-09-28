@@ -74,6 +74,7 @@ export default class VerifyPassword extends Vue {
     }
     this.isCorrect = true;
     await store.dispatch("unlock", this.password);
+    this.password = "";
     this.isLoading = false;
   }
 
