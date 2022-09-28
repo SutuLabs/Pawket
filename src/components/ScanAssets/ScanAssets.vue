@@ -8,7 +8,7 @@
       <div class="is-size-6 has-text-info">
         {{ $t("scanAssets.ui.prompt.selectAssetType") }}
       </div>
-      <div>
+      <div class="pt-4">
         <b-field :label="$t('scanAssets.ui.label.scan')">
           <b-radio v-model="option" native-value="Token"> {{ $t("scanAssets.ui.label.token") }} </b-radio>
         </b-field>
@@ -39,17 +39,19 @@
         <div class="is-size-6 has-text-info">{{ $t("scanAssets.ui.prompt.scanning") }}</div>
         <div class="is-size-6 has-text-info">{{ $t("scanAssets.ui.prompt.wait") }}</div>
       </div>
-      <div>
-        <b-field :label="$t('scanAssets.ui.label.scanning')">
+      <div class="pt-3">
+        <b-field :label="$t('scanAssets.ui.label.scanning')" class="mb-1">
           <b-progress size="is-large" type="is-primary" :value="progress"></b-progress>
         </b-field>
-        <div class="is-size-6" v-if="status == 'Scanning'">
-          {{ $t("scanAssets.ui.prompt.scanned") }} {{ current }}/{{ addressNumber }}
+        <div class="pb-2">
+          <div class="is-size-6" v-if="status == 'Scanning'">
+            {{ $t("scanAssets.ui.prompt.scanned") }} {{ current }}/{{ addressNumber }}
+          </div>
+          <div class="is-size-6" v-if="status == 'Finished'">{{ $t("scanAssets.ui.prompt.finished") }}</div>
+          <div class="is-size-6" v-if="status == 'Canceled'">{{ $t("scanAssets.ui.prompt.canceled") }}</div>
+          <div class="is-size-6" v-if="status == 'Paused'">{{ $t("scanAssets.ui.prompt.paused") }}</div>
         </div>
-        <div class="is-size-6" v-if="status == 'Finished'">{{ $t("scanAssets.ui.prompt.finished") }}</div>
-        <div class="is-size-6" v-if="status == 'Canceled'">{{ $t("scanAssets.ui.prompt.canceled") }}</div>
-        <div class="is-size-6" v-if="status == 'Paused'">{{ $t("scanAssets.ui.prompt.paused") }}</div>
-        <div class="buttons">
+        <div class="buttons pt-4">
           <b-button type="is-info" outlined v-if="status == 'Scanning'" @click="pause()">{{
             $t("scanAssets.ui.button.pause")
           }}</b-button>
