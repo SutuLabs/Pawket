@@ -158,7 +158,7 @@ const routes: Array<RouteConfig> = [
   {
     path: "/",
     redirect: () => {
-      return { path: "/create" };
+      return { path: "/home" };
     },
   },
 ];
