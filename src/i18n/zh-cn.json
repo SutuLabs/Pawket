@@ -1222,7 +1222,7 @@
     "ui": {
       "title": "扫描资产",
       "prompt": {
-        "selectAssetType": "你可以通过扫描更多地址，发现未显示在列表中的资产（包括 XCH、CAT、NFT），并将它们转移到一个常用地址。",
+        "selectAssetType": "通过扫描更多地址，发现未显示在列表中的资产（包括 XCH、CAT、NFT），并将它们转移到一个常用地址。",
         "scanning": "正在扫描...",
         "wait": "请耐心等待几分钟。",
         "paused": "暂停中...",
