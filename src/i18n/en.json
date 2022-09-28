@@ -18,9 +18,9 @@
       "copy": "Copy"
     },
     "message": {
-      "saved": "Saved",
-      "noResult": "No Result",
-      "uploadSuccess": "Upload Successfully."
+      "saved": "Saved.",
+      "noResult": "No result.",
+      "uploadSuccess": "Upload successfully."
     }
   },
   "app": {
@@ -54,7 +54,7 @@
         "proxy": "Proxy"
       },
       "error": {
-        "READ_VERSION_FAILED": "failed to read version"
+        "READ_VERSION_FAILED": "Failed to read version."
       }
     }
   },
