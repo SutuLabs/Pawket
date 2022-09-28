@@ -43,7 +43,7 @@
         {{ $t("app.ui.navigation.explore") }}
       </b-button>
     </router-link>
-    <router-link to="/settings">
+    <router-link to="/settings/general">
       <b-button
         icon-left="cog"
         type="is-primary"

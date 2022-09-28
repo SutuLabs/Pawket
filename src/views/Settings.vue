@@ -6,39 +6,39 @@
         <nav role="tablist" aria-orientation="vertical" class="tabs is-boxed">
           <ul>
             <li role="presentation" :class="{ 'is-active': path == '/settings/general' }">
-              <router-link role="tab" :to="{ path: 'general' }"
+              <router-link role="tab" :to="{ path: '/settings/general' }"
                 ><b-icon icon="tune"></b-icon>{{ $t("settings.menu.items.general.title") }}</router-link
               >
             </li>
             <li role="presentation" :class="{ 'is-active': path == '/settings/security' }">
-              <router-link role="tab" :to="{ path: 'security' }"
+              <router-link role="tab" :to="{ path: '/settings/security' }"
                 ><b-icon icon="key"></b-icon>{{ $t("settings.menu.items.security.title") }}</router-link
               >
             </li>
             <li role="presentation" :class="{ 'is-active': path == '/settings/addressBook' }">
-              <router-link role="tab" :to="{ path: 'addressBook' }"
+              <router-link role="tab" :to="{ path: '/settings/addressBook' }"
                 ><b-icon icon="account-box-multiple-outline"></b-icon
                 >{{ $t("settings.menu.items.addressBook.title") }}</router-link
               >
             </li>
             <li role="presentation" :class="{ 'is-active': path == '/settings/collection' }" v-if="debugMode">
-              <router-link role="tab" :to="{ path: 'collection' }"
+              <router-link role="tab" :to="{ path: '/settings/collection' }"
                 ><b-icon icon="account-box-multiple-outline"></b-icon
                 >{{ $t("settings.menu.items.collection.title") }}</router-link
               >
             </li>
             <li role="presentation" :class="{ 'is-active': path == '/settings/advanced' }">
-              <router-link role="tab" :to="{ path: 'advanced' }"
+              <router-link role="tab" :to="{ path: '/settings/advanced' }"
                 ><b-icon icon="lightbulb-outline"></b-icon>{{ $t("settings.menu.items.advanced.title") }}</router-link
               >
             </li>
             <li role="presentation" :class="{ 'is-active': path == '/settings/devhelper' }">
-              <router-link role="tab" :to="{ path: 'devhelper' }"
+              <router-link role="tab" :to="{ path: '/settings/devhelper' }"
                 ><b-icon icon="developer-board"></b-icon>{{ $t("settings.menu.items.devhelper.title") }}</router-link
               >
             </li>
             <li role="presentation" :class="{ 'is-active': path == '/settings/about' }">
-              <router-link role="tab" :to="{ path: 'about' }"
+              <router-link role="tab" :to="{ path: '/settings/about' }"
                 ><b-icon icon="information-outline"></b-icon>{{ $t("settings.menu.items.about.title") }}</router-link
               >
             </li>

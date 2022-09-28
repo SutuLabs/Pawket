@@ -49,8 +49,8 @@ const routes: Array<RouteConfig> = [
         path: "take-offer",
       },
       {
-        path: "scan-assets"
-      }
+        path: "scan-assets",
+      },
     ],
   },
   {
