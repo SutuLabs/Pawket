@@ -8,7 +8,7 @@ import { prefix0x } from "./condition";
 import { modshash, modshex, modsprog } from "./mods";
 import { bytesToHex0x } from "../crypto/utility";
 import { getCoinName0x } from "./coinUtility";
-import { cloneAndChangeRequestPuzzleTemporary, constructSingletonTopLayerPuzzle, getNextCoinName0x, getPuzzleDetail, ParsedMetadata, parseMetadata, SingletonStructList } from "./singleton";
+import { cloneAndAddRequestPuzzleTemporary, constructSingletonTopLayerPuzzle, getNextCoinName0x, getPuzzleDetail, ParsedMetadata, parseMetadata, SingletonStructList } from "./singleton";
 import { curryMod } from "../offer/bundler";
 import { CannotParsePuzzle, expectModArgs, sexpAssemble, UncurriedPuzzle, uncurryPuzzle } from "./analyzer";
 import { sha256tree } from "clvm_tools";
@@ -120,7 +120,7 @@ export async function generateMintDidBundle(
   };
   // console.log("didCoinSpend", didCoinSpend)
 
-  const extreqs = cloneAndChangeRequestPuzzleTemporary(baseSymbol, requests, inner_p2_puzzle.hash, didPuzzle, didPuzzleHash);
+  const extreqs = cloneAndAddRequestPuzzleTemporary(baseSymbol, requests, inner_p2_puzzle.hash, didPuzzle, didPuzzleHash);
   // console.log("extreqs", extreqs, { coin_spends: [launcherCoinSpend, didCoinSpend] }, chainId);
 
   const bundles = await transfer.getSpendBundle([launcherCoinSpend, didCoinSpend], extreqs, chainId, true);

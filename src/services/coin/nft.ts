@@ -9,7 +9,7 @@ import { modshash, modshex, modsprog } from "./mods";
 import utility, { bytesToHex0x } from "../crypto/utility";
 import catBundle, { LineageProof } from "../transfer/catBundle";
 import { getCoinName0x } from "./coinUtility";
-import { cloneAndChangeRequestPuzzleTemporary, constructSingletonTopLayerPuzzle, getNextCoinName0x, getPuzzleDetail, hex2asc, hex2ascSingle, ParsedMetadata, parseMetadata, SingletonStructList } from "./singleton";
+import { cloneAndAddRequestPuzzleTemporary, constructSingletonTopLayerPuzzle, getNextCoinName0x, getPuzzleDetail, hex2asc, hex2ascSingle, ParsedMetadata, parseMetadata, SingletonStructList } from "./singleton";
 import { findByPath } from "./lisp";
 import { ConditionOpcode } from "./opcode";
 import { DidCoinAnalysisResult } from "./did";
@@ -128,9 +128,9 @@ export async function generateMintNftBundle(
 
   const didPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(didAnalysis.rawPuzzle));
 
-  const extreqs = cloneAndChangeRequestPuzzleTemporary(baseSymbol, requests, inner_p2_puzzle.hash, nftPuzzle, nftPuzzleHash);
+  const extreqs = cloneAndAddRequestPuzzleTemporary(baseSymbol, requests, inner_p2_puzzle.hash, nftPuzzle, nftPuzzleHash);
   const bundles = await transfer.getSpendBundle([launcherCoinSpend, nftCoinSpend], extreqs, chainId, true);
-  const extreqs2 = cloneAndChangeRequestPuzzleTemporary(baseSymbol, requests, didP2InnerPuzzleHash, didAnalysis.rawPuzzle, didPuzzleHash);
+  const extreqs2 = cloneAndAddRequestPuzzleTemporary(baseSymbol, requests, didP2InnerPuzzleHash, didAnalysis.rawPuzzle, didPuzzleHash);
   const bundles2 = await transfer.getSpendBundle([didCoinSpend], extreqs2, chainId);
   const bundle = await combineSpendBundlePure(bootstrapSpendBundle, bundles, bundles2);
 
@@ -193,7 +193,7 @@ export async function generateTransferNftBundle(
     solution: prefix0x(await puzzle.encodePuzzle(nftSolution)),
   };
 
-  const extreqs = cloneAndChangeRequestPuzzleTemporary(baseSymbol, requests, inner_p2_puzzle.hash, nftPuzzle, nftPuzzleHash);
+  const extreqs = cloneAndAddRequestPuzzleTemporary(baseSymbol, requests, inner_p2_puzzle.hash, nftPuzzle, nftPuzzleHash);
 
   const bundle = await transfer.getSpendBundle([nftCoinSpend], extreqs, chainId);
 
