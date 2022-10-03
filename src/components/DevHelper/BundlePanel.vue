@@ -253,6 +253,7 @@ import debug from "@/services/api/debug";
 import { Instance } from "@/services/util/instance";
 import { demojo } from "@/filters/unitConversion";
 import { OneTokenInfo } from "@/models/account";
+import { convertUncurriedPuzzle, getModsPath, sexpAssemble, uncurryPuzzle } from "@/services/coin/analyzer";
 
 interface AnnouncementCoin {
   coinIndex: number;
@@ -278,6 +279,7 @@ interface CoinIndexInfo {
   coinName: string;
   amount: bigint;
   nextIndex?: number;
+  mods?: string;
 }
 
 @Component({
@@ -306,6 +308,7 @@ export default class BundlePanel extends Vue {
   public coinAnnoCreates: AnnouncementCoin[] = [];
   public coinAnnoAsserted: AnnouncementCoin[] = [];
   public coinAvailability: CoinAvailability[] = [];
+  public coinMods: { coinIndex: number; mods: string }[] = [];
   public aggSigMessages: AggSigMessage[] = [];
   public createdCoins: { [key: string]: CoinIndexInfo } = {};
   public sigVerified: "None" | "Verified" | "Failed" = "None";
@@ -379,6 +382,7 @@ export default class BundlePanel extends Vue {
     this.coinAnnoAsserted = [];
     this.coinAvailability = [];
     this.aggSigMessages = [];
+    this.coinMods = [];
     this.sigVerified = "None";
     this.mgraphGenerated = false;
 
@@ -427,7 +431,6 @@ export default class BundlePanel extends Vue {
     this.autoCalculation = localStorage.getItem("BUNDLE_AUTO_CALCULATION") === "true";
   }
 
-  
   demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null, digits = -1): string {
     return demojo(mojo, token, digits);
   }
@@ -517,6 +520,7 @@ export default class BundlePanel extends Vue {
     const coinsForAvail: CoinAvailability[] = [];
     const newCoins: CoinIndexInfo[] = [];
     this.aggSigMessages = [];
+    this.coinMods = [];
     try {
       for (let i = 0; i < this.bundle.coin_spends.length; i++) {
         const cs = this.bundle.coin_spends[i];
@@ -571,6 +575,11 @@ export default class BundlePanel extends Vue {
             .filter((_) => _.op == ConditionOpcode.AGG_SIG_UNSAFE)
             .map((_) => ({ coinIndex: i, coinName: "", publicKey: _.args[0], message: _.args[1] }))
         );
+
+        const uncPuzzle = await uncurryPuzzle(sexpAssemble(cs.puzzle_reveal), cs.puzzle_reveal);
+        const decPuzzle = convertUncurriedPuzzle(uncPuzzle);
+        const mods = getModsPath(decPuzzle);
+        this.coinMods.push({ mods, coinIndex: i });
       }
 
       Vue.set(this, "createdCoins", {});
@@ -652,6 +661,36 @@ export default class BundlePanel extends Vue {
       // graphDefinition += `SIG -- SIG --> ${sig.coinIndex};`;
     }
 
+    for (let i = 0; i < this.coinMods.length; i++) {
+      const coin = this.coinMods[i];
+
+      if (!coin.mods) continue;
+      const mods =
+        coin.mods == "singleton_launcher()"
+          ? "Launcher"
+          : coin.mods == "p2_delegated_puzzle_or_hidden_puzzle()"
+          ? "XCH"
+          : coin.mods == "cat_v2()"
+          ? "CAT"
+          : coin.mods == "cat_v2(p2_delegated_puzzle_or_hidden_puzzle())"
+          ? "CAT"
+          : coin.mods == "cat_v2(settlement_payments())"
+          ? "CAT(O)"
+          : coin.mods == "singleton_top_layer_v1_1(did_innerpuz(p2_delegated_puzzle_or_hidden_puzzle()))"
+          ? "DID"
+          : coin.mods ==
+            "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),p2_delegated_puzzle_or_hidden_puzzle())))"
+          ? "NFT"
+          : coin.mods ==
+            "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),settlement_payments())))"
+          ? "NFT(O)"
+          : "";
+      if (coin.mods && !mods) console.warn("mods", coin.mods);
+      if (!mods) continue;
+
+      graphDefinition += `${coin.coinIndex}[${coin.coinIndex}:${mods}];`;
+    }
+
     for (let i = 0; i < this.puzzleAnnoAsserted.length; i++) {
       const ass = this.puzzleAnnoAsserted[i];
       const cre = this.puzzleAnnoCreates.find((_) => _.message == ass.message);
@@ -691,6 +730,7 @@ export default class BundlePanel extends Vue {
     graphDefinition += `\nclassDef Sig fill:#EFFAF5,stroke:#48C78E;`;
     graphDefinition += `\nclassDef SigUnsafe fill:#FFFAEB,stroke:#FFE08A;`;
     graphDefinition += `\nclassDef NoSig fill:#FEECF0,stroke:#F14668;`;
+    console.log(graphDefinition);
     mermaid.mermaidAPI.render("mgraph", graphDefinition, insertSvg);
   }
 }
