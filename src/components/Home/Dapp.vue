@@ -87,6 +87,16 @@
           </a>
         </b-tooltip>
       </div>
+      <div v-if="experimentMode && debugMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.mintNft')" position="is-right">
+          <a href="javascript:void(0)" @click="$router.push('/home/batch-mint-nft')" class="has-text-link">
+            <div class="has-text-centered">
+              <b-icon icon="image-multiple-outline" size="is-medium"></b-icon>
+              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.mintNft") }}</p>
+            </div>
+          </a>
+        </b-tooltip>
+      </div>
     </div>
   </div>
 </template>
@@ -96,6 +106,7 @@ import { AccountEntity, CustomCat } from "@/models/account";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import MintCat from "@/components/Mint/MintCat.vue";
 import MintNft from "@/components/Mint/MintNft.vue";
+import BatchMintNft from "@/components/Mint/BatchMintNft.vue";
 import MakeOffer from "@/components/Offer/Make.vue";
 import TakeOffer from "@/components/Offer/Take.vue";
 import ScanAssets from "@/components/ScanAssets/ScanAssets.vue";
@@ -152,6 +163,9 @@ export default class Dapp extends Vue {
         break;
       case "/home/mint-nft":
         this.openMintNft();
+        break;
+      case "/home/batch-mint-nft":
+        this.openBatchMintNft();
         break;
       case "/home/scan-assets":
         this.openScanAssets();
@@ -272,6 +286,21 @@ export default class Dapp extends Vue {
     this.$buefy.modal.open({
       parent: this,
       component: MintNft,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      fullScreen: isMobile(),
+      props: {
+        account: this.account,
+      },
+    });
+  }
+
+  openBatchMintNft(): void {
+    this.checkObserveMode();
+    this.$buefy.modal.open({
+      parent: this,
+      component: BatchMintNft,
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
