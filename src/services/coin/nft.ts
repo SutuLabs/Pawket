@@ -62,6 +62,7 @@ export async function generateMintNftBundle(
   if (!Array.isArray(metadatas)) metadatas = [metadatas];
 
   /*
+  0. Initial Bootstrap Coin: XCH Tx -> (1 mojo) XCH Tx(s) [When multiple mint is enabled]
   1. BootstrapCoin: XCH Tx -> (XCH Change Tx . SgtLauncher Tx)
   2. LauncherCoin: SgtLauncher Tx -> Genesis NFT Tx
   3. NftCoin: Genesis NFT Tx -> Updater NFT Tx
