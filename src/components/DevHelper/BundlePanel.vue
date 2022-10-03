@@ -730,7 +730,6 @@ export default class BundlePanel extends Vue {
     graphDefinition += `\nclassDef Sig fill:#EFFAF5,stroke:#48C78E;`;
     graphDefinition += `\nclassDef SigUnsafe fill:#FFFAEB,stroke:#FFE08A;`;
     graphDefinition += `\nclassDef NoSig fill:#FEECF0,stroke:#F14668;`;
-    console.log(graphDefinition);
     mermaid.mermaidAPI.render("mgraph", graphDefinition, insertSvg);
   }
 }
