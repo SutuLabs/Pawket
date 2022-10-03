@@ -41,7 +41,7 @@ export function getPuzzleDetail(
 }
 
 
-export function cloneAndChangeRequestPuzzleTemporary(
+export function cloneAndAddRequestPuzzleTemporary(
   baseSymbol: string,
   requests: TokenPuzzleDetail[],
   originalHash: string,
@@ -49,11 +49,16 @@ export function cloneAndChangeRequestPuzzleTemporary(
   newPuzzleHash: string,
 ): TokenPuzzleDetail[] {
   const extreqs = Array.from(requests.map((_) => ({ symbol: _.symbol, puzzles: Array.from(_.puzzles.map((_) => ({ ..._ }))) })));
-  const nftReq = extreqs.find((_) => _.symbol == baseSymbol)?.puzzles.find((_) => unprefix0x(originalHash) == _.hash);
-  if (!nftReq) throw new Error(`cannot find inner puzzle hash [${unprefix0x(originalHash)}] from ` + JSON.stringify(extreqs));
-  nftReq.puzzle = newPuzzle;
-  nftReq.hash = unprefix0x(newPuzzleHash);
-  nftReq.address = "";
+  const puzs = extreqs.find((_) => _.symbol == baseSymbol);
+  const nftReq = puzs?.puzzles.find((_) => unprefix0x(originalHash) == _.hash);
+  if (!puzs || !nftReq) throw new Error(`cannot find inner puzzle hash [${unprefix0x(originalHash)}] from ` + JSON.stringify(extreqs));
+  puzs.puzzles.push({
+    privateKey: nftReq.privateKey,
+    puzzle: newPuzzle,
+    hash: unprefix0x(newPuzzleHash),
+    address: "",
+    type: nftReq.type,
+  });
   return extreqs;
 }
 

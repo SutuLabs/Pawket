@@ -6,7 +6,7 @@
     "configurations": [
         {
             "type": "node",
-            "name": "Debug Jest script",      
+            "name": "Debug Server Jest script",      
             "request": "launch",
             "runtimeArgs": [
               "--inspect-brk",
@@ -16,6 +16,23 @@
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen",
             "cwd": "${workspaceFolder}/server",
+            "port": 9229
+          },
+        {
+            "type": "node",
+            "name": "Debug Jest script",      
+            "request": "launch",
+            "runtimeArgs": [
+              "--inspect-brk",
+              "${workspaceRoot}/node_modules/jest/bin/jest.js",
+              // "nft",
+              // "-t",
+              // "\"Mint Multiple Nfts\"",
+              "--runInBand"
+            ],
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "cwd": "${workspaceFolder}",
             "port": 9229
           }
     ]

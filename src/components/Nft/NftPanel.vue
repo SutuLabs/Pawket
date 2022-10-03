@@ -153,9 +153,16 @@ export default class NftPanel extends Vue {
     const resp = await fetch(uri);
     const body = await resp.blob();
     const bodyhex = utility.toHexString(await utility.purehash(await body.arrayBuffer()));
-    const md = JSON.parse(await body.text()) as NftOffChainMetadata;
+    try {
+      const md = JSON.parse(await body.text()) as NftOffChainMetadata;
+      this.extraInfo[nft.address].metadata = md;
+    } catch (error) {
+      if (process.env.NODE_ENV !== "production") {
+        console.warn("cannot parse metadata", error);
+      }
+      this.extraInfo[nft.address].metadata = undefined;
+    }
     // console.log("downloaded", bodyhex, nft.analysis.metadata.metadataHash, md);
-    this.extraInfo[nft.address].metadata = md;
     this.extraInfo[nft.address].status = "Processed";
     this.extraInfo[nft.address].matchHash = bodyhex.toLowerCase() == unprefix0x(nft.analysis.metadata.metadataHash).toLowerCase();
   }

@@ -1,6 +1,6 @@
 import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
 import puzzle from "../crypto/puzzle";
-import { TokenPuzzleDetail } from "../crypto/receive";
+import receive, { TokenPuzzleDetail } from "../crypto/receive";
 import { combineSpendBundlePure } from "../mint/cat";
 import { curryMod } from "../offer/bundler";
 import transfer, { GetPuzzleApiCallback, SymbolCoins, TransferTarget } from "../transfer/transfer";
@@ -9,7 +9,7 @@ import { modshash, modshex, modsprog } from "./mods";
 import utility, { bytesToHex0x } from "../crypto/utility";
 import catBundle, { LineageProof } from "../transfer/catBundle";
 import { getCoinName0x } from "./coinUtility";
-import { cloneAndChangeRequestPuzzleTemporary, constructSingletonTopLayerPuzzle, getNextCoinName0x, getPuzzleDetail, hex2asc, hex2ascSingle, ParsedMetadata, parseMetadata, SingletonStructList } from "./singleton";
+import { cloneAndAddRequestPuzzleTemporary, constructSingletonTopLayerPuzzle, getNextCoinName0x, getPuzzleDetail, hex2asc, hex2ascSingle, ParsedMetadata, parseMetadata, SingletonStructList } from "./singleton";
 import { findByPath } from "./lisp";
 import { ConditionOpcode } from "./opcode";
 import { DidCoinAnalysisResult } from "./did";
@@ -17,6 +17,7 @@ import { NftCoinAnalysisResult, NftMetadataKeys, NftMetadataValues } from "@/mod
 import { CannotParsePuzzle, expectModArgs, sexpAssemble, UncurriedPuzzle, uncurryPuzzle } from "./analyzer";
 import { disassemble, sha256tree } from "clvm_tools";
 import { SExp } from "clvm";
+import { Instance } from "../util/instance";
 
 export interface MintNftInfo {
   spendBundle: SpendBundle;
@@ -38,10 +39,10 @@ export interface MintNftInfo {
 //           - `INNER_PUZZLE` -> p2_delegated_puzzle_or_hidden_puzzle
 
 export async function generateMintNftBundle(
-  targetAddress: string,
+  nftIntermediateAddress: string,
   changeAddress: string,
   fee: bigint,
-  metadata: NftMetadataValues,
+  metadatas: NftMetadataValues | NftMetadataValues[],
   availcoins: SymbolCoins,
   requests: TokenPuzzleDetail[],
   baseSymbol: string,
@@ -50,89 +51,117 @@ export async function generateMintNftBundle(
   tradePricePercentage: number,
   didAnalysis: DidCoinAnalysisResult,
   api: GetPuzzleApiCallback,
+  privateKey: string | undefined = undefined,
+  targetAddresses: string[] | undefined = undefined,
   isCns = false,
 ): Promise<MintNftInfo> {
   const amount = 1n; // always 1 mojo for 1 NFT
-  const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
+  const intermediate_hex = prefix0x(puzzle.getPuzzleHashFromAddress(nftIntermediateAddress));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(changeAddress));
-  const inner_p2_puzzle = getPuzzleDetail(tgt_hex, requests);
+  const inner_p2_puzzle = getPuzzleDetail(intermediate_hex, requests);
+
+  if (!Array.isArray(metadatas)) metadatas = [metadatas];
 
   /*
+  0. Initial Bootstrap Coin: XCH Tx -> (1 mojo) XCH Tx(s) [When multiple mint is enabled]
   1. BootstrapCoin: XCH Tx -> (XCH Change Tx . SgtLauncher Tx)
   2. LauncherCoin: SgtLauncher Tx -> Genesis NFT Tx
   3. NftCoin: Genesis NFT Tx -> Updater NFT Tx
   4. DidCoin: DID Tx -> DID Tx
   */
 
-  const bootstrapTgts: TransferTarget[] = [{ address: prefix0x(modshash["singleton_launcher"]), amount, symbol: baseSymbol }];
-  const bootstrapSpendPlan = transfer.generateSpendPlan(availcoins, bootstrapTgts, change_hex, fee, baseSymbol);
-  const bootstrapSpendBundle = await transfer.generateSpendBundleWithoutCat(bootstrapSpendPlan, requests, [], baseSymbol, chainId);
-  const bootstrapCoin = bootstrapSpendBundle.coin_spends[0].coin;// get the primary coin
-  const bootstrapCoinId = getCoinName0x(bootstrapCoin);
-  // TODO: assert puzzle announcement from launcher coin in p2 bootstrap coin
+  const bootstrapSpendBundle = await getBootstrapSpendBundle(change_hex, fee, availcoins, requests, metadatas.length, baseSymbol, chainId, privateKey);
 
-  const launcherCoin: OriginCoin = {
-    parent_coin_info: bootstrapCoinId,
-    amount,
-    puzzle_hash: prefix0x(modshash["singleton_launcher"]),
-  };
-  const launcherCoinId = getCoinName0x(launcherCoin);
+  if (bootstrapSpendBundle.coin_spends.length != (metadatas.length == 1 ? 1 : metadatas.length + 1))
+    throw new Error("unexpected bootstrap coin spends number");
 
-  const sgnStruct = `(${prefix0x(modshash["singleton_top_layer_v1_1"])} ${prefix0x(launcherCoinId)} . ${prefix0x(modshash["singleton_launcher"])})`;
-  const metadata_updater_hash = isCns ? modshash["nft_metadata_updater_cns"] : modshash["nft_metadata_updater_default"];
-  const nftPuzzle = await constructSingletonTopLayerPuzzle(
-    launcherCoinId,
-    prefix0x(modshash["singleton_launcher"]),
-    await constructNftStatePuzzle(
-      await constructMetadataString(metadata),
-      metadata_updater_hash,
-      await constructNftOwnershipPuzzle("()", // first creation, current owner in field is () instead of didAnalysis.launcherId, true owner is in the solution
-        await constructNftTransferPuzzle(sgnStruct, royaltyAddressHex, tradePricePercentage),
-        inner_p2_puzzle.puzzle))
-  );
+  if (targetAddresses != undefined && targetAddresses.length != metadatas.length)
+    throw new Error("target address number should equal to metadata number");
 
-  const nftPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(nftPuzzle));
-  const nftCoin = {
-    parent_coin_info: launcherCoinId,
-    amount,
-    puzzle_hash: nftPuzzleHash,
-  };
-  const didInnerPuzzleHash0x = prefix0x(didAnalysis.didInnerPuzzleHash);
-
-  const launcherSolution = `(${nftPuzzleHash} ${amount} ())`;
-
-  const nftSolution = `((${bootstrapCoinId} ${amount}) ${amount} (((() (q (-10 ${didAnalysis.launcherId} () ${didInnerPuzzleHash0x}) (51 ${tgt_hex} 1 (${tgt_hex} ${tgt_hex}))) ()))))`;
-
-  const launcherCoinSpend: CoinSpend = {
-    coin: launcherCoin,
-    puzzle_reveal: prefix0x(modshex["singleton_launcher"]),
-    solution: prefix0x(await puzzle.encodePuzzle(launcherSolution)),
-  };
-
-  const nftCoinSpend: CoinSpend = {
-    coin: nftCoin,
-    puzzle_reveal: prefix0x(await puzzle.encodePuzzle(nftPuzzle)),
-    solution: prefix0x(await puzzle.encodePuzzle(nftSolution)),
-  };
-
-  const proof = await catBundle.getLineageProof(didAnalysis.coin.parent_coin_info, api, 2);
-  if (proof.proof != didInnerPuzzleHash0x)
-    throw new Error(`proof[${proof.proof}] should equal to did_inner_puzzle_hash[${didInnerPuzzleHash0x}]`);
-  const didP2InnerPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(didAnalysis.p2InnerPuzzle));
-  const didSolution = `((${proof.coinId} ${proof.proof} ${proof.amount}) ${amount} (q (() (q (51 ${didInnerPuzzleHash0x} ${amount} (${didP2InnerPuzzleHash})) (62 ${launcherCoinId})) ())))`;
-  const didCoinSpend: CoinSpend = {
-    coin: didAnalysis.coin,
-    puzzle_reveal: prefix0x(await puzzle.encodePuzzle(didAnalysis.rawPuzzle)),
-    solution: prefix0x(await puzzle.encodePuzzle(didSolution)),
-  };
-
+  let didPreviousCoin = didAnalysis.coin;
+  let proof = await catBundle.getLineageProof(didPreviousCoin.parent_coin_info, api, 2);
   const didPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(didAnalysis.rawPuzzle));
+  let bundle: SpendBundle = bootstrapSpendBundle;
+  for (let i = 0; i < metadatas.length; i++) {
+    const offset = metadatas.length == 1 ? 0 : 1;
+    const metadata = metadatas[i];
+    const bootstrapCoin = bootstrapSpendBundle.coin_spends[offset + i].coin;
+    const bootstrapCoinId = getCoinName0x(bootstrapCoin);
+    // TODO: assert puzzle announcement from launcher coin in p2 bootstrap coin
 
-  const extreqs = cloneAndChangeRequestPuzzleTemporary(baseSymbol, requests, inner_p2_puzzle.hash, nftPuzzle, nftPuzzleHash);
-  const bundles = await transfer.getSpendBundle([launcherCoinSpend, nftCoinSpend], extreqs, chainId, true);
-  const extreqs2 = cloneAndChangeRequestPuzzleTemporary(baseSymbol, requests, didP2InnerPuzzleHash, didAnalysis.rawPuzzle, didPuzzleHash);
-  const bundles2 = await transfer.getSpendBundle([didCoinSpend], extreqs2, chainId);
-  const bundle = await combineSpendBundlePure(bootstrapSpendBundle, bundles, bundles2);
+    const launcherCoin: OriginCoin = {
+      parent_coin_info: bootstrapCoinId,
+      amount,
+      puzzle_hash: prefix0x(modshash["singleton_launcher"]),
+    };
+    const launcherCoinId = getCoinName0x(launcherCoin);
+
+    const sgnStruct = `(${prefix0x(modshash["singleton_top_layer_v1_1"])} ${prefix0x(launcherCoinId)} . ${prefix0x(modshash["singleton_launcher"])})`;
+    const metadata_updater_hash = isCns ? modshash["nft_metadata_updater_cns"] : modshash["nft_metadata_updater_default"];
+    const nftPuzzle = await constructSingletonTopLayerPuzzle(
+      launcherCoinId,
+      prefix0x(modshash["singleton_launcher"]),
+      await constructNftStatePuzzle(
+        await constructMetadataString(metadata),
+        metadata_updater_hash,
+        await constructNftOwnershipPuzzle("()", // first creation, current owner in field is () instead of didAnalysis.launcherId, true owner is in the solution
+          await constructNftTransferPuzzle(sgnStruct, royaltyAddressHex, tradePricePercentage),
+          inner_p2_puzzle.puzzle))
+    );
+
+    const nftPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(nftPuzzle));
+    const nftCoin = {
+      parent_coin_info: launcherCoinId,
+      amount,
+      puzzle_hash: nftPuzzleHash,
+    };
+    const didInnerPuzzleHash0x = prefix0x(didAnalysis.didInnerPuzzleHash);
+
+    const launcherSolution = `(${nftPuzzleHash} ${amount} ())`;
+
+    const tgt_hex = targetAddresses ? prefix0x(puzzle.getPuzzleHashFromAddress(targetAddresses[i])) : intermediate_hex;
+    const nftSolution = `((${bootstrapCoinId} ${amount}) ${amount} (((() (q (-10 ${didAnalysis.launcherId} () ${didInnerPuzzleHash0x}) (51 ${tgt_hex} 1 (${tgt_hex} ${tgt_hex}))) ()))))`;
+
+    const launcherCoinSpend: CoinSpend = {
+      coin: launcherCoin,
+      puzzle_reveal: prefix0x(modshex["singleton_launcher"]),
+      solution: prefix0x(await puzzle.encodePuzzle(launcherSolution)),
+    };
+
+    const nftCoinSpend: CoinSpend = {
+      coin: nftCoin,
+      puzzle_reveal: prefix0x(await puzzle.encodePuzzle(nftPuzzle)),
+      solution: prefix0x(await puzzle.encodePuzzle(nftSolution)),
+    };
+
+    if (proof.proof != didInnerPuzzleHash0x)
+      throw new Error(`proof[${proof.proof}] should equal to did_inner_puzzle_hash[${didInnerPuzzleHash0x}]`);
+    const didP2InnerPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(didAnalysis.p2InnerPuzzle));
+    const didSolution = `((${proof.coinId} ${proof.proof} ${proof.amount}) ${amount} (q (() (q (51 ${didInnerPuzzleHash0x} ${amount} (${didP2InnerPuzzleHash})) (62 ${launcherCoinId})) ())))`;
+    const didCoinSpend: CoinSpend = {
+      coin: didPreviousCoin,
+      puzzle_reveal: prefix0x(await puzzle.encodePuzzle(didAnalysis.rawPuzzle)),
+      solution: prefix0x(await puzzle.encodePuzzle(didSolution)),
+    };
+
+    const didParentCoinId = getCoinName0x(didPreviousCoin);
+    proof = {
+      amount: proof.amount,
+      proof: proof.proof, // proof not change due to p2_inner_puzzle not change and did_innerpuz not change
+      coinId: didPreviousCoin.parent_coin_info,
+    }
+    didPreviousCoin = {
+      parent_coin_info: didParentCoinId,
+      puzzle_hash: didPuzzleHash,
+      amount: didPreviousCoin.amount,
+    };
+
+    const extreqs = cloneAndAddRequestPuzzleTemporary(baseSymbol, requests, inner_p2_puzzle.hash, nftPuzzle, nftPuzzleHash);
+    const bundles = await transfer.getSpendBundle([launcherCoinSpend, nftCoinSpend], extreqs, chainId, true);
+    const extreqs2 = cloneAndAddRequestPuzzleTemporary(baseSymbol, requests, didP2InnerPuzzleHash, didAnalysis.rawPuzzle, didPuzzleHash);
+    const bundles2 = await transfer.getSpendBundle([didCoinSpend], extreqs2, chainId);
+    bundle = await combineSpendBundlePure(bundle, bundles, bundles2);
+  }
 
   // for test case generation
   // console.log(`const targetAddress="${targetAddress}";`
@@ -148,6 +177,55 @@ export async function generateMintNftBundle(
   return {
     spendBundle: bundle,
   };
+}
+
+export async function getBootstrapSpendBundle(
+  change_hex: string,
+  fee: bigint,
+  availcoins: SymbolCoins,
+  requests: TokenPuzzleDetail[],
+  count: number,
+  baseSymbol: string,
+  chainId: string,
+  privateKey: string | undefined = undefined,
+): Promise<SpendBundle> {
+  const amount = 1n; // always 1 mojo for 1 NFT
+
+  if (count == 1) {
+    const bootstrapTgts: TransferTarget[] = [{ address: prefix0x(modshash["singleton_launcher"]), amount, symbol: baseSymbol }];
+    const bootstrapSpendPlan = transfer.generateSpendPlan(availcoins, bootstrapTgts, change_hex, fee, baseSymbol);
+    const bootstrapSpendBundle = await transfer.generateSpendBundleWithoutCat(bootstrapSpendPlan, requests, [], baseSymbol, chainId);
+    return bootstrapSpendBundle;
+  }
+  else {
+    const BLS = Instance.BLS;
+    if (!BLS) throw new Error("BLS not initialized");
+
+    const sk = privateKey ? privateKey : utility.toHexString(BLS.AugSchemeMPL.key_gen(utility.getRandom(64)).serialize());
+    const puzzles = await receive.getAssetsRequestDetail(sk, 0, count, [], {}, "any", baseSymbol, "cat_v2");
+    const ps = puzzles.filter(_ => _.symbol == baseSymbol)[0].puzzles;
+
+    // initboot coin == initial bootstrap coin
+    const initbootTgts: TransferTarget[] = ps.slice(0, count).map(puz => ({ address: prefix0x(puz.hash), amount, symbol: baseSymbol }));
+    const initbootSpendPlan = transfer.generateSpendPlan(availcoins, initbootTgts, change_hex, fee, baseSymbol);
+    const initbootSpendBundle = await transfer.generateSpendBundleWithoutCat(initbootSpendPlan, requests, [], baseSymbol, chainId);
+
+
+    let spendBundle = initbootSpendBundle;
+    const parent = getCoinName0x(spendBundle.coin_spends[0].coin);
+    for (let i = 0; i < count; i++) {
+      const tgt = initbootSpendPlan[baseSymbol].targets[i];
+      const onlycoin: SymbolCoins = {};
+      onlycoin[baseSymbol] = [{ puzzle_hash: tgt.address, amount: tgt.amount, parent_coin_info: parent }];
+      const bootstrapTgts: TransferTarget[] = [{ address: prefix0x(modshash["singleton_launcher"]), amount, symbol: baseSymbol }];
+      const bootstrapSpendPlan = transfer.generateSpendPlan(onlycoin, bootstrapTgts, change_hex, 0n, baseSymbol);
+      const bootstrapSpendBundle = await transfer.generateSpendBundleWithoutCat(bootstrapSpendPlan, puzzles, [], baseSymbol, chainId);
+
+      spendBundle = await combineSpendBundlePure(spendBundle, bootstrapSpendBundle);
+    }
+
+    return spendBundle;
+  }
 }
 
 export async function generateTransferNftBundle(
@@ -193,7 +271,7 @@ export async function generateTransferNftBundle(
     solution: prefix0x(await puzzle.encodePuzzle(nftSolution)),
   };
 
-  const extreqs = cloneAndChangeRequestPuzzleTemporary(baseSymbol, requests, inner_p2_puzzle.hash, nftPuzzle, nftPuzzleHash);
+  const extreqs = cloneAndAddRequestPuzzleTemporary(baseSymbol, requests, inner_p2_puzzle.hash, nftPuzzle, nftPuzzleHash);
 
   const bundle = await transfer.getSpendBundle([nftCoinSpend], extreqs, chainId);
 

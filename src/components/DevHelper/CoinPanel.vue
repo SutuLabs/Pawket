@@ -24,7 +24,7 @@
       <b-field v-if="false" label="Result">
         <b-input type="textarea" disabled :value="JSON.stringify(coinSpend, null, 4)"></b-input>
       </b-field>
-      <bundle-panel :inputBundleText="bundleText"></bundle-panel>
+      <bundle-panel :inputBundleText="bundleText" @coinname="find"></bundle-panel>
     </template>
   </div>
 </template>
@@ -120,6 +120,10 @@ export default class CoinPanel extends Vue {
 
       this.coinSearchList.push(...children);
     }
+  }
+
+  find(coinname: string): void {
+    this.searchCoinId(coinname);
   }
 }
 </script>

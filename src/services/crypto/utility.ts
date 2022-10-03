@@ -75,6 +75,12 @@ class Utility {
     // console.warn(`elapsed ${end - start}ms for ${iteration} iterations.`);
     return this.toHexString(new Uint8Array(d));
   }
+
+  public getRandom(length:number): Uint8Array {
+    const seed = new Uint8Array(length);
+    crypto.getRandomValues(seed);
+    return seed;
+  }
 }
 
 export default new Utility();

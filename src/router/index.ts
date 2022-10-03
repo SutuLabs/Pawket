@@ -51,6 +51,9 @@ const routes: Array<RouteConfig> = [
       {
         path: "scan-assets",
       },
+      {
+        path: "batch-mint-nft",
+      },
     ],
   },
   {
