@@ -98,6 +98,36 @@ test('Mint Nft', async () => {
   expect(spendBundle).toMatchSnapshot("spendbundle");
 });
 
+test('Mint Multiple Nfts', async () => {
+  const targetAddress = "txch1p6mjpkgetll9j6ztv2cj64rer0n66wakypl4awfwpcd5pm9uz92s0xl0jd";
+  const changeAddress = "txch1p6mjpkgetll9j6ztv2cj64rer0n66wakypl4awfwpcd5pm9uz92s0xl0jd";
+  const fee = 0n;
+  const royaltyAddressHex = "7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10";
+  const tradePricePercentage = 500;
+
+  const account = getTestAccount("55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f");
+
+  const tokenPuzzles = await getAccountAddressDetails(account, [], tokenInfo(), xchPrefix(), xchSymbol(), undefined, "cat_v1");
+  const availcoins: SymbolCoins = {
+    [xchSymbol()]: [
+      {
+        "amount": 4998999984n,
+        "parent_coin_info": "0xf3b7d6d4bdd80b99c539f7ca900288f5dc2ac8fb23559656e981761e90b2fe71",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155"
+      },
+    ]
+  };
+  const metadatas = [
+    Object.assign({}, nftMetadata, { serialNumber: 1 }),
+    Object.assign({}, nftMetadata, { serialNumber: 2 }),
+    Object.assign({}, nftMetadata, { serialNumber: 3 }),
+  ];
+  const { spendBundle } = await generateMintNftBundle(
+    targetAddress, changeAddress, fee, metadatas, availcoins, tokenPuzzles, xchSymbol(), chainId(), royaltyAddressHex,
+    tradePricePercentage, didAnalysis, localPuzzleApiCall, "00186eae4cd4a3ec609ca1a8c1cda8467e3cb7cbbbf91a523d12d31129d5f8d7");
+  expect(spendBundle).toMatchSnapshot("spendbundle");
+});
+
 test('Transfer Nft', async () => {
   const hintPuzzle = "8f972e809806a42ec005beb3019665bea4b3478c9582bf43708bb1c261916a51";
   const target_hex = "0xd26c36cfd99da03a18a7d47dddd7beb968ff63bd7d3ccc45205fadb6958a571d";
