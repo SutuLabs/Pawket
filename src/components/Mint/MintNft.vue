@@ -451,6 +451,7 @@ export default class MintNft extends Vue {
         this.royaltyPercentage * 100,
         did.analysis,
         getLineageProofPuzzle,
+        undefined,
         isCns
       );
 
