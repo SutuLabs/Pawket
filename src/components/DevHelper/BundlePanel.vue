@@ -129,7 +129,14 @@
                   {{ getNumber(sol.args[1]) }}
                 </li>
                 <li v-if="sol.op == 51">
-                  <b-tag type="is-primary is-light">coin name:</b-tag>
+                  <b-tag type="is-primary is-light"
+                    >Name:
+                    <b-tooltip label="Find Coin Name">
+                      <a href="javascript:void(0)" @click="find(getCoinNameInternal(...sol.args))">
+                        <b-icon icon="web" size="is-small"></b-icon>
+                      </a>
+                    </b-tooltip>
+                  </b-tag>
                   {{ getCoinNameInternal(...sol.args) }}
                 </li>
               </ul>
@@ -442,6 +449,10 @@ export default class BundlePanel extends Vue {
 
   saveSettings(): void {
     localStorage.setItem("BUNDLE_AUTO_CALCULATION", this.autoCalculation.toString());
+  }
+
+  find(coinname: string): void {
+    this.$emit("coinname", coinname);
   }
 
   async changeCoin(idx: number): Promise<void> {
