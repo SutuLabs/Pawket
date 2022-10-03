@@ -46,7 +46,11 @@ test('Analyze Nft 4', async () => await testAnalyzeNftCoin(nftcoin4, "0000000000
 // mainnet coin: 0x092addccb83469b626b4a462e2b8671bb33085032486e9cf6861c43db188516b
 test('Analyze Nft 5', async () => await testAnalyzeNftCoin(nftcoin5, "bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79"));
 
-async function testMintNft(fee: bigint, metadata: NftMetadataValues | NftMetadataValues[]): Promise<void> {
+async function testMintNft(
+  fee: bigint,
+  metadata: NftMetadataValues | NftMetadataValues[],
+  targetAddresses: string[] | undefined = undefined,
+): Promise<void> {
   const targetAddress = "txch1p6mjpkgetll9j6ztv2cj64rer0n66wakypl4awfwpcd5pm9uz92s0xl0jd";
   const changeAddress = "txch1p6mjpkgetll9j6ztv2cj64rer0n66wakypl4awfwpcd5pm9uz92s0xl0jd";
   const royaltyAddressHex = "7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10";
@@ -66,12 +70,14 @@ async function testMintNft(fee: bigint, metadata: NftMetadataValues | NftMetadat
   };
   const { spendBundle } = await generateMintNftBundle(
     targetAddress, changeAddress, fee, metadata, availcoins, tokenPuzzles, xchSymbol(), chainId(), royaltyAddressHex,
-    tradePricePercentage, didAnalysis, localPuzzleApiCall, "00186eae4cd4a3ec609ca1a8c1cda8467e3cb7cbbbf91a523d12d31129d5f8d7");
+    tradePricePercentage, didAnalysis, localPuzzleApiCall,
+    "00186eae4cd4a3ec609ca1a8c1cda8467e3cb7cbbbf91a523d12d31129d5f8d7", targetAddresses);
   expect(spendBundle).toMatchSnapshot("spendbundle");
 }
 
 test('Mint Nft', async () => {
   await testMintNft(0n, nftMetadata);
+  await testMintNft(8889n, nftMetadata);
 });
 
 test('Mint Multiple Nfts', async () => {
@@ -80,7 +86,13 @@ test('Mint Multiple Nfts', async () => {
     Object.assign({}, nftMetadata, { serialNumber: 2 }),
     Object.assign({}, nftMetadata, { serialNumber: 3 }),
   ];
+  const addresses = [
+    "xch1yrp82hk8q566lj9zkpqg637rp4r6rnsjxtxdxdusxrp62ymru2eq3l2ger",
+    "xch12kr5c48vs65gugkn448j4djz95xqhxxjm05e0hfp7sze85rvsfns56p70d",
+    "xch1mh5us8c296g4rvfhf4ksmnwzd66a9tzt9rslf3f4waejhyws7g6slnrxz6",
+  ]
   await testMintNft(0n, metadatas);
+  await testMintNft(8888n, metadatas, addresses);
 });
 
 async function testTransferNft(fee: bigint): Promise<void> {
@@ -100,7 +112,13 @@ async function testTransferNft(fee: bigint): Promise<void> {
 
   const tokenPuzzles = await getAccountAddressDetails(account, [], tokenInfo(), xchPrefix(), xchSymbol(), undefined, "cat_v1");
   const availcoins: SymbolCoins = {
-    [xchSymbol()]: []
+    [xchSymbol()]: [
+      {
+        "amount": 4998999984n,
+        "parent_coin_info": "0xf3b7d6d4bdd80b99c539f7ca900288f5dc2ac8fb23559656e981761e90b2fe71",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155"
+      },
+    ]
   };
 
   const spendBundle = await generateTransferNftBundle(
@@ -110,6 +128,7 @@ async function testTransferNft(fee: bigint): Promise<void> {
 
 test('Transfer Nft', async () => {
   await testTransferNft(0n);
+  await testTransferNft(7777n);
 });
 
 async function testMintDid(fee: bigint): Promise<void> {
@@ -131,7 +150,12 @@ async function testMintDid(fee: bigint): Promise<void> {
         "amount": 23n,
         "parent_coin_info": "0xc4badc175d119df8006fd8e96ad84c475e743275e70d6c16f43cf83fb75df021",
         "puzzle_hash": "0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10"
-      }
+      },
+      {
+        "amount": 4998999984n,
+        "parent_coin_info": "0xf3b7d6d4bdd80b99c539f7ca900288f5dc2ac8fb23559656e981761e90b2fe71",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155"
+      },
     ]
   };
 
@@ -141,6 +165,7 @@ async function testMintDid(fee: bigint): Promise<void> {
 
 test('Mint Did', async () => {
   await testMintDid(0n);
+  await testMintDid(6666n);
 });
 
 test('Analyze Did', async () => {
