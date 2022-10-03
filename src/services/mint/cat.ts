@@ -153,7 +153,9 @@ export async function combineSpendBundlePure(
   const BLS = Instance.BLS;
   if (!BLS) throw new Error("BLS not initialized");
 
-  const sigs = spendbundles.map(_ => BLS.G2Element.from_bytes(Bytes.from(_.aggregated_signature, "hex").raw()));
+  const sigs = spendbundles
+    .filter(_ => _.aggregated_signature)
+    .map(_ => BLS.G2Element.from_bytes(Bytes.from(_.aggregated_signature, "hex").raw()));
   const agg_sig = BLS.AugSchemeMPL.aggregate(sigs);
   const sig = Bytes.from(agg_sig.serialize()).hex();
 
