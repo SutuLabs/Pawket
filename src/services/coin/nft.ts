@@ -39,7 +39,7 @@ export interface MintNftInfo {
 //           - `INNER_PUZZLE` -> p2_delegated_puzzle_or_hidden_puzzle
 
 export async function generateMintNftBundle(
-  targetAddress: string,
+  nftIntermediateAddress: string,
   changeAddress: string,
   fee: bigint,
   metadatas: NftMetadataValues | NftMetadataValues[],
@@ -52,12 +52,13 @@ export async function generateMintNftBundle(
   didAnalysis: DidCoinAnalysisResult,
   api: GetPuzzleApiCallback,
   privateKey: string | undefined = undefined,
+  targetAddresses: string[] | undefined = undefined,
   isCns = false,
 ): Promise<MintNftInfo> {
   const amount = 1n; // always 1 mojo for 1 NFT
-  const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
+  const intermediate_hex = prefix0x(puzzle.getPuzzleHashFromAddress(nftIntermediateAddress));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(changeAddress));
-  const inner_p2_puzzle = getPuzzleDetail(tgt_hex, requests);
+  const inner_p2_puzzle = getPuzzleDetail(intermediate_hex, requests);
 
   if (!Array.isArray(metadatas)) metadatas = [metadatas];
 
@@ -73,6 +74,9 @@ export async function generateMintNftBundle(
 
   if (bootstrapSpendBundle.coin_spends.length != (metadatas.length == 1 ? 1 : metadatas.length + 1))
     throw new Error("unexpected bootstrap coin spends number");
+
+  if (targetAddresses != undefined && targetAddresses.length != metadatas.length)
+    throw new Error("target address number should equal to metadata number");
 
   let didPreviousCoin = didAnalysis.coin;
   let proof = await catBundle.getLineageProof(didPreviousCoin.parent_coin_info, api, 2);
@@ -115,6 +119,7 @@ export async function generateMintNftBundle(
 
     const launcherSolution = `(${nftPuzzleHash} ${amount} ())`;
 
+    const tgt_hex = targetAddresses ? prefix0x(puzzle.getPuzzleHashFromAddress(targetAddresses[i])) : intermediate_hex;
     const nftSolution = `((${bootstrapCoinId} ${amount}) ${amount} (((() (q (-10 ${didAnalysis.launcherId} () ${didInnerPuzzleHash0x}) (51 ${tgt_hex} 1 (${tgt_hex} ${tgt_hex}))) ()))))`;
 
     const launcherCoinSpend: CoinSpend = {

@@ -452,6 +452,7 @@ export default class MintNft extends Vue {
         did.analysis,
         getLineageProofPuzzle,
         undefined,
+        undefined,
         isCns
       );
 
