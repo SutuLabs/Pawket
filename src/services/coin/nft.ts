@@ -145,16 +145,16 @@ export async function generateMintNftBundle(
     };
 
     const didParentCoinId = getCoinName0x(didPreviousCoin);
+    proof = {
+      amount: proof.amount,
+      proof: proof.proof, // proof not change due to p2_inner_puzzle not change and did_innerpuz not change
+      coinId: didPreviousCoin.parent_coin_info,
+    }
     didPreviousCoin = {
       parent_coin_info: didParentCoinId,
       puzzle_hash: didPuzzleHash,
       amount: didPreviousCoin.amount,
     };
-    proof = {
-      amount: proof.amount,
-      proof: proof.proof,
-      coinId: didParentCoinId,
-    }
 
     const extreqs = cloneAndAddRequestPuzzleTemporary(baseSymbol, requests, inner_p2_puzzle.hash, nftPuzzle, nftPuzzleHash);
     const bundles = await transfer.getSpendBundle([launcherCoinSpend, nftCoinSpend], extreqs, chainId, true);
