@@ -140,8 +140,15 @@ export default class CoinGallery extends Vue {
 .card-content p {
   margin-bottom: 2rem;
 }
+.card-content {
+  padding: 0.2rem;
+}
 a[disabled="disabled"] {
   cursor: not-allowed;
   color: #aaa;
+}
+.image img {
+  object-fit: contain;
+  height: 200px;
 }
 </style>
