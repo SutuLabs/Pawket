@@ -145,7 +145,7 @@
         </template>
       </b-field>
       <hr />
-      <b-field>
+      <b-field class="overall-check">
         <template #label>
           Overall Check
           <b-button tag="a" size="is-small" @click="check()"> Check </b-button>
@@ -198,7 +198,10 @@
           </template>
 
           <template v-if="mgraphGenerated">
-            <h3>Dependency Graph</h3>
+            <h3>
+              Dependency Graph
+              <key-box v-if="mermaidSvg" :value="mermaidSvg" icon="checkbox-multiple-blank-outline" tooltip="Copy Graph SVG"></key-box>
+            </h3>
             <b-field grouped group-multiline>
               <div v-for="leg in depGraphLegends" :key="leg.key" class="control">
                 <b-taglist attached>
@@ -207,7 +210,7 @@
                 </b-taglist>
               </div>
             </b-field>
-            <div ref="mgraph"></div>
+            <div v-html="mermaidSvg"></div>
           </template>
         </template>
       </b-field>
@@ -295,6 +298,7 @@ export default class BundlePanel extends Vue {
   public createdCoins: { [key: string]: CoinIndexInfo } = {};
   public sigVerified: "None" | "Verified" | "Failed" = "None";
   public mgraphGenerated = false;
+  public mermaidSvg = "";
   public depGraphLegends = [
     {
       key: "SIG",
@@ -634,10 +638,8 @@ export default class BundlePanel extends Vue {
 
     const mermaid = (await import(/* webpackChunkName: "mermaid" */ "mermaid")).default;
     mermaid.mermaidAPI.initialize({ startOnLoad: false });
-    const el = this.$refs.mgraph as HTMLElement | undefined;
-    if (!el) return;
-    const insertSvg = function (svgCode: string) {
-      el.innerHTML = svgCode;
+    const insertSvg = (svgCode: string) => {
+      this.mermaidSvg = svgCode;
     };
     let graphDefinition = "graph LR;";
     // graphDefinition += "SIG(SIG);";
@@ -735,4 +737,9 @@ export function getUint8ArrayFromHexString(hex: string): Uint8Array {
 
 <style scoped lang="scss">
 @import "@/styles/arguments.scss";
+
+.overall-check ::v-deep h3 {
+  margin: 1.5em 0 1em 0;
+  font-weight: bold;
+}
 </style>
