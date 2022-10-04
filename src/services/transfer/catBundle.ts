@@ -44,8 +44,9 @@ class CatBundle {
         transfer.getSolution(plan.targets, additionalConditions)
         : "(() (q) ())";
 
-      const nextCoin_puzzle = getPuzDetail(nextcoin.puzzle_hash).puzzle;
-      const nextCoin_inner_puzzle_hash = await this.calcLineageProof(await puzzle.encodePuzzle(nextCoin_puzzle), 3);
+      const nextCoin_puz = getPuzDetail(nextcoin.puzzle_hash);
+      const nextCoin_pk = Bytes.from(nextCoin_puz.privateKey.get_g1().serialize()).hex();
+      const nextCoin_inner_puzzle_hash = await puzzle.getPuzzleHash(nextCoin_pk);
 
       const cs = await this.generateCoinSpend(
         coin, prevcoin, nextcoin, nextCoin_inner_puzzle_hash, subtotal, puz, inner_puzzle_solution, getPuzzle);
@@ -92,7 +93,6 @@ class CatBundle {
     nextCoin_inner_puzzle_hash: string,
     subtotal: bigint,
     proof: LineageProof,
-    inner_puzzle_hash: string,
   ): string {
 
     const ljoin = (...args: string[]) => "(" + args.join(" ") + ")";
@@ -155,10 +155,8 @@ class CatBundle {
     getPuzzle: GetPuzzleApiCallback,
   ): Promise<string> {
     const proof = await this.getLineageProof(coin.parent_coin_info, getPuzzle);
-    const pk = Bytes.from(puz.privateKey.get_g1().serialize()).hex();
-    const inner_puzzle_hash = await puzzle.getPuzzleHash(pk);
     const solution = this.getCatPuzzleSolution(
-      inner_puzzle_solution, coin, prevCoin, nextCoin, nextCoin_inner_puzzle_hash, subtotal, proof, inner_puzzle_hash);
+      inner_puzzle_solution, coin, prevCoin, nextCoin, nextCoin_inner_puzzle_hash, subtotal, proof);
     return solution;
   }
 }
