@@ -137,7 +137,7 @@ export default class Send extends Vue {
   @Prop() public inputAddress!: string;
   @Prop() public inputAmount!: string;
   @Prop() public inputAvailableCoins!: SymbolCoins;
-  @Prop() public inputRequests!: TokenPuzzleDetail[]
+  @Prop() public inputRequests!: TokenPuzzleDetail[];
   @Prop() public inputSelectedToken!: string;
   @Prop({ default: true }) public addressEditable!: boolean;
   @Prop({ default: true }) public amountEditable!: boolean;
@@ -322,17 +322,10 @@ export default class Send extends Vue {
       Math.pow(10, this.decimal),
       this.decimal
     );
-    const singleMax = bigDecimal.divide(
-      availcoins.reduce((a, b) => (a > b ? a : b), 0n),
-      Math.pow(10, this.decimal),
-      this.decimal
-    );
-    if (this.selectedToken == xchSymbol()) {
-      this.maxAmount = this.totalAmount;
-      this.totalAmount = "-1";
-    } else {
-      this.maxAmount = singleMax;
-    }
+
+    this.maxAmount = this.totalAmount;
+    this.totalAmount = "-1";
+
     this.maxStatus = "Loaded";
   }
 
