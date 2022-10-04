@@ -270,7 +270,7 @@ export async function combineSpendBundle(spendbundles: SpendBundle[]): Promise<S
         };
       };
       const proof = await catBundle.getLineageProof(getCoinName0x(offcs.coin), localPuzzleApiCall);
-      const solution = catBundle.getCatPuzzleSolution(inner_puzzle, offnewcoin, proof, settlement_tgt);
+      const solution = catBundle.getCatPuzzleSolution(inner_puzzle, offnewcoin, offnewcoin, offnewcoin, settlement_tgt, 0n, proof);
       reqcs.solution = prefix0x(await puzzle.encodePuzzle(solution));
     }
   }

@@ -145,49 +145,22 @@
         </template>
       </b-field>
       <hr />
-      <b-field>
+      <b-field class="overall-check">
         <template #label>
           Overall Check
           <b-button tag="a" size="is-small" @click="check()"> Check </b-button>
         </template>
         <template #message>
-          <h3 v-if="puzzleAnnoCreates.length > 0">Puzzle Announcement</h3>
-          <ul v-if="puzzleAnnoCreates.length > 0" class="args_list ellipsis-item">
-            <li v-for="(anno, i) in puzzleAnnoCreates" :key="i" :title="anno.message">
-              <span class="mid-message">
-                {{ anno.message }}
-              </span>
-              <b-button tag="a" size="is-small" @click="changeCoin(anno.coinIndex)">
-                {{ anno.coinIndex }}
-              </b-button>
-
-              <span v-for="(asserted, idx) in [puzzleAnnoAsserted.filter((_) => _.message == anno.message)[0]]" :key="idx">
-                <b-tag v-if="asserted" type="is-success is-light">AS</b-tag>
-                <b-button v-if="asserted" tag="a" size="is-small" @click="changeCoin(asserted.coinIndex)">
-                  {{ asserted.coinIndex }}
-                </b-button>
-              </span>
-              <b-tag v-if="puzzleAnnoAsserted.findIndex((_) => _.message == anno.message) == -1" type="is-warning is-light"
-                >No Assert</b-tag
-              >
-            </li>
-          </ul>
-          <ul v-if="puzzleAnnoAsserted.length > 0" class="args_list ellipsis-item">
-            <li
-              v-for="(anno, i) in puzzleAnnoAsserted.filter((_) => !puzzleAnnoCreates.some((p) => p.message == _.message))"
-              :key="i"
-              :title="anno.message"
-            >
-              <span class="mid-message is-danger">
-                {{ anno.message }}
-              </span>
-              <b-button tag="a" size="is-small" @click="changeCoin(anno.coinIndex)">
-                {{ anno.coinIndex }}
-              </b-button>
-
-              <b-tag type="is-warning is-light">Not Created</b-tag>
-            </li>
-          </ul>
+          <AnnouncementList
+            :annoAsserted="puzzleAnnoAsserted"
+            :annoCreates="puzzleAnnoCreates"
+            title="Puzzle Announcement"
+          ></AnnouncementList>
+          <AnnouncementList
+            :annoAsserted="coinAnnoAsserted"
+            :annoCreates="coinAnnoCreates"
+            title="Coin Announcement"
+          ></AnnouncementList>
 
           <h3 v-if="coinAvailability.length > 0">Coin Availability</h3>
           <ul v-if="coinAvailability.length > 0" class="args_list ellipsis-item">
@@ -225,7 +198,10 @@
           </template>
 
           <template v-if="mgraphGenerated">
-            <h3>Dependency Graph</h3>
+            <h3>
+              Dependency Graph
+              <key-box v-if="mermaidSvg" :value="mermaidSvg" icon="checkbox-multiple-blank-outline" tooltip="Copy Graph SVG"></key-box>
+            </h3>
             <b-field grouped group-multiline>
               <div v-for="leg in depGraphLegends" :key="leg.key" class="control">
                 <b-taglist attached>
@@ -234,7 +210,7 @@
                 </b-taglist>
               </div>
             </b-field>
-            <div ref="mgraph"></div>
+            <div v-html="mermaidSvg"></div>
           </template>
         </template>
       </b-field>
@@ -252,6 +228,7 @@ import { Bytes } from "clvm";
 import { conditionDict, ConditionInfo, prefix0x, getNumber, unprefix0x } from "@/services/coin/condition";
 import { modsdict, modsprog } from "@/services/coin/mods";
 import UncurryPuzzle from "@/components/DevHelper/UncurryPuzzle.vue";
+import AnnouncementList from "@/components/DevHelper/AnnouncementList.vue";
 import { decodeOffer } from "@/services/offer/encoding";
 import { chainId, rpcUrl, xchPrefix } from "@/store/modules/network";
 import { getCoinName, getCoinName0x } from "@/services/coin/coinUtility";
@@ -262,7 +239,7 @@ import { demojo } from "@/filters/unitConversion";
 import { OneTokenInfo } from "@/models/account";
 import { convertUncurriedPuzzle, getModsPath, sexpAssemble, uncurryPuzzle } from "@/services/coin/analyzer";
 
-interface AnnouncementCoin {
+export interface AnnouncementCoin {
   coinIndex: number;
   message: string;
 }
@@ -293,6 +270,7 @@ interface CoinIndexInfo {
   components: {
     KeyBox,
     UncurryPuzzle,
+    AnnouncementList,
   },
 })
 export default class BundlePanel extends Vue {
@@ -320,6 +298,7 @@ export default class BundlePanel extends Vue {
   public createdCoins: { [key: string]: CoinIndexInfo } = {};
   public sigVerified: "None" | "Verified" | "Failed" = "None";
   public mgraphGenerated = false;
+  public mermaidSvg = "";
   public depGraphLegends = [
     {
       key: "SIG",
@@ -659,10 +638,8 @@ export default class BundlePanel extends Vue {
 
     const mermaid = (await import(/* webpackChunkName: "mermaid" */ "mermaid")).default;
     mermaid.mermaidAPI.initialize({ startOnLoad: false });
-    const el = this.$refs.mgraph as HTMLElement | undefined;
-    if (!el) return;
-    const insertSvg = function (svgCode: string) {
-      el.innerHTML = svgCode;
+    const insertSvg = (svgCode: string) => {
+      this.mermaidSvg = svgCode;
     };
     let graphDefinition = "graph LR;";
     // graphDefinition += "SIG(SIG);";
@@ -681,12 +658,14 @@ export default class BundlePanel extends Vue {
           ? "Launcher"
           : coin.mods == "p2_delegated_puzzle_or_hidden_puzzle()"
           ? "XCH"
+          : coin.mods == "settlement_payments()"
+          ? "XCH-O"
           : coin.mods == "cat_v2()"
           ? "CAT"
           : coin.mods == "cat_v2(p2_delegated_puzzle_or_hidden_puzzle())"
           ? "CAT"
           : coin.mods == "cat_v2(settlement_payments())"
-          ? "CAT(O)"
+          ? "CAT-O"
           : coin.mods == "singleton_top_layer_v1_1(did_innerpuz(p2_delegated_puzzle_or_hidden_puzzle()))"
           ? "DID"
           : coin.mods ==
@@ -694,7 +673,7 @@ export default class BundlePanel extends Vue {
           ? "NFT"
           : coin.mods ==
             "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),settlement_payments())))"
-          ? "NFT(O)"
+          ? "NFT-O"
           : "";
       if (coin.mods && !mods) console.warn("mods", coin.mods);
       if (!mods) continue;
@@ -738,10 +717,16 @@ export default class BundlePanel extends Vue {
       graphDefinition += ccoins.map((coin) => `${coin.name} --> ${coin.coinIndex};`).join("");
     }
 
-    graphDefinition += `\nclassDef Sig fill:#EFFAF5,stroke:#48C78E;`;
-    graphDefinition += `\nclassDef SigUnsafe fill:#FFFAEB,stroke:#FFE08A;`;
-    graphDefinition += `\nclassDef NoSig fill:#FEECF0,stroke:#F14668;`;
-    mermaid.mermaidAPI.render("mgraph", graphDefinition, insertSvg);
+    graphDefinition += `classDef Sig fill:#EFFAF5,stroke:#48C78E;`;
+    graphDefinition += `classDef SigUnsafe fill:#FFFAEB,stroke:#FFE08A;`;
+    graphDefinition += `classDef NoSig fill:#FEECF0,stroke:#F14668;`;
+    graphDefinition = graphDefinition.replaceAll(";", ";\n");
+    try {
+      mermaid.mermaidAPI.render("mgraph", graphDefinition, insertSvg);
+    } catch (error) {
+      console.warn("mermaid failure definition:", graphDefinition);
+      throw error;
+    }
   }
 }
 
@@ -753,10 +738,8 @@ export function getUint8ArrayFromHexString(hex: string): Uint8Array {
 <style scoped lang="scss">
 @import "@/styles/arguments.scss";
 
-ul.args_list.ellipsis-item > li .mid-message {
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-  max-width: 80px;
+.overall-check ::v-deep h3 {
+  margin: 1.5em 0 1em 0;
+  font-weight: bold;
 }
 </style>

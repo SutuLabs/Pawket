@@ -59,6 +59,11 @@ const routes: Array<RouteConfig> = [
     component: () => import(/* webpackChunkName: "developer" */ "../views/CoinDeveloper.vue"),
   },
   {
+    path: "/gallery",
+    name: "CoinSetGallery",
+    component: () => import(/* webpackChunkName: "developer" */ "../views/CoinGallery.vue"),
+  },
+  {
     path: "*",
     redirect: "/"
   },

@@ -33,6 +33,18 @@
                   Tools
                 </b-button>
               </router-link>
+              <router-link to="/gallery" v-bind="$props" custom v-slot="{ isActive, href, navigate }">
+                <b-button
+                  v-bind="$attrs"
+                  @click="navigate"
+                  icon-left="source-repository-multiple"
+                  type="is-primary"
+                  outlined
+                  :class="isActive ? 'border-less has-background-primary has-text-white' : 'border-less '"
+                >
+                  Gallery
+                </b-button>
+              </router-link>
               <router-link to="/clvm" v-bind="$props" custom v-slot="{ isActive, href, navigate }">
                 <b-button
                   v-bind="$attrs"

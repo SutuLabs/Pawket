@@ -25,9 +25,10 @@
             "runtimeArgs": [
               "--inspect-brk",
               "${workspaceRoot}/node_modules/jest/bin/jest.js",
-              // "nft",
+              "--coverage=false",
               // "-t",
-              // "\"Mint Multiple Nfts\"",
+              // "Multi Cat Coin",
+              // "catTransfer",
               "--runInBand"
             ],
             "console": "integratedTerminal",

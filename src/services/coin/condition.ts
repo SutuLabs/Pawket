@@ -57,6 +57,12 @@ export function getNumber(str: string): bigint {
   }
 }
 
+export function toNumberString(number: bigint): string {
+  if (!number) return "()";
+  if (number < 10000) return number.toString();
+  return prefix0x(number.toString(16));
+}
+
 export const conditionInfos: ConditionInfo[] = [
   {
     name: "AGG_SIG_UNSAFE",

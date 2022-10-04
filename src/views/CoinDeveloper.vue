@@ -50,21 +50,7 @@
         </b-field>
       </div>
     </div>
-    <b-modal v-model="isInspectorActive" has-modal-card>
-      <div class="modal-card" style="width: auto">
-        <header class="modal-card-head">
-          <p class="modal-card-title">Inspect</p>
-        </header>
-        <section class="modal-card-body">
-          <bundle-panel v-if="inspectorType == 'SpendBundle'" :inputBundleText="inspectSpendBundle"></bundle-panel>
-          <offer-panel v-if="inspectorType == 'Offer'" :inputOfferText="inspectOffer"></offer-panel>
-          <json-viewer v-if="inspectorType == 'Json'" :value="inspectJson" :expand-depth="5" copyable boxed sort></json-viewer>
-        </section>
-        <footer class="modal-card-foot">
-          <b-button label="Close" @click="isInspectorActive = false" />
-        </footer>
-      </div>
-    </b-modal>
+    <Inspector ref="inspector"></Inspector>
   </div>
 </template>
 
@@ -72,14 +58,13 @@
 import { Component, Vue } from "vue-property-decorator";
 import SExpBox from "@/components/Simulator/SExpBox.vue";
 import * as monaco from "monaco-editor";
-import BundlePanel from "@/components/DevHelper/BundlePanel.vue";
-import OfferPanel from "@/components/DevHelper/OfferPanel.vue";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import cdvdev from "@/services/developer/editor/types/cdv.dev.ts";
 import { registerClspLanguage, defineClspTheme } from "@/services/developer/editor/clspLanguage";
 import { executeCode } from "@/services/developer/editor/executor";
-import JsonViewer from "vue-json-viewer";
 import { MixchCodeFilePersistent, MixchCodePersistent, persistent, retrieve } from "@/services/developer/editor/persistence";
+import { getOutputType, LogType } from "@/components/DevHelper/Inspector.vue";
+import Inspector from "@/components/DevHelper/Inspector.vue";
 
 interface MonacoInMemoryFile {
   data: MixchCodeFilePersistent;
@@ -87,25 +72,11 @@ interface MonacoInMemoryFile {
   state?: monaco.editor.ICodeEditorViewState | null;
 }
 
-type LogType =
-  | "string"
-  | "number"
-  | "bigint"
-  | "boolean"
-  | "symbol"
-  | "undefined"
-  | "object"
-  | "function"
-  | "spendbundle"
-  | "offer";
-
 @Component({
   components: {
     SExpBox,
     KeyBox,
-    BundlePanel,
-    OfferPanel,
-    JsonViewer,
+    Inspector,
   },
 })
 export default class CoinDeveloper extends Vue {
@@ -115,12 +86,6 @@ export default class CoinDeveloper extends Vue {
   bundleText = "";
   public outputList: { value: unknown; type: LogType }[][] = [];
   public editor: monaco.editor.IStandaloneCodeEditor | null = null;
-
-  public isInspectorActive = false;
-  public inspectSpendBundle: string | null = null;
-  public inspectOffer: unknown | null = null;
-  public inspectJson: unknown | null = null;
-  public inspectorType: "SpendBundle" | "Offer" | "Json" | "Unknown" = "Unknown";
 
   public editorData: MonacoInMemoryFile[] = [];
   public selectedFileIndex = 0;
@@ -202,7 +167,7 @@ export default class CoinDeveloper extends Vue {
 
     this.save();
     const ex = await executeCode(this.editor.getValue());
-    if (ex.result) this.outputList = ex.result.map((_) => _.map((_) => ({ value: _, type: this.getType(_) })));
+    if (ex.result) this.outputList = ex.result.map((_) => _.map((_) => ({ value: _, type: getOutputType(_) })));
   }
 
   changeTab(newIndex: number): void {
@@ -220,14 +185,6 @@ export default class CoinDeveloper extends Vue {
     this.editor.setModel(newFile.model);
     if (newFile.state) this.editor.restoreViewState(newFile.state);
     this.editor.focus();
-  }
-
-  getType(input: unknown): LogType {
-    const type = typeof input;
-    if (typeof input === "string" && input.startsWith("offer1")) return "offer";
-    if (typeof input === "object" && input != null && "aggregated_signature" in input && "coin_spends" in input)
-      return "spendbundle";
-    return type;
   }
 
   created(): void {
@@ -262,33 +219,14 @@ export default class CoinDeveloper extends Vue {
     persistent(info);
   }
 
-  inspect(value: unknown): void {
-    const type = this.getType(value);
-    switch (type) {
-      case "spendbundle":
-        this.inspectSpendBundle = JSON.stringify(value);
-        this.inspectorType = "SpendBundle";
-        this.isInspectorActive = true;
-        break;
-      case "object":
-        this.inspectJson = JSON.parse(JSON.stringify(value));
-        this.inspectorType = "Json";
-        this.isInspectorActive = true;
-        break;
-
-      case "offer":
-        this.inspectOffer = value;
-        this.inspectorType = "Offer";
-        this.isInspectorActive = true;
-        break;
-
-      default:
-        break;
-    }
-  }
-
   create(): void {
     //
+  }
+
+  inspect(obj: unknown): void {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const inspector = this.$refs.inspector as any;
+    if (inspector.inspect) inspector.inspect(obj);
   }
 }
 </script>

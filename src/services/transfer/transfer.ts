@@ -32,9 +32,7 @@ class Transfer {
 
       const outgoingExtra = (symbol == tokenSymbol) ? fee : 0n;
       const outgoingTotal = tgts.reduce((acc, cur) => acc + cur.amount, 0n) + outgoingExtra;
-      const incomingCoins = (symbol == tokenSymbol)
-        ? this.findCoins(coins, outgoingTotal)
-        : this.findPossibleSmallest(coins, outgoingTotal);
+      const incomingCoins = this.findCoins(coins, outgoingTotal);
 
       const incomingTotal = incomingCoins.reduce((acc, cur) => acc + cur.amount, 0n);
 
