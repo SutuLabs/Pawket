@@ -1,10 +1,17 @@
 {
   "gallery": [
     {
+      "name": "CatV2 multiple issuance",
+      "description": "Issue CatV2 with multiple issuance",
+      "image": "gallery/catv2-multi-issuance.svg",
+      "bundle": "gallery/catv2-multi-issuance.json",
+      "code": ""
+    },
+    {
       "name": "goby cat send",
       "description": "goby multiple cat combined send",
-      "image": "gallery/1-goby-cat.svg",
-      "bundle": "gallery/1-goby-cat.json",
+      "image": "gallery/goby-cat.svg",
+      "bundle": "gallery/goby-cat.json",
       "code": ""
     }
   ]
