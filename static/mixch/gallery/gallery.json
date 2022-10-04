@@ -1,0 +1,11 @@
+{
+  "gallery": [
+    {
+      "name": "goby cat send",
+      "description": "goby multiple cat combined send",
+      "image": "gallery/1-goby-cat.svg",
+      "bundle": "gallery/1-goby-cat.json",
+      "code": ""
+    }
+  ]
+}
