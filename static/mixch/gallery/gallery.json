@@ -8,8 +8,15 @@
       "code": ""
     },
     {
-      "name": "goby cat send",
-      "description": "goby multiple cat combined send",
+      "name": "Multiple CatV2 combine send",
+      "description": "Multiple CatV2 combine send",
+      "image": "gallery/multiple-cat-combine-transfer.svg",
+      "bundle": "gallery/multiple-cat-combine-transfer.json",
+      "code": ""
+    },
+    {
+      "name": "Multiple CatV2 combine send(goby)",
+      "description": "Multiple CatV2 combine send from goby",
       "image": "gallery/goby-cat.svg",
       "bundle": "gallery/goby-cat.json",
       "code": ""
