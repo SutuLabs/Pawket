@@ -656,12 +656,14 @@ export default class BundlePanel extends Vue {
           ? "Launcher"
           : coin.mods == "p2_delegated_puzzle_or_hidden_puzzle()"
           ? "XCH"
+          : coin.mods == "settlement_payments()"
+          ? "XCH-O"
           : coin.mods == "cat_v2()"
           ? "CAT"
           : coin.mods == "cat_v2(p2_delegated_puzzle_or_hidden_puzzle())"
           ? "CAT"
           : coin.mods == "cat_v2(settlement_payments())"
-          ? "CAT(O)"
+          ? "CAT-O"
           : coin.mods == "singleton_top_layer_v1_1(did_innerpuz(p2_delegated_puzzle_or_hidden_puzzle()))"
           ? "DID"
           : coin.mods ==
@@ -669,7 +671,7 @@ export default class BundlePanel extends Vue {
           ? "NFT"
           : coin.mods ==
             "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),settlement_payments())))"
-          ? "NFT(O)"
+          ? "NFT-O"
           : "";
       if (coin.mods && !mods) console.warn("mods", coin.mods);
       if (!mods) continue;
@@ -713,10 +715,16 @@ export default class BundlePanel extends Vue {
       graphDefinition += ccoins.map((coin) => `${coin.name} --> ${coin.coinIndex};`).join("");
     }
 
-    graphDefinition += `\nclassDef Sig fill:#EFFAF5,stroke:#48C78E;`;
-    graphDefinition += `\nclassDef SigUnsafe fill:#FFFAEB,stroke:#FFE08A;`;
-    graphDefinition += `\nclassDef NoSig fill:#FEECF0,stroke:#F14668;`;
-    mermaid.mermaidAPI.render("mgraph", graphDefinition, insertSvg);
+    graphDefinition += `classDef Sig fill:#EFFAF5,stroke:#48C78E;`;
+    graphDefinition += `classDef SigUnsafe fill:#FFFAEB,stroke:#FFE08A;`;
+    graphDefinition += `classDef NoSig fill:#FEECF0,stroke:#F14668;`;
+    graphDefinition = graphDefinition.replaceAll(";", ";\n");
+    try {
+      mermaid.mermaidAPI.render("mgraph", graphDefinition, insertSvg);
+    } catch (error) {
+      console.warn("mermaid failure definition:", graphDefinition);
+      throw error;
+    }
   }
 }
 
