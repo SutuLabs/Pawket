@@ -169,6 +169,7 @@
           outlined
           :disabled="observeMode"
         ></b-button>
+        <b-button label="Move" type="is-info" @click="move()" icon-left="image-move" outlined :disabled="observeMode"></b-button>
       </div>
     </footer>
   </div>
