@@ -71,6 +71,14 @@
               outlined
               :disabled="observeMode"
             ></b-button>
+            <b-button
+              label="Move"
+              type="is-info"
+              @click="move()"
+              icon-left="image-move"
+              outlined
+              :disabled="observeMode"
+            ></b-button>
           </div>
         </div>
         <div class="column is-12 is-hidden-mobile">
@@ -178,6 +186,7 @@ import { NftDetail } from "@/services/crypto/receive";
 import { NftOffChainMetadata } from "@/models/nft";
 import store from "@/store";
 import { notifyPrimary } from "@/services/notification/notification";
+import NftMove from "./NftMove.vue";
 
 @Component({
   components: {
@@ -249,6 +258,18 @@ export default class NftDetailPanel extends Vue {
     this.$buefy.modal.open({
       parent: this,
       component: NftOffer,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      fullScreen: isMobile(),
+      props: { nft: this.nft, account: this.account },
+    });
+  }
+
+  move(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: NftMove,
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],

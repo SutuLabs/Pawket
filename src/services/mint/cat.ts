@@ -148,21 +148,22 @@ async function constructExternalBundle(
 }
 
 export async function combineSpendBundlePure(
-  ...spendbundles: SpendBundle[]
+  ...spendbundles: (SpendBundle | undefined)[]
 ): Promise<SpendBundle> {
   const BLS = Instance.BLS;
   if (!BLS) throw new Error("BLS not initialized");
 
-  const sigs = spendbundles
-    .filter(_ => _.aggregated_signature)
+  const withsigs = spendbundles
+    .filter(_ => _ && _.aggregated_signature) as SpendBundle[];
+  const sigs = withsigs
     .map(_ => BLS.G2Element.from_bytes(Bytes.from(_.aggregated_signature, "hex").raw()));
   const agg_sig = BLS.AugSchemeMPL.aggregate(sigs);
   const sig = Bytes.from(agg_sig.serialize()).hex();
 
-  const spends = spendbundles.flatMap(_ => _.coin_spends);
+  const spends = withsigs.flatMap(_ => _.coin_spends);
 
   return {
-    aggregated_signature: sig,
+    aggregated_signature: prefix0x(sig),
     coin_spends: spends,
   }
 }

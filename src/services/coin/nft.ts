@@ -239,6 +239,7 @@ export async function generateTransferNftBundle(
   baseSymbol: string,
   chainId: string,
   api: GetPuzzleApiCallback,
+  didAnalysis: DidCoinAnalysisResult | undefined = undefined,
 ): Promise<SpendBundle> {
 
   const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
@@ -254,7 +255,10 @@ export async function generateTransferNftBundle(
 
   const proof = await catBundle.getLineageProof(nftCoin.parent_coin_info, api, 2);
 
-  const nftSolution = await getTransferNftSolution(proof, await getTransferNftInnerSolution(tgt_hex));
+  const nftInnerSolution = didAnalysis
+    ? await getTransferNftByDidInnerSolution(tgt_hex, didAnalysis.launcherId, didAnalysis.didInnerPuzzleHash)
+    : await getTransferNftInnerSolution(tgt_hex)
+  const nftSolution = await getTransferNftSolution(proof, nftInnerSolution);
   const nftPuzzle = await getTransferNftPuzzle(analysis, inner_p2_puzzle.puzzle);
 
   const nftPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(nftPuzzle));
@@ -271,22 +275,19 @@ export async function generateTransferNftBundle(
     solution: prefix0x(await puzzle.encodePuzzle(nftSolution)),
   };
 
+
   const extreqs = cloneAndAddRequestPuzzleTemporary(baseSymbol, requests, inner_p2_puzzle.hash, nftPuzzle, nftPuzzleHash);
+  const nftBundle = await transfer.getSpendBundle([nftCoinSpend], extreqs, chainId);
 
-  const bundle = await transfer.getSpendBundle([nftCoinSpend], extreqs, chainId);
+  const didBundle = didAnalysis
+    ? await constructDidSpendBundle(didAnalysis, analysis.launcherId, requests, baseSymbol, chainId, api)
+    : undefined;
 
+  const feeBundle = fee > 0n
+    ? await constructPureFeeSpendBundle(change_hex, fee, availcoins, requests, baseSymbol, chainId)
+    : undefined;
 
-  if (fee > 0n) {
-    // not tested so far
-    // throw new Error("fee is not supported in transfer");
-    const feeTgts: TransferTarget[] = [{ address: "0x0000000000000000000000000000000000000000000000000000000000000000", amount: 0n, symbol: baseSymbol }];
-    const feeSpendPlan = transfer.generateSpendPlan(availcoins, feeTgts, change_hex, fee, baseSymbol);
-    const feeSpendBundle = await transfer.generateSpendBundleWithoutCat(feeSpendPlan, requests, [], baseSymbol, chainId);
-    const feeBundle = await combineSpendBundlePure(feeSpendBundle, bundle);
-
-    return feeBundle;
-  }
-
+  const bundle = await combineSpendBundlePure(nftBundle, didBundle, feeBundle);
   return bundle;
 }
 
@@ -454,6 +455,15 @@ export async function getTransferNftInnerSolution(tgt_hex: string): Promise<stri
   return nftSolution;
 }
 
+export async function getTransferNftByDidInnerSolution(tgt_hex: string, didLauncherId: string, didInnerPuzzleHash: string): Promise<string> {
+  const amount = 1n;
+  tgt_hex = prefix0x(tgt_hex);
+
+  // `-10` is the change owner magic condition
+  const nftSolution = `() (q (-10 ${prefix0x(didLauncherId)} () ${prefix0x(didInnerPuzzleHash)}) (51 ${tgt_hex} ${amount} (${tgt_hex} ${tgt_hex}))) ()`;
+  return nftSolution;
+}
+
 async function getOwnerFromSolution(sol: SExp): Promise<{
   didOwner: string | undefined,
   p2Owner: string | undefined,
@@ -563,6 +573,50 @@ async function constructNftTransferPuzzle(singletonStruct: string, royaltyAddres
   if (!curried_tail) throw new Error("failed to curry tail.");
 
   return curried_tail;
+}
+
+async function constructDidSpendBundle(
+  didAnalysis: DidCoinAnalysisResult,
+  nftLauncherId: string,
+  requests: TokenPuzzleDetail[],
+  baseSymbol: string,
+  chainId: string,
+  api: GetPuzzleApiCallback,
+): Promise<SpendBundle> {
+  const amount = 1n;
+  const didPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(didAnalysis.rawPuzzle));
+  const proof = await catBundle.getLineageProof(didAnalysis.coin.parent_coin_info, api, 2);
+  const didInnerPuzzleHash0x = prefix0x(didAnalysis.didInnerPuzzleHash);
+  if (proof.proof != didInnerPuzzleHash0x)
+    throw new Error(`proof[${proof.proof}] should equal to did_inner_puzzle_hash[${didInnerPuzzleHash0x}]`);
+  const didP2InnerPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(didAnalysis.p2InnerPuzzle));
+  const didSolution = `((${proof.coinId} ${proof.proof} ${proof.amount}) ${amount} (q (() (q (51 ${didInnerPuzzleHash0x} ${amount} (${didP2InnerPuzzleHash})) (62 ${prefix0x(nftLauncherId)})) ())))`;
+  const didCoinSpend: CoinSpend = {
+    coin: didAnalysis.coin,
+    puzzle_reveal: prefix0x(await puzzle.encodePuzzle(didAnalysis.rawPuzzle)),
+    solution: prefix0x(await puzzle.encodePuzzle(didSolution)),
+  };
+  const extreqs2 = cloneAndAddRequestPuzzleTemporary(baseSymbol, requests, didP2InnerPuzzleHash, didAnalysis.rawPuzzle, didPuzzleHash);
+  const bundle = await transfer.getSpendBundle([didCoinSpend], extreqs2, chainId);
+  return bundle;
+}
+
+async function constructPureFeeSpendBundle(
+  change_hex: string,
+  fee: bigint,
+  availcoins: SymbolCoins,
+  requests: TokenPuzzleDetail[],
+  baseSymbol: string,
+  chainId: string,
+): Promise<SpendBundle> {
+  const feeTgts: TransferTarget[] = [{
+    address: "0x0000000000000000000000000000000000000000000000000000000000000000",
+    amount: 0n,
+    symbol: baseSymbol,
+  }];
+  const feeSpendPlan = transfer.generateSpendPlan(availcoins, feeTgts, change_hex, fee, baseSymbol);
+  const bundle = await transfer.generateSpendBundleWithoutCat(feeSpendPlan, requests, [], baseSymbol, chainId);
+  return bundle;
 }
 
 function getNftMetadataKeys(): NftMetadataKeys {
