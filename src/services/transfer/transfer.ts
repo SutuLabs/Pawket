@@ -1,8 +1,8 @@
-import { PrivateKey, G1Element, G2Element, ModuleInstance } from "@chiamine/bls-signatures";
-import { Bytes, bigint_from_bytes, bigint_to_bytes } from "clvm";
+import { PrivateKey, G2Element, ModuleInstance } from "@chiamine/bls-signatures";
+import { Bytes } from "clvm";
 import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
 import { GetParentPuzzleResponse } from "@/models/api";
-import { DEFAULT_HIDDEN_PUZZLE_HASH, GROUP_ORDER } from "../coin/consts";
+import { DEFAULT_HIDDEN_PUZZLE_HASH } from "../coin/consts";
 import { CoinConditions, ConditionType, prefix0x } from "../coin/condition";
 import puzzle, { PuzzleDetail } from "../crypto/puzzle";
 import { TokenPuzzleDetail } from "../crypto/receive";
@@ -11,6 +11,7 @@ import { ConditionOpcode } from "../coin/opcode";
 import catBundle from "./catBundle";
 import { getCoinNameHex } from "../coin/coinUtility";
 import { Instance } from "../util/instance";
+import { calculate_synthetic_secret_key } from "../crypto/sign";
 
 export type GetPuzzleApiCallback = (parentCoinId: string) => Promise<GetParentPuzzleResponse | undefined>;
 
@@ -118,7 +119,7 @@ class Transfer {
       const puzzle_reveal = await puzzle.disassemblePuzzle(coin_spend.puzzle_reveal);
 
       const synthetic_sk = puz
-        ? this.calculate_synthetic_secret_key(BLS, puz.privateKey, DEFAULT_HIDDEN_PUZZLE_HASH.raw())
+        ? calculate_synthetic_secret_key(BLS, puz.privateKey, DEFAULT_HIDDEN_PUZZLE_HASH.raw())
         : undefined;
       const coinname = getCoinNameHex(coin_spend.coin);
 
@@ -153,24 +154,6 @@ class Transfer {
         .map(_ => (typeof _ === "object" ? ("(" + _.join(" ") + ")") : _))
         .join(" ") + ")")
       .join(" ") + ")";
-  }
-
-  private calculate_synthetic_offset(public_key: G1Element, hidden_puzzle_hash: Uint8Array): bigint {
-    const blob = Bytes.SHA256(new Uint8Array([...public_key.serialize(), ...hidden_puzzle_hash]));
-    let offset = bigint_from_bytes(blob, { signed: true })
-    while (offset < 0) offset += GROUP_ORDER;
-    offset %= GROUP_ORDER;
-    return offset;
-  }
-
-  private calculate_synthetic_secret_key(BLS: ModuleInstance, secret_key: PrivateKey, hidden_puzzle_hash: Uint8Array): PrivateKey {
-    const secret_exponent = bigint_from_bytes(Bytes.from(secret_key.serialize()), { signed: true });
-    const public_key = secret_key.get_g1();
-    const synthetic_offset = this.calculate_synthetic_offset(public_key, hidden_puzzle_hash);
-    const synthetic_secret_exponent = (secret_exponent + synthetic_offset) % GROUP_ORDER
-    const blob = bigint_to_bytes(synthetic_secret_exponent).raw();
-    const synthetic_secret_key = BLS.PrivateKey.from_bytes(blob, true)
-    return synthetic_secret_key;
   }
 
   private async signSolution(

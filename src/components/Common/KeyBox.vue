@@ -30,6 +30,8 @@ export default class KeyBox extends Vue {
   @Prop() public tooltip!: string;
   @Prop() public multilined!: boolean | undefined;
   @Prop({ default: 0 }) public delay!: number;
+  @Prop({ default: 7 }) public headLength!: number;
+  @Prop({ default: 4 }) public tailLength!: number;
   @Prop({ default: "is-top" }) public position!: "is-top" | "is-bottom" | "is-left" | "is-right";
   @Prop({ default: "is-medium" }) public tooltipSize!: "is-small" | "is-medium" | "is-large";
 
@@ -41,7 +43,7 @@ export default class KeyBox extends Vue {
   }
 
   get effectiveDisplayValue(): string {
-    return this.showValue ? shorten(this.value) : this.display;
+    return this.showValue ? shorten(this.value, "...", 0, this.headLength, this.tailLength) : this.display;
   }
 
   copy(text: string): void {

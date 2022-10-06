@@ -200,7 +200,12 @@
           <template v-if="mgraphGenerated">
             <h3>
               Dependency Graph
-              <key-box v-if="mermaidSvg" :value="mermaidSvg" icon="checkbox-multiple-blank-outline" tooltip="Copy Graph SVG"></key-box>
+              <key-box
+                v-if="mermaidSvg"
+                :value="mermaidSvg"
+                icon="checkbox-multiple-blank-outline"
+                tooltip="Copy Graph SVG"
+              ></key-box>
             </h3>
             <b-field grouped group-multiline>
               <div v-for="leg in depGraphLegends" :key="leg.key" class="control">
@@ -605,12 +610,17 @@ export default class BundlePanel extends Vue {
       throw new Error("cannot check bundle: " + err);
     }
 
-    this.verifySig();
+    try {
+      this.verifySig();
+    } catch (error) {
+      this.sigVerified = "None";
+      console.warn("failed to verify signature", error);
+    }
     this.renderMermaid();
   }
 
   public verifySig(): void {
-    if (!this.bundle) return;
+    if (!this.bundle || !this.bundle.aggregated_signature) return;
     const BLS = Instance.BLS;
     if (!BLS) throw new Error("BLS not initialized");
     try {

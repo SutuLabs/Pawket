@@ -6,7 +6,7 @@ import puzzle from "@/services/crypto/puzzle";
 import { GetParentPuzzleResponse } from "@/models/api";
 import { Instance } from "@/services/util/instance";
 import { getAccountAddressDetails } from "@/services/util/account";
-import { analyzeDidCoin, generateMintDidBundle } from "@/services/coin/did";
+import { analyzeDidCoin, DidCoinAnalysisResult, generateMintDidBundle } from "@/services/coin/did";
 
 import nftcoin0 from "./cases/nftcoin0.json"
 import nftcoin1 from "./cases/nftcoin1.json"
@@ -95,7 +95,7 @@ test('Mint Multiple Nfts', async () => {
   await testMintNft(8888n, metadatas, addresses);
 });
 
-async function testTransferNft(fee: bigint): Promise<void> {
+async function testTransferNft(fee: bigint, didAnalysis: DidCoinAnalysisResult | undefined = undefined): Promise<void> {
   const hintPuzzle = "8f972e809806a42ec005beb3019665bea4b3478c9582bf43708bb1c261916a51";
   const target_hex = "0xd26c36cfd99da03a18a7d47dddd7beb968ff63bd7d3ccc45205fadb6958a571d";
   const change_hex = "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155";
@@ -122,13 +122,15 @@ async function testTransferNft(fee: bigint): Promise<void> {
   };
 
   const spendBundle = await generateTransferNftBundle(
-    targetAddress, changeAddress, fee, nftCoin, analysis, availcoins, tokenPuzzles, xchSymbol(), chainId(), localPuzzleApiCall);
+    targetAddress, changeAddress, fee, nftCoin, analysis, availcoins, tokenPuzzles, xchSymbol(), chainId(), localPuzzleApiCall, didAnalysis);
   expect(spendBundle).toMatchSnapshot("spendbundle");
 }
 
 test('Transfer Nft', async () => {
   await testTransferNft(0n);
   await testTransferNft(7777n);
+  await testTransferNft(0n, didAnalysis);
+  await testTransferNft(7776n, didAnalysis);
 });
 
 async function testMintDid(fee: bigint): Promise<void> {

@@ -97,6 +97,16 @@
           </a>
         </b-tooltip>
       </div>
+      <div v-if="experimentMode && debugMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+        <b-tooltip :label="'Sign'" position="is-right">
+          <a href="javascript:void(0)" @click="$router.push('/home/verify-message')" class="has-text-link">
+            <div class="has-text-centered">
+              <b-icon icon="comment-check-outline" size="is-medium"></b-icon>
+              <p class="is-size-7">Verify</p>
+            </div>
+          </a>
+        </b-tooltip>
+      </div>
     </div>
   </div>
 </template>
@@ -115,6 +125,7 @@ import { NotificationProgrammatic as Notification } from "buefy";
 import Donate from "@/components/Settings/Donate.vue";
 import { isMobile } from "@/services/view/responsive";
 import { xchPrefix } from "@/store/modules/network";
+import VerifyMessage from "../Cryptography/VerifyMessage.vue";
 
 @Component
 export default class Dapp extends Vue {
@@ -169,6 +180,9 @@ export default class Dapp extends Vue {
         break;
       case "/home/scan-assets":
         this.openScanAssets();
+        break;
+      case "/home/verify-message":
+        this.openVerifyMessage();
         break;
       default:
         break;
@@ -301,6 +315,21 @@ export default class Dapp extends Vue {
     this.$buefy.modal.open({
       parent: this,
       component: BatchMintNft,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      fullScreen: isMobile(),
+      props: {
+        account: this.account,
+      },
+    });
+  }
+
+  openVerifyMessage(): void {
+    this.checkObserveMode();
+    this.$buefy.modal.open({
+      parent: this,
+      component: VerifyMessage,
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],

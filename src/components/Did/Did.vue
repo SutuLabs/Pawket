@@ -61,7 +61,7 @@ export default class Did extends Vue {
     const names: DidName[] = JSON.parse(didNames);
     return names;
   }
-  
+
   get networkId(): string {
     return store.state.network.networkId;
   }
@@ -93,7 +93,7 @@ export default class Did extends Vue {
       trapFocus: true,
       fullScreen: isMobile(),
       canCancel: ["outside"],
-      props: { did: did },
+      props: { did: did, account: this.account },
       events: { edit: this.edit },
     });
   }

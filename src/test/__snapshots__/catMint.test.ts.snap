@@ -22,7 +22,7 @@ exports[`Mint Cat: assetid 1`] = `"0x3d65a20099e84ac0d5a061d74814ea76bbe78678358
 
 exports[`Mint Cat: spendbundle 1`] = `
 Object {
-  "aggregated_signature": "a2e7cae0b1d495f7a83ef15cc9d39da348b84ce1124e3031af0f1af9d6f3c3f51d09277a2b3541d81768619551a0db55158f475965aa5129998e9c19cd41826c3503135498d825f5628730b410f4e1f9219e8b4b68fcd647671fcf22de95fdb7",
+  "aggregated_signature": "0xa2e7cae0b1d495f7a83ef15cc9d39da348b84ce1124e3031af0f1af9d6f3c3f51d09277a2b3541d81768619551a0db55158f475965aa5129998e9c19cd41826c3503135498d825f5628730b410f4e1f9219e8b4b68fcd647671fcf22de95fdb7",
   "coin_spends": Array [
     Object {
       "coin": Object {
