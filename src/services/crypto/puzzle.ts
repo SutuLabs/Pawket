@@ -164,7 +164,8 @@ class PuzzleMaker {
     return (await this.getPuzzleDetails(privateKey, prefix, startIndex, endIndex)).map(_ => _.hash);
   }
 
-  public async getPuzzleDetails(privateKey: Uint8Array, prefix: string, startIndex = 0, endIndex = 10): Promise<PuzzleDetail[]> {
+  public async getPuzzleDetails(privateKey: string | Uint8Array, prefix: string, startIndex = 0, endIndex = 10): Promise<PuzzleDetail[]> {
+    if (typeof privateKey === "string") privateKey = utility.fromHexString(privateKey);
     return await this.getPuzzleDetailsInner(privateKey, async (spk) => this.getPuzzle(spk), startIndex, endIndex, prefix, true)
   }
 

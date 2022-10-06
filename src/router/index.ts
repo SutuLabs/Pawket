@@ -54,6 +54,9 @@ const routes: Array<RouteConfig> = [
       {
         path: "batch-mint-nft",
       },
+      {
+        path: "verify-message",
+      },
     ],
   },
   {
