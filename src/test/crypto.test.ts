@@ -3,6 +3,15 @@ import utility from "@/services/crypto/utility";
 import transfer from "@/services/transfer/transfer";
 import { getCoinName } from "@/services/coin/coinUtility";
 import { Instance } from "@/services/util/instance";
+import { analyzeDidCoin } from "@/services/coin/did";
+import { convertToOriginCoin } from "@/models/wallet";
+import { prefix0x } from "@/services/coin/condition";
+import { analyzeNftCoin } from "@/services/coin/nft";
+import { getSignMessage, signMessage, verifySignature } from "@/services/crypto/sign";
+import { PrivateKey } from "@chiamine/bls-signatures";
+
+import didcoin2 from "./cases/didcoin2.json"
+import nftcoin6 from "./cases/nftcoin6.json"
 
 beforeAll(async () => {
   await Instance.init();
@@ -56,3 +65,67 @@ test('Coin Name', async () => {
   });
   expect(coinname).toMatchSnapshot("coinname");
 });
+
+// ## Signing Verification
+//
+// verification from:
+// 1. pk -> (synthetic pk, p2 owner puzzle hash)
+// 2. signature
+// 3. message for signing
+// 4. NFT/DID/XCH -> p2 owner puzzle hash
+
+// verification process:
+// 1. (pk -> synthetic pk, signature, message) -> signature correctness
+// 2. (pk, NFT) -> (pk -> synthetic pk -> p2 owner puzzle hash, NFT/DID/XCH -> p2 owner puzzle hash) -> linkability correctness
+
+test('Sign Message By XCH', async () => {
+  const puzzleHash = "0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10";
+
+  const privkey = utility.fromHexString("55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f");
+  const requests = await puzzle.getPuzzleDetails(privkey, "xch", 0, 10);
+  const sk = requests.find(_ => prefix0x(_.hash) == puzzleHash)?.privateKey;
+  if (!sk) fail("cannot find sk");
+
+  await signMessageTest(sk, "747769", puzzleHash);
+});
+
+test('Sign Message By DID', async () => {
+  const analysis = await analyzeDidCoin(didcoin2.puzzle_reveal, "", convertToOriginCoin(didcoin2.coin), didcoin2.solution);
+  if (!analysis) fail("cannot parse did coin");
+
+  const privkey = utility.fromHexString("55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f");
+  const requests = await puzzle.getPuzzleDetails(privkey, "xch", 0, 10);
+  const sk = requests.find(_ => prefix0x(_.hash) == analysis.hintPuzzle)?.privateKey;
+  if (!sk) fail("cannot find sk");
+
+  await signMessageTest(sk, "747769", analysis.hintPuzzle);
+});
+
+test('Sign Message By NFT', async () => {
+  const analysis = await analyzeNftCoin(nftcoin6.puzzle_reveal, "", convertToOriginCoin(nftcoin6.coin), nftcoin6.solution);
+  if (!analysis) fail("cannot parse nft coin");
+
+  const privkey = utility.fromHexString("55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f");
+  const requests = await puzzle.getPuzzleDetails(privkey, "xch", 0, 10);
+  const sk = requests.find(_ => _.hash == analysis.p2Owner)?.privateKey;
+  if (!sk) fail("cannot find sk");
+
+  await signMessageTest(sk, "747769", analysis.p2Owner);
+});
+
+async function signMessageTest(sk: PrivateKey, message: string, expectPuzzleHash: string): Promise<void> {
+  const pk = utility.toHexString(sk.get_g1().serialize());
+
+  const msg = await getSignMessage(message);
+  expect(utility.toHexString(msg)).toMatchSnapshot("msg");
+
+  const { signature, syntheticPublicKey } = signMessage(sk, msg);
+  expect(signature).toMatchSnapshot("signature");
+  expect(syntheticPublicKey).toMatchSnapshot("syntheticPublicKey");
+
+  const v = verifySignature(pk, msg, signature);
+  expect(v).toBeTruthy();
+
+  const vp2owner = prefix0x(await puzzle.getPuzzleHash(pk));
+  expect(vp2owner).toBe(prefix0x(expectPuzzleHash));
+}

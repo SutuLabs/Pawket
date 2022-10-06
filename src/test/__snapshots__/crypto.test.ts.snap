@@ -23,3 +23,21 @@ exports[`Coin Name: coinname 1`] = `"c62152493a6f3fbca7a918a8258e52f84c4e8aa286b
 exports[`Puzzle Assemble 1`] = `"(q (a b c) (d e f))"`;
 
 exports[`Puzzle Assemble 2`] = `"(q (a b c) (d e (f \\"g\\") ()))"`;
+
+exports[`Sign Message By DID: msg 1`] = `"eac753f6f07152ef558a6fd1d1b989cc99f0528bb34f5b927294f031117b3d70"`;
+
+exports[`Sign Message By DID: signature 1`] = `"0x82ca9a652a58e148ec74645dae3106c28f33d5057abedec9e7fbe6b9d46450dd71082bb5dbff4108a75184f7825d7857053da2caa2bafb12e8f689ff6f24e88f930d515244d9730300c860ac5279ae8cca2022ea0588b6b68f25e6fc80471197"`;
+
+exports[`Sign Message By DID: syntheticPublicKey 1`] = `"0xb79284e00045f07be014cacf9aac17b5a41648b32329eb2a38104768a0a0abd6542cb577b28e25458a8472c43fb8475b"`;
+
+exports[`Sign Message By NFT: msg 1`] = `"eac753f6f07152ef558a6fd1d1b989cc99f0528bb34f5b927294f031117b3d70"`;
+
+exports[`Sign Message By NFT: signature 1`] = `"0x8310a5ce30132bd240595fa9da662bbaa77b505feedfb19fdafb121113c354bd3ecfad0d46851816fd0ad3cb6ea6a05e0506f44924cd4d7c0844f1ac54c8355e0194eec826784fd4bc458a409b53ca060beacf4dd06d309ffaeee31e1faf22c0"`;
+
+exports[`Sign Message By NFT: syntheticPublicKey 1`] = `"0xa0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338"`;
+
+exports[`Sign Message By XCH: msg 1`] = `"eac753f6f07152ef558a6fd1d1b989cc99f0528bb34f5b927294f031117b3d70"`;
+
+exports[`Sign Message By XCH: signature 1`] = `"0xa673160a951c23683f4d8aa551eca97767befbf025d75f4539e7db4aa639efe950f389134e5c2552f5e2bd87c3ce97600d523cb434cdf75afe6a490b4dba4cb2bba5e7c49b44c55743bffbe08b372955d74fd0384178ebf40ee73a1b46d27f8f"`;
+
+exports[`Sign Message By XCH: syntheticPublicKey 1`] = `"0x92c7027d455e843b1226b757c1dd5e124e0e6ddab3549036a4684b410182fdfd1eee459eb76a4d6d73e94f90fbe6eb1d"`;

@@ -163,7 +163,7 @@ class Transfer {
     return offset;
   }
 
-  private calculate_synthetic_secret_key(BLS: ModuleInstance, secret_key: PrivateKey, hidden_puzzle_hash: Uint8Array): PrivateKey {
+  public calculate_synthetic_secret_key(BLS: ModuleInstance, secret_key: PrivateKey, hidden_puzzle_hash: Uint8Array): PrivateKey {
     const secret_exponent = bigint_from_bytes(Bytes.from(secret_key.serialize()), { signed: true });
     const public_key = secret_key.get_g1();
     const synthetic_offset = this.calculate_synthetic_offset(public_key, hidden_puzzle_hash);
@@ -171,6 +171,13 @@ class Transfer {
     const blob = bigint_to_bytes(synthetic_secret_exponent).raw();
     const synthetic_secret_key = BLS.PrivateKey.from_bytes(blob, true)
     return synthetic_secret_key;
+  }
+
+  public calculate_synthetic_public_key(BLS: ModuleInstance, public_key: G1Element, hidden_puzzle_hash: Uint8Array): G1Element {
+    const synthetic_offset = BLS.PrivateKey.from_bytes(bigint_to_bytes(
+      this.calculate_synthetic_offset(public_key, hidden_puzzle_hash)).raw(), true);
+
+    return public_key.add(synthetic_offset.get_g1());
   }
 
   private async signSolution(
