@@ -76,7 +76,7 @@ test('Coin Name', async () => {
 
 // verification process:
 // 1. (pk -> synthetic pk, signature, message) -> signature correctness
-// 2. (pk, NFT) -> (pk -> synthetic pk -> p2 owner puzzle hash, NFT/DID/XCH -> p2 owner puzzle hash) -> linkability correctness
+// 2. (pk, NFT/DID/XCH) -> (pk -> synthetic pk -> p2 owner puzzle hash, NFT/DID/XCH -> p2 owner puzzle hash) -> linkability correctness
 
 test('Sign Message By XCH', async () => {
   const puzzleHash = "0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10";
