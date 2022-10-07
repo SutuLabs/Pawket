@@ -37,6 +37,15 @@
         </b-field>
       </template>
       <template v-else>
+        <b-field v-if="false">
+          <b-radio-button v-model="signMode" native-value="Pawket" type="is-primary is-light is-outlined">
+            <span>Pawket</span>
+          </b-radio-button>
+
+          <b-radio-button v-model="signMode" native-value="Chia CLI" type="is-warning is-light is-outlined">
+            <span>Chia CLI</span>
+          </b-radio-button>
+        </b-field>
         <b-field label="Result">
           <b-input type="textarea" v-model="signResult" rows="20"></b-input>
         </b-field>
@@ -70,7 +79,7 @@ import { NftCoinAnalysisResult } from "@/models/nft";
 import { DidCoinAnalysisResult } from "@/services/coin/did";
 import store from "@/store";
 import puzzle from "@/services/crypto/puzzle";
-import { prefix0x } from "@/services/coin/condition";
+import { prefix0x, unprefix0x } from "@/services/coin/condition";
 import utility from "@/services/crypto/utility";
 import { getSignMessage, signMessage, verifySignature } from "@/services/crypto/sign";
 import { xchPrefix } from "@/store/modules/network";
@@ -90,6 +99,9 @@ export default class SignMessage extends Vue {
 
   public submitting = false;
   public signResult = "";
+  public pawketSignResult = "";
+  public chiaCliSignResult = "";
+  public signMode: "Pawket" | "Chia CLI" = "Pawket";
   public message = "";
 
   mounted(): void {
@@ -121,6 +133,12 @@ export default class SignMessage extends Vue {
     return;
   }
 
+  @Watch("signMode")
+  onSignModeChange(): void {
+    this.signResult =
+      this.signMode == "Pawket" ? this.pawketSignResult : this.signMode == "Chia CLI" ? this.chiaCliSignResult : "";
+  }
+
   reset(): void {
     this.signResult = "";
   }
@@ -136,7 +154,7 @@ export default class SignMessage extends Vue {
   async sign(): Promise<void> {
     this.submitting = true;
     try {
-      if (this.message.indexOf("\"")>-1) {
+      if (this.message.indexOf('"') > -1) {
         Notification.open({
           message: `Double quotes(") is not supported in message.`,
           type: "is-danger",
@@ -197,16 +215,22 @@ export default class SignMessage extends Vue {
       const pk = prefix0x(utility.toHexString(sk.get_g1().serialize()));
       this.message = this.message.trim();
       const msg = await getSignMessage(this.message);
-      // const { signature, syntheticPublicKey } = signMessage(sk, msg);
-      const { signature } = signMessage(sk, msg);
+      const { signature, syntheticPublicKey } = signMessage(sk, msg);
       const v = verifySignature(pk, msg, signature);
       if (!v) throw new Error("failed to sign a valid signature");
 
-      this.signResult = `Public Key: ${prefix0x(pk)}
+      this.pawketSignResult = `Public Key: ${prefix0x(pk)}
+Synthetic Key: ${prefix0x(syntheticPublicKey)}
 Signature: ${prefix0x(signature)}
 ${phResult}${phHint ? "\nHint: " + phHint : ""}
 Message:
 ${this.message}`;
+      this.chiaCliSignResult =
+        this.message.indexOf("\n") > -1
+          ? "Message with multiple line is not supported to executed in Chia CLI."
+          : `chia keys verify -s ${unprefix0x(signature)} -p ${unprefix0x(syntheticPublicKey)} -d ${utility.toHexString(msg)}`;
+
+      this.onSignModeChange();
     } catch (error) {
       Notification.open({
         message: this.$tc("batchSend.ui.messages.failedToSign") + error,

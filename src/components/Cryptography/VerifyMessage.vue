@@ -9,9 +9,23 @@
         <b-input type="textarea" v-model="message" rows="18"></b-input>
       </b-field>
 
-      <b-field v-if="verifyResult" label="Result">
-        <b-icon v-if="verifyResult == 'GOOD'" icon="check-decagram"></b-icon>
-        <b-icon v-else icon="comment-remove-outline"></b-icon>
+      <b-field v-if="verified" label="Result">
+        <template #message>
+          <ul v-for="(v, i) in validationResult" :key="i">
+            <li v-if="v.v == 'Pass'">
+              <b-icon icon="check-decagram" type="is-success"></b-icon>
+              {{ v.pass }}
+            </li>
+            <li v-if="v.v == 'None'">
+              <b-icon icon="crosshairs-question"></b-icon>
+              {{ v.none }}
+            </li>
+            <li v-if="v.v == 'Fail'">
+              <b-icon icon="comment-remove-outline" type="is-danger"></b-icon>
+              {{ v.fail }}
+            </li>
+          </ul>
+        </template>
       </b-field>
     </section>
     <footer class="modal-card-foot is-block">
@@ -19,7 +33,7 @@
         <b-button :label="$t('batchSend.ui.button.cancel')" class="is-pulled-left" @click="cancel()"></b-button>
       </div>
       <div>
-        <b-button label="Verify" type="is-primary" class="is-pulled-right" @click="sign()" :loading="submitting"></b-button>
+        <b-button label="Verify" type="is-primary" class="is-pulled-right" @click="verify()" :loading="submitting"></b-button>
       </div>
     </footer>
     <b-loading :is-full-page="false" v-model="submitting"></b-loading>
@@ -39,6 +53,8 @@ import { CoinSpend } from "@/models/wallet";
 import debug from "@/services/api/debug";
 import { analyzeNftCoin } from "@/services/coin/nft";
 
+type ValidationResult = "None" | "Pass" | "Fail";
+
 @Component({
   components: {
     KeyBox,
@@ -48,8 +64,22 @@ export default class VerifyMessage extends Vue {
   @Prop() public initMessage!: string | undefined;
 
   public submitting = false;
-  public verifyResult = "";
+  public verified = false;
   public message = "";
+  public signatureValidation: ValidationResult = "None";
+  public coinValidation: ValidationResult = "None";
+
+  get validationResult(): { v: ValidationResult; pass: string; fail: string; none: string }[] {
+    return [
+      {
+        v: this.signatureValidation,
+        pass: "Signature check pass",
+        fail: "Signature check failed",
+        none: "Doesn't check signature",
+      },
+      { v: this.coinValidation, pass: "Coin check pass", fail: "Coin check failed", none: "Doesn't check Coin" },
+    ];
+  }
 
   mounted(): void {
     this.message = this.initMessage || this.message;
@@ -71,20 +101,24 @@ export default class VerifyMessage extends Vue {
   }
 
   reset(): void {
-    this.verifyResult = "";
+    this.verified = false;
   }
 
   cancel(): void {
-    if (this.verifyResult) {
+    if (this.verified) {
       this.reset();
     } else {
       this.$router.push("/home");
     }
   }
 
-  async sign(): Promise<void> {
+  async verify(): Promise<void> {
     this.submitting = true;
     try {
+      this.verified = false;
+      this.signatureValidation = "None";
+      this.coinValidation = "None";
+
       const kvp = this.message
         .split("\n")
         .filter((_) => _.indexOf(":") > -1)
@@ -110,13 +144,7 @@ export default class VerifyMessage extends Vue {
         return;
       }
 
-      const signmsg = await getSignMessage(msg);
-      const v = verifySignature(pk, signmsg, signature);
-      if (!v) {
-        this.verifyResult = "BAD";
-        this.submitting = false;
-        return;
-      }
+      await this.checkSignature(pk, msg, signature);
 
       if ((nft || did) && !hint) {
         Notification.open({
@@ -124,10 +152,55 @@ export default class VerifyMessage extends Vue {
           type: "is-danger",
           duration: 5000,
         });
+        this.coinValidation = "Fail";
         this.submitting = false;
         return;
       }
 
+      await this.checkCoin(did, nft, xch, hint, prefix0x(await puzzle.getPuzzleHash(pk)));
+    } catch (error) {
+      Notification.open({
+        message: this.$tc("batchSend.ui.messages.failedToSign") + error,
+        type: "is-danger",
+        autoClose: false,
+      });
+      console.warn(error);
+    }
+
+    this.submitting = false;
+    this.verified = true;
+  }
+
+  async checkSignature(pk: string, msg: string, signature: string): Promise<void> {
+    try {
+      const signmsg = await getSignMessage(msg);
+      const v = verifySignature(pk, signmsg, signature);
+      if (!v) {
+        this.signatureValidation = "Fail";
+        this.verified = true;
+        this.submitting = false;
+        return;
+      }
+
+      this.signatureValidation = "Pass";
+    } catch (error) {
+      Notification.open({
+        message: this.$tc("batchSend.ui.messages.failedToSign") + error,
+        type: "is-danger",
+        autoClose: false,
+      });
+      console.warn(error);
+      this.signatureValidation = "Fail";
+    }
+  }
+  async checkCoin(
+    did: string | undefined,
+    nft: string | undefined,
+    xch: string | undefined,
+    hint: string | undefined,
+    p2owner: string
+  ): Promise<void> {
+    try {
       const expect =
         did && hint
           ? await this.getCoin(hint, did, async (cs, launcherId) => {
@@ -152,13 +225,11 @@ export default class VerifyMessage extends Vue {
           duration: 5000,
         });
         this.submitting = false;
+        this.coinValidation = "Fail";
         return;
       }
 
-      const vp2owner = prefix0x(await puzzle.getPuzzleHash(pk));
-      const v2 = vp2owner == expect;
-
-      this.verifyResult = v && v2 ? "GOOD" : "BAD";
+      this.coinValidation = p2owner == expect ? "Pass" : "Fail";
     } catch (error) {
       Notification.open({
         message: this.$tc("batchSend.ui.messages.failedToSign") + error,
@@ -166,9 +237,8 @@ export default class VerifyMessage extends Vue {
         autoClose: false,
       });
       console.warn(error);
-      this.submitting = false;
+      this.coinValidation = "Fail";
     }
-    this.submitting = false;
   }
 
   async getCoin(
