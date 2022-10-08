@@ -219,16 +219,18 @@ export default class SignMessage extends Vue {
       const v = verifySignature(pk, msg, signature);
       if (!v) throw new Error("failed to sign a valid signature");
 
+      const msghash = prefix0x(utility.toHexString(msg));
       this.pawketSignResult = `Public Key: ${prefix0x(pk)}
 Synthetic Key: ${prefix0x(syntheticPublicKey)}
 Signature: ${prefix0x(signature)}
 ${phResult}${phHint ? "\nHint: " + phHint : ""}
+Message Hash: ${msghash}
 Message:
 ${this.message}`;
       this.chiaCliSignResult =
         this.message.indexOf("\n") > -1
           ? "Message with multiple line is not supported to executed in Chia CLI."
-          : `chia keys verify -s ${unprefix0x(signature)} -p ${unprefix0x(syntheticPublicKey)} -d ${utility.toHexString(msg)}`;
+          : `chia keys verify -s ${unprefix0x(signature)} -p ${unprefix0x(syntheticPublicKey)} -d ${msghash}`;
 
       this.onSignModeChange();
     } catch (error) {
