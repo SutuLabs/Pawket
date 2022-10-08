@@ -22,9 +22,14 @@ const routes: Array<RouteConfig> = [
         redirect: "address",
       },
       {
-        name: "Bech32m",
+        name: "Address",
         path: "address",
         component: () => import(/* webpackChunkName: "create" */ "../components/DevHelper/HashPanel.vue"),
+      },
+      {
+        name: "Name",
+        path: "name",
+        component: () => import(/* webpackChunkName: "create" */ "../components/DevHelper/NamePanel.vue"),
       },
       {
         name: "CLVM",
