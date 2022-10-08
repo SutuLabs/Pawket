@@ -3,9 +3,6 @@
     <b-field label="Address">
       <template #message>
         {{ address_hash }}
-        <a v-if="address_hash" href="javascript:void(0)" @click="search(address_hash)">
-          <b-icon icon="database-search"></b-icon>
-        </a>
       </template>
       <b-input v-model="origin_address" type="text" @input="changeAddress()"></b-input>
     </b-field>
@@ -52,9 +49,6 @@ export default class HashPanel extends Vue {
   }
   changeHash(): void {
     this.hash_address = puzzle.getAddressFromPuzzleHash(this.origin_hash, this.prefix);
-  }
-  search(hash: string): void {
-    this.$emit("search", hash);
   }
 }
 </script>

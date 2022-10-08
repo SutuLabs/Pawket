@@ -182,8 +182,8 @@ export default class MakeOffer extends Vue {
   }
 
   @Watch("path")
-  onPathChange():void {
-    if(this.path == "/home") this.close();
+  onPathChange(): void {
+    if (this.path == "/home") this.close();
   }
 
   get cats(): { [id: string]: string } {
@@ -206,19 +206,8 @@ export default class MakeOffer extends Vue {
     return xchSymbol();
   }
 
-  getTotalAmount(token: string): string {
-    if (!this.availcoins || !this.availcoins[token] || token == xchSymbol()) {
-      return "-1";
-    }
-
-    const availcoins = this.availcoins[token].map((_) => _.amount);
-    const decimal = 3;
-    const totalAmount = bigDecimal.divide(
-      availcoins.reduce((a, b) => a + b, 0n),
-      Math.pow(10, decimal),
-      decimal
-    );
-    return totalAmount;
+  getTotalAmount(): string {
+    return "-1";
   }
 
   getMaxAmount(token: string): string {
@@ -228,21 +217,12 @@ export default class MakeOffer extends Vue {
 
     const availcoins = this.availcoins[token].map((_) => _.amount);
     const decimal = token == xchSymbol() ? 12 : 3;
-    const singleMax = bigDecimal.divide(
-      availcoins.reduce((a, b) => (a > b ? a : b), 0n),
-      Math.pow(10, decimal),
-      decimal
-    );
     const totalAmount = bigDecimal.divide(
       availcoins.reduce((a, b) => a + b, 0n),
       Math.pow(10, decimal),
       decimal
     );
-    if (token == xchSymbol()) {
-      return totalAmount;
-    } else {
-      return singleMax;
-    }
+    return totalAmount;
   }
 
   setMax(offer: OfferTokenAmount): void {

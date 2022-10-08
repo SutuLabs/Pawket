@@ -28,7 +28,6 @@ export async function generateOffer(
   catModName: "cat_v1" | "cat_v2" = "cat_v2",
 ): Promise<SpendBundle> {
   if (offered.length != 1 || requested.length != 1) throw new Error("currently, only support single offer/request");
-  if (offered[0].id && offered[0].plan.coins.length != 1) throw new Error("currently, only support single coin for CAT");
 
   const settlement_tgt = "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79";
   const spends: CoinSpend[] = [];

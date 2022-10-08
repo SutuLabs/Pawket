@@ -52,6 +52,7 @@ import { rpcUrl } from "@/store/modules/network";
 import { CoinSpend } from "@/models/wallet";
 import debug from "@/services/api/debug";
 import { analyzeNftCoin } from "@/services/coin/nft";
+import utility from "@/services/crypto/utility";
 
 type ValidationResult = "None" | "Pass" | "Fail";
 
@@ -129,12 +130,13 @@ export default class VerifyMessage extends Vue {
       const pk = kvp.find((_) => _.key == "Public Key")?.value;
       const signature = kvp.find((_) => _.key == "Signature")?.value;
       const hint = kvp.find((_) => _.key == "Hint")?.value;
+      const msghash = kvp.find((_) => _.key == "Message Hash")?.value;
 
       const did = kvp.find((_) => _.key == "DID")?.value;
       const nft = kvp.find((_) => _.key == "NFT")?.value;
       const xch = kvp.find((_) => _.key == "XCH")?.value;
 
-      if (!pk || !signature || !msg) {
+      if (!pk || !signature || !msg || !msghash) {
         Notification.open({
           message: "malformat.",
           type: "is-danger",
@@ -144,7 +146,12 @@ export default class VerifyMessage extends Vue {
         return;
       }
 
-      await this.checkSignature(pk, msg, signature);
+      const sigv = await this.checkSignature(pk, msg, msghash, signature);
+      if (!sigv) {
+        this.verified = true;
+        this.submitting = false;
+        return;
+      }
 
       if ((nft || did) && !hint) {
         Notification.open({
@@ -171,15 +178,17 @@ export default class VerifyMessage extends Vue {
     this.verified = true;
   }
 
-  async checkSignature(pk: string, msg: string, signature: string): Promise<void> {
+  async checkSignature(pk: string, msg: string, msghash: string, signature: string): Promise<boolean> {
     try {
       const signmsg = await getSignMessage(msg);
+      if (utility.toHexString(signmsg) != unprefix0x(msghash).toLowerCase()) {
+        this.signatureValidation = "Fail";
+        return false;
+      }
       const v = verifySignature(pk, signmsg, signature);
       if (!v) {
         this.signatureValidation = "Fail";
-        this.verified = true;
-        this.submitting = false;
-        return;
+        return false;
       }
 
       this.signatureValidation = "Pass";
@@ -191,8 +200,12 @@ export default class VerifyMessage extends Vue {
       });
       console.warn(error);
       this.signatureValidation = "Fail";
+      return false;
     }
+
+    return true;
   }
+
   async checkCoin(
     did: string | undefined,
     nft: string | undefined,

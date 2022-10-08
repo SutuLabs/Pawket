@@ -3,8 +3,11 @@
     <top-bar :title="$t('settings.devhelper.title')" :tag="network" @close="close()" :showClose="showClose"></top-bar>
     <section class="modal-card-body">
       <b-tabs position="is-centered" class="block" v-model="selectedTab">
-        <b-tab-item label="Bech32m">
-          <hash-panel @search="search"></hash-panel>
+        <b-tab-item label="Address">
+          <hash-panel></hash-panel>
+        </b-tab-item>
+        <b-tab-item label="Name">
+          <name-panel></name-panel>
         </b-tab-item>
         <b-tab-item label="CLVM">
           <clvm-panel></clvm-panel>
@@ -29,6 +32,7 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import BundlePanel from "@/components/DevHelper/BundlePanel.vue";
 import CoinPanel from "@/components/DevHelper/CoinPanel.vue";
 import HashPanel from "@/components/DevHelper/HashPanel.vue";
+import NamePanel from "@/components/DevHelper/NamePanel.vue";
 import ClvmPanel from "@/components/DevHelper/ClvmPanel.vue";
 import OfferPanel from "@/components/DevHelper/OfferPanel.vue";
 import store from "@/store";
@@ -40,6 +44,7 @@ import TopBar from "@/components/Common/TopBar.vue";
     BundlePanel,
     CoinPanel,
     HashPanel,
+    NamePanel,
     ClvmPanel,
     OfferPanel,
     TopBar,
@@ -58,10 +63,10 @@ export default class DevHelper extends Vue {
 
   mounted(): void {
     if (this.inputBundleText) {
-      this.selectedTab = 2;
+      this.selectedTab = 3;
     }
     if (this.inputOfferText) {
-      this.selectedTab = 3;
+      this.selectedTab = 4;
     }
   }
 
@@ -80,11 +85,6 @@ export default class DevHelper extends Vue {
 
   get network(): string {
     return this.networkId;
-  }
-
-  search(hash: string): void {
-    this.selectedTab = 4;
-    this.puzzle_hash = hash;
   }
 }
 </script>

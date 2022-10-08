@@ -4,7 +4,7 @@
       <ul>
         <router-link
           :to="{ name }"
-          v-for="name in ['Bech32m', 'CLVM', 'Bundle', 'Offer', 'Coin']"
+          v-for="name in ['Address', 'Name', 'CLVM', 'Bundle', 'Offer', 'Coin']"
           :key="name"
           :label="name"
           v-slot="{ navigate, isActive, href }"
@@ -27,6 +27,7 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import BundlePanel from "@/components/DevHelper/BundlePanel.vue";
 import CoinPanel from "@/components/DevHelper/CoinPanel.vue";
 import HashPanel from "@/components/DevHelper/HashPanel.vue";
+import NamePanel from "@/components/DevHelper/NamePanel.vue";
 import ClvmPanel from "@/components/DevHelper/ClvmPanel.vue";
 import OfferPanel from "@/components/DevHelper/OfferPanel.vue";
 import store from "@/store";
@@ -37,6 +38,7 @@ import store from "@/store";
     BundlePanel,
     CoinPanel,
     HashPanel,
+    NamePanel,
     ClvmPanel,
     OfferPanel,
   },
