@@ -68,6 +68,8 @@
 import { CustomCat } from "@/models/account";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import TailDb, { TailInfo } from "@/services/api/tailDb";
+import { unprefix0x } from "@/services/coin/condition";
+
 @Component
 export default class SearchCat extends Vue {
   @Prop({ default: [] }) public allCats!: CustomCat[];
@@ -79,8 +81,11 @@ export default class SearchCat extends Vue {
   get filteredData(): TailInfo[] {
     if (!this.searchInput.length) return this.tails;
     let res: TailInfo[] = [];
+    const hash = unprefix0x(this.searchInput.toLowerCase());
+    const code = this.searchInput.toUpperCase();
     this.tails.map((t) => {
-      if (t.code.startsWith(this.searchInput.toUpperCase())) res.push(t);
+      if (t.code.startsWith(code)) res.push(t);
+      else if (t.hash == hash) res.push(t);
     });
     return res;
   }
