@@ -8,7 +8,7 @@
     </b-field>
     <b-field label="Amount">
       <template #message>
-        <span>{{ demojo(amount) }}</span>
+        <span>{{ xchAmount }}</span>
       </template>
       <b-input v-model="amount" type="text" @input="update()"></b-input>
     </b-field>
@@ -25,7 +25,6 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import puzzle from "@/services/crypto/puzzle";
 import { xchPrefix } from "@/store/modules/network";
 import { demojo } from "@/filters/unitConversion";
-import { OneTokenInfo } from "@/models/account";
 import { getCoinName0x } from "@/services/coin/coinUtility";
 
 @Component({
@@ -38,11 +37,12 @@ export default class NamePanel extends Vue {
   public puzzle_hash_converted = "";
   public parent_coin_name = "";
   public coin_name = "";
-  public amount = 0n;
+  public amount = "0";
 
-  demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null, digits = -1): string {
-    return demojo(mojo, token, digits);
+  get xchAmount(): string {
+    return demojo(BigInt(this.amount));
   }
+
   update(): void {
     if (!this.puzzle_hash) return;
     this.puzzle_hash_converted = this.puzzle_hash.startsWith(xchPrefix())
@@ -54,7 +54,7 @@ export default class NamePanel extends Vue {
     this.coin_name = getCoinName0x({
       parent_coin_info: this.parent_coin_name,
       puzzle_hash: ph,
-      amount: this.amount,
+      amount: BigInt(this.amount),
     });
   }
 }
