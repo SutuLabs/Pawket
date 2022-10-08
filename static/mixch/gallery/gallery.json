@@ -15,6 +15,13 @@
       "code": ""
     },
     {
+      "name": "Plotnft create with join pool",
+      "description": "Plotnft create with join pool",
+      "image": "gallery/plotnft-pool-create.svg",
+      "bundle": "gallery/plotnft-pool-create.json",
+      "code": ""
+    },
+    {
       "name": "Multiple CatV2 combine send",
       "description": "Multiple CatV2 combine send",
       "image": "gallery/multiple-cat-combine-transfer.svg",
