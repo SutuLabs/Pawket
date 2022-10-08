@@ -111,7 +111,7 @@
                   <b-tag v-if="isImported(unprefix0x(cat.tailProgramHash))">{{ $t("scanAssets.ui.label.imported") }}</b-tag>
                 </td>
                 <td>{{ shorten(unprefix0x(cat.tailProgramHash)) }}</td>
-                <td>
+                <td v-if="!isImported(unprefix0x(cat.tailProgramHash))">
                   <b-button
                     type="is-primary"
                     size="is-small"
@@ -155,6 +155,7 @@ import coin from "@/services/transfer/coin";
 import Send from "../Send/Send.vue";
 import { getAllCats } from "@/store/modules/account";
 import { NotificationProgrammatic as Notification } from "buefy";
+import store from "@/store";
 
 type Option = "Token" | "NftV1" | "CatV2";
 type Mode = "option" | "result";
@@ -237,6 +238,12 @@ export default class ScanAssets extends Vue {
     const idx = this.tails.findIndex((t) => t.hash == unprefix0x(hash));
     if (idx > -1) return this.tails[idx].code;
     return "Unknown CAT";
+  }
+
+  getCatImg(hash: string): string {
+    const idx = this.tails.findIndex((t) => t.hash == unprefix0x(hash));
+    if (idx > -1) return this.tails[idx].logo_url;
+    return "";
   }
 
   unprefix0x(str: string | undefined): string {
@@ -409,14 +416,24 @@ export default class ScanAssets extends Vue {
   }
 
   add(id: string): void {
-    this.$buefy.modal.open({
-      parent: this,
-      component: ManageCats,
-      hasModalCard: true,
-      trapFocus: true,
-      canCancel: [""],
-      props: { account: this.account, defaultName: this.getCatName(id), defaultAssetId: id, defaultTab: 1 },
-    });
+    if (this.getCatName(id) !== "Unknown CAT") {
+      const network = store.state.network.networkId;
+      this.account.allCats.push({ name: this.getCatName(id), id: id, network: network, img: this.getCatImg(id) });
+      setTimeout(() => {
+        store.dispatch("persistent");
+        this.account.addressGenerated = 0;
+        store.dispatch("refreshBalance");
+      }, 50);
+    } else {
+      this.$buefy.modal.open({
+        parent: this,
+        component: ManageCats,
+        hasModalCard: true,
+        trapFocus: true,
+        canCancel: [""],
+        props: { account: this.account, defaultName: this.getCatName(id), defaultAssetId: id, defaultTab: 1 },
+      });
+    }
   }
 
   send(): void {
