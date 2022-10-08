@@ -4,7 +4,7 @@
     <section class="modal-card-body">
       <b-tabs position="is-centered" class="block" v-model="selectedTab">
         <b-tab-item label="Bech32m">
-          <hash-panel @search="search"></hash-panel>
+          <hash-panel></hash-panel>
         </b-tab-item>
         <b-tab-item label="CLVM">
           <clvm-panel></clvm-panel>
@@ -80,11 +80,6 @@ export default class DevHelper extends Vue {
 
   get network(): string {
     return this.networkId;
-  }
-
-  search(hash: string): void {
-    this.selectedTab = 4;
-    this.puzzle_hash = hash;
   }
 }
 </script>
