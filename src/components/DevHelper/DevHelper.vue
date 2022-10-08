@@ -63,10 +63,10 @@ export default class DevHelper extends Vue {
 
   mounted(): void {
     if (this.inputBundleText) {
-      this.selectedTab = 2;
+      this.selectedTab = 3;
     }
     if (this.inputOfferText) {
-      this.selectedTab = 3;
+      this.selectedTab = 4;
     }
   }
 
