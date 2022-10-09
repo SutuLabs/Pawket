@@ -6,12 +6,19 @@
           <b-button :label="nameOmit(getProfileName(profile))" :icon-right="active ? 'menu-up' : 'menu-down'" />
         </template>
         <b-dropdown-item aria-role="listitem" @click="profile = 'All'">{{ $t("nftDetail.ui.profile.all") }}</b-dropdown-item>
-        <b-dropdown-item aria-role="listitem" v-for="did of dids" @click="profile = did.name" :key="did.did">{{
-          did.name
-        }}</b-dropdown-item>
         <b-dropdown-item aria-role="listitem" @click="profile = 'Unassigned'">{{
           $t("nftDetail.ui.profile.unassigned")
         }}</b-dropdown-item>
+        <b-dropdown-item
+          aria-role="listitem"
+          v-for="did of dids"
+          @click="
+            profile = 'Single';
+            selectedDid = did.name;
+          "
+          :key="did.did"
+          >{{ did.name }}</b-dropdown-item
+        >
       </b-dropdown>
       <b-button @click="refresh()" :loading="refreshing">
         <b-icon icon="refresh"></b-icon>
@@ -89,13 +96,14 @@ interface CollectionNfts {
 }
 
 type CollectionDict = { [name: string]: CollectionNfts };
-
+type Profile = "All" | "Unassigned" | "Single";
 @Component({})
 export default class NftPanel extends Vue {
   @Prop() public account!: AccountEntity;
   public isOpen: number | string = 0;
   public refreshing = false;
-  profile = "All";
+  profile: Profile = "All";
+  selectedDid = "";
 
   get collection(): CollectionDict {
     const other = "Other"; //i18n
@@ -121,7 +129,7 @@ export default class NftPanel extends Vue {
     }
     if (this.profile == "All") return this.account.nfts;
     if (this.profile == "Unassigned") return this.account.nfts.filter((nft) => nft.analysis.didOwner == "");
-    const did = this.dids.find((d) => d.name == this.profile);
+    const did = this.dids.find((d) => d.name == this.selectedDid);
     if (did) {
       return this.account.nfts.filter((nft) => puzzle.getAddressFromPuzzleHash(nft.analysis.didOwner, "did:chia:") == did.did);
     }
@@ -152,10 +160,10 @@ export default class NftPanel extends Vue {
     return nameOmit(name, upperCase);
   }
 
-  getProfileName(profile: string): string {
+  getProfileName(profile: Profile): string {
     if (profile == "All") return tc("nftDetail.ui.profile.all");
     if (profile == "Unassigned") return tc("nftDetail.ui.profile.unassigned");
-    return profile;
+    return this.selectedDid;
   }
 
   setAsProfilePic(url: string): void {
