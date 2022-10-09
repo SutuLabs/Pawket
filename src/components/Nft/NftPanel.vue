@@ -1,6 +1,25 @@
 <template>
   <section>
     <div>
+      <b-dropdown aria-role="list" class="mr-3" :mobile-modal="false">
+        <template #trigger="{ active }">
+          <b-button :label="nameOmit(getProfileName(profile))" :icon-right="active ? 'menu-up' : 'menu-down'" />
+        </template>
+        <b-dropdown-item aria-role="listitem" @click="profile = 'All'">{{ $t("nftDetail.ui.profile.all") }}</b-dropdown-item>
+        <b-dropdown-item aria-role="listitem" @click="profile = 'Unassigned'">{{
+          $t("nftDetail.ui.profile.unassigned")
+        }}</b-dropdown-item>
+        <b-dropdown-item
+          aria-role="listitem"
+          v-for="did of dids"
+          @click="
+            profile = 'Single';
+            selectedDid = did.name;
+          "
+          :key="did.did"
+          >{{ did.name }}</b-dropdown-item
+        >
+      </b-dropdown>
       <b-button @click="refresh()" :loading="refreshing">
         <b-icon icon="refresh"></b-icon>
       </b-button>
@@ -60,12 +79,15 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import store from "@/store";
 import NftDetailPanel from "@/components/Nft/NftDetailPanel.vue";
 import { isMobile } from "@/services/view/responsive";
-import { NftDetail } from "@/services/crypto/receive";
+import { DidDetail, NftDetail } from "@/services/crypto/receive";
 import { DonwloadedNftCollection, NftOffChainMetadata } from "@/models/nft";
 import utility from "@/services/crypto/utility";
 import { unprefix0x } from "@/services/coin/condition";
 import { getScalarString } from "@/services/coin/nft";
 import { notifyPrimary } from "@/services/notification/notification";
+import puzzle from "@/services/crypto/puzzle";
+import { nameOmit } from "@/filters/nameConversion";
+import { tc } from "@/i18n/i18n";
 
 interface CollectionNfts {
   name: string;
@@ -74,12 +96,14 @@ interface CollectionNfts {
 }
 
 type CollectionDict = { [name: string]: CollectionNfts };
-
+type Profile = "All" | "Unassigned" | "Single";
 @Component({})
 export default class NftPanel extends Vue {
   @Prop() public account!: AccountEntity;
   public isOpen: number | string = 0;
   public refreshing = false;
+  profile: Profile = "All";
+  selectedDid = "";
 
   get collection(): CollectionDict {
     const other = "Other"; //i18n
@@ -100,7 +124,20 @@ export default class NftPanel extends Vue {
   }
 
   get nfts(): NftDetail[] {
-    return this.account.nfts ?? [];
+    if (!this.account.nfts) {
+      return [];
+    }
+    if (this.profile == "All") return this.account.nfts;
+    if (this.profile == "Unassigned") return this.account.nfts.filter((nft) => nft.analysis.didOwner == "");
+    const did = this.dids.find((d) => d.name == this.selectedDid);
+    if (did) {
+      return this.account.nfts.filter((nft) => puzzle.getAddressFromPuzzleHash(nft.analysis.didOwner, "did:chia:") == did.did);
+    }
+    return this.account.nfts;
+  }
+
+  get dids(): DidDetail[] {
+    return this.account.dids ?? [];
   }
 
   get spaceScanUrl(): string {
@@ -117,6 +154,16 @@ export default class NftPanel extends Vue {
 
   get accountId(): number {
     return store.state.account.selectedAccount;
+  }
+
+  nameOmit(name: string, upperCase = false): string {
+    return nameOmit(name, upperCase);
+  }
+
+  getProfileName(profile: Profile): string {
+    if (profile == "All") return tc("nftDetail.ui.profile.all");
+    if (profile == "Unassigned") return tc("nftDetail.ui.profile.unassigned");
+    return this.selectedDid;
   }
 
   setAsProfilePic(url: string): void {
@@ -171,6 +218,7 @@ export default class NftPanel extends Vue {
     this.refreshing = true;
     try {
       await store.dispatch("refreshNfts");
+      await store.dispatch("refreshDids");
     } catch (err) {
       console.warn(err);
     }
@@ -186,7 +234,7 @@ export default class NftPanel extends Vue {
       width: 1000,
       fullScreen: isMobile(),
       canCancel: ["outside"],
-      props: { nft: nft, metadata: this.extraInfo[nft.address].metadata, account: this.account },
+      props: { nft: nft, metadata: this.extraInfo[nft.address].metadata, account: this.account, dids: this.dids },
     });
   }
 

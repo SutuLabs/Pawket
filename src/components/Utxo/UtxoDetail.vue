@@ -37,11 +37,11 @@
       </b-field>
       <b-field :label="$t('utxoDetail.ui.label.puzzleHash')" custom-class="is-medium has-text-weight-normal" v-if="activity.coin">
         <p class="long-text-wrapper has-text-grey">
-          {{ activity.coin.puzzleHash }}
+          {{ getAddressFromPuzzleHash(activity.coin.puzzleHash) }}
           <key-box
             icon="checkbox-multiple-blank-outline"
             :tooltip="$t('utxoDetail.ui.tooltip.copy')"
-            :value="activity.coin.puzzleHash"
+            :value="getAddressFromPuzzleHash(activity.coin.puzzleHash)"
           ></key-box>
         </p>
       </b-field>
@@ -55,6 +55,8 @@ import { CoinRecord } from "@/models/wallet";
 import { OneTokenInfo, TokenInfo } from "@/models/account";
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
+import puzzle from "@/services/crypto/puzzle";
+import { xchPrefix } from "@/store/modules/network";
 
 @Component({
   components: {
@@ -73,6 +75,10 @@ export default class UtxoDetail extends Vue {
 
   demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null, digits = -1): string {
     return demojo(mojo, token, digits);
+  }
+
+  getAddressFromPuzzleHash(hash: string): string {
+    return puzzle.getAddressFromPuzzleHash(hash, xchPrefix());
   }
 }
 </script>

@@ -1131,6 +1131,10 @@
       "dropdown": {
         "spaceScan": "在 Spacescan.io 查看",
         "setAsProfilePic": "设置为账户头像"
+      },
+      "profile": {
+        "all": "全部",
+        "unassigned": "未分配"
       }
     }
   },
