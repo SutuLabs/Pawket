@@ -1,5 +1,7 @@
 import { Bytes, bigint_to_bytes } from "clvm";
 import { ConditionOpcode } from "./opcode";
+import { SExp } from "clvm";
+import { disassemble } from "clvm_tools";
 
 export interface ConditionInfo {
   name: string;
@@ -59,8 +61,7 @@ export function getNumber(str: string): bigint {
 
 export function toNumberString(number: bigint): string {
   if (!number) return "()";
-  if (number < 10000) return number.toString();
-  return prefix0x(number.toString(16));
+  return disassemble(SExp.to(number));
 }
 
 export const conditionInfos: ConditionInfo[] = [
