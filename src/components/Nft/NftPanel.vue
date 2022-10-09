@@ -194,6 +194,7 @@ export default class NftPanel extends Vue {
     const src = img.getAttribute("data-src");
     if (!src) return;
     img.setAttribute("src", src);
+    img.setAttribute("data-src", "");
   }
 
   lazyLoading(): void {
