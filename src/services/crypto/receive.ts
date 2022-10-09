@@ -8,6 +8,7 @@ import debug from "../api/debug";
 import { analyzeDidCoin, DidCoinAnalysisResult } from "../coin/did";
 import { NftCoinAnalysisResult } from "@/models/nft";
 import { CnsCoinAnalysisResult } from "@/models/cns";
+import store from "@/store";
 
 export interface TokenPuzzleDetail {
   symbol: string;
@@ -177,8 +178,14 @@ class Receive {
           console.warn("coin cannot record", coinRecord);
           continue;
         }
-
-        const scoin = await debug.getCoinSolution(coinRecord.coin.parentCoinInfo, rpcUrl);
+        let scoin;
+        const coinCache = store.state.account.coinSolutions.get(coinRecord.coin.parentCoinInfo);
+        if (coinCache) {
+          scoin = coinCache;
+        } else {
+          scoin = await debug.getCoinSolution(coinRecord.coin.parentCoinInfo, rpcUrl);
+          store.state.account.coinSolutions.set(coinRecord.coin.parentCoinInfo, scoin);
+        }
         const ocoin = convertToOriginCoin(coinRecord.coin);
         // console.log("analyzing", getCoinName0x(convertToOriginCoin(coinRecord.coin)));
         const nftResult = await analyzeNftCoin(scoin.puzzle_reveal, coinRecords.puzzleHash, ocoin, scoin.solution);

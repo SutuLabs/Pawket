@@ -122,14 +122,8 @@ export default class SignMessage extends Vue {
       : "";
   }
 
-  @Watch("path")
-  onPathChange(): void {
-    if (this.path == "/home") this.close();
-  }
-
   @Emit("close")
   close(): void {
-    if (this.path.endsWith("sign-message")) this.$router.back();
     return;
   }
 
@@ -147,7 +141,7 @@ export default class SignMessage extends Vue {
     if (this.signResult) {
       this.reset();
     } else {
-      this.$router.push("/home");
+      this.close();
     }
   }
 

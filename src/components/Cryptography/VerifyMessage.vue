@@ -152,7 +152,6 @@ export default class VerifyMessage extends Vue {
         this.submitting = false;
         return;
       }
-
       if ((nft || did) && !hint) {
         Notification.open({
           message: "Hint is missing.",

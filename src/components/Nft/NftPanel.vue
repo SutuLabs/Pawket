@@ -1,7 +1,7 @@
 <template>
   <section>
     <div>
-      <b-dropdown aria-role="list" class="mr-3">
+      <b-dropdown aria-role="list" class="mr-3" :mobile-modal="false">
         <template #trigger="{ active }">
           <b-button :label="nameOmit(getProfileName(profile))" :icon-right="active ? 'menu-up' : 'menu-down'" />
         </template>
@@ -78,7 +78,6 @@ import utility from "@/services/crypto/utility";
 import { unprefix0x } from "@/services/coin/condition";
 import { getScalarString } from "@/services/coin/nft";
 import { notifyPrimary } from "@/services/notification/notification";
-import { profile } from "console";
 import puzzle from "@/services/crypto/puzzle";
 import { nameOmit } from "@/filters/nameConversion";
 import { tc } from "@/i18n/i18n";
@@ -227,7 +226,7 @@ export default class NftPanel extends Vue {
       width: 1000,
       fullScreen: isMobile(),
       canCancel: ["outside"],
-      props: { nft: nft, metadata: this.extraInfo[nft.address].metadata, account: this.account },
+      props: { nft: nft, metadata: this.extraInfo[nft.address].metadata, account: this.account, dids: this.dids },
     });
   }
 
