@@ -160,6 +160,8 @@ import store from "@/store";
 type Option = "Token" | "NftV1" | "CatV2";
 type Mode = "option" | "result";
 type Status = "Configuring" | "Scanning" | "Paused" | "Canceled" | "Finished";
+const unknownCat = "Unknown CAT";
+
 @Component({})
 export default class ScanAssets extends Vue {
   @Prop() public account!: AccountEntity;
@@ -237,7 +239,7 @@ export default class ScanAssets extends Vue {
   getCatName(hash: string): string {
     const idx = this.tails.findIndex((t) => t.hash == unprefix0x(hash));
     if (idx > -1) return this.tails[idx].code;
-    return "Unknown CAT";
+    return unknownCat;
   }
 
   getCatImg(hash: string): string {
@@ -416,7 +418,7 @@ export default class ScanAssets extends Vue {
   }
 
   add(id: string): void {
-    if (this.getCatName(id) !== "Unknown CAT") {
+    if (this.getCatName(id) !== unknownCat) {
       const network = store.state.network.networkId;
       this.account.allCats.push({ name: this.getCatName(id), id: id, network: network, img: this.getCatImg(id) });
       setTimeout(() => {
