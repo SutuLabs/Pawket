@@ -102,7 +102,7 @@
           <a href="javascript:void(0)" @click="$router.push('/home/verify-message')" class="has-text-link">
             <div class="has-text-centered">
               <b-icon icon="comment-check-outline" size="is-medium"></b-icon>
-              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.tooltip.verify") }}</p>
+              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.verify") }}</p>
             </div>
           </a>
         </b-tooltip>

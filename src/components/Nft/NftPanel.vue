@@ -86,7 +86,6 @@ import { unprefix0x } from "@/services/coin/condition";
 import { getScalarString } from "@/services/coin/nft";
 import { notifyPrimary } from "@/services/notification/notification";
 import puzzle from "@/services/crypto/puzzle";
-import { nameOmit } from "@/filters/nameConversion";
 import { tc } from "@/i18n/i18n";
 import { shorten } from "@/filters/addressConversion";
 
