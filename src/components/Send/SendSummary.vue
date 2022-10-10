@@ -54,30 +54,32 @@
         </span>
       </template>
     </b-field>
-    <b-field v-if="total" class="py-4">
-      <template #label>
-        <span class="is-size-5">{{ $t("sendSummary.ui.label.total") }}</span>
-        <span class="is-pulled-right is-size-5 has-text-primary">
-          <span>
-            {{ demojo(total) }}
+    <div v-if="!nftUri">
+      <b-field v-if="total" class="py-4">
+        <template #label>
+          <span class="is-size-5">{{ $t("sendSummary.ui.label.total") }}</span>
+          <span class="is-pulled-right is-size-5 has-text-primary">
+            <span>
+              {{ demojo(total) }}
+            </span>
           </span>
-        </span>
-      </template>
-    </b-field>
-    <b-field v-else class="py-4">
-      <template #label>
-        <span class="is-size-5">{{ $t("sendSummary.ui.label.total") }}</span>
-        <span class="is-pulled-right is-size-5 has-text-primary">
-          <span v-if="unit == xchSymbol">
-            {{ demojo(BigInt(amount) + fee) }}
+        </template>
+      </b-field>
+      <b-field v-else class="py-4">
+        <template #label>
+          <span class="is-size-5">{{ $t("sendSummary.ui.label.total") }}</span>
+          <span class="is-pulled-right is-size-5 has-text-primary">
+            <span v-if="unit == xchSymbol">
+              {{ demojo(BigInt(amount) + fee) }}
+            </span>
+            <span v-else>
+              {{ demojo(amount, { unit: unit, decimal: 3, symbol: "" }) }}
+              <span v-if="fee > 0"> + {{ demojo(fee) }} </span>
+            </span>
           </span>
-          <span v-else>
-            {{ demojo(amount, { unit: unit, decimal: 3, symbol: "" }) }}
-            <span v-if="fee > 0"> + {{ demojo(fee) }} </span>
-          </span>
-        </span>
-      </template>
-    </b-field>
+        </template>
+      </b-field>
+    </div>
   </div>
 </template>
 <script lang="ts">

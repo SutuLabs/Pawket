@@ -17,7 +17,7 @@
           </a>
         </b-tooltip>
       </div>
-      <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+      <div v-if="experimentMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.scanAssets')" position="is-right">
           <a href="javascript:void(0)" @click="$router.push('/home/scan-assets')" class="has-text-link">
             <div class="has-text-centered">
@@ -97,7 +97,7 @@
           </a>
         </b-tooltip>
       </div>
-      <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+      <div v-if="experimentMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.verify')" position="is-right">
           <a href="javascript:void(0)" @click="$router.push('/home/verify-message')" class="has-text-link">
             <div class="has-text-centered">

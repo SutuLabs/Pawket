@@ -210,7 +210,7 @@ class Receive {
         const didResult = await analyzeDidCoin(scoin.puzzle_reveal, coinRecords.puzzleHash, ocoin, scoin.solution);
         if (didResult) {
           const did: DidDetail = {
-            name: puzzle.getAddressFromPuzzleHash(didResult.launcherId, "did:chia:"),
+            name: `DID${didList.length + 1}`,
             did: puzzle.getAddressFromPuzzleHash(didResult.launcherId, "did:chia:"),
             hintPuzzle: coinRecords.puzzleHash,
             coin: convertToOriginCoin(coinRecord.coin),

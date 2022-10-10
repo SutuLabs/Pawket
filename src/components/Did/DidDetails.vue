@@ -15,7 +15,7 @@
         ></span>
       </b-field>
 
-      <b-field :label="$t('did.ui.label.tool')">
+      <b-field :label="$t('did.ui.label.tool')" v-if="experimentMode">
         <b-tooltip :label="'Sign'" position="is-right">
           <a href="javascript:void(0)" @click="openSignMessage()" class="has-text-link">
             <div class="has-text-centered">
@@ -49,6 +49,10 @@ export default class DidDetails extends Vue {
 
   get debugMode(): boolean {
     return store.state.app.debug;
+  }
+
+  get experimentMode(): boolean {
+    return store.state.vault.experiment;
   }
 
   editName(name: string): void {
