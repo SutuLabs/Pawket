@@ -12,7 +12,7 @@
         <div class="column is-6-tablet is-12-mobile">
           <b-field>
             <template #label>
-              {{ metadata ? metadata.name : ''}}
+              {{ metadata ? metadata.name : "" }}
               <b-dropdown aria-role="list" class="is-pulled-right" :mobile-modal="false" position="is-bottom-left">
                 <template #trigger>
                   <b-icon icon="dots-vertical" class="is-clickable"></b-icon>
@@ -40,7 +40,9 @@
               tooltipSize="is-small"
             ></key-box>
           </b-field>
-          <b-field :label="$t('nftDetail.ui.label.collection')">{{ metadata && metadata.collection ? metadata.collection.name : ''}}</b-field>
+          <b-field :label="$t('nftDetail.ui.label.collection')">{{
+            metadata && metadata.collection ? metadata.collection.name : ""
+          }}</b-field>
           <b-field :label="$t('nftDetail.ui.label.description')">
             <div v-if="!metadata || !metadata.description" class="pb-6"></div>
             <div v-else-if="metadata.description.length < 100">{{ metadata.description }}</div>
@@ -94,7 +96,10 @@
                 </a>
               </div>
             </template>
-            <div class="columns is-mobile is-multiline card-content is-justify-content-space-between" v-if="metadata && metadata.attributes">
+            <div
+              class="columns is-mobile is-multiline card-content is-justify-content-space-between"
+              v-if="metadata && metadata.attributes"
+            >
               <div class="column is-5 is-size-5 property m-2" v-for="(att, index) of metadata.attributes" :key="index">
                 <span class="has-text-grey is-size-7 line-height-normal">
                   <p>{{ att.trait_type }}</p>
@@ -126,7 +131,7 @@
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.launcherId") }}</span><span class="is-pulled-right">
                   <key-box :value="nft.analysis.launcherId" :showValue="true" position="is-left" tooltipSize="is-small"></key-box></span></li>
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.ownerDid") }}</span><span class="is-pulled-right">
-                  <key-box :value="getDidFromPuzzleHash(nft.analysis.didOwner)" :showValue="true" position="is-left" tooltipSize="is-small"></key-box></span></li>
+                  <key-box :value="getDidFromPuzzleHash(nft.analysis.didOwner, true)" :showValue="true" :tooltip="getDidFromPuzzleHash(nft.analysis.didOwner)" position="is-left" tooltipSize="is-small"></key-box></span></li>
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.ownerAddress") }}</span><span class="is-pulled-right">
                   <key-box :value="getAddressFromPuzzleHash(nft.analysis.p2Owner)" :showValue="true" position="is-left" tooltipSize="is-small"></key-box></span></li>
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.royaltyPercentage") }}</span><span class="is-pulled-right">
@@ -234,10 +239,12 @@ export default class NftDetailPanel extends Vue {
     notifyPrimary(this.$tc("common.message.saved"));
   }
 
-  getDidFromPuzzleHash(hash: string): string {
+  getDidFromPuzzleHash(hash: string, name = false): string {
     const did = puzzle.getAddressFromPuzzleHash(hash, "did:chia:");
-    const idx = this.dids.findIndex((d) => d.did == did);
-    if (idx > -1) return this.dids[idx].name;
+    if (name) {
+      const idx = this.dids.findIndex((d) => d.did == did);
+      if (idx > -1) return this.dids[idx].name;
+    }
     return did;
   }
 

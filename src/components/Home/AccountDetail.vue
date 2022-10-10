@@ -136,7 +136,7 @@
           <b-tab-item :label="$t('accountDetail.ui.tab.nft')" class="min-height-20">
             <nft-panel :account="account"></nft-panel>
           </b-tab-item>
-          <b-tab-item :label="$t('accountDetail.ui.tab.did')" class="min-height-20" v-if="debugMode">
+          <b-tab-item :label="$t('accountDetail.ui.tab.did')" class="min-height-20">
             <did></did>
           </b-tab-item>
           <b-tab-item :label="$t('accountDetail.ui.tab.utxos')" class="min-height-20">

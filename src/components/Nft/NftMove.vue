@@ -10,6 +10,7 @@
           <b-dropdown v-model="selectedDid">
             <template #trigger>
               <b-button :label="selectedDid ? selectedDid.name : 'Select DID'" icon-right="menu-down" />
+              <p class="has-text-danger is-size-7" v-if="!selectedDid">Please Select a DID</p>
             </template>
 
             <b-dropdown-item v-for="did in dids" :key="did.did" :value="did">{{ did.name }}</b-dropdown-item>
@@ -40,8 +41,7 @@
     </section>
     <footer class="modal-card-foot is-block">
       <div>
-        <b-button v-if="bundle" :label="$t('offer.make.ui.button.done')" class="is-pulled-left" @click="close()"></b-button>
-        <b-button v-else :label="$t('common.button.cancel')" class="is-pulled-left" @click="close()"></b-button>
+        <b-button :label="$t('common.button.cancel')" class="is-pulled-left" @click="close()"></b-button>
         <b-button v-if="!bundle" type="is-primary" :loading="signing" @click="sign()">
           {{ $t("offer.make.ui.button.sign") }}
         </b-button>

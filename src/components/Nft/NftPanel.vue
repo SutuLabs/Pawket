@@ -3,7 +3,7 @@
     <div>
       <b-dropdown aria-role="list" class="mr-3" :mobile-modal="false">
         <template #trigger="{ active }">
-          <b-button :label="nameOmit(getProfileName(profile))" :icon-right="active ? 'menu-up' : 'menu-down'" />
+          <b-button :label="shorten(getProfileName(profile))" :icon-right="active ? 'menu-up' : 'menu-down'" />
         </template>
         <b-dropdown-item aria-role="listitem" @click="profile = 'All'">{{ $t("nftDetail.ui.profile.all") }}</b-dropdown-item>
         <b-dropdown-item aria-role="listitem" @click="profile = 'Unassigned'">{{
@@ -17,7 +17,7 @@
             selectedDid = did.name;
           "
           :key="did.did"
-          >{{ did.name }}</b-dropdown-item
+          >{{ shorten(did.name) }}</b-dropdown-item
         >
       </b-dropdown>
       <b-button @click="refresh()" :loading="refreshing">
@@ -88,6 +88,7 @@ import { notifyPrimary } from "@/services/notification/notification";
 import puzzle from "@/services/crypto/puzzle";
 import { nameOmit } from "@/filters/nameConversion";
 import { tc } from "@/i18n/i18n";
+import { shorten } from "@/filters/addressConversion";
 
 interface CollectionNfts {
   name: string;
@@ -156,8 +157,8 @@ export default class NftPanel extends Vue {
     return store.state.account.selectedAccount;
   }
 
-  nameOmit(name: string, upperCase = false): string {
-    return nameOmit(name, upperCase);
+  shorten(name: string): string {
+    return shorten(name);
   }
 
   getProfileName(profile: Profile): string {

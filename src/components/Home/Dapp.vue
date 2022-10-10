@@ -97,7 +97,7 @@
           </a>
         </b-tooltip>
       </div>
-      <div v-if="experimentMode && debugMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+      <div v-if="experimentMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="'Sign'" position="is-right">
           <a href="javascript:void(0)" @click="$router.push('/home/verify-message')" class="has-text-link">
             <div class="has-text-centered">

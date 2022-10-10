@@ -115,6 +115,7 @@ import { chainId, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getLineageProofPuzzle } from "@/services/transfer/call";
 import { NftMetadataValues } from "@/models/nft";
 import { generateMintNftBundle } from "@/services/coin/nft";
+import store from "@/store";
 
 @Component({
   components: {
@@ -143,6 +144,9 @@ export default class BatchSend extends Vue {
 
   mounted(): void {
     this.loadCoins();
+    if(!this.account.dids) {
+      store.dispatch("refreshDids");
+    }
   }
 
   get path(): string {
@@ -224,8 +228,8 @@ export default class BatchSend extends Vue {
         const metadataHash = line[3];
         const licenseUri = line[4];
         const licenseHash = line[5];
-        const serialNumber = line[6];
-        const serialTotal = line[7];
+        const serialNumber = Number(line[6]).toString(16);
+        const serialTotal = Number(line[6]).toString(16);
         const targetAddress = line[8];
         if (!targetAddress.startsWith(xchPrefix())) {
           Notification.open({
