@@ -50,3 +50,9 @@ export function getTestAccount(privateKey: string): AccountEntity {
 export async function noNeedGetProof(): Promise<GetParentPuzzleResponse> {
   throw new Error("unexpected, program declared it does not need proof");
 }
+
+export async function logBundle(spendBundle: SpendBundle): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (BigInt.prototype as any).toJSON = function () { return this.toString(); };
+  console.log(JSON.stringify(spendBundle));
+}
