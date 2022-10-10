@@ -18,6 +18,9 @@ import { CannotParsePuzzle, expectModArgs, sexpAssemble, UncurriedPuzzle, uncurr
 import { disassemble, sha256tree } from "clvm_tools";
 import { SExp } from "clvm";
 import { Instance } from "../util/instance";
+import { CnsMetadataKeys, CnsMetadataValues } from "@/models/cns";
+
+type MetadataValues = NftMetadataValues | CnsMetadataValues;
 
 export interface MintNftInfo {
   spendBundle: SpendBundle;
@@ -42,7 +45,7 @@ export async function generateMintNftBundle(
   nftIntermediateAddress: string,
   changeAddress: string,
   fee: bigint,
-  metadatas: NftMetadataValues | NftMetadataValues[],
+  metadatas: MetadataValues | MetadataValues[],
   availcoins: SymbolCoins,
   requests: TokenPuzzleDetail[],
   baseSymbol: string,
@@ -521,7 +524,7 @@ async function getOwnerFromSolution(sol: SExp): Promise<{
   return { didOwner, p2Owner, updaterInSolution };
 }
 
-async function constructMetadataString(metadata: NftMetadataValues): Promise<string> {
+async function constructMetadataString(metadata: MetadataValues): Promise<string> {
   if (!metadata.imageUri) throw new Error("empty image uri is not allowed");
   if (metadata.imageUri.indexOf("\"") >= 0) throw new Error("image uri should processed before proceeding");
 
@@ -546,9 +549,16 @@ async function constructMetadataString(metadata: NftMetadataValues): Promise<str
     metadata.licenseHash ? `${toNumber(mkeys.licenseHash)} . ${prefix0x(metadata.licenseHash)}` : toNumber(mkeys.licenseHash),
     `${toNumber(mkeys.serialNumber)} . ${toNumber(metadata.serialNumber)}`,
     `${toNumber(mkeys.serialTotal)} . ${toNumber(metadata.serialTotal)}`,
-    metadata.address ? `${toNumber(mkeys.address)} . ${prefix0x(metadata.address)}` : undefined,
-    metadata.name ? `${toNumber(mkeys.name)} . "${metadata.name}"` : undefined,
-    metadata.text ? `${toNumber(mkeys.text)} . "${metadata.text}"` : undefined,
+
+    ...("address" in metadata ? [
+      metadata.address ? `${toNumber(mkeys.address)} . ${prefix0x(metadata.address)}` : undefined,
+      metadata.name ? `${toNumber(mkeys.name)} . "${metadata.name}"` : undefined,
+      metadata.contentHash ? `${toNumber(mkeys.contentHash)} . "${metadata.contentHash}"` : undefined,
+      metadata.text ? `${toNumber(mkeys.text)} . "${metadata.text}"` : undefined,
+      metadata.dns ? `${toNumber(mkeys.dns)} . "${metadata.dns}"` : undefined,
+      metadata.publicKey ? `${toNumber(mkeys.publicKey)} . "${metadata.publicKey}"` : undefined,
+      metadata.reserved ? `${toNumber(mkeys.reserved)} . "${metadata.reserved}"` : undefined,
+    ] : [])
   ]
     .filter(_ => _)
     .map(_ => `(${_})`).join(" ") + ")";
@@ -642,7 +652,7 @@ async function constructPureFeeSpendBundle(
   return bundle;
 }
 
-function getNftMetadataKeys(): NftMetadataKeys {
+function getNftMetadataKeys(): NftMetadataKeys & CnsMetadataKeys {
   const getHex = function (key: string): string {
     return key.split("").map(_ => _.charCodeAt(0).toString(16)).join("");
   }
@@ -656,13 +666,18 @@ function getNftMetadataKeys(): NftMetadataKeys {
     "licenseHash": getHex("lh"),
     "serialNumber": getHex("sn"),
     "serialTotal": getHex("st"),
+
     "address": getHex("ad"),
     "name": getHex("nm"),
+    "contentHash": getHex("ch"),
     "text": getHex("tt"),
+    "dns": getHex("dns"),
+    "publicKey": getHex("pk"),
+    "reserved": getHex("rr"),
   };
 }
 
-export function getNftMetadataInfo(parsed: ParsedMetadata): NftMetadataValues {
+export function getNftMetadataInfo(parsed: ParsedMetadata): MetadataValues {
   const mkeys = getNftMetadataKeys();
 
   const getScalar = function (input: string | string[] | undefined): string | undefined {
@@ -671,7 +686,7 @@ export function getNftMetadataInfo(parsed: ParsedMetadata): NftMetadataValues {
     return input;
   }
 
-  const obj = {
+  const obj: MetadataValues = {
     imageUri: hex2asc(parsed[mkeys.imageUri]) ?? "",
     imageHash: getScalar(parsed[mkeys.imageHash]),
     metadataUri: hex2asc(parsed[mkeys.metadataUri]) ?? "",
@@ -680,9 +695,14 @@ export function getNftMetadataInfo(parsed: ParsedMetadata): NftMetadataValues {
     licenseHash: getScalar(parsed[mkeys.licenseHash]) ?? "",
     serialNumber: getScalar(parsed[mkeys.serialNumber]),
     serialTotal: getScalar(parsed[mkeys.serialTotal]),
+
     address: getScalar(parsed[mkeys.address]),
     name: hex2ascSingle(parsed[mkeys.name]),
+    contentHash: hex2ascSingle(parsed[mkeys.contentHash]),
     text: hex2ascSingle(parsed[mkeys.text]),
+    dns: hex2ascSingle(parsed[mkeys.dns]),
+    publicKey: hex2ascSingle(parsed[mkeys.publicKey]),
+    reserved: hex2ascSingle(parsed[mkeys.reserved]),
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

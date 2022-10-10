@@ -88,15 +88,6 @@
           :loading="submitting"
           :disabled="!validity || submitting"
         ></b-button>
-        <b-button
-          label="Sign CNS"
-          v-if="!bundle"
-          type="is-primary"
-          class="is-pulled-left"
-          @click="signCns()"
-          :loading="submitting"
-          :disabled="!validity || submitting"
-        ></b-button>
         <template v-if="showTest && debugMode">
           <b-button
             class="is-pulled-left"
@@ -153,7 +144,6 @@ import { generateMintNftBundle } from "@/services/coin/nft";
 import { NftMetadataValues } from "@/models/nft";
 import puzzle from "@/services/crypto/puzzle";
 import { getLineageProofPuzzle } from "@/services/transfer/call";
-import { prefix0x } from "@/services/coin/condition";
 
 interface NftFormInfo {
   uri: string;
@@ -372,11 +362,7 @@ export default class MintNft extends Vue {
     this.changeValidity(true);
   }
 
-  async signCns(): Promise<void> {
-    await this.sign(true);
-  }
-
-  async sign(isCns = false): Promise<void> {
+  async sign(): Promise<void> {
     this.submitting = true;
     try {
       if (!this.account.firstAddress) {
@@ -433,11 +419,6 @@ export default class MintNft extends Vue {
         serialTotal: Math.floor(this.serialTotal).toString(16),
       };
 
-      if (isCns) {
-        md.address = prefix0x(puzzle.getPuzzleHashFromAddress(this.address));
-        md.name = "hiya.xch";
-      }
-
       const { spendBundle } = await generateMintNftBundle(
         this.address,
         this.account.firstAddress,
@@ -452,8 +433,7 @@ export default class MintNft extends Vue {
         did.analysis,
         getLineageProofPuzzle,
         undefined,
-        undefined,
-        isCns
+        undefined
       );
 
       this.bundle = spendBundle;

@@ -1,18 +1,10 @@
-import { NftCoinAnalysisResult, NftMetadataValues } from "./nft";
+import { NftCoinAnalysisResult, NftDataKey, NftMetadataValues } from "./nft";
 
 export interface CnsCoinAnalysisResult extends NftCoinAnalysisResult {
   cns?: string;
 }
 
-export interface CnsMetadataValues  extends NftMetadataValues {
-  imageUri: string | string[] | undefined;
-  imageHash: string | undefined;
-  metadataUri: string | string[] | undefined;
-  metadataHash: string | undefined;
-  licenseUri: string | string[] | undefined;
-  licenseHash: string | undefined;
-  serialNumber: string | undefined;
-  serialTotal: string | undefined;
+export interface CnsMetadataValues extends NftMetadataValues {
   address: string | undefined;
   name: string | undefined;
   contentHash: string | undefined;
@@ -21,3 +13,7 @@ export interface CnsMetadataValues  extends NftMetadataValues {
   publicKey: string | undefined;
   reserved: string | undefined;
 };
+
+export type CnsDataKey =NftDataKey| "address" | "name" | "contentHash" | "text" | "dns" | "publicKey" | "reserved";
+
+export type CnsMetadataKeys = { [key in CnsDataKey]: string; };
