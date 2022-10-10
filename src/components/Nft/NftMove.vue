@@ -1,15 +1,16 @@
 <template>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">Move NFT</p>
+      <p class="modal-card-title">{{ $t("moveNft.ui.title") }}</p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
       <template v-if="step == 'Input'">
-        <b-field label="Move To Profile">
+        <b-field :label="$t('moveNft.ui.label.moveToProfile')">
           <b-dropdown v-model="selectedDid">
             <template #trigger>
-              <b-button :label="selectedDid ? selectedDid.name : 'Select DID'" icon-right="menu-down" />
+              <b-button :label="selectedDid ? selectedDid.name : $t('moveNft.ui.label.selectDid')" icon-right="menu-down" />
+              <p class="has-text-danger is-size-7" v-if="!selectedDid">{{ $t("moveNft.ui.label.selectDid") }}</p>
             </template>
 
             <b-dropdown-item v-for="did in dids" :key="did.did" :value="did">{{ did.name }}</b-dropdown-item>
@@ -28,7 +29,7 @@
         <fee-selector v-model="fee"></fee-selector>
       </template>
       <template v-if="step == 'Confirmation'">
-        <b-field v-if="debugMode && bundle">
+        <b-field v-if="bundle">
           <template #label>
             {{ $t("offer.make.ui.label.bundle") }}
             <key-box icon="checkbox-multiple-blank-outline" :value="JSON.stringify(bundle)" tooltip="Copy"></key-box>
@@ -40,8 +41,7 @@
     </section>
     <footer class="modal-card-foot is-block">
       <div>
-        <b-button v-if="bundle" :label="$t('offer.make.ui.button.done')" class="is-pulled-left" @click="close()"></b-button>
-        <b-button v-else :label="$t('common.button.cancel')" class="is-pulled-left" @click="close()"></b-button>
+        <b-button :label="$t('common.button.cancel')" class="is-pulled-left" @click="close()"></b-button>
         <b-button v-if="!bundle" type="is-primary" :loading="signing" @click="sign()">
           {{ $t("offer.make.ui.button.sign") }}
         </b-button>

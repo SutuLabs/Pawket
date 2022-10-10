@@ -187,10 +187,6 @@ export default class Settings extends Vue {
   get isMobile(): boolean {
     return isMobile();
   }
-
-  mounted(): void {
-    if (!this.isMobile) this.$router.push("/settings/general");
-  }
 }
 </script>
 

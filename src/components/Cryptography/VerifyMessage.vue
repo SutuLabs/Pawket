@@ -1,15 +1,15 @@
 <template>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">Verify Message</p>
+      <p class="modal-card-title">{{ $t("verifyMessage.ui.title") }}</p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
-      <b-field label="Message">
+      <b-field :label="$t('verifyMessage.ui.label.message')">
         <b-input type="textarea" v-model="message" rows="18"></b-input>
       </b-field>
 
-      <b-field v-if="verified" label="Result">
+      <b-field v-if="verified" :label="$t('verifyMessage.ui.label.result')">
         <template #message>
           <ul v-for="(v, i) in validationResult" :key="i">
             <li v-if="v.v == 'Pass'">
@@ -33,7 +33,13 @@
         <b-button :label="$t('batchSend.ui.button.cancel')" class="is-pulled-left" @click="cancel()"></b-button>
       </div>
       <div>
-        <b-button label="Verify" type="is-primary" class="is-pulled-right" @click="verify()" :loading="submitting"></b-button>
+        <b-button
+          :label="$t('verifyMessage.ui.button.verify')"
+          type="is-primary"
+          class="is-pulled-right"
+          @click="verify()"
+          :loading="submitting"
+        ></b-button>
       </div>
     </footer>
     <b-loading :is-full-page="false" v-model="submitting"></b-loading>
@@ -53,6 +59,7 @@ import { CoinSpend } from "@/models/wallet";
 import debug from "@/services/api/debug";
 import { analyzeNftCoin } from "@/services/coin/nft";
 import utility from "@/services/crypto/utility";
+import { tc } from "@/i18n/i18n";
 
 type ValidationResult = "None" | "Pass" | "Fail";
 
@@ -74,11 +81,16 @@ export default class VerifyMessage extends Vue {
     return [
       {
         v: this.signatureValidation,
-        pass: "Signature check pass",
-        fail: "Signature check failed",
-        none: "Doesn't check signature",
+        pass: tc("verifyMessage.ui.sigResult.pass"),
+        fail: tc("verifyMessage.ui.sigResult.fail"),
+        none: tc("verifyMessage.ui.sigResult.none"),
       },
-      { v: this.coinValidation, pass: "Coin check pass", fail: "Coin check failed", none: "Doesn't check Coin" },
+      {
+        v: this.coinValidation,
+        pass: tc("verifyMessage.ui.coinResult.pass"),
+        fail: tc("verifyMessage.ui.coinResult.fail"),
+        none: tc("verifyMessage.ui.coinResult.none"),
+      },
     ];
   }
 

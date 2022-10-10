@@ -12,7 +12,9 @@
       "confirm": "Confirm",
       "cancel": "Cancel",
       "save": "Save",
-      "delete": "Delete"
+      "delete": "Delete",
+      "sign": "Sign",
+      "copy": "Copy"
     },
     "tooltip": {
       "copy": "Copy"
@@ -161,7 +163,9 @@
           "makeOffer": "Make Offer",
           "batchSend": "Batch Send",
           "mintCat": "Issue CAT",
-          "mintNft": "Mint NFT"
+          "mintNft": "Mint NFT",
+          "batchMintNft": "Batch Mint",
+          "verify": "Verify Message"
         },
         "button": {
           "donate": "Donate",
@@ -171,7 +175,9 @@
           "makeOffer": "Make Offer",
           "batchSend": "Batch Send",
           "mintCat": "Issue CAT",
-          "mintNft": "Mint NFT"
+          "mintNft": "Mint NFT",
+          "batchMintNft": "Batch Mint",
+          "verify": "Verify Message"
         }
       }
     },
@@ -1107,6 +1113,7 @@
       "button": {
         "transfer": "Transfer",
         "makeOffer": "Make Offer",
+        "move": "Move",
         "showMore": "Show More",
         "showLess": "Show Less"
       },
@@ -1133,8 +1140,8 @@
         "setAsProfilePic": "Set as Account Avatar"
       },
       "profile": {
-        "all": "All",
-        "unassigned": "Unassigned"
+        "all": "All NFTs",
+        "unassigned": "Unassigned NFTs"
       }
     }
   },
@@ -1144,11 +1151,13 @@
         "detail": "Details"
       },
       "button": {
-        "addDid": "Add DID"
+        "addDid": "Add DID",
+        "sign": "Sign"
       },
       "label": {
         "name": "Name",
-        "did": "DID"
+        "did": "DID",
+        "tool": "Tool"
       },
       "prompt": {
         "newName": "Enter New Name"
@@ -1265,6 +1274,57 @@
       },
       "error": {
         "ABORT_OOM": "Scan was aborted. Please refresh the page and try again."
+      }
+    }
+  },
+  "moveNft": {
+    "ui": {
+      "title": "Move NFT",
+      "label": {
+        "moveToProfile": "Move to Profile",
+        "selectDid": "Select a DID"
+      }
+    }
+  },
+  "signMessage": {
+    "ui": {
+      "title": "Sign Message",
+      "prompt": "Make sure the message is come from trust source, if you don't understand or agree to the message, don't sign!",
+      "label": {
+        "signWdid": "Sign with DID:",
+        "message": "Message",
+        "result": "Result"
+      }
+    }
+  },
+  "verifyMessage": {
+    "ui": {
+      "title": "Verify Message",
+      "label": {
+        "message": "Message",
+        "result": "Result"
+      },
+      "button": {
+        "verify": "Verify"
+      },
+      "sigResult": {
+        "pass": "Signature check passed",
+        "fail": "Signature check failed",
+        "none": "Doesn't check Signature"
+      },
+      "coinResult": {
+        "pass": "Coin check passed",
+        "fail": "Coin check failed",
+        "none": "Doesn't check Coin"
+      }
+    }
+  },
+  "batchMintNft": {
+    "ui": {
+      "title": "Batch Mint NFT",
+      "label": {
+        "royaltyAddress": "Royalty Address",
+        "royaltyPercentage": "Royalty Percentage"
       }
     }
   }

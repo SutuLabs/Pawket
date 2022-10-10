@@ -77,9 +77,8 @@ export default class Security extends Vue {
       cancelText: this.$tc("common.button.cancel"),
       trapFocus: true,
       type: "is-danger",
-      onConfirm: () => {
-        store.dispatch("clear");
-        this.$router.push("/create");
+      onConfirm: async () => {
+        await store.dispatch("clear").then(() => location.reload());
       },
     });
   }

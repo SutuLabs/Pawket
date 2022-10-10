@@ -88,21 +88,21 @@
         </b-tooltip>
       </div>
       <div v-if="experimentMode && debugMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
-        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.mintNft')" position="is-right">
+        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.batchMintNft')" position="is-right">
           <a href="javascript:void(0)" @click="$router.push('/home/batch-mint-nft')" class="has-text-link">
             <div class="has-text-centered">
               <b-icon icon="image-multiple-outline" size="is-medium"></b-icon>
-              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.mintNft") }}</p>
+              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.batchMintNft") }}</p>
             </div>
           </a>
         </b-tooltip>
       </div>
-      <div v-if="experimentMode && debugMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
-        <b-tooltip :label="'Sign'" position="is-right">
+      <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.verify')" position="is-right">
           <a href="javascript:void(0)" @click="$router.push('/home/verify-message')" class="has-text-link">
             <div class="has-text-centered">
               <b-icon icon="comment-check-outline" size="is-medium"></b-icon>
-              <p class="is-size-7">Verify</p>
+              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.verify") }}</p>
             </div>
           </a>
         </b-tooltip>

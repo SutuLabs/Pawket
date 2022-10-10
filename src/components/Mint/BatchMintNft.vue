@@ -1,7 +1,7 @@
 <template>
   <div class="modal-card" @dragenter="dragenter" @dragleave="dragleave">
     <header class="modal-card-head">
-      <p class="modal-card-title">Batch Mint Nft</p>
+      <p class="modal-card-title">{{ $t("batchMintNft.ui.title") }}</p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
@@ -44,10 +44,10 @@
           </b-tag>
         </b-field>
 
-        <b-field :label="'Royalty Address'">
+        <b-field :label="$t('batchMintNft.ui.label.royaltyAddress')">
           <b-input v-model="royaltyAddress" type="text" @input="reset()" required></b-input>
         </b-field>
-        <b-field :label="'Royalty Percentage'">
+        <b-field :label="$t('batchMintNft.ui.label.royaltyPercentage')">
           <b-numberinput
             v-model="royaltyPercentage"
             max="100"
@@ -115,6 +115,7 @@ import { chainId, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getLineageProofPuzzle } from "@/services/transfer/call";
 import { NftMetadataValues } from "@/models/nft";
 import { generateMintNftBundle } from "@/services/coin/nft";
+import store from "@/store";
 
 @Component({
   components: {
@@ -124,7 +125,7 @@ import { generateMintNftBundle } from "@/services/coin/nft";
     BundleSummary,
   },
 })
-export default class BatchSend extends Vue {
+export default class BatchMintNft extends Vue {
   @Prop() public account!: AccountEntity;
   public submitting = false;
   public fee = 0;
@@ -143,6 +144,9 @@ export default class BatchSend extends Vue {
 
   mounted(): void {
     this.loadCoins();
+    if (!this.account.dids) {
+      store.dispatch("refreshDids");
+    }
   }
 
   get path(): string {
@@ -224,8 +228,8 @@ export default class BatchSend extends Vue {
         const metadataHash = line[3];
         const licenseUri = line[4];
         const licenseHash = line[5];
-        const serialNumber = line[6];
-        const serialTotal = line[7];
+        const serialNumber = Number(line[6]).toString(16);
+        const serialTotal = Number(line[7]).toString(16);
         const targetAddress = line[8];
         if (!targetAddress.startsWith(xchPrefix())) {
           Notification.open({

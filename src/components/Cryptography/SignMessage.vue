@@ -1,25 +1,19 @@
 <template>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">Sign Message</p>
+      <p class="modal-card-title">{{ $t("signMessage.ui.title") }}</p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
       <template v-if="!signResult">
         <b-notification type="is-warning is-light" has-icon icon="head-question-outline" :closable="false">
-          <span
-            v-html="
-              $sanitize(
-                'Make sure the message is come from trust source, if you don\'t understand or agree to the message, don\'t sign!'
-              )
-            "
-          ></span>
+          <span v-html="$sanitize($t('signMessage.ui.prompt'))"></span>
         </b-notification>
 
         <b-field>
           <template #label>
             <span v-if="did">
-              Sign with DID:
+              {{ $t("signMessage.ui.label.signWdid") }}
               <key-box
                 icon="checkbox-multiple-blank-outline"
                 :value="signName"
@@ -32,7 +26,7 @@
           </template>
         </b-field>
 
-        <b-field label="Message">
+        <b-field :label="$t('signMessage.ui.label.message')">
           <b-input type="textarea" v-model="message" rows="10"></b-input>
         </b-field>
       </template>
@@ -46,16 +40,16 @@
             <span>Chia CLI</span>
           </b-radio-button>
         </b-field>
-        <b-field label="Result">
+        <b-field :label="$t('signMessage.ui.label.result')">
           <b-input type="textarea" v-model="signResult" rows="20"></b-input>
         </b-field>
       </template>
     </section>
     <footer class="modal-card-foot is-block">
       <div>
-        <b-button :label="$t('batchSend.ui.button.cancel')" class="is-pulled-left" @click="cancel()"></b-button>
+        <b-button :label="$t('common.button.cancel')" class="is-pulled-left" @click="cancel()"></b-button>
         <b-button
-          :label="$t('batchSend.ui.button.sign')"
+          :label="$t('common.button.sign')"
           v-if="!signResult"
           type="is-primary"
           @click="sign()"
@@ -63,7 +57,13 @@
         ></b-button>
       </div>
       <div>
-        <b-button label="Copy" v-if="signResult" type="is-primary" class="is-pulled-right" @click="copy()"></b-button>
+        <b-button
+          :label="$t('common.button.copy')"
+          v-if="signResult"
+          type="is-primary"
+          class="is-pulled-right"
+          @click="copy()"
+        ></b-button>
       </div>
     </footer>
     <b-loading :is-full-page="false" v-model="submitting"></b-loading>
