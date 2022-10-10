@@ -124,36 +124,115 @@
               </div>
             </template>
             <div class="card-content">
-              <!-- prettier-ignore -->
               <ul>
-                <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.nftId") }}</span><span class="is-pulled-right">
-                  <key-box :value="nft.address" :showValue="true" position="is-left" tooltipSize="is-small"></key-box></span></li>
-                <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.launcherId") }}</span><span class="is-pulled-right">
-                  <key-box :value="nft.analysis.launcherId" :showValue="true" position="is-left" tooltipSize="is-small"></key-box></span></li>
-                <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.ownerDid") }}</span><span class="is-pulled-right">
-                  <key-box :display="getDidFromPuzzleHash(nft.analysis.didOwner, true)" :showValue="false" :value="getDidFromPuzzleHash(nft.analysis.didOwner)" :tooltip="getDidFromPuzzleHash(nft.analysis.didOwner)" position="is-left" tooltipSize="is-small"></key-box></span></li>
-                <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.ownerAddress") }}</span><span class="is-pulled-right">
-                  <key-box :value="getAddressFromPuzzleHash(nft.analysis.p2Owner)" :showValue="true" position="is-left" tooltipSize="is-small"></key-box></span></li>
-                <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.royaltyPercentage") }}</span><span class="is-pulled-right">
-                  {{ nft.analysis.tradePricePercentage/100 }}%</span></li>
-                  <div>
-                    <li v-for="(data, index) of dataUrls" :key="index"><span class="has-text-grey">{{ $t("nftDetail.ui.details.dataUrl", {index: index + 1})}}</span><span class="is-pulled-right">
-                  <a :href="data" target="_blank"><b-icon icon="open-in-new" size="is-small"></b-icon></a></span></li>
-                  </div>
-                <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.dataHash") }}</span><span class="is-pulled-right">
-                  <key-box :value="nft.analysis.metadata.imageHash" :showValue="true" position="is-left" tooltipSize="is-small"></key-box></span></li>
-                  <div>
-                    <li v-for="(url, index) of metadataUrls" :key="index"><span class="has-text-grey">{{ $t("nftDetail.ui.details.metadataUrl", {index: index + 1}) }}</span><span class="is-pulled-right">
-                  <a :href="url" target="_blank"><b-icon icon="open-in-new" size="is-small"></b-icon></a></span></li>
-                  </div>
-                <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.metadataHash") }}</span><span class="is-pulled-right">
-                  <key-box :value="nft.analysis.metadata.metadataHash" :showValue="true" position="is-left" tooltipSize="is-small"></key-box></span></li>
-                <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.licenseUrl") }}</span><span class="is-pulled-right">
-                  <a :href="nft.analysis.metadata.licenseUri" target="_blank"><b-icon icon="open-in-new" size="is-small"></b-icon></a></span></li>
-                <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.licenseHash") }}</span><span class="is-pulled-right">
-                  <key-box :value="nft.analysis.metadata.licenseHash" :showValue="true" position="is-left" tooltipSize="is-small"></key-box></span></li>
-                <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.series") }}</span><span class="is-pulled-right" v-if="nft.analysis.metadata.serialNumber && nft.analysis.metadata.serialTotal">
-                  {{ parseInt(nft.analysis.metadata.serialNumber, 16) }} / {{ parseInt(nft.analysis.metadata.serialTotal,16) }}</span></li>
+                <li>
+                  <span class="has-text-grey">{{ $t("nftDetail.ui.details.nftId") }}</span
+                  ><span class="is-pulled-right">
+                    <key-box :value="nft.address" :showValue="true" position="is-left" tooltipSize="is-small"></key-box
+                  ></span>
+                </li>
+                <li>
+                  <span class="has-text-grey">{{ $t("nftDetail.ui.details.launcherId") }}</span
+                  ><span class="is-pulled-right">
+                    <key-box
+                      :value="nft.analysis.launcherId"
+                      :showValue="true"
+                      position="is-left"
+                      tooltipSize="is-small"
+                    ></key-box
+                  ></span>
+                </li>
+                <li>
+                  <span class="has-text-grey">{{ $t("nftDetail.ui.details.ownerDid") }}</span
+                  ><span class="is-pulled-right">
+                    <key-box
+                      :display="getDidFromPuzzleHash(nft.analysis.didOwner, true)"
+                      :showValue="false"
+                      :value="getDidFromPuzzleHash(nft.analysis.didOwner)"
+                      :tooltip="getDidFromPuzzleHash(nft.analysis.didOwner)"
+                      position="is-left"
+                      tooltipSize="is-small"
+                    ></key-box
+                  ></span>
+                </li>
+                <li>
+                  <span class="has-text-grey">{{ $t("nftDetail.ui.details.ownerAddress") }}</span
+                  ><span class="is-pulled-right">
+                    <key-box
+                      :value="getAddressFromPuzzleHash(nft.analysis.p2Owner)"
+                      :showValue="true"
+                      position="is-left"
+                      tooltipSize="is-small"
+                    ></key-box
+                  ></span>
+                </li>
+                <li>
+                  <span class="has-text-grey">{{ $t("nftDetail.ui.details.royaltyPercentage") }}</span
+                  ><span class="is-pulled-right"> {{ nft.analysis.tradePricePercentage / 100 }}%</span>
+                </li>
+                <div>
+                  <li v-for="(data, index) of dataUrls" :key="index">
+                    <span class="has-text-grey">{{ $t("nftDetail.ui.details.dataUrl", { index: index + 1 }) }}</span
+                    ><span class="is-pulled-right">
+                      <a :href="data" target="_blank"><b-icon icon="open-in-new" size="is-small"></b-icon></a
+                    ></span>
+                  </li>
+                </div>
+                <li>
+                  <span class="has-text-grey">{{ $t("nftDetail.ui.details.dataHash") }}</span
+                  ><span class="is-pulled-right">
+                    <key-box
+                      :value="nft.analysis.metadata.imageHash"
+                      :showValue="true"
+                      position="is-left"
+                      tooltipSize="is-small"
+                    ></key-box
+                  ></span>
+                </li>
+                <div>
+                  <li v-for="(url, index) of metadataUrls" :key="index">
+                    <span class="has-text-grey">{{ $t("nftDetail.ui.details.metadataUrl", { index: index + 1 }) }}</span
+                    ><span class="is-pulled-right">
+                      <a :href="url" target="_blank"><b-icon icon="open-in-new" size="is-small"></b-icon></a
+                    ></span>
+                  </li>
+                </div>
+                <li>
+                  <span class="has-text-grey">{{ $t("nftDetail.ui.details.metadataHash") }}</span
+                  ><span class="is-pulled-right">
+                    <key-box
+                      :value="nft.analysis.metadata.metadataHash"
+                      :showValue="true"
+                      position="is-left"
+                      tooltipSize="is-small"
+                    ></key-box
+                  ></span>
+                </li>
+                <li>
+                  <span class="has-text-grey">{{ $t("nftDetail.ui.details.licenseUrl") }}</span
+                  ><span class="is-pulled-right">
+                    <a :href="nft.analysis.metadata.licenseUri" target="_blank"
+                      ><b-icon icon="open-in-new" size="is-small"></b-icon></a
+                  ></span>
+                </li>
+                <li>
+                  <span class="has-text-grey">{{ $t("nftDetail.ui.details.licenseHash") }}</span
+                  ><span class="is-pulled-right">
+                    <key-box
+                      :value="nft.analysis.metadata.licenseHash"
+                      :showValue="true"
+                      position="is-left"
+                      tooltipSize="is-small"
+                    ></key-box
+                  ></span>
+                </li>
+                <li>
+                  <span class="has-text-grey">{{ $t("nftDetail.ui.details.series") }}</span
+                  ><span class="is-pulled-right" v-if="nft.analysis.metadata.serialNumber && nft.analysis.metadata.serialTotal">
+                    {{ parseInt(nft.analysis.metadata.serialNumber, 16) }} /
+                    {{ parseInt(nft.analysis.metadata.serialTotal, 16) }}</span
+                  >
+                </li>
               </ul>
             </div>
           </b-collapse>

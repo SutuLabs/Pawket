@@ -229,7 +229,7 @@ export default class BatchMintNft extends Vue {
         const licenseUri = line[4];
         const licenseHash = line[5];
         const serialNumber = Number(line[6]).toString(16);
-        const serialTotal = Number(line[6]).toString(16);
+        const serialTotal = Number(line[7]).toString(16);
         const targetAddress = line[8];
         if (!targetAddress.startsWith(xchPrefix())) {
           Notification.open({
