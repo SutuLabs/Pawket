@@ -1,14 +1,14 @@
-import { CoinRecord, convertToOriginCoin, GetRecordsResponse, OriginCoin } from "@/models/wallet";
+import { CoinRecord, convertToOriginCoin, GetRecordsResponse, OriginCoin } from "../../models/wallet";
 import puzzle, { PuzzleAddress } from "./puzzle";
 import { PuzzleDetail } from "./puzzle";
 import utility from "./utility";
-import { CustomCat, AccountTokens, AccountTokenAddress, TokenInfo } from "@/models/account";
+import { CustomCat, AccountTokens, AccountTokenAddress, TokenInfo } from "../../models/account";
 import { analyzeNftCoin, getScalarString } from "../coin/nft";
 import debug from "../api/debug";
 import { analyzeDidCoin, DidCoinAnalysisResult } from "../coin/did";
-import { NftCoinAnalysisResult } from "@/models/nft";
-import { CnsCoinAnalysisResult } from "@/models/cns";
-import store from "@/store";
+import { NftCoinAnalysisResult } from "../../models/nft";
+import { CnsCoinAnalysisResult } from "../../models/cns";
+import { CoinSpend } from "../../models/wallet";
 
 export interface TokenPuzzleDetail {
   symbol: string;
@@ -62,6 +62,8 @@ export interface AssetsList {
 export type CoinClassType = "CatV2" | "DidV1" | "NftV1";
 
 export type OptionalOneFoundParameterType = { did?: DidDetail, nft?: NftDetail };
+
+const coinSolutions = new Map<string, CoinSpend>();
 
 class Receive {
   async getAssetsRequestDetail(sk_hex: string, startId: number, maxId: number, customCats: CustomCat[], tokenInfo: TokenInfo, prefix: string, symbol: string, catModName: "cat_v1" | "cat_v2"): Promise<TokenPuzzleDetail[]> {
@@ -179,12 +181,12 @@ class Receive {
           continue;
         }
         let scoin;
-        const coinCache = store.state.account.coinSolutions.get(coinRecord.coin.parentCoinInfo);
+        const coinCache = coinSolutions.get(coinRecord.coin.parentCoinInfo);
         if (coinCache) {
           scoin = coinCache;
         } else {
           scoin = await debug.getCoinSolution(coinRecord.coin.parentCoinInfo, rpcUrl);
-          store.state.account.coinSolutions.set(coinRecord.coin.parentCoinInfo, scoin);
+          coinSolutions.set(coinRecord.coin.parentCoinInfo, scoin);
         }
         const ocoin = convertToOriginCoin(coinRecord.coin);
         // console.log("analyzing", getCoinName0x(convertToOriginCoin(coinRecord.coin)));
