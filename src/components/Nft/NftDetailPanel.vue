@@ -131,7 +131,7 @@
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.launcherId") }}</span><span class="is-pulled-right">
                   <key-box :value="nft.analysis.launcherId" :showValue="true" position="is-left" tooltipSize="is-small"></key-box></span></li>
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.ownerDid") }}</span><span class="is-pulled-right">
-                  <key-box :value="getDidFromPuzzleHash(nft.analysis.didOwner, true)" :showValue="true" :tooltip="getDidFromPuzzleHash(nft.analysis.didOwner)" position="is-left" tooltipSize="is-small"></key-box></span></li>
+                  <key-box :display="getDidFromPuzzleHash(nft.analysis.didOwner, true)" :showValue="false" :value="getDidFromPuzzleHash(nft.analysis.didOwner)" :tooltip="getDidFromPuzzleHash(nft.analysis.didOwner)" position="is-left" tooltipSize="is-small"></key-box></span></li>
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.ownerAddress") }}</span><span class="is-pulled-right">
                   <key-box :value="getAddressFromPuzzleHash(nft.analysis.p2Owner)" :showValue="true" position="is-left" tooltipSize="is-small"></key-box></span></li>
                 <li><span class="has-text-grey">{{ $t("nftDetail.ui.details.royaltyPercentage") }}</span><span class="is-pulled-right">

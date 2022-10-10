@@ -29,7 +29,7 @@
         <fee-selector v-model="fee"></fee-selector>
       </template>
       <template v-if="step == 'Confirmation'">
-        <b-field v-if="debugMode && bundle">
+        <b-field v-if="bundle">
           <template #label>
             {{ $t("offer.make.ui.label.bundle") }}
             <key-box icon="checkbox-multiple-blank-outline" :value="JSON.stringify(bundle)" tooltip="Copy"></key-box>
