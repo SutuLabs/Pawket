@@ -8,7 +8,6 @@ import {
   DEFAULT_ADDRESS_RETRIEVAL_COUNT,
   getAccountAddressDetails as getAccountAddressDetailsExternal,
 } from "@/services/util/account";
-import { CoinSpend } from "@/models/wallet";
 
 export function getAccountCats(account: AccountEntity): CustomCat[] {
   return account.allCats?.filter((c) => c.network == store.state.network.networkId) ?? [];
@@ -53,7 +52,6 @@ export interface IAccountState {
   tokenInfo: TokenInfo;
   refreshing: boolean;
   offline: boolean;
-  coinSolutions: Map<string, CoinSpend>;
 }
 
 store.registerModule<IAccountState>("account", {
@@ -64,7 +62,6 @@ store.registerModule<IAccountState>("account", {
       selectedAccount: 0,
       refreshing: false,
       offline: false,
-      coinSolutions: new Map<string, CoinSpend>(),
     };
   },
   actions: {
@@ -262,17 +259,17 @@ export async function getAccountAddressDetails(
   const requests: TokenPuzzleAddress[] =
     account.type == "Address"
       ? <TokenPuzzleAddress[]>[
-          { symbol: xchSymbol(), puzzles: [{ hash: account.puzzleHash, type: "Unknown", address: account.firstAddress }] },
-        ]
+        { symbol: xchSymbol(), puzzles: [{ hash: account.puzzleHash, type: "Unknown", address: account.firstAddress }] },
+      ]
       : await getAccountAddressDetailsExternal(
-          account,
-          getAccountCats(account),
-          store.state.account.tokenInfo,
-          xchPrefix(),
-          xchSymbol(),
-          maxId,
-          "cat_v2"
-        );
+        account,
+        getAccountCats(account),
+        store.state.account.tokenInfo,
+        xchPrefix(),
+        xchSymbol(),
+        maxId,
+        "cat_v2"
+      );
 
   return requests;
 }
