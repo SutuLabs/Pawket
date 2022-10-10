@@ -15,12 +15,12 @@
         ></span>
       </b-field>
 
-      <b-field v-if="debugMode" label="Tools">
+      <b-field :label="$t('did.ui.label.tool')">
         <b-tooltip :label="'Sign'" position="is-right">
           <a href="javascript:void(0)" @click="openSignMessage()" class="has-text-link">
             <div class="has-text-centered">
               <b-icon icon="lead-pencil" size="is-medium"></b-icon>
-              <p class="is-size-7">Sign</p>
+              <p class="is-size-7">{{ $t("did.ui.button.sign") }}</p>
             </div>
           </a>
         </b-tooltip>

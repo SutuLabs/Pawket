@@ -1,7 +1,7 @@
 <template>
   <div class="modal-card" @dragenter="dragenter" @dragleave="dragleave">
     <header class="modal-card-head">
-      <p class="modal-card-title">Batch Mint Nft</p>
+      <p class="modal-card-title">{{ $t("batchMintNft.ui.title") }}</p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
@@ -44,10 +44,10 @@
           </b-tag>
         </b-field>
 
-        <b-field :label="'Royalty Address'">
+        <b-field :label="$t('batchMintNft.ui.label.royaltyAddress')">
           <b-input v-model="royaltyAddress" type="text" @input="reset()" required></b-input>
         </b-field>
-        <b-field :label="'Royalty Percentage'">
+        <b-field :label="$t('batchMintNft.ui.label.royaltyPercentage')">
           <b-numberinput
             v-model="royaltyPercentage"
             max="100"
@@ -125,7 +125,7 @@ import store from "@/store";
     BundleSummary,
   },
 })
-export default class BatchSend extends Vue {
+export default class BatchMintNft extends Vue {
   @Prop() public account!: AccountEntity;
   public submitting = false;
   public fee = 0;
@@ -144,7 +144,7 @@ export default class BatchSend extends Vue {
 
   mounted(): void {
     this.loadCoins();
-    if(!this.account.dids) {
+    if (!this.account.dids) {
       store.dispatch("refreshDids");
     }
   }

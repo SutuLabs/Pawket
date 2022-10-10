@@ -74,7 +74,7 @@
               :disabled="observeMode"
             ></b-button>
             <b-button
-              label="Move"
+              :label="$t('nftDetail.ui.button.move')"
               type="is-info"
               @click="move()"
               icon-left="image-move"

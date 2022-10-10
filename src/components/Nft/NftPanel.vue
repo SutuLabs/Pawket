@@ -218,8 +218,8 @@ export default class NftPanel extends Vue {
   async refresh(): Promise<void> {
     this.refreshing = true;
     try {
-      await store.dispatch("refreshNfts");
       await store.dispatch("refreshDids");
+      await store.dispatch("refreshNfts");
     } catch (err) {
       console.warn(err);
     }

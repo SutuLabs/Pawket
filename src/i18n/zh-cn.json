@@ -12,7 +12,9 @@
       "confirm": "确认",
       "cancel": "取消",
       "save": "保存",
-      "delete": "删除"
+      "delete": "删除",
+      "sign": "签名",
+      "copy": "拷贝"
     },
     "tooltip": {
       "copy": "复制"
@@ -161,7 +163,9 @@
           "makeOffer": "发起 Offer",
           "batchSend": "批量发送",
           "mintCat": "发行 CAT",
-          "mintNft": "发行 NFT"
+          "mintNft": "发行 NFT",
+          "batchMintNft": "批量发行 NFT",
+          "verify": "验证信息"
         },
         "button": {
           "donate": "捐赠",
@@ -171,7 +175,9 @@
           "makeOffer": "发起 Offer",
           "batchSend": "批量发送",
           "mintCat": "发行 CAT",
-          "mintNft": "发行 NFT"
+          "mintNft": "发行 NFT",
+          "batchMintNft": "批量发行 NFT",
+          "verify": "验证信息"
         }
       }
     },
@@ -1107,6 +1113,7 @@
       "button": {
         "transfer": "转发",
         "makeOffer": "创建 Offer",
+        "move": "归档",
         "showMore": "显示更多",
         "showLess": "收起"
       },
@@ -1133,8 +1140,8 @@
         "setAsProfilePic": "设置为账户头像"
       },
       "profile": {
-        "all": "全部",
-        "unassigned": "未分配"
+        "all": "全部NFT",
+        "unassigned": "未分配的NFT"
       }
     }
   },
@@ -1144,11 +1151,13 @@
         "detail": "详情"
       },
       "button": {
-        "addDid": "添加 DID"
+        "addDid": "添加 DID",
+        "sign": "签名"
       },
       "label": {
         "name": "名称",
-        "did": "DID"
+        "did": "DID",
+        "tool": "工具"
       },
       "prompt": {
         "newName": "输入新名称"
@@ -1265,6 +1274,57 @@
       },
       "error": {
         "ABORT_OOM": "扫描已中止，请刷新页面后重试。"
+      }
+    }
+  },
+  "moveNft": {
+    "ui": {
+      "title": "NFT 归档",
+      "label": {
+        "moveToProfile": "移至 DID",
+        "selectDid": "选择一个 DID"
+      }
+    }
+  },
+  "signMessage": {
+    "ui": {
+      "title": "签名信息",
+      "prompt": "确保该信息来自信任来源，如果你不理解或不同意该信息，请勿签名！",
+      "label": {
+        "signWdid": "签名 DID：",
+        "message": "信息",
+        "result": "结果"
+      }
+    }
+  },
+  "verifyMessage": {
+    "ui": {
+      "title": "验证信息",
+      "label": {
+        "message": "信息",
+        "result": "结果"
+      },
+      "button": {
+        "verify": "验证"
+      },
+      "sigResult": {
+        "pass": "签名验证通过",
+        "fail": "签名验证失败",
+        "none": "未检查签名"
+      },
+      "coinResult": {
+        "pass": "硬币检查通过",
+        "fail": "硬币检查失败",
+        "none": "未检查硬币"
+      }
+    }
+  },
+  "batchMintNft": {
+    "ui": {
+      "title": "批量发行 NFT",
+      "label": {
+        "royaltyAddress": "版权费地址",
+        "royaltyPercentage": "版权费"
       }
     }
   }
