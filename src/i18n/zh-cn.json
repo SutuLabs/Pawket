@@ -14,7 +14,7 @@
       "save": "保存",
       "delete": "删除",
       "sign": "签名",
-      "copy": "拷贝"
+      "copy": "复制"
     },
     "tooltip": {
       "copy": "复制"
@@ -165,7 +165,7 @@
           "mintCat": "发行 CAT",
           "mintNft": "发行 NFT",
           "batchMintNft": "批量发行 NFT",
-          "verify": "验证信息"
+          "verify": "信息验证"
         },
         "button": {
           "donate": "捐赠",
@@ -177,7 +177,7 @@
           "mintCat": "发行 CAT",
           "mintNft": "发行 NFT",
           "batchMintNft": "批量发行 NFT",
-          "verify": "验证信息"
+          "verify": "信息验证"
         }
       }
     },
@@ -661,7 +661,7 @@
         "spentHeight": "花费区块高度",
         "confirmedHeight": "确认区块高度",
         "parentCoinInfo": "父硬币信息",
-        "puzzleHash": "谜语哈希"
+        "puzzleHash": "接收地址"
       },
       "tooltip": {
         "copy": "复制"
@@ -841,7 +841,7 @@
   },
   "searchCat": {
     "ui": {
-      "placeholder": "输入CAT名称",
+      "placeholder": "输入 CAT 名称",
       "tag": {
         "imported": "已导入"
       },
@@ -1140,8 +1140,8 @@
         "setAsProfilePic": "设置为账户头像"
       },
       "profile": {
-        "all": "全部NFT",
-        "unassigned": "未分配的NFT"
+        "all": "全部 NFT",
+        "unassigned": "未分配的 NFT"
       }
     }
   },
@@ -1286,13 +1286,13 @@
         "move": "移动 NFT",
         "to": "至"
       },
-      "confirmation": "确定要移动这个 NFT 吗？请务必再次检查你的交易内容。"
+      "confirmation": "确定要移动这个 NFT 吗？<br>请务必再次检查你的交易内容。"
     }
   },
   "signMessage": {
     "ui": {
       "title": "签名信息",
-      "prompt": "确保该信息来自信任来源，如果你不理解或不同意该信息，请勿签名！",
+      "prompt": "请您确保该消息来自可信任的来源。如果您不理解或不同意该消息，请勿签名！",
       "label": {
         "signWdid": "签名 DID：",
         "message": "信息",
