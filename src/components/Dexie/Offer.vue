@@ -39,12 +39,33 @@
           </td>
           <td>
             <p v-for="offered of offer.offered" :key="offered.code" class="has-text-left">
-              <span v-if="offered.is_nft"
-                ><img
-                  @click="preview(offered)"
-                  class="image is-48x48 is-inline-block ml-3"
-                  :src="offered.preview.tiny"
-                />{{ offered.name }}</span
+              <span v-if="offered.is_nft">
+                <b-tooltip type="is-light" :triggers="['click', 'hover']" position="is-right" multilined>
+                  <template v-slot:content>
+                    <div class="card">
+                      <div class="card-image">
+                        <figure class="image is-4by3">
+                          <img :src="offered.nft_data.data_uris[0]" alt="Image" />
+                        </figure>
+                      </div>
+                      <div class="card-content">
+                        <div class="media">
+                          <div class="media-content">
+                            <p class="title is-5">{{ offered.name }}</p>
+                          </div>
+                        </div>
+
+                        <div class="content" style="word-break: break-all">
+                          {{ getAddressFromPuzzleHash(offered.id) }}
+                        </div>
+                      </div>
+                    </div>
+                  </template>
+                  <img
+                    class="image is-48x48 is-inline-block ml-3"
+                    :src="offered.preview.tiny"
+                  /> </b-tooltip
+                >{{ offered.name }}</span
               >
               <span v-else> {{ offered.amount }} {{ offered.code }} </span>
             </p>
@@ -76,26 +97,6 @@
       aria-current-label="Current page"
     >
     </b-pagination>
-    <b-modal v-model="isPreviewing" :width="320" v-if="previewNft">
-      <div class="card">
-        <div class="card-image">
-          <figure class="image is-4by3">
-            <img :src="previewNft.nft_data.data_uris[0]" alt="Image" />
-          </figure>
-        </div>
-        <div class="card-content">
-          <div class="media">
-            <div class="media-content">
-              <p class="title is-5">{{ previewNft.name }}</p>
-            </div>
-          </div>
-
-          <div class="content" style="word-break: break-word">
-            {{ getAddressFromPuzzleHash(previewNft.id) }}
-          </div>
-        </div>
-      </div>
-    </b-modal>
   </div>
 </template>
 <script lang="ts">
@@ -166,11 +167,6 @@ export default class DexieOffer extends Vue {
 
   back(): void {
     this.$router.push(`/explore/market/${this.offerType}`);
-  }
-
-  preview(nft: Offered): void {
-    this.previewNft = nft;
-    this.isPreviewing = true;
   }
 
   getAddressFromPuzzleHash(hash: string): string {
