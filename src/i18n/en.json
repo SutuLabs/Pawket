@@ -1282,8 +1282,11 @@
       "title": "Move NFT",
       "label": {
         "moveToProfile": "Move to Profile",
-        "selectDid": "Select a DID"
-      }
+        "selectDid": "Select a DID",
+        "move": "Move NFT",
+        "to": "To"
+      },
+      "confirmation": "Are you sure to move the NFT? Please review your transaction."
     }
   },
   "signMessage": {

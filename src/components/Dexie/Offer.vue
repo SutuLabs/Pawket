@@ -39,8 +39,33 @@
           </td>
           <td>
             <p v-for="offered of offer.offered" :key="offered.code" class="has-text-left">
-              <span v-if="offered.is_nft"
-                ><img class="image is-48x48 is-inline-block ml-3" :src="offered.preview.tiny" />{{ offered.name }}</span
+              <span v-if="offered.is_nft">
+                <b-tooltip type="is-light" :triggers="['click', 'hover']" position="is-right" multilined>
+                  <template v-slot:content>
+                    <div class="card">
+                      <div class="card-image">
+                        <figure class="image is-4by3">
+                          <img :src="offered.nft_data.data_uris[0]" alt="Image" />
+                        </figure>
+                      </div>
+                      <div class="card-content">
+                        <div class="media">
+                          <div class="media-content">
+                            <p class="title is-5">{{ offered.name }}</p>
+                          </div>
+                        </div>
+
+                        <div class="content" style="word-break: break-all">
+                          {{ getAddressFromPuzzleHash(offered.id) }}
+                        </div>
+                      </div>
+                    </div>
+                  </template>
+                  <img
+                    class="image is-48x48 is-inline-block ml-3"
+                    :src="offered.preview.tiny"
+                  /> </b-tooltip
+                >{{ offered.name }}</span
               >
               <span v-else> {{ offered.amount }} {{ offered.code }} </span>
             </p>
@@ -78,12 +103,13 @@
 import { isMobile } from "@/services/view/responsive";
 import { Component, Vue, Watch } from "vue-property-decorator";
 import TakeOffer from "@/components/Offer/Take.vue";
-import { Offer } from "@/models/dexieOffer";
+import { Offer, Offered } from "@/models/dexieOffer";
 import { AccountEntity, CustomCat } from "@/models/account";
 import store from "@/store";
 import { getAllCats } from "@/store/modules/account";
 import Dexie from "@/services/api/dexie";
 import { tc } from "@/i18n/i18n";
+import puzzle from "@/services/crypto/puzzle";
 
 @Component({})
 export default class DexieOffer extends Vue {
@@ -94,6 +120,9 @@ export default class DexieOffer extends Vue {
   total = 0;
   pageSize = 20;
   loading = false;
+  isPreviewing = false;
+  transitioning = false;
+  previewNft: Offered | null = null;
 
   get isMobile(): boolean {
     return isMobile();
@@ -138,6 +167,10 @@ export default class DexieOffer extends Vue {
 
   back(): void {
     this.$router.push(`/explore/market/${this.offerType}`);
+  }
+
+  getAddressFromPuzzleHash(hash: string): string {
+    return puzzle.getAddressFromPuzzleHash(hash, "nft");
   }
 
   @Watch("currentPage")

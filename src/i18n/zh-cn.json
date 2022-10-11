@@ -1282,8 +1282,11 @@
       "title": "NFT 归档",
       "label": {
         "moveToProfile": "移至 DID",
-        "selectDid": "选择一个 DID"
-      }
+        "selectDid": "选择一个 DID",
+        "move": "移动 NFT",
+        "to": "至"
+      },
+      "confirmation": "确定要移动这个 NFT 吗？请务必再次检查你的交易内容。"
     }
   },
   "signMessage": {

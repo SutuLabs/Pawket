@@ -67,7 +67,11 @@
         </div>
       </div>
       <div class="pt-6">
-        <b-field :label="$t('scanAssets.ui.label.result')">
+        <b-field>
+          <template #label>
+            {{ $t("scanAssets.ui.label.result") }}
+            <b-button loading size="is-small" rounded v-if="isLoading" type="is-text"></b-button>
+          </template>
           <table class="table is-fullwidth has-text-centered">
             <thead>
               <tr>
@@ -179,6 +183,7 @@ export default class ScanAssets extends Vue {
   allRequests: TokenPuzzleAddress[] = [];
   puzCache: { [symbol: string]: PuzzleDetail[] } = {};
   allRecords: CoinRecord[] = [];
+  isLoading = false;
 
   async mounted(): Promise<void> {
     this.tails = await TailDb.getTails();
@@ -378,6 +383,7 @@ export default class ScanAssets extends Vue {
   }
 
   async analyse(records: GetRecordsResponse, rpcUrl: string): Promise<void> {
+    this.isLoading = true;
     for (let i = 0; i < records.coins.length; i++) {
       const coinRecords = records.coins[i];
 
@@ -415,6 +421,7 @@ export default class ScanAssets extends Vue {
         }
       }
     }
+    this.isLoading = false;
   }
 
   add(id: string): void {
