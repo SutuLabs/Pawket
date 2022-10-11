@@ -1176,7 +1176,7 @@
       "title": "转发",
       "description": "你将把这个 NFT 转发给他人。",
       "summary": {
-        "confirmation": "确定要转发这个 NFT 吗？<br>请检查您的交易。"
+        "confirmation": "确定要转发这个 NFT 吗？<br>请务必再次检查你的交易内容。"
       }
     }
   },
