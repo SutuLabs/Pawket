@@ -229,9 +229,11 @@ export async function combineSpendBundle(spendbundles: SpendBundle[]): Promise<S
 
     if (summary.requested.length != 1) throw new Error("unexpected length of request");
     const req = summary.requested[0];
-    const reqcs = spendbundles[i].coin_spends[0];
+    const reqcs = spendbundles[i].coin_spends
+      .filter(_ => _.coin.parent_coin_info == "0x0000000000000000000000000000000000000000000000000000000000000000")[0];
     const offcs = spendbundles[(i + 1) % summaries.length].coin_spends
-      .filter(_ => _.coin.puzzle_hash != "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79")
+      .filter(_ => _.coin.puzzle_hash != "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79"
+        && _.coin.parent_coin_info != "0x0000000000000000000000000000000000000000000000000000000000000000")
       .slice(-1)[0];
     const sumoff = summaries[(i + 1) % summaries.length].offered[0];
     reqcs.coin.parent_coin_info = getCoinName0x(offcs.coin);
