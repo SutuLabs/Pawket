@@ -661,7 +661,7 @@
         "spentHeight": "Spent Height",
         "confirmedHeight": "Confirmed Height",
         "parentCoinInfo": "ParentCoinInfo",
-        "puzzleHash": "PuzzleHash"
+        "puzzleHash": "Receive Address"
       },
       "tooltip": {
         "copy": "Copy"
@@ -1286,13 +1286,13 @@
         "move": "Move NFT",
         "to": "To"
       },
-      "confirmation": "Are you sure to move the NFT? Please review your transaction."
+      "confirmation": "Are you sure to move the NFT? <br>Please review your transaction."
     }
   },
   "signMessage": {
     "ui": {
       "title": "Sign Message",
-      "prompt": "Make sure the message is come from trust source, if you don't understand or agree to the message, don't sign!",
+      "prompt": "Make sure the message comes from trusty source. If you don't understand or agree to the message, don't sign!",
       "label": {
         "signWdid": "Sign with DID:",
         "message": "Message",
