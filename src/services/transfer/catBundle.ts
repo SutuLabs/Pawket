@@ -66,9 +66,13 @@ class CatBundle {
     const presp = await api(parentCoinId);
     // console.log(`const presp=${JSON.stringify(presp, null, 2)};`)
     if (!presp) throw new Error("cannot find the coin: " + parentCoinId);
-    const hash = await this.calcLineageProof(presp.puzzleReveal, argnum);
-    // console.log("api hash", hash);
-    return { coinId: presp.parentParentCoinId, amount: BigInt(presp.amount), proof: hash };
+    try {
+      const hash = await this.calcLineageProof(presp.puzzleReveal, argnum);
+      // console.log("api hash", hash);
+      return { coinId: presp.parentParentCoinId, amount: BigInt(presp.amount), proof: hash };
+    } catch (err) {
+      throw new Error(`error when processing coin[${parentCoinId}]: ` + err);
+    }
   }
 
   private async calcLineageProof(puzzleReveal: string, argnum_of_inner_puzzle: number) {
@@ -81,6 +85,7 @@ class CatBundle {
       effectiveArg = effectiveArg.rest();
     }
     const trickarg = disassemble(effectiveArg).slice(1, -1);
+    if (!trickarg) throw new Error("Cannot get lineage proof out of puzzle");
     const hash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(trickarg));
     return hash; // getting inner_puzzle hash
   }
