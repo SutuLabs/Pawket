@@ -1292,7 +1292,7 @@
   "signMessage": {
     "ui": {
       "title": "签名信息",
-      "prompt": "请您确保该消息来自可信任的来源。如果您不理解或不同意该消息，请勿签名！",
+      "prompt": "请确保该信息来自可信任的来源。如果你不理解或不同意该信息，请勿签名！",
       "label": {
         "signWdid": "签名 DID：",
         "message": "信息",
@@ -1302,7 +1302,7 @@
   },
   "verifyMessage": {
     "ui": {
-      "title": "验证信息",
+      "title": "信息验证",
       "label": {
         "message": "信息",
         "result": "结果"
