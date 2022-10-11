@@ -172,6 +172,7 @@
               <b-tag v-else-if="ca.availability == 'Ephemeral'" type="is-success is-light">Ephemeral</b-tag>
               <b-tag v-else-if="ca.availability == 'NotFound'" type="is-danger is-light">NotFound</b-tag>
               <b-tag v-else-if="ca.availability == 'Unexecutable'" type="is-danger">Unexecutable</b-tag>
+              <b-tag v-else-if="ca.availability == 'Settlement'" type="is-warning">Settlement</b-tag>
               <b-tag v-else-if="ca.availability == 'Used'" type="is-danger is-light">Used</b-tag>
               <b-tag v-else type="is-light">Unknown</b-tag>
               {{ ca.coinName }}
@@ -231,7 +232,7 @@ import puzzle, { ExecuteResult } from "@/services/crypto/puzzle";
 import { beautifyLisp } from "@/services/coin/lisp";
 import { Bytes } from "clvm";
 import { conditionDict, ConditionInfo, prefix0x, getNumber, unprefix0x } from "@/services/coin/condition";
-import { modsdict, modsprog } from "@/services/coin/mods";
+import { modsdict, modshex, modsprog } from "@/services/coin/mods";
 import UncurryPuzzle from "@/components/DevHelper/UncurryPuzzle.vue";
 import AnnouncementList from "@/components/DevHelper/AnnouncementList.vue";
 import { decodeOffer } from "@/services/offer/encoding";
@@ -252,7 +253,7 @@ export interface AnnouncementCoin {
 interface CoinAvailability {
   coinName: string;
   coinIndex: number;
-  availability: "Unknown" | "Unexecutable" | "Available" | "Used" | "NotFound" | "Ephemeral";
+  availability: "Unknown" | "Unexecutable" | "Settlement" | "Available" | "Used" | "NotFound" | "Ephemeral";
   dependenceIndex?: number;
 }
 
@@ -525,9 +526,14 @@ export default class BundlePanel extends Vue {
         try {
           result = await puzzle.executePuzzleHex(cs.puzzle_reveal, cs.solution);
         } catch (err) {
-          console.warn("error executing puzzle", err);
-          ca.availability = "Unexecutable";
-          continue;
+          try {
+            result = await puzzle.executePuzzleHex(modshex["settlement_payments"], cs.solution);
+            ca.availability = "Settlement";
+          } catch (err) {
+            console.warn("error executing puzzle", err);
+            ca.availability = "Unexecutable";
+            continue;
+          }
         }
 
         this.puzzleAnnoCreates.push(
@@ -586,7 +592,7 @@ export default class BundlePanel extends Vue {
         const ca = coinsForAvail[i];
         this.coinAvailability.push(ca);
 
-        if (ca.availability == "Unexecutable") continue;
+        if (ca.availability == "Unexecutable" || ca.availability == "Settlement") continue;
         if (this.createdCoins[ca.coinName]) {
           this.createdCoins[ca.coinName].nextIndex = ca.coinIndex;
           ca.dependenceIndex = this.createdCoins[ca.coinName].coinIndex;

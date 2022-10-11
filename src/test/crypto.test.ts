@@ -12,6 +12,7 @@ import { PrivateKey } from "@chiamine/bls-signatures";
 
 import didcoin2 from "./cases/didcoin2.json"
 import nftcoin6 from "./cases/nftcoin6.json"
+import { ByteBase, CryptographyService, EcPrivateKey } from "@/services/crypto/encryption";
 
 beforeAll(async () => {
   await Instance.init();
@@ -128,4 +129,37 @@ async function signMessageTest(sk: PrivateKey, message: string, expectPuzzleHash
 
   const vp2owner = prefix0x(await puzzle.getPuzzleHash(pk));
   expect(vp2owner).toBe(prefix0x(expectPuzzleHash));
+}
+
+test('ECDH', async () => {
+  await testEncryption("hello");
+  await testEncryption(`
+very long sentence with newline
+very long sentence with newline
+very long sentence with newline
+very long sentence with newline
+very long sentence with newline
+very long sentence with newline
+very long sentence with newline
+very long sentence with newline
+  `);
+});
+
+async function testEncryption(plaintext: string): Promise<void> {
+  const ecc = new CryptographyService();
+
+  const sk1 = EcPrivateKey.parse('1d1b65531bf3b0fc629fb4537b8bf4083bb72b532f1b571250b137ca6bb4dde3');
+  const sk2 = EcPrivateKey.parse('3d0578e760b3abb55eee2a207f86610f49c909b0bed5f1775e7c2cc1efe0033b');
+  if (!sk1 || !sk2) fail();
+
+  const pk1 = ecc.getPublicKey(sk1);
+  const pk2 = ecc.getPublicKey(sk2);
+
+  const ran = ByteBase.hexStringToByte('3d0578e760b3abb55eee2a207f86610f');
+
+  const enc = await ecc.encrypt(plaintext, pk2, sk1, ran);
+  const dec = await ecc.decrypt(enc, pk1, sk2);
+  expect(dec).toBe(plaintext);
+  expect(enc).toMatchSnapshot("encrypted");
+  expect(dec).toMatchSnapshot("decrypted");
 }
