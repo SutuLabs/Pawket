@@ -20,6 +20,25 @@ exports[`Basic Cryptography: walletpubkey 1`] = `"8b58921998b2337fd9d4a410e8bd11
 
 exports[`Coin Name: coinname 1`] = `"c62152493a6f3fbca7a918a8258e52f84c4e8aa286b8ebf1b0d5e5dda7fa7e6f"`;
 
+exports[`ECDH: decrypted 1`] = `"hello"`;
+
+exports[`ECDH: decrypted 2`] = `
+"
+very long sentence with newline
+very long sentence with newline
+very long sentence with newline
+very long sentence with newline
+very long sentence with newline
+very long sentence with newline
+very long sentence with newline
+very long sentence with newline
+  "
+`;
+
+exports[`ECDH: encrypted 1`] = `"3d0578e760b3abb55eee2a207f86610f6979d828e7f013c3ab07be3512673944"`;
+
+exports[`ECDH: encrypted 2`] = `"3d0578e760b3abb55eee2a207f86610f3d438ba728ec2d91b98ded328fc922c60521dde55f7123982fa14bd80c051e5ba4d384a3023e171106630069ff6f38d3b31aebee6f898f6ab21bc99e2af1c2b60a8d30490a71da5f349a64485eafccb70ff1042d5b9c29ad75c97c6e18529228fb6357831cb16fdfff6c45989f87d93b4f3450fcb5995de197b5fd057f223718069955323de8b88b2a296b244f82995e9693ce1808a8c2522596bb81e058e41faf867e816a3aede95f4b6c78f1f69e837687eb1d6e1a4ba598f05a1fd85d1ec434cb21bfa998de63665764ad4000376537525e0b428df13abdf45061af69024a1983312a798017e5d7bc31ef7173195610f1b5b54ec85f79f29f85c92ea60cd6c672dfb7fcb95bbe4d4fb43aea263991"`;
+
 exports[`Puzzle Assemble 1`] = `"(q (a b c) (d e f))"`;
 
 exports[`Puzzle Assemble 2`] = `"(q (a b c) (d e (f \\"g\\") ()))"`;
