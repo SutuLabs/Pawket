@@ -29,14 +29,40 @@
         <fee-selector v-model="fee"></fee-selector>
       </template>
       <template v-if="step == 'Confirmation'">
-        <b-field v-if="bundle">
-          <template #label>
-            {{ $t("offer.make.ui.label.bundle") }}
-            <key-box icon="checkbox-multiple-blank-outline" :value="JSON.stringify(bundle)" tooltip="Copy"></key-box>
-            <a href="javascript:void(0)" v-if="debugMode" @click="debugBundle()">🐞</a>
-          </template>
-          <b-input type="textarea" disabled :value="bundleJson"></b-input>
-        </b-field>
+        <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
+          <span v-html="$sanitize($t('moveNft.ui.confirmation'))"></span>
+        </b-notification>
+        <div class="mb-3">
+          <b-field>
+            <template #label>
+              <span class="is-size-6">{{ $t("moveNft.ui.label.move") }}</span>
+              <span class="is-pulled-right">
+                <img v-if="nft.metadata.uri" :src="nft.metadata.uri" class="nft-image" />
+                <img v-else src="@/assets/nft-no-image.png" class="nft-image" />
+              </span>
+            </template>
+          </b-field>
+          <b-field v-if="selectedDid">
+            <template #label>
+              <span class="is-size-6">{{ $t("moveNft.ui.label.to") }}</span>
+              <span class="is-size-6 is-pulled-right">
+                <span class="tag is-primary is-light">{{ selectedDid.name }}</span>
+                <b-tooltip :label="selectedDid.did" multilined class="break-string" position="is-left">
+                  {{ shorten(selectedDid.did) }}
+                </b-tooltip>
+              </span>
+            </template>
+          </b-field>
+          <b-field>
+            <template #label>
+              <span class="is-size-6 has-text-grey">{{ $t("sendSummary.ui.label.fee") }}</span>
+              <span class="is-size-6 is-pulled-right has-text-grey">
+                {{ demojo(fee) }}
+              </span>
+            </template>
+          </b-field>
+        </div>
+        <bundle-summary :account="account" :bundle="bundle" :ignoreError="true"></bundle-summary>
       </template>
     </section>
     <footer class="modal-card-foot is-block">
@@ -64,7 +90,7 @@
 import { Component, Vue, Prop, Emit } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { SpendBundle } from "@/models/wallet";
-import { AccountEntity } from "@/models/account";
+import { AccountEntity, OneTokenInfo } from "@/models/account";
 import store from "@/store";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
 import coinHandler from "@/services/transfer/coin";
@@ -79,12 +105,16 @@ import { getLineageProofPuzzle } from "@/services/transfer/call";
 import { submitBundle } from "@/services/view/bundle";
 import { generateTransferNftBundle } from "@/services/coin/nft";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
+import { demojo } from "@/filters/unitConversion";
+import { shorten } from "@/filters/addressConversion";
+import BundleSummary from "../Bundle/BundleSummary.vue";
 
 @Component({
   components: {
     KeyBox,
     TokenAmountField,
     FeeSelector,
+    BundleSummary,
   },
 })
 export default class NftMove extends Vue {
@@ -130,6 +160,14 @@ export default class NftMove extends Vue {
 
   async mounted(): Promise<void> {
     await this.loadCoins();
+  }
+
+  demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null, digits = -1): string {
+    return demojo(mojo, token, digits);
+  }
+
+  shorten(name: string): string {
+    return shorten(name);
   }
 
   get xchSymbol(): string {
@@ -220,4 +258,14 @@ export default class NftMove extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.break-string {
+  word-break: break-word;
+}
+img.nft-image {
+  width: 100px;
+  height: 1.5rem;
+  object-fit: cover;
+  border: 1px solid;
+}
+</style>

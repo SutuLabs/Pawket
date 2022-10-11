@@ -19,7 +19,7 @@
           <span v-html="$sanitize($t('did.addDid.confirmation'))"></span>
         </b-notification>
         <send-summary :leadingText="$t('did.addDid.spend')" :amount="amount" :unit="selectedToken" :fee="feeBigInt" :address="address"></send-summary>
-        <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
+        <bundle-summary :account="account" :bundle="bundle" :ignoreError="true"></bundle-summary>
       </template>
     </section>
     <footer class="is-block buttons modal-card-foot pb-2 my-0">

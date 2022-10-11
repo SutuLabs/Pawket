@@ -35,7 +35,7 @@
           :total="total"
           :contactName="contactName"
         ></send-summary>
-        <bundle-summary :account="account" :bundle="bundle" :ignoreError="true"></bundle-summary>
+        <bundle-summary :account="account" :bundle="bundle" :ignoreError="true" class="mt-3"></bundle-summary>
       </template>
     </section>
     <footer class="modal-card-foot is-block">

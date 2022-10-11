@@ -27,6 +27,18 @@ export interface Offered {
   code: string;
   name: string;
   amount: number;
+  preview: Preview;
+  is_nft: boolean;
+  nft_data: NftData
+}
+
+export interface Preview {
+  tiny: string;
+  medium: string;
+}
+
+export interface NftData {
+  data_uris: string[];
 }
 
 export interface Requested {

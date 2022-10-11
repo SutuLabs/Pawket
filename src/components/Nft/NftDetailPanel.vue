@@ -146,7 +146,7 @@
                   <span class="has-text-grey">{{ $t("nftDetail.ui.details.ownerDid") }}</span
                   ><span class="is-pulled-right">
                     <key-box
-                      :display="getDidFromPuzzleHash(nft.analysis.didOwner, true)"
+                      :display="shorten(getDidFromPuzzleHash(nft.analysis.didOwner, true))"
                       :showValue="false"
                       :value="getDidFromPuzzleHash(nft.analysis.didOwner)"
                       :tooltip="getDidFromPuzzleHash(nft.analysis.didOwner)"
@@ -278,6 +278,7 @@ import { notifyPrimary } from "@/services/notification/notification";
 import NftMove from "./NftMove.vue";
 import puzzle from "@/services/crypto/puzzle";
 import { xchPrefix } from "@/store/modules/network";
+import { shorten } from "@/filters/addressConversion";
 
 @Component({
   components: {
@@ -319,12 +320,17 @@ export default class NftDetailPanel extends Vue {
   }
 
   getDidFromPuzzleHash(hash: string, name = false): string {
+    if (!hash) return "";
     const did = puzzle.getAddressFromPuzzleHash(hash, "did:chia:");
     if (name) {
       const idx = this.dids.findIndex((d) => d.did == did);
       if (idx > -1) return this.dids[idx].name;
     }
     return did;
+  }
+
+  shorten(name: string): string {
+    return shorten(name);
   }
 
   getAddressFromPuzzleHash(hash: string): string {
