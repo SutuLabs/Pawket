@@ -18,7 +18,7 @@ import { CannotParsePuzzle, expectModArgs, sexpAssemble, UncurriedPuzzle, uncurr
 import { disassemble, sha256tree } from "clvm_tools";
 import { SExp } from "clvm";
 import { Instance } from "../util/instance";
-import { CnsMetadataKeys, CnsMetadataValues } from "@/models/cns";
+import { CnsCoinAnalysisResult, CnsMetadataKeys, CnsMetadataValues } from "@/models/cns";
 
 type MetadataValues = NftMetadataValues | CnsMetadataValues;
 
@@ -322,7 +322,7 @@ export async function analyzeNftCoin(
   hintPuzzle: string | undefined,
   coin: OriginCoin,
   solution_hex: string
-): Promise<NftCoinAnalysisResult | null> {
+): Promise<NftCoinAnalysisResult | CnsCoinAnalysisResult | null> {
   const parsed_puzzle = (typeof puz === "string")
     ? await uncurryPuzzle(sexpAssemble(puz))
     : puz;
@@ -440,6 +440,15 @@ export async function analyzeNftCoin(
     updaterInSolution,
   };
   if (!obj.updaterInSolution) delete obj.updaterInSolution;
+
+  if ("address" in metadata && metadata.address && metadata.name) {
+    const cnsobj = Object.assign({
+      cnsName: metadata.name,
+      cnsAddress: metadata.address,
+    }, obj) as CnsCoinAnalysisResult;
+    return cnsobj;
+  }
+
   return obj;
 }
 

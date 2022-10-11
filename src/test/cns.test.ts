@@ -1,6 +1,6 @@
 import { getTestAccount } from "./utility";
 import { SymbolCoins } from "@/services/transfer/transfer";
-import { generateMintNftBundle, getBootstrapSpendBundle } from "@/services/coin/nft";
+import { analyzeNftCoin, generateMintNftBundle, getBootstrapSpendBundle } from "@/services/coin/nft";
 import puzzle from "@/services/crypto/puzzle";
 import { GetParentPuzzleResponse } from "@/models/api";
 import { Instance } from "@/services/util/instance";
@@ -8,6 +8,7 @@ import { getAccountAddressDetails } from "@/services/util/account";
 
 import { CnsMetadataValues } from "@/models/cns";
 import { cnsMetadata, knownCoins } from "./cases/cns.test.data";
+import { CoinSpend } from "@/models/wallet";
 
 function xchPrefix() { return "xch"; }
 function xchSymbol() { return "XCH"; }
@@ -87,11 +88,20 @@ async function testMintCns(
     targetAddress, changeAddress, fee, metadata, availcoins, tokenPuzzles, xchSymbol(), chainId(), royaltyAddressHex,
     tradePricePercentage, undefined, localPuzzleApiCall, sk, targetAddresses);
   expect(spendBundle).toMatchSnapshot("spendbundle");
+  const cs = spendBundle.coin_spends[2];
+  await testAnalyzeCnsCoin(cs, "");
 }
 
 test('Analyze CNS', async () => {
   //
 });
+
+async function testAnalyzeCnsCoin(coin: CoinSpend, hintPuzzle: string): Promise<void> {
+  const puzzle_reveal = coin.puzzle_reveal;
+  const solution = coin.solution;
+  const ret = await analyzeNftCoin(puzzle_reveal, hintPuzzle, coin.coin, solution);
+  expect(ret).toMatchSnapshot("cns analysis result");
+}
 
 test('Transfer CNS', async () => {
   //

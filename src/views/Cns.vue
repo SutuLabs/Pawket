@@ -61,7 +61,7 @@
     </div>
     <div v-if="showSearchResults">
       <cns-desktop-detail
-        :cnsResult="this.result"
+        :cnsResult="result"
         :cns="cnses[0]"
         :account="account"
         @close="showSearchResults = false"
@@ -74,7 +74,7 @@ import CnsDesktopDetail from "@/components/Cns/CnsDesktopDetail.vue";
 import CnsDetailPanel from "@/components/Cns/CnsDetailPanel.vue";
 import CnsSearch, { CnsResult } from "@/components/Cns/CnsSearch.vue";
 import { AccountEntity } from "@/models/account";
-import { CnsDetail } from "@/services/crypto/receive";
+import { CnsDetail, NftDetail } from "@/services/crypto/receive";
 import { isMobile } from "@/services/view/responsive";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
@@ -97,7 +97,7 @@ export default class Cns extends Vue {
     return store.state.account.accounts[this.selectedAccount] ?? {};
   }
 
-  get cnses(): CnsDetail[] {
+  get cnses(): NftDetail[] {
     return this.account.nfts ?? [];
   }
 

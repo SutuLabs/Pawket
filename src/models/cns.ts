@@ -1,7 +1,8 @@
 import { NftCoinAnalysisResult, NftDataKey, NftMetadataValues } from "./nft";
 
 export interface CnsCoinAnalysisResult extends NftCoinAnalysisResult {
-  cns?: string;
+  cnsName: string;
+  cnsAddress: string;
 }
 
 export interface CnsMetadataValues extends NftMetadataValues {

@@ -43,7 +43,7 @@ export interface NftDetail {
   hintPuzzle: string;
   coin: OriginCoin;
   address: string;
-  analysis: NftCoinAnalysisResult;
+  analysis: NftCoinAnalysisResult | CnsCoinAnalysisResult;
 }
 
 export interface DidDetail {
