@@ -1,23 +1,43 @@
 {
-    "eslint.enable": true,
-    "eslint.packageManager": "yarn",
-    "eslint.validate": ["vue", "ts"],
-    "vetur.validation.template": false,
-    "vetur.validation.script": true,
-    "vetur.validation.style": false,
-    "typescript.validate.enable": true,
-    "javascript.validate.enable": true,
-    "prettier.printWidth": 130,
-    "vetur.format.defaultFormatter.ts": "vscode-typescript",
-    "vetur.format.defaultFormatter.html": "prettier",
-    "vetur.format.defaultFormatter.js": "vscode-typescript",
-    "vetur.format.defaultFormatterOptions": {
-      "prettier": {
-        "printWidth": 130
-      }
-    },
-    "files.associations": {
-      "*.clvm":"lisp"
+  "eslint.enable": true,
+  "eslint.packageManager": "yarn",
+  "eslint.validate": [
+    "vue",
+    "ts"
+  ],
+  "vetur.validation.template": false,
+  "vetur.validation.script": true,
+  "vetur.validation.style": false,
+  "typescript.validate.enable": true,
+  "javascript.validate.enable": true,
+  "prettier.printWidth": 130,
+  "vetur.format.defaultFormatter.ts": "vscode-typescript",
+  "vetur.format.defaultFormatter.html": "prettier",
+  "vetur.format.defaultFormatter.js": "vscode-typescript",
+  "vetur.format.defaultFormatterOptions": {
+    "prettier": {
+      "printWidth": 130
     }
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "files.associations": {
+    "*.clvm": "lisp"
   }
-  
+}
