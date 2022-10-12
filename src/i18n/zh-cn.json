@@ -1330,5 +1330,20 @@
         "royaltyPercentage": "版权费"
       }
     }
+  },
+  "addNetwork": {
+    "ui": {
+      "title": "添加网络",
+      "warning": "恶意网络提供商可能会报告错误的区块链信息并记录你的网络活动。请添加你信任的自定义网络。",
+      "label": {
+        "networkName": "网络名称",
+        "rpcUrl": "RPC 地址",
+        "chainId": "链地址",
+        "currencySymbol": "货币符号",
+        "addressPrefix": "地址前缀",
+        "decimalPlace": "货币小数位数",
+        "blockExplorer": "区块链浏览器地址（选填）"
+      }
+    }
   }
 }

@@ -27,26 +27,7 @@
               rounded
               ><span class="has-text-grey">{{ account.key.fingerprint }}</span></b-button
             >
-            <b-dropdown v-model="networkId" aria-role="list" :mobile-modal="false" class="is-pulled-left">
-              <template #trigger>
-                <b-button
-                  :class="{
-                    'has-text-primary': !offline && networkId == 'mainnet',
-                    'has-text-info': !offline && networkId == 'testnet10',
-                    'has-text-grey': offline,
-                    'border-less': true,
-                    'pl-2': true,
-                  }"
-                  icon-left="brightness-1"
-                  icon-right="menu-down"
-                  rounded
-                  ><span class="has-text-grey">{{ networkId }}</span></b-button
-                >
-              </template>
-              <b-dropdown-item v-for="net in networks" :key="net.name" :value="net.name" aria-role="listitem">{{
-                net.name
-              }}</b-dropdown-item>
-            </b-dropdown>
+            <network-selector class="is-pulled-left"></network-selector>
             <b-tooltip :label="$t('accountDetail.ui.tooltip.errorLog')" class="is-pulled-right">
               <b-button v-if="debugMode && hasError" @click="$router.push('/home/errorLog')"
                 ><b-icon icon="bug" class="has-text-grey"> </b-icon
@@ -177,6 +158,7 @@ import AccountManagement from "@/components/AccountManagement/AccountManagement.
 import { isMobile } from "@/services/view/responsive";
 import AddressAccountQr from "./AddressAccountQr.vue";
 import { getAllCats } from "@/store/modules/account";
+import NetworkSelector from "./NetworkSelector.vue";
 
 type Mode = "Verify" | "Create";
 
@@ -188,6 +170,7 @@ type Mode = "Verify" | "Create";
     NftPanel,
     Dapp,
     Did,
+    NetworkSelector,
   },
 })
 export default class AccountDetail extends Vue {

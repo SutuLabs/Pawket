@@ -1330,5 +1330,20 @@
         "royaltyPercentage": "Royalty Percentage"
       }
     }
+  },
+  "addNetwork": {
+    "ui": {
+      "title": "Add Network",
+      "warning": "A malicious network provider can lie about the state of the blockchain and record your network activity. Only add custom networks you trust.",
+      "label": {
+        "networkName": "Network Name",
+        "rpcUrl": "RPC URL",
+        "chainId": "Chain ID",
+        "currencySymbol": "Currency Symbol",
+        "addressPrefix": "Address Prefix",
+        "decimalPlace": "Currency Decimal Places",
+        "blockExplorer": "Block Explorer URL (Optional)"
+      }
+    }
   }
 }

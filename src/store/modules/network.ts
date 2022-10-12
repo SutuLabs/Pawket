@@ -45,6 +45,7 @@ export interface INetworkState {
   peekHeight?: number;
 }
 const NETWORK_ID_KEY = "NETWORK_ID";
+const CUSTOM_NETWORKS = "CUSTOM_NETWORKS";
 
 store.registerModule<INetworkState>("network", {
   state() {
@@ -82,6 +83,10 @@ store.registerModule<INetworkState>("network", {
         },
       },
     };
+    const CustomNetworks: NetworkDetail[] = JSON.parse(localStorage.getItem(CUSTOM_NETWORKS) ?? "[]");
+    CustomNetworks.forEach(network => {
+      if (network.name != "mainnet" && network.name != 'testnet') networks[network.name] = network;
+    })
     const defaultNetworkId = networks.mainnet.name;
     const networkId = localStorage.getItem(NETWORK_ID_KEY) || defaultNetworkId;
     const network = networks[networkId] || networks.mainnet;
@@ -111,5 +116,13 @@ store.registerModule<INetworkState>("network", {
       }
       localStorage.setItem(NETWORK_ID_KEY, state.networkId);
     },
-  },
+    addNetwork({ state }, network: NetworkDetail) {
+      if (state.networks[network.name]) return;
+      state.networks[network.name] = network;
+      const CustomNetworks: NetworkDetail[] = JSON.parse(localStorage.getItem(CUSTOM_NETWORKS) ?? "[]");
+      const idx = CustomNetworks.findIndex(cn => cn.name == network.name);
+      if (idx == -1) CustomNetworks.push(network);
+      localStorage.setItem(CUSTOM_NETWORKS, JSON.stringify(CustomNetworks));
+    },
+  }
 });
