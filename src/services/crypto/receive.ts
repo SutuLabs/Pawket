@@ -26,7 +26,7 @@ export interface CnsDetail {
     hash: string;
     collection?: string;
     name?: string;
-  }
+  };
   hintPuzzle: string;
   coin: OriginCoin;
   address: string;
@@ -39,7 +39,7 @@ export interface NftDetail {
     hash: string;
     collection?: string;
     name?: string;
-  }
+  };
   hintPuzzle: string;
   coin: OriginCoin;
   address: string;
@@ -61,20 +61,28 @@ export interface AssetsList {
 
 export type CoinClassType = "CatV2" | "DidV1" | "NftV1";
 
-export type OptionalOneFoundParameterType = { did?: DidDetail, nft?: NftDetail };
+export type OptionalOneFoundParameterType = { did?: DidDetail; nft?: NftDetail };
 
 const coinSolutions = new Map<string, CoinSpend>();
 
 class Receive {
-  async getAssetsRequestDetail(sk_hex: string, startId: number, maxId: number, customCats: CustomCat[], tokenInfo: TokenInfo, prefix: string, symbol: string, catModName: "cat_v1" | "cat_v2"): Promise<TokenPuzzleDetail[]> {
-
+  async getAssetsRequestDetail(
+    sk_hex: string,
+    startId: number,
+    maxId: number,
+    customCats: CustomCat[],
+    tokenInfo: TokenInfo,
+    prefix: string,
+    symbol: string,
+    catModName: "cat_v1" | "cat_v2"
+  ): Promise<TokenPuzzleDetail[]> {
     const privkey = utility.fromHexString(sk_hex);
     const xchToken = { symbol, puzzles: await puzzle.getPuzzleDetails(privkey, prefix, startId, maxId) };
     const tokens: TokenPuzzleDetail[] = [xchToken];
     const standardAssets = Object.values(tokenInfo)
-      .filter(_ => _.id)
-      .map(_ => ({ symbol: _.symbol, id: _.id ?? "" }));
-    const accountAssets = (customCats ?? []).map(_ => ({ symbol: _.name, id: _.id }));
+      .filter((_) => _.id)
+      .map((_) => ({ symbol: _.symbol, id: _.id ?? "" }));
+    const accountAssets = (customCats ?? []).map((_) => ({ symbol: _.name, id: _.id }));
     const assets = standardAssets.concat(accountAssets);
 
     for (let i = 0; i < assets.length; i++) {
@@ -91,9 +99,9 @@ class Receive {
     includeSpentCoins: boolean,
     rpcUrl: string,
     hint = false,
-    coinType: CoinClassType | undefined = undefined,
+    coinType: CoinClassType | undefined = undefined
   ): Promise<GetRecordsResponse> {
-    const hashes = tokens.reduce((acc, token) => acc.concat(token.puzzles.map(_ => _.hash)), ([] as string[]));
+    const hashes = tokens.reduce((acc, token) => acc.concat(token.puzzles.map((_) => _.hash)), [] as string[]);
 
     const resp = await fetch(rpcUrl + "Wallet/records", {
       method: "POST",
@@ -112,8 +120,8 @@ class Receive {
     return json;
   }
 
-  getAssetsDict(requests: TokenPuzzleAddress[]): { [key: string]: { symbol: string, puzzle: PuzzleAddress } } {
-    const dictAssets: { [key: string]: { symbol: string, puzzle: PuzzleAddress } } = {};
+  getAssetsDict(requests: TokenPuzzleAddress[]): { [key: string]: { symbol: string; puzzle: PuzzleAddress } } {
+    const dictAssets: { [key: string]: { symbol: string; puzzle: PuzzleAddress } } = {};
     for (let i = 0; i < requests.length; i++) {
       const t = requests[i];
       for (let j = 0; j < t.puzzles.length; j++) {
@@ -125,7 +133,7 @@ class Receive {
   }
 
   async getActivities(tokens: TokenPuzzleAddress[], includeSpentCoins: boolean, rpcUrl: string): Promise<CoinRecord[]> {
-    const records = (await this.getCoinRecords(tokens, includeSpentCoins, rpcUrl));
+    const records = await this.getCoinRecords(tokens, includeSpentCoins, rpcUrl);
     const activities = this.convertActivities(tokens, records);
     return activities;
   }
@@ -133,11 +141,16 @@ class Receive {
   convertActivities(tokens: TokenPuzzleAddress[], records: GetRecordsResponse): CoinRecord[] {
     const dictAssets = this.getAssetsDict(tokens);
 
-    const activities = records.coins.reduce(
-      (acc, puzzle) => acc.concat(puzzle.records
-        .reduce<CoinRecord[]>((recacc, rec) => recacc.concat(rec), [])
-        .map(rec => Object.assign({}, rec, { symbol: dictAssets[puzzle.puzzleHash].symbol }))),
-      ([] as CoinRecord[]))
+    const activities = records.coins
+      .reduce(
+        (acc, puzzle) =>
+          acc.concat(
+            puzzle.records
+              .reduce<CoinRecord[]>((recacc, rec) => recacc.concat(rec), [])
+              .map((rec) => Object.assign({}, rec, { symbol: dictAssets[puzzle.puzzleHash].symbol }))
+          ),
+        [] as CoinRecord[]
+      )
       .sort((a, b) => b.timestamp - a.timestamp);
     return activities;
   }
@@ -150,13 +163,14 @@ class Receive {
     for (let i = 0; i < tokens.length; i++) {
       const symbol = tokens[i].symbol;
       tokenBalances[symbol] = {
-        amount: records.coins.filter(_ => dictAssets[_.puzzleHash].symbol == symbol).reduce((pv, cur) => pv + BigInt(cur.balance), 0n),
-        addresses: tokens[i].puzzles
-          .map<AccountTokenAddress>(_ => ({
-            address: _.address,
-            type: dictAssets[_.hash].puzzle.type,
-            coins: (records.coins.find(c => _.hash == c.puzzleHash) || { records: [] }).records,
-          })),
+        amount: records.coins
+          .filter((_) => dictAssets[_.puzzleHash].symbol == symbol)
+          .reduce((pv, cur) => pv + BigInt(cur.balance), 0n),
+        addresses: tokens[i].puzzles.map<AccountTokenAddress>((_) => ({
+          address: _.address,
+          type: dictAssets[_.hash].puzzle.type,
+          coins: (records.coins.find((c) => _.hash == c.puzzleHash) || { records: [] }).records,
+        })),
       };
     }
 
@@ -166,7 +180,7 @@ class Receive {
   async getAssets(
     records: GetRecordsResponse,
     rpcUrl: string,
-    oneFound: ((parameter: OptionalOneFoundParameterType) => void) | undefined = undefined,
+    oneFound: ((parameter: OptionalOneFoundParameterType) => void) | undefined = undefined
   ): Promise<AssetsList> {
     const nftList: NftDetail[] = [];
     const didList: DidDetail[] = [];
@@ -210,7 +224,7 @@ class Receive {
         const didResult = await analyzeDidCoin(scoin.puzzle_reveal, coinRecords.puzzleHash, ocoin, scoin.solution);
         if (didResult) {
           const did: DidDetail = {
-            name: `DID${didList.length + 1}`,
+            name: puzzle.getAddressFromPuzzleHash(didResult.launcherId, "did:chia:"),
             did: puzzle.getAddressFromPuzzleHash(didResult.launcherId, "did:chia:"),
             hintPuzzle: coinRecords.puzzleHash,
             coin: convertToOriginCoin(coinRecord.coin),
@@ -228,4 +242,3 @@ class Receive {
 }
 
 export default new Receive();
-

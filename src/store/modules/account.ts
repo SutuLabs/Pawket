@@ -31,14 +31,18 @@ export function getAllCats(account: AccountEntity): CustomCat[] {
 }
 
 function setDidName(dids: DidDetail[]): void {
-  const didNames = localStorage.getItem("DID_NAMES");
-  if (didNames != null) {
-    const names = JSON.parse(didNames);
-    for (const n of names) {
-      const idx = dids.findIndex((d) => d.did == n.did);
-      if (idx > -1) dids[idx].name = n.name;
+  const didNames = localStorage.getItem("DID_NAMES") ?? "";
+  const names: DidName[] = JSON.parse(didNames);
+  for (let i = 0; i < dids.length; i++) {
+    const idx = names.findIndex((n) => n.did == dids[i].did);
+    if (idx > -1) {
+      dids[i].name = names[idx].name;
+    } else {
+      dids[i].name = `DID${i + 1}`;
+      names.push({ name: `DID${i + 1}`, did: dids[i].did });
     }
   }
+  localStorage.setItem("DID_NAMES", JSON.stringify(names));
 }
 
 export interface DidName {
@@ -259,17 +263,17 @@ export async function getAccountAddressDetails(
   const requests: TokenPuzzleAddress[] =
     account.type == "Address"
       ? <TokenPuzzleAddress[]>[
-        { symbol: xchSymbol(), puzzles: [{ hash: account.puzzleHash, type: "Unknown", address: account.firstAddress }] },
-      ]
+          { symbol: xchSymbol(), puzzles: [{ hash: account.puzzleHash, type: "Unknown", address: account.firstAddress }] },
+        ]
       : await getAccountAddressDetailsExternal(
-        account,
-        getAccountCats(account),
-        store.state.account.tokenInfo,
-        xchPrefix(),
-        xchSymbol(),
-        maxId,
-        "cat_v2"
-      );
+          account,
+          getAccountCats(account),
+          store.state.account.tokenInfo,
+          xchPrefix(),
+          xchSymbol(),
+          maxId,
+          "cat_v2"
+        );
 
   return requests;
 }
