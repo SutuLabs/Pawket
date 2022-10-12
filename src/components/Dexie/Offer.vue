@@ -44,7 +44,7 @@
                   <template v-slot:content>
                     <div class="card">
                       <div class="card-image">
-                        <figure class="image is-4by3">
+                        <figure class="image is-1by1">
                           <img :src="offered.nft_data.data_uris[0]" alt="Image" />
                         </figure>
                       </div>
