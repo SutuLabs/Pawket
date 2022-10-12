@@ -263,17 +263,17 @@ export async function getAccountAddressDetails(
   const requests: TokenPuzzleAddress[] =
     account.type == "Address"
       ? <TokenPuzzleAddress[]>[
-          { symbol: xchSymbol(), puzzles: [{ hash: account.puzzleHash, type: "Unknown", address: account.firstAddress }] },
-        ]
+        { symbol: xchSymbol(), puzzles: [{ hash: account.puzzleHash, type: "Unknown", address: account.firstAddress }] },
+      ]
       : await getAccountAddressDetailsExternal(
-          account,
-          getAccountCats(account),
-          store.state.account.tokenInfo,
-          xchPrefix(),
-          xchSymbol(),
-          maxId,
-          "cat_v2"
-        );
+        account,
+        getAccountCats(account),
+        store.state.account.tokenInfo,
+        xchPrefix(),
+        xchSymbol(),
+        maxId,
+        "cat_v2"
+      );
 
   return requests;
 }
