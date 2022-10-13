@@ -21,7 +21,7 @@
                 >{{ $t("settings.menu.items.addressBook.title") }}</router-link
               >
             </li>
-            <li role="presentation" :class="{ 'is-active': path == '/settings/network' }">
+            <li role="presentation" :class="{ 'is-active': path == '/settings/network' }" v-if="experimentMode">
               <router-link role="tab" :to="{ path: '/settings/network' }"
                 ><b-icon icon="access-point-network"></b-icon>{{ $t("settings.menu.items.network.title") }}</router-link
               >
@@ -99,7 +99,7 @@
           <b-icon class="is-pulled-right has-text-grey" icon="chevron-right"> </b-icon>
         </div>
       </router-link>
-      <router-link role="tab" :to="{ path: '/settings/network' }" class="panel-block py-0 my-0">
+      <router-link role="tab" :to="{ path: '/settings/network' }" class="panel-block py-0 my-0" v-if="experimentMode">
         <div class="is-11 is-flex my-1 py-1">
           <div class="mr-2 py-1">
             <b-icon icon="access-point-network"></b-icon>
@@ -197,6 +197,10 @@ export default class Settings extends Vue {
 
   get path(): string {
     return this.$route.path;
+  }
+
+  get experimentMode(): boolean {
+    return store.state.vault.experiment;
   }
 
   get debugMode(): boolean {

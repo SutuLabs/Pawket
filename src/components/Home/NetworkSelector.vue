@@ -24,10 +24,12 @@
         <span :class="getdotStyle(network.name, false)"> <i class="mdi mdi-brightness-1"></i> </span
         ><span>{{ network.name }}</span></b-dropdown-item
       >
-      <hr class="dropdown-divider" />
-      <b-button type="is-primary" icon-left="plus" size="is-small" outlined @click="addNetwork()">{{
-        $t("addNetwork.ui.button.addNetwork")
-      }}</b-button>
+      <div v-if="experimentMode">
+        <hr class="dropdown-divider" />
+        <b-button type="is-primary" icon-left="plus" size="is-small" outlined @click="addNetwork()">{{
+          $t("addNetwork.ui.button.addNetwork")
+        }}</b-button>
+      </div>
     </b-dropdown>
   </div>
 </template>
@@ -46,6 +48,10 @@ export default class NetworkSelector extends Vue {
 
   set networkId(value: string) {
     store.dispatch("switchNetwork", value);
+  }
+
+  get experimentMode(): boolean {
+    return store.state.vault.experiment;
   }
 
   get networks(): NetworkInfo {
