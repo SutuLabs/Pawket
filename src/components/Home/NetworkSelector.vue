@@ -1,26 +1,33 @@
 <template>
   <div>
-    <div :class="{ dropdown: true, 'is-active': isActive }">
-      <div class="dropdown-trigger button is-white" @click="isActive = !isActive">
-        <span :class="getdotStyle(networkId)"> <i class="mdi mdi-brightness-1"></i> </span>
-        <span>{{ networkId }}</span>
-        <span class="icon is-small"> <i class="mdi mdi-menu-down"></i> </span>
-      </div>
-      <div class="dropdown-menu" id="dropdown-menu" role="menu">
-        <div class="dropdown-content">
-          <button
-            class="button is-white dropdown-item has-text-left"
-            v-for="network of networks"
-            :key="network.name"
-            @click="networkId = network.name"
-          >
-            <span :class="getdotStyle(network.name)"> <i class="mdi mdi-brightness-1"></i> </span><span>{{ network.name }}</span>
-          </button>
-          <hr class="dropdown-divider" />
-          <b-button type="is-primary" icon-left="plus" size="is-small" outlined @click="addNetwork()">Add Network</b-button>
-        </div>
-      </div>
-    </div>
+    <b-dropdown aria-role="list" :triggers="['click', 'hover']" :mobile-modal="false">
+      <template #trigger>
+        <button class="button is-white" aria-haspopup="true" aria-controls="dropdown-menu">
+          <span :class="getdotStyle(networkId)"> <i class="mdi mdi-brightness-1"></i> </span>
+          <span>{{ networkId }}</span>
+          <span class="icon is-small"> <i class="mdi mdi-menu-down"></i> </span>
+        </button>
+      </template>
+      <button
+        :class="{
+          button: true,
+          'is-white': true,
+          'dropdown-item': true,
+          'has-text-left': true,
+          'is-active': networkId == network.name,
+        }"
+        v-for="network of networks"
+        :key="network.name"
+        @click="networkId = network.name"
+      >
+        <span :class="getdotStyle(network.name, false)"> <i class="mdi mdi-brightness-1"></i> </span
+        ><span>{{ network.name }}</span>
+      </button>
+      <hr class="dropdown-divider" />
+      <b-button type="is-primary" icon-left="plus" size="is-small" outlined @click="addNetwork()">{{
+        $t("addNetwork.ui.button.addNetwork")
+      }}</b-button>
+    </b-dropdown>
   </div>
 </template>
 <script lang="ts">
@@ -32,8 +39,6 @@ import AddNetwork from "./AddNetwork.vue";
 
 @Component({})
 export default class NetworkSelector extends Vue {
-  isActive = false;
-
   get networkId(): string {
     return store.state.network.networkId;
   }
@@ -50,9 +55,9 @@ export default class NetworkSelector extends Vue {
     return store.state.account.offline;
   }
 
-  getdotStyle(networkId: string): string {
+  getdotStyle(networkId: string, greyOnOffline = true): string {
     let color = "has-text-grey";
-    if (this.offline) {
+    if (this.offline && greyOnOffline) {
       color = "has-text-dark";
     } else {
       if (networkId == "testnet10") color = "has-text-info";

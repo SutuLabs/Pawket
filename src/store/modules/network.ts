@@ -1,6 +1,7 @@
 import store from "@/store";
 import { TokenInfo } from "@/models/account";
 import puzzle from "@/services/crypto/puzzle";
+import Vue from "vue";
 
 export function xchPrefix(): string {
   return store.state.network.prefix;
@@ -14,10 +15,12 @@ export function rpcUrl(): string {
 export function chainId(): string {
   return store.state.network.network.chainId;
 }
-
 export function ensureAddress(address: string | undefined): string {
   if (!address) return "";
   return puzzle.getAddressFromPuzzleHash(puzzle.getPuzzleHashFromAddress(address), xchPrefix());
+}
+export function isDefaultNetwork(name: string): boolean {
+  return name == "mainnet" || name == "testnet10";
 }
 
 export interface NetworkDetail {
@@ -85,7 +88,7 @@ store.registerModule<INetworkState>("network", {
     };
     const CustomNetworks: NetworkDetail[] = JSON.parse(localStorage.getItem(CUSTOM_NETWORKS) ?? "[]");
     CustomNetworks.forEach(network => {
-      if (network.name != "mainnet" && network.name != 'testnet') networks[network.name] = network;
+      if (!isDefaultNetwork(network.name)) networks[network.name] = network;
     })
     const defaultNetworkId = networks.mainnet.name;
     const networkId = localStorage.getItem(NETWORK_ID_KEY) || defaultNetworkId;
@@ -116,12 +119,21 @@ store.registerModule<INetworkState>("network", {
       }
       localStorage.setItem(NETWORK_ID_KEY, state.networkId);
     },
-    addNetwork({ state }, network: NetworkDetail) {
-      if (state.networks[network.name]) return;
-      state.networks[network.name] = network;
+    addOrUpdateNetwork({ state }, network: NetworkDetail) {
+      if (isDefaultNetwork(network.name)) return;
+      Vue.set(state.networks, network.name, network);
       const CustomNetworks: NetworkDetail[] = JSON.parse(localStorage.getItem(CUSTOM_NETWORKS) ?? "[]");
       const idx = CustomNetworks.findIndex(cn => cn.name == network.name);
       if (idx == -1) CustomNetworks.push(network);
+      else CustomNetworks[idx] = network;
+      localStorage.setItem(CUSTOM_NETWORKS, JSON.stringify(CustomNetworks));
+    },
+    deleteNetwork({ state }, name: string) {
+      if (!state.networks[name]) return;
+      Vue.delete(state.networks, name);
+      const CustomNetworks: NetworkDetail[] = JSON.parse(localStorage.getItem(CUSTOM_NETWORKS) ?? "[]");
+      const idx = CustomNetworks.findIndex(cn => cn.name == name);
+      if (idx > -1) CustomNetworks.splice(idx, 1);
       localStorage.setItem(CUSTOM_NETWORKS, JSON.stringify(CustomNetworks));
     },
   }

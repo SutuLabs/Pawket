@@ -21,6 +21,11 @@
                 >{{ $t("settings.menu.items.addressBook.title") }}</router-link
               >
             </li>
+            <li role="presentation" :class="{ 'is-active': path == '/settings/network' }">
+              <router-link role="tab" :to="{ path: '/settings/network' }"
+                ><b-icon icon="access-point-network"></b-icon>{{ $t("settings.menu.items.network.title") }}</router-link
+              >
+            </li>
             <li role="presentation" :class="{ 'is-active': path == '/settings/collection' }" v-if="debugMode">
               <router-link role="tab" :to="{ path: '/settings/collection' }"
                 ><b-icon icon="account-box-multiple-outline"></b-icon
@@ -88,6 +93,20 @@
           <div class="py-1">
             <p>{{ $t("settings.menu.items.addressBook.title") }}</p>
             <p class="is-size-7 pt-2 has-text-grey">{{ $t("settings.menu.items.addressBook.description") }}</p>
+          </div>
+        </div>
+        <div class="column py-1">
+          <b-icon class="is-pulled-right has-text-grey" icon="chevron-right"> </b-icon>
+        </div>
+      </router-link>
+      <router-link role="tab" :to="{ path: '/settings/network' }" class="panel-block py-0 my-0">
+        <div class="is-11 is-flex my-1 py-1">
+          <div class="mr-2 py-1">
+            <b-icon icon="access-point-network"></b-icon>
+          </div>
+          <div class="py-1">
+            <p>{{ $t("settings.menu.items.network.title") }}</p>
+            <p class="is-size-7 pt-2 has-text-grey">{{ $t("settings.menu.items.network.description") }}</p>
           </div>
         </div>
         <div class="column py-1">

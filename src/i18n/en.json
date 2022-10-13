@@ -867,6 +867,10 @@
           "title": "Address Book",
           "description": "Add, edit, remove, and manage your contact addresses"
         },
+        "network": {
+          "title": "Network",
+          "description": "Add, edit, remove, and manage your network"
+        },
         "collection": {
           "title": "Collection",
           "description": "Create, edit, remove, and manage your collection"
@@ -1333,7 +1337,10 @@
   },
   "addNetwork": {
     "ui": {
-      "title": "Add Network",
+      "title": {
+        "add": "Add Network",
+        "edit": "Edit Network"
+      },
       "warning": "A malicious network provider can lie about the state of the blockchain and record your network activity. Only add custom networks you trust.",
       "label": {
         "networkName": "Network Name",
@@ -1343,6 +1350,14 @@
         "addressPrefix": "Address Prefix",
         "decimalPlace": "Currency Decimal Places",
         "blockExplorer": "Block Explorer URL (Optional)"
+      },
+      "button": {
+        "addNetwork": "Add Network"
+      }
+    },
+    "message": {
+      "notification": {
+        "networkExists": "This network name already exists!"
       }
     }
   }

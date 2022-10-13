@@ -1,7 +1,10 @@
 <template>
   <div class="modal-card">
     <header>
-      <top-bar :title="$t('addNetwork.ui.title')" @close="cancel()"></top-bar>
+      <top-bar
+        :title="mode == 'Add' ? $t('addNetwork.ui.title.add') : $t('addNetwork.ui.title.edit')"
+        @close="cancel()"
+      ></top-bar>
     </header>
     <section class="modal-card-body">
       <b-notification type="is-warning" has-icon role="alert" :closable="false">
@@ -11,6 +14,7 @@
         <b-input
           v-model="networkName"
           required
+          :disabled="mode == 'View'"
           maxlength="36"
           ref="networkName"
           oninvalid="setCustomValidity(' ')"
@@ -21,6 +25,7 @@
         <b-input
           v-model="rpcUrl"
           required
+          :disabled="mode == 'View'"
           ref="rpcUrl"
           oninvalid="setCustomValidity(' ')"
           oninput="setCustomValidity('')"
@@ -30,6 +35,7 @@
         <b-input
           v-model="chainId"
           required
+          :disabled="mode == 'View'"
           ref="chainId"
           oninvalid="setCustomValidity(' ')"
           oninput="setCustomValidity('')"
@@ -39,6 +45,7 @@
         <b-input
           v-model="currencySymbol"
           required
+          :disabled="mode == 'View'"
           ref="currencySymbol"
           oninvalid="setCustomValidity(' ')"
           oninput="setCustomValidity('')"
@@ -48,36 +55,46 @@
         <b-input
           v-model="addressPrefix"
           required
+          :disabled="mode == 'View'"
           ref="addressPrefix"
           oninvalid="setCustomValidity(' ')"
           oninput="setCustomValidity('')"
         ></b-input>
       </b-field>
       <b-field :label="$t('addNetwork.ui.label.decimalPlace')">
-        <b-numberinput v-model="decimalPlace" min="0" min-step="1"></b-numberinput>
+        <b-numberinput v-model="decimalPlace" min="0" min-step="1" :disabled="mode == 'View'"></b-numberinput>
       </b-field>
       <b-field :label="$t('addNetwork.ui.label.blockExplorer')">
-        <b-input v-model="blockExplorer"></b-input>
+        <b-input v-model="blockExplorer" :disabled="mode == 'View'"></b-input>
       </b-field>
     </section>
-    <footer class="modal-card-body">
+    <footer class="modal-card-foot is-block">
       <b-button @click="cancel()" class="is-pulled-left">{{ $t("addressBookField.ui.button.cancel") }}</b-button>
       <div class="is-pulled-right">
-        <b-button type="is-primary" @click="save()">{{ $t("addressBookField.ui.button.save") }}</b-button>
+        <b-button type="is-primary" @click="save()" v-show="mode != 'View'">{{
+          $t("addressBookField.ui.button.save")
+        }}</b-button>
       </div>
     </footer>
   </div>
 </template>
 <script lang="ts">
+import { TokenInfo } from "@/models/account";
 import store from "@/store";
 import { NetworkDetail } from "@/store/modules/network";
-import { Component, Vue } from "vue-property-decorator";
+import { NotificationProgrammatic as Notification } from "buefy";
+import { Component, Prop, Vue } from "vue-property-decorator";
 import TopBar from "../Common/TopBar.vue";
+
+type Mode = "Add" | "Edit" | "View";
 
 @Component({
   components: { TopBar },
 })
 export default class AddNetwork extends Vue {
+  @Prop() inputNetwork!: NetworkDetail;
+  @Prop({ default: "Add" }) mode!: Mode;
+
   networkName = "";
   rpcUrl = "";
   chainId = "";
@@ -104,6 +121,20 @@ export default class AddNetwork extends Vue {
 
   save(): void {
     if (!this.validate()) return;
+    if (this.mode == "Add" && store.state.network.networks[this.networkName]) {
+      Notification.open({
+        message: this.$tc("addNetwork.message.notification.networkExists"),
+        type: "is-danger",
+        duration: 5000,
+      });
+      return;
+    }
+    const tokenInfo: TokenInfo = {};
+    tokenInfo[this.currencySymbol] = {
+      symbol: this.currencySymbol,
+      decimal: this.decimalPlace,
+      unit: this.currencySymbol,
+    };
     const network: NetworkDetail = {
       name: this.networkName,
       rpcUrl: this.rpcUrl,
@@ -112,10 +143,24 @@ export default class AddNetwork extends Vue {
       chainId: this.chainId,
       explorerUrl: this.blockExplorer,
       spaceScanUrl: this.blockExplorer,
-      tokenInfo: {},
+      tokenInfo: tokenInfo,
     };
-    store.dispatch("addNetwork", network);
-    return;
+    store.dispatch("addOrUpdateNetwork", network);
+    this.cancel();
+  }
+
+  mounted(): void {
+    if (this.inputNetwork) {
+      this.networkName = this.inputNetwork.name;
+      this.rpcUrl = this.inputNetwork.rpcUrl;
+      this.chainId = this.inputNetwork.chainId;
+      this.currencySymbol = this.inputNetwork.symbol;
+      this.addressPrefix = this.inputNetwork.prefix;
+      this.decimalPlace = this.inputNetwork.tokenInfo[this.currencySymbol]
+        ? this.inputNetwork.tokenInfo[this.currencySymbol].decimal
+        : 12;
+      this.blockExplorer = this.inputNetwork.explorerUrl;
+    }
   }
 }
 </script>
