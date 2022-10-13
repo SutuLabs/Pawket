@@ -56,9 +56,7 @@ export default class Did extends Vue {
   }
 
   get didNames(): DidName[] {
-    const didNames = localStorage.getItem("DID_NAMES");
-    if (didNames == null) return [];
-    const names: DidName[] = JSON.parse(didNames);
+    const names: DidName[] = JSON.parse(localStorage.getItem("DID_NAMES") || "[]");
     return names;
   }
 
