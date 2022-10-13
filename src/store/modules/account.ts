@@ -31,8 +31,12 @@ export function getAllCats(account: AccountEntity): CustomCat[] {
 }
 
 function setDidName(dids: DidDetail[]): void {
-  const didNames = localStorage.getItem("DID_NAMES") ?? "";
-  const names: DidName[] = JSON.parse(didNames);
+  let names: DidName[] = [];
+  try {
+    names = JSON.parse(localStorage.getItem("DID_NAMES") ?? "[]") as DidName[];
+  } catch (error) {
+    names = [];
+  }
   for (let i = 0; i < dids.length; i++) {
     const idx = names.findIndex((n) => n.did == dids[i].did);
     if (idx > -1) {
