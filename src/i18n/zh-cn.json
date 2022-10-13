@@ -21,6 +21,7 @@
     },
     "message": {
       "saved": "已保存",
+      "added": "已添加",
       "noResult": "结果为空",
       "uploadSuccess": "上传成功"
     }
@@ -867,6 +868,10 @@
           "title": "地址簿",
           "description": "添加、编辑、删除、管理你的联系人地址"
         },
+        "network": {
+          "title": "网络",
+          "description": "添加、编辑、删除、管理你的网络"
+        },
         "collection": {
           "title": "收藏集",
           "description": "创建、编辑、删除和管理您的收藏集"
@@ -1328,6 +1333,35 @@
       "label": {
         "royaltyAddress": "版权费地址",
         "royaltyPercentage": "版权费"
+      }
+    }
+  },
+  "addNetwork": {
+    "ui": {
+      "title": {
+        "add": "添加网络",
+        "edit": "编辑网络"
+      },
+      "warning": "恶意网络提供商可能会报告错误的区块链信息并记录你的网络活动。请添加你信任的自定义网络。",
+      "label": {
+        "networkName": "网络名称",
+        "rpcUrl": "RPC 地址",
+        "chainId": "链地址",
+        "currencySymbol": "货币符号",
+        "addressPrefix": "地址前缀",
+        "decimalPlace": "货币小数位数",
+        "blockExplorer": "区块链浏览器地址（选填）"
+      },
+      "button": {
+        "addNetwork": "添加网络"
+      }
+    },
+    "message": {
+      "notification": {
+        "networkExists": "网络名称已存在!"
+      },
+      "confirmation": {
+        "delete": "确定要移除该网络吗？"
       }
     }
   }

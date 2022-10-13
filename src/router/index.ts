@@ -144,6 +144,10 @@ const routes: Array<RouteConfig> = [
         component: () => import(/* webpackChunkName: "settings" */ "@/components/AddressBook/AddressBook.vue"),
       },
       {
+        path: "network",
+        component: () => import(/* webpackChunkName: "settings" */ "@/components/Settings/Network.vue"),
+      },
+      {
         path: "collection",
         component: () => import(/* webpackChunkName: "settings" */ "@/components/Collection/Collection.vue"),
       },
