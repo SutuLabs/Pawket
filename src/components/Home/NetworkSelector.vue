@@ -8,7 +8,8 @@
           <span class="icon is-small"> <i class="mdi mdi-menu-down"></i> </span>
         </button>
       </template>
-      <button
+      <b-dropdown-item
+        aria-role="listitem"
         :class="{
           button: true,
           'is-white': true,
@@ -21,8 +22,8 @@
         @click="networkId = network.name"
       >
         <span :class="getdotStyle(network.name, false)"> <i class="mdi mdi-brightness-1"></i> </span
-        ><span>{{ network.name }}</span>
-      </button>
+        ><span>{{ network.name }}</span></b-dropdown-item
+      >
       <hr class="dropdown-divider" />
       <b-button type="is-primary" icon-left="plus" size="is-small" outlined @click="addNetwork()">{{
         $t("addNetwork.ui.button.addNetwork")

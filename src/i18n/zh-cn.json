@@ -21,6 +21,7 @@
     },
     "message": {
       "saved": "已保存",
+      "added": "已添加",
       "noResult": "结果为空",
       "uploadSuccess": "上传成功"
     }
@@ -1358,6 +1359,9 @@
     "message": {
       "notification": {
         "networkExists": "网络名称已存在!"
+      },
+      "confirmation": {
+        "delete": "确定要移除该网络吗？"
       }
     }
   }

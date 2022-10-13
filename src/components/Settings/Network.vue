@@ -92,7 +92,16 @@ export default class Network extends Vue {
   }
 
   deleteNetwork(name: string): void {
-    store.dispatch("deleteNetwork", name);
+    this.$buefy.dialog.confirm({
+      message: this.$tc("addNetwork.message.confirmation.delete"),
+      confirmText: this.$tc("common.button.confirm"),
+      cancelText: this.$tc("common.button.cancel"),
+      trapFocus: true,
+      type: "is-danger",
+      onConfirm: () => {
+        store.dispatch("deleteNetwork", name);
+      },
+    });
   }
 }
 </script>

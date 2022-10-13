@@ -14,7 +14,7 @@
         <b-input
           v-model="networkName"
           required
-          :disabled="mode == 'View'"
+          :disabled="mode != 'Add'"
           maxlength="36"
           ref="networkName"
           oninvalid="setCustomValidity(' ')"
@@ -71,15 +71,14 @@
     <footer class="modal-card-foot is-block">
       <b-button @click="cancel()" class="is-pulled-left">{{ $t("addressBookField.ui.button.cancel") }}</b-button>
       <div class="is-pulled-right">
-        <b-button type="is-primary" @click="save()" v-show="mode != 'View'">{{
-          $t("addressBookField.ui.button.save")
-        }}</b-button>
+        <b-button type="is-primary" @click="save()" v-show="mode != 'View'">{{ $t("addressBookField.ui.button.save") }}</b-button>
       </div>
     </footer>
   </div>
 </template>
 <script lang="ts">
 import { TokenInfo } from "@/models/account";
+import { notifyPrimary } from "@/services/notification/notification";
 import store from "@/store";
 import { NetworkDetail } from "@/store/modules/network";
 import { NotificationProgrammatic as Notification } from "buefy";
@@ -146,6 +145,8 @@ export default class AddNetwork extends Vue {
       tokenInfo: tokenInfo,
     };
     store.dispatch("addOrUpdateNetwork", network);
+    if (this.mode == "Add") notifyPrimary(this.$tc("common.message.added"));
+    if (this.mode == "Edit") notifyPrimary(this.$tc("common.message.saved"));
     this.cancel();
   }
 

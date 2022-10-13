@@ -21,6 +21,7 @@
     },
     "message": {
       "saved": "Saved.",
+      "added": "Added.",
       "noResult": "No result.",
       "uploadSuccess": "Upload successfully."
     }
@@ -1358,6 +1359,9 @@
     "message": {
       "notification": {
         "networkExists": "This network name already exists!"
+      },
+      "confirmation": {
+        "delete": "Are you sure to remove this network?"
       }
     }
   }
