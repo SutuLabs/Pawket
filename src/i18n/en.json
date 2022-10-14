@@ -354,7 +354,7 @@
       "ui": {
         "title": "Take Offer",
         "hint": {
-          "pasteOffer": "Paste your offer here, e.g. offer1...",
+          "pasteOffer": "Paste your offer data here, or upload your offer file.",
           "error": "Your offer string is incorrect."
         },
         "panel": {
@@ -371,7 +371,8 @@
         "button": {
           "cancel": "Cancel",
           "sign": "Sign",
-          "submit": "Submit"
+          "submit": "Submit",
+          "upload": "Upload Offer File"
         },
         "field": {
           "offer": "Offer"
@@ -391,7 +392,8 @@
       },
       "messages": {
         "failedToSign": "Failed to take offer.",
-        "unsupportOfferNftOffer": "This type of offer is not supported yet."
+        "unsupportOfferNftOffer": "This type of offer is not supported yet.",
+        "wrongFileType": "Please upload a file in .offer format."
       }
     }
   },
