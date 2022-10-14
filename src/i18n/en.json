@@ -1252,6 +1252,7 @@
         "scan": "Scan",
         "token": "Token",
         "nft": "NFT",
+        "did": "DID",
         "myCats": "My CATs",
         "maxAddress": "Maximum number of scan addresses",
         "scanning": "Scanning",
@@ -1269,7 +1270,8 @@
         "continue": "Continue",
         "reScan": "Rescan",
         "add": "Add",
-        "send": "Send"
+        "send": "Send",
+        "sign": "Sign"
       }
     },
     "message": {
