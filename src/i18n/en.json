@@ -392,8 +392,7 @@
       },
       "messages": {
         "failedToSign": "Failed to take offer.",
-        "unsupportOfferNftOffer": "This type of offer is not supported yet.",
-        "wrongFileType": "Please upload a file in .offer format."
+        "unsupportOfferNftOffer": "This type of offer is not supported yet."
       }
     }
   },

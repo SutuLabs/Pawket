@@ -11,7 +11,7 @@
       <template v-if="step == 'Input'">
         <span class="label">
           {{ $t("offer.take.ui.field.offer") }}
-          <b-upload v-model="file" accept=".offer" class="file-label is-pulled-right is-inline-block" @input="afterUpload">
+          <b-upload v-model="file" class="file-label is-pulled-right is-inline-block" @input="afterUpload">
             <b-tag icon="tray-arrow-up" size="is-small">{{ $t("offer.take.ui.button.upload") }}</b-tag>
           </b-upload>
         </span>
@@ -430,16 +430,6 @@ export default class TakeOffer extends Vue {
       return;
     }
     this.file = f[0];
-    if (!this.file.name.endsWith(".offer")) {
-      Notification.open({
-        message: this.$tc("offer.take.messages.wrongFileType"),
-        type: "is-danger",
-        autoClose: false,
-      });
-      this.dragfile = [];
-      this.file = null;
-      return;
-    }
     this.afterUpload(f[0]);
     this.dragfile = [];
   }

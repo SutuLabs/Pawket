@@ -392,8 +392,7 @@
       },
       "messages": {
         "failedToSign": "接受 Offer 失败",
-        "unsupportOfferNftOffer": "这种类型的 NFT Offer 尚不支持",
-        "wrongFileType": "请上传.offer 格式的文件。"
+        "unsupportOfferNftOffer": "这种类型的 NFT Offer 尚不支持"
       }
     }
   },
