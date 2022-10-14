@@ -23,6 +23,9 @@
           <b-radio v-model="option" native-value="NftV1"> {{ $t("scanAssets.ui.label.nft") }} </b-radio>
         </b-field>
         <b-field>
+          <b-radio v-model="option" native-value="DidV1"> {{ $t("scanAssets.ui.label.did") }} </b-radio>
+        </b-field>
+        <b-field>
           <b-radio v-model="option" native-value="CatV2"> {{ $t("scanAssets.ui.label.myCats") }}</b-radio>
         </b-field>
         <b-field :label="$t('scanAssets.ui.label.maxAddress')">
@@ -100,11 +103,31 @@
                     <img :src="nft.metadata.uri" />
                   </span>
                 </td>
-                <td>{{ shorten(nft.address) }}</td>
+                <td>
+                  <key-box :value="nft.address" :showValue="true"></key-box>
+                </td>
                 <td>
                   <b-button type="is-primary" size="is-small" outlined @click="transfer(nft)" :disabled="status == 'Scanning'">{{
                     $t("scanAssets.ui.button.send")
                   }}</b-button>
+                </td>
+              </tr>
+            </tbody>
+            <tbody v-if="option == 'DidV1'">
+              <tr v-for="(did, index) of didList" :key="index">
+                <td>{{ index + 1 }}</td>
+                <td>
+                  <key-box :value="did.did" :showValue="true"></key-box>
+                </td>
+                <td>
+                  <b-button
+                    type="is-primary"
+                    size="is-small"
+                    outlined
+                    :disabled="status == 'Scanning'"
+                    @click="openSignMessage(did.analysis)"
+                    >{{ $t("scanAssets.ui.button.sign") }}</b-button
+                  >
                 </td>
               </tr>
             </tbody>
@@ -114,7 +137,7 @@
                   {{ getCatName(cat.tailProgramHash) }}
                   <b-tag v-if="isImported(unprefix0x(cat.tailProgramHash))">{{ $t("scanAssets.ui.label.imported") }}</b-tag>
                 </td>
-                <td>{{ shorten(unprefix0x(cat.tailProgramHash)) }}</td>
+                <td><key-box :value="unprefix0x(cat.tailProgramHash)" :showValue="true"></key-box></td>
                 <td v-if="!isImported(unprefix0x(cat.tailProgramHash))">
                   <b-button
                     type="is-primary"
@@ -140,7 +163,7 @@
 import { AccountEntity, AccountTokens, CustomCat, OneTokenInfo, TokenInfo } from "@/models/account";
 import { getCatIdDict, getCatNames, getTokenInfo } from "@/services/view/cat";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import receive, { NftDetail, TokenPuzzleAddress, TokenPuzzleDetail } from "@/services/crypto/receive";
+import receive, { DidDetail, NftDetail, TokenPuzzleAddress, TokenPuzzleDetail } from "@/services/crypto/receive";
 import { ensureAddress, rpcUrl, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { CoinRecord, convertToOriginCoin, GetRecordsResponse } from "@/models/wallet";
 import debug from "@/services/api/debug";
@@ -160,13 +183,16 @@ import Send from "../Send/Send.vue";
 import { getAllCats } from "@/store/modules/account";
 import { NotificationProgrammatic as Notification } from "buefy";
 import store from "@/store";
+import { analyzeDidCoin, DidCoinAnalysisResult } from "@/services/coin/did";
+import KeyBox from "../Common/KeyBox.vue";
+import SignMessage from "../Cryptography/SignMessage.vue";
 
-type Option = "Token" | "NftV1" | "CatV2";
+type Option = "Token" | "NftV1" | "CatV2" | "DidV1";
 type Mode = "option" | "result";
 type Status = "Configuring" | "Scanning" | "Paused" | "Canceled" | "Finished";
 const unknownCat = "Unknown CAT";
 
-@Component({})
+@Component({ components: { KeyBox } })
 export default class ScanAssets extends Vue {
   @Prop() public account!: AccountEntity;
   option: Option = "Token";
@@ -178,6 +204,7 @@ export default class ScanAssets extends Vue {
   tails: TailInfo[] = [];
   addressNumberOptions = [100, 500, 1000];
   nftList: NftDetail[] = [];
+  didList: DidDetail[] = [];
   catList: CatCoinAnalysisResult[] = [];
   tokenBalance: AccountTokens = {};
   allRequests: TokenPuzzleAddress[] = [];
@@ -293,6 +320,7 @@ export default class ScanAssets extends Vue {
   reset(): void {
     this.nftList = [];
     this.catList = [];
+    this.didList = [];
     this.tokenBalance = {};
     this.allRecords = [];
     this.allRequests = [];
@@ -413,7 +441,21 @@ export default class ScanAssets extends Vue {
             };
             if (this.nftList.findIndex((n) => n.address == nft.address) == -1) this.nftList.push(nft);
           }
-        } else {
+        }
+        if (this.option == "DidV1") {
+          const didResult = await analyzeDidCoin(scoin.puzzle_reveal, coinRecords.puzzleHash, ocoin, scoin.solution);
+          if (didResult) {
+            const did: DidDetail = {
+              name: puzzle.getAddressFromPuzzleHash(didResult.launcherId, "did:chia:"),
+              did: puzzle.getAddressFromPuzzleHash(didResult.launcherId, "did:chia:"),
+              hintPuzzle: coinRecords.puzzleHash,
+              coin: convertToOriginCoin(coinRecord.coin),
+              analysis: didResult,
+            };
+            if (this.didList.findIndex((d) => d.did == did.did) == -1) this.didList.push(did);
+          }
+        }
+        if (this.option == "CatV2") {
           const catResult = await analyzeCatCoin(scoin.puzzle_reveal);
           if (catResult) {
             if (this.catList.findIndex((c) => c.tailProgramHash == catResult.tailProgramHash) == -1) this.catList.push(catResult);
@@ -472,6 +514,21 @@ export default class ScanAssets extends Vue {
       fullScreen: isMobile(),
       canCancel: [""],
       props: { nft: nft, account: this.account },
+    });
+  }
+
+  openSignMessage(analysis: DidCoinAnalysisResult): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: SignMessage,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      fullScreen: isMobile(),
+      props: {
+        account: this.account,
+        did: analysis,
+      },
     });
   }
 }

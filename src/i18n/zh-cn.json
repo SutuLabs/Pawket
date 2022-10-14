@@ -1252,6 +1252,7 @@
         "scan": "扫描",
         "token": "代币",
         "nft": "NFT",
+        "did": "DID",
         "myCats": "持有的 CAT",
         "maxAddress": "最大扫描地址数量",
         "scanning": "扫描",
@@ -1269,7 +1270,8 @@
         "continue": "继续",
         "reScan": "重新扫描",
         "add": "添加",
-        "send": "发送"
+        "send": "发送",
+        "sign": "签名" 
       }
     },
     "message": {

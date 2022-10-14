@@ -114,7 +114,7 @@ export default class SignMessage extends Vue {
 
   get signName(): string {
     return this.did
-      ? puzzle.getAddressFromPuzzleHash(this.did.hintPuzzle, "did:chia:")
+      ? puzzle.getAddressFromPuzzleHash(this.did.launcherId, "did:chia:")
       : this.nft
       ? puzzle.getAddressFromPuzzleHash(this.nft.p2Owner, "nft")
       : this.xch
