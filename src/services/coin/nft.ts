@@ -18,7 +18,7 @@ import { CannotParsePuzzle, expectModArgs, sexpAssemble, UncurriedPuzzle, uncurr
 import { disassemble, sha256tree } from "clvm_tools";
 import { SExp } from "clvm";
 import { Instance } from "../util/instance";
-import { CnsCoinAnalysisResult, CnsMetadataKeys, CnsMetadataValues } from "@/models/cns";
+import { CnsCoinAnalysisResult, CnsMetadataKeys, CnsMetadataValues } from "@/models/nft";
 
 type MetadataValues = NftMetadataValues | CnsMetadataValues;
 

@@ -6,7 +6,7 @@ import { GetParentPuzzleResponse } from "@/models/api";
 import { Instance } from "@/services/util/instance";
 import { getAccountAddressDetails } from "@/services/util/account";
 
-import { CnsMetadataValues } from "@/models/cns";
+import { CnsMetadataValues } from "@/models/nft";
 import { cnsMetadata, knownCoins } from "./cases/cns.test.data";
 import { CoinSpend, OriginCoin } from "@/models/wallet";
 import { combineSpendBundle, generateNftOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
