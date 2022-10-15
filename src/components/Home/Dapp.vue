@@ -107,6 +107,26 @@
           </a>
         </b-tooltip>
       </div>
+      <div v-if="experimentMode && debugMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+        <b-tooltip label="Encrypt Message" position="is-right">
+          <a href="javascript:void(0)" @click="$router.push('/home/encrypt-message')" class="has-text-link">
+            <div class="has-text-centered">
+              <b-icon icon="lock-outline" size="is-medium"></b-icon>
+              <p class="is-size-7">Encrypt Message</p>
+            </div>
+          </a>
+        </b-tooltip>
+      </div>
+      <div v-if="experimentMode && debugMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+        <b-tooltip label="Decrypt Message" position="is-right">
+          <a href="javascript:void(0)" @click="$router.push('/home/decrypt-message')" class="has-text-link">
+            <div class="has-text-centered">
+              <b-icon icon="lock-open-variant-outline" size="is-medium"></b-icon>
+              <p class="is-size-7">Decrypt Message</p>
+            </div>
+          </a>
+        </b-tooltip>
+      </div>
     </div>
   </div>
 </template>
@@ -126,6 +146,8 @@ import Donate from "@/components/Settings/Donate.vue";
 import { isMobile } from "@/services/view/responsive";
 import { xchPrefix } from "@/store/modules/network";
 import VerifyMessage from "../Cryptography/VerifyMessage.vue";
+import DecryptMessage from "../Cryptography/DecryptMessage.vue";
+import EncryptMessage from "../Cryptography/EncryptMessage.vue";
 
 @Component
 export default class Dapp extends Vue {
@@ -183,6 +205,12 @@ export default class Dapp extends Vue {
         break;
       case "/home/verify-message":
         this.openVerifyMessage();
+        break;
+      case "/home/encrypt-message":
+        this.openEncryptMessage();
+        break;
+      case "/home/decrypt-message":
+        this.openDecryptMessage();
         break;
       default:
         break;
@@ -330,6 +358,36 @@ export default class Dapp extends Vue {
     this.$buefy.modal.open({
       parent: this,
       component: VerifyMessage,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      fullScreen: isMobile(),
+      props: {
+        account: this.account,
+      },
+    });
+  }
+
+  openEncryptMessage(): void {
+    this.checkObserveMode();
+    this.$buefy.modal.open({
+      parent: this,
+      component: EncryptMessage,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      fullScreen: isMobile(),
+      props: {
+        account: this.account,
+      },
+    });
+  }
+
+  openDecryptMessage(): void {
+    this.checkObserveMode();
+    this.$buefy.modal.open({
+      parent: this,
+      component: DecryptMessage,
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
