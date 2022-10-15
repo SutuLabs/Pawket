@@ -12,7 +12,7 @@ import { PrivateKey } from "@chiamine/bls-signatures";
 
 import didcoin2 from "./cases/didcoin2.json"
 import nftcoin6 from "./cases/nftcoin6.json"
-import { ByteBase, CryptographyService, EcPrivateKey } from "@/services/crypto/encryption";
+import { ByteBase, CryptographyService, EcPrivateKey, EcPublicKey } from "@/services/crypto/encryption";
 
 beforeAll(async () => {
   await Instance.init();
@@ -154,6 +154,11 @@ async function testEncryption(plaintext: string): Promise<void> {
 
   const pk1 = ecc.getPublicKey(sk1);
   const pk2 = ecc.getPublicKey(sk2);
+  expect(pk1.toHex()).toMatchSnapshot("pk1");
+  expect(pk2.toHex()).toMatchSnapshot("pk2");
+
+  const pk1Parse = EcPublicKey.parse(pk1.toHex());
+  expect(pk1Parse).toStrictEqual(pk1);
 
   const ran = ByteBase.hexStringToByte('3d0578e760b3abb55eee2a207f86610f');
 
