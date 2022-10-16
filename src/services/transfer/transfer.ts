@@ -86,7 +86,7 @@ class Transfer {
       if (symbol == net.symbol) {
         coin_spends.push(... await stdBundle.generateCoinSpends(tp, puzzles));
       } else {
-        if (net.api == null) throw new Error(`getPuzzle cannot be null when composing cat[${symbol}] spendbundle other than native token[${net.symbol}]`);
+        if (!net.api) throw new Error(`getPuzzle cannot be null when composing cat[${symbol}] spendbundle other than native token[${net.symbol}]`);
         coin_spends.push(... await catBundle.generateCoinSpends(tp, puzzles, catAdditionalConditions, net.api));
       }
     }
