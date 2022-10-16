@@ -41,8 +41,8 @@ export function unprefix0x(str: Hex0x | string | undefined): string {
   return str && str.startsWith("0x") ? str.substring(2) : (str ?? "");
 }
 
-export function skipFirstByte0x(str: string): string {
-  return "0x" + (str.slice(str.startsWith("0x") ? 4 : 2));
+export function skipFirstByte0x(str: string): Hex0x {
+  return "0x" + (str.slice(str.startsWith("0x") ? 4 : 2)) as Hex0x;
 }
 
 export function formatAmount(amount: bigint): string {

@@ -6,7 +6,7 @@ import utility from "./utility";
 import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
 import { Instance } from "../util/instance";
 import { modsdict } from "../coin/mods";
-import { prefix0x, unprefix0x } from "../coin/condition";
+import { Hex0x, prefix0x, unprefix0x } from "../coin/condition";
 import { SExp, isAtom, TToJavascript } from "clvm";
 import { sexpAssemble } from "../coin/analyzer";
 
@@ -151,7 +151,7 @@ class PuzzleMaker {
     return arr;
   }
 
-  public getAddressFromPuzzleHash(puzzleHash: string, prefix: string): string {
+  public getAddressFromPuzzleHash(puzzleHash: Hex0x | string, prefix: string): string {
     const address = bech32m.encode(prefix, bech32m.toWords(utility.fromHexString(unprefix0x(puzzleHash))));
     return address;
   }

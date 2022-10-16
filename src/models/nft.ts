@@ -1,4 +1,4 @@
-import { NftDetail } from "@/services/crypto/receive";
+import { Hex0x } from "@/services/coin/condition";
 import { OriginCoin } from "./wallet";
 
 export interface NftItemAttribute {
@@ -54,7 +54,7 @@ export interface NftCoinAnalysisResult {
   previousOwner: string;
   didOwner: string;
   p2Owner: string;
-  royaltyAddress: string;
+  royaltyAddress: Hex0x;
   tradePricePercentage: number;
   rawMetadata: string;
   metadata: NftMetadataValues;
