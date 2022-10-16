@@ -16,7 +16,7 @@
       </div>
       <template v-if="bundle">
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($t('did.addDid.confirmation'))"></span>
+          <span v-html="$sanitize($tc('did.addDid.confirmation'))"></span>
         </b-notification>
         <send-summary :leadingText="$t('did.addDid.spend')" :amount="amount" :unit="selectedToken" :fee="feeBigInt" :address="address"></send-summary>
         <bundle-summary :account="account" :bundle="bundle" :ignoreError="true"></bundle-summary>
@@ -73,7 +73,7 @@ import FeeSelector from "@/components/Send/FeeSelector.vue";
 import OfflineSendShowBundle from "@/components/Offline/OfflineSendShowBundle.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import SendSummary from "@/components/Send/SendSummary.vue";
-import { chainId, xchSymbol } from "@/store/modules/network";
+import { networkContext, xchSymbol } from "@/store/modules/network";
 import { getCatNames } from "@/services/view/cat";
 import TopBar from "@/components/Common/TopBar.vue";
 import { generateMintDidBundle } from "@/services/coin/did";
@@ -204,7 +204,7 @@ export default class MintDid extends Vue {
       // const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
       // this.bundle = await transfer.generateSpendBundle(plan, this.requests, [], xchSymbol(), chainId());
       this.bundle = await (
-        await generateMintDidBundle(tgt, change, this.feeBigInt, {}, this.availcoins, this.requests, xchSymbol(), chainId())
+        await generateMintDidBundle(tgt, change, this.feeBigInt, {}, this.availcoins, this.requests, networkContext())
       ).spendBundle;
     } catch (error) {
       Notification.open({

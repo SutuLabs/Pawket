@@ -5,8 +5,8 @@ import { PrivateKey } from "@chiamine/bls-signatures";
 import utility from "./utility";
 import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
 import { Instance } from "../util/instance";
-import { modsdict, modsprog } from "../coin/mods";
-import { prefix0x, unprefix0x } from "../coin/condition";
+import { modsdict } from "../coin/mods";
+import { Hex0x, prefix0x, unprefix0x } from "../coin/condition";
 import { SExp, isAtom, TToJavascript } from "clvm";
 import { sexpAssemble } from "../coin/analyzer";
 
@@ -20,11 +20,13 @@ export interface ExecuteResult {
   conditions: ExecuteResultCondition[];
 }
 
+export type PlaintextPuzzle = string;
+
 export type AddressType = "Observed" | "Hardened" | "Unknown";
 
 export interface PuzzleDetail extends PuzzleAddress {
   privateKey: PrivateKey;
-  puzzle: string;
+  puzzle: PlaintextPuzzle;
 }
 
 export interface PuzzleAddress {
@@ -149,7 +151,7 @@ class PuzzleMaker {
     return arr;
   }
 
-  public getAddressFromPuzzleHash(puzzleHash: string, prefix: string): string {
+  public getAddressFromPuzzleHash(puzzleHash: Hex0x | string, prefix: string): string {
     const address = bech32m.encode(prefix, bech32m.toWords(utility.fromHexString(unprefix0x(puzzleHash))));
     return address;
   }
@@ -189,7 +191,13 @@ class PuzzleMaker {
       const puzzle = await getPuzzle(synpubkey);
       const hash = await this.getPuzzleHashFromPuzzle(puzzle);
       const address = this.getAddressFromPuzzleHash(hash, prefix);
-      details.push({ privateKey: privkey, hash, address, puzzle, type: hardened ? "Hardened" : "Observed" });
+      details.push({
+        privateKey: privkey,
+        hash: hash,
+        puzzle: puzzle,
+        address,
+        type: hardened ? "Hardened" : "Observed"
+      });
     }
     for (let i = startIndex; i < endIndex; i++) {
       const privkey = derive([12381, 8444, 2, i]);
@@ -268,11 +276,6 @@ class PuzzleMaker {
       console.warn("failed to parse condition: " + conditon);
       throw err;
     }
-  }
-
-  public getSettlementPaymentsPuzzle(): string {
-    const puzzle = modsprog["settlement_payments"];
-    return puzzle;
   }
 
   public getEmptyPrivateKey(

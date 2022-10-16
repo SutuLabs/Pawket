@@ -1,4 +1,4 @@
-import { NftDetail } from "@/services/crypto/receive";
+import { Hex0x } from "@/services/coin/condition";
 import { OriginCoin } from "./wallet";
 
 export interface NftItemAttribute {
@@ -54,7 +54,7 @@ export interface NftCoinAnalysisResult {
   previousOwner: string;
   didOwner: string;
   p2Owner: string;
-  royaltyAddress: string;
+  royaltyAddress: Hex0x;
   tradePricePercentage: number;
   rawMetadata: string;
   metadata: NftMetadataValues;
@@ -65,7 +65,7 @@ export interface NftCoinAnalysisResult {
 
 export type NftDataKey = "imageUri" | "imageHash" | "metadataUri" | "metadataHash" | "licenseUri" | "licenseHash" | "serialNumber" | "serialTotal";
 
-export interface NftMetadataValues  {
+export interface NftMetadataValues {
   imageUri: string | string[] | undefined;
   imageHash: string | undefined;
   metadataUri: string | string[] | undefined;
@@ -76,3 +76,22 @@ export interface NftMetadataValues  {
   serialTotal: string | undefined;
 };
 export type NftMetadataKeys = { [key in NftDataKey]: string; };
+
+export interface CnsCoinAnalysisResult extends NftCoinAnalysisResult {
+  cnsName: string;
+  cnsAddress: string;
+}
+
+export interface CnsMetadataValues extends NftMetadataValues {
+  address: string | undefined;
+  name: string | undefined;
+  contentHash: string | undefined;
+  text: string | undefined;
+  dns: string | undefined;
+  publicKey: string | undefined;
+  reserved: string | undefined;
+};
+
+export type CnsDataKey = NftDataKey | "address" | "name" | "contentHash" | "text" | "dns" | "publicKey" | "reserved";
+
+export type CnsMetadataKeys = { [key in CnsDataKey]: string; };

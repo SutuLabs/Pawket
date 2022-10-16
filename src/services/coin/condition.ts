@@ -13,10 +13,10 @@ export interface ConditionInfo {
 export type ConditionType = (string | string[])[];
 
 export class CoinConditions {
-  public static CREATE_COIN(puzzlehash: string, amount: bigint): ConditionType {
-    return [ConditionOpcode.CREATE_COIN.toString(), prefix0x(puzzlehash), formatAmount(amount)];
+  public static CREATE_COIN(puzzlehash: Hex0x, amount: bigint): ConditionType {
+    return [ConditionOpcode.CREATE_COIN.toString(), puzzlehash, formatAmount(amount)];
   }
-  public static CREATE_COIN_Extend(puzzlehash: string, amount: bigint, memos: string[]): ConditionType {
+  public static CREATE_COIN_Extend(puzzlehash: Hex0x, amount: bigint, memos: string[]): ConditionType {
     return [...this.CREATE_COIN(puzzlehash, amount), ...((memos && memos.length > 0) ? [memos] : [])];
   }
   public static CREATE_COIN_ANNOUNCEMENT(message: string): ConditionType {
@@ -30,17 +30,19 @@ export class CoinConditions {
   }
 }
 
-export function prefix0x(str: string): string {
+export type Hex0x = "()" | `0x${string}`;
+
+export function prefix0x(str: string): Hex0x {
   if (str == "()") return str;
-  return str.startsWith("0x") ? str : "0x" + str;
+  return str.startsWith("0x") ? (str as Hex0x) : `0x${str}`;
 }
 
-export function unprefix0x(str: string | undefined): string {
+export function unprefix0x(str: Hex0x | string | undefined): string {
   return str && str.startsWith("0x") ? str.substring(2) : (str ?? "");
 }
 
-export function skipFirstByte0x(str: string): string {
-  return "0x" + (str.slice(str.startsWith("0x") ? 4 : 2));
+export function skipFirstByte0x(str: string): Hex0x {
+  return "0x" + (str.slice(str.startsWith("0x") ? 4 : 2)) as Hex0x;
 }
 
 export function formatAmount(amount: bigint): string {

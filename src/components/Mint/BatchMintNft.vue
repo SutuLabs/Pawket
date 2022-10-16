@@ -64,7 +64,7 @@
       </template>
       <template v-if="bundle">
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($t('batchSend.ui.summary.notification'))"></span>
+          <span v-html="$sanitize($tc('batchSend.ui.summary.notification'))"></span>
         </b-notification>
         <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
       </template>
@@ -111,8 +111,7 @@ import { submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import { csvToArray } from "@/services/util/csv";
-import { chainId, xchPrefix, xchSymbol } from "@/store/modules/network";
-import { getLineageProofPuzzle } from "@/services/transfer/call";
+import { networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { NftMetadataValues } from "@/models/nft";
 import { generateMintNftBundle } from "@/services/coin/nft";
 import store from "@/store";
@@ -263,12 +262,10 @@ export default class BatchMintNft extends Vue {
         metadatas,
         this.availcoins,
         this.requests,
-        xchSymbol(),
-        chainId(),
         royaltyAddressHex,
         tradePricePercentage,
+        networkContext(),
         did.analysis,
-        getLineageProofPuzzle,
         undefined,
         addresses
       );

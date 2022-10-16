@@ -1,11 +1,22 @@
 <template>
   <div class="modal-card" @dragenter="dragenter" @dragleave="dragleave">
     <header class="modal-card-head">
-      <p class="modal-card-title">{{ $t("batchSend.ui.title.send") }}</p>
+      <p class="modal-card-title">Encrypt Message</p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
-      <template v-if="!bundle">
+      <template v-if="!result">
+        <b-field label="Encrypt with Profile">
+          <b-dropdown v-model="selectedDid">
+            <template #trigger>
+              <b-button :label="selectedDid ? selectedDid.name : $t('moveNft.ui.label.selectDid')" icon-right="menu-down" />
+              <p class="has-text-danger is-size-7" v-if="!selectedDid">{{ $t("moveNft.ui.label.selectDid") }}</p>
+            </template>
+
+            <b-dropdown-item v-for="did in dids" :key="did.did" :value="did">{{ did.name }}</b-dropdown-item>
+          </b-dropdown>
+        </b-field>
+
         <span class="label">
           <b-tooltip :label="$t('batchSend.ui.tooltip.upload')" position="is-right">
             <b-upload v-model="file" accept=".csv" class="file-label" @input="afterUploadCsv">
@@ -43,36 +54,31 @@
             {{ file.name }}
           </b-tag>
         </b-field>
-
-        <fee-selector v-model="fee"></fee-selector>
       </template>
-      <template v-if="bundle">
-        <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($tc('batchSend.ui.summary.notification'))"></span>
-        </b-notification>
-        <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
+      <template v-if="result">
+        <b-input type="textarea" v-model="result" rows="18"></b-input>
       </template>
     </section>
     <footer class="modal-card-foot is-block">
       <div>
         <b-button :label="$t('batchSend.ui.button.cancel')" class="is-pulled-left" @click="cancel()"></b-button>
-        <b-button
-          :label="$t('batchSend.ui.button.sign')"
-          v-if="!bundle"
-          type="is-primary"
-          @click="sign()"
-          :loading="submitting"
-          :disabled="status == 'Loading' || submitting"
-        ></b-button>
       </div>
       <div>
         <b-button
-          :label="$t('batchSend.ui.button.submit')"
-          v-if="bundle"
+          label="Encrypt"
+          v-if="!result"
+          class="is-pulled-right"
+          type="is-primary"
+          @click="encrypt()"
+          :loading="submitting"
+          :disabled="submitting"
+        ></b-button>
+        <b-button
+          :label="$t('common.button.copy')"
+          v-if="result"
           type="is-primary"
           class="is-pulled-right"
-          @click="submit()"
-          :disabled="submitting"
+          @click="copy()"
         ></b-button>
       </div>
     </footer>
@@ -85,44 +91,45 @@ import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
 import { AccountEntity } from "@/models/account";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { TokenPuzzleDetail } from "@/services/crypto/receive";
-import { SpendBundle } from "@/models/wallet";
+import { DidDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
 import puzzle from "@/services/crypto/puzzle";
-import { prefix0x } from "@/services/coin/condition";
-import transfer, { SymbolCoins, TransferTarget } from "@/services/transfer/transfer";
-import TokenAmountField from "@/components/Send/TokenAmountField.vue";
-import coinHandler from "@/services/transfer/coin";
-import { submitBundle } from "@/services/view/bundle";
-import FeeSelector from "@/components/Send/FeeSelector.vue";
-import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import { csvToArray } from "@/services/util/csv";
-import { networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
+import { xchPrefix, xchSymbol } from "@/store/modules/network";
+import store from "@/store";
+import { prefix0x } from "@/services/coin/condition";
+import utility from "@/services/crypto/utility";
+import { CryptographyService, EcPrivateKey } from "@/services/crypto/encryption";
+import { Bytes } from "clvm";
+import { bech32m } from "@scure/base";
 
 @Component({
   components: {
     KeyBox,
-    FeeSelector,
-    TokenAmountField,
-    BundleSummary,
   },
 })
-export default class BatchSend extends Vue {
+export default class EncryptMessage extends Vue {
   @Prop() public account!: AccountEntity;
+
   public submitting = false;
   public fee = 0;
-  public bundle: SpendBundle | null = null;
-  public availcoins: SymbolCoins | null = null;
-  public status: "Loading" | "Loaded" = "Loading";
   public csv = "";
   public file: File | null = null;
   public dragfile: File[] = [];
   public isDragging = false;
   public transitioning = false;
+  public result = "";
 
   public requests: TokenPuzzleDetail[] = [];
+  public selectedDid: DidDetail | null = null;
+
+  get dids(): DidDetail[] {
+    return this.account.dids || [];
+  }
 
   mounted(): void {
-    this.loadCoins();
+    if (!this.account.dids) {
+      store.dispatch("refreshDids");
+    }
   }
 
   get path(): string {
@@ -136,89 +143,59 @@ export default class BatchSend extends Vue {
 
   @Emit("close")
   close(): void {
-    if (this.path.endsWith("batch-send")) this.$router.back();
+    if (this.path.endsWith("encrypt-message")) this.$router.back();
     return;
   }
 
-  reset(): void {
-    this.bundle = null;
-  }
-
   cancel(): void {
-    if (this.bundle) {
-      this.reset();
-    } else {
-      this.$router.push("/home");
-    }
+    this.$router.push("/home");
   }
 
-  async loadCoins(): Promise<void> {
-    this.bundle = null;
-    this.status = "Loading";
-
-    if (!this.requests || this.requests.length == 0) {
-      this.requests = await coinHandler.getAssetsRequestDetail(this.account);
-    }
-
-    if (!this.availcoins) {
-      this.availcoins = await coinHandler.getAvailableCoins(this.requests, coinHandler.getTokenNames(this.account));
-    }
-
-    this.status = "Loaded";
-  }
-
-  async sign(): Promise<void> {
+  async encrypt(): Promise<void> {
+    if (!this.selectedDid) return;
     this.submitting = true;
+    const ecc = new CryptographyService();
     try {
-      if (!this.account.firstAddress) {
+      const requests = this.account.addressPuzzles.find((_) => _.symbol == xchSymbol())?.puzzles;
+      if (!requests) {
+        this.submitting = false;
+        return;
+      }
+      const ph = prefix0x(this.selectedDid.hintPuzzle);
+      const sk_arr = requests.find((_) => prefix0x(_.hash) == ph)?.privateKey?.serialize();
+      if (!sk_arr) {
         this.submitting = false;
         return;
       }
 
-      if (this.availcoins == null) {
+      const sk_hex = utility.toHexString(sk_arr);
+      const sk = EcPrivateKey.parse(sk_hex);
+      if (!sk) {
         this.submitting = false;
         return;
       }
+      const pubKey = ecc.getPublicKey(sk_hex).toHex();
+      const pubKeyText = puzzle.getAddressFromPuzzleHash(pubKey, "curve25519");
 
       const inputs = csvToArray(this.csv);
-      const tgts: TransferTarget[] = [];
-      const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
+
+      let result = "";
 
       for (let i = 0; i < inputs.length; i++) {
-        const line = inputs[i];
+        const pars = inputs[i];
+        const comment = pars[0];
+        const pktext = pars[1];
+        const pk = Bytes.from(bech32m.decodeToBytes(pktext).bytes).hex();
+        const msg = pars[2];
 
-        const address = line[0];
-        if (!address.startsWith(xchPrefix())) {
-          Notification.open({
-            message: this.$tc("batchSend.messages.error.ADDRESS_NOT_MATCH_NETWORK", 1, { address }),
-            type: "is-danger",
-            duration: 5000,
-          });
-          this.submitting = false;
-          return;
-        }
-        const symbol = line[1];
-        if (this.availcoins[symbol] == undefined) {
-          Notification.open({
-            message: this.$tc("batchSend.messages.error.COIN_NOT_EXIST", 0, { symbol: symbol }),
-            type: "is-danger",
-            duration: 5000,
-          });
-          this.submitting = false;
-          return;
-        }
-        const amount = BigInt(line[2]);
-        const memo = line[3];
-        // there is error in checking this regular expression
-        // eslint-disable-next-line no-useless-escape
-        const std_memo = memo.replace(/[&/\\#,+()$~%.'":*?<>{}\[\] ]/g, "_");
-        const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(address));
-
-        tgts.push({ address: tgt_hex, amount, symbol, memos: [tgt_hex, std_memo] });
+        const enc = await ecc.encrypt(msg, pk, sk);
+        result += `------------------------------ ${comment} ------------------------------
+Sender Public Key: ${pubKeyText}
+Receiver Public Key: ${pktext}
+Encrypted Message: ${enc}
+`;
       }
-
-      const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
-      this.bundle = await transfer.generateSpendBundleIncludingCat(plan, this.requests, [], networkContext());
+      this.result = result;
     } catch (error) {
       Notification.open({
         message: this.$tc("batchSend.ui.messages.failedToSign") + error,
@@ -229,11 +206,6 @@ export default class BatchSend extends Vue {
       this.submitting = false;
     }
     this.submitting = false;
-  }
-
-  async submit(): Promise<void> {
-    if (!this.bundle) return;
-    submitBundle(this.bundle, (_) => (this.submitting = _), this.close);
   }
 
   get csvSampleUri(): string {
@@ -250,11 +222,10 @@ export default class BatchSend extends Vue {
   }
 
   fillSample(): void {
-    const address = puzzle.getAddressFromPuzzleHash(
-      "d19c05a54dacbf2b40ff4843534c47976de90246c3fc42ac1f42ea81b434b8ea",
-      xchPrefix()
-    );
-    this.csv = `${address},BSH,150,hello_memo\n${address},${xchSymbol()},150,`;
+    this.csv = `
+target1,curve255191ty3e7p5lpklfmvuy73l3lkp2m4tj4460y9ygzggqj6wqakg24feqtfue8c,message1
+target2,curve255191ty3e7p5lpklfmvuy73l3lkp2m4tj4460y9ygzggqj6wqakg24feqtfue8c,message2
+`.trim();
   }
 
   async afterUploadCsv(f: File): Promise<void> {
@@ -305,11 +276,15 @@ export default class BatchSend extends Vue {
     this.afterUploadCsv(f[0]);
     this.dragfile = [];
   }
+
+  copy(): void {
+    store.dispatch("copy", this.result);
+  }
 }
 </script>
 
 <style scoped lang="scss">
-.field ::v-deep textarea {
-  font-size: 0.9em;
+::v-deep textarea {
+  font-size: 0.8em;
 }
 </style>

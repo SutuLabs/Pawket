@@ -45,7 +45,7 @@
       </div>
       <template v-if="bundle">
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($t('send.ui.summary.notification'))"></span>
+          <span v-html="$sanitize($tc('send.ui.summary.notification'))"></span>
         </b-notification>
         <send-summary
           :amount="numericAmount"
@@ -102,7 +102,7 @@ import store from "@/store";
 import { OriginCoin, SpendBundle } from "@/models/wallet";
 import puzzle from "@/services/crypto/puzzle";
 import bigDecimal from "js-big-decimal";
-import { prefix0x } from "@/services/coin/condition";
+import { Hex0x, prefix0x } from "@/services/coin/condition";
 import transfer, { SymbolCoins, TransferTarget } from "@/services/transfer/transfer";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
 import coinHandler from "@/services/transfer/coin";
@@ -112,12 +112,11 @@ import OfflineSendShowBundle from "@/components/Offline/OfflineSendShowBundle.vu
 import { CurrencyType } from "@/services/exchange/currencyType";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import SendSummary from "@/components/Send/SendSummary.vue";
-import { chainId, xchPrefix, xchSymbol } from "@/store/modules/network";
+import { networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getCatNames, getTokenInfo } from "@/services/view/cat";
 import AddressField from "@/components/Common/AddressField.vue";
 import TopBar from "@/components/Common/TopBar.vue";
 import AddressBook, { Contact } from "@/components/AddressBook/AddressBook.vue";
-import { getLineageProofPuzzle } from "@/services/transfer/call";
 
 @Component({
   components: {
@@ -344,8 +343,8 @@ export default class Send extends Vue {
         this.submitting = false;
         return;
       }
-      let tgt_hex = "";
-      let change_hex = "";
+      let tgt_hex: Hex0x = "()";
+      let change_hex: Hex0x = "()";
       try {
         tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.address));
         change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
@@ -374,14 +373,7 @@ export default class Send extends Vue {
       const memo = this.memo.replace(/[&/\\#,+()$~%.'":*?<>{}\[\] ]/g, "_");
       const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: this.selectedToken, memos: [tgt_hex, memo] }];
       const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
-      this.bundle = await transfer.generateSpendBundleIncludingCat(
-        plan,
-        this.requests,
-        [],
-        xchSymbol(),
-        chainId(),
-        getLineageProofPuzzle
-      );
+      this.bundle = await transfer.generateSpendBundleIncludingCat(plan, this.requests, [], networkContext());
     } catch (error) {
       Notification.open({
         message: this.$tc("send.ui.messages.failedToSign") + error,

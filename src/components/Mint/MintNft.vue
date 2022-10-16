@@ -62,7 +62,7 @@
       </div>
       <template v-if="bundle">
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($t('mintNft.ui.summary.notification'))"></span>
+          <span v-html="$sanitize($tc('mintNft.ui.summary.notification'))"></span>
         </b-notification>
         <send-summary
           :nftUri="uri"
@@ -134,7 +134,7 @@ import { debugBundle, submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import SendSummary from "@/components/Send/SendSummary.vue";
-import { chainId, ensureAddress, xchPrefix, xchSymbol } from "@/store/modules/network";
+import { ensureAddress, networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getTokenInfo } from "@/services/view/cat";
 import AddressField from "@/components/Common/AddressField.vue";
 import { Bytes } from "clvm";
@@ -143,7 +143,6 @@ import utility from "@/services/crypto/utility";
 import { generateMintNftBundle } from "@/services/coin/nft";
 import { NftMetadataValues } from "@/models/nft";
 import puzzle from "@/services/crypto/puzzle";
-import { getLineageProofPuzzle } from "@/services/transfer/call";
 
 interface NftFormInfo {
   uri: string;
@@ -426,12 +425,10 @@ export default class MintNft extends Vue {
         md,
         this.availcoins,
         this.requests,
-        xchSymbol(),
-        chainId(),
         puzzle.getPuzzleHashFromAddress(this.royaltyAddress),
         this.royaltyPercentage * 100,
+        networkContext(),
         did.analysis,
-        getLineageProofPuzzle,
         undefined,
         undefined
       );

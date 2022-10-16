@@ -24,7 +24,7 @@
       </div>
       <template v-if="bundle">
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($t('nftTransfer.ui.summary.confirmation'))"></span>
+          <span v-html="$sanitize($tc('nftTransfer.ui.summary.confirmation'))"></span>
         </b-notification>
         <send-summary
           :nftUri="uri"
@@ -81,13 +81,12 @@ import { debugBundle, submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import SendSummary from "@/components/Send/SendSummary.vue";
-import { chainId, xchPrefix, xchSymbol } from "@/store/modules/network";
+import { networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getTokenInfo } from "@/services/view/cat";
 import { generateTransferNftBundle } from "@/services/coin/nft";
 import AddressField from "@/components/Common/AddressField.vue";
 import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
-import { getLineageProofPuzzle } from "@/services/transfer/call";
 
 @Component({
   components: {
@@ -283,9 +282,7 @@ export default class NftTransfer extends Vue {
         this.nft.analysis,
         this.availcoins,
         this.requests,
-        xchSymbol(),
-        chainId(),
-        getLineageProofPuzzle
+        networkContext()
       );
 
       this.bundle = spendBundle;

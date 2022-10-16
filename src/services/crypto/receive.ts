@@ -6,8 +6,7 @@ import { CustomCat, AccountTokens, AccountTokenAddress, TokenInfo } from "../../
 import { analyzeNftCoin, getScalarString } from "../coin/nft";
 import debug from "../api/debug";
 import { analyzeDidCoin, DidCoinAnalysisResult } from "../coin/did";
-import { NftCoinAnalysisResult } from "../../models/nft";
-import { CnsCoinAnalysisResult } from "../../models/cns";
+import { NftCoinAnalysisResult, CnsCoinAnalysisResult  } from "../../models/nft";
 import { CoinSpend } from "../../models/wallet";
 
 export interface TokenPuzzleDetail {

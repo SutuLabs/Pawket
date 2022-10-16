@@ -185,15 +185,14 @@ import { getOfferSummary, OfferSummary } from "@/services/offer/summary";
 import { decodeOffer } from "@/services/offer/encoding";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { combineSpendBundle, generateNftOffer, generateOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
-import { prefix0x } from "@/services/coin/condition";
+import { Hex0x, prefix0x } from "@/services/coin/condition";
 import puzzle from "@/services/crypto/puzzle";
 import store from "@/store";
 import { debugBundle, submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import ManageCats from "@/components/Cat/ManageCats.vue";
 import OfflineSendShowBundle from "@/components/Offline/OfflineSendShowBundle.vue";
-import { chainId, xchPrefix, xchSymbol } from "@/store/modules/network";
-import { getLineageProofPuzzle } from "@/services/transfer/call";
+import { networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
 import bigDecimal from "js-big-decimal";
 
 @Component({
@@ -259,7 +258,7 @@ export default class TakeOffer extends Vue {
 
   @Emit("close")
   close(): void {
-    if(this.path.endsWith("take-offer")) this.$router.back();
+    if (this.path.endsWith("take-offer")) this.$router.back();
     return;
   }
 
@@ -268,7 +267,7 @@ export default class TakeOffer extends Vue {
   }
 
   @Watch("path")
-  onPathChange():void {
+  onPathChange(): void {
     this.close();
   }
 
@@ -304,10 +303,10 @@ export default class TakeOffer extends Vue {
     return this.account.type == "Address";
   }
 
-  get royaltyAddress(): string {
+  get royaltyAddress(): Hex0x {
     const s = this.summary;
-    if (!s) return "";
-    return s.offered[0].nft_detail?.analysis.royaltyAddress ?? "";
+    if (!s) return "()";
+    return s.offered[0].nft_detail?.analysis.royaltyAddress ?? "()";
   }
 
   get total(): string {
@@ -435,14 +434,7 @@ export default class TakeOffer extends Vue {
         }
         const fee = isReceivingCat ? BigInt(this.fee) : 0n;
         const offplan = await generateOfferPlan(revSummary.offered, change_hex, this.availcoins, fee, xchSymbol());
-        const takerBundle = await generateOffer(
-          offplan,
-          revSummary.requested,
-          this.tokenPuzzles,
-          getLineageProofPuzzle,
-          xchSymbol(),
-          chainId()
-        );
+        const takerBundle = await generateOffer(offplan, revSummary.requested, this.tokenPuzzles, networkContext());
         const combined = await combineSpendBundle([this.makerBundle, takerBundle]);
         // for creating unit test
         // console.log("const change_hex=", change_hex, ";");
@@ -470,9 +462,7 @@ export default class TakeOffer extends Vue {
           undefined,
           revSummary.requested,
           this.tokenPuzzles,
-          getLineageProofPuzzle,
-          xchSymbol(),
-          chainId()
+          networkContext()
         );
         const combined = await combineSpendBundle([this.makerBundle, takerBundle]);
         // for creating unit test
@@ -508,7 +498,8 @@ export default class TakeOffer extends Vue {
     return puzzle.getAddressFromPuzzleHash(hex, "nft");
   }
 
-  getAddress(hex: string): string {
+  getAddress(hex: Hex0x | undefined): string {
+    if (!hex) return "";
     return puzzle.getAddressFromPuzzleHash(hex, xchPrefix());
   }
 

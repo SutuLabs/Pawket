@@ -7,7 +7,7 @@
     <section class="modal-card-body">
       <template v-if="!signResult">
         <b-notification type="is-warning is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($t('signMessage.ui.prompt'))"></span>
+          <span v-html="$sanitize($tc('signMessage.ui.prompt'))"></span>
         </b-notification>
 
         <b-field>
@@ -82,7 +82,7 @@ import puzzle from "@/services/crypto/puzzle";
 import { prefix0x, unprefix0x } from "@/services/coin/condition";
 import utility from "@/services/crypto/utility";
 import { getSignMessage, signMessage, verifySignature } from "@/services/crypto/sign";
-import { xchPrefix } from "@/store/modules/network";
+import { xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getCoinName0x } from "@/services/coin/coinUtility";
 
 @Component({
@@ -193,8 +193,17 @@ export default class SignMessage extends Vue {
         return;
       }
 
-      const privkey = this.account.key.privateKey;
-      const requests = await puzzle.getPuzzleDetails(privkey, "xch", 0, 10);
+      const requests = this.account.addressPuzzles.find((_) => _.symbol == xchSymbol())?.puzzles;
+      if (!requests) {
+        Notification.open({
+          message: "Account initialization not finish.",
+          type: "is-danger",
+          duration: 5000,
+        });
+        this.submitting = false;
+        return;
+      }
+
       const sk = requests.find((_) => prefix0x(_.hash) == prefix0x(puzzleHash))?.privateKey;
       if (!sk) {
         Notification.open({

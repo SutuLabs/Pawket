@@ -2,6 +2,8 @@ import store from "@/store";
 import { TokenInfo } from "@/models/account";
 import puzzle from "@/services/crypto/puzzle";
 import Vue from "vue";
+import { NetworkContext } from "@/services/coin/coinUtility";
+import { getLineageProofPuzzle } from "@/services/transfer/call";
 
 export function xchPrefix(): string {
   return store.state.network.prefix;
@@ -14,6 +16,14 @@ export function rpcUrl(): string {
 }
 export function chainId(): string {
   return store.state.network.network.chainId;
+}
+export function networkContext(): NetworkContext {
+  return {
+    symbol: xchSymbol(),
+    prefix: xchPrefix(),
+    chainId: chainId(),
+    api: getLineageProofPuzzle,
+  }
 }
 export function ensureAddress(address: string | undefined): string {
   if (!address) return "";

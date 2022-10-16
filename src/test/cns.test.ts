@@ -6,15 +6,21 @@ import { GetParentPuzzleResponse } from "@/models/api";
 import { Instance } from "@/services/util/instance";
 import { getAccountAddressDetails } from "@/services/util/account";
 
-import { CnsMetadataValues } from "@/models/cns";
+import { CnsMetadataValues } from "@/models/nft";
 import { cnsMetadata, knownCoins } from "./cases/cns.test.data";
-import { CoinSpend, OriginCoin } from "@/models/wallet";
+import { CoinSpend } from "@/models/wallet";
 import { combineSpendBundle, generateNftOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
 import { getOfferSummary } from "@/services/offer/summary";
-import { getCoinName0x } from "@/services/coin/coinUtility";
-import { combineSpendBundlePure } from "@/services/mint/cat";
+import { generateMintCnsOffer } from "@/services/offer/cns";
+import { NetworkContext } from "@/services/coin/coinUtility";
 
+const net: NetworkContext = {
+  prefix: "xch",
+  symbol: "XCH",
+  chainId: "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb",
+  api: localPuzzleApiCall,
+}
 function xchPrefix() { return "xch"; }
 function xchSymbol() { return "XCH"; }
 function chainId() { return "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb"; }
@@ -51,7 +57,7 @@ test('Prepare CNS bootstrap coins', async () => {
   const sk = "00186eae4cd4a3ec609ca1a8c1cda8467e3cb7cbbbf91a523d12d31129d5f8d7";
 
   const spendBundle = await getBootstrapSpendBundle(
-    target_hex, change_hex, fee, availcoins, tokenPuzzles, count, xchSymbol(), chainId(), sk);
+    target_hex, change_hex, fee, availcoins, tokenPuzzles, count, net, sk);
   expect(spendBundle).toMatchSnapshot("spendbundle");
 });
 
@@ -90,8 +96,8 @@ async function testMintCns(
   };
   const sk = "00186eae4cd4a3ec609ca1a8c1cda8467e3cb7cbbbf91a523d12d31129d5f8d7";
   const { spendBundle } = await generateMintNftBundle(
-    targetAddress, changeAddress, fee, metadata, availcoins, tokenPuzzles, xchSymbol(), chainId(), royaltyAddressHex,
-    tradePricePercentage, undefined, localPuzzleApiCall, sk, targetAddresses);
+    targetAddress, changeAddress, fee, metadata, availcoins, tokenPuzzles, royaltyAddressHex,
+    tradePricePercentage, net, undefined, sk, targetAddresses);
   expect(spendBundle).toMatchSnapshot("spendbundle");
   const cs = spendBundle.coin_spends[2];
   await testAnalyzeCnsCoin(cs, "");
@@ -107,26 +113,17 @@ test('Create CNS Offer And Accept', async () => {
 async function testMintCnsAndOffer(
   fee: bigint,
   metadata: CnsMetadataValues,
-  targetAddresses: string[] | undefined = undefined,
 ): Promise<void> {
   const target_hex = "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155";
   const change_hex = "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155";
 
   const changeAddress = puzzle.getAddressFromPuzzleHash(change_hex, xchPrefix());
   const targetAddress = puzzle.getAddressFromPuzzleHash(target_hex, xchPrefix());
-  const reqs = [
-    {
-      "id": "",
-      "symbol": xchSymbol(),
-      "amount": 200n,
-      "target": target_hex,
-    }
-  ];
 
   const nonce = "626f9cf141deefc2e77a56a4ef99996259e840dc4020eda31408cdd442a770d1"
   const account = getTestAccount("55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f");
   const tokenPuzzles = await getAccountAddressDetails(account, [], {}, xchPrefix(), xchSymbol(), undefined, "cat_v2");
-  const availcoinsForMaker = {
+  const availcoinsForMaker: SymbolCoins = {
     [xchSymbol()]: [
       {
         "amount": 1n,
@@ -135,7 +132,7 @@ async function testMintCnsAndOffer(
       },
     ],
   };
-  const availcoinsForTaker = {
+  const availcoinsForTaker: SymbolCoins = {
     [xchSymbol()]: [
       {
         "amount": 4998999984n,
@@ -148,67 +145,26 @@ async function testMintCnsAndOffer(
   const royaltyAddressHex = "7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10";
   const tradePricePercentage = 500;
 
-  const sk = "00186eae4cd4a3ec609ca1a8c1cda8467e3cb7cbbbf91a523d12d31129d5f8d7";
-  const { spendBundle } = await generateMintNftBundle(
-    targetAddress, changeAddress, fee, metadata, availcoinsForMaker, tokenPuzzles, xchSymbol(), chainId(), royaltyAddressHex,
-    tradePricePercentage, undefined, localPuzzleApiCall, sk, targetAddresses);
-  expect(spendBundle).toMatchSnapshot("spendbundle");
+  const offerBundle = await generateMintCnsOffer(
+    targetAddress, changeAddress, 200n, 0n, metadata, availcoinsForMaker, tokenPuzzles,
+    royaltyAddressHex, tradePricePercentage, net, nonce);
 
-  const nftcs = spendBundle.coin_spends[2];
-  const analysis = await analyzeNftCoin(nftcs.puzzle_reveal, "", nftcs.coin, nftcs.solution);
-  const nextCoin: OriginCoin = {
-    parent_coin_info: getCoinName0x(nftcs.coin),
-    amount: 1n,
-    puzzle_hash: nftcs.coin.puzzle_hash,
-  }
-  knownCoins.push({
-    parentCoinId: nextCoin.parent_coin_info,
-    parentParentCoinId: nftcs.coin.parent_coin_info,
-    amount: Number(nftcs.coin.amount),
-    puzzleReveal: nftcs.puzzle_reveal,
-  })
-  expect(analysis).toMatchSnapshot("cns analysis");
-  if (!analysis) fail("failed to analysis nft");
-  if ("cnsName" in analysis === false) fail("failed to analysis cns nft");
-
-  const offs = [
-    {
-      "id": analysis.launcherId,
-      "amount": 1n,
-      "target": "",
-      "nft_target": "",
-      "royalty": analysis.tradePricePercentage,
-      "nft_uri": "something"
-    }
-  ];
-
-  const offplan = await generateOfferPlan(offs, change_hex, availcoinsForMaker, 0n, xchSymbol());
-  expect(offplan).toMatchSnapshot("offplan");
-  const offerBundle = await generateNftOffer(
-    offplan,
-    analysis,
-    nextCoin,
-    reqs,
-    tokenPuzzles,
-    localPuzzleApiCall,
-    xchSymbol(),
-    chainId(),
-    nonce
-  );
-
-  expect(offerBundle).toMatchSnapshot("offer bundle");
-  const offerCombineBundle = await combineSpendBundlePure(spendBundle, offerBundle);
-  const offerText = await encodeOffer(offerCombineBundle);
+  const offerText = await encodeOffer(offerBundle);
   expect(offerText).toMatchSnapshot("offer text");
 
+  // for offer taker
+
   const makerBundle = await decodeOffer(offerText);
-  expect(makerBundle).toStrictEqual(offerCombineBundle);
+  expect(makerBundle).toStrictEqual(offerBundle);
 
   const summary = await getOfferSummary(makerBundle);
   expect(summary).toMatchSnapshot("summary");
   const revSummary = getReversePlan(summary, change_hex, {});
   expect(revSummary).toMatchSnapshot("revSummary");
   expect(fee).toMatchSnapshot("fee");
+  const analysis = summary.offered[0].nft_detail?.analysis;
+  if (!analysis) fail("failed to get analysis from summary");
+  expect(analysis).toMatchSnapshot("cns analysis");
 
   const royalty_amount = (revSummary.offered[0].amount * BigInt(analysis.tradePricePercentage)) / BigInt(10000);
   expect(royalty_amount).toMatchSnapshot("royalty_amount");
@@ -227,9 +183,7 @@ async function testMintCnsAndOffer(
     undefined,
     revSummary.requested,
     tokenPuzzles,
-    localPuzzleApiCall,
-    xchSymbol(),
-    chainId(),
+    net,
     nonce
   );
   expect(takerBundle).toMatchSnapshot("takerBundle");

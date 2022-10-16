@@ -115,7 +115,7 @@ export class EcPrivateKey extends ByteBase {
 }
 
 export class EcPublicKey extends ByteBase {
-  private static size = 33;
+  private static size = 32;
 
   constructor(a: ArrayLike<number>) {
     super(a);
@@ -144,8 +144,8 @@ export class CryptographyService {
   private size = 32;
   private subtle: SubtleCrypto;
 
-  constructor() {
-    this.ec = new EC('curve25519');
+  constructor(curve = "curve25519") {
+    this.ec = new EC(curve);
     this.subtle = isoCrypto.subtle;
   }
 

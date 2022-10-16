@@ -1,7 +1,7 @@
-import puzzle, { ExecuteResult, PuzzleDetail } from "../crypto/puzzle";
+import puzzle, { ExecuteResult, PlaintextPuzzle, PuzzleDetail } from "../crypto/puzzle";
 import { TokenPuzzleDetail } from "../crypto/receive";
 import { curryMod } from "../offer/bundler";
-import { getNumber, prefix0x, unprefix0x } from "./condition";
+import { getNumber, Hex0x, prefix0x, unprefix0x } from "./condition";
 import { modshash, modsprog } from "./mods";
 import { Bytes, SExp } from "clvm";
 import { assemble } from "clvm_tools/clvm_tools/binutils";
@@ -16,10 +16,10 @@ export async function constructSingletonTopLayerPuzzle(
   launcherId: string,
   launcherPuzzleHash: string,
   inner_state_puzzle: string
-): Promise<string> {
+): Promise<PlaintextPuzzle> {
   const sgnStruct = `(${prefix0x(modshash["singleton_top_layer_v1_1"])} ${prefix0x(launcherId)} . ${prefix0x(launcherPuzzleHash)})`;
   const curried_tail = await curryMod(modsprog["singleton_top_layer_v1_1"], sgnStruct, inner_state_puzzle);
-  if (!curried_tail) throw new Error("failed to curry tail.");
+  if (!curried_tail) throw new Error("failed to curry tail. the inner_state_puzzle = " + inner_state_puzzle);
 
   return curried_tail;
 }
@@ -46,7 +46,7 @@ export function cloneAndAddRequestPuzzleTemporary(
   requests: TokenPuzzleDetail[],
   originalHash: string,
   newPuzzle: string,
-  newPuzzleHash: string,
+  newPuzzleHash: Hex0x,
 ): TokenPuzzleDetail[] {
   const extreqs = Array.from(requests.map((_) => ({ symbol: _.symbol, puzzles: Array.from(_.puzzles.map((_) => ({ ..._ }))) })));
   const puzs = extreqs.find((_) => _.symbol == baseSymbol);
@@ -55,7 +55,7 @@ export function cloneAndAddRequestPuzzleTemporary(
   puzs.puzzles.push({
     privateKey: nftReq.privateKey,
     puzzle: newPuzzle,
-    hash: unprefix0x(newPuzzleHash),
+    hash: newPuzzleHash,
     address: "",
     type: nftReq.type,
   });
@@ -94,7 +94,7 @@ export function hex2ascSingle(hex: string | string[] | undefined): string | unde
   return result[0];
 }
 
-export async function getNextCoinName0x(puzzle_hex: string, solution_hex: string, thisCoinName: string): Promise<string | undefined> {
+export async function getNextCoinName0x(puzzle_hex: string, solution_hex: string, thisCoinName: Hex0x): Promise<string | undefined> {
   let result: ExecuteResult;
   try {
     result = await puzzle.executePuzzleHex(puzzle_hex, solution_hex);
@@ -106,9 +106,9 @@ export async function getNextCoinName0x(puzzle_hex: string, solution_hex: string
     const coinCond = result.conditions
       .filter((_) => _.op == ConditionOpcode.CREATE_COIN && getNumber(_.args.at(1) ?? "0") % 2n == 1n).at(0);
     if (!coinCond) return undefined;
-    const nextcoin_puzhash = coinCond.args.at(0);
+    const nextcoin_puzhash = prefix0x(coinCond.args.at(0) ?? "()");
     const amount = getNumber(coinCond.args.at(1) ?? "0");
-    const nextCoinName = getCoinName0x({ parent_coin_info: thisCoinName, amount, puzzle_hash: nextcoin_puzhash ?? "" });
+    const nextCoinName = getCoinName0x({ parent_coin_info: thisCoinName, amount, puzzle_hash: nextcoin_puzhash });
     return nextCoinName;
   } catch (err) {
     if (process.env.NODE_ENV !== "production") {

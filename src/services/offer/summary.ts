@@ -1,6 +1,6 @@
 import { CoinSpend, SpendBundle } from "../../models/wallet";
 import { Bytes, SExp, Tuple } from "clvm";
-import { getNumber, prefix0x } from '../coin/condition';
+import { getNumber, Hex0x, prefix0x } from '../coin/condition';
 import { assemble, disassemble } from 'clvm_tools/clvm_tools/binutils';
 import puzzle from "../crypto/puzzle";
 import { modsdict, modsprog } from '../coin/mods';
@@ -151,7 +151,7 @@ function getRequestedCoins(bundle: SpendBundle): CoinSpend[] {
   return bundle.coin_spends.filter(_ => _.coin.parent_coin_info == EmptyParent)
 }
 
-export function getOfferEntities(ents: OfferTokenAmount[], target: string, catIds: { [name: string]: string }, symbol: string): OfferEntity[] {
+export function getOfferEntities(ents: OfferTokenAmount[], target: Hex0x, catIds: { [name: string]: string }, symbol: string): OfferEntity[] {
   return ents.map((_) => ({
     id: _.token == symbol ? "" : catIds[_.token],
     symbol: _.token,
@@ -174,9 +174,9 @@ export interface OfferEntity {
   symbol?: string;
   id: string;
   amount: bigint;
-  target: string;
-  cat_target?: string;
-  nft_target?: string;
+  target?: Hex0x;
+  cat_target?: Hex0x;
+  nft_target?: Hex0x;
   nft_detail?: NftDetail;
   royalty?: number;
   nft_uri?: string;

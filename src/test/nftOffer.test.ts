@@ -1,14 +1,23 @@
 import { GetParentPuzzleResponse } from "@/models/api";
 import { getTestAccount } from "./utility";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
-import { getOfferSummary } from "@/services/offer/summary";
+import { getOfferSummary, OfferEntity, OfferPlan } from "@/services/offer/summary";
 import { Instance } from "@/services/util/instance";
 import { getAccountAddressDetails } from "@/services/util/account";
 import { combineSpendBundle, generateNftOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
+import { SymbolCoins } from "@/services/transfer/transfer";
+import { NftDetail } from "@/services/crypto/receive";
+import { NetworkContext } from "@/services/coin/coinUtility";
 
 function xchPrefix() { return "txch"; }
 function xchSymbol() { return "TXCH"; }
 function chainId() { return "ae83525ba8d1dd3f09b277de18ca3e43fc0af20d20c4b3e92ef2a48bd291ccb2"; }
+const net: NetworkContext = {
+  prefix: "txch",
+  symbol: "TXCH",
+  chainId: "ae83525ba8d1dd3f09b277de18ca3e43fc0af20d20c4b3e92ef2a48bd291ccb2",
+  api: localPuzzleApiCall,
+}
 
 beforeAll(async () => {
   await Instance.init();
@@ -17,7 +26,7 @@ beforeAll(async () => {
 test('create and accept nft offer for xch', async () => {
 
   const change_hex = "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155";
-  const nft = {
+  const nft: NftDetail = {
     "metadata": {
       "uri": "https://guggero.github.io/cryptography-toolkit/images/fork-me-on-github-ribbon.png",
       "hash": "e62bcdc91903b07b7b86f1af11c5fdd9c3b545bfff90515976f9e8d67c91eb0f",
@@ -62,17 +71,15 @@ test('create and accept nft offer for xch', async () => {
       "hintPuzzle": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155"
     }
   };
-  const offs = [
+  const offs: OfferEntity[] = [
     {
       "id": "74cc7e5904310477bae6e250910da9fee0e604b93d73a180cbd052d12f56769a",
       "amount": 1n,
-      "target": "",
-      "nft_target": "",
       "royalty": 800,
       "nft_uri": "https://guggero.github.io/cryptography-toolkit/images/fork-me-on-github-ribbon.png"
     }
   ];
-  const reqs = [
+  const reqs: OfferEntity[] = [
     {
       "id": "",
       "symbol": "TXCH",
@@ -84,7 +91,7 @@ test('create and accept nft offer for xch', async () => {
   const nonce = "626f9cf141deefc2e77a56a4ef99996259e840dc4020eda31408cdd442a770d1"
   const account = getTestAccount("55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f");
   const tokenPuzzles = await getAccountAddressDetails(account, [], {}, xchPrefix(), xchSymbol(), undefined, "cat_v2");
-  const availcoins = {
+  const availcoins: SymbolCoins = {
     "TXCH": [
       {
         "amount": 4998981617n,
@@ -107,9 +114,7 @@ test('create and accept nft offer for xch', async () => {
     nft.coin,
     reqs,
     tokenPuzzles,
-    localPuzzleApiCall,
-    xchSymbol(),
-    chainId(),
+    net,
     nonce
   );
   expect(bundle).toMatchSnapshot("bundle");
@@ -144,9 +149,7 @@ test('create and accept nft offer for xch', async () => {
     undefined,
     revSummary.requested,
     tokenPuzzles,
-    localPuzzleApiCall,
-    xchSymbol(),
-    chainId(),
+    net,
     nonce
   );
   expect(takerBundle).toMatchSnapshot("takerBundle");

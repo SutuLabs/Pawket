@@ -1,5 +1,6 @@
 import { GetParentPuzzleResponse } from "@/models/api";
 import { OriginCoin } from "@/models/wallet";
+import { NetworkContext } from "@/services/coin/coinUtility";
 import { prefix0x } from "@/services/coin/condition";
 import puzzle from "@/services/crypto/puzzle";
 import utility from "@/services/crypto/utility";
@@ -7,9 +8,13 @@ import transfer, { SymbolCoins } from "@/services/transfer/transfer";
 import { Instance } from "@/services/util/instance";
 import { knownCoins } from "./cases/catTransfer.test.data";
 
-function xchPrefix() { return "xch"; }
-function xchSymbol() { return "XCH"; }
-function chainId() { return "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb"; }
+const net: NetworkContext = {
+  prefix: "xch",
+  symbol: "XCH",
+  chainId: "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb",
+  api: localPuzzleApiCall,
+}
+function xchPrefix() { return net.prefix; }
 
 beforeAll(async () => {
   await Instance.init();
@@ -37,9 +42,9 @@ test('Cat Transfer', async () => {
 
   const puzzles = await puzzle.getCatPuzzleDetails(utility.fromHexString(sk_hex), assetId, xchPrefix(), 0, 5, "cat_v1");
   expect(puzzles).toMatchSnapshot("puzzles");
-  const plan = await transfer.generateSpendPlan({ "CAT": [coin] }, [{ symbol: "CAT", address: tgt_hex, amount: 300n, memos: [tgt_hex] }], change_hex, 0n, xchSymbol());
+  const plan = await transfer.generateSpendPlan({ "CAT": [coin] }, [{ symbol: "CAT", address: tgt_hex, amount: 300n, memos: [tgt_hex] }], change_hex, 0n, net.symbol);
   expect(plan).toMatchSnapshot("plan");
-  const bundle = await transfer.generateSpendBundleIncludingCat(plan, [{ symbol: "CAT", puzzles }], [], xchSymbol(), chainId(), localPuzzleApiCall);
+  const bundle = await transfer.generateSpendBundleIncludingCat(plan, [{ symbol: "CAT", puzzles }], [], net);
   expect(bundle).toMatchSnapshot("bundle");
 });
 
@@ -71,9 +76,9 @@ test('Cat Transfer2', async () => {
   const assetId = "6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b";
   const puzzles = await puzzle.getCatPuzzleDetails(utility.fromHexString(sk_hex), assetId, xchPrefix(), 0, 8, "cat_v1");
   expect(puzzles).toMatchSnapshot("puzzles");
-  const plan = await transfer.generateSpendPlan({ "CAT": [coin] }, [{ symbol: "CAT", address: tgt_hex, amount: 300n, memos: [tgt_hex] }], change_hex, 0n, xchSymbol());
+  const plan = await transfer.generateSpendPlan({ "CAT": [coin] }, [{ symbol: "CAT", address: tgt_hex, amount: 300n, memos: [tgt_hex] }], change_hex, 0n, net.symbol);
   expect(plan).toMatchSnapshot("plan");
-  const bundle = await transfer.generateSpendBundleIncludingCat(plan, [{ symbol: "CAT", puzzles }], [], xchSymbol(), chainId(), localPuzzleApiCall);
+  const bundle = await transfer.generateSpendBundleIncludingCat(plan, [{ symbol: "CAT", puzzles }], [], net);
   expect(bundle).toMatchSnapshot("bundle");
 });
 
@@ -116,9 +121,9 @@ test('Multi Cat Coin Transfer', async () => {
   const assetId = "b3867458a6af107794a09b6083e3f0f05fbece0adae328f4df9ade53a60ca1b3";
   const puzzles = await puzzle.getCatPuzzleDetails(utility.fromHexString(sk_hex), assetId, xchPrefix(), 0, 8, "cat_v2");
   expect(puzzles).toMatchSnapshot("puzzles");
-  const plan = await transfer.generateSpendPlan(availcoins, [{ symbol: "CAT", address: tgt_hex, amount: 1900n, memos: [tgt_hex] }], change_hex, 0n, xchSymbol());
+  const plan = await transfer.generateSpendPlan(availcoins, [{ symbol: "CAT", address: tgt_hex, amount: 1900n, memos: [tgt_hex] }], change_hex, 0n, net.symbol);
   expect(plan).toMatchSnapshot("plan");
-  const bundle = await transfer.generateSpendBundleIncludingCat(plan, [{ symbol: "CAT", puzzles }], [], xchSymbol(), chainId(), localPuzzleApiCall);
+  const bundle = await transfer.generateSpendBundleIncludingCat(plan, [{ symbol: "CAT", puzzles }], [], net);
   expect(bundle).toMatchSnapshot("bundle");
 });
 
@@ -165,8 +170,8 @@ test('Multi Cat Coin Transfer 2', async () => {
   const assetId = "6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b";
   const puzzles = await puzzle.getCatPuzzleDetails(utility.fromHexString(sk_hex), assetId, xchPrefix(), 0, 8, "cat_v2");
   expect(puzzles).toMatchSnapshot("puzzles");
-  const plan = transfer.generateSpendPlan(availcoins, [{ symbol: "CAT", address: tgt_hex, amount: 60000n, memos: [tgt_hex] }], change_hex, 0n, xchSymbol());
+  const plan = transfer.generateSpendPlan(availcoins, [{ symbol: "CAT", address: tgt_hex, amount: 60000n, memos: [tgt_hex] }], change_hex, 0n, net.symbol);
   expect(plan).toMatchSnapshot("plan");
-  const bundle = await transfer.generateSpendBundleIncludingCat(plan, [{ symbol: "CAT", puzzles }], [], xchSymbol(), chainId(), localPuzzleApiCall);
+  const bundle = await transfer.generateSpendBundleIncludingCat(plan, [{ symbol: "CAT", puzzles }], [], net);
   expect(bundle).toMatchSnapshot("bundle");
 });

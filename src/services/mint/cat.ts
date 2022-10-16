@@ -1,12 +1,12 @@
 import { Bytes } from "clvm";
-import { CoinSpend, SpendBundle } from "@/models/wallet";
-import { prefix0x } from "../coin/condition";
+import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
+import { Hex0x, prefix0x, unprefix0x } from "../coin/condition";
 import puzzle from "../crypto/puzzle";
 import { TokenPuzzleDetail } from "../crypto/receive";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { curryMod } from "../offer/bundler";
 import { modshash, modsprog } from "../coin/mods";
-import { getCoinName0x } from "../coin/coinUtility";
+import { getCoinName0x, NetworkContextWithOptionalApi } from "../coin/coinUtility";
 import { Instance } from "../util/instance";
 
 export interface MintCatInfo {
@@ -17,13 +17,13 @@ export interface MintCatInfo {
 interface CatPuzzleResponse {
   innerPuzzle: PuzzleInfo;
   catPuzzle: PuzzleInfo;
-  assetId: string;
-  bootstrapCoin: string;
+  assetId: Hex0x;
+  bootstrapCoin: Hex0x;
 }
 
 interface PuzzleInfo {
   plaintext: string;
-  hash: string;
+  hash: Hex0x;
 }
 
 export async function generateMintCatBundle(
@@ -35,8 +35,7 @@ export async function generateMintCatBundle(
   availcoins: SymbolCoins,
   sk_hex: string,
   requests: TokenPuzzleDetail[],
-  tokenSymbol: string,
-  chainId: string,
+  net: NetworkContextWithOptionalApi,
   catModName: "cat_v1" | "cat_v2" = "cat_v2",
 ): Promise<MintCatInfo> {
   const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
@@ -46,9 +45,9 @@ export async function generateMintCatBundle(
   // eslint-disable-next-line no-useless-escape
   memo = memo.replace(/[&/\\#,+()$~%.'":*?<>{}\[\] ]/g, "_");
 
-  const { innerPuzzle, catPuzzle, assetId, bootstrapCoin } = await constructCatPuzzle(tgt_hex, change_hex, amount, fee, memo, availcoins, tokenSymbol, catModName);
-  const ibundle = await constructInternalBundle(catPuzzle.hash, change_hex, amount, fee, availcoins, requests, tokenSymbol, chainId);
-  const ebundle = await constructExternalBundle(innerPuzzle, catPuzzle, bootstrapCoin, amount, sk_hex, chainId);
+  const { innerPuzzle, catPuzzle, assetId, bootstrapCoin } = await constructCatPuzzle(tgt_hex, change_hex, amount, fee, memo, availcoins, net.symbol, catModName);
+  const ibundle = await constructInternalBundle(catPuzzle.hash, change_hex, amount, fee, availcoins, requests, net);
+  const ebundle = await constructExternalBundle(innerPuzzle, catPuzzle, bootstrapCoin, amount, sk_hex, net.chainId);
   const bundle = await combineSpendBundlePure(ibundle, ebundle);
 
   return {
@@ -58,8 +57,8 @@ export async function generateMintCatBundle(
 }
 
 async function constructCatPuzzle(
-  tgt_hex: string,
-  change_hex: string,
+  tgt_hex: Hex0x,
+  change_hex: Hex0x,
   amount: bigint,
   fee: bigint,
   memo: string,
@@ -95,32 +94,31 @@ async function constructCatPuzzle(
 }
 
 async function constructInternalBundle(
-  tgt_hex: string,
-  change_hex: string,
+  tgt_hex: Hex0x,
+  change_hex: Hex0x,
   amount: bigint,
   fee: bigint,
   availcoins: SymbolCoins,
   requests: TokenPuzzleDetail[],
-  tokenSymbol: string,
-  chainId: string,
+  net: NetworkContextWithOptionalApi,
 ): Promise<SpendBundle> {
   const baseSymbol = Object.keys(availcoins)[0];
   const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: baseSymbol },];
   tgts[0].address = tgt_hex;
-  const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, fee, tokenSymbol);
-  const bundle = await transfer.generateSpendBundleWithoutCat(plan, requests, [], tokenSymbol, chainId);
+  const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, fee, net.symbol);
+  const bundle = await transfer.generateSpendBundleWithoutCat(plan, requests, [], net);
   return bundle;
 }
 
 async function constructExternalBundle(
   innerPuzzle: PuzzleInfo,
   catPuzzle: PuzzleInfo,
-  bootstrapCoin: string,
+  bootstrapCoin: Hex0x,
   amount: bigint,
   sk_hex: string,
   chainId: string,
 ): Promise<SpendBundle> {
-  const coin = { parent_coin_info: bootstrapCoin, amount, puzzle_hash: catPuzzle.hash };
+  const coin: OriginCoin = { parent_coin_info: bootstrapCoin, amount, puzzle_hash: catPuzzle.hash };
   const coin_name = getCoinName0x(coin);
 
   const catsln = `(() () ${coin_name} (${bootstrapCoin} ${catPuzzle.hash} ${amount}) (${bootstrapCoin} ${innerPuzzle.hash} ${amount}) () ())`;
@@ -137,7 +135,7 @@ async function constructExternalBundle(
         {
           privateKey: puzzle.getPrivateKeyFromHex(sk_hex),
           puzzle: catPuzzle.plaintext,
-          hash: catPuzzle.hash,
+          hash: unprefix0x(catPuzzle.hash),
           address: "",
         },
       ],

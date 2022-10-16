@@ -4,7 +4,7 @@ import { SExp, Tuple, to_sexp_f, sexp_from_stream, Stream, Bytes } from "clvm";
 import { uncurry } from "clvm_tools/clvm_tools/curry";
 import { ModName, modshex, modshexdict } from "./mods";
 import { getCoinName0x } from './coinUtility';
-import { prefix0x, unprefix0x } from './condition';
+import { Hex0x, prefix0x, unprefix0x } from './condition';
 import { sha256tree } from 'clvm_tools';
 import puzzle from '../crypto/puzzle';
 import { analyzeCatCoin } from './cat';
@@ -33,12 +33,12 @@ export interface UncurriedPuzzle {
 }
 
 export interface CoinInfo {
-  parent: string;
+  parent: Hex0x;
   puzzle: string;
   parsed_puzzle: SimplePuzzle | CannotParsePuzzle;
   amount: string;
   solution: string;
-  coin_name: string;
+  coin_name: Hex0x;
   mods: string;
   key_param?: string;
   analysis?: string;
@@ -84,7 +84,7 @@ export async function uncurryPuzzle(
 }
 
 export async function parseCoin(all: SExp): Promise<CoinInfo> {
-  const parent = disassemble(all.first());
+  const parent = prefix0x(disassemble(all.first()));
   let next = all.rest();
   const puz = next.first();
   const puz_hex = prefix0x(puz.as_bin().hex());
@@ -93,8 +93,8 @@ export async function parseCoin(all: SExp): Promise<CoinInfo> {
   next = next.rest();
   const solution = prefix0x(next.first().as_bin().hex());
 
-  const puzzle_hash = sha256tree(puz).hex();
-  const coin = { amount, parent_coin_info: parent, puzzle_hash };
+  const puzzle_hash = prefix0x(sha256tree(puz).hex());
+  const coin: OriginCoin = { amount, parent_coin_info: parent, puzzle_hash };
   const coin_name = getCoinName0x(coin);
 
   const uncPuzzle = await uncurryPuzzle(puz, puz_hex);

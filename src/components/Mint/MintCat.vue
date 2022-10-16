@@ -36,7 +36,7 @@
       </div>
       <template v-if="bundle">
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($t('mintCat.ui.summary.notification'))"></span>
+          <span v-html="$sanitize($tc('mintCat.ui.summary.notification'))"></span>
         </b-notification>
         <send-summary
           :amount="numericAmount"
@@ -95,7 +95,7 @@ import FeeSelector from "@/components/Send/FeeSelector.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import SendSummary from "@/components/Send/SendSummary.vue";
 import { generateMintCatBundle } from "@/services/mint/cat";
-import { chainId, ensureAddress, xchPrefix, xchSymbol } from "@/store/modules/network";
+import { ensureAddress, networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
 import { getTokenInfo } from "@/services/view/cat";
@@ -349,8 +349,7 @@ export default class MintCat extends Vue {
         this.availcoins,
         this.account.key.privateKey,
         this.requests,
-        xchSymbol(),
-        chainId(),
+        networkContext(),
         "cat_v2"
       );
 

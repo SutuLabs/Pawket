@@ -57,6 +57,12 @@ const routes: Array<RouteConfig> = [
       {
         path: "verify-message",
       },
+      {
+        path: "encrypt-message",
+      },
+      {
+        path: "decrypt-message",
+      },
     ],
   },
   {

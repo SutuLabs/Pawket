@@ -1,13 +1,18 @@
 import { OriginCoin } from "@/models/wallet";
+import { NetworkContextWithOptionalApi } from "@/services/coin/coinUtility";
 import { prefix0x } from "@/services/coin/condition";
 import puzzle from "@/services/crypto/puzzle";
 import utility from "@/services/crypto/utility";
 import transfer from "@/services/transfer/transfer";
 import { Instance } from "@/services/util/instance";
 
-function xchPrefix() { return "xch"; }
-function xchSymbol() { return "XCH"; }
-function chainId() { return "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb"; }
+const net: NetworkContextWithOptionalApi = {
+  prefix: "xch",
+  symbol: "XCH",
+  chainId: "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb",
+}
+function xchPrefix() { return net.prefix; }
+function xchSymbol() { return net.symbol; }
 
 beforeAll(async () => {
   await Instance.init();
@@ -35,6 +40,6 @@ test('Standard Transfer', async () => {
   expect(puzzles).toMatchSnapshot("puzzles");
   const plan = await transfer.generateSpendPlan({ [xchSymbol()]: [coin] }, [{ symbol: xchSymbol(), address: tgt_hex, amount: 1_000_000n, }], change_hex, 0n, xchSymbol());
   expect(plan).toMatchSnapshot("plan");
-  const bundle = await transfer.generateSpendBundleWithoutCat(plan, [{ symbol: xchSymbol(), puzzles }], [], xchSymbol(), chainId());
+  const bundle = await transfer.generateSpendBundleWithoutCat(plan, [{ symbol: xchSymbol(), puzzles }], [], net);
   expect(bundle).toMatchSnapshot("bundle");
 });
