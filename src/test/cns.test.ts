@@ -8,12 +8,10 @@ import { getAccountAddressDetails } from "@/services/util/account";
 
 import { CnsMetadataValues } from "@/models/nft";
 import { cnsMetadata, knownCoins } from "./cases/cns.test.data";
-import { CoinSpend, OriginCoin } from "@/models/wallet";
+import { CoinSpend } from "@/models/wallet";
 import { combineSpendBundle, generateNftOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
 import { getOfferSummary } from "@/services/offer/summary";
-import { getCoinName0x } from "@/services/coin/coinUtility";
-import { combineSpendBundlePure } from "@/services/mint/cat";
 import { generateMintCnsOffer } from "@/services/offer/cns";
 
 function xchPrefix() { return "xch"; }
