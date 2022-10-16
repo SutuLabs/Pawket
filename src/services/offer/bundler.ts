@@ -3,7 +3,7 @@ import { Bytes } from "clvm";
 import { CoinConditions, ConditionType, Hex0x, prefix0x } from '../coin/condition';
 import puzzle, { PlaintextPuzzle } from "../crypto/puzzle";
 import { ConditionOpcode } from "../coin/opcode";
-import transfer, { GetPuzzleApiCallback, SymbolCoins, TransferTarget } from "../transfer/transfer";
+import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { TokenPuzzleDetail } from "../crypto/receive";
 import catBundle from "../transfer/catBundle";
 import stdBundle from "../transfer/stdBundle";
@@ -21,9 +21,7 @@ export async function generateOffer(
   offered: OfferPlan[],
   requested: OfferEntity[],
   puzzles: TokenPuzzleDetail[],
-  getPuzzle: GetPuzzleApiCallback,
-  tokenSymbol: string,
-  chainId: string,
+  net:NetworkContext,
   nonceHex: string | null = null,
   catModName: "cat_v1" | "cat_v2" = "cat_v2",
 ): Promise<SpendBundle> {
@@ -75,7 +73,7 @@ export async function generateOffer(
       const puzzle_reveal_text = modsprog["settlement_payments"];
 
       // put special target into puzzle reverse dict
-      puzzleCopy.filter(_ => _.symbol == tokenSymbol)[0].puzzles.push({
+      puzzleCopy.filter(_ => _.symbol == net.symbol)[0].puzzles.push({
         privateKey: puzzle.getEmptyPrivateKey(), // this private key will not really calculated due to no AGG_SIG_ME exist in this spend
         puzzle: puzzle_reveal_text,
         hash: settlement_tgt,
@@ -143,14 +141,14 @@ export async function generateOffer(
     const off = offered[i];
     const conds = getPuzzleAnnoConditions();
     if (off.id) {//CAT
-      spends.push(...await catBundle.generateCoinSpends(off.plan, puzzleCopy, conds, getPuzzle));
+      spends.push(...await catBundle.generateCoinSpends(off.plan, puzzleCopy, conds, net.api));
     } else {
       spends.push(...await stdBundle.generateCoinSpends(off.plan, puzzleCopy, conds));
     }
   }
 
   // combine into one spendbundle
-  return transfer.getSpendBundle(spends, puzzleCopy, chainId);
+  return transfer.getSpendBundle(spends, puzzleCopy, net.chainId);
 }
 
 export function sha256(...args: (string | Uint8Array)[]): string {

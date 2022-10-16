@@ -95,7 +95,7 @@ import FeeSelector from "@/components/Send/FeeSelector.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import SendSummary from "@/components/Send/SendSummary.vue";
 import { generateMintCatBundle } from "@/services/mint/cat";
-import { chainId, ensureAddress, networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
+import { ensureAddress, networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
 import { getTokenInfo } from "@/services/view/cat";

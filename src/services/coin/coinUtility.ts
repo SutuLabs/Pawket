@@ -6,6 +6,13 @@ export interface NetworkContext {
   prefix: string;
   symbol: string;
   chainId: string;
+  api: GetPuzzleApiCallback;
+}
+
+export interface NetworkContextWithOptionalApi {
+  prefix: string;
+  symbol: string;
+  chainId: string;
   api?: GetPuzzleApiCallback;
 }
 

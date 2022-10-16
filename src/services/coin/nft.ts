@@ -57,8 +57,6 @@ export async function generateMintNftBundle(
   isCns = false,
 ): Promise<MintNftInfo> {
   const amount = 1n; // always 1 mojo for 1 NFT
-  if (!net.api) throw new Error("api is mandatory for this interface");
-
   const intermediate_hex = prefix0x(puzzle.getPuzzleHashFromAddress(nftIntermediateAddress));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(changeAddress));
   const inner_p2_puzzle = getPuzzleDetail(intermediate_hex, requests);
@@ -264,8 +262,6 @@ export async function generateTransferNftBundle(
   net: NetworkContext,
   didAnalysis: DidCoinAnalysisResult | undefined = undefined,
 ): Promise<SpendBundle> {
-  if (!net.api) throw new Error("api is mandatory for this interface");
-
   const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(changeAddress));
   const inner_p2_puzzle = getPuzzleDetail(analysis.hintPuzzle, requests);
@@ -621,8 +617,6 @@ async function constructDidSpendBundle(
   requests: TokenPuzzleDetail[],
   net: NetworkContext,
 ): Promise<SpendBundle> {
-  if (!net.api) throw new Error("api is mandatory for this interface");
-
   const amount = 1n;
   const didPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(didAnalysis.rawPuzzle));
   const proof = await catBundle.getLineageProof(didAnalysis.coin.parent_coin_info, net.api, 2);

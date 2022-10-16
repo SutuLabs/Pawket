@@ -134,7 +134,7 @@ import { debugBundle, submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import SendSummary from "@/components/Send/SendSummary.vue";
-import { chainId, ensureAddress, networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
+import { ensureAddress, networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getTokenInfo } from "@/services/view/cat";
 import AddressField from "@/components/Common/AddressField.vue";
 import { Bytes } from "clvm";
@@ -143,7 +143,6 @@ import utility from "@/services/crypto/utility";
 import { generateMintNftBundle } from "@/services/coin/nft";
 import { NftMetadataValues } from "@/models/nft";
 import puzzle from "@/services/crypto/puzzle";
-import { getLineageProofPuzzle } from "@/services/transfer/call";
 
 interface NftFormInfo {
   uri: string;

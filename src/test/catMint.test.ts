@@ -1,12 +1,12 @@
 import { OriginCoin } from "@/models/wallet";
 import { analyzeCatCoin } from "@/services/coin/cat";
-import { NetworkContext } from "@/services/coin/coinUtility";
+import { NetworkContextWithOptionalApi } from "@/services/coin/coinUtility";
 import puzzle from "@/services/crypto/puzzle";
 import utility from "@/services/crypto/utility";
 import { generateMintCatBundle } from "@/services/mint/cat";
 import { Instance } from "@/services/util/instance";
 
-const net: NetworkContext = {
+const net: NetworkContextWithOptionalApi = {
   prefix: "xch",
   symbol: "XCH",
   chainId: "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb",

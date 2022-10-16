@@ -25,8 +25,6 @@ export async function generateMintCnsOffer(
   net: NetworkContext,
   nonceHex: string | null = null,
 ): Promise<SpendBundle> {
-  if (!net.api) throw new Error("api is mandatory for this interface");
-
   const target_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(changeAddress));
   const reqs = [
@@ -72,7 +70,7 @@ export async function generateMintCnsOffer(
   net.api = async function (parentCoinId: string): Promise<GetParentPuzzleResponse | undefined> {
     const resp = knownCoins.find(_ => _.parentCoinId == parentCoinId);
     if (resp) return resp;
-    return !net.api ? undefined : await net.api(parentCoinId);
+    return await net.api(parentCoinId);
   };
   const offerBundle = await generateNftOffer(
     offplan, analysis, nextCoin, reqs, requests, net, nonceHex);

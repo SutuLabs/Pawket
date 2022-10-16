@@ -6,7 +6,7 @@ import { TokenPuzzleDetail } from "../crypto/receive";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { curryMod } from "../offer/bundler";
 import { modshash, modsprog } from "../coin/mods";
-import { getCoinName0x, NetworkContext } from "../coin/coinUtility";
+import { getCoinName0x, NetworkContextWithOptionalApi } from "../coin/coinUtility";
 import { Instance } from "../util/instance";
 
 export interface MintCatInfo {
@@ -35,7 +35,7 @@ export async function generateMintCatBundle(
   availcoins: SymbolCoins,
   sk_hex: string,
   requests: TokenPuzzleDetail[],
-  net: NetworkContext,
+  net: NetworkContextWithOptionalApi,
   catModName: "cat_v1" | "cat_v2" = "cat_v2",
 ): Promise<MintCatInfo> {
   const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
@@ -100,7 +100,7 @@ async function constructInternalBundle(
   fee: bigint,
   availcoins: SymbolCoins,
   requests: TokenPuzzleDetail[],
-  net: NetworkContext,
+  net: NetworkContextWithOptionalApi,
 ): Promise<SpendBundle> {
   const baseSymbol = Object.keys(availcoins)[0];
   const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: baseSymbol },];

@@ -87,11 +87,10 @@ import DevHelper from "@/components/DevHelper/DevHelper.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { getOfferEntities, getOfferSummary, OfferEntity, OfferSummary, OfferTokenAmount } from "@/services/offer/summary";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
-import { chainId, networkContext, xchSymbol } from "@/store/modules/network";
+import { networkContext, xchSymbol } from "@/store/modules/network";
 import { prefix0x } from "@/services/coin/condition";
 import puzzle from "@/services/crypto/puzzle";
 import { generateNftOffer, generateOfferPlan } from "@/services/offer/bundler";
-import { getLineageProofPuzzle } from "@/services/transfer/call";
 import dexie from "@/services/api/dexie";
 import { tc } from "@/i18n/i18n";
 

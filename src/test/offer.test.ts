@@ -1,6 +1,5 @@
 import { GetParentPuzzleResponse } from "@/models/api";
-import { SpendBundle } from "@/models/wallet";
-import { getTestAccount, noNeedGetProof } from "./utility";
+import { getTestAccount } from "./utility";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
 import { getOfferSummary, OfferEntity, OfferPlan } from "@/services/offer/summary";
 import { combineSpendBundle, generateOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
@@ -9,10 +8,10 @@ import { Instance } from "@/services/util/instance";
 import { getAccountAddressDetails } from "@/services/util/account";
 import { AccountEntity, PersistentCustomCat } from "@/models/account";
 import { prefix0x } from "@/services/coin/condition";
+import { NetworkContext } from "@/services/coin/coinUtility";
 
 function xchPrefix() { return "xch"; }
 function xchSymbol() { return "XCH"; }
-function chainId() { return "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb"; }
 function tokenInfo() {
   return {
     BSH: {
@@ -22,6 +21,12 @@ function tokenInfo() {
       id: "6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b",
     },
   };
+}
+const net: NetworkContext = {
+  prefix: "xch",
+  symbol: "XCH",
+  chainId: "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb",
+  api: localPuzzleApiCall,
 }
 
 beforeAll(async () => {
@@ -79,7 +84,7 @@ test('Make Offer 1', async () => {
   const tokenPuzzles = await getAccountAddressDetails(account, [], tokenInfo(), xchPrefix(), xchSymbol(), undefined, "cat_v1");
 
   const nonce = "71bdf5d923a48956a8d26a36c6ea4a9959de221ff2ee986bce4827e5f037ceb8";
-  const bundle = await generateOffer(offplan, reqs, tokenPuzzles, noNeedGetProof, xchSymbol(), chainId(), nonce, "cat_v1");
+  const bundle = await generateOffer(offplan, reqs, tokenPuzzles, net, nonce, "cat_v1");
   const encoded = await encodeOffer(bundle, undefined, 2);
 
   expect(bundle).toMatchSnapshot("bundle");
@@ -136,7 +141,7 @@ test('Make Offer 2', async () => {
   const tokenPuzzles = await getAccountAddressDetails(account, [], tokenInfo(), xchPrefix(), xchSymbol(), undefined, "cat_v1");
 
   const nonce = "741f8564b6637aee92dd68548cfe7df8ec35b20029235565244944febd68bf8d";
-  const bundle = await generateOffer(offplan, reqs, tokenPuzzles, localPuzzleApiCall, xchSymbol(), chainId(), nonce, "cat_v1");
+  const bundle = await generateOffer(offplan, reqs, tokenPuzzles, net, nonce, "cat_v1");
   const encoded = await encodeOffer(bundle, undefined, 2);
 
   expect(bundle).toMatchSnapshot("bundle");
@@ -170,7 +175,7 @@ test('Take Offer Xch For CAT', async () => {
   expect(revSummary).toMatchSnapshot("reverse summary");
   const offplan = await generateOfferPlan(revSummary.offered, change_hex, availcoins, 0n, xchSymbol());
   expect(offplan).toMatchSnapshot("offer plan");
-  const takerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, localPuzzleApiCall, xchSymbol(), chainId(), nonce, "cat_v1");
+  const takerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, net, nonce, "cat_v1");
   expect(takerBundle).toMatchSnapshot("taker bundle");
   const combined = await combineSpendBundle([makerBundle, takerBundle]);
   expect(combined).toMatchSnapshot("bundle");
@@ -203,7 +208,7 @@ test('Take Offer CAT For Xch', async () => {
   expect(revSummary).toMatchSnapshot("reverse summary");
   const offplan = await generateOfferPlan(revSummary.offered, change_hex, availcoins, 0n, xchSymbol());
   expect(offplan).toMatchSnapshot("offer plan");
-  const takerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, localPuzzleApiCall, xchSymbol(), chainId(), nonce, "cat_v1");
+  const takerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, net, nonce, "cat_v1");
   expect(takerBundle).toMatchSnapshot("taker bundle");
   const combined = await combineSpendBundle([makerBundle, takerBundle]);
   expect(combined).toMatchSnapshot("bundle");

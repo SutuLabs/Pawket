@@ -81,13 +81,12 @@ import { debugBundle, submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import SendSummary from "@/components/Send/SendSummary.vue";
-import { chainId, networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
+import { networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getTokenInfo } from "@/services/view/cat";
 import { generateTransferNftBundle } from "@/services/coin/nft";
 import AddressField from "@/components/Common/AddressField.vue";
 import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
-import { getLineageProofPuzzle } from "@/services/transfer/call";
 
 @Component({
   components: {

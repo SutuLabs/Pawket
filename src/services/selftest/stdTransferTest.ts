@@ -1,5 +1,5 @@
 import { OriginCoin } from "@/models/wallet";
-import { NetworkContext } from "../coin/coinUtility";
+import { NetworkContextWithOptionalApi } from "../coin/coinUtility";
 import { prefix0x } from "../coin/condition";
 import puzzle from "../crypto/puzzle";
 import utility from "../crypto/utility";
@@ -8,7 +8,7 @@ import { assert } from "./runner";
 
 function xchPrefix() { return "xch"; }
 function xchSymbol() { return "XCH"; }
-const net: NetworkContext = {
+const net: NetworkContextWithOptionalApi = {
   prefix: "xch",
   symbol: "XCH",
   chainId: "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb",

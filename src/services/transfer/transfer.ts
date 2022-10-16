@@ -9,7 +9,7 @@ import { TokenPuzzleDetail } from "../crypto/receive";
 import stdBundle from "./stdBundle";
 import { ConditionOpcode } from "../coin/opcode";
 import catBundle from "./catBundle";
-import { getCoinNameHex, NetworkContext } from "../coin/coinUtility";
+import { getCoinNameHex, NetworkContext, NetworkContextWithOptionalApi } from "../coin/coinUtility";
 import { Instance } from "../util/instance";
 import { calculate_synthetic_secret_key } from "../crypto/sign";
 
@@ -57,7 +57,7 @@ class Transfer {
     plan: SpendPlan,
     puzzles: TokenPuzzleDetail[],
     catAdditionalConditions: ConditionType[],
-    net: NetworkContext,
+    net: NetworkContextWithOptionalApi,
   ): Promise<SpendBundle> {
     return await this.generateSpendBundleInternal(plan, puzzles, catAdditionalConditions, net);
   }
@@ -75,7 +75,7 @@ class Transfer {
     plan: SpendPlan,
     puzzles: TokenPuzzleDetail[],
     catAdditionalConditions: ConditionType[],
-    net: NetworkContext,
+    net: NetworkContextWithOptionalApi,
   ): Promise<SpendBundle> {
     const coin_spends: CoinSpend[] = [];
 

@@ -192,8 +192,7 @@ import { debugBundle, submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import ManageCats from "@/components/Cat/ManageCats.vue";
 import OfflineSendShowBundle from "@/components/Offline/OfflineSendShowBundle.vue";
-import { chainId, networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
-import { getLineageProofPuzzle } from "@/services/transfer/call";
+import { networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
 import bigDecimal from "js-big-decimal";
 
 @Component({
@@ -259,7 +258,7 @@ export default class TakeOffer extends Vue {
 
   @Emit("close")
   close(): void {
-    if (this.path.endsWith("take-offer")) this.$router.back();
+    if(this.path.endsWith("take-offer")) this.$router.back();
     return;
   }
 
@@ -268,7 +267,7 @@ export default class TakeOffer extends Vue {
   }
 
   @Watch("path")
-  onPathChange(): void {
+  onPathChange():void {
     this.close();
   }
 
@@ -439,9 +438,7 @@ export default class TakeOffer extends Vue {
           offplan,
           revSummary.requested,
           this.tokenPuzzles,
-          getLineageProofPuzzle,
-          xchSymbol(),
-          chainId()
+          networkContext(),
         );
         const combined = await combineSpendBundle([this.makerBundle, takerBundle]);
         // for creating unit test
