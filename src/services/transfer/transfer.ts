@@ -9,7 +9,7 @@ import { TokenPuzzleDetail } from "../crypto/receive";
 import stdBundle from "./stdBundle";
 import { ConditionOpcode } from "../coin/opcode";
 import catBundle from "./catBundle";
-import { getCoinNameHex } from "../coin/coinUtility";
+import { getCoinNameHex, NetworkContext } from "../coin/coinUtility";
 import { Instance } from "../util/instance";
 import { calculate_synthetic_secret_key } from "../crypto/sign";
 
@@ -57,30 +57,25 @@ class Transfer {
     plan: SpendPlan,
     puzzles: TokenPuzzleDetail[],
     catAdditionalConditions: ConditionType[],
-    tokenSymbol: string,
-    chainId: string,
+    net: NetworkContext,
   ): Promise<SpendBundle> {
-    return await this.generateSpendBundleInternal(plan, puzzles, catAdditionalConditions, tokenSymbol, chainId);
+    return await this.generateSpendBundleInternal(plan, puzzles, catAdditionalConditions, net);
   }
 
   public async generateSpendBundleIncludingCat(
     plan: SpendPlan,
     puzzles: TokenPuzzleDetail[],
     catAdditionalConditions: ConditionType[],
-    tokenSymbol: string,
-    chainId: string,
-    getPuzzle: GetPuzzleApiCallback,
+    net: NetworkContext,
   ): Promise<SpendBundle> {
-    return await this.generateSpendBundleInternal(plan, puzzles, catAdditionalConditions, tokenSymbol, chainId, getPuzzle);
+    return await this.generateSpendBundleInternal(plan, puzzles, catAdditionalConditions, net);
   }
 
   public async generateSpendBundleInternal(
     plan: SpendPlan,
     puzzles: TokenPuzzleDetail[],
     catAdditionalConditions: ConditionType[],
-    tokenSymbol: string,
-    chainId: string,
-    getPuzzle: GetPuzzleApiCallback | null = null,
+    net: NetworkContext,
   ): Promise<SpendBundle> {
     const coin_spends: CoinSpend[] = [];
 
@@ -88,15 +83,15 @@ class Transfer {
       if (!Object.prototype.hasOwnProperty.call(plan, symbol)) continue;
 
       const tp = plan[symbol];
-      if (symbol == tokenSymbol) {
+      if (symbol == net.symbol) {
         coin_spends.push(... await stdBundle.generateCoinSpends(tp, puzzles));
       } else {
-        if (getPuzzle == null) throw new Error(`getPuzzle cannot be null when composing cat[${symbol}] spendbundle other than native token[${tokenSymbol}]`);
-        coin_spends.push(... await catBundle.generateCoinSpends(tp, puzzles, catAdditionalConditions, getPuzzle));
+        if (net.api == null) throw new Error(`getPuzzle cannot be null when composing cat[${symbol}] spendbundle other than native token[${net.symbol}]`);
+        coin_spends.push(... await catBundle.generateCoinSpends(tp, puzzles, catAdditionalConditions, net.api));
       }
     }
 
-    return this.getSpendBundle(coin_spends, puzzles, chainId);
+    return this.getSpendBundle(coin_spends, puzzles, net.chainId);
   }
 
   public async getSignaturesFromCoinSpends(

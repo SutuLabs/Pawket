@@ -6,7 +6,7 @@ import { TokenPuzzleDetail } from "../crypto/receive";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { curryMod } from "../offer/bundler";
 import { modshash, modsprog } from "../coin/mods";
-import { getCoinName0x } from "../coin/coinUtility";
+import { getCoinName0x, NetworkContext } from "../coin/coinUtility";
 import { Instance } from "../util/instance";
 
 export interface MintCatInfo {
@@ -35,8 +35,7 @@ export async function generateMintCatBundle(
   availcoins: SymbolCoins,
   sk_hex: string,
   requests: TokenPuzzleDetail[],
-  tokenSymbol: string,
-  chainId: string,
+  net: NetworkContext,
   catModName: "cat_v1" | "cat_v2" = "cat_v2",
 ): Promise<MintCatInfo> {
   const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
@@ -46,9 +45,9 @@ export async function generateMintCatBundle(
   // eslint-disable-next-line no-useless-escape
   memo = memo.replace(/[&/\\#,+()$~%.'":*?<>{}\[\] ]/g, "_");
 
-  const { innerPuzzle, catPuzzle, assetId, bootstrapCoin } = await constructCatPuzzle(tgt_hex, change_hex, amount, fee, memo, availcoins, tokenSymbol, catModName);
-  const ibundle = await constructInternalBundle(catPuzzle.hash, change_hex, amount, fee, availcoins, requests, tokenSymbol, chainId);
-  const ebundle = await constructExternalBundle(innerPuzzle, catPuzzle, bootstrapCoin, amount, sk_hex, chainId);
+  const { innerPuzzle, catPuzzle, assetId, bootstrapCoin } = await constructCatPuzzle(tgt_hex, change_hex, amount, fee, memo, availcoins, net.symbol, catModName);
+  const ibundle = await constructInternalBundle(catPuzzle.hash, change_hex, amount, fee, availcoins, requests, net);
+  const ebundle = await constructExternalBundle(innerPuzzle, catPuzzle, bootstrapCoin, amount, sk_hex, net.chainId);
   const bundle = await combineSpendBundlePure(ibundle, ebundle);
 
   return {
@@ -101,14 +100,13 @@ async function constructInternalBundle(
   fee: bigint,
   availcoins: SymbolCoins,
   requests: TokenPuzzleDetail[],
-  tokenSymbol: string,
-  chainId: string,
+  net: NetworkContext,
 ): Promise<SpendBundle> {
   const baseSymbol = Object.keys(availcoins)[0];
   const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: baseSymbol },];
   tgts[0].address = tgt_hex;
-  const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, fee, tokenSymbol);
-  const bundle = await transfer.generateSpendBundleWithoutCat(plan, requests, [], tokenSymbol, chainId);
+  const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, fee, net.symbol);
+  const bundle = await transfer.generateSpendBundleWithoutCat(plan, requests, [], net);
   return bundle;
 }
 

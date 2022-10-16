@@ -71,7 +71,7 @@ import coinHandler from "@/services/transfer/coin";
 import { debugBundle, submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
-import { chainId, xchPrefix, xchSymbol } from "@/store/modules/network";
+import { chainId, networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getTokenInfo } from "@/services/view/cat";
 import { generateTransferNftBundle } from "@/services/coin/nft";
 import AddressField from "@/components/Common/AddressField.vue";
@@ -87,7 +87,7 @@ import BuyCnsSummary from "@/components/Cns/BuyCnsSummary.vue";
     TokenAmountField,
     BundleSummary,
     AddressField,
-    BuyCnsSummary
+    BuyCnsSummary,
   },
 })
 export default class BuyCns extends Vue {
@@ -276,9 +276,7 @@ export default class BuyCns extends Vue {
         this.cns.analysis,
         this.availcoins,
         this.requests,
-        xchSymbol(),
-        chainId(),
-        getLineageProofPuzzle
+        networkContext()
       );
 
       this.bundle = spendBundle;

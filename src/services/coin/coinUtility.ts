@@ -1,5 +1,13 @@
 import { Hex0x, prefix0x } from "./condition";
 import { Bytes, bigint_to_bytes } from "clvm";
+import { GetPuzzleApiCallback } from "../transfer/transfer";
+
+export interface NetworkContext {
+  prefix: string;
+  symbol: string;
+  chainId: string;
+  api?: GetPuzzleApiCallback;
+}
 
 export interface CompatibleCoin {
   amount: bigint | number;

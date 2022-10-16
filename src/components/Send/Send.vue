@@ -112,12 +112,11 @@ import OfflineSendShowBundle from "@/components/Offline/OfflineSendShowBundle.vu
 import { CurrencyType } from "@/services/exchange/currencyType";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import SendSummary from "@/components/Send/SendSummary.vue";
-import { chainId, xchPrefix, xchSymbol } from "@/store/modules/network";
+import { networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getCatNames, getTokenInfo } from "@/services/view/cat";
 import AddressField from "@/components/Common/AddressField.vue";
 import TopBar from "@/components/Common/TopBar.vue";
 import AddressBook, { Contact } from "@/components/AddressBook/AddressBook.vue";
-import { getLineageProofPuzzle } from "@/services/transfer/call";
 
 @Component({
   components: {
@@ -374,14 +373,7 @@ export default class Send extends Vue {
       const memo = this.memo.replace(/[&/\\#,+()$~%.'":*?<>{}\[\] ]/g, "_");
       const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: this.selectedToken, memos: [tgt_hex, memo] }];
       const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
-      this.bundle = await transfer.generateSpendBundleIncludingCat(
-        plan,
-        this.requests,
-        [],
-        xchSymbol(),
-        chainId(),
-        getLineageProofPuzzle
-      );
+      this.bundle = await transfer.generateSpendBundleIncludingCat(plan, this.requests, [], networkContext());
     } catch (error) {
       Notification.open({
         message: this.$tc("send.ui.messages.failedToSign") + error,

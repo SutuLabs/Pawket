@@ -100,7 +100,7 @@ import DevHelper from "@/components/DevHelper/DevHelper.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { getOfferSummary, OfferSummary } from "@/services/offer/summary";
 import { decodeOffer } from "@/services/offer/encoding";
-import { chainId, xchSymbol } from "@/store/modules/network";
+import { chainId, networkContext, xchSymbol } from "@/store/modules/network";
 import { getLineageProofPuzzle } from "@/services/transfer/call";
 import { submitBundle } from "@/services/view/bundle";
 import { generateTransferNftBundle } from "@/services/coin/nft";
@@ -217,9 +217,7 @@ export default class NftMove extends Vue {
         this.nft.analysis,
         this.availcoins,
         this.tokenPuzzles,
-        xchSymbol(),
-        chainId(),
-        getLineageProofPuzzle,
+        networkContext(),
         this.selectedDid.analysis
       );
 

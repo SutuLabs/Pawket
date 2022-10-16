@@ -18,7 +18,14 @@ import nftcoin5 from "./cases/nftcoin5.json"
 import didcoin1 from "./cases/didcoin1.json"
 import { NftMetadataValues } from "@/models/nft";
 import { didAnalysis, knownCoins, nftMetadata } from "./cases/nft.test.data";
+import { NetworkContext } from "@/services/coin/coinUtility";
 
+const net: NetworkContext = {
+  prefix: "txch",
+  symbol: "TXCH",
+  chainId: "ae83525ba8d1dd3f09b277de18ca3e43fc0af20d20c4b3e92ef2a48bd291ccb2",
+  api: localPuzzleApiCall,
+}
 function xchPrefix() { return "txch"; }
 function xchSymbol() { return "TXCH"; }
 function chainId() { return "ae83525ba8d1dd3f09b277de18ca3e43fc0af20d20c4b3e92ef2a48bd291ccb2"; }
@@ -69,8 +76,8 @@ async function testMintNft(
     ]
   };
   const { spendBundle } = await generateMintNftBundle(
-    targetAddress, changeAddress, fee, metadata, availcoins, tokenPuzzles, xchSymbol(), chainId(), royaltyAddressHex,
-    tradePricePercentage, didAnalysis, localPuzzleApiCall,
+    targetAddress, changeAddress, fee, metadata, availcoins, tokenPuzzles, royaltyAddressHex,
+    tradePricePercentage, net, didAnalysis,
     "00186eae4cd4a3ec609ca1a8c1cda8467e3cb7cbbbf91a523d12d31129d5f8d7", targetAddresses);
   expect(spendBundle).toMatchSnapshot("spendbundle");
 }
@@ -122,7 +129,7 @@ async function testTransferNft(fee: bigint, didAnalysis: DidCoinAnalysisResult |
   };
 
   const spendBundle = await generateTransferNftBundle(
-    targetAddress, changeAddress, fee, nftCoin, analysis, availcoins, tokenPuzzles, xchSymbol(), chainId(), localPuzzleApiCall, didAnalysis);
+    targetAddress, changeAddress, fee, nftCoin, analysis, availcoins, tokenPuzzles, net, didAnalysis);
   expect(spendBundle).toMatchSnapshot("spendbundle");
 }
 
@@ -161,7 +168,7 @@ async function testMintDid(fee: bigint): Promise<void> {
     ]
   };
 
-  const spendBundle = await generateMintDidBundle(targetAddress, changeAddress, fee, {}, availcoins, tokenPuzzles, xchSymbol, chainId);
+  const spendBundle = await generateMintDidBundle(targetAddress, changeAddress, fee, {}, availcoins, tokenPuzzles, net);
   expect(spendBundle).toMatchSnapshot("spendbundle");
 }
 

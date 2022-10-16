@@ -4,7 +4,7 @@ import { analyzeNftCoin, generateMintNftBundle } from "@/services/coin/nft";
 import puzzle from "@/services/crypto/puzzle";
 import { CnsMetadataValues } from "@/models/nft";
 import { OriginCoin } from "@/models/wallet";
-import { getCoinName0x } from "../coin/coinUtility";
+import { getCoinName0x, NetworkContext } from "../coin/coinUtility";
 import { TokenPuzzleDetail } from "../crypto/receive";
 import { generateOfferPlan, generateNftOffer } from "./bundler";
 import { prefix0x } from "../coin/condition";
@@ -20,27 +20,27 @@ export async function generateMintCnsOffer(
   metadata: CnsMetadataValues,
   availcoins: SymbolCoins,
   requests: TokenPuzzleDetail[],
-  baseSymbol: string,
-  chainId: string,
   royaltyAddressHex: string,
   tradePricePercentage: number,
-  api: GetPuzzleApiCallback,
+  net: NetworkContext,
   nonceHex: string | null = null,
 ): Promise<SpendBundle> {
+  if (!net.api) throw new Error("api is mandatory for this interface");
+
   const target_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(changeAddress));
   const reqs = [
     {
       "id": "",
-      "symbol": baseSymbol,
+      "symbol": net.symbol,
       "amount": price,
       "target": target_hex,
     }
   ];
 
   const { spendBundle } = await generateMintNftBundle(
-    targetAddress, changeAddress, fee, metadata, availcoins, requests, baseSymbol, chainId, royaltyAddressHex,
-    tradePricePercentage, undefined, api);
+    targetAddress, changeAddress, fee, metadata, availcoins, requests, royaltyAddressHex,
+    tradePricePercentage, net, undefined);
 
   const nftcs = spendBundle.coin_spends[2];
   const analysis = await analyzeNftCoin(nftcs.puzzle_reveal, "", nftcs.coin, nftcs.solution);
@@ -68,14 +68,14 @@ export async function generateMintCnsOffer(
     }
   ];
 
-  const offplan = await generateOfferPlan(offs, change_hex, availcoins, 0n, baseSymbol);
-  const localPuzzleApiCall = async function (parentCoinId: string): Promise<GetParentPuzzleResponse | undefined> {
+  const offplan = await generateOfferPlan(offs, change_hex, availcoins, 0n, net.symbol);
+  net.api = async function (parentCoinId: string): Promise<GetParentPuzzleResponse | undefined> {
     const resp = knownCoins.find(_ => _.parentCoinId == parentCoinId);
     if (resp) return resp;
-    return await api(parentCoinId);
+    return !net.api ? undefined : await net.api(parentCoinId);
   };
   const offerBundle = await generateNftOffer(
-    offplan, analysis, nextCoin, reqs, requests, localPuzzleApiCall, baseSymbol, chainId, nonceHex);
+    offplan, analysis, nextCoin, reqs, requests, net, nonceHex);
 
   const offerCombineBundle = await combineSpendBundlePure(spendBundle, offerBundle);
   return offerCombineBundle;

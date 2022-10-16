@@ -87,7 +87,7 @@ import DevHelper from "@/components/DevHelper/DevHelper.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { getOfferEntities, getOfferSummary, OfferEntity, OfferSummary, OfferTokenAmount } from "@/services/offer/summary";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
-import { chainId, xchSymbol } from "@/store/modules/network";
+import { chainId, networkContext, xchSymbol } from "@/store/modules/network";
 import { prefix0x } from "@/services/coin/condition";
 import puzzle from "@/services/crypto/puzzle";
 import { generateNftOffer, generateOfferPlan } from "@/services/offer/bundler";
@@ -190,16 +190,7 @@ export default class NftOffer extends Vue {
       // console.log("const reqs=" + JSON.stringify(reqs, null, 2) + ";");
       // console.log("const availcoins=" + JSON.stringify(this.availcoins, null, 2) + ";");
       const offplan = await generateOfferPlan(offs, change_hex, this.availcoins, 0n, xchSymbol());
-      const bundle = await generateNftOffer(
-        offplan,
-        this.nft.analysis,
-        this.nft.coin,
-        reqs,
-        this.tokenPuzzles,
-        getLineageProofPuzzle,
-        xchSymbol(),
-        chainId()
-      );
+      const bundle = await generateNftOffer(offplan, this.nft.analysis, this.nft.coin, reqs, this.tokenPuzzles, networkContext());
       this.bundle = bundle;
       this.offerText = await encodeOffer(bundle);
 

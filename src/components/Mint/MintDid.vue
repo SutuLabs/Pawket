@@ -73,7 +73,7 @@ import FeeSelector from "@/components/Send/FeeSelector.vue";
 import OfflineSendShowBundle from "@/components/Offline/OfflineSendShowBundle.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import SendSummary from "@/components/Send/SendSummary.vue";
-import { chainId, xchSymbol } from "@/store/modules/network";
+import { chainId, networkContext, xchSymbol } from "@/store/modules/network";
 import { getCatNames } from "@/services/view/cat";
 import TopBar from "@/components/Common/TopBar.vue";
 import { generateMintDidBundle } from "@/services/coin/did";
@@ -204,7 +204,7 @@ export default class MintDid extends Vue {
       // const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
       // this.bundle = await transfer.generateSpendBundle(plan, this.requests, [], xchSymbol(), chainId());
       this.bundle = await (
-        await generateMintDidBundle(tgt, change, this.feeBigInt, {}, this.availcoins, this.requests, xchSymbol(), chainId())
+        await generateMintDidBundle(tgt, change, this.feeBigInt, {}, this.availcoins, this.requests, networkContext())
       ).spendBundle;
     } catch (error) {
       Notification.open({

@@ -7,10 +7,17 @@ import { getAccountAddressDetails } from "@/services/util/account";
 import { combineSpendBundle, generateNftOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import { NftDetail } from "@/services/crypto/receive";
+import { NetworkContext } from "@/services/coin/coinUtility";
 
 function xchPrefix() { return "txch"; }
 function xchSymbol() { return "TXCH"; }
 function chainId() { return "ae83525ba8d1dd3f09b277de18ca3e43fc0af20d20c4b3e92ef2a48bd291ccb2"; }
+const net: NetworkContext = {
+  prefix: "txch",
+  symbol: "TXCH",
+  chainId: "ae83525ba8d1dd3f09b277de18ca3e43fc0af20d20c4b3e92ef2a48bd291ccb2",
+  api: localPuzzleApiCall,
+}
 
 beforeAll(async () => {
   await Instance.init();
@@ -107,9 +114,7 @@ test('create and accept nft offer for xch', async () => {
     nft.coin,
     reqs,
     tokenPuzzles,
-    localPuzzleApiCall,
-    xchSymbol(),
-    chainId(),
+    net,
     nonce
   );
   expect(bundle).toMatchSnapshot("bundle");
@@ -144,9 +149,7 @@ test('create and accept nft offer for xch', async () => {
     undefined,
     revSummary.requested,
     tokenPuzzles,
-    localPuzzleApiCall,
-    xchSymbol(),
-    chainId(),
+    net,
     nonce
   );
   expect(takerBundle).toMatchSnapshot("takerBundle");

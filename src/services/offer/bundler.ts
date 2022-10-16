@@ -11,7 +11,7 @@ import { getOfferSummary, OfferEntity, OfferPlan, OfferSummary } from "./summary
 import { GetParentPuzzleResponse } from "@/models/api";
 import { assemble, curry, disassemble } from "clvm_tools";
 import { modshash, modshex0x, modsprog } from "../coin/mods";
-import { getCoinName0x } from "../coin/coinUtility";
+import { getCoinName0x, NetworkContext } from "../coin/coinUtility";
 import { Instance } from "../util/instance";
 import { NftCoinAnalysisResult } from "@/models/nft";
 import { generateTransferNftBundle, getTransferNftPuzzle, getTransferNftSolution } from "../coin/nft";
@@ -288,9 +288,7 @@ export async function generateNftOffer(
   nftcoin: OriginCoin | undefined,
   requested: OfferEntity[],
   puzzles: TokenPuzzleDetail[],
-  getPuzzle: GetPuzzleApiCallback,
-  tokenSymbol: string,
-  chainId: string,
+  net: NetworkContext,
   nonceHex: string | null = null
 ): Promise<SpendBundle> {
   const settlement_tgt = "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79";
@@ -329,7 +327,7 @@ export async function generateNftOffer(
 
   // put special target into puzzle reverse dict
   puzzleCopy
-    .filter((_) => _.symbol == tokenSymbol)[0]
+    .filter((_) => _.symbol == net.symbol)[0]
     .puzzles.push({
       privateKey: puzzle.getEmptyPrivateKey(), // this private key will not really calculated due to no AGG_SIG_ME exist in this spend
       puzzle: modsprog["settlement_payments"],
@@ -371,7 +369,7 @@ export async function generateNftOffer(
 
       // put special target into puzzle reverse dict
       puzzleCopy
-        .filter((_) => _.symbol == tokenSymbol)[0]
+        .filter((_) => _.symbol == net.symbol)[0]
         .puzzles.push({
           privateKey: puzzle.getEmptyPrivateKey(), // this private key will not really calculated due to no AGG_SIG_ME exist in this spend
           puzzle: nftPuzzle,
@@ -412,22 +410,20 @@ export async function generateNftOffer(
       //NFT
       if (nftcoin) {
         const spbundle: SpendBundle = await generateTransferNftBundle(
-          puzzle.getAddressFromPuzzleHash(settlement_tgt, tokenSymbol),
-          puzzle.getAddressFromPuzzleHash("0x0000000000000000000000000000000000000000000000000000000000000000", tokenSymbol),
+          puzzle.getAddressFromPuzzleHash(settlement_tgt, net.symbol),
+          puzzle.getAddressFromPuzzleHash("0x0000000000000000000000000000000000000000000000000000000000000000", net.symbol),
           0n,
           nftcoin,
           nft,
           {},
           puzzles,
-          tokenSymbol,
-          chainId,
-          getPuzzle
+          net,
         );
         puzzleCopy
-          .filter((_) => _.symbol == tokenSymbol)[0]
+          .filter((_) => _.symbol == net.symbol)[0]
           .puzzles.push({
             privateKey: puzzles
-              .filter((_) => _.symbol == tokenSymbol)[0]
+              .filter((_) => _.symbol == net.symbol)[0]
               .puzzles.filter((_) => prefix0x(_.hash) == prefix0x(nft.hintPuzzle))[0].privateKey,
             puzzle: "()",
             hash: nftcoin.puzzle_hash,
@@ -460,7 +456,7 @@ export async function generateNftOffer(
   }
 
   // combine into one spendbundle
-  return transfer.getSpendBundle(spends, puzzleCopy, chainId);
+  return transfer.getSpendBundle(spends, puzzleCopy, net.chainId);
 }
 
 export async function curryMod(mod: string, ...args: string[]): Promise<PlaintextPuzzle | null> {

@@ -96,8 +96,7 @@ import { submitBundle } from "@/services/view/bundle";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import { csvToArray } from "@/services/util/csv";
-import { chainId, xchPrefix, xchSymbol } from "@/store/modules/network";
-import { getLineageProofPuzzle } from "@/services/transfer/call";
+import { networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
 
 @Component({
   components: {
@@ -219,14 +218,7 @@ export default class BatchSend extends Vue {
       }
 
       const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
-      this.bundle = await transfer.generateSpendBundleIncludingCat(
-        plan,
-        this.requests,
-        [],
-        xchSymbol(),
-        chainId(),
-        getLineageProofPuzzle
-      );
+      this.bundle = await transfer.generateSpendBundleIncludingCat(plan, this.requests, [], networkContext());
     } catch (error) {
       Notification.open({
         message: this.$tc("batchSend.ui.messages.failedToSign") + error,

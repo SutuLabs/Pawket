@@ -7,7 +7,7 @@ import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { prefix0x } from "./condition";
 import { modshash, modshex, modsprog } from "./mods";
 import { bytesToHex0x } from "../crypto/utility";
-import { getCoinName0x } from "./coinUtility";
+import { getCoinName0x, NetworkContext } from "./coinUtility";
 import { cloneAndAddRequestPuzzleTemporary, constructSingletonTopLayerPuzzle, getNextCoinName0x, getPuzzleDetail, ParsedMetadata, parseMetadata, SingletonStructList } from "./singleton";
 import { curryMod } from "../offer/bundler";
 import { CannotParsePuzzle, expectModArgs, sexpAssemble, UncurriedPuzzle, uncurryPuzzle } from "./analyzer";
@@ -44,8 +44,7 @@ export async function generateMintDidBundle(
   metadata: DidMetadata,
   availcoins: SymbolCoins,
   requests: TokenPuzzleDetail[],
-  baseSymbol: string,
-  chainId: string,
+  net: NetworkContext,
 ): Promise<MintDidInfo> {
   // console.log(
   //   `const targetAddress="${targetAddress}";\n`
@@ -69,9 +68,9 @@ export async function generateMintDidBundle(
   3. DIDCoin: Genesis DID Tx -> Concealed DID Tx
   */
 
-  const bootstrapTgts: TransferTarget[] = [{ address: prefix0x(modshash["singleton_launcher"]), amount, symbol: baseSymbol }];
-  const bootstrapSpendPlan = transfer.generateSpendPlan(availcoins, bootstrapTgts, change_hex, fee, baseSymbol);
-  const bootstrapSpendBundle = await transfer.generateSpendBundleWithoutCat(bootstrapSpendPlan, requests, [], baseSymbol, chainId);
+  const bootstrapTgts: TransferTarget[] = [{ address: prefix0x(modshash["singleton_launcher"]), amount, symbol: net.symbol }];
+  const bootstrapSpendPlan = transfer.generateSpendPlan(availcoins, bootstrapTgts, change_hex, fee, net.symbol);
+  const bootstrapSpendBundle = await transfer.generateSpendBundleWithoutCat(bootstrapSpendPlan, requests, [], net);
   const bootstrapCoin = bootstrapSpendBundle.coin_spends[0].coin;// get the primary coin
   const bootstrapCoinId = getCoinName0x(bootstrapCoin);
 
@@ -120,10 +119,10 @@ export async function generateMintDidBundle(
   };
   // console.log("didCoinSpend", didCoinSpend)
 
-  const extreqs = cloneAndAddRequestPuzzleTemporary(baseSymbol, requests, inner_p2_puzzle.hash, didPuzzle, didPuzzleHash);
+  const extreqs = cloneAndAddRequestPuzzleTemporary(net.symbol, requests, inner_p2_puzzle.hash, didPuzzle, didPuzzleHash);
   // console.log("extreqs", extreqs, { coin_spends: [launcherCoinSpend, didCoinSpend] }, chainId);
 
-  const bundles = await transfer.getSpendBundle([launcherCoinSpend, didCoinSpend], extreqs, chainId, true);
+  const bundles = await transfer.getSpendBundle([launcherCoinSpend, didCoinSpend], extreqs, net.chainId, true);
   // console.log("bundles", bundles)
   const bundle = await combineSpendBundlePure(bootstrapSpendBundle, bundles);
 

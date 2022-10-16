@@ -13,7 +13,14 @@ import { combineSpendBundle, generateNftOffer, generateOfferPlan, getReversePlan
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
 import { getOfferSummary } from "@/services/offer/summary";
 import { generateMintCnsOffer } from "@/services/offer/cns";
+import { NetworkContext } from "@/services/coin/coinUtility";
 
+const net: NetworkContext = {
+  prefix: "xch",
+  symbol: "XCH",
+  chainId: "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb",
+  api: localPuzzleApiCall,
+}
 function xchPrefix() { return "xch"; }
 function xchSymbol() { return "XCH"; }
 function chainId() { return "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb"; }
@@ -50,7 +57,7 @@ test('Prepare CNS bootstrap coins', async () => {
   const sk = "00186eae4cd4a3ec609ca1a8c1cda8467e3cb7cbbbf91a523d12d31129d5f8d7";
 
   const spendBundle = await getBootstrapSpendBundle(
-    target_hex, change_hex, fee, availcoins, tokenPuzzles, count, xchSymbol(), chainId(), sk);
+    target_hex, change_hex, fee, availcoins, tokenPuzzles, count, net, sk);
   expect(spendBundle).toMatchSnapshot("spendbundle");
 });
 
@@ -89,8 +96,8 @@ async function testMintCns(
   };
   const sk = "00186eae4cd4a3ec609ca1a8c1cda8467e3cb7cbbbf91a523d12d31129d5f8d7";
   const { spendBundle } = await generateMintNftBundle(
-    targetAddress, changeAddress, fee, metadata, availcoins, tokenPuzzles, xchSymbol(), chainId(), royaltyAddressHex,
-    tradePricePercentage, undefined, localPuzzleApiCall, sk, targetAddresses);
+    targetAddress, changeAddress, fee, metadata, availcoins, tokenPuzzles, royaltyAddressHex,
+    tradePricePercentage, net, undefined, sk, targetAddresses);
   expect(spendBundle).toMatchSnapshot("spendbundle");
   const cs = spendBundle.coin_spends[2];
   await testAnalyzeCnsCoin(cs, "");
@@ -139,8 +146,8 @@ async function testMintCnsAndOffer(
   const tradePricePercentage = 500;
 
   const offerBundle = await generateMintCnsOffer(
-    targetAddress, changeAddress, 200n, 0n, metadata, availcoinsForMaker, tokenPuzzles, xchSymbol(), chainId(),
-    royaltyAddressHex, tradePricePercentage, localPuzzleApiCall, nonce);
+    targetAddress, changeAddress, 200n, 0n, metadata, availcoinsForMaker, tokenPuzzles,
+    royaltyAddressHex, tradePricePercentage, net, nonce);
 
   const offerText = await encodeOffer(offerBundle);
   expect(offerText).toMatchSnapshot("offer text");
@@ -176,9 +183,7 @@ async function testMintCnsAndOffer(
     undefined,
     revSummary.requested,
     tokenPuzzles,
-    localPuzzleApiCall,
-    xchSymbol(),
-    chainId(),
+    net,
     nonce
   );
   expect(takerBundle).toMatchSnapshot("takerBundle");
