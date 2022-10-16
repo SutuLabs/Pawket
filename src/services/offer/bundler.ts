@@ -1,7 +1,7 @@
 import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
 import { Bytes } from "clvm";
-import { CoinConditions, ConditionType, prefix0x } from '../coin/condition';
-import puzzle from "../crypto/puzzle";
+import { CoinConditions, ConditionType, Hex0x, prefix0x } from '../coin/condition';
+import puzzle, { PlaintextPuzzle } from "../crypto/puzzle";
 import { ConditionOpcode } from "../coin/opcode";
 import transfer, { GetPuzzleApiCallback, SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { TokenPuzzleDetail } from "../crypto/receive";
@@ -10,7 +10,7 @@ import stdBundle from "../transfer/stdBundle";
 import { getOfferSummary, OfferEntity, OfferPlan, OfferSummary } from "./summary";
 import { GetParentPuzzleResponse } from "@/models/api";
 import { assemble, curry, disassemble } from "clvm_tools";
-import { modshash, modshex, modsprog } from "../coin/mods";
+import { modshash, modshex0x, modsprog } from "../coin/mods";
 import { getCoinName0x } from "../coin/coinUtility";
 import { Instance } from "../util/instance";
 import { NftCoinAnalysisResult } from "@/models/nft";
@@ -66,13 +66,13 @@ export async function generateOffer(
   for (let i = 0; i < requested.length; i++) {
     const req = requested[i];
     if (!req.id) {// XCH
-      const coin = {
+      const coin: OriginCoin = {
         parent_coin_info: "0x0000000000000000000000000000000000000000000000000000000000000000",
         puzzle_hash: settlement_tgt,
         amount: 0n,
       };
 
-      const puzzle_reveal_text = puzzle.getSettlementPaymentsPuzzle();
+      const puzzle_reveal_text = modsprog["settlement_payments"];
 
       // put special target into puzzle reverse dict
       puzzleCopy.filter(_ => _.symbol == tokenSymbol)[0].puzzles.push({
@@ -82,7 +82,7 @@ export async function generateOffer(
         address: "",
       })
 
-      const solution_text = `((${prefix0x(nonce)} (${prefix0x(req.target)} ${req.amount} ())))`;
+      const solution_text = `((${prefix0x(nonce)} (${req.target} ${req.amount} ())))`;
       const msg = await getPuzAnnoMsg(puzzle_reveal_text, solution_text);
       puz_anno_ids.push(getPuzzleAnnoId(coin.puzzle_hash, msg));
 
@@ -100,7 +100,7 @@ export async function generateOffer(
       if (!cat_mod) throw new Error("cannot curry cat");
       const cat_settlement_tgt = prefix0x(await puzzle.getPuzzleHashFromPuzzle(cat_mod));
 
-      const coin = {
+      const coin: OriginCoin = {
         parent_coin_info: "0x0000000000000000000000000000000000000000000000000000000000000000",
         puzzle_hash: cat_settlement_tgt,
         amount: 0n,
@@ -116,8 +116,8 @@ export async function generateOffer(
         address: "",
       })
 
-      const solution_text = `((${prefix0x(nonce)} (${prefix0x(req.target)} ${req.amount} (${prefix0x(req.target)}))))`;
-      const msg = await getPuzAnnoMsg(puzzle.getSettlementPaymentsPuzzle(), solution_text);
+      const solution_text = `((${prefix0x(nonce)} (${req.target} ${req.amount} (${req.target}))))`;
+      const msg = await getPuzAnnoMsg(modsprog["settlement_payments"], solution_text);
       puz_anno_ids.push(getPuzzleAnnoId(coin.puzzle_hash, msg));
 
       const puzzle_reveal = prefix0x(await puzzle.encodePuzzle(puzzle_reveal_text));
@@ -163,14 +163,13 @@ export const settlement_tgt = "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f86
 
 export async function generateOfferPlan(
   offered: OfferEntity[],
-  change_hex: string,
+  change_hex: Hex0x,
   availcoins: SymbolCoins,
   fee: bigint,
   tokenSymbol: string,
   royaltyFee = 0n,
 ): Promise<OfferPlan[]> {
   const plans: OfferPlan[] = [];
-  change_hex = prefix0x(change_hex);
 
   for (let i = 0; i < offered.length; i++) {
     const off = offered[i];
@@ -278,7 +277,7 @@ export async function combineSpendBundle(spendbundles: SpendBundle[]): Promise<S
 
   const spends = spendbundles.flatMap((_) => _.coin_spends);
   return {
-    aggregated_signature: sig,
+    aggregated_signature: prefix0x(sig),
     coin_spends: spends,
   };
 }
@@ -333,7 +332,7 @@ export async function generateNftOffer(
     .filter((_) => _.symbol == tokenSymbol)[0]
     .puzzles.push({
       privateKey: puzzle.getEmptyPrivateKey(), // this private key will not really calculated due to no AGG_SIG_ME exist in this spend
-      puzzle: puzzle.getSettlementPaymentsPuzzle(),
+      puzzle: modsprog["settlement_payments"],
       hash: settlement_tgt,
       address: "",
     });
@@ -344,15 +343,15 @@ export async function generateNftOffer(
     const req = requested[i];
     if (!req.id) {
       // XCH
-      const coin = {
+      const coin: OriginCoin = {
         parent_coin_info: "0x0000000000000000000000000000000000000000000000000000000000000000",
         puzzle_hash: settlement_tgt,
         amount: 0n,
       };
 
-      const puzzle_reveal_text = puzzle.getSettlementPaymentsPuzzle();
+      const puzzle_reveal_text = modsprog["settlement_payments"];
 
-      const solution_text = `((${prefix0x(nonce)} (${prefix0x(req.target)} ${req.amount} (${prefix0x(req.target)}))))`;
+      const solution_text = `((${prefix0x(nonce)} (${req.target} ${req.amount} (${req.target}))))`;
       const msg = await getPuzAnnoMsg(puzzle_reveal_text, solution_text);
       puz_anno_ids.push(getPuzzleAnnoId(coin.puzzle_hash, msg));
 
@@ -364,7 +363,7 @@ export async function generateNftOffer(
       const nftPuzzle = await getTransferNftPuzzle(nft, modsprog["settlement_payments"]);
       const nftPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(nftPuzzle));
 
-      const coin = {
+      const coin: OriginCoin = {
         parent_coin_info: "0x0000000000000000000000000000000000000000000000000000000000000000",
         puzzle_hash: nftPuzzleHash,
         amount: 0n,
@@ -381,8 +380,8 @@ export async function generateNftOffer(
         });
 
       // console.log("puzzleCopy", puzzleCopy);
-      const solution_text = `((${prefix0x(nonce)} (${prefix0x(req.target)} ${req.amount} (${prefix0x(req.target)}))))`;
-      const msg = await getPuzAnnoMsg(puzzle.getSettlementPaymentsPuzzle(), solution_text);
+      const solution_text = `((${prefix0x(nonce)} (${req.target} ${req.amount} (${req.target}))))`;
+      const msg = await getPuzAnnoMsg(modsprog["settlement_payments"], solution_text);
       puz_anno_ids.push(getPuzzleAnnoId(coin.puzzle_hash, msg));
 
       const puzzle_reveal = prefix0x(await puzzle.encodePuzzle(nftPuzzle));
@@ -430,7 +429,7 @@ export async function generateNftOffer(
             privateKey: puzzles
               .filter((_) => _.symbol == tokenSymbol)[0]
               .puzzles.filter((_) => prefix0x(_.hash) == prefix0x(nft.hintPuzzle))[0].privateKey,
-            puzzle: "",
+            puzzle: "()",
             hash: nftcoin.puzzle_hash,
             address: "",
           });
@@ -453,7 +452,7 @@ export async function generateNftOffer(
           amount,
           puzzle_hash: settlement_tgt,
         },
-        puzzle_reveal: modshex["settlement_payments"],
+        puzzle_reveal: modshex0x["settlement_payments"],
         solution,
       };
       spends.push(roysp);
@@ -464,7 +463,7 @@ export async function generateNftOffer(
   return transfer.getSpendBundle(spends, puzzleCopy, chainId);
 }
 
-export async function curryMod(mod: string, ...args: string[]): Promise<string | null> {
+export async function curryMod(mod: string, ...args: string[]): Promise<PlaintextPuzzle | null> {
   try {
     const m = assemble(mod);
     const astr = "(" + args.join(" ") + ")";

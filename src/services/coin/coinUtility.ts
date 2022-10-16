@@ -1,16 +1,21 @@
-import { OriginCoin } from "@/models/wallet";
-import { prefix0x } from "./condition";
+import { Hex0x, prefix0x } from "./condition";
 import { Bytes, bigint_to_bytes } from "clvm";
 
-export function getCoinName0x(coin: OriginCoin): string {
+export interface CompatibleCoin {
+  amount: bigint | number;
+  parent_coin_info: Hex0x | string;
+  puzzle_hash: Hex0x | string;
+}
+
+export function getCoinName0x(coin: CompatibleCoin): Hex0x {
   return prefix0x(getCoinNameHex(coin).hex());
 }
 
-export function getCoinName(coin: OriginCoin): string {
+export function getCoinName(coin: CompatibleCoin): string {
   return getCoinNameHex(coin).hex();
 }
 
-export function getCoinNameHex(coin: OriginCoin): Bytes {
+export function getCoinNameHex(coin: CompatibleCoin): Bytes {
   const a = bigint_to_bytes(BigInt(coin.amount), { signed: true });
   const pci = Bytes.from(coin.parent_coin_info, "hex");
   const ph = Bytes.from(coin.puzzle_hash, "hex");

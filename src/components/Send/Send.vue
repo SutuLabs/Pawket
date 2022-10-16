@@ -102,7 +102,7 @@ import store from "@/store";
 import { OriginCoin, SpendBundle } from "@/models/wallet";
 import puzzle from "@/services/crypto/puzzle";
 import bigDecimal from "js-big-decimal";
-import { prefix0x } from "@/services/coin/condition";
+import { Hex0x, prefix0x } from "@/services/coin/condition";
 import transfer, { SymbolCoins, TransferTarget } from "@/services/transfer/transfer";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
 import coinHandler from "@/services/transfer/coin";
@@ -344,8 +344,8 @@ export default class Send extends Vue {
         this.submitting = false;
         return;
       }
-      let tgt_hex = "";
-      let change_hex = "";
+      let tgt_hex: Hex0x = "()";
+      let change_hex: Hex0x = "()";
       try {
         tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.address));
         change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));

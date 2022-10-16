@@ -256,7 +256,7 @@ export default class MakeOffer extends Vue {
       this.signing = true;
 
       const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
-      const offs: OfferEntity[] = getOfferEntities(this.offers, "", this.catIds, xchSymbol());
+      const offs: OfferEntity[] = getOfferEntities(this.offers, "()", this.catIds, xchSymbol());
       const reqs: OfferEntity[] = getOfferEntities(this.requests, change_hex, this.catIds, xchSymbol());
 
       const offplan = await generateOfferPlan(offs, change_hex, this.availcoins, 0n, xchSymbol());

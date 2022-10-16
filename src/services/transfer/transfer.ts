@@ -3,7 +3,7 @@ import { Bytes } from "clvm";
 import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
 import { GetParentPuzzleResponse } from "@/models/api";
 import { DEFAULT_HIDDEN_PUZZLE_HASH } from "../coin/consts";
-import { CoinConditions, ConditionType, prefix0x } from "../coin/condition";
+import { CoinConditions, ConditionType, Hex0x, prefix0x } from "../coin/condition";
 import puzzle, { PuzzleDetail } from "../crypto/puzzle";
 import { TokenPuzzleDetail } from "../crypto/receive";
 import stdBundle from "./stdBundle";
@@ -20,7 +20,7 @@ class Transfer {
   public generateSpendPlan(
     availcoins: SymbolCoins,
     targets: TransferTarget[],
-    changeAddress: string,
+    changeAddress: Hex0x,
     fee: bigint,
     tokenSymbol: string,
   ): SpendPlan {
@@ -266,7 +266,7 @@ export interface TokenSpendPlan {
 
 export interface TransferTarget {
   symbol: string;
-  address: string;
+  address: Hex0x;
   amount: bigint;
   memos?: string[];
 }

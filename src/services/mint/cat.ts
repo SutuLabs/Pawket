@@ -1,6 +1,6 @@
 import { Bytes } from "clvm";
-import { CoinSpend, SpendBundle } from "@/models/wallet";
-import { prefix0x } from "../coin/condition";
+import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
+import { Hex0x, prefix0x, unprefix0x } from "../coin/condition";
 import puzzle from "../crypto/puzzle";
 import { TokenPuzzleDetail } from "../crypto/receive";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
@@ -17,13 +17,13 @@ export interface MintCatInfo {
 interface CatPuzzleResponse {
   innerPuzzle: PuzzleInfo;
   catPuzzle: PuzzleInfo;
-  assetId: string;
-  bootstrapCoin: string;
+  assetId: Hex0x;
+  bootstrapCoin: Hex0x;
 }
 
 interface PuzzleInfo {
   plaintext: string;
-  hash: string;
+  hash: Hex0x;
 }
 
 export async function generateMintCatBundle(
@@ -58,8 +58,8 @@ export async function generateMintCatBundle(
 }
 
 async function constructCatPuzzle(
-  tgt_hex: string,
-  change_hex: string,
+  tgt_hex: Hex0x,
+  change_hex: Hex0x,
   amount: bigint,
   fee: bigint,
   memo: string,
@@ -95,8 +95,8 @@ async function constructCatPuzzle(
 }
 
 async function constructInternalBundle(
-  tgt_hex: string,
-  change_hex: string,
+  tgt_hex: Hex0x,
+  change_hex: Hex0x,
   amount: bigint,
   fee: bigint,
   availcoins: SymbolCoins,
@@ -115,12 +115,12 @@ async function constructInternalBundle(
 async function constructExternalBundle(
   innerPuzzle: PuzzleInfo,
   catPuzzle: PuzzleInfo,
-  bootstrapCoin: string,
+  bootstrapCoin: Hex0x,
   amount: bigint,
   sk_hex: string,
   chainId: string,
 ): Promise<SpendBundle> {
-  const coin = { parent_coin_info: bootstrapCoin, amount, puzzle_hash: catPuzzle.hash };
+  const coin: OriginCoin = { parent_coin_info: bootstrapCoin, amount, puzzle_hash: catPuzzle.hash };
   const coin_name = getCoinName0x(coin);
 
   const catsln = `(() () ${coin_name} (${bootstrapCoin} ${catPuzzle.hash} ${amount}) (${bootstrapCoin} ${innerPuzzle.hash} ${amount}) () ())`;
@@ -137,7 +137,7 @@ async function constructExternalBundle(
         {
           privateKey: puzzle.getPrivateKeyFromHex(sk_hex),
           puzzle: catPuzzle.plaintext,
-          hash: catPuzzle.hash,
+          hash: unprefix0x(catPuzzle.hash),
           address: "",
         },
       ],

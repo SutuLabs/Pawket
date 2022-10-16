@@ -177,8 +177,6 @@ export default class NftOffer extends Vue {
         {
           id: puzzle.getPuzzleHashFromAddress(this.nft.address),
           amount: 1n,
-          target: "",
-          nft_target: "",
           royalty: this.nft.analysis.tradePricePercentage,
           nft_uri: this.nft.metadata.uri,
         },

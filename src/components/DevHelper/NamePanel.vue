@@ -26,6 +26,7 @@ import puzzle from "@/services/crypto/puzzle";
 import { xchPrefix } from "@/store/modules/network";
 import { demojo } from "@/filters/unitConversion";
 import { getCoinName0x } from "@/services/coin/coinUtility";
+import { prefix0x } from "@/services/coin/condition";
 
 @Component({
   components: {
@@ -52,8 +53,8 @@ export default class NamePanel extends Vue {
 
     if (!this.parent_coin_name) return;
     this.coin_name = getCoinName0x({
-      parent_coin_info: this.parent_coin_name,
-      puzzle_hash: ph,
+      parent_coin_info: prefix0x(this.parent_coin_name),
+      puzzle_hash: prefix0x(ph),
       amount: BigInt(this.amount),
     });
   }

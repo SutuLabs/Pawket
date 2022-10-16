@@ -231,7 +231,7 @@ import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
 import puzzle, { ExecuteResult } from "@/services/crypto/puzzle";
 import { beautifyLisp } from "@/services/coin/lisp";
 import { Bytes } from "clvm";
-import { conditionDict, ConditionInfo, prefix0x, getNumber, unprefix0x } from "@/services/coin/condition";
+import { conditionDict, ConditionInfo, prefix0x, getNumber, unprefix0x, Hex0x } from "@/services/coin/condition";
 import { modsdict, modshex, modsprog } from "@/services/coin/mods";
 import UncurryPuzzle from "@/components/DevHelper/UncurryPuzzle.vue";
 import AnnouncementList from "@/components/DevHelper/AnnouncementList.vue";
@@ -282,7 +282,7 @@ interface CoinIndexInfo {
 export default class BundlePanel extends Vue {
   @Prop() public inputBundleText!: string;
   public bundleText = "";
-  public used_coin_name = "";
+  public used_coin_name: Hex0x = "()";
   public used_coin_tgt_address = "";
   public puzzle = "";
   public puzzle_hash = "";
@@ -498,7 +498,7 @@ export default class BundlePanel extends Vue {
   public getCoinNameInternal(...args: string[]): string {
     if (!this.bundle) return "";
     const coin: OriginCoin = {
-      puzzle_hash: args[0],
+      puzzle_hash: prefix0x(args[0]),
       amount: this.getNumber(args[1]),
       parent_coin_info: this.used_coin_name,
     };

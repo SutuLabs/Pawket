@@ -10,6 +10,7 @@ import { generateOfferPlan, generateNftOffer } from "./bundler";
 import { prefix0x } from "../coin/condition";
 import { combineSpendBundlePure } from "../mint/cat";
 import { GetParentPuzzleResponse } from "@/models/api";
+import { OfferEntity } from "./summary";
 
 export async function generateMintCnsOffer(
   targetAddress: string,
@@ -58,12 +59,10 @@ export async function generateMintCnsOffer(
   if (!analysis) throw Error("failed to analysis nft");
   if ("cnsName" in analysis === false) throw Error("failed to analysis cns nft");
 
-  const offs = [
+  const offs: OfferEntity[] = [
     {
       "id": analysis.launcherId,
       "amount": 1n,
-      "target": "",
-      "nft_target": "",
       "royalty": analysis.tradePricePercentage,
       "nft_uri": "something unimportant"
     }

@@ -212,7 +212,7 @@ Object {
 
 exports[`Take Offer CAT For Xch: bundle 1`] = `
 Object {
-  "aggregated_signature": "b5ef407448ad63b5a16241f80b980956d82dd7353097d100712bce25503fc42f70593e98077e45f43066956c901c1366097537c01fee94d16678da87b73fba2bbfe24c17fd7d83180b2dbd098d9f0ccd8ef535e6305513fb03c06061567d4b3c",
+  "aggregated_signature": "0xb5ef407448ad63b5a16241f80b980956d82dd7353097d100712bce25503fc42f70593e98077e45f43066956c901c1366097537c01fee94d16678da87b73fba2bbfe24c17fd7d83180b2dbd098d9f0ccd8ef535e6305513fb03c06061567d4b3c",
   "coin_spends": Array [
     Object {
       "coin": Object {
@@ -351,7 +351,7 @@ Object {
 
 exports[`Take Offer Xch For CAT: bundle 1`] = `
 Object {
-  "aggregated_signature": "8519b6590745c2643cd51e84d4807a08ac512b6e3febdd7fe549146096c19eae2138edfddbc0c775eeb55f24684ba0f419f44615fc039e6fa822de9387466f93d405490b1fa4e46ed94aa80ba1519606711af4ca8e86b16ff07357f2a217f71d",
+  "aggregated_signature": "0x8519b6590745c2643cd51e84d4807a08ac512b6e3febdd7fe549146096c19eae2138edfddbc0c775eeb55f24684ba0f419f44615fc039e6fa822de9387466f93d405490b1fa4e46ed94aa80ba1519606711af4ca8e86b16ff07357f2a217f71d",
   "coin_spends": Array [
     Object {
       "coin": Object {

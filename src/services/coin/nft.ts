@@ -1,10 +1,10 @@
 import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
-import puzzle from "../crypto/puzzle";
+import puzzle, { PlaintextPuzzle } from "../crypto/puzzle";
 import receive, { TokenPuzzleDetail } from "../crypto/receive";
 import { combineSpendBundlePure } from "../mint/cat";
 import { curryMod } from "../offer/bundler";
 import transfer, { GetPuzzleApiCallback, SymbolCoins, TransferTarget } from "../transfer/transfer";
-import { prefix0x, skipFirstByte0x } from "./condition";
+import { Hex0x, prefix0x, skipFirstByte0x } from "./condition";
 import { modshash, modshex, modsprog } from "./mods";
 import utility, { bytesToHex0x } from "../crypto/utility";
 import catBundle, { LineageProof } from "../transfer/catBundle";
@@ -183,7 +183,7 @@ async function getDidBundle(
   amount: bigint,
   launcherCoinId: string,
   didPreviousCoin: OriginCoin,
-  didPuzzleHash: string,
+  didPuzzleHash: Hex0x,
   baseSymbol: string,
   requests: TokenPuzzleDetail[],
   chainId: string)
@@ -199,14 +199,14 @@ async function getDidBundle(
     solution: prefix0x(await puzzle.encodePuzzle(didSolution)),
   };
 
-  const extreqs = cloneAndAddRequestPuzzleTemporary(baseSymbol, requests, didP2InnerPuzzleHash, didAnalysis.rawPuzzle, didPuzzleHash);
+  const extreqs = cloneAndAddRequestPuzzleTemporary(baseSymbol, requests, didP2InnerPuzzleHash, "()", didPuzzleHash);
   const bundle = await transfer.getSpendBundle([didCoinSpend], extreqs, chainId);
   return bundle;
 }
 
 export async function getBootstrapSpendBundle(
-  change_hex: string,
-  target_hex: string,
+  change_hex: Hex0x,
+  target_hex: Hex0x,
   fee: bigint,
   availcoins: SymbolCoins,
   requests: TokenPuzzleDetail[],
@@ -218,7 +218,7 @@ export async function getBootstrapSpendBundle(
   const amount = 1n; // always 1 mojo for 1 NFT
 
   if (count == 1) {
-    const bootstrapTgts: TransferTarget[] = [{ address: prefix0x(target_hex), amount, symbol: baseSymbol }];
+    const bootstrapTgts: TransferTarget[] = [{ address: target_hex, amount, symbol: baseSymbol }];
     const bootstrapSpendPlan = transfer.generateSpendPlan(availcoins, bootstrapTgts, change_hex, fee, baseSymbol);
     const bootstrapSpendBundle = await transfer.generateSpendBundleWithoutCat(bootstrapSpendPlan, requests, [], baseSymbol, chainId);
     return bootstrapSpendBundle;
@@ -452,7 +452,7 @@ export async function analyzeNftCoin(
   return obj;
 }
 
-export async function getTransferNftPuzzle(analysis: NftCoinAnalysisResult, inner_p2_puzzle: string): Promise<string> {
+export async function getTransferNftPuzzle(analysis: NftCoinAnalysisResult, inner_p2_puzzle: string): Promise<PlaintextPuzzle> {
   const sgnStruct = `(${prefix0x(modshash["singleton_top_layer_v1_1"])} ${prefix0x(analysis.launcherId)} . ${prefix0x(
     modshash["singleton_launcher"]
   )})`;
@@ -638,13 +638,13 @@ async function constructDidSpendBundle(
     puzzle_reveal: prefix0x(await puzzle.encodePuzzle(didAnalysis.rawPuzzle)),
     solution: prefix0x(await puzzle.encodePuzzle(didSolution)),
   };
-  const extreqs2 = cloneAndAddRequestPuzzleTemporary(baseSymbol, requests, didP2InnerPuzzleHash, didAnalysis.rawPuzzle, didPuzzleHash);
+  const extreqs2 = cloneAndAddRequestPuzzleTemporary(baseSymbol, requests, didP2InnerPuzzleHash, "()", didPuzzleHash);
   const bundle = await transfer.getSpendBundle([didCoinSpend], extreqs2, chainId);
   return bundle;
 }
 
 async function constructPureFeeSpendBundle(
-  change_hex: string,
+  change_hex: Hex0x,
   fee: bigint,
   availcoins: SymbolCoins,
   requests: TokenPuzzleDetail[],

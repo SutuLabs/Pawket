@@ -116,7 +116,7 @@ async function testMintCnsAndOffer(
   const nonce = "626f9cf141deefc2e77a56a4ef99996259e840dc4020eda31408cdd442a770d1"
   const account = getTestAccount("55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f");
   const tokenPuzzles = await getAccountAddressDetails(account, [], {}, xchPrefix(), xchSymbol(), undefined, "cat_v2");
-  const availcoinsForMaker = {
+  const availcoinsForMaker: SymbolCoins = {
     [xchSymbol()]: [
       {
         "amount": 1n,
@@ -125,7 +125,7 @@ async function testMintCnsAndOffer(
       },
     ],
   };
-  const availcoinsForTaker = {
+  const availcoinsForTaker: SymbolCoins = {
     [xchSymbol()]: [
       {
         "amount": 4998999984n,
