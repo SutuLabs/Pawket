@@ -131,8 +131,11 @@ async function signMessageTest(sk: PrivateKey, message: string, expectPuzzleHash
   expect(vp2owner).toBe(prefix0x(expectPuzzleHash));
 }
 
-test('ECDH', async () => {
+test('ECDH 1', async () => {
   await testEncryption("hello");
+});
+
+test('ECDH 2', async () => {
   await testEncryption(`
 very long sentence with newline
 very long sentence with newline
