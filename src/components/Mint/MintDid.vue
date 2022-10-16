@@ -16,7 +16,7 @@
       </div>
       <template v-if="bundle">
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($t('did.addDid.confirmation'))"></span>
+          <span v-html="$sanitize($tc('did.addDid.confirmation'))"></span>
         </b-notification>
         <send-summary :leadingText="$t('did.addDid.spend')" :amount="amount" :unit="selectedToken" :fee="feeBigInt" :address="address"></send-summary>
         <bundle-summary :account="account" :bundle="bundle" :ignoreError="true"></bundle-summary>

@@ -7,7 +7,7 @@
     <section class="modal-card-body">
       <template v-if="bundle">
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($t('offline.proxy.confirmBundle.notification'))"></span>
+          <span v-html="$sanitize($tc('offline.proxy.confirmBundle.notification'))"></span>
         </b-notification>
         <bundle-summary :bundle="bundle"></bundle-summary>
       </template>

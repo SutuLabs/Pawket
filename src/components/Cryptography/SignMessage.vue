@@ -7,7 +7,7 @@
     <section class="modal-card-body">
       <template v-if="!signResult">
         <b-notification type="is-warning is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($t('signMessage.ui.prompt'))"></span>
+          <span v-html="$sanitize($tc('signMessage.ui.prompt'))"></span>
         </b-notification>
 
         <b-field>

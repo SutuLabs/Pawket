@@ -24,7 +24,7 @@
       </div>
       <template v-if="bundle">
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($t('nftTransfer.ui.summary.confirmation'))"></span>
+          <span v-html="$sanitize($tc('nftTransfer.ui.summary.confirmation'))"></span>
         </b-notification>
         <send-summary
           :nftUri="uri"

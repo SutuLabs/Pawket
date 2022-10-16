@@ -45,7 +45,7 @@
       </div>
       <template v-if="bundle">
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($t('send.ui.summary.notification'))"></span>
+          <span v-html="$sanitize($tc('send.ui.summary.notification'))"></span>
         </b-notification>
         <send-summary
           :amount="numericAmount"

@@ -30,7 +30,7 @@
       </template>
       <template v-if="step == 'Confirmation'">
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($t('moveNft.ui.confirmation'))"></span>
+          <span v-html="$sanitize($tc('moveNft.ui.confirmation'))"></span>
         </b-notification>
         <div class="mb-3">
           <b-field>
