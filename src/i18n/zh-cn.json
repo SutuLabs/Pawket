@@ -354,7 +354,7 @@
       "ui": {
         "title": "接受 Offer",
         "hint": {
-          "pasteOffer": "在此处粘贴 Offer 信息",
+          "pasteOffer": "在此处粘贴 Offer 信息，或者上传 Offer 文件。",
           "error": "你的 Offer 信息有误"
         },
         "panel": {
@@ -371,7 +371,8 @@
         "button": {
           "cancel": "取消",
           "sign": "签名",
-          "submit": "提交"
+          "submit": "提交",
+          "upload": "上传 Offer 文件"
         },
         "field": {
           "offer": "Offer 信息"

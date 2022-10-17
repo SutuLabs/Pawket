@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-card">
+  <div class="modal-card" @dragenter="dragenter" @dragleave="dragleave">
     <header class="modal-card-head">
       <p class="modal-card-title">{{ $t("offer.take.ui.title") }}</p>
       <button type="button" class="delete" @click="close()"></button>
@@ -9,14 +9,39 @@
         $t("offer.take.ui.notification.observation")
       }}</b-notification>
       <template v-if="step == 'Input'">
+        <span class="label">
+          {{ $t("offer.take.ui.field.offer") }}
+          <b-upload v-model="file" class="file-label is-pulled-right is-inline-block" @input="afterUpload">
+            <b-tag icon="tray-arrow-up" size="is-small">{{ $t("offer.take.ui.button.upload") }}</b-tag>
+          </b-upload>
+        </span>
         <b-field
-          :label="$t('offer.take.ui.field.offer')"
           :type="parseError == 'error' ? 'is-danger' : ''"
+          v-show="!isDragging"
           :message="
             offerText ? (parseError == 'error' ? $t('offer.take.ui.hint.error') : '') : $t('offer.take.ui.hint.pasteOffer')
           "
         >
           <b-input type="textarea" v-model="offerText" @input="updateOffer()"></b-input>
+        </b-field>
+        <b-field v-if="file">
+          <b-tooltip :label="file.name" multilined style="word-break: break-all" position="is-right">
+            <b-tag icon="paperclip" size="is-small" closable aria-close-label="Close tag" @close="deleteFile">
+              {{ shorten(file.name) }}
+            </b-tag>
+          </b-tooltip>
+        </b-field>
+        <b-field v-show="isDragging">
+          <b-upload v-model="dragfile" drag-drop expanded multiple @input="afterDragged">
+            <section class="section">
+              <div class="content has-text-centered">
+                <p>
+                  <b-icon icon="upload" size="is-large"> </b-icon>
+                </p>
+                <p>{{ $t("batchSend.ui.field.csv.drag") }}</p>
+              </div>
+            </section>
+          </b-upload>
         </b-field>
         <b-loading :is-full-page="false" v-model="isUpdating"></b-loading>
         <b-field v-if="summary" :label="$t('offer.take.ui.panel.information')">
@@ -194,6 +219,7 @@ import ManageCats from "@/components/Cat/ManageCats.vue";
 import OfflineSendShowBundle from "@/components/Offline/OfflineSendShowBundle.vue";
 import { networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
 import bigDecimal from "js-big-decimal";
+import { shorten } from "@/filters/addressConversion";
 
 @Component({
   components: {
@@ -211,6 +237,10 @@ export default class TakeOffer extends Vue {
   @Prop() public inputOfferText!: string;
   @Prop() tokenList!: CustomCat[];
   public offerText = "";
+  public file: File | null = null;
+  public dragfile: File[] = [];
+  public isDragging = false;
+  public transitioning = false;
   public makerBundle: SpendBundle | null = null;
   public summary: OfferSummary | null = null;
   public submitting = false;
@@ -329,6 +359,10 @@ export default class TakeOffer extends Vue {
     return store.state.network.network.spaceScanUrl;
   }
 
+  shorten(name: string): string {
+    return shorten(name);
+  }
+
   async mounted(): Promise<void> {
     if (this.inputOfferText) {
       this.offerText = this.inputOfferText;
@@ -356,6 +390,47 @@ export default class TakeOffer extends Vue {
     setTimeout(() => {
       this.longRunUpdateOffer();
     }, 50);
+  }
+
+  async afterUpload(f: File): Promise<void> {
+    this.isDragging = false;
+    this.offerText = await f.text();
+    this.updateOffer();
+  }
+
+  deleteFile(): void {
+    this.file = null;
+    this.offerText = "";
+    this.makerBundle = null;
+    this.summary = null;
+  }
+
+  dragenter(event: Event): void {
+    event.preventDefault();
+    this.isDragging = true;
+    this.transitioning = true;
+    setTimeout(() => (this.transitioning = false), 1);
+  }
+
+  dragleave(event: Event): void {
+    event.preventDefault();
+    if (!this.transitioning) this.isDragging = false;
+  }
+
+  afterDragged(f: File[]): void {
+    this.isDragging = false;
+    if (f.length > 1) {
+      Notification.open({
+        message: this.$tc("batchSend.ui.messages.onlyOneFile"),
+        type: "is-danger",
+        autoClose: false,
+      });
+      this.dragfile = [];
+      return;
+    }
+    this.file = f[0];
+    this.afterUpload(f[0]);
+    this.dragfile = [];
   }
 
   async longRunUpdateOffer(): Promise<void> {
