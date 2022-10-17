@@ -67,7 +67,7 @@
     </section>
     <footer class="modal-card-foot is-block">
       <div>
-        <b-button :label="$t('common.button.cancel')" class="is-pulled-left" @click="close()"></b-button>
+        <b-button :label="$t('common.button.cancel')" class="is-pulled-left" @click="cancel()"></b-button>
         <b-button v-if="!bundle" type="is-primary" :loading="signing" @click="sign()">
           {{ $t("offer.make.ui.button.sign") }}
         </b-button>
@@ -151,6 +151,19 @@ export default class NftMove extends Vue {
   @Emit("close")
   close(): void {
     return;
+  }
+
+  reset(): void {
+    this.bundle = null;
+    this.step = "Input";
+  }
+
+  cancel(): void {
+    if (this.bundle) {
+      this.reset();
+    } else {
+      this.close();
+    }
   }
 
   get tokenNames(): string[] {

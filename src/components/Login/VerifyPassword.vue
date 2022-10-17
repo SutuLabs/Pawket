@@ -82,16 +82,16 @@ export default class VerifyPassword extends Vue {
     this.isCorrect = true;
   }
 
-  clear(): void {
+  async clear(): Promise<void> {
     this.$buefy.dialog.confirm({
       message: this.$tc("verifyPassword.message.confirmation.clear"),
       confirmText: this.$tc("verifyPassword.message.confirmation.confirmText"),
       cancelText: this.$tc("verifyPassword.message.confirmation.cancelText"),
       trapFocus: true,
       type: "is-danger",
-      onConfirm: () => {
-        store.dispatch("clear");
-        this.$router.push("/create");
+      onConfirm: async () => {
+        await store.dispatch("clear");
+        location.reload();
       },
     });
   }
