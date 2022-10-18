@@ -49,8 +49,8 @@ export default class TokenItem extends Vue {
     this.$emit("remove", id);
   }
 
-  updateOrder(newOrder: CustomCat[]): void {
-    this.$emit("updateOrder", newOrder);
+  updateOrder(detail: { oldIndex: number; newIndex: number }): void {
+    this.$emit("updateOrder", detail);
   }
 
   nameOmit(name: string, upperCase = false): string {

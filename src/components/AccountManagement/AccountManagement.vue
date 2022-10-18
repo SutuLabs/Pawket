@@ -2,35 +2,44 @@
   <div class="modal-card margin-auto">
     <top-bar :title="$t('accountManagement.ui.title')" :showClose="true" @close="close()"></top-bar>
     <div class="modal-card-body">
-      <a v-for="(account, idx) in accounts" :key="idx" class="panel-block" @click="select(idx)">
-        <b-icon icon="check" v-if="idx == selectedAccount" style="margin-left: -15px" size="is-small" type="is-primary"></b-icon>
-        <figure class="image is-32x32" style="margin: auto">
-          <img v-if="account.profilePic" class="is-rounded cover" :src="account.profilePic" />
-          <img v-else class="is-rounded" src="@/assets/account-circle.svg" />
-        </figure>
-        <div class="column is-flex my-0 py-0">
-          <div class="py-1">
-            <p class="is-size-6">{{ account.name }}</p>
-            <p class="is-size-7 has-text-grey">{{ account.key.fingerprint }}</p>
+      <div v-sortable="sortableOptions" @updateOrder="updateOrder($event.detail)">
+        <a v-for="(account, idx) in accounts" :key="idx" class="panel-block list-item" @click="select(idx)">
+          <b-icon
+            icon="check"
+            v-if="idx == selectedAccount"
+            style="margin-left: -15px"
+            size="is-small"
+            type="is-primary"
+          ></b-icon>
+          <figure class="image is-32x32" style="margin: auto">
+            <img v-if="account.profilePic" class="is-rounded cover" :src="account.profilePic" />
+            <img v-else class="is-rounded" src="@/assets/account-circle.svg" />
+          </figure>
+          <div class="column is-flex my-0 py-0">
+            <div class="py-1">
+              <p class="is-size-6">{{ account.name }}</p>
+              <p class="is-size-7 has-text-grey">{{ account.key.fingerprint }}</p>
+            </div>
           </div>
-        </div>
-        <div class="column has-text-centered">
-          <b-tag v-if="account.type == 'Password'" rounded class="has-background-grey-lighter">{{
-            $t("accountManagement.ui.label.passPhrase")
-          }}</b-tag>
-          <b-tag v-if="account.type == 'Address'" rounded class="has-background-grey-lighter">{{
-            $t("accountManagement.ui.label.address")
-          }}</b-tag>
-          <b-tag v-if="account.type == 'Legacy'" rounded class="has-background-grey-lighter">{{
-            $t("accountManagement.ui.label.imported")
-          }}</b-tag>
-        </div>
-        <div class="column py-1">
-          <span @click.stop="showDetail(idx)"
-            ><b-icon class="is-pulled-right hover-info has-text-grey" icon="text-box-search-outline"> </b-icon
-          ></span>
-        </div>
-      </a>
+          <div class="column has-text-centered">
+            <b-tag v-if="account.type == 'Password'" rounded class="has-background-grey-lighter">{{
+              $t("accountManagement.ui.label.passPhrase")
+            }}</b-tag>
+            <b-tag v-if="account.type == 'Address'" rounded class="has-background-grey-lighter">{{
+              $t("accountManagement.ui.label.address")
+            }}</b-tag>
+            <b-tag v-if="account.type == 'Legacy'" rounded class="has-background-grey-lighter">{{
+              $t("accountManagement.ui.label.imported")
+            }}</b-tag>
+          </div>
+          <div class="column py-1">
+            <span @click.stop="showDetail(idx)"
+              ><b-icon class="is-pulled-right hover-info has-text-grey" icon="text-box-search-outline"> </b-icon
+            ></span>
+          </div>
+        </a>
+      </div>
+
       <a href="javascript:void(0)" class="panel-block" @click="addBySerial()">
         <b-tooltip :label="$t('accountManagement.ui.tooltip.addBySerial')" position="is-right" multilined size="is-small">
           <span class="panel-icon">
@@ -87,11 +96,22 @@ import AddByMnemonic from "./AddAccount/AddByMnemonic.vue";
 import AddBySerial from "./AddAccount/AddBySerial.vue";
 import AddByPassword from "./AddAccount/AddByPassword.vue";
 import { isMobile } from "@/services/view/responsive";
+import { sortable } from "@/directives/sortable";
 
 @Component({
+  directives: {
+    sortable,
+  },
   components: { TopBar },
 })
 export default class AccountManagement extends Vue {
+  sortableOptions = {
+    chosenClass: "box",
+    draggable: ".list-item",
+  };
+
+  newOrder: AccountEntity[] = this.accounts;
+
   get accounts(): AccountEntity[] {
     return store.state.account.accounts;
   }
@@ -101,8 +121,8 @@ export default class AccountManagement extends Vue {
   }
 
   @Watch("path")
-  onPathChange():void {
-    if(this.path == "/home") this.close();
+  onPathChange(): void {
+    if (this.path == "/home") this.close();
   }
 
   get experimentMode(): boolean {
@@ -122,8 +142,33 @@ export default class AccountManagement extends Vue {
     return (n + 1).toString();
   }
 
-  close(): void {
+  async close(): Promise<void> {
+    const newSelectedIdx = this.newOrder.findIndex((d) => d.name == this.accounts[this.selectedAccount].name);
+    Vue.set(store.state.account, "accounts", this.newOrder);
+    Vue.set(store.state.account, "selectedAccount", newSelectedIdx);
+    Vue.set(store.state.vault, "selectedAccount", newSelectedIdx);
+    await store.dispatch("persistent");
+
     this.$emit("close");
+  }
+
+  updateOrder(detail: { oldIndex: number; newIndex: number }): void {
+    const oldIndex = detail.oldIndex;
+    const newIndex = detail.newIndex;
+    const data: AccountEntity[] = JSON.parse(JSON.stringify(this.newOrder));
+    const item = data[oldIndex];
+
+    if (newIndex > oldIndex) {
+      for (let i = oldIndex; i < newIndex; i++) {
+        data[i] = data[i + 1];
+      }
+    } else {
+      for (let i = oldIndex; i > newIndex; i--) {
+        data[i] = data[i - 1];
+      }
+    }
+    data[newIndex] = item;
+    this.newOrder = data;
   }
 
   showDetail(idx: number): void {

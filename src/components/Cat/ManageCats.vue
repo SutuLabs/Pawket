@@ -240,7 +240,25 @@ export default class ManageCats extends Vue {
     this.submitting = false;
   }
 
-  updateOrder(newOrder: CustomCat[]): void {
+  updateOrder(detail: { oldIndex: number; newIndex: number }): void {
+    const oldIndex = detail.oldIndex;
+    const newIndex = detail.newIndex;
+    const data = this.assetIds;
+    const item = data[oldIndex];
+    if (newIndex > oldIndex) {
+      for (let i = oldIndex; i < newIndex; i++) {
+        data[i] = data[i + 1];
+      }
+    } else {
+      for (let i = oldIndex; i > newIndex; i--) {
+        data[i] = data[i - 1];
+      }
+    }
+    data[newIndex] = item;
+    const newOrder: CustomCat[] = [];
+    for (let i = 0; i < data.length; i++) {
+      newOrder.push({ name: data[i].name, id: data[i].id, img: data[i].img });
+    }
     this.assetIds = newOrder;
     this.submit();
   }
