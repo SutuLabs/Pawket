@@ -101,6 +101,8 @@ import { Bytes } from "clvm";
 export default class NftTransfer extends Vue {
   @Prop() public account!: AccountEntity;
   @Prop() public nft!: NftDetail;
+  @Prop() public inputAvailableCoins!: SymbolCoins;
+  @Prop() public inputRequests!: TokenPuzzleDetail[];
 
   public addressEditable = true;
   public submitting = false;
@@ -119,6 +121,10 @@ export default class NftTransfer extends Vue {
   public requests: TokenPuzzleDetail[] = [];
 
   mounted(): void {
+    if (this.inputAvailableCoins && this.inputRequests) {
+      this.availcoins = this.inputAvailableCoins;
+      this.requests = this.inputRequests;
+    }
     this.loadCoins();
   }
 
