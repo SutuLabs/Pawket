@@ -384,6 +384,7 @@ export default class ScanAssets extends Vue {
         }
       } else {
         records = await receive.getCoinRecords(requests, false, rpcUrl(), false, this.option);
+        this.allRequests = this.allRequests.concat(requests);
         this.analyse(records, rpcUrl());
       }
     } catch (error) {
@@ -505,7 +506,8 @@ export default class ScanAssets extends Vue {
     });
   }
 
-  transfer(nft: NftDetail): void {
+  async transfer(nft: NftDetail): Promise<void> {
+    const availableCoins = await coin.getAvailableCoins(this.allRequests, [this.token]);
     this.$buefy.modal.open({
       parent: this,
       component: NftTransfer,
@@ -513,7 +515,7 @@ export default class ScanAssets extends Vue {
       trapFocus: true,
       fullScreen: isMobile(),
       canCancel: [""],
-      props: { nft: nft, account: this.account },
+      props: { nft: nft, account: this.account, inputAvailableCoins: availableCoins, inputRequests: this.allRequests },
     });
   }
 
