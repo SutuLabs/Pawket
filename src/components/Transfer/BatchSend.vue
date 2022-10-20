@@ -58,7 +58,7 @@
       :title="$t('batchSend.ui.title.send')"
       @close="close()"
       @leftClick="cancel()"
-      @rightClick="sign()"
+      @rightClick="submit()"
       :showClose="true"
       :disabled="submitting"
     >

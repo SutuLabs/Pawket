@@ -7,7 +7,7 @@
     <footer class="modal-card-foot is-block">
       <b-button :label="leftBtnName ? leftBtnName : leftBtn" @click="leftClick()"></b-button>
       <b-button
-        class="is-pulled-right"
+        :class="stage == 'Confirm' ? 'is-pulled-right' : ''"
         :label="rightBtnName ? rightBtnName : rightBtn"
         type="is-primary"
         @click="rightClick()"
