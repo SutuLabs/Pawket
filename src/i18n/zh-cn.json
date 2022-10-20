@@ -11,7 +11,9 @@
     "button": {
       "confirm": "确认",
       "cancel": "取消",
+      "back": "返回",
       "save": "保存",
+      "submit": "提交",
       "delete": "删除",
       "sign": "签名",
       "copy": "复制"
@@ -250,9 +252,7 @@
         "fee": "交易费"
       },
       "button": {
-        "cancel": "取消",
         "submit": "提交",
-        "sign": "签名",
         "showSend": "显示"
       },
       "slider": {
@@ -616,9 +616,6 @@
         "notification": "确定要提交吗？<br/>请务必再次检查你的交易内容。"
       },
       "button": {
-        "cancel": "取消",
-        "sign": "签名",
-        "submit": "提交",
         "upload": "上传CSV"
       },
       "messages": {
@@ -705,11 +702,6 @@
         "label": {
           "leadingText": "发行 CAT"
         }
-      },
-      "button": {
-        "cancel": "取消",
-        "sign": "签名",
-        "submit": "提交"
       },
       "messages": {
         "failedToSign": "签名失败: ",
@@ -1272,7 +1264,7 @@
         "reScan": "重新扫描",
         "add": "添加",
         "send": "发送",
-        "sign": "签名" 
+        "sign": "签名"
       }
     },
     "message": {

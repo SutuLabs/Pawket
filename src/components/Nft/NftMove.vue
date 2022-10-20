@@ -1,11 +1,15 @@
 <template>
   <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">{{ $t("moveNft.ui.title") }}</p>
-      <button type="button" class="delete" @click="close()"></button>
-    </header>
-    <section class="modal-card-body">
-      <template v-if="step == 'Input'">
+    <confirmation
+      v-if="step == 'Input'"
+      :title="$t('moveNft.ui.title')"
+      @close="close()"
+      :showClose="true"
+      @leftClick="cancel()"
+      @rightClick="sign()"
+      :loading="signing"
+    >
+      <template #content>
         <b-field :label="$t('moveNft.ui.label.moveToProfile')">
           <b-dropdown v-model="selectedDid">
             <template #trigger>
@@ -28,7 +32,18 @@
         </b-field>
         <fee-selector v-model="fee"></fee-selector>
       </template>
-      <template v-if="step == 'Confirmation'">
+    </confirmation>
+    <confirmation
+      v-if="step == 'Confirmation'"
+      :title="$t('moveNft.ui.title')"
+      :stage="'Confirm'"
+      @close="close()"
+      :showClose="true"
+      @leftClick="cancel()"
+      @rightClick="submit()"
+      :disabled="submitting"
+    >
+      <template #content>
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
           <span v-html="$sanitize($tc('moveNft.ui.confirmation'))"></span>
         </b-notification>
@@ -64,25 +79,7 @@
         </div>
         <bundle-summary :account="account" :bundle="bundle" :ignoreError="true"></bundle-summary>
       </template>
-    </section>
-    <footer class="modal-card-foot is-block">
-      <div>
-        <b-button :label="$t('common.button.cancel')" class="is-pulled-left" @click="cancel()"></b-button>
-        <b-button v-if="!bundle" type="is-primary" :loading="signing" @click="sign()">
-          {{ $t("offer.make.ui.button.sign") }}
-        </b-button>
-      </div>
-      <div>
-        <b-button
-          :label="$t('mintNft.ui.button.submit')"
-          v-if="bundle"
-          type="is-primary"
-          class="is-pulled-right"
-          @click="submit()"
-          :disabled="submitting"
-        ></b-button>
-      </div>
-    </footer>
+    </confirmation>
   </div>
 </template>
 
@@ -107,6 +104,7 @@ import FeeSelector from "@/components/Send/FeeSelector.vue";
 import { demojo } from "@/filters/unitConversion";
 import { shorten } from "@/filters/addressConversion";
 import BundleSummary from "../Bundle/BundleSummary.vue";
+import Confirmation from "../Common/Confirmation.vue";
 
 @Component({
   components: {
@@ -114,6 +112,7 @@ import BundleSummary from "../Bundle/BundleSummary.vue";
     TokenAmountField,
     FeeSelector,
     BundleSummary,
+    Confirmation,
   },
 })
 export default class NftMove extends Vue {

@@ -1,11 +1,16 @@
 <template>
   <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">{{ $t("mintNft.ui.title") }}</p>
-      <button type="button" class="delete" @click="close()"></button>
-    </header>
-    <section class="modal-card-body">
-      <div v-show="!bundle">
+    <confirmation
+      v-if="!bundle"
+      :title="$t('mintNft.ui.title')"
+      @close="close()"
+      :showClose="true"
+      @leftClick="cancel()"
+      @rightClick="sign()"
+      :loading="submitting"
+      :disabled="!validity || submitting"
+    >
+      <template #content>
         <address-field
           :inputAddress="address"
           :addressEditable="addressEditable"
@@ -59,8 +64,20 @@
           <b-numberinput min="0" v-model="serialTotal" @input="reset()" required></b-numberinput>
         </b-field>
         <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
-      </div>
-      <template v-if="bundle">
+      </template>
+    </confirmation>
+    <confirmation
+      v-if="bundle"
+      :title="$t('mintCat.ui.title')"
+      @close="close()"
+      :showClose="true"
+      :stage="'Confirm'"
+      @leftClick="cancel()"
+      @rightClick="submit()"
+      :loading="submitting"
+      :disabled="!validity || submitting"
+    >
+      <template #content>
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
           <span v-html="$sanitize($tc('mintNft.ui.summary.notification'))"></span>
         </b-notification>
@@ -75,19 +92,9 @@
         ></send-summary>
         <bundle-summary :account="account" :bundle="bundle" :ignoreError="true"></bundle-summary>
       </template>
-    </section>
+    </confirmation>
     <footer class="modal-card-foot is-block">
       <div>
-        <b-button :label="$t('mintNft.ui.button.cancel')" class="is-pulled-left" @click="cancel()"></b-button>
-        <b-button
-          :label="$t('mintNft.ui.button.sign')"
-          v-if="!bundle"
-          type="is-primary"
-          class="is-pulled-left"
-          @click="sign()"
-          :loading="submitting"
-          :disabled="!validity || submitting"
-        ></b-button>
         <template v-if="showTest && debugMode">
           <b-button
             class="is-pulled-left"
@@ -102,16 +109,6 @@
           </b-button>
         </template>
         <button v-if="debugMode" class="test-btn is-pulled-left" @click="showTest = !showTest"></button>
-      </div>
-      <div>
-        <b-button
-          :label="$t('mintNft.ui.button.submit')"
-          v-if="bundle"
-          type="is-primary"
-          class="is-pulled-right"
-          @click="submit()"
-          :disabled="submitting"
-        ></b-button>
       </div>
     </footer>
     <b-loading :is-full-page="false" v-model="submitting"></b-loading>
@@ -143,6 +140,7 @@ import utility from "@/services/crypto/utility";
 import { generateMintNftBundle } from "@/services/coin/nft";
 import { NftMetadataValues } from "@/models/nft";
 import puzzle from "@/services/crypto/puzzle";
+import Confirmation from "../Common/Confirmation.vue";
 
 interface NftFormInfo {
   uri: string;
@@ -165,6 +163,7 @@ interface NftFormInfo {
     BundleSummary,
     SendSummary,
     AddressField,
+    Confirmation,
   },
 })
 export default class MintNft extends Vue {

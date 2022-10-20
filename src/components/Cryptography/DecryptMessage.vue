@@ -28,7 +28,7 @@
     </section>
     <footer class="modal-card-foot is-block">
       <div>
-        <b-button :label="$t('batchSend.ui.button.cancel')" class="is-pulled-left" @click="cancel()"></b-button>
+        <b-button :label="$t('common.button.cancel')" class="is-pulled-left" @click="cancel()"></b-button>
       </div>
       <div>
         <b-button label="Decrypt" type="is-primary" class="is-pulled-right" @click="decrypt()" :loading="submitting"></b-button>

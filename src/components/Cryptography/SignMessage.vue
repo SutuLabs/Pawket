@@ -1,11 +1,15 @@
 <template>
   <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">{{ $t("signMessage.ui.title") }}</p>
-      <button type="button" class="delete" @click="close()"></button>
-    </header>
-    <section class="modal-card-body">
-      <template v-if="!signResult">
+    <confirmation
+      v-if="!signResult"
+      :title="$t('signMessage.ui.title')"
+      @close="close()"
+      :showClose="true"
+      @leftClick="cancel()"
+      @rightClick="sign()"
+      :loading="submitting"
+    >
+      <template #content>
         <b-notification type="is-warning is-light" has-icon icon="head-question-outline" :closable="false">
           <span v-html="$sanitize($tc('signMessage.ui.prompt'))"></span>
         </b-notification>
@@ -30,7 +34,18 @@
           <b-input type="textarea" v-model="message" rows="10"></b-input>
         </b-field>
       </template>
-      <template v-else>
+    </confirmation>
+    <confirmation
+      v-if="signResult"
+      :title="$t('signMessage.ui.title')"
+      :stage="'Confirm'"
+      @close="close()"
+      :showClose="true"
+      @leftClick="cancel()"
+      :rightBtnName="$t('common.button.copy')"
+      @rightClick="copy()"
+    >
+      <template #content>
         <b-field v-if="false">
           <b-radio-button v-model="signMode" native-value="Pawket" type="is-primary is-light is-outlined">
             <span>Pawket</span>
@@ -44,28 +59,7 @@
           <b-input type="textarea" v-model="signResult" rows="20"></b-input>
         </b-field>
       </template>
-    </section>
-    <footer class="modal-card-foot is-block">
-      <div>
-        <b-button :label="$t('common.button.cancel')" class="is-pulled-left" @click="cancel()"></b-button>
-        <b-button
-          :label="$t('common.button.sign')"
-          v-if="!signResult"
-          type="is-primary"
-          @click="sign()"
-          :loading="submitting"
-        ></b-button>
-      </div>
-      <div>
-        <b-button
-          :label="$t('common.button.copy')"
-          v-if="signResult"
-          type="is-primary"
-          class="is-pulled-right"
-          @click="copy()"
-        ></b-button>
-      </div>
-    </footer>
+    </confirmation>
     <b-loading :is-full-page="false" v-model="submitting"></b-loading>
   </div>
 </template>
@@ -84,10 +78,12 @@ import utility from "@/services/crypto/utility";
 import { getSignMessage, signMessage, verifySignature } from "@/services/crypto/sign";
 import { xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getCoinName0x } from "@/services/coin/coinUtility";
+import Confirmation from "../Common/Confirmation.vue";
 
 @Component({
   components: {
     KeyBox,
+    Confirmation,
   },
 })
 export default class SignMessage extends Vue {

@@ -1,8 +1,16 @@
 <template>
   <div class="modal-card m-0">
-    <top-bar :title="title ? title : $t('send.ui.title.send')" @close="close()" :showClose="showClose"></top-bar>
-    <section class="modal-card-body">
-      <div v-show="!bundle">
+    <confirmation
+      v-if="!bundle"
+      :title="title ? title : $t('send.ui.title.send')"
+      @close="close()"
+      @leftClick="cancel()"
+      @rightClick="sign()"
+      :showClose="showClose"
+      :loading="submitting"
+      :disabled="!validity || submitting"
+    >
+      <template #content>
         <b-notification
           v-if="notificationMessage"
           :type="notificationType || 'is-primary'"
@@ -42,8 +50,19 @@
           <b-input maxlength="100" v-model="memo" type="text" @input="reset()" :disabled="selectedToken == xchSymbol"></b-input>
         </b-field>
         <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
-      </div>
-      <template v-if="bundle">
+      </template>
+    </confirmation>
+    <confirmation
+      v-if="bundle"
+      :title="title ? title : $t('send.ui.title.send')"
+      @close="close()"
+      @leftClick="cancel()"
+      :stage="'Confirm'"
+      :rightBtnName="offline ? $t('send.ui.button.showSend') : $t('send.ui.button.submit')"
+      @rightClick="offline ? showSend() : submit()"
+      :disabled="submitting"
+    >
+      <template #content>
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
           <span v-html="$sanitize($tc('send.ui.summary.notification'))"></span>
         </b-notification>
@@ -56,38 +75,7 @@
         ></send-summary>
         <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
       </template>
-    </section>
-    <footer class="is-block buttons modal-card-foot pb-2 my-0">
-      <div>
-        <b-button :label="$t('send.ui.button.cancel')" class="is-pulled-left" @click="cancel()"></b-button>
-        <b-button
-          :label="$t('send.ui.button.sign')"
-          v-if="!bundle"
-          type="is-primary"
-          @click="sign()"
-          :loading="submitting"
-          :disabled="!validity || submitting"
-        ></b-button>
-      </div>
-      <div>
-        <b-button
-          :label="$t('send.ui.button.submit')"
-          v-if="bundle && !offline"
-          type="is-primary"
-          class="is-pulled-right"
-          @click="submit()"
-          :disabled="submitting"
-        ></b-button>
-        <b-button
-          :label="$t('send.ui.button.showSend')"
-          v-if="bundle && offline"
-          type="is-primary"
-          class="is-pulled-right"
-          @click="showSend()"
-          :disabled="submitting"
-        ></b-button>
-      </div>
-    </footer>
+    </confirmation>
     <b-loading :is-full-page="false" v-model="submitting"></b-loading>
   </div>
 </template>
@@ -117,6 +105,7 @@ import { getCatNames, getTokenInfo } from "@/services/view/cat";
 import AddressField from "@/components/Common/AddressField.vue";
 import TopBar from "@/components/Common/TopBar.vue";
 import AddressBook, { Contact } from "@/components/AddressBook/AddressBook.vue";
+import Confirmation from "../Common/Confirmation.vue";
 
 @Component({
   components: {
@@ -125,6 +114,7 @@ import AddressBook, { Contact } from "@/components/AddressBook/AddressBook.vue";
     TokenAmountField,
     BundleSummary,
     SendSummary,
+    Confirmation,
     AddressField,
     TopBar,
   },

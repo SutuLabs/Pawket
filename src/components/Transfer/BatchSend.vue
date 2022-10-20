@@ -1,11 +1,16 @@
 <template>
   <div class="modal-card" @dragenter="dragenter" @dragleave="dragleave">
-    <header class="modal-card-head">
-      <p class="modal-card-title">{{ $t("batchSend.ui.title.send") }}</p>
-      <button type="button" class="delete" @click="close()"></button>
-    </header>
-    <section class="modal-card-body">
-      <template v-if="!bundle">
+    <confirmation
+      v-if="!bundle"
+      :title="$t('batchSend.ui.title.send')"
+      @close="close()"
+      @leftClick="cancel()"
+      @rightClick="sign()"
+      :showClose="true"
+      :loading="submitting"
+      :disabled="status == 'Loading' || submitting"
+    >
+      <template #content>
         <span class="label">
           <b-tooltip :label="$t('batchSend.ui.tooltip.upload')" position="is-right">
             <b-upload v-model="file" accept=".csv" class="file-label" @input="afterUploadCsv">
@@ -46,36 +51,24 @@
 
         <fee-selector v-model="fee"></fee-selector>
       </template>
-      <template v-if="bundle">
+    </confirmation>
+    <confirmation
+      v-if="bundle"
+      stage="Confirm"
+      :title="$t('batchSend.ui.title.send')"
+      @close="close()"
+      @leftClick="cancel()"
+      @rightClick="sign()"
+      :showClose="true"
+      :disabled="submitting"
+    >
+      <template #content>
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
           <span v-html="$sanitize($tc('batchSend.ui.summary.notification'))"></span>
         </b-notification>
         <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
       </template>
-    </section>
-    <footer class="modal-card-foot is-block">
-      <div>
-        <b-button :label="$t('batchSend.ui.button.cancel')" class="is-pulled-left" @click="cancel()"></b-button>
-        <b-button
-          :label="$t('batchSend.ui.button.sign')"
-          v-if="!bundle"
-          type="is-primary"
-          @click="sign()"
-          :loading="submitting"
-          :disabled="status == 'Loading' || submitting"
-        ></b-button>
-      </div>
-      <div>
-        <b-button
-          :label="$t('batchSend.ui.button.submit')"
-          v-if="bundle"
-          type="is-primary"
-          class="is-pulled-right"
-          @click="submit()"
-          :disabled="submitting"
-        ></b-button>
-      </div>
-    </footer>
+    </confirmation>
     <b-loading :is-full-page="false" v-model="submitting"></b-loading>
   </div>
 </template>
@@ -97,6 +90,7 @@ import FeeSelector from "@/components/Send/FeeSelector.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import { csvToArray } from "@/services/util/csv";
 import { networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
+import Confirmation from "../Common/Confirmation.vue";
 
 @Component({
   components: {
@@ -104,6 +98,7 @@ import { networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
     FeeSelector,
     TokenAmountField,
     BundleSummary,
+    Confirmation,
   },
 })
 export default class BatchSend extends Vue {

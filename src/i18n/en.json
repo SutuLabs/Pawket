@@ -11,7 +11,9 @@
     "button": {
       "confirm": "Confirm",
       "cancel": "Cancel",
+      "back": "Back",
       "save": "Save",
+      "submit": "Submit",
       "delete": "Delete",
       "sign": "Sign",
       "copy": "Copy"
@@ -250,9 +252,7 @@
         "fee": "Fee"
       },
       "button": {
-        "cancel": "Cancel",
         "submit": "Submit",
-        "sign": "Sign",
         "showSend": "Show"
       },
       "slider": {
@@ -616,9 +616,6 @@
         "notification": "Are you sure to send?<br/>Please review your transaction."
       },
       "button": {
-        "cancel": "Cancel",
-        "sign": "Sign",
-        "submit": "Submit",
         "upload": "Upload CSV"
       },
       "messages": {
@@ -705,11 +702,6 @@
         "label": {
           "leadingText": "Issuing CAT"
         }
-      },
-      "button": {
-        "cancel": "Cancel",
-        "sign": "Sign",
-        "submit": "Submit"
       },
       "messages": {
         "failedToSign": "Failed to sign: ",
