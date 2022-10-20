@@ -93,7 +93,7 @@
         <bundle-summary :account="account" :bundle="bundle" :ignoreError="true"></bundle-summary>
       </template>
     </confirmation>
-    <footer class="modal-card-foot is-block">
+    <footer class="modal-card-foot is-block" v-if="debugMode">
       <div>
         <template v-if="showTest && debugMode">
           <b-button

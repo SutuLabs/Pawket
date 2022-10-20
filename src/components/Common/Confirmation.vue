@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="modal-card">
     <top-bar :title="title" @close="close()" :showClose="showClose" :showBack="showBack" :tag="tag"></top-bar>
     <section class="modal-card-body">
       <slot name="content"></slot>
