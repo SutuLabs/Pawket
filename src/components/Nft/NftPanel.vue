@@ -233,7 +233,7 @@ export default class NftPanel extends Vue {
       trapFocus: true,
       width: 1000,
       fullScreen: isMobile(),
-      canCancel: ["outside"],
+      canCancel: ["outside", "escape"],
       props: { nft: nft, metadata: this.extraInfo[nft.address].metadata, account: this.account, dids: this.dids },
     });
   }

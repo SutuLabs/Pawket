@@ -62,6 +62,7 @@ export default class DidDetails extends Vue {
         value: name,
       },
       trapFocus: true,
+      canCancel: ["button"],
       confirmText: tc("common.button.confirm"),
       cancelText: tc("common.button.cancel"),
       onConfirm: (value) => this.$emit("edit", this.did.did, value),

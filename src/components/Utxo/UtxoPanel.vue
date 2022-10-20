@@ -71,7 +71,7 @@ export default class UtxoPanel extends Vue {
       hasModalCard: true,
       trapFocus: true,
       fullScreen: isMobile(),
-      canCancel: ["outside"],
+      canCancel: ["outside", "escape"],
       props: { activity: activity, tokenInfo: this.tokenInfo },
     });
   }

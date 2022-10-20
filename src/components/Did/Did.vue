@@ -90,7 +90,7 @@ export default class Did extends Vue {
       hasModalCard: true,
       trapFocus: true,
       fullScreen: isMobile(),
-      canCancel: ["outside"],
+      canCancel: ["outside", "escape"],
       props: { did: did, account: this.account },
       events: { edit: this.edit },
     });
