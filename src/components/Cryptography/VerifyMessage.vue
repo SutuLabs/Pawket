@@ -1,47 +1,40 @@
 <template>
   <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">{{ $t("verifyMessage.ui.title") }}</p>
-      <button type="button" class="delete" @click="close()"></button>
-    </header>
-    <section class="modal-card-body">
-      <b-field :label="$t('verifyMessage.ui.label.message')">
-        <b-input type="textarea" v-model="message" rows="18"></b-input>
-      </b-field>
+    <confirmation
+      :title="$t('verifyMessage.ui.title')"
+      @close="close()"
+      :leftBtnName="verified ? $t('common.button.back') : $t('common.button.cancel')"
+      :rightBtnName="$t('verifyMessage.ui.button.verify')"
+      :showClose="true"
+      @leftClick="cancel()"
+      @rightClick="verify()"
+      :loading="submitting"
+    >
+      <template #content>
+        <b-field :label="$t('verifyMessage.ui.label.message')">
+          <b-input type="textarea" v-model="message" rows="18"></b-input>
+        </b-field>
 
-      <b-field v-if="verified" :label="$t('verifyMessage.ui.label.result')">
-        <template #message>
-          <ul v-for="(v, i) in validationResult" :key="i">
-            <li v-if="v.v == 'Pass'">
-              <b-icon icon="check-decagram" type="is-success"></b-icon>
-              {{ v.pass }}
-            </li>
-            <li v-if="v.v == 'None'">
-              <b-icon icon="crosshairs-question"></b-icon>
-              {{ v.none }}
-            </li>
-            <li v-if="v.v == 'Fail'">
-              <b-icon icon="comment-remove-outline" type="is-danger"></b-icon>
-              {{ v.fail }}
-            </li>
-          </ul>
-        </template>
-      </b-field>
-    </section>
-    <footer class="modal-card-foot is-block">
-      <div>
-        <b-button :label="$t('batchSend.ui.button.cancel')" class="is-pulled-left" @click="cancel()"></b-button>
-      </div>
-      <div>
-        <b-button
-          :label="$t('verifyMessage.ui.button.verify')"
-          type="is-primary"
-          class="is-pulled-right"
-          @click="verify()"
-          :loading="submitting"
-        ></b-button>
-      </div>
-    </footer>
+        <b-field v-if="verified" :label="$t('verifyMessage.ui.label.result')">
+          <template #message>
+            <ul v-for="(v, i) in validationResult" :key="i">
+              <li v-if="v.v == 'Pass'">
+                <b-icon icon="check-decagram" type="is-success"></b-icon>
+                {{ v.pass }}
+              </li>
+              <li v-if="v.v == 'None'">
+                <b-icon icon="crosshairs-question"></b-icon>
+                {{ v.none }}
+              </li>
+              <li v-if="v.v == 'Fail'">
+                <b-icon icon="comment-remove-outline" type="is-danger"></b-icon>
+                {{ v.fail }}
+              </li>
+            </ul>
+          </template>
+        </b-field>
+      </template>
+    </confirmation>
     <b-loading :is-full-page="false" v-model="submitting"></b-loading>
   </div>
 </template>
@@ -60,12 +53,14 @@ import debug from "@/services/api/debug";
 import { analyzeNftCoin } from "@/services/coin/nft";
 import utility from "@/services/crypto/utility";
 import { tc } from "@/i18n/i18n";
+import Confirmation from "../Common/Confirmation.vue";
 
 type ValidationResult = "None" | "Pass" | "Fail";
 
 @Component({
   components: {
     KeyBox,
+    Confirmation,
   },
 })
 export default class VerifyMessage extends Vue {

@@ -1,11 +1,16 @@
 <template>
   <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">{{ $t("mintCat.ui.title") }}</p>
-      <button type="button" class="delete" @click="close()"></button>
-    </header>
-    <section class="modal-card-body">
-      <div v-show="!bundle">
+    <confirmation
+      v-if="!bundle"
+      :title="$t('mintCat.ui.title')"
+      @close="close()"
+      :showClose="true"
+      @leftClick="cancel()"
+      @rightClick="sign()"
+      :loading="submitting"
+      :disabled="!validity || submitting"
+    >
+      <template #content>
         <address-field
           :inputAddress="address"
           :addressEditable="addressEditable"
@@ -33,8 +38,19 @@
           <b-input maxlength="12" v-model="symbol" type="text" @input="reset()" required></b-input>
         </b-field>
         <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
-      </div>
-      <template v-if="bundle">
+      </template>
+    </confirmation>
+    <confirmation
+      v-if="bundle"
+      :title="$t('mintCat.ui.title')"
+      @close="close()"
+      :stage="'Confirm'"
+      :showClose="true"
+      @leftClick="cancel()"
+      @rightClick="submit()"
+      :disabled="submitting"
+    >
+      <template #content>
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
           <span v-html="$sanitize($tc('mintCat.ui.summary.notification'))"></span>
         </b-notification>
@@ -50,30 +66,7 @@
         ></send-summary>
         <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
       </template>
-    </section>
-    <footer class="modal-card-foot is-block">
-      <div>
-        <b-button :label="$t('mintCat.ui.button.cancel')" class="is-pulled-left" @click="cancel()"></b-button>
-        <b-button
-          :label="$t('mintCat.ui.button.sign')"
-          v-if="!bundle"
-          type="is-primary"
-          @click="sign()"
-          :loading="submitting"
-          :disabled="!validity || submitting"
-        ></b-button>
-      </div>
-      <div>
-        <b-button
-          :label="$t('mintCat.ui.button.submit')"
-          v-if="bundle"
-          type="is-primary"
-          class="is-pulled-right"
-          @click="submit()"
-          :disabled="submitting"
-        ></b-button>
-      </div>
-    </footer>
+    </confirmation>
     <b-loading :is-full-page="false" v-model="submitting"></b-loading>
   </div>
 </template>
@@ -100,6 +93,7 @@ import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
 import { getTokenInfo } from "@/services/view/cat";
 import AddressField from "@/components/Common/AddressField.vue";
+import Confirmation from "../Common/Confirmation.vue";
 
 @Component({
   components: {
@@ -109,6 +103,7 @@ import AddressField from "@/components/Common/AddressField.vue";
     BundleSummary,
     SendSummary,
     AddressField,
+    Confirmation,
   },
 })
 export default class MintCat extends Vue {

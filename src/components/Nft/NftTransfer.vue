@@ -1,28 +1,45 @@
 <template>
   <div class="modal-card">
-    <header class="modal-card-head">
-      <!-- <p class="modal-card-title">{{ $t("mintNft.ui.title") }}</p> -->
-      <p class="modal-card-title">{{ $t("nftTransfer.ui.title") }}</p>
-      <button type="button" class="delete" @click="close()"></button>
-    </header>
-    <section class="modal-card-body">
-      <div v-show="!bundle">
-        <div class="has-text-centered">
-          <p class="has-text-grey pb-3">{{ $t("nftTransfer.ui.description") }}</p>
-          <img v-if="uri" :src="uri" class="image is-128x128" />
-          <img v-else src="@/assets/nft-no-image.png" class="image is-128x128" />
-          <p>{{ nft.name }}</p>
-        </div>
-        <address-field
-          :inputAddress="address"
-          :addressEditable="addressEditable"
-          @updateAddress="updateAddress"
-          @updateContactName="updateContactName"
-        ></address-field>
+    <confirmation
+      v-if="!bundle"
+      :title="$t('nftTransfer.ui.title')"
+      :showClose="true"
+      @close="close()"
+      @leftClick="cancel()"
+      @rightClick="sign()"
+      :loading="submitting"
+      :disabled="!validity || submitting"
+    >
+      <template #content>
+        <div>
+          <div class="has-text-centered">
+            <p class="has-text-grey pb-3">{{ $t("nftTransfer.ui.description") }}</p>
+            <img v-if="uri" :src="uri" class="image is-128x128" />
+            <img v-else src="@/assets/nft-no-image.png" class="image is-128x128" />
+            <p>{{ nft.name }}</p>
+          </div>
+          <address-field
+            :inputAddress="address"
+            :addressEditable="addressEditable"
+            @updateAddress="updateAddress"
+            @updateContactName="updateContactName"
+          ></address-field>
 
-        <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
-      </div>
-      <template v-if="bundle">
+          <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
+        </div>
+      </template>
+    </confirmation>
+    <confirmation
+      v-if="bundle"
+      :title="$t('nftTransfer.ui.title')"
+      :showClose="true"
+      @close="close()"
+      @leftClick="cancel()"
+      @rightClick="submit()"
+      :stage="'Confirm'"
+      :disabled="submitting"
+    >
+      <template #content>
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
           <span v-html="$sanitize($tc('nftTransfer.ui.summary.confirmation'))"></span>
         </b-notification>
@@ -37,30 +54,7 @@
         ></send-summary>
         <bundle-summary :account="account" :bundle="bundle" :ignoreError="true" class="mt-3"></bundle-summary>
       </template>
-    </section>
-    <footer class="modal-card-foot is-block">
-      <div>
-        <b-button class="is-pulled-left" :label="$t('mintNft.ui.button.cancel')" @click="cancel()"></b-button>
-        <b-button
-          :label="$t('mintNft.ui.button.sign')"
-          v-if="!bundle"
-          type="is-primary"
-          @click="sign()"
-          :loading="submitting"
-          :disabled="!validity || submitting"
-        ></b-button>
-      </div>
-      <div>
-        <b-button
-          :label="$t('mintNft.ui.button.submit')"
-          v-if="bundle"
-          type="is-primary"
-          class="is-pulled-right"
-          @click="submit()"
-          :disabled="submitting"
-        ></b-button>
-      </div>
-    </footer>
+    </confirmation>
     <b-loading :is-full-page="false" v-model="submitting"></b-loading>
   </div>
 </template>
@@ -87,6 +81,7 @@ import { generateTransferNftBundle } from "@/services/coin/nft";
 import AddressField from "@/components/Common/AddressField.vue";
 import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
+import Confirmation from "../Common/Confirmation.vue";
 
 @Component({
   components: {
@@ -96,6 +91,7 @@ import { Bytes } from "clvm";
     BundleSummary,
     SendSummary,
     AddressField,
+    Confirmation,
   },
 })
 export default class NftTransfer extends Vue {

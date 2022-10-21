@@ -1,11 +1,16 @@
 <template>
   <div class="modal-card m-0">
-    <top-bar :title="$t('did.addDid.title')" @close="$emit('close')" :showClose="showClose"></top-bar>
-    <section class="modal-card-body">
-      <div v-show="!bundle">
-        <!-- <b-field :label="$t('send.ui.label.memo')">
-          <b-input maxlength="100" v-model="memo" type="text" @input="reset()"></b-input>
-        </b-field> -->
+    <confirmation
+      v-show="!bundle"
+      :title="$t('did.addDid.title')"
+      @close="close()"
+      :showClose="true"
+      @leftClick="cancel()"
+      @rightClick="sign()"
+      :loading="submitting"
+      :disabled="submitting"
+    >
+      <template #content>
         <b-notification type="is-primary" has-icon icon="exclamation" :closable="false">
           <p>{{ $t("did.addDid.tip") }}</p>
           <p class="is-size-7" v-if="account.tokens && account.tokens.hasOwnProperty(xchSymbol)">
@@ -13,46 +18,33 @@
           </p>
         </b-notification>
         <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
-      </div>
-      <template v-if="bundle">
+      </template>
+    </confirmation>
+    <confirmation
+      v-if="bundle"
+      :title="$t('did.addDid.title')"
+      @close="close()"
+      :stage="'Confirm'"
+      :showClose="true"
+      @leftClick="cancel()"
+      @rightClick="offline ? showSend() : submit()"
+      :rightBtnName="offline ? $t('send.ui.button.showSend') : $t('send.ui.button.submit')"
+      :disabled="submitting"
+    >
+      <template #content>
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
           <span v-html="$sanitize($tc('did.addDid.confirmation'))"></span>
         </b-notification>
-        <send-summary :leadingText="$t('did.addDid.spend')" :amount="amount" :unit="selectedToken" :fee="feeBigInt" :address="address"></send-summary>
+        <send-summary
+          :leadingText="$t('did.addDid.spend')"
+          :amount="amount"
+          :unit="selectedToken"
+          :fee="feeBigInt"
+          :address="address"
+        ></send-summary>
         <bundle-summary :account="account" :bundle="bundle" :ignoreError="true"></bundle-summary>
       </template>
-    </section>
-    <footer class="is-block buttons modal-card-foot pb-2 my-0">
-      <div>
-        <b-button :label="$t('send.ui.button.cancel')" class="is-pulled-left" @click="cancel()"></b-button>
-        <b-button
-          :label="$t('send.ui.button.sign')"
-          v-if="!bundle"
-          type="is-primary"
-          @click="sign()"
-          :loading="submitting"
-          :disabled="submitting"
-        ></b-button>
-      </div>
-      <div>
-        <b-button
-          :label="$t('send.ui.button.submit')"
-          v-if="bundle && !offline"
-          type="is-primary"
-          class="is-pulled-right"
-          @click="submit()"
-          :disabled="submitting"
-        ></b-button>
-        <b-button
-          :label="$t('send.ui.button.showSend')"
-          v-if="bundle && offline"
-          type="is-primary"
-          class="is-pulled-right"
-          @click="showSend()"
-          :disabled="submitting"
-        ></b-button>
-      </div>
-    </footer>
+    </confirmation>
     <b-loading :is-full-page="false" v-model="submitting"></b-loading>
   </div>
 </template>
@@ -78,6 +70,7 @@ import { getCatNames } from "@/services/view/cat";
 import TopBar from "@/components/Common/TopBar.vue";
 import { generateMintDidBundle } from "@/services/coin/did";
 import { demojo } from "@/filters/unitConversion";
+import Confirmation from "../Common/Confirmation.vue";
 
 @Component({
   components: {
@@ -87,6 +80,7 @@ import { demojo } from "@/filters/unitConversion";
     BundleSummary,
     SendSummary,
     TopBar,
+    Confirmation,
   },
 })
 export default class MintDid extends Vue {
