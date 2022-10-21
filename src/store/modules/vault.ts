@@ -235,7 +235,8 @@ store.registerModule<IVaultState>("vault", {
       await ustore.removeItem("DISPLAY_DAPP");
       await ustore.removeItem("Locale");
       await ustore.removeItem("CONTACTS");
-      await ustore.removeItem("CUSTOM_NETWORKS")
+      await ustore.removeItem("CUSTOM_NETWORKS");
+      await ustore.removeItem("DID_NAMES");
     },
   },
 });

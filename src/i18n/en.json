@@ -423,8 +423,7 @@
     },
     "message": {
       "notification": {
-        "wrongAssetId": "Wrong asset ID. Failed to add a new CAT!",
-        "saved": "Saved."
+        "wrongAssetId": "Wrong asset ID. Failed to add a new CAT!"
       },
       "confirmation": {
         "removeToken": "Are you sure to remove the CAT?",

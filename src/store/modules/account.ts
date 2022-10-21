@@ -34,6 +34,7 @@ function setDidName(dids: DidDetail[]): void {
   let names: DidName[] = [];
   try {
     names = JSON.parse(localStorage.getItem("DID_NAMES") ?? "[]") as DidName[];
+    names = names.filter(n => dids.findIndex(d => d.did == n.did) > -1);
   } catch (error) {
     names = [];
   }
