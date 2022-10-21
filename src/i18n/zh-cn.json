@@ -988,6 +988,7 @@
     "ui": {
       "title": "账户管理",
       "label": {
+        "default": "默认账户",
         "serial": "序列账户",
         "address": "地址账户",
         "imported": "导入账户",

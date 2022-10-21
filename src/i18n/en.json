@@ -995,6 +995,7 @@
         "addByAddress": "Add by Address(Observation Mode)"
       },
       "label": {
+        "default": "Default",
         "serial": "Serial",
         "address": "Address",
         "imported": "Imported",
