@@ -1,6 +1,6 @@
 <template>
   <div class="modal-card" style="overflow-y: auto">
-    <b-loading :is-full-page="true" v-model="submitting"></b-loading>
+    <b-loading :active="submitting" :is-full-page="false"></b-loading>
     <section>
       <header class="modal-card-head">
         <p class="modal-card-title">
@@ -91,13 +91,13 @@ export default class ManageCats extends Vue {
   public assetIds: CustomCat[] = [];
   public defaultCats: CustomCat[] = [];
   public activeTab = 0;
+  submitting = false;
 
   sortableOptions = {
     chosenClass: "box",
     draggable: ".list-item",
     handle: ".drag-handle",
   };
-  submitting = false;
 
   mounted(): void {
     if (!this.account) {
@@ -124,19 +124,26 @@ export default class ManageCats extends Vue {
     if (this.path == "/home") this.close();
   }
 
-  close(): void {
+  async close(): Promise<void> {
+    this.submitting = true;
     if (this.name.length || this.assetId.length) {
       this.$buefy.dialog.confirm({
         message: this.$tc("ManageCats.message.confirmation.closeWithContent"),
         confirmText: this.$tc("ManageCats.message.confirmation.confirm"),
         cancelText: this.$tc("ManageCats.message.confirmation.cancel"),
-        onConfirm: () => {
+        onConfirm: async () => {
           this.name = "";
           this.assetId = "";
+          await store.dispatch("persistent");
+          this.submitting = false;
+          this.$emit("refresh");
           this.$emit("close");
         },
       });
     } else {
+      await store.dispatch("persistent");
+      this.submitting = false
+      this.$emit("refresh");
       this.$emit("close");
     }
   }
@@ -176,12 +183,10 @@ export default class ManageCats extends Vue {
       return;
     }
     this.assetIds.push({ name: this.name.toUpperCase(), id: this.assetId });
-    this.submit();
     this.reset();
   }
 
   async addCats(tails: TailInfo[]): Promise<void> {
-    let added = 0;
     tails.map((_) => {
       if (this.isExisted(_.code, _.hash)) {
         Notification.open({
@@ -190,11 +195,10 @@ export default class ManageCats extends Vue {
           duration: 3000,
         });
       } else {
-        added++;
         this.assetIds.push({ name: _.code, id: _.hash, img: _.logo_url });
       }
     });
-    if (added) this.submit();
+    this.submit();
   }
 
   remove(id: string): void {
@@ -204,8 +208,8 @@ export default class ManageCats extends Vue {
         const aid = this.assetIds.findIndex((a) => a.id == id);
         if (aid > -1) {
           this.assetIds.splice(aid, 1);
-          this.submit();
         }
+        this.submit();
       },
     });
   }
@@ -224,20 +228,11 @@ export default class ManageCats extends Vue {
   }
 
   async submit(): Promise<void> {
-    this.submitting = true;
     const network = store.state.network.networkId;
     this.account.allCats = this.account.allCats
       .filter((_) => _.network != network)
       .concat(this.assetIds.map((_) => ({ name: _.name, id: _.id, img: _.img, network })));
-    Notification.open({
-      message: this.$tc("ManageCats.message.notification.saved"),
-      type: "is-primary",
-    });
     this.account.addressGenerated = 0;
-    await store.dispatch("persistent");
-    this.$emit("refresh");
-
-    this.submitting = false;
   }
 
   updateOrder(detail: { oldIndex: number; newIndex: number }): void {

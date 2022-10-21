@@ -423,8 +423,7 @@
     },
     "message": {
       "notification": {
-        "wrongAssetId": "CAT 的 Asset ID 不正确，添加失败！",
-        "saved": "已保存"
+        "wrongAssetId": "CAT 的 Asset ID 不正确，添加失败！"
       },
       "confirmation": {
         "removeToken": "确定要删除这个 CAT 吗?",
@@ -980,6 +979,7 @@
     "ui": {
       "title": "账户管理",
       "label": {
+        "default": "默认账户",
         "serial": "序列账户",
         "address": "地址账户",
         "imported": "导入账户",

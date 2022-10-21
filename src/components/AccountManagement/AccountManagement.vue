@@ -3,7 +3,7 @@
     <top-bar :title="$t('accountManagement.ui.title')" :showClose="true" @close="close()"></top-bar>
     <div class="modal-card-body">
       <div v-sortable="sortableOptions" @updateOrder="updateOrder($event.detail)">
-        <a v-for="(account, idx) in accounts" :key="idx" class="panel-block list-item" @click="select(idx)">
+        <a v-for="(account, idx) in accounts" :key="idx" :class="{ 'panel-block': true, 'list-item': idx }" @click="select(idx)">
           <b-icon
             icon="check"
             v-if="idx == selectedAccount"
@@ -22,6 +22,9 @@
             </div>
           </div>
           <div class="column has-text-centered">
+            <b-tag v-if="idx == 0" rounded class="has-background-grey-lighter">{{
+              $t("accountManagement.ui.label.default")
+            }}</b-tag>
             <b-tag v-if="account.type == 'Password'" rounded class="has-background-grey-lighter">{{
               $t("accountManagement.ui.label.passPhrase")
             }}</b-tag>

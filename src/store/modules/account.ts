@@ -34,6 +34,7 @@ function setDidName(dids: DidDetail[]): void {
   let names: DidName[] = [];
   try {
     names = JSON.parse(localStorage.getItem("DID_NAMES") ?? "[]") as DidName[];
+    names = names.filter(n => dids.findIndex(d => d.did == n.did) > -1);
   } catch (error) {
     names = [];
   }
@@ -42,8 +43,12 @@ function setDidName(dids: DidDetail[]): void {
     if (idx > -1) {
       dids[i].name = names[idx].name;
     } else {
-      dids[i].name = `DID${i + 1}`;
-      names.push({ name: `DID${i + 1}`, did: dids[i].did });
+      let idx = 1;
+      while (names.findIndex(n => n.name == `DID${idx}`) > -1) {
+        idx++
+      }
+      dids[i].name = `DID${idx}`;
+      names.push({ name: `DID${idx}`, did: dids[i].did });
     }
   }
   localStorage.setItem("DID_NAMES", JSON.stringify(names));
