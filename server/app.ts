@@ -34,6 +34,10 @@ interface AnalyzeTxRequest {
 }
 
 Instance.init().then(() => {
+  app.get('/version', async (_req: express.Request, res: express.Response) => {
+    res.send(JSON.stringify({ version: "0.1" }))
+  });
+
   app.post('/parse_block', async (req: express.Request, res: express.Response) => {
     try {
       if (process.env.SHOW_LOG) {
