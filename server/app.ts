@@ -4,6 +4,7 @@ import puzzle from "../src/services/crypto/puzzle";
 import { Instance } from "../src/services/util/instance";
 import { assemble } from "clvm_tools/clvm_tools/binutils";
 import { analyzeCoin, convertUncurriedPuzzle, getModsPath, parseBlock, parseCoin, sexpAssemble, simplifyPuzzle, uncurryPuzzle } from "../src/services/coin/analyzer";
+import { Hex0x } from '../src/services/coin/condition';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (BigInt.prototype as any).toJSON = function () {
@@ -81,7 +82,7 @@ Instance.init().then(() => {
     try {
       r = req.body as AnalyzeTxRequest;
       // console.log(`${JSON.stringify(r)},`);
-      const coin = { amount: BigInt(r.amount), parent_coin_info: r.coin_parent, puzzle_hash: r.puzzle_hash };
+      const coin = { amount: BigInt(r.amount), parent_coin_info: r.coin_parent as Hex0x, puzzle_hash: r.puzzle_hash as Hex0x };
 
       const uncPuzzle = await uncurryPuzzle(sexpAssemble(r.puzzle), r.puzzle);
       const decPuzzle = convertUncurriedPuzzle(uncPuzzle);
