@@ -63,6 +63,9 @@ const routes: Array<RouteConfig> = [
       {
         path: "decrypt-message",
       },
+      {
+        path: "split-coin",
+      },
     ],
   },
   {
