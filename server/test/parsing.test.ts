@@ -40,3 +40,11 @@ async function testCase(url: string, cs: any, name: string | undefined = undefin
   expect(resp.status).toBe(200);
   expect(JSON.parse(resp.text)).toMatchSnapshot(name ? `${name} response` : "response");
 }
+
+describe("Puzzle API test", () => {
+  test('Puzzle To Address', async () => {
+    const resp = await request(app).post("/puzzle").send({ method: "ToAddress", parameters: ["0xb93495c7c2f956454ee75f96c0e5ca51d0b8165aebe6e15e8a1f288512b97f6c"] });
+    expect(resp.status).toBe(200);
+    expect(JSON.parse(resp.text)).toMatchSnapshot("response");
+  });
+});

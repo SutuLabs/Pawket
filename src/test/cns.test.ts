@@ -14,6 +14,7 @@ import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
 import { getOfferSummary } from "@/services/offer/summary";
 import { generateMintCnsOffer } from "@/services/offer/cns";
 import { NetworkContext } from "@/services/coin/coinUtility";
+import { prefix0x } from "@/services/coin/condition";
 
 const net: NetworkContext = {
   prefix: "xch",
@@ -110,17 +111,26 @@ test('Create CNS Offer And Accept', async () => {
   await testMintCnsAndOffer(0n, md);
 });
 
+test('Create CNS Offer And Accept 2', async () => {
+  const md = Object.assign({}, cnsMetadata);
+  md.name = "longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglon.xch";
+  expect(md.name.length).toBe(63 + ".xch".length);
+  md.address = "0x5662b49a357db4f05c2c141452b72fb91e7ec286e9b47d6c287210c63ae5cd3e";
+  await testMintCnsAndOffer(0n, md);
+});
+
 async function testMintCnsAndOffer(
   fee: bigint,
   metadata: CnsMetadataValues,
 ): Promise<void> {
-  const target_hex = "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155";
+  const target_hex = prefix0x(metadata.address || "");
   const change_hex = "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155";
 
   const changeAddress = puzzle.getAddressFromPuzzleHash(change_hex, xchPrefix());
   const targetAddress = puzzle.getAddressFromPuzzleHash(target_hex, xchPrefix());
 
   const nonce = "626f9cf141deefc2e77a56a4ef99996259e840dc4020eda31408cdd442a770d1"
+  const intermediate_sk = "44475cb971933e4545efad1337f3d68bc53523d987412df233f3b905ed1c5b3f"
   const account = getTestAccount("55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f");
   const tokenPuzzles = await getAccountAddressDetails(account, [], {}, xchPrefix(), xchSymbol(), undefined, "cat_v2");
   const availcoinsForMaker: SymbolCoins = {
@@ -147,7 +157,7 @@ async function testMintCnsAndOffer(
 
   const offerBundle = await generateMintCnsOffer(
     targetAddress, changeAddress, 200n, 0n, metadata, availcoinsForMaker, tokenPuzzles,
-    royaltyAddressHex, tradePricePercentage, net, nonce);
+    royaltyAddressHex, tradePricePercentage, net, nonce, intermediate_sk);
 
   const offerText = await encodeOffer(offerBundle);
   expect(offerText).toMatchSnapshot("offer text");

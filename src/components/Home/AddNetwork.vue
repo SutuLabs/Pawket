@@ -78,11 +78,12 @@
 </template>
 <script lang="ts">
 import { TokenInfo } from "@/models/account";
+import { getNetworkInfo } from "@/services/api/networkApi";
 import { notifyPrimary } from "@/services/notification/notification";
 import store from "@/store";
 import { NetworkDetail } from "@/store/modules/network";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import TopBar from "../Common/TopBar.vue";
 
 type Mode = "Add" | "Edit" | "View";
@@ -116,6 +117,17 @@ export default class AddNetwork extends Vue {
 
   cancel(): void {
     this.$emit("close");
+  }
+
+  @Watch("rpcUrl")
+  async onPathChange(): Promise<void> {
+    const net = await getNetworkInfo(this.rpcUrl);
+    this.networkName = net.name || this.networkName;
+    this.chainId = net.chainId || this.chainId;
+    this.currencySymbol = net.symbol || this.currencySymbol;
+    this.addressPrefix = net.prefix || this.addressPrefix;
+    this.decimalPlace = net.decimal || this.decimalPlace;
+    this.blockExplorer = net.explorerUrl || this.blockExplorer;
   }
 
   save(): void {

@@ -127,6 +127,16 @@
           </a>
         </b-tooltip>
       </div>
+      <div v-if="experimentMode && debugMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+        <b-tooltip label="Split Coin" position="is-right">
+          <a href="javascript:void(0)" @click="$router.push('/home/split-coin')" class="has-text-link">
+            <div class="has-text-centered">
+              <b-icon icon="call-split" size="is-medium"></b-icon>
+              <p class="is-size-7">Split Coin</p>
+            </div>
+          </a>
+        </b-tooltip>
+      </div>
     </div>
   </div>
 </template>
@@ -148,6 +158,7 @@ import { xchPrefix } from "@/store/modules/network";
 import VerifyMessage from "../Cryptography/VerifyMessage.vue";
 import DecryptMessage from "../Cryptography/DecryptMessage.vue";
 import EncryptMessage from "../Cryptography/EncryptMessage.vue";
+import SplitCoin from "@/components/Mint/SplitCoin.vue";
 
 @Component
 export default class Dapp extends Vue {
@@ -211,6 +222,9 @@ export default class Dapp extends Vue {
         break;
       case "/home/decrypt-message":
         this.openDecryptMessage();
+        break;
+      case "/home/split-coin":
+        this.openSplitCoin();
         break;
       default:
         break;
@@ -388,6 +402,21 @@ export default class Dapp extends Vue {
     this.$buefy.modal.open({
       parent: this,
       component: DecryptMessage,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      fullScreen: isMobile(),
+      props: {
+        account: this.account,
+      },
+    });
+  }
+
+  openSplitCoin(): void {
+    this.checkObserveMode();
+    this.$buefy.modal.open({
+      parent: this,
+      component: SplitCoin,
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],

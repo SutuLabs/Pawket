@@ -11,6 +11,50 @@
         {{ contactName }}
       </span>
     </template>
+    <template #message>
+      <span v-if="debugMode">
+        <span v-if="!resolveAnswer"></span>
+        <span v-else-if="resolveAnswer.status == 'Failure'">
+          <b-icon type="is-warning" icon="alert-decagram-outline" size="is-small"></b-icon>
+          Fail to resolve the name
+        </span>
+        <span v-else-if="resolveAnswer.status == 'NotFound'">
+          <b-icon type="is-danger" icon="alert-decagram" size="is-small"></b-icon>
+          Not Found
+        </span>
+        <span v-else-if="resolveAnswer.status == 'Found'">
+          <b-button
+            tag="a"
+            size="is-small"
+            type="is-success"
+            icon-left="open-in-new"
+            :href="spaceScanUrl + nftAddress"
+            target="_blank"
+          >
+            Inspect NFT
+          </b-button>
+          Send to:
+          <key-box icon="checkbox-multiple-blank-outline" :value="resolvedAddress" :showValue="true"></key-box>
+          <span v-if="hoursAgo > 0">
+            Last changed:
+            <span>{{ hoursAgo.toFixed(0) }} hours ago</span>
+          </span>
+          <b-icon
+            v-if="onChainConfirmationStatus == 'Confirmed'"
+            type="is-success"
+            icon="check-decagram"
+            size="is-small"
+          ></b-icon>
+          <b-icon v-else-if="onChainConfirmationStatus == 'Confirming'" type="is-info" icon="decagram" size="is-small"></b-icon>
+          <b-icon
+            v-else-if="onChainConfirmationStatus == 'Wrong'"
+            type="is-danger"
+            icon="alert-decagram"
+            size="is-small"
+          ></b-icon>
+        </span>
+      </span>
+    </template>
     <b-input
       v-model="address"
       @input="reset()"
@@ -36,9 +80,18 @@
 import store from "@/store";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import AddressBook, { Contact } from "@/components/AddressBook/AddressBook.vue";
-import { ensureAddress } from "@/store/modules/network";
+import { ensureAddress, rpcUrl, xchPrefix } from "@/store/modules/network";
+import KeyBox from "@/components/Common/KeyBox.vue";
+import puzzle from "@/services/crypto/puzzle";
+import debug from "@/services/api/debug";
+import { CoinSpend } from "@/models/wallet";
+import { analyzeNftCoin } from "@/services/coin/nft";
 
-@Component
+@Component({
+  components: {
+    KeyBox,
+  },
+})
 export default class AddressField extends Vue {
   @Prop() public inputAddress!: string;
   @Prop({ default: true }) public validAddress!: boolean;
@@ -47,6 +100,9 @@ export default class AddressField extends Vue {
 
   public address = "";
   public contacts: Contact[] = [];
+  public resolveAnswer: StandardResolveAnswer | ResolveFailureAnswer | null = null;
+  public proofCoin: CoinSpend | null = null;
+  public onChainConfirmationStatus: "None" | "Confirming" | "Confirmed" | "Wrong" = "None";
 
   mounted(): void {
     if (this.inputAddress) this.address = this.inputAddress;
@@ -112,8 +168,57 @@ export default class AddressField extends Vue {
     }
   }
 
-  reset(): void {
+  get resolvedAddress(): string | null {
+    if (this.resolveAnswer?.status != "Found" || !this.resolveAnswer?.data) return null;
+    return puzzle.getAddressFromPuzzleHash(this.resolveAnswer?.data, xchPrefix());
+  }
+
+  get nftAddress(): string | null {
+    if (this.resolveAnswer?.status != "Found" || !this.resolveAnswer?.nft_coin_name) return null;
+    return puzzle.getAddressFromPuzzleHash(this.resolveAnswer?.nft_coin_name, "nft");
+  }
+
+  get spaceScanUrl(): string {
+    return store.state.network.network.spaceScanUrl;
+  }
+
+  get hoursAgo(): number {
+    if (this.resolveAnswer?.status != "Found" || !this.resolveAnswer?.proof_coin_spent_index) return -1;
+    if (!store.state.network.peekHeight) return -1;
+    return (store.state.network.peekHeight - this.resolveAnswer.proof_coin_spent_index) / (6 * 32);
+  }
+
+  async reset(): Promise<void> {
     this.validAddress = true;
+    if (
+      this.address.match(/[a-zA-Z0-9-]{4,}\.xch$/) &&
+      (this.resolveAnswer?.status == "Found" && this.resolveAnswer?.name) != this.address
+    ) {
+      this.onChainConfirmationStatus = "None";
+      this.resolveAnswer = await resolveName(this.address);
+      if (this.resolveAnswer?.status == "Found" && this.resolveAnswer?.proof_coin_name) {
+        this.onChainConfirmationStatus = "Confirming";
+        this.proofCoin = await debug.getCoinSolution(this.resolveAnswer?.proof_coin_name, rpcUrl());
+        const nftAnalysis = await analyzeNftCoin(
+          this.proofCoin.puzzle_reveal,
+          undefined,
+          this.proofCoin.coin,
+          this.proofCoin.solution
+        );
+        if (
+          nftAnalysis != null &&
+          "cnsName" in nftAnalysis &&
+          nftAnalysis.cnsName == this.address &&
+          this.resolveAnswer?.data == nftAnalysis.cnsAddress
+        ) {
+          this.onChainConfirmationStatus = "Confirmed";
+        } else {
+          this.onChainConfirmationStatus = "Wrong";
+        }
+      }
+    } else {
+      this.resolveAnswer = null;
+    }
   }
 
   async scanQrCode(): Promise<void> {
@@ -160,6 +265,56 @@ export default class AddressField extends Vue {
       events: { added: this.updateContacts },
     });
     return;
+  }
+
+  get debugMode(): boolean {
+    return store.state.app.debug;
+  }
+}
+
+export interface StandardResolveQueryRequest {
+  queries?: StandardResolveQuery[];
+}
+export interface StandardResolveQueryResponse {
+  answers?: StandardResolveAnswer[];
+}
+export interface StandardResolveQuery {
+  name: string;
+  type: string;
+}
+export interface StandardResolveAnswer {
+  name?: string;
+  type?: string;
+  time_to_live?: number;
+  data?: string;
+  proof_coin_name?: string;
+  proof_coin_spent_index?: number;
+  nft_coin_name?: string;
+  status: "Found";
+}
+export interface ResolveFailureAnswer {
+  status: "NotFound" | "Failure";
+}
+
+export async function resolveName(name: string): Promise<StandardResolveAnswer | ResolveFailureAnswer> {
+  try {
+    const resp = await fetch(rpcUrl() + "Name/resolve", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        queries: [{ name, type: "address" }],
+      }),
+    });
+    const qresp = (await resp.json()) as StandardResolveQueryResponse;
+    const answer = qresp.answers?.at(0);
+    if (answer) answer.status = "Found";
+    return answer || { status: "NotFound" };
+  } catch (error) {
+    console.warn(error);
+    return { status: "Failure" };
   }
 }
 </script>

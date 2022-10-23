@@ -32,7 +32,7 @@ export function getPuzzleDetail(
   const puzzleDict: { [key: string]: PuzzleDetail } = Object.assign({}, ...requests.flatMap((_) => _.puzzles).map((x) => ({ [prefix0x(x.hash)]: x })));
   const getPuzDetail = (hash: string) => {
     const puz = puzzleDict[hash];
-    if (!puz) throw new Error("cannot find puzzle");
+    if (!puz) throw new Error(`cannot find puzzle: (${hash}) in (${requests.flatMap(_ => _.puzzles).map(_ => _.hash).join(", ")})`);
     return puz;
   };
 

@@ -10448,3 +10448,9 @@ Object {
   "mod": "p2_delegated_puzzle_or_hidden_puzzle",
 }
 `;
+
+exports[`Puzzle API test Puzzle To Address: response 1`] = `
+Object {
+  "address": "xch1hy6ft37zl9ty2nh8t7tvpew228gts9j6a0nwzh52ru5g2y4e0akqhs2cqh",
+}
+`;

@@ -1,9 +1,9 @@
-import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
+import { CoinSpend, OriginCoin, SpendBundle } from "../../models/wallet";
 import { bech32m } from "@scure/base";
 import zlib from 'zlib';
 import { Buffer } from 'buffer';
 import { Bytes, sexp_buffer_from_stream, Stream, sexp_from_stream, SExp } from "clvm";
-import { prefix0x } from '@/services/coin/condition';
+import { prefix0x } from '../coin/condition';
 import { assemble, disassemble } from 'clvm_tools/clvm_tools/binutils';
 import puzzle from "../crypto/puzzle";
 import { modshex } from "../coin/mods";

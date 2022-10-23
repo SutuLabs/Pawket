@@ -1,16 +1,18 @@
-import { SpendBundle } from "@/models/wallet";
-import { GetPuzzleApiCallback, SymbolCoins } from "@/services/transfer/transfer";
-import { analyzeNftCoin, generateMintNftBundle } from "@/services/coin/nft";
-import puzzle from "@/services/crypto/puzzle";
-import { CnsMetadataValues } from "@/models/nft";
-import { OriginCoin } from "@/models/wallet";
+import { SpendBundle } from "../../models/wallet";
+import { SymbolCoins } from "../transfer/transfer";
+import { analyzeNftCoin, generateMintNftBundle } from "../coin/nft";
+import puzzle from "../crypto/puzzle";
+import { CnsMetadataValues } from "../../models/nft";
+import { OriginCoin } from "../../models/wallet";
 import { getCoinName0x, NetworkContext } from "../coin/coinUtility";
-import { TokenPuzzleDetail } from "../crypto/receive";
+import receive, { TokenPuzzleDetail } from "../crypto/receive";
 import { generateOfferPlan, generateNftOffer } from "./bundler";
 import { prefix0x } from "../coin/condition";
 import { combineSpendBundlePure } from "../mint/cat";
 import { GetParentPuzzleResponse } from "@/models/api";
 import { OfferEntity } from "./summary";
+import utility from "../crypto/utility";
+import { Instance } from "../util/instance";
 
 export async function generateMintCnsOffer(
   targetAddress: string,
@@ -24,6 +26,7 @@ export async function generateMintCnsOffer(
   tradePricePercentage: number,
   net: NetworkContext,
   nonceHex: string | null = null,
+  privateKey: string | undefined = undefined,
 ): Promise<SpendBundle> {
   const target_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(changeAddress));
@@ -36,8 +39,17 @@ export async function generateMintCnsOffer(
     }
   ];
 
+  // generate temporary intermediate address
+  const BLS = Instance.BLS;
+  if (!BLS) throw new Error("BLS is not initialized.");
+  const sk = privateKey ? privateKey : utility.toHexString(BLS.AugSchemeMPL.key_gen(utility.getRandom(64)).serialize());
+  const puzzles = await receive.getAssetsRequestDetail(sk, 0, 1, [], {}, "any", net.symbol, "cat_v2");
+  const ps = puzzles.filter(_ => _.symbol == net.symbol)[0].puzzles;
+  const intermediateAddress = ps[0].address;
+  requests.filter(_ => _.symbol == net.symbol)[0].puzzles.push(...ps);
+
   const { spendBundle } = await generateMintNftBundle(
-    targetAddress, changeAddress, fee, metadata, availcoins, requests, royaltyAddressHex,
+    intermediateAddress, changeAddress, fee, metadata, availcoins, requests, royaltyAddressHex,
     tradePricePercentage, net, undefined);
 
   const nftcs = spendBundle.coin_spends[2];

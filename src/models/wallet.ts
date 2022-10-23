@@ -1,4 +1,4 @@
-import { Hex0x, prefix0x } from "@/services/coin/condition";
+import { Hex0x, prefix0x } from "../services/coin/condition";
 
 export interface GetRecordsRequest {
     puzzleHashes: string[];
