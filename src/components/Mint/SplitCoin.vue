@@ -332,7 +332,7 @@ export default class SplitCoin extends Vue {
 
       const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
       const target_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.address));
-      
+
       const spendBundle = await getBootstrapSpendBundle(
         change_hex,
         target_hex,
@@ -340,8 +340,7 @@ export default class SplitCoin extends Vue {
         this.availcoins,
         this.requests,
         amount,
-        networkContext(),
-        this.account.key.privateKey
+        networkContext()
       );
 
       this.coinSummary = "parent_coin_id,puzzle_hash,amount\n";
