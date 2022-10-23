@@ -1,0 +1,38 @@
+{
+    "targetAddress": "xch12e3tfx340k60qhpvzs299de0hy08as5xax686mpgwggvvwh9e5lqvtsuyd",
+    "changeAddress": "xch12e3tfx340k60qhpvzs299de0hy08as5xax686mpgwggvvwh9e5lqvtsuyd",
+    "price": 170000000000,
+    "fee": 0,
+    "metadata": {
+        "address": "xch12e3tfx340k60qhpvzs299de0hy08as5xax686mpgwggvvwh9e5lqvtsuyd",
+        "name": "abcd.xch",
+        "contentHash": "",
+        "text": "",
+        "dns": "",
+        "publicKey": "",
+        "reserved": "",
+        "imageUri": "https://wallet.dev.supernova.uchaindb.com/img/cns.bf52c726.jpg",
+        "imageHash": "76a1900b6931f7bf5f07ab310733270838b040385f285423f49e2f5518867335",
+        "metadataUri": "https://ufzyuv55yicm3ev56cstqbmaayrkudmmjueyrd3nkolafxbe.arweave.net/oX--OKV73CBM2-SvfClOAWABiKqDYxNCYiPbVOWAtwk",
+        "metadataHash": "44475cb971933e4545efad1337f3d68bc53523d987412df233f3b905ed1c5b3f",
+        "licenseUri": "https://bafybeigzcazxeu7epmm4vtkuadrvysv74lbzzbl2evphtae6k57yhgynp4.ipfs.nftstorage.link/license.pdf",
+        "licenseHash": "2267456bd2cef8ebc2f22a42947b068bc3b138284a587feda2edfe07a3577f50",
+        "serialNumber": 1,
+        "serialTotal": 1
+    },
+    "coin": {
+        "amount": 1,
+        "parent_coin_info": "0x49d86d00f54860ec6f08b60203537a572b7525e1f81e6a6813ce55083f487fe4",
+        "puzzle_hash": "0x4c4b3c755718237df6f5c918c5deab8b47907977f31509ef3487625dbeddec9f"
+    },
+    "privateKey": "0154706cb612791800ffad454c4b09deab14e224713a2021bd1c3def97fc307e",
+    "puzzleHash": "4c4b3c755718237df6f5c918c5deab8b47907977f31509ef3487625dbeddec9f",
+    "puzzleText": "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0x86299f14aced88345284945d2205ce75f22474cc9a19b3a538891a4df1f85569e2ac3882a6d80a1846a118003b00e362) 1))",
+    "royaltyAddress": "xch186erjxgvukd54u0yvy53hyv9e6nz6crjl5m3spg62v8a32pp30qq2zkmtm",
+    "royaltyPercentage": 500,
+    "chainId": "",
+    "symbol": "",
+    "prefix": "",
+    "nonce": "78c3760c0d9e120552abe079046f5f6620984918ba9080d2764919bab9c48322",
+    "intermediateKey": "311df76534fca95c61932761530c2fa0b0314dc52ea0f270aa5d772fa8b682a3"
+}

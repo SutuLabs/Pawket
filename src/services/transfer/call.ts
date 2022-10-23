@@ -1,7 +1,6 @@
 import { GetParentPuzzleRequest, GetParentPuzzleResponse } from "@/models/api";
-import { rpcUrl } from "@/store/modules/network";
 
-export async function getLineageProofPuzzle(parentCoinId: string, baseUrl: string = rpcUrl()): Promise<GetParentPuzzleResponse> {
+export async function getLineageProofPuzzle(parentCoinId: string, baseUrl: string): Promise<GetParentPuzzleResponse> {
   const resp = await fetch(baseUrl + "Wallet/get-puzzle", {
     method: "POST",
     headers: {

@@ -22,7 +22,7 @@ export function networkContext(): NetworkContext {
     symbol: xchSymbol(),
     prefix: xchPrefix(),
     chainId: chainId(),
-    api: getLineageProofPuzzle,
+    api: (_) => getLineageProofPuzzle(_, rpcUrl()),
   }
 }
 export function ensureAddress(address: string | undefined): string {
