@@ -558,7 +558,7 @@
         "name": "账户名"
       },
       "message": {
-        "nameRequired": "账户名不能为空."
+        "nameRequired": "账户名不能为空"
       },
       "button": {
         "back": "返回",
