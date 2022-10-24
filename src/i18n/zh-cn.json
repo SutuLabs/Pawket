@@ -25,7 +25,7 @@
       "saved": "已保存",
       "added": "已添加",
       "noResult": "结果为空",
-      "uploadSuccess": "上传成功"
+      "uploadSuccess": "已上传"
     }
   },
   "app": {
@@ -42,7 +42,7 @@
     },
     "message": {
       "notification": {
-        "copySuccess": "复制成功",
+        "copySuccess": "已复制",
         "copyFailed": "复制失败"
       }
     }
@@ -558,7 +558,7 @@
         "name": "账户名"
       },
       "message": {
-        "nameRequired": "账户名不能为空."
+        "nameRequired": "账户名不能为空"
       },
       "button": {
         "back": "返回",
@@ -659,7 +659,7 @@
         "spentHeight": "花费区块高度",
         "confirmedHeight": "确认区块高度",
         "parentCoinInfo": "父硬币信息",
-        "puzzleHash": "接收地址"
+        "puzzleHash": "地址"
       },
       "tooltip": {
         "copy": "复制"
@@ -866,7 +866,7 @@
         },
         "collection": {
           "title": "收藏集",
-          "description": "创建、编辑、删除和管理您的收藏集"
+          "description": "创建、编辑、删除和管理你的收藏集"
         },
         "advanced": {
           "title": "高级",
@@ -1110,7 +1110,7 @@
       },
       "button": {
         "transfer": "转发",
-        "makeOffer": "创建 Offer",
+        "makeOffer": "出售",
         "move": "归档",
         "showMore": "显示更多",
         "showLess": "收起"
