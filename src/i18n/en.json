@@ -42,7 +42,7 @@
     },
     "message": {
       "notification": {
-        "copySuccess": "Copy successfully.",
+        "copySuccess": "Copied.",
         "copyFailed": "Copy failed."
       }
     }
