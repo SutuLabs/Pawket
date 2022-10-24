@@ -25,7 +25,7 @@
       "saved": "Saved.",
       "added": "Added.",
       "noResult": "No result.",
-      "uploadSuccess": "Upload successfully."
+      "uploadSuccess": "Uploaded."
     }
   },
   "app": {
@@ -659,7 +659,7 @@
         "spentHeight": "Spent Height",
         "confirmedHeight": "Confirmed Height",
         "parentCoinInfo": "ParentCoinInfo",
-        "puzzleHash": "Receive Address"
+        "puzzleHash": "Address"
       },
       "tooltip": {
         "copy": "Copy"
@@ -1110,7 +1110,7 @@
       },
       "button": {
         "transfer": "Transfer",
-        "makeOffer": "Make Offer",
+        "makeOffer": "Sell",
         "move": "Move",
         "showMore": "Show More",
         "showLess": "Show Less"
@@ -1233,7 +1233,7 @@
     "ui": {
       "title": "Scan Assets",
       "prompt": {
-        "selectAssetType": "By scanning more addresses, you can discover assets not shown in the list (including XCH, CAT, NFT) and transfer them to a commonly used address.",
+        "selectAssetType": "By scanning more addresses, you can discover assets not shown in the list (including XCH, CAT, NFT etc.) and transfer them to a commonly used address.",
         "scanning": "Scanning...",
         "wait": "Please be patient for a few minutes.",
         "paused": "Paused...",
@@ -1269,11 +1269,11 @@
     },
     "message": {
       "confirmation": {
-        "close": "Scanning has not completed, are you sure to close this page?",
-        "cancel": "Scanning has not been completed, are you sure to cancel?"
+        "close": "Scanning has not completed. Are you sure to close this page?",
+        "cancel": "Scanning has not been completed. Are you sure to cancel?"
       },
       "error": {
-        "ABORT_OOM": "Scan was aborted. Please refresh the page and try again."
+        "ABORT_OOM": "Scanning was aborted. Please refresh the page and try again."
       }
     }
   },
@@ -1313,12 +1313,12 @@
       "sigResult": {
         "pass": "Signature check passed",
         "fail": "Signature check failed",
-        "none": "Doesn't check Signature"
+        "none": "Signature not checked"
       },
       "coinResult": {
         "pass": "Coin check passed",
         "fail": "Coin check failed",
-        "none": "Doesn't check Coin"
+        "none": "Coin not checked"
       }
     }
   },
