@@ -111,6 +111,7 @@ export default class AccountManagement extends Vue {
   sortableOptions = {
     chosenClass: "box",
     draggable: ".list-item",
+    disabled: true,
   };
 
   newOrder: AccountEntity[] = this.accounts;
