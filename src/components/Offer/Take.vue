@@ -135,7 +135,7 @@
             $t("offer.take.information.unsupportOfferNftOffer")
           }}</b-notification>
         </template>
-        <fee-selector v-if="debugMode && summary" v-model="fee"></fee-selector>
+        <fee-selector v-if="(debugMode || isNftOffer) && summary" v-model="fee"></fee-selector>
       </template>
       <template v-if="step == 'Confirmation'">
         <b-field v-if="bundle">
