@@ -16,42 +16,41 @@
         <span v-if="!resolveAnswer"></span>
         <span v-else-if="resolveAnswer.status == 'Failure'">
           <b-icon type="is-warning" icon="alert-decagram-outline" size="is-small"></b-icon>
-          Fail to resolve the name
+          {{ $t("addressField.ui.resolve.fail") }}
         </span>
         <span v-else-if="resolveAnswer.status == 'NotFound'">
           <b-icon type="is-danger" icon="alert-decagram" size="is-small"></b-icon>
-          Not Found
+          {{ $t("addressField.ui.resolve.notFound") }}
         </span>
-        <span v-else-if="resolveAnswer.status == 'Found'">
-          <b-button
-            tag="a"
-            size="is-small"
-            type="is-success"
-            icon-left="open-in-new"
-            :href="spaceScanUrl + nftAddress"
-            target="_blank"
-          >
-            Inspect NFT
-          </b-button>
-          Send to:
-          <key-box icon="checkbox-multiple-blank-outline" :value="resolvedAddress" :showValue="true"></key-box>
-          <span v-if="hoursAgo > 0">
-            Last changed:
-            <span>{{ hoursAgo.toFixed(0) }} hours ago</span>
-          </span>
-          <b-icon
-            v-if="onChainConfirmationStatus == 'Confirmed'"
-            type="is-success"
-            icon="check-decagram"
-            size="is-small"
-          ></b-icon>
-          <b-icon v-else-if="onChainConfirmationStatus == 'Confirming'" type="is-info" icon="decagram" size="is-small"></b-icon>
-          <b-icon
-            v-else-if="onChainConfirmationStatus == 'Wrong'"
-            type="is-danger"
-            icon="alert-decagram"
-            size="is-small"
-          ></b-icon>
+        <span v-else-if="resolveAnswer.status == 'Found'" class="is-flex">
+          <div>
+            <a class="has-text-dark" :href="spaceScanUrl + nftAddress" target="_blank">
+              <img v-if="cnsUrl" :src="cnsUrl" class="image is-128x128" />
+              <img v-else src="@/assets/nft-no-image.png" class="image is-128x128" />
+            </a>
+          </div>
+          <div class="ml-4">
+            <p class="mb-2">
+              <b-tooltip :label="$t('addressField.ui.tooltip.confirmed')" v-if="onChainConfirmationStatus == 'Confirmed'">
+                <b-icon type="is-success" icon="check-decagram"></b-icon>
+              </b-tooltip>
+              <b-tooltip :label="$t('addressField.ui.tooltip.confirming')" v-else-if="onChainConfirmationStatus == 'Confirming'">
+                <b-icon type="is-info" icon="decagram" size="is-small"></b-icon>
+              </b-tooltip>
+              <b-tooltip :label="$t('addressField.ui.tooltip.wrong')" v-else-if="onChainConfirmationStatus == 'Wrong'">
+                <b-icon type="is-danger" icon="alert-decagram" size="is-small"></b-icon>
+              </b-tooltip>
+              <b-tag type="is-info is-light">{{ address }}</b-tag>
+            </p>
+            <p class="mb-2">
+              {{ $t("addressField.ui.label.bindingAddress") }}
+              <key-box icon="checkbox-multiple-blank-outline" :value="resolvedAddress" :showValue="true"></key-box>
+            </p>
+            <p v-if="hoursAgo > 0">
+              {{ $t("addressField.ui.label.lastChanged") }}
+              <span>{{ hoursAgo.toFixed(0) }} {{ $t("addressField.ui.label.hoursAgo") }}</span>
+            </p>
+          </div>
         </span>
       </span>
     </template>
@@ -85,7 +84,7 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import puzzle from "@/services/crypto/puzzle";
 import debug from "@/services/api/debug";
 import { CoinSpend } from "@/models/wallet";
-import { analyzeNftCoin } from "@/services/coin/nft";
+import { analyzeNftCoin, getScalarString } from "@/services/coin/nft";
 
 @Component({
   components: {
@@ -99,6 +98,7 @@ export default class AddressField extends Vue {
   @Prop() public label!: string;
 
   public address = "";
+  public cnsUrl = "";
   public contacts: Contact[] = [];
   public resolveAnswer: StandardResolveAnswer | ResolveFailureAnswer | null = null;
   public proofCoin: CoinSpend | null = null;
@@ -211,6 +211,7 @@ export default class AddressField extends Vue {
           nftAnalysis.cnsName == this.address &&
           this.resolveAnswer?.data == nftAnalysis.cnsAddress
         ) {
+          this.cnsUrl = getScalarString(nftAnalysis.metadata.imageUri) ?? "";
           this.onChainConfirmationStatus = "Confirmed";
         } else {
           this.onChainConfirmationStatus = "Wrong";

@@ -803,14 +803,24 @@
   "addressField": {
     "ui": {
       "label": {
-        "address": "地址"
+        "address": "地址",
+        "bindingAddress": "绑定地址:",
+        "lastChanged": "最后更改:",
+        "hoursAgo": "小时以前"
       },
       "tooltip": {
         "qr": "扫描二维码",
-        "addressBook": "打开地址簿"
+        "addressBook": "打开地址簿",
+        "confirmed": "已确认",
+        "confirming": "确认中",
+        "wrong": "错误"
       },
       "span": {
         "newAddress": "检测到新地址，点击添加至地址薄。"
+      },
+      "resolve": {
+        "fail": "解析失败",
+        "notFound": "没有找到记录"
       }
     }
   },
