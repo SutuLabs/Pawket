@@ -98,7 +98,7 @@ export default class Cns extends Vue {
   }
 
   get cnses(): NftDetail[] {
-    return this.account.nfts ?? [];
+    return this.account.nfts?.filter((nft) => nft.analysis != null && "cnsName" in nft.analysis) ?? [];
   }
 
   get spaceScanUrl(): string {
@@ -109,20 +109,19 @@ export default class Cns extends Vue {
     return [
       { domainName: "cns1", status: "Available", price: 100 },
       { domainName: "cns2", status: "Registering", address: "yyyy" },
-      { domainName: "cns3", status: "Unavailable", address: "xxxx" }
-    ]
+      { domainName: "cns3", status: "Unavailable", address: "xxxx" },
+    ];
   }
-
 
   get legalSearch(): boolean {
     if (this.searchStr.length < 4 || this.searchStr.length > 40) return false;
-    if (this.searchStr.charAt(0) == '-' || this.searchStr.charAt(this.searchStr.length - 1) == '-') return false;
+    if (this.searchStr.charAt(0) == "-" || this.searchStr.charAt(this.searchStr.length - 1) == "-") return false;
     for (let i = 0; i < this.searchStr.length; i++) {
-      if (this.searchStr.charAt(i) >= 'A' && this.searchStr.charAt(i) <= 'Z') continue;
-      if (this.searchStr.charAt(i) >= 'a' && this.searchStr.charAt(i) <= 'z') continue;
-      if (this.searchStr.charAt(i) >= '0' && this.searchStr.charAt(i) <= '9') continue;
-      if (this.searchStr.charAt(i) == '-') {
-        if (this.searchStr.charAt(i - 1) != '-' && this.searchStr.charAt(i + 1) != '-') continue;
+      if (this.searchStr.charAt(i) >= "A" && this.searchStr.charAt(i) <= "Z") continue;
+      if (this.searchStr.charAt(i) >= "a" && this.searchStr.charAt(i) <= "z") continue;
+      if (this.searchStr.charAt(i) >= "0" && this.searchStr.charAt(i) <= "9") continue;
+      if (this.searchStr.charAt(i) == "-") {
+        if (this.searchStr.charAt(i - 1) != "-" && this.searchStr.charAt(i + 1) != "-") continue;
       } else {
         return false;
       }
@@ -132,7 +131,7 @@ export default class Cns extends Vue {
 
   searchCns(): void {
     this.result = null;
-    const idx = this.cnsList.findIndex(cnses => cnses.domainName == this.searchStr);
+    const idx = this.cnsList.findIndex((cnses) => cnses.domainName == this.searchStr);
     if (idx > -1) {
       this.result = this.cnsList[idx];
       this.showSearchResults = true;

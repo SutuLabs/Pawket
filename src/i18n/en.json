@@ -803,14 +803,24 @@
   "addressField": {
     "ui": {
       "label": {
-        "address": "Address"
+        "address": "Address",
+        "bindingAddress": "Binding Address:",
+        "lastChanged": "Last changed:",
+        "hoursAgo": "hours ago"
       },
       "tooltip": {
         "qr": "Scan QR",
-        "addressBook": "Open Address Book"
+        "addressBook": "Open Address Book",
+        "confirmed": "Confirmed",
+        "confirming": "Confirming",
+        "wrong": "Wrong"
       },
       "span": {
         "newAddress": "New Address Found, Click to Add to Address Book."
+      },
+      "resolve": {
+        "fail": "Fail to resolve the name",
+        "notFound": "Not Found"
       }
     }
   },
