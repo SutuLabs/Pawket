@@ -75,7 +75,7 @@
 </template>
 <script lang="ts">
 import { AccountEntity } from "@/models/account";
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import store from "@/store";
 import NftDetailPanel from "@/components/Nft/NftDetailPanel.vue";
 import { isMobile } from "@/services/view/responsive";
@@ -99,11 +99,19 @@ type CollectionDict = { [name: string]: CollectionNfts };
 type Profile = "All" | "Unassigned" | "Single";
 @Component({})
 export default class NftPanel extends Vue {
-  @Prop() public account!: AccountEntity;
   public isOpen: number | string = 0;
   public refreshing = false;
   profile: Profile = "All";
   selectedDid = "";
+
+
+  get selectedAccount(): number {
+    return store.state.account.selectedAccount;
+  }
+
+  get account(): AccountEntity {
+    return store.state.account.accounts[this.selectedAccount] ?? {};
+  }
 
   get collection(): CollectionDict {
     const other = "Other"; //i18n

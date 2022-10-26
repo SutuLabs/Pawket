@@ -16,55 +16,92 @@ const routes: Array<RouteConfig> = [
     component: () => import(/* webpackChunkName: "home" */ "../views/Home.vue"),
     children: [
       {
+        path: "",
+        redirect: 'asset'
+      },
+      {
+        path: "asset",
+        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
+      },
+      {
+        path: "nft",
+        component: () => import(/* webpackChunkName: "home" */ "@/components/Nft/NftPanel.vue"),
+      },
+      {
+        path: "did",
+        component: () => import(/* webpackChunkName: "home" */ "@/components/Did/Did.vue"),
+      },
+      {
+        path: "utxos",
+        component: () => import(/* webpackChunkName: "home" */ "@/components/Utxo/UtxoPanel.vue"),
+      },
+      {
         path: "cats",
+        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
       },
       {
         path: "accounts",
+        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
       },
       {
         path: "send",
+        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
       },
       {
         path: "receive",
+        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
       },
       {
         path: "errorLog",
+        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
       },
       {
         path: "proxy",
+        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
       },
       {
         path: "make-offer",
+        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
       },
       {
         path: "batch-send",
+        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
       },
       {
         path: "issue-cat",
+        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
       },
       {
         path: "mint-nft",
+        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
       },
       {
         path: "take-offer",
+        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
       },
       {
         path: "scan-assets",
+        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
       },
       {
         path: "batch-mint-nft",
+        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
       },
       {
         path: "verify-message",
+        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
       },
       {
         path: "encrypt-message",
+        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
       },
       {
         path: "decrypt-message",
+        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
       },
       {
         path: "split-coin",
+        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
       },
     ],
   },

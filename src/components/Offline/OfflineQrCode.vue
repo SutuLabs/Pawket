@@ -71,7 +71,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Emit } from "vue-property-decorator";
+import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import QrcodeVue from "qrcode.vue";
 import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from "vue-qrcode-reader";
@@ -123,6 +123,11 @@ export default class OfflineQrCode extends Vue {
 
   get path(): string {
     return this.$route.path;
+  }
+
+  @Watch("path")
+  onPathChange(): void {
+    this.close();
   }
 
   mounted(): void {

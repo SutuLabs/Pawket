@@ -118,8 +118,8 @@ export default class ExplorerLink extends Vue {
   }
 
   @Watch("path")
-  onPathChange():void {
-    if(this.path == "/home") this.close();
+  onPathChange(): void {
+    this.close();
   }
 
   changeAddressType(): void {

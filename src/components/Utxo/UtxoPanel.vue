@@ -50,18 +50,18 @@
 <script lang="ts">
 import { demojo } from "@/filters/unitConversion";
 import { CoinRecord } from "@/models/wallet";
-import { OneTokenInfo, TokenInfo } from "@/models/account";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { AccountEntity, OneTokenInfo, TokenInfo } from "@/models/account";
+import { Component, Vue } from "vue-property-decorator";
 import UtxoDetail from "@/components/Utxo/UtxoDetail.vue";
 import { isMobile } from "@/services/view/responsive";
+import { getTokenInfo } from "@/services/view/cat";
+import store from "@/store";
 
 @Component({})
 export default class UtxoPanel extends Vue {
-  @Prop() public value!: CoinRecord[];
-  @Prop() public tokenInfo!: TokenInfo;
-  @Prop({ default: 10 }) public perPage!: number;
-  @Prop({ default: 1 }) public rangeBefore!: number;
-  @Prop({ default: 1 }) public rangeAfter!: number;
+  public perPage = 10;
+  public rangeBefore = 1;
+  public rangeAfter = 1;
   current = 1;
 
   showUtxo(activity: CoinRecord): void {
@@ -76,9 +76,25 @@ export default class UtxoPanel extends Vue {
     });
   }
 
+  get activities(): CoinRecord[] {
+    return this.account.activities ?? [];
+  }
+
+  get tokenInfo(): TokenInfo {
+    return getTokenInfo(this.account);
+  }
+
+  get selectedAccount(): number {
+    return store.state.account.selectedAccount;
+  }
+
+  get account(): AccountEntity {
+    return store.state.account.accounts[this.selectedAccount] ?? {};
+  }
+
   get actList(): CoinRecord[] {
     const actList: CoinRecord[] = [];
-    for (let act of this.value) {
+    for (let act of this.activities) {
       actList.push(act);
       if (act.spent) {
         // generate original receive record

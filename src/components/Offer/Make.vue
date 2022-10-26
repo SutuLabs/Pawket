@@ -182,7 +182,7 @@ export default class MakeOffer extends Vue {
 
   @Watch("path")
   onPathChange(): void {
-    if (this.path == "/home") this.close();
+    this.close();
   }
 
   get cats(): { [id: string]: string } {
