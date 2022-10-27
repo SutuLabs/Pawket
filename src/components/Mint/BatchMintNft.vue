@@ -149,7 +149,7 @@ export default class BatchMintNft extends Vue {
 
   @Watch("path")
   onPathChange(): void {
-    if (this.path == "/home") this.close();
+    this.close();
   }
 
   @Emit("close")

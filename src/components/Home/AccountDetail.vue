@@ -79,51 +79,31 @@
       </div>
       <div id="tab"></div>
       <div class="p-2">
-        <b-tabs position="is-centered" class="block" expanded :destroy-on-hide="true">
-          <b-tab-item :label="$t('accountDetail.ui.tab.asset')" class="min-height-20">
-            <a
-              v-for="cat of tokenList"
-              :key="cat.id"
-              class="panel-block is-justify-content-space-between py-4 has-text-grey-dark"
-              v-show="account.tokens && account.tokens.hasOwnProperty(cat.name)"
-            >
-              <div class="column is-flex is-7" v-if="account.tokens && account.tokens.hasOwnProperty(cat.name)">
-                <div class="mr-4">
-                  <span class="image is-32x32">
-                    <img v-if="cat.img" class="is-rounded" :src="cat.img" />
-                    <img v-else-if="cat.name === xchSymbol" class="is-rounded" src="@/assets/chia-logo.svg" />
-                    <img v-else class="is-rounded" src="@/assets/custom-cat.svg" />
-                  </span>
-                </div>
-                <div class="py-1">
-                  <p class="has-text-grey-dark is-size-6" v-if="tokenInfo[cat.name]">
-                    <span v-if="account.tokens[cat.name].amount < 0">- {{ cat.name }}</span>
-                    <span v-else>{{ demojo(account.tokens[cat.name].amount, tokenInfo[cat.name]) }}</span>
-                  </p>
-                  <p>
-                    <span class="mr-2 is-size-7 has-text-grey" v-if="cat.name === xchSymbol">{{
-                      xchToCurrency(account.tokens[cat.name].amount, rate, currency)
-                    }}</span>
-                  </p>
-                </div>
-              </div>
-            </a>
-            <div class="column is-full has-text-centered pt-5 mt-2">
-              <a @click="$router.push('/home/cats')"
-                ><span class="has-color-link">{{ $t("accountDetail.ui.button.manageCats") }}</span></a
-              >
-            </div>
-          </b-tab-item>
-          <b-tab-item :label="$t('accountDetail.ui.tab.nft')" class="min-height-20">
-            <nft-panel :account="account"></nft-panel>
-          </b-tab-item>
-          <b-tab-item :label="$t('accountDetail.ui.tab.did')" class="min-height-20">
-            <did></did>
-          </b-tab-item>
-          <b-tab-item :label="$t('accountDetail.ui.tab.utxos')" class="min-height-20">
-            <utxo-panel :tokenInfo="tokenInfo" v-model="activities" @changePage="changePage"></utxo-panel>
-          </b-tab-item>
-        </b-tabs>
+        <div class="tabs is-centered is-fullwidth">
+          <ul>
+            <router-link to="/home/asset" :label="$t('accountDetail.ui.tab.asset')" v-slot="{ navigate, isActive, href }" custom>
+              <li :class="isActive ? 'is-active' : ''">
+                <a @click="navigate" :href="href">{{ $t("accountDetail.ui.tab.asset") }}</a>
+              </li>
+            </router-link>
+            <router-link to="/home/nft" :label="$t('accountDetail.ui.tab.nft')" v-slot="{ navigate, isActive, href }" custom>
+              <li :class="isActive ? 'is-active' : ''">
+                <a @click="navigate" :href="href">{{ $t("accountDetail.ui.tab.nft") }}</a>
+              </li>
+            </router-link>
+            <router-link to="/home/did" :label="$t('accountDetail.ui.tab.did')" v-slot="{ navigate, isActive, href }" custom>
+              <li :class="isActive ? 'is-active' : ''">
+                <a @click="navigate" :href="href">{{ $t("accountDetail.ui.tab.did") }}</a>
+              </li>
+            </router-link>
+            <router-link to="/home/utxos" :label="$t('accountDetail.ui.tab.utxos')" v-slot="{ navigate, isActive, href }" custom>
+              <li :class="isActive ? 'is-active' : ''">
+                <a @click="navigate" :href="href">{{ $t("accountDetail.ui.tab.utxos") }}</a>
+              </li>
+            </router-link>
+          </ul>
+        </div>
+        <router-view></router-view>
       </div>
       <div class="p-4 border-top-1">
         <dapp :account="account" :tokenList="tokenList" class="pb-6"></dapp>
@@ -139,19 +119,16 @@ import ManageCats from "@/components/Cat/ManageCats.vue";
 import ExplorerLink from "@/components/Home/ExplorerLink.vue";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import Send from "@/components/Send/Send.vue";
-import Did from "@/components/Did/Did.vue";
 import { demojo } from "@/filters/unitConversion";
 import { xchToCurrency } from "@/filters/usdtConversion";
 import { TokenInfo, AccountEntity, CustomCat, OneTokenInfo, AccountToken } from "@/models/account";
 import { getTokenInfo } from "@/services/view/cat";
 import { getExchangeRate } from "@/services/exchange/rates";
 import { CurrencyType } from "@/services/exchange/currencyType";
-import UtxoPanel from "@/components/Utxo/UtxoPanel.vue";
 import { CoinRecord } from "@/models/wallet";
 import { nameOmit } from "@/filters/nameConversion";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { NetworkInfo, xchSymbol } from "@/store/modules/network";
-import NftPanel from "@/components/Nft/NftPanel.vue";
 import Dapp from "./Dapp.vue";
 import ErrorLog from "@/components/ErrorLog/ErrorLog.vue";
 import AccountManagement from "@/components/AccountManagement/AccountManagement.vue";
@@ -166,10 +143,7 @@ type Mode = "Verify" | "Create";
   components: {
     KeyBox,
     Send,
-    UtxoPanel,
-    NftPanel,
     Dapp,
-    Did,
     NetworkSelector,
   },
 })

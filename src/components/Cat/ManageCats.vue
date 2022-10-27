@@ -121,7 +121,7 @@ export default class ManageCats extends Vue {
 
   @Watch("path")
   onPathChange(): void {
-    if (this.path == "/home") this.close();
+    this.close();
   }
 
   async close(): Promise<void> {
@@ -142,7 +142,7 @@ export default class ManageCats extends Vue {
       });
     } else {
       await store.dispatch("persistent");
-      this.submitting = false
+      this.submitting = false;
       this.$emit("refresh");
       this.$emit("close");
     }

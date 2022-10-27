@@ -229,7 +229,7 @@ export default class MintNft extends Vue {
 
   @Watch("path")
   onPathChange(): void {
-    if (this.path == "/home") this.close();
+    this.close();
   }
 
   @Emit("close")

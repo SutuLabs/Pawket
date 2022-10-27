@@ -82,7 +82,7 @@ export default class DecryptMessage extends Vue {
 
   @Watch("path")
   onPathChange(): void {
-    if (this.path == "/home") this.close();
+    this.close();
   }
 
   @Emit("close")
@@ -106,7 +106,7 @@ export default class DecryptMessage extends Vue {
   async decrypt(): Promise<void> {
     this.submitting = true;
     try {
-      this.decryptedMessage="";
+      this.decryptedMessage = "";
 
       const kvp = this.message
         .split("\n")
