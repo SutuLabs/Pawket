@@ -5,8 +5,8 @@
       <div class="columns is-mobile is-multiline">
         <div class="column is-6-tablet is-12-mobile">
           <span @click="preview(nft.metadata.uri)"
-            ><b-image v-if="nft.metadata.uri" :src="nft.metadata.uri" alt="NFT image" ratio="6by4"></b-image
-            ><b-image v-else :src="require('@/assets/nft-no-image.png')" alt="NFT image" ratio="6by4"></b-image
+            ><b-image v-if="nft.metadata.uri" :src="nft.metadata.uri" alt="NFT image" ratio="1by1"></b-image
+            ><b-image v-else :src="require('@/assets/nft-no-image.png')" alt="NFT image" ratio="1by1"></b-image
           ></span>
         </div>
         <div class="column is-6-tablet is-12-mobile">
@@ -43,6 +43,29 @@
           <b-field :label="$t('nftDetail.ui.label.collection')">{{
             metadata && metadata.collection ? metadata.collection.name : ""
           }}</b-field>
+          <div v-if="nft.analysis.hasOwnProperty('cnsName')" class="mb-2">
+            <b-field :label="$t('nftDetail.ui.label.ownerAddress')">
+              <span class="word-break"
+                >{{ shorten(getAddressFromPuzzleHash(nft.analysis.p2Owner)) }}
+                <key-box
+                  icon="checkbox-multiple-blank-outline"
+                  :value="getAddressFromPuzzleHash(nft.analysis.p2Owner)"
+                  :showValue="false"
+                ></key-box
+              ></span>
+            </b-field>
+            <b-field :label="$t('nftDetail.ui.label.bindingAddress')">
+              <span class="word-break"
+                >{{ shorten(getAddressFromPuzzleHash(nft.analysis.cnsAddress)) }}
+                <key-box
+                  icon="checkbox-multiple-blank-outline"
+                  :value="getAddressFromPuzzleHash(nft.analysis.cnsAddress)"
+                  :showValue="false"
+                ></key-box
+              ></span>
+            </b-field>
+            <b-field :label="$t('nftDetail.ui.label.expirationDate')">{{ metadata.attributes[0].value }}</b-field>
+          </div>
           <b-field :label="$t('nftDetail.ui.label.description')">
             <div v-if="!metadata || !metadata.description" class="pb-6"></div>
             <div v-else-if="metadata.description.length < 100">{{ metadata.description }}</div>

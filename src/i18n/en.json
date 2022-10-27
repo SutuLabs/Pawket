@@ -1116,7 +1116,10 @@
       "label": {
         "nftId": "NFT ID:",
         "collection": "Collection",
-        "description": "Description"
+        "description": "Description",
+        "ownerAddress": "Owner Address",
+        "bindingAddress": "Binding Address",
+        "expirationDate": "Expiration Date"
       },
       "button": {
         "transfer": "Transfer",
