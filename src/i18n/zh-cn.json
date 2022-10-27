@@ -1116,7 +1116,10 @@
       "label": {
         "nftId": "NFT ID:",
         "collection": "收藏集",
-        "description": "描述"
+        "description": "描述",
+        "ownerAddress": "所属地址",
+        "bindingAddress": "绑定地址",
+        "expirationDate": "过期时间"
       },
       "button": {
         "transfer": "转发",
