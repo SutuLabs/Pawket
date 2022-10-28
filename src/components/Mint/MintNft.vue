@@ -1,118 +1,103 @@
 <template>
-  <div class="modal-card">
-    <confirmation
-      v-if="!bundle"
-      :title="$t('mintNft.ui.title')"
-      @close="close()"
-      :showClose="true"
-      @leftClick="cancel()"
-      @rightClick="sign()"
-      :loading="submitting"
-      :disabled="!validity || submitting"
-    >
-      <template #content>
-        <address-field
-          :inputAddress="address"
-          :addressEditable="addressEditable"
-          @updateAddress="updateAddress"
-          @updateContactName="updateContactName"
-        ></address-field>
-        <b-field v-if="false" :label="$t('mintNft.ui.label.memo')">
-          <b-input maxlength="100" v-model="memo" type="text" @input="reset()" disabled></b-input>
-        </b-field>
-        <b-field :label="$t('mintNft.ui.label.uri')">
-          <template #message>
-            <a v-if="uri" :href="uri" target="_blank">
-              <img :src="uri" class="image-preview" />
-            </a>
-          </template>
-          <b-input maxlength="1024" v-model="uri" type="text" @input="reset()" required></b-input>
-        </b-field>
-        <span class="label">
-          {{ $t("mintNft.ui.label.hash") }}
-          <b-tooltip :label="$t('mintNft.ui.tooltip.upload')" position="is-bottom" multilined>
-            <b-upload v-model="imageFile" class="file-label" @input="afterUploadImg">
-              <b-tag icon="tray-arrow-up" size="is-small">{{ $t("mintNft.ui.button.upload") }}</b-tag>
-            </b-upload>
-          </b-tooltip>
-        </span>
-        <b-field>
-          <b-input maxlength="64" v-model="hash" type="text" @input="reset()" required></b-input>
-        </b-field>
-        <b-field :label="'Metadata Uri'">
-          <b-input v-model="metadataUri" type="text" @input="reset()" required></b-input>
-        </b-field>
-        <b-field :label="'Metadata Hash'">
-          <b-input maxlength="64" v-model="metadataHash" type="text" @input="reset()" required></b-input>
-        </b-field>
-        <b-field :label="'License Uri'">
-          <b-input v-model="licenseUri" type="text" @input="reset()" required></b-input>
-        </b-field>
-        <b-field :label="'License Hash'">
-          <b-input maxlength="64" v-model="licenseHash" type="text" @input="reset()" required></b-input>
-        </b-field>
-        <b-field :label="'Royalty Address'">
-          <b-input v-model="royaltyAddress" type="text" @input="reset()" required></b-input>
-        </b-field>
-        <b-field :label="'Royalty Percentage'">
-          <b-input max="100" min="0" v-model="royaltyPercentage" type="number" @input="reset()" required></b-input>
-        </b-field>
-        <b-field :label="'Serial Number'">
-          <b-numberinput min="0" v-model="serialNumber" @input="reset()" required></b-numberinput>
-        </b-field>
-        <b-field :label="'Serial Total'">
-          <b-numberinput min="0" v-model="serialTotal" @input="reset()" required></b-numberinput>
-        </b-field>
-        <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
-      </template>
-    </confirmation>
-    <confirmation
-      v-if="bundle"
-      :title="$t('mintCat.ui.title')"
-      @close="close()"
-      :showClose="true"
-      :stage="'Confirm'"
-      @leftClick="cancel()"
-      @rightClick="submit()"
-      :loading="submitting"
-      :disabled="!validity || submitting"
-    >
-      <template #content>
-        <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($tc('mintNft.ui.summary.notification'))"></span>
-        </b-notification>
-        <send-summary
-          :nftUri="uri"
-          :nftHash="hash"
-          :fee="feeBigInt"
-          :address="address"
-          :leadingText="$t('mintNft.ui.summary.label.leadingText')"
-          :total="total"
-          :contactName="contactName"
-        ></send-summary>
-        <bundle-summary :account="account" :bundle="bundle" :ignoreError="true"></bundle-summary>
-      </template>
-    </confirmation>
-    <footer class="modal-card-foot is-block" v-if="debugMode">
-      <div>
-        <template v-if="showTest && debugMode">
-          <b-button
-            class="is-pulled-left"
-            v-for="(c, idx) in testCases"
-            :key="idx"
-            type="is-primary is-light"
-            size="is-small"
-            :title="c.tip"
-            @click="setCase(c.info)"
-          >
-            <span>{{ c.name }}</span>
-          </b-button>
+  <confirmation
+    :value="bundle"
+    :title="$t('mintNft.ui.title')"
+    @close="close()"
+    @back="cancel()"
+    @sign="sign()"
+    @cancel="cancel()"
+    @confirm="submit()"
+    :showClose="true"
+    :loading="submitting"
+    :disabled="!validity || submitting"
+    :submitting="submitting"
+  >
+    <template #sign>
+      <address-field
+        :inputAddress="address"
+        :addressEditable="addressEditable"
+        @updateAddress="updateAddress"
+        @updateContactName="updateContactName"
+      ></address-field>
+      <b-field v-if="false" :label="$t('mintNft.ui.label.memo')">
+        <b-input maxlength="100" v-model="memo" type="text" @input="reset()" disabled></b-input>
+      </b-field>
+      <b-field :label="$t('mintNft.ui.label.uri')">
+        <template #message>
+          <a v-if="uri" :href="uri" target="_blank">
+            <img :src="uri" class="image-preview" />
+          </a>
         </template>
-        <button v-if="debugMode" class="test-btn is-pulled-left" @click="showTest = !showTest"></button>
+        <b-input maxlength="1024" v-model="uri" type="text" @input="reset()" required></b-input>
+      </b-field>
+      <span class="label">
+        {{ $t("mintNft.ui.label.hash") }}
+        <b-tooltip :label="$t('mintNft.ui.tooltip.upload')" position="is-bottom" multilined>
+          <b-upload v-model="imageFile" class="file-label" @input="afterUploadImg">
+            <b-tag icon="tray-arrow-up" size="is-small">{{ $t("mintNft.ui.button.upload") }}</b-tag>
+          </b-upload>
+        </b-tooltip>
+      </span>
+      <b-field>
+        <b-input maxlength="64" v-model="hash" type="text" @input="reset()" required></b-input>
+      </b-field>
+      <b-field :label="'Metadata Uri'">
+        <b-input v-model="metadataUri" type="text" @input="reset()" required></b-input>
+      </b-field>
+      <b-field :label="'Metadata Hash'">
+        <b-input maxlength="64" v-model="metadataHash" type="text" @input="reset()" required></b-input>
+      </b-field>
+      <b-field :label="'License Uri'">
+        <b-input v-model="licenseUri" type="text" @input="reset()" required></b-input>
+      </b-field>
+      <b-field :label="'License Hash'">
+        <b-input maxlength="64" v-model="licenseHash" type="text" @input="reset()" required></b-input>
+      </b-field>
+      <b-field :label="'Royalty Address'">
+        <b-input v-model="royaltyAddress" type="text" @input="reset()" required></b-input>
+      </b-field>
+      <b-field :label="'Royalty Percentage'">
+        <b-input max="100" min="0" v-model="royaltyPercentage" type="number" @input="reset()" required></b-input>
+      </b-field>
+      <b-field :label="'Serial Number'">
+        <b-numberinput min="0" v-model="serialNumber" @input="reset()" required></b-numberinput>
+      </b-field>
+      <b-field :label="'Serial Total'">
+        <b-numberinput min="0" v-model="serialTotal" @input="reset()" required></b-numberinput>
+      </b-field>
+      <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
+    </template>
+    <template #confirm>
+      <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
+        <span v-html="$sanitize($tc('mintNft.ui.summary.notification'))"></span>
+      </b-notification>
+      <send-summary
+        :nftUri="uri"
+        :nftHash="hash"
+        :fee="feeBigInt"
+        :address="address"
+        :leadingText="$t('mintNft.ui.summary.label.leadingText')"
+        :total="total"
+        :contactName="contactName"
+      ></send-summary>
+      <bundle-summary :account="account" :bundle="bundle" :ignoreError="true"></bundle-summary>
+    </template>
+    <template #extraBtn>
+      <div v-if="showTest && debugMode">
+        <b-button
+          v-for="(c, idx) in testCases"
+          :key="idx"
+          type="is-primary is-light"
+          size="is-small"
+          :title="c.tip"
+          @click="setCase(c.info)"
+        >
+          <span>{{ c.name }}</span>
+        </b-button>
       </div>
-    </footer>
-    <b-loading :is-full-page="false" v-model="submitting"></b-loading>
-  </div>
+      <button v-if="debugMode" class="test-btn" @click="showTest = !showTest"></button>
+    </template>
+  </confirmation>
 </template>
 
 <script lang="ts">

@@ -1,67 +1,56 @@
 <template>
-  <div class="modal-card">
-    <confirmation
-      v-if="!signResult"
-      :title="$t('signMessage.ui.title')"
-      @close="close()"
-      :showClose="true"
-      @leftClick="cancel()"
-      @rightClick="sign()"
-      :loading="submitting"
-    >
-      <template #content>
-        <b-notification type="is-warning is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($tc('signMessage.ui.prompt'))"></span>
-        </b-notification>
+  <confirmation
+    :value="signResult"
+    :title="$t('signMessage.ui.title')"
+    @close="close()"
+    @back="cancel()"
+    @sign="sign()"
+    @cancel="cancel()"
+    @confirm="copy()"
+    :confirmBtn="$t('common.button.copy')"
+    :loading="submitting"
+    :submitting="submitting"
+  >
+    <template #sign>
+      <b-notification type="is-warning is-light" has-icon icon="head-question-outline" :closable="false">
+        <span v-html="$sanitize($tc('signMessage.ui.prompt'))"></span>
+      </b-notification>
 
-        <b-field>
-          <template #label>
-            <span v-if="did">
-              {{ $t("signMessage.ui.label.signWdid") }}
-              <key-box
-                icon="checkbox-multiple-blank-outline"
-                :value="signName"
-                :tooltip="signName"
-                :showValue="true"
-                :headLength="30"
-                :tailLength="10"
-              ></key-box>
-            </span>
-          </template>
-        </b-field>
+      <b-field>
+        <template #label>
+          <span v-if="did">
+            {{ $t("signMessage.ui.label.signWdid") }}
+            <key-box
+              icon="checkbox-multiple-blank-outline"
+              :value="signName"
+              :tooltip="signName"
+              :showValue="true"
+              :headLength="30"
+              :tailLength="10"
+            ></key-box>
+          </span>
+        </template>
+      </b-field>
 
-        <b-field :label="$t('signMessage.ui.label.message')">
-          <b-input type="textarea" v-model="message" rows="10"></b-input>
-        </b-field>
-      </template>
-    </confirmation>
-    <confirmation
-      v-if="signResult"
-      :title="$t('signMessage.ui.title')"
-      :stage="'Confirm'"
-      @close="close()"
-      :showClose="true"
-      @leftClick="cancel()"
-      :rightBtnName="$t('common.button.copy')"
-      @rightClick="copy()"
-    >
-      <template #content>
-        <b-field v-if="false">
-          <b-radio-button v-model="signMode" native-value="Pawket" type="is-primary is-light is-outlined">
-            <span>Pawket</span>
-          </b-radio-button>
+      <b-field :label="$t('signMessage.ui.label.message')">
+        <b-input type="textarea" v-model="message" rows="10"></b-input>
+      </b-field>
+    </template>
+    <template #confirm>
+      <b-field v-if="false">
+        <b-radio-button v-model="signMode" native-value="Pawket" type="is-primary is-light is-outlined">
+          <span>Pawket</span>
+        </b-radio-button>
 
-          <b-radio-button v-model="signMode" native-value="Chia CLI" type="is-warning is-light is-outlined">
-            <span>Chia CLI</span>
-          </b-radio-button>
-        </b-field>
-        <b-field :label="$t('signMessage.ui.label.result')">
-          <b-input type="textarea" v-model="signResult" rows="20"></b-input>
-        </b-field>
-      </template>
-    </confirmation>
-    <b-loading :is-full-page="false" v-model="submitting"></b-loading>
-  </div>
+        <b-radio-button v-model="signMode" native-value="Chia CLI" type="is-warning is-light is-outlined">
+          <span>Chia CLI</span>
+        </b-radio-button>
+      </b-field>
+      <b-field :label="$t('signMessage.ui.label.result')">
+        <b-input type="textarea" v-model="signResult" rows="20"></b-input>
+      </b-field>
+    </template>
+  </confirmation>
 </template>
 
 <script lang="ts">

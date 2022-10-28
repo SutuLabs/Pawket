@@ -1,73 +1,62 @@
 <template>
-  <div class="modal-card">
-    <confirmation
-      v-if="!bundle"
-      title="Split Coin"
-      @close="close()"
-      :showClose="true"
-      @leftClick="cancel()"
-      @rightClick="sign()"
-      :loading="submitting"
-      :disabled="!validity || submitting"
-    >
-      <template #content>
-        <address-field
-          :inputAddress="address"
-          :addressEditable="addressEditable"
-          @updateAddress="updateAddress"
-          @updateContactName="updateContactName"
-        ></address-field>
-        <token-amount-field
-          v-model="amount"
-          :selectedToken="selectedToken"
-          :token-names="tokenNames"
-          :fee="fee"
-          :label="$t('mintCat.ui.label.amount')"
-          :max-amount="maxAmount"
-          :total-amount="totalAmount"
-          @input="updateTokenAmount"
-          @change-token="changeToken"
-          @validity="changeValidity"
-          @set-max="setMax()"
-        >
-        </token-amount-field>
-        <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
-      </template>
-    </confirmation>
-    <confirmation
-      v-if="bundle"
-      title="Split Coin"
-      @close="close()"
-      :stage="'Confirm'"
-      :showClose="true"
-      @leftClick="cancel()"
-      @rightClick="submit()"
-      :disabled="submitting || !copied"
-    >
-      <template #content>
-        <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($tc('mintCat.ui.summary.notification'))"></span>
-        </b-notification>
-        <send-summary
-          :amount="numericAmount"
-          :fee="feeBigInt"
-          :address="address"
-          leadingText="Spliting"
-          :total="total"
-          :contactName="contactName"
-        ></send-summary>
-        <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
-        <b-field class="output">
-          <template #label>
-            Coins
-            <b-button size="is-small" type="is-info" @click="copy(coinSummary)">Copy</b-button>
-          </template>
-          <b-input type="textarea" v-model="coinSummary" readonly></b-input>
-        </b-field>
-      </template>
-    </confirmation>
-    <b-loading :is-full-page="false" v-model="submitting"></b-loading>
-  </div>
+  <confirmation
+    :value="bundle"
+    title="Split Coin"
+    @close="close()"
+    @back="cancel()"
+    @sign="sign()"
+    @cancel="cancel()"
+    @confirm="submit()"
+    :showClose="true"
+    :loading="submitting"
+    :disabled="!validity || submitting || (bundle && !copied)"
+    :submitting="submitting"
+  >
+    <template #sign>
+      <address-field
+        :inputAddress="address"
+        :addressEditable="addressEditable"
+        @updateAddress="updateAddress"
+        @updateContactName="updateContactName"
+      ></address-field>
+      <token-amount-field
+        v-model="amount"
+        :selectedToken="selectedToken"
+        :token-names="tokenNames"
+        :fee="fee"
+        :label="$t('mintCat.ui.label.amount')"
+        :max-amount="maxAmount"
+        :total-amount="totalAmount"
+        @input="updateTokenAmount"
+        @change-token="changeToken"
+        @validity="changeValidity"
+        @set-max="setMax()"
+      >
+      </token-amount-field>
+      <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
+    </template>
+    <template #confirm>
+      <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
+        <span v-html="$sanitize($tc('mintCat.ui.summary.notification'))"></span>
+      </b-notification>
+      <send-summary
+        :amount="numericAmount"
+        :fee="feeBigInt"
+        :address="address"
+        leadingText="Spliting"
+        :total="total"
+        :contactName="contactName"
+      ></send-summary>
+      <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
+      <b-field class="output">
+        <template #label>
+          Coins
+          <b-button size="is-small" type="is-info" @click="copy(coinSummary)">Copy</b-button>
+        </template>
+        <b-input type="textarea" v-model="coinSummary" readonly></b-input>
+      </b-field>
+    </template>
+  </confirmation>
 </template>
 
 <script lang="ts">

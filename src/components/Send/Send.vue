@@ -1,83 +1,73 @@
 <template>
-  <div class="modal-card m-0">
-    <confirmation
-      v-if="!bundle"
-      :title="title ? title : $t('send.ui.title.send')"
-      @close="close()"
-      @leftClick="cancel()"
-      @rightClick="sign()"
-      :showClose="showClose"
-      :loading="submitting"
-      :disabled="!validity || submitting"
-    >
-      <template #content>
-        <b-notification
-          v-if="notificationMessage"
-          :type="notificationType || 'is-primary'"
-          has-icon
-          :icon="notificationIcon || 'heart'"
-          :closable="notificationClosable"
-        >
-          {{ notificationMessage }}
-        </b-notification>
-        <address-field
-          :inputAddress="address"
-          :validAddress="validAddress"
-          :addressEditable="addressEditable"
-          @updateAddress="updateAddress"
-          @updateContactName="updateContactName"
-        ></address-field>
-        <token-amount-field
-          v-model="amount"
-          :rate="rate"
-          :currency="currency"
-          :selectedToken="selectedToken"
-          :token-names="tokenNames"
-          :fee="fee"
-          :label="$t('send.ui.label.amount')"
-          :amount-editable="amountEditable"
-          :max-amount="maxAmount"
-          :total-amount="totalAmount"
-          :offline="offline"
-          @input="updateTokenAmount"
-          @change-token="changeToken"
-          @validity="changeValidity"
-          @set-max="setMax()"
-          @offline-scan="offlineScan()"
-        >
-        </token-amount-field>
-        <b-field :label="$t('send.ui.label.memo')">
-          <b-input maxlength="100" v-model="memo" type="text" @input="reset()" :disabled="selectedToken == xchSymbol"></b-input>
-        </b-field>
-        <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
-      </template>
-    </confirmation>
-    <confirmation
-      v-if="bundle"
-      :title="title ? title : $t('send.ui.title.send')"
-      @close="close()"
-      @leftClick="cancel()"
-      :stage="'Confirm'"
-      :rightBtnName="offline ? $t('send.ui.button.showSend') : $t('send.ui.button.submit')"
-      @rightClick="offline ? showSend() : submit()"
-      :disabled="submitting"
-    >
-      <template #content>
-        <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($tc('send.ui.summary.notification'))"></span>
-        </b-notification>
-        <send-summary
-          :amount="numericAmount"
-          :unit="selectedToken"
-          :fee="feeBigInt"
-          :address="address"
-          :contactName="contactName"
-        ></send-summary>
-        <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
-      </template>
-    </confirmation>
-    <b-loading :is-full-page="false" v-model="submitting"></b-loading>
-  </div>
+  <confirmation
+    :value="bundle"
+    :title="title ? title : $t('send.ui.title.send')"
+    @close="close()"
+    @back="cancel()"
+    @sign="sign()"
+    @cancel="cancel()"
+    @confirm="offline ? showSend() : submit()"
+    :confirmBtn="offline ? $t('send.ui.button.showSend') : $t('send.ui.button.submit')"
+    :showClose="showClose"
+    :loading="submitting"
+    :disabled="!validity || submitting"
+    :submitting="submitting"
+  >
+    <template #sign>
+      <b-notification
+        v-if="notificationMessage"
+        :type="notificationType || 'is-primary'"
+        has-icon
+        :icon="notificationIcon || 'heart'"
+        :closable="notificationClosable"
+      >
+        {{ notificationMessage }}
+      </b-notification>
+      <address-field
+        :inputAddress="address"
+        :validAddress="validAddress"
+        :addressEditable="addressEditable"
+        @updateAddress="updateAddress"
+        @updateContactName="updateContactName"
+      ></address-field>
+      <token-amount-field
+        v-model="amount"
+        :rate="rate"
+        :currency="currency"
+        :selectedToken="selectedToken"
+        :token-names="tokenNames"
+        :fee="fee"
+        :label="$t('send.ui.label.amount')"
+        :amount-editable="amountEditable"
+        :max-amount="maxAmount"
+        :total-amount="totalAmount"
+        :offline="offline"
+        @input="updateTokenAmount"
+        @change-token="changeToken"
+        @validity="changeValidity"
+        @set-max="setMax()"
+        @offline-scan="offlineScan()"
+      >
+      </token-amount-field>
+      <b-field :label="$t('send.ui.label.memo')">
+        <b-input maxlength="100" v-model="memo" type="text" @input="reset()" :disabled="selectedToken == xchSymbol"></b-input>
+      </b-field>
+      <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
+    </template>
+    <template #confirm>
+      <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
+        <span v-html="$sanitize($tc('send.ui.summary.notification'))"></span>
+      </b-notification>
+      <send-summary
+        :amount="numericAmount"
+        :unit="selectedToken"
+        :fee="feeBigInt"
+        :address="address"
+        :contactName="contactName"
+      ></send-summary>
+      <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
+    </template>
+  </confirmation>
 </template>
 
 <script lang="ts">

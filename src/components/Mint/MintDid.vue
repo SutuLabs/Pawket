@@ -1,52 +1,41 @@
 <template>
-  <div class="modal-card m-0">
-    <confirmation
-      v-show="!bundle"
-      :title="$t('did.addDid.title')"
-      @close="close()"
-      :showClose="true"
-      @leftClick="cancel()"
-      @rightClick="sign()"
-      :loading="submitting"
-      :disabled="submitting"
-    >
-      <template #content>
-        <b-notification type="is-primary" has-icon icon="exclamation" :closable="false">
-          <p>{{ $t("did.addDid.tip") }}</p>
-          <p class="is-size-7" v-if="account.tokens && account.tokens.hasOwnProperty(xchSymbol)">
-            {{ $t("did.addDid.balance") }}:{{ demojo(account.tokens[xchSymbol].amount) }}
-          </p>
-        </b-notification>
-        <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
-      </template>
-    </confirmation>
-    <confirmation
-      v-if="bundle"
-      :title="$t('did.addDid.title')"
-      @close="close()"
-      :stage="'Confirm'"
-      :showClose="true"
-      @leftClick="cancel()"
-      @rightClick="offline ? showSend() : submit()"
-      :rightBtnName="offline ? $t('send.ui.button.showSend') : $t('send.ui.button.submit')"
-      :disabled="submitting"
-    >
-      <template #content>
-        <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($tc('did.addDid.confirmation'))"></span>
-        </b-notification>
-        <send-summary
-          :leadingText="$t('did.addDid.spend')"
-          :amount="amount"
-          :unit="selectedToken"
-          :fee="feeBigInt"
-          :address="address"
-        ></send-summary>
-        <bundle-summary :account="account" :bundle="bundle" :ignoreError="true"></bundle-summary>
-      </template>
-    </confirmation>
-    <b-loading :is-full-page="false" v-model="submitting"></b-loading>
-  </div>
+  <confirmation
+    :value="bundle"
+    :title="$t('did.addDid.title')"
+    @close="close()"
+    @back="cancel()"
+    @sign="sign()"
+    @cancel="cancel()"
+    @confirm="offline ? showSend() : submit()"
+    :confirmBtn="offline ? $t('send.ui.button.showSend') : $t('send.ui.button.submit')"
+    :showClose="true"
+    :loading="submitting"
+    :disabled="submitting"
+    :submitting="submitting"
+  >
+    <template #sign>
+      <b-notification type="is-primary" has-icon icon="exclamation" :closable="false">
+        <p>{{ $t("did.addDid.tip") }}</p>
+        <p class="is-size-7" v-if="account.tokens && account.tokens.hasOwnProperty(xchSymbol)">
+          {{ $t("did.addDid.balance") }}:{{ demojo(account.tokens[xchSymbol].amount) }}
+        </p>
+      </b-notification>
+      <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
+    </template>
+    <template #confirm>
+      <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
+        <span v-html="$sanitize($tc('did.addDid.confirmation'))"></span>
+      </b-notification>
+      <send-summary
+        :leadingText="$t('did.addDid.spend')"
+        :amount="amount"
+        :unit="selectedToken"
+        :fee="feeBigInt"
+        :address="address"
+      ></send-summary>
+      <bundle-summary :account="account" :bundle="bundle" :ignoreError="true"></bundle-summary>
+    </template>
+  </confirmation>
 </template>
 
 <script lang="ts">
