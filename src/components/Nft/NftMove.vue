@@ -1,86 +1,77 @@
 <template>
-  <div class="modal-card">
-    <confirmation
-      v-if="step == 'Input'"
-      :title="$t('moveNft.ui.title')"
-      @close="close()"
-      :showClose="true"
-      @leftClick="cancel()"
-      @rightClick="sign()"
-      :loading="signing"
-    >
-      <template #content>
-        <b-field :label="$t('moveNft.ui.label.moveToProfile')">
-          <b-dropdown v-model="selectedDid">
-            <template #trigger>
-              <b-button :label="selectedDid ? selectedDid.name : $t('moveNft.ui.label.selectDid')" icon-right="menu-down" />
-              <p class="has-text-danger is-size-7" v-if="!selectedDid">{{ $t("moveNft.ui.label.selectDid") }}</p>
-            </template>
+  <confirmation
+    :value="bundle"
+    :title="$t('moveNft.ui.title')"
+    @close="close()"
+    @back="cancel()"
+    @sign="sign()"
+    @cancel="cancel()"
+    @confirm="submit()"
+    :showClose="true"
+    :loading="signing"
+    :disabled="submitting"
+    :submitting="submitting"
+  >
+    <template #sign>
+      <b-field :label="$t('moveNft.ui.label.moveToProfile')">
+        <b-dropdown v-model="selectedDid">
+          <template #trigger>
+            <b-button :label="selectedDid ? selectedDid.name : $t('moveNft.ui.label.selectDid')" icon-right="menu-down" />
+            <p class="has-text-danger is-size-7" v-if="!selectedDid">{{ $t("moveNft.ui.label.selectDid") }}</p>
+          </template>
 
-            <b-dropdown-item v-for="did in dids" :key="did.did" :value="did">{{ did.name }}</b-dropdown-item>
-          </b-dropdown>
+          <b-dropdown-item v-for="did in dids" :key="did.did" :value="did">{{ did.name }}</b-dropdown-item>
+        </b-dropdown>
+      </b-field>
+      <b-field label="NFT">
+        <b-input :value="nft.address" disabled></b-input>
+      </b-field>
+      <b-field>
+        <img v-if="nft.metadata.uri" :src="nft.metadata.uri" class="image is-64x64" />
+        <img v-else src="@/assets/nft-no-image.png" class="image is-64x64" />
+        <span class="pl-2 has-text-grey"
+          ><p>{{ nft.metadata.name }}</p>
+        </span>
+      </b-field>
+      <fee-selector v-model="fee"></fee-selector>
+    </template>
+    <template #confirm>
+      <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
+        <span v-html="$sanitize($tc('moveNft.ui.confirmation'))"></span>
+      </b-notification>
+      <div class="mb-3">
+        <b-field>
+          <template #label>
+            <span class="is-size-6">{{ $t("moveNft.ui.label.move") }}</span>
+            <span class="is-pulled-right">
+              <img v-if="nft.metadata.uri" :src="nft.metadata.uri" class="nft-image" />
+              <img v-else src="@/assets/nft-no-image.png" class="nft-image" />
+            </span>
+          </template>
         </b-field>
-        <b-field label="NFT">
-          <b-input :value="nft.address" disabled></b-input>
+        <b-field v-if="selectedDid">
+          <template #label>
+            <span class="is-size-6">{{ $t("moveNft.ui.label.to") }}</span>
+            <span class="is-size-6 is-pulled-right">
+              <span class="tag is-primary is-light">{{ selectedDid.name }}</span>
+              <b-tooltip :label="selectedDid.did" multilined class="break-string" position="is-left">
+                {{ shorten(selectedDid.did) }}
+              </b-tooltip>
+            </span>
+          </template>
         </b-field>
         <b-field>
-          <img v-if="nft.metadata.uri" :src="nft.metadata.uri" class="image is-64x64" />
-          <img v-else src="@/assets/nft-no-image.png" class="image is-64x64" />
-          <span class="pl-2 has-text-grey"
-            ><p>{{ nft.metadata.name }}</p>
-          </span>
+          <template #label>
+            <span class="is-size-6 has-text-grey">{{ $t("sendSummary.ui.label.fee") }}</span>
+            <span class="is-size-6 is-pulled-right has-text-grey">
+              {{ demojo(fee) }}
+            </span>
+          </template>
         </b-field>
-        <fee-selector v-model="fee"></fee-selector>
-      </template>
-    </confirmation>
-    <confirmation
-      v-if="step == 'Confirmation'"
-      :title="$t('moveNft.ui.title')"
-      :stage="'Confirm'"
-      @close="close()"
-      :showClose="true"
-      @leftClick="cancel()"
-      @rightClick="submit()"
-      :disabled="submitting"
-    >
-      <template #content>
-        <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($tc('moveNft.ui.confirmation'))"></span>
-        </b-notification>
-        <div class="mb-3">
-          <b-field>
-            <template #label>
-              <span class="is-size-6">{{ $t("moveNft.ui.label.move") }}</span>
-              <span class="is-pulled-right">
-                <img v-if="nft.metadata.uri" :src="nft.metadata.uri" class="nft-image" />
-                <img v-else src="@/assets/nft-no-image.png" class="nft-image" />
-              </span>
-            </template>
-          </b-field>
-          <b-field v-if="selectedDid">
-            <template #label>
-              <span class="is-size-6">{{ $t("moveNft.ui.label.to") }}</span>
-              <span class="is-size-6 is-pulled-right">
-                <span class="tag is-primary is-light">{{ selectedDid.name }}</span>
-                <b-tooltip :label="selectedDid.did" multilined class="break-string" position="is-left">
-                  {{ shorten(selectedDid.did) }}
-                </b-tooltip>
-              </span>
-            </template>
-          </b-field>
-          <b-field>
-            <template #label>
-              <span class="is-size-6 has-text-grey">{{ $t("sendSummary.ui.label.fee") }}</span>
-              <span class="is-size-6 is-pulled-right has-text-grey">
-                {{ demojo(fee) }}
-              </span>
-            </template>
-          </b-field>
-        </div>
-        <bundle-summary :account="account" :bundle="bundle" :ignoreError="true"></bundle-summary>
-      </template>
-    </confirmation>
-  </div>
+      </div>
+      <bundle-summary :account="account" :bundle="bundle" :ignoreError="true"></bundle-summary>
+    </template>
+  </confirmation>
 </template>
 
 <script lang="ts">

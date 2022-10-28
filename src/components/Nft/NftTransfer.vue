@@ -1,17 +1,19 @@
 <template>
-  <div class="modal-card">
     <confirmation
-      v-if="!bundle"
-      :title="$t('nftTransfer.ui.title')"
-      :showClose="true"
-      @close="close()"
-      @leftClick="cancel()"
-      @rightClick="sign()"
-      :loading="submitting"
+    :value="bundle"
+    :title="$t('nftTransfer.ui.title')"
+    @close="close()"
+    @back="cancel()"
+    @sign="sign()"
+    @cancel="cancel()"
+    @confirm="submit()"
+    :showClose="true"
+    :loading="submitting"
       :disabled="!validity || submitting"
-    >
-      <template #content>
-        <div>
+    :submitting="submitting"
+  >
+    <template #sign>
+      <div>
           <div class="has-text-centered">
             <p class="has-text-grey pb-3">{{ $t("nftTransfer.ui.description") }}</p>
             <img v-if="uri" :src="uri" class="image is-128x128" />
@@ -27,20 +29,9 @@
 
           <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
         </div>
-      </template>
-    </confirmation>
-    <confirmation
-      v-if="bundle"
-      :title="$t('nftTransfer.ui.title')"
-      :showClose="true"
-      @close="close()"
-      @leftClick="cancel()"
-      @rightClick="submit()"
-      :stage="'Confirm'"
-      :disabled="submitting"
-    >
-      <template #content>
-        <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
+    </template>
+    <template #confirm>
+      <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
           <span v-html="$sanitize($tc('nftTransfer.ui.summary.confirmation'))"></span>
         </b-notification>
         <send-summary
@@ -53,10 +44,8 @@
           :contactName="contactName"
         ></send-summary>
         <bundle-summary :account="account" :bundle="bundle" :ignoreError="true" class="mt-3"></bundle-summary>
-      </template>
-    </confirmation>
-    <b-loading :is-full-page="false" v-model="submitting"></b-loading>
-  </div>
+    </template>
+  </confirmation>
 </template>
 
 <script lang="ts">

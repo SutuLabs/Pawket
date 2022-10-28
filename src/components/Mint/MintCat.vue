@@ -1,74 +1,63 @@
 <template>
-  <div class="modal-card">
-    <confirmation
-      v-if="!bundle"
-      :title="$t('mintCat.ui.title')"
-      @close="close()"
-      :showClose="true"
-      @leftClick="cancel()"
-      @rightClick="sign()"
-      :loading="submitting"
-      :disabled="!validity || submitting"
-    >
-      <template #content>
-        <address-field
-          :inputAddress="address"
-          :addressEditable="addressEditable"
-          @updateAddress="updateAddress"
-          @updateContactName="updateContactName"
-        ></address-field>
-        <token-amount-field
-          v-model="amount"
-          :selectedToken="selectedToken"
-          :token-names="tokenNames"
-          :fee="fee"
-          :label="$t('mintCat.ui.label.amount')"
-          :max-amount="maxAmount"
-          :total-amount="totalAmount"
-          @input="updateTokenAmount"
-          @change-token="changeToken"
-          @validity="changeValidity"
-          @set-max="setMax()"
-        >
-        </token-amount-field>
-        <b-field :label="$t('mintCat.ui.label.memo')">
-          <b-input maxlength="100" v-model="memo" type="text" @input="reset()"></b-input>
-        </b-field>
-        <b-field :label="$t('mintCat.ui.label.symbolName')">
-          <b-input maxlength="12" v-model="symbol" type="text" @input="reset()" required></b-input>
-        </b-field>
-        <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
-      </template>
-    </confirmation>
-    <confirmation
-      v-if="bundle"
-      :title="$t('mintCat.ui.title')"
-      @close="close()"
-      :stage="'Confirm'"
-      :showClose="true"
-      @leftClick="cancel()"
-      @rightClick="submit()"
-      :disabled="submitting"
-    >
-      <template #content>
-        <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($tc('mintCat.ui.summary.notification'))"></span>
-        </b-notification>
-        <send-summary
-          :amount="numericAmount"
-          :unit="symbol.toUpperCase()"
-          :fee="feeBigInt"
-          :address="address"
-          :asset-id="assetId"
-          :leadingText="$t('mintCat.ui.summary.label.leadingText')"
-          :total="total"
-          :contactName="contactName"
-        ></send-summary>
-        <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
-      </template>
-    </confirmation>
-    <b-loading :is-full-page="false" v-model="submitting"></b-loading>
-  </div>
+  <confirmation
+    :value="bundle"
+    :title="$t('mintCat.ui.title')"
+    @close="close()"
+    @back="cancel()"
+    @sign="sign()"
+    @cancel="cancel()"
+    @confirm="submit()"
+    :showClose="true"
+    :loading="submitting"
+    :disabled="!validity || submitting"
+    :submitting="submitting"
+  >
+    <template #sign>
+      <address-field
+        :inputAddress="address"
+        :addressEditable="addressEditable"
+        @updateAddress="updateAddress"
+        @updateContactName="updateContactName"
+      ></address-field>
+      <token-amount-field
+        v-model="amount"
+        :selectedToken="selectedToken"
+        :token-names="tokenNames"
+        :fee="fee"
+        :label="$t('mintCat.ui.label.amount')"
+        :max-amount="maxAmount"
+        :total-amount="totalAmount"
+        @input="updateTokenAmount"
+        @change-token="changeToken"
+        @validity="changeValidity"
+        @set-max="setMax()"
+      >
+      </token-amount-field>
+      <b-field :label="$t('mintCat.ui.label.memo')">
+        <b-input maxlength="100" v-model="memo" type="text" @input="reset()"></b-input>
+      </b-field>
+      <b-field :label="$t('mintCat.ui.label.symbolName')">
+        <b-input maxlength="12" v-model="symbol" type="text" @input="reset()" required></b-input>
+      </b-field>
+      <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
+    </template>
+    <template #confirm>
+      <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
+        <span v-html="$sanitize($tc('mintCat.ui.summary.notification'))"></span>
+      </b-notification>
+      <send-summary
+        :amount="numericAmount"
+        :unit="symbol.toUpperCase()"
+        :fee="feeBigInt"
+        :address="address"
+        :asset-id="assetId"
+        :leadingText="$t('mintCat.ui.summary.label.leadingText')"
+        :total="total"
+        :contactName="contactName"
+      ></send-summary>
+      <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
+    </template>
+  </confirmation>
 </template>
 
 <script lang="ts">
