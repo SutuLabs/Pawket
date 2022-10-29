@@ -66,6 +66,7 @@ test('Register CNS', async () => {
   const md = Object.assign({}, cnsMetadata);
   md.name = "hiya.xch";
   md.address = "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155";
+  md.expiry = Math.floor(new Date(2022, 10, 1).getTime() / 1000).toFixed(0);
   await testMintCns(0n, md);
 });
 
@@ -108,6 +109,7 @@ test('Create CNS Offer And Accept', async () => {
   const md = Object.assign({}, cnsMetadata);
   md.name = "hiya.xch";
   md.address = "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155";
+  md.expiry = Math.floor(new Date(2022, 10, 1).getTime() / 1000).toFixed(0);
   await testMintCnsAndOffer(0n, md);
 });
 
@@ -116,6 +118,7 @@ test('Create CNS Offer And Accept 2', async () => {
   md.name = "longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglon.xch";
   expect(md.name.length).toBe(63 + ".xch".length);
   md.address = "0x5662b49a357db4f05c2c141452b72fb91e7ec286e9b47d6c287210c63ae5cd3e";
+  md.expiry = Math.floor(new Date(2022, 10, 1).getTime() / 1000).toFixed(0);
   await testMintCnsAndOffer(0n, md);
 });
 

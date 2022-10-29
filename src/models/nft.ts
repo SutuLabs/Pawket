@@ -78,11 +78,13 @@ export interface NftMetadataValues {
 export type NftMetadataKeys = { [key in NftDataKey]: string; };
 
 export interface CnsCoinAnalysisResult extends NftCoinAnalysisResult {
+  cnsExpiry: string;
   cnsName: string;
   cnsAddress: string;
 }
 
 export interface CnsMetadataValues extends NftMetadataValues {
+  expiry: string | undefined;
   address: string | undefined;
   name: string | undefined;
   contentHash: string | undefined;
@@ -92,6 +94,6 @@ export interface CnsMetadataValues extends NftMetadataValues {
   reserved: string | undefined;
 };
 
-export type CnsDataKey = NftDataKey | "address" | "name" | "contentHash" | "text" | "dns" | "publicKey" | "reserved";
+export type CnsDataKey = NftDataKey | "expiry" | "address" | "name" | "contentHash" | "text" | "dns" | "publicKey" | "reserved";
 
 export type CnsMetadataKeys = { [key in CnsDataKey]: string; };

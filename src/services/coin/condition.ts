@@ -45,7 +45,7 @@ export function skipFirstByte0x(str: string): Hex0x {
   return "0x" + (str.slice(str.startsWith("0x") ? 4 : 2)) as Hex0x;
 }
 
-export function formatAmount(amount: bigint): string {
+export function formatAmount(amount: bigint): Hex0x {
   return prefix0x(Bytes.from(bigint_to_bytes(amount, { signed: true })).hex());
 }
 

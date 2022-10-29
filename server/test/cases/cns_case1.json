@@ -4,6 +4,7 @@
     "price": 170000000000,
     "fee": 0,
     "metadata": {
+        "expiry": "1667009382",
         "address": "xch12e3tfx340k60qhpvzs299de0hy08as5xax686mpgwggvvwh9e5lqvtsuyd",
         "name": "abcd.xch",
         "contentHash": "",
