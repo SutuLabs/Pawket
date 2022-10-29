@@ -100,6 +100,18 @@
           </li>
         </ul>
       </div>
+      <div v-if="debugMode" class="border-bottom py-2">
+        <span class="is-size-6 has-text-weight-bold">Get Encrypted Puzzle Detail Tuple</span>
+        <span class="is-pulled-right" v-if="!observeMode">
+          <b-button v-if="!showPdt" size="is-small" @click="showPdtInfo()" class="is-primary">Calculate</b-button>
+          <b-button v-else size="is-small" @click="showPdt = false" class="is-link">
+            {{ $t("accountInfo.ui.button.hide") }}
+          </b-button>
+          <span v-if="showPdt">
+            <key-box icon="checkbox-multiple-blank-outline" :tooltip="$t('common.tooltip.copy')" :value="pdtInfo"></key-box>
+          </span>
+        </span>
+      </div>
       <div class="pt-6 px-2" v-if="idx != 0">
         <b-button type="is-danger" outlined expanded @click="remove()">{{ $t("accountInfo.ui.button.delete") }}</b-button>
       </div>
@@ -116,6 +128,7 @@ import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import { accountTypeConverter } from "@/filters/accountTypeConversion";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import TopBar from "@/components/Common/TopBar.vue";
+import encryption from "@/services/crypto/encryption";
 
 @Component({
   components: { TopBar, KeyBox },
@@ -129,12 +142,14 @@ export default class AccountDetail extends Vue {
   public walletprikey = "";
   public walletpubkey = "";
   public showMnemonic = false;
+  public showPdt = false;
+  public pdtInfo = "";
   public showDetail = false;
 
   mounted(): void {
     window.history.pushState(null, "", "#/home/accounts/detail");
     window.onpopstate = () => this.$emit("close");
-    
+
     var privkey = utility.fromHexString(this.account.key.privateKey);
     utility.getPrivateKey(privkey).then((sk) => {
       this.masterprikey = utility.toHexString(sk.serialize());
@@ -208,6 +223,28 @@ export default class AccountDetail extends Vue {
         }
         close();
         this.showMnemonic = true;
+      },
+    });
+  }
+
+  async showPdtInfo(): Promise<void> {
+    this.$buefy.dialog.prompt({
+      message: "Input the encryption key",
+      trapFocus: true,
+      closeOnConfirm: false,
+      canCancel: ["button"],
+      cancelText: this.$tc("common.button.cancel"),
+      confirmText: this.$tc("common.button.confirm"),
+      onConfirm: async (key, { close }) => {
+        const puz = this.account.addressPuzzles[0].puzzles[1];
+        const originData = JSON.stringify({
+          privateKey: utility.toHexString(puz.privateKey.serialize()),
+          puzzle: puz.puzzle,
+          hash: puz.hash,
+        });
+        this.pdtInfo = await encryption.encrypt(originData, key);
+        close();
+        this.showPdt = true;
       },
     });
   }
