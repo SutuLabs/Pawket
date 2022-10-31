@@ -74,9 +74,9 @@ stages:
 
     - task: CmdLine@2
       inputs:
-        workingDirectory: '$(Build.SourcesDirectory)/server'
-        script: 'yarn build'
-      displayName: 'yarn build'
+        workingDirectory: '$(Build.SourcesDirectory)'
+        script: 'yarn build:server'
+      displayName: 'yarn build:server'
 
     - task: CmdLine@2
       inputs:
