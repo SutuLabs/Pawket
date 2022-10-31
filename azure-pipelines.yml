@@ -13,6 +13,7 @@ variables:
   webArtifactName: chia-wallet
   extArtifactName: chia-wallet-ext
   mixchArtifactName: chia-mixch
+  serverArtifactName: chia-server
   versionNumber: '0.1.$(Build.BuildNumber)'
   qaEnvironment: 'chiabee_wallet_qa'
   qaFtp: 'chiabee_wallet_dev_ftp'
@@ -71,6 +72,18 @@ stages:
     #     script: 'echo $(versionNumber)>$(Build.SourcesDirectory)/dist/ext/version.txt'
     #   displayName: 'write version file(ext)'
 
+    - task: CmdLine@2
+      inputs:
+        workingDirectory: '$(Build.SourcesDirectory)/server'
+        script: 'yarn build'
+      displayName: 'yarn build'
+
+    - task: CmdLine@2
+      inputs:
+        workingDirectory: '$(Build.SourcesDirectory)'
+        script: 'echo $(versionNumber)>$(Build.SourcesDirectory)/dist/server/version.txt'
+      displayName: 'write version file(server)'
+
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.SourcesDirectory)/dist/web'
@@ -88,6 +101,12 @@ stages:
     #     PathtoPublish: '$(Build.SourcesDirectory)/dist/ext'
     #     ArtifactName: '$(extArtifactName)'
     #     publishLocation: 'Container'
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.SourcesDirectory)/dist/server'
+        ArtifactName: '$(serverArtifactName)'
+        publishLocation: 'Container'
 
 
 - stage: pr
