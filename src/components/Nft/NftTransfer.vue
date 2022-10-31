@@ -24,6 +24,7 @@
             :inputAddress="address"
             :addressEditable="addressEditable"
             @updateAddress="updateAddress"
+            @updateEffectiveAddress="updateEffectiveAddress"
             @updateContactName="updateContactName"
           ></address-field>
 
@@ -38,7 +39,7 @@
           :nftUri="uri"
           :nftHash="hash"
           :fee="feeBigInt"
-          :address="address"
+          :address="signAddress"
           :leadingText="$t('mintNft.ui.summary.label.leadingText')"
           :total="total"
           :contactName="contactName"
@@ -93,6 +94,7 @@ export default class NftTransfer extends Vue {
   public submitting = false;
   public fee = 0;
   public address = "";
+  public signAddress = "";
   public contactName = "";
   public memo = "";
   public bundle: SpendBundle | null = null;
@@ -148,6 +150,11 @@ export default class NftTransfer extends Vue {
 
   updateAddress(value: string): void {
     this.address = value;
+    this.reset();
+  }
+
+  updateEffectiveAddress(value: string): void {
+    this.signAddress = value;
     this.reset();
   }
 
@@ -244,7 +251,7 @@ export default class NftTransfer extends Vue {
       }
 
       try {
-        Bytes.from(bech32m.decodeToBytes(this.address).bytes).hex();
+        Bytes.from(bech32m.decodeToBytes(this.signAddress).bytes).hex();
       } catch (error) {
         Notification.open({
           message: this.$tc("send.messages.error.INVALID_ADDRESS"),
@@ -255,7 +262,7 @@ export default class NftTransfer extends Vue {
         return;
       }
 
-      if (!this.address.startsWith(xchPrefix())) {
+      if (!this.signAddress.startsWith(xchPrefix())) {
         Notification.open({
           message: this.$tc("send.messages.error.ADDRESS_NOT_MATCH_NETWORK"),
           type: "is-danger",
@@ -266,7 +273,7 @@ export default class NftTransfer extends Vue {
       }
 
       const spendBundle = await generateTransferNftBundle(
-        this.address,
+        this.signAddress,
         this.account.firstAddress,
         BigInt(this.fee),
         this.nft.coin,

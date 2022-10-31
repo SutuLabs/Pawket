@@ -12,7 +12,7 @@
       </span>
     </template>
     <template #message>
-      <span v-if="debugMode">
+      <span>
         <span v-if="!resolveAnswer"></span>
         <span v-else-if="resolveAnswer.status == 'Failure'">
           <b-icon type="is-warning" icon="alert-decagram-outline" size="is-small"></b-icon>
@@ -26,7 +26,9 @@
           <div>
             <a class="has-text-dark" :href="spaceScanUrl + nftAddress" target="_blank">
               <img v-if="cnsUrl" :src="cnsUrl" class="image is-128x128" />
-              <img v-else src="@/assets/nft-no-image.png" class="image is-128x128" />
+              <div v-else class="image is-128x128">
+                <b-loading active :is-full-page="false"></b-loading>
+              </div>
             </a>
           </div>
           <div class="ml-4">
@@ -105,13 +107,21 @@ export default class AddressField extends Vue {
   public onChainConfirmationStatus: "None" | "Confirming" | "Confirmed" | "Wrong" = "None";
 
   mounted(): void {
-    if (this.inputAddress) this.address = this.inputAddress;
+    if (this.inputAddress) {
+      this.address = this.inputAddress;
+      this.reset();
+    }
     this.updateContacts();
   }
 
   @Watch("inputAddress")
   onInputAddressChanged(): void {
     this.address = this.inputAddress;
+  }
+
+  @Watch("outputAddress")
+  onOutputAddressChanged(): void {
+    this.$emit("updateEffectiveAddress", this.outputAddress);
   }
 
   @Watch("address")
@@ -126,6 +136,15 @@ export default class AddressField extends Vue {
 
   get network(): string {
     return store.state.network.networkId;
+  }
+
+  get outputAddress(): string {
+    if (this.resolvedAddress) {
+      this.$emit("updateContactName", this.address);
+      return this.resolvedAddress;
+    } else {
+      return this.address;
+    }
   }
 
   get isNewAddress(): boolean {
@@ -219,6 +238,7 @@ export default class AddressField extends Vue {
       }
     } else {
       this.resolveAnswer = null;
+      this.cnsUrl = "";
     }
   }
 
