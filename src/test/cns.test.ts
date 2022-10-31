@@ -27,8 +27,8 @@ function xchSymbol() { return "XCH"; }
 function chainId() { return "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb"; }
 function tokenInfo() { return {}; }
 function expiryDate() {
-  const dt = new Date(2022, 10, 1, 8, 0, 0);
-  return Math.floor(dt.getTime() / 1000 + dt.getTimezoneOffset() * 60).toFixed(0);
+  const dt = new Date(2022, 9, 31, 16, 0, 0); // month have 1 offset, this 2022-10-31
+  return Math.floor(dt.getTime() / 1000 - dt.getTimezoneOffset() * 60).toFixed(0);
 }
 
 beforeAll(async () => {
