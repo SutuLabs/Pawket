@@ -28,6 +28,7 @@
         :validAddress="validAddress"
         :addressEditable="addressEditable"
         @updateAddress="updateAddress"
+        @updateEffectiveAddress="updateEffectiveAddress"
         @updateContactName="updateContactName"
       ></address-field>
       <token-amount-field
@@ -62,7 +63,7 @@
         :amount="numericAmount"
         :unit="selectedToken"
         :fee="feeBigInt"
-        :address="address"
+        :address="signAddress"
         :contactName="contactName"
       ></send-summary>
       <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
@@ -131,6 +132,7 @@ export default class Send extends Vue {
   public validAddress = true;
   public fee = 0;
   public address = "";
+  public signAddress = "";
   public contactName = "";
   public memo = "";
   public bundle: SpendBundle | null = null;
@@ -256,6 +258,11 @@ export default class Send extends Vue {
     this.reset();
   }
 
+  updateEffectiveAddress(value: string): void {
+    this.signAddress = value;
+    this.reset();
+  }
+
   updateContactName(value: string): void {
     this.contactName = value;
   }
@@ -330,7 +337,7 @@ export default class Send extends Vue {
       let tgt_hex: Hex0x = "()";
       let change_hex: Hex0x = "()";
       try {
-        tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.address));
+        tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.signAddress));
         change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
       } catch (err) {
         Notification.open({
@@ -342,7 +349,7 @@ export default class Send extends Vue {
         this.submitting = false;
         return;
       }
-      if (!this.address.startsWith(xchPrefix())) {
+      if (!this.signAddress.startsWith(xchPrefix())) {
         Notification.open({
           message: this.$tc("send.messages.error.ADDRESS_NOT_MATCH_NETWORK"),
           type: "is-danger",

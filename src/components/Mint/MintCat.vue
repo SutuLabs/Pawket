@@ -17,6 +17,7 @@
         :inputAddress="address"
         :addressEditable="addressEditable"
         @updateAddress="updateAddress"
+        @updateEffectiveAddress="updateEffectiveAddress"
         @updateContactName="updateContactName"
       ></address-field>
       <token-amount-field
@@ -49,7 +50,7 @@
         :amount="numericAmount"
         :unit="symbol.toUpperCase()"
         :fee="feeBigInt"
-        :address="address"
+        :address="signAddress"
         :asset-id="assetId"
         :leadingText="$t('mintCat.ui.summary.label.leadingText')"
         :total="total"
@@ -102,6 +103,7 @@ export default class MintCat extends Vue {
   public submitting = false;
   public fee = 0;
   public address = "";
+  public signAddress = "";
   public memo = "";
   public contactName = "";
   public bundle: SpendBundle | null = null;
@@ -185,6 +187,11 @@ export default class MintCat extends Vue {
 
   updateAddress(value: string): void {
     this.address = value;
+    this.reset();
+  }
+
+  updateEffectiveAddress(value: string): void {
+    this.signAddress = value;
     this.reset();
   }
 
@@ -303,7 +310,7 @@ export default class MintCat extends Vue {
       }
 
       try {
-        Bytes.from(bech32m.decodeToBytes(this.address).bytes).hex();
+        Bytes.from(bech32m.decodeToBytes(this.signAddress).bytes).hex();
       } catch (error) {
         Notification.open({
           message: this.$tc("send.messages.error.INVALID_ADDRESS"),
@@ -314,7 +321,7 @@ export default class MintCat extends Vue {
         return;
       }
 
-      if (!this.address.startsWith(xchPrefix())) {
+      if (!this.signAddress.startsWith(xchPrefix())) {
         Notification.open({
           message: this.$tc("send.messages.error.ADDRESS_NOT_MATCH_NETWORK"),
           type: "is-danger",
@@ -325,7 +332,7 @@ export default class MintCat extends Vue {
       }
 
       const { spendBundle, assetId } = await generateMintCatBundle(
-        this.address,
+        this.signAddress,
         this.account.firstAddress,
         amount,
         BigInt(this.fee),
