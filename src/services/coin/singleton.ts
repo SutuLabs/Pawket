@@ -94,6 +94,18 @@ export function hex2ascSingle(hex: string | string[] | undefined): string | unde
   return result[0];
 }
 
+export function hex2dec(hex: string | string[] | undefined): string | string[] | undefined {
+  if (!hex) return hex;
+  if (typeof hex === "string") return parseInt(prefix0x(hex)).toString();
+  return hex.map(_ => parseInt(prefix0x(_)).toString());
+}
+
+export function hex2decSingle(hex: string | string[] | undefined): string | undefined {
+  const result = hex2dec(hex);
+  if (!result || typeof result === "string") return result;
+  return result[0];
+}
+
 export async function getNextCoinName0x(puzzle_hex: string, solution_hex: string, thisCoinName: Hex0x): Promise<string | undefined> {
   let result: ExecuteResult;
   try {

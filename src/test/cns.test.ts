@@ -26,6 +26,10 @@ function xchPrefix() { return "xch"; }
 function xchSymbol() { return "XCH"; }
 function chainId() { return "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb"; }
 function tokenInfo() { return {}; }
+function expiryDate() {
+  const dt = new Date(2022, 9, 31, 16, 0, 0); // month have 1 offset, this 2022-10-31
+  return Math.floor(dt.getTime() / 1000 - dt.getTimezoneOffset() * 60).toFixed(0);
+}
 
 beforeAll(async () => {
   await Instance.init();
@@ -66,6 +70,7 @@ test('Register CNS', async () => {
   const md = Object.assign({}, cnsMetadata);
   md.name = "hiya.xch";
   md.address = "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155";
+  md.expiry = expiryDate();
   await testMintCns(0n, md);
 });
 
@@ -108,6 +113,7 @@ test('Create CNS Offer And Accept', async () => {
   const md = Object.assign({}, cnsMetadata);
   md.name = "hiya.xch";
   md.address = "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155";
+  md.expiry = expiryDate();
   await testMintCnsAndOffer(0n, md);
 });
 
@@ -116,6 +122,7 @@ test('Create CNS Offer And Accept 2', async () => {
   md.name = "longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglon.xch";
   expect(md.name.length).toBe(63 + ".xch".length);
   md.address = "0x5662b49a357db4f05c2c141452b72fb91e7ec286e9b47d6c287210c63ae5cd3e";
+  md.expiry = expiryDate();
   await testMintCnsAndOffer(0n, md);
 });
 

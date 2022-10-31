@@ -4,12 +4,12 @@ import receive, { TokenPuzzleDetail } from "../crypto/receive";
 import { combineSpendBundlePure } from "../mint/cat";
 import { curryMod } from "../offer/bundler";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
-import { Hex0x, prefix0x, skipFirstByte0x } from "./condition";
+import { formatAmount, Hex0x, prefix0x, skipFirstByte0x } from "./condition";
 import { modshash, modshex, modsprog } from "./mods";
 import utility, { bytesToHex0x } from "../crypto/utility";
 import catBundle, { LineageProof } from "../transfer/catBundle";
 import { getCoinName0x, NetworkContext } from "./coinUtility";
-import { cloneAndAddRequestPuzzleTemporary, constructSingletonTopLayerPuzzle, getNextCoinName0x, getPuzzleDetail, hex2asc, hex2ascSingle, ParsedMetadata, parseMetadata, SingletonStructList } from "./singleton";
+import { cloneAndAddRequestPuzzleTemporary, constructSingletonTopLayerPuzzle, getNextCoinName0x, getPuzzleDetail, hex2asc, hex2ascSingle, hex2decSingle, ParsedMetadata, parseMetadata, SingletonStructList } from "./singleton";
 import { findByPath } from "./lisp";
 import { ConditionOpcode } from "./opcode";
 import { DidCoinAnalysisResult } from "./did";
@@ -435,8 +435,9 @@ export async function analyzeNftCoin(
   };
   if (!obj.updaterInSolution) delete obj.updaterInSolution;
 
-  if ("address" in metadata && metadata.address && metadata.name) {
+  if ("expiry" in metadata && metadata.expiry && metadata.address && metadata.name) {
     const cnsobj = Object.assign({
+      cnsExpiry: metadata.expiry,
       cnsName: metadata.name,
       cnsAddress: metadata.address,
     }, obj) as CnsCoinAnalysisResult;
@@ -553,7 +554,8 @@ async function constructMetadataString(metadata: MetadataValues): Promise<string
     `${toNumber(mkeys.serialNumber)} . ${toNumber(metadata.serialNumber)}`,
     `${toNumber(mkeys.serialTotal)} . ${toNumber(metadata.serialTotal)}`,
 
-    ...("address" in metadata ? [
+    ...("expiry" in metadata ? [
+      metadata.expiry ? `${toNumber(mkeys.expiry)} . ${formatAmount(BigInt(metadata.expiry))}` : undefined,
       metadata.address ? `${toNumber(mkeys.address)} . ${prefix0x(metadata.address)}` : undefined,
       metadata.name ? `${toNumber(mkeys.name)} . "${metadata.name}"` : undefined,
       metadata.contentHash ? `${toNumber(mkeys.contentHash)} . "${metadata.contentHash}"` : undefined,
@@ -667,6 +669,7 @@ function getNftMetadataKeys(): NftMetadataKeys & CnsMetadataKeys {
     "serialNumber": getHex("sn"),
     "serialTotal": getHex("st"),
 
+    "expiry": getHex("ex"),
     "address": getHex("ad"),
     "name": getHex("nm"),
     "contentHash": getHex("ch"),
@@ -696,6 +699,7 @@ export function getNftMetadataInfo(parsed: ParsedMetadata): MetadataValues {
     serialNumber: getScalar(parsed[mkeys.serialNumber]),
     serialTotal: getScalar(parsed[mkeys.serialTotal]),
 
+    expiry: hex2decSingle(parsed[mkeys.expiry]),
     address: getScalar(parsed[mkeys.address]),
     name: hex2ascSingle(parsed[mkeys.name]),
     contentHash: hex2ascSingle(parsed[mkeys.contentHash]),

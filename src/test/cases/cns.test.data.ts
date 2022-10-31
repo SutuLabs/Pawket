@@ -25,6 +25,7 @@ export const cnsMetadata: CnsMetadataValues = {
   "metadataHash": "44475cb971933e4545efad1337f3d68bc53523d987412df233f3b905ed1c5b3f",
   "serialNumber": "21",
   "serialTotal": "63",
+  expiry: "",
   address: "",
   name: "",
   contentHash: undefined,
