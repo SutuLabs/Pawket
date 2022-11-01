@@ -85,7 +85,7 @@ class CatBundle {
       effectiveArg = effectiveArg.rest();
     }
     const trickarg = disassemble(effectiveArg).slice(1, -1);
-    if (!trickarg) throw new Error("Cannot get lineage proof out of puzzle");
+    if (!trickarg) throw new Error("Cannot get lineage proof out of puzzle: " + curriedPuzzle);
     const hash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(trickarg));
     return hash; // getting inner_puzzle hash
   }
