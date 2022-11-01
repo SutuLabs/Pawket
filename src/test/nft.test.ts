@@ -8,7 +8,7 @@ import nftcoin4 from "./cases/nftcoin4.json"
 import nftcoin5 from "./cases/nftcoin5.json"
 
 import { nftMetadata } from "./cases/nft.test.data";
-import { testMintNft } from "./nftFunctions";
+import { testMintNft, testUpdateNft } from "./nftFunctions";
 
 beforeAll(async () => {
   await Instance.init();
@@ -35,4 +35,8 @@ test('Analyze Nft 5', async () => await testAnalyzeNftCoin(nftcoin5, "bae24162ef
 test('Mint Nft', async () => {
   await testMintNft(0n, nftMetadata);
   await testMintNft(8889n, nftMetadata);
+});
+
+test('Update Nft', async () => {
+  await testUpdateNft(0n);
 });

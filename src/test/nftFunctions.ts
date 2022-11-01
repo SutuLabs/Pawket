@@ -1,13 +1,14 @@
 import { convertToOriginCoin } from "@/models/wallet";
 import { getTestAccount } from "./utility";
 import { SymbolCoins } from "@/services/transfer/transfer";
-import { analyzeNftCoin, generateMintNftBundle, generateTransferNftBundle } from "@/services/coin/nft";
+import { analyzeNftCoin, generateMintNftBundle, generateTransferNftBundle, generateUpdatedNftBundle } from "@/services/coin/nft";
 import puzzle from "@/services/crypto/puzzle";
 import { GetParentPuzzleResponse } from "@/models/api";
 import { getAccountAddressDetails } from "@/services/util/account";
 import { DidCoinAnalysisResult } from "@/services/coin/did";
 
 import nftcoin0 from "./cases/nftcoin0.json"
+import nftcoin7 from "./cases/nftcoin7.json"
 
 import { NftMetadataValues } from "@/models/nft";
 import { didAnalysis, knownCoins } from "./cases/nft.test.data";
@@ -80,6 +81,40 @@ export async function testTransferNft(fee: bigint, didAnalysis: DidCoinAnalysisR
 
   const spendBundle = await generateTransferNftBundle(
     targetAddress, changeAddress, fee, nftCoin, analysis, availcoins, tokenPuzzles, net, didAnalysis);
+  expect(spendBundle).toMatchSnapshot("spendbundle");
+}
+
+export async function testUpdateNft(fee: bigint): Promise<void> {
+  const hintPuzzle = "0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10";//0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10 
+  const change_hex = "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155";
+  const nftCoin = convertToOriginCoin({
+    "amount": 1,
+    "parent_coin_info": "0xdf5592ae5aead18a9a98d76c3d54b292511d9b230bdfd29975d7b4d6f35a05d5",
+    "puzzle_hash": "0x72f4131e47360c7b5d04481de13c320a368ad89cbf6e4b0dfad0e6661bf6e978",
+  });
+
+  const analysis = await analyzeNftCoin(nftcoin7.puzzle_reveal, hintPuzzle, nftCoin, nftcoin7.solution);
+  if (analysis == null) fail("null analysis");
+  expect(analysis).toMatchSnapshot("analysis");
+
+  const account = getTestAccount("55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f");
+  account.addressRetrievalCount = 5;
+
+  const changeAddress = puzzle.getAddressFromPuzzleHash(change_hex, xchPrefix());
+
+  const tokenPuzzles = await getAccountAddressDetails(account, [], tokenInfo(), xchPrefix(), xchSymbol(), undefined, "cat_v1");
+  const availcoins: SymbolCoins = {
+    [xchSymbol()]: [
+      {
+        "parent_coin_info": "0xc2d7aa805ebbfdfdd5760294b74ddd63c76cae14da817cd27e40ea2c15f18298",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+        "amount": 21n
+      },
+    ]
+  };
+
+  const spendBundle = await generateUpdatedNftBundle(
+    changeAddress, fee, nftCoin, analysis, "NFT", "imageUri", "https://example.com/a.jpg", availcoins, tokenPuzzles, net);
   expect(spendBundle).toMatchSnapshot("spendbundle");
 }
 
