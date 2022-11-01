@@ -54,7 +54,13 @@
                 ></key-box
               ></span>
             </b-field>
-            <b-field :label="$t('nftDetail.ui.label.bindingAddress')">
+            <b-field>
+              <template #label>
+                {{ $t("nftDetail.ui.label.bindingAddress") }}
+                <a href="javascript:void(0)" @click="update()">
+                  <b-icon icon="pencil" size="is-small"></b-icon>
+                </a>
+              </template>
               <span class="word-break"
                 >{{ shorten(getAddressFromPuzzleHash(nft.analysis.cnsAddress)) }}
                 <key-box
@@ -299,6 +305,7 @@ import { NftOffChainMetadata } from "@/models/nft";
 import store from "@/store";
 import { notifyPrimary } from "@/services/notification/notification";
 import NftMove from "./NftMove.vue";
+import NftUpdate from "./NftUpdate.vue";
 import puzzle from "@/services/crypto/puzzle";
 import { xchPrefix } from "@/store/modules/network";
 import { shorten } from "@/filters/addressConversion";
@@ -357,7 +364,11 @@ export default class NftDetailPanel extends Vue {
   }
 
   getAddressFromPuzzleHash(hash: string): string {
-    return puzzle.getAddressFromPuzzleHash(hash, xchPrefix());
+    try {
+      return puzzle.getAddressFromPuzzleHash(hash, xchPrefix());
+    } catch (err) {
+      return "";
+    }
   }
 
   get observeMode(): boolean {
@@ -404,6 +415,18 @@ export default class NftDetailPanel extends Vue {
     this.$buefy.modal.open({
       parent: this,
       component: NftMove,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      fullScreen: isMobile(),
+      props: { nft: this.nft, account: this.account },
+    });
+  }
+
+  update(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: NftUpdate,
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
