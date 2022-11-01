@@ -6,6 +6,7 @@ import nftcoin2 from "./cases/nftcoin2.json"
 import nftcoin3 from "./cases/nftcoin3.json"
 import nftcoin4 from "./cases/nftcoin4.json"
 import nftcoin5 from "./cases/nftcoin5.json"
+import nftcoin8 from "./cases/nftcoin8.json"
 
 import { nftMetadata } from "./cases/nft.test.data";
 import { testMintNft, testUpdateNft } from "./nftFunctions";
@@ -31,6 +32,8 @@ test('Analyze Nft 3', async () => await testAnalyzeNftCoin(nftcoin3, "4c61cafe59
 test('Analyze Nft 4', async () => await testAnalyzeNftCoin(nftcoin4, "0000000000000000000000000000000000000000000000000000000000000000"));
 // mainnet coin: 0x092addccb83469b626b4a462e2b8671bb33085032486e9cf6861c43db188516b
 test('Analyze Nft 5', async () => await testAnalyzeNftCoin(nftcoin5, "bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79"));
+// with updater: new url
+test('Analyze Nft 8', async () => await testAnalyzeNftCoin(nftcoin8, "7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10"));
 
 test('Mint Nft', async () => {
   await testMintNft(0n, nftMetadata);

@@ -15,7 +15,7 @@ import { ConditionOpcode } from "./opcode";
 import { DidCoinAnalysisResult } from "./did";
 import { CnsDataKey, NftCoinAnalysisResult, NftDataKey, NftMetadataKeys, NftMetadataValues } from "@/models/nft";
 import { CannotParsePuzzle, expectModArgs, sexpAssemble, UncurriedPuzzle, uncurryPuzzle } from "./analyzer";
-import { disassemble, sha256tree } from "clvm_tools";
+import { assemble, disassemble, sha256tree } from "clvm_tools";
 import { SExp } from "clvm";
 import { Instance } from "../util/instance";
 import { CnsCoinAnalysisResult, CnsMetadataKeys, CnsMetadataValues } from "@/models/nft";
@@ -407,8 +407,10 @@ export async function analyzeNftCoin(
 
   const nftStateModHash = skipFirstByte0x(nftStateModHash_parsed.raw);
   const metadataUpdaterPuzzleHash = skipFirstByte0x(metadataUpdaterPuzzleHash_parsed.raw);
-  const rawMetadata = await puzzle.disassemblePuzzle(rawMetadata_parsed.raw);
-  const parsed = parseMetadata(sexpAssemble(rawMetadata_parsed.raw));
+  const solsexp = sexpAssemble(solution_hex);
+  const calculatedMetadata = await getCalculatedMetadata(rawMetadata_parsed.raw as Hex0x, metadataUpdaterPuzzleHash, solsexp);
+  const rawMetadata = disassemble(calculatedMetadata);
+  const parsed = parseMetadata(calculatedMetadata);
   const metadata = getNftMetadataInfo(parsed);
 
   // nft_ownership_layer
@@ -448,7 +450,6 @@ export async function analyzeNftCoin(
   const tradePricePercentage = sexpAssemble(tradePricePercentage_parsed.raw).as_int();
 
   if (transfer_sgn_struct != root_sgn_struct.raw) throw new Error("abnormal, SINGLETON_STRUCT is different in top_layer and ownership_transfer");
-  const solsexp = sexpAssemble(solution_hex);
   const { didOwner, p2Owner, updaterInSolution } = await getOwnerFromSolution(solsexp);
 
   const nextCoinName = await getNextCoinName0x(parsed_puzzle.hex, solution_hex, getCoinName0x(coin));
@@ -597,6 +598,21 @@ async function getOwnerFromSolution(sol: SExp): Promise<{
   const p2Owner = (!p2 || !(p2.args[2] instanceof Array) || !(p2.args[2][0] instanceof Uint8Array)) ? undefined : utility.toHexString(p2.args[2][0]);
 
   return { didOwner, p2Owner, updaterInSolution };
+}
+
+async function getCalculatedMetadata(currentMetadata: Hex0x, updaterPuzzleHash: string, sol: SExp,): Promise<SExp> {
+  const updateSol = findByPath(sol, "rrfffrfrf");
+  const magic = findByPath(updateSol, "f");
+  if (magic.as_int() != -24)
+    return sexpAssemble(currentMetadata);
+  const prog = findByPath(updateSol, "rf").as_bin().hex();
+  const argument = findByPath(updateSol, "rrf");
+  const pars = SExp.to([sexpAssemble(currentMetadata), updaterPuzzleHash, argument]).as_bin().hex();
+
+  const result = await puzzle.executePuzzleHex(prog, pars)
+  const sexpResult = sexpAssemble(result.raw);
+  const metadata = findByPath(sexpResult, "ff");
+  return metadata;
 }
 
 async function constructMetadataString(metadata: MetadataValues): Promise<string> {

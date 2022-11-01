@@ -181,6 +181,45 @@ Object {
 }
 `;
 
+exports[`Analyze Nft 8: nft analysis result 1`] = `
+Object {
+  "coin": Object {
+    "amount": 1,
+    "parent_coin_info": "0xdf5592ae5aead18a9a98d76c3d54b292511d9b230bdfd29975d7b4d6f35a05d5",
+    "puzzle_hash": "0x72f4131e47360c7b5d04481de13c320a368ad89cbf6e4b0dfad0e6661bf6e978",
+  },
+  "didOwner": "()",
+  "hintPuzzle": "0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10",
+  "launcherId": "0x9335e9ef78d3750c2368c02da0c50f4b6d7ac679e8346cdf8db324a100087c47",
+  "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+  "metadata": Object {
+    "imageHash": "e55788ca78f11f3e5524f35267b845f49d79840ba593e4411ba30b70f4d4d3e7",
+    "imageUri": Array [
+      "https://dweb.link/ipfs/QmRDDsfYLZvJ4aHRTYPnWyNvK8aJ2iFX8D8EaCJN7ncLZR?filename=good.xch.jpg",
+      "https://storage.pawket.app/ipfs/QmRDDsfYLZvJ4aHRTYPnWyNvK8aJ2iFX8D8EaCJN7ncLZR?filename=good.xch.jpg",
+    ],
+    "licenseHash": "",
+    "licenseUri": "",
+    "metadataHash": "",
+    "metadataUri": "",
+    "serialNumber": "01",
+    "serialTotal": "01",
+  },
+  "metadataUpdaterPuzzleHash": "0xfe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b",
+  "nextCoinName": "0x34ed98ba8208fdd3cf5e3d78bbe1b62c88b13652291095e6082ddfa1997b1b9f",
+  "nftOwnershipModHash": "0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
+  "nftStateModHash": "0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
+  "p2InnerPuzzle": "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0x92c7027d455e843b1226b757c1dd5e124e0e6ddab3549036a4684b410182fdfd1eee459eb76a4d6d73e94f90fbe6eb1d) 1))",
+  "p2Owner": "7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10",
+  "previousOwner": "()",
+  "rawMetadata": "((117 \\"https://dweb.link/ipfs/QmRDDsfYLZvJ4aHRTYPnWyNvK8aJ2iFX8D8EaCJN7ncLZR?filename=good.xch.jpg\\" \\"https://storage.pawket.app/ipfs/QmRDDsfYLZvJ4aHRTYPnWyNvK8aJ2iFX8D8EaCJN7ncLZR?filename=good.xch.jpg\\") (104 . 0xe55788ca78f11f3e5524f35267b845f49d79840ba593e4411ba30b70f4d4d3e7) (28021) (27765) (29550 . 1) (29556 . 1))",
+  "royaltyAddress": "0x20c2755ec70535afc8a2b0408d47c30d47a1ce1232ccd3379030c3a51363e2b2",
+  "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
+  "tradePricePercentage": 200,
+  "updaterInSolution": true,
+}
+`;
+
 exports[`Mint Nft: spendbundle 1`] = `
 Object {
   "aggregated_signature": "0xa6a4dd809e81c641174826dd8e04477f0c7abb4eb9227b501877109cb198c05d1e23a895eb246404b0feee1af9331587191b6af4e395acacfaaf6d5f440d4917f108c0f2f05e2bae6dc9ecfcf750c966ab95658954e1184d221976f9e657b5a1",
