@@ -15,7 +15,7 @@ import { ConditionOpcode } from "./opcode";
 import { DidCoinAnalysisResult } from "./did";
 import { CnsDataKey, NftCoinAnalysisResult, NftDataKey, NftMetadataKeys, NftMetadataValues } from "@/models/nft";
 import { CannotParsePuzzle, expectModArgs, sexpAssemble, UncurriedPuzzle, uncurryPuzzle } from "./analyzer";
-import { assemble, disassemble, sha256tree } from "clvm_tools";
+import { disassemble, sha256tree } from "clvm_tools";
 import { SExp } from "clvm";
 import { Instance } from "../util/instance";
 import { CnsCoinAnalysisResult, CnsMetadataKeys, CnsMetadataValues } from "@/models/nft";
