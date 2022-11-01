@@ -50,7 +50,7 @@ export async function generateMintCnsOffer(
 
   const { spendBundle } = await generateMintNftBundle(
     intermediateAddress, changeAddress, fee, metadata, availcoins, requests, royaltyAddressHex,
-    tradePricePercentage, net, undefined);
+    tradePricePercentage, net, undefined, undefined, undefined, true);
 
   const nftcs = spendBundle.coin_spends[2];
   const analysis = await analyzeNftCoin(nftcs.puzzle_reveal, "", nftcs.coin, nftcs.solution);
@@ -79,10 +79,11 @@ export async function generateMintCnsOffer(
   ];
 
   const offplan = await generateOfferPlan(offs, change_hex, availcoins, 0n, net.symbol);
+  const legacyApiCall = net.api;
   net.api = async function (parentCoinId: string): Promise<GetParentPuzzleResponse | undefined> {
     const resp = knownCoins.find(_ => _.parentCoinId == parentCoinId);
     if (resp) return resp;
-    return await net.api(parentCoinId);
+    return await legacyApiCall(parentCoinId);
   };
   const offerBundle = await generateNftOffer(
     offplan, analysis, nextCoin, reqs, requests, net, nonceHex);

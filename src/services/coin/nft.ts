@@ -13,7 +13,7 @@ import { cloneAndAddRequestPuzzleTemporary, constructSingletonTopLayerPuzzle, ge
 import { findByPath } from "./lisp";
 import { ConditionOpcode } from "./opcode";
 import { DidCoinAnalysisResult } from "./did";
-import { NftCoinAnalysisResult, NftMetadataKeys, NftMetadataValues } from "@/models/nft";
+import { CnsDataKey, NftCoinAnalysisResult, NftDataKey, NftMetadataKeys, NftMetadataValues } from "@/models/nft";
 import { CannotParsePuzzle, expectModArgs, sexpAssemble, UncurriedPuzzle, uncurryPuzzle } from "./analyzer";
 import { disassemble, sha256tree } from "clvm_tools";
 import { SExp } from "clvm";
@@ -311,6 +311,61 @@ export async function generateTransferNftBundle(
   return bundle;
 }
 
+export async function generateUpdatedNftBundle(
+  changeAddress: string,
+  fee: bigint,
+  nftCoin: OriginCoin,
+  analysis: NftCoinAnalysisResult | CnsCoinAnalysisResult,
+  updater: "CNS" | "NFT",
+  key: CnsDataKey | NftDataKey,
+  value: string,
+  availcoins: SymbolCoins,
+  requests: TokenPuzzleDetail[],
+  net: NetworkContext,
+  targetAddress: string | undefined = undefined,
+): Promise<SpendBundle> {
+  const tgt_hex = !targetAddress
+    ? analysis.p2Owner
+    : prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
+  if (!tgt_hex) throw new Error(`cannot find proper target address. analysis.p2Owner = ${analysis.p2Owner}`);
+
+  const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(changeAddress));
+  const inner_p2_puzzle = getPuzzleDetail(analysis.hintPuzzle, requests);
+  const metadataUpdater = updater == "CNS"
+    ? modsprog["nft_metadata_updater_cns"]
+    : modsprog["nft_metadata_updater_default"]
+
+  const proof = await catBundle.getLineageProof(nftCoin.parent_coin_info, net.api, 2);
+
+  const nftInnerSolution = await getUpdateNftInnerSolution(tgt_hex, metadataUpdater, key, value);
+  const nftSolution = await getTransferNftSolution(proof, nftInnerSolution);
+  const nftPuzzle = await getTransferNftPuzzle(analysis, inner_p2_puzzle.puzzle);
+
+  const nftPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(nftPuzzle));
+  if (nftPuzzleHash != nftCoin.puzzle_hash) {
+    if (process.env.NODE_ENV !== "production") {
+      console.warn("failed to construct puzzle", nftPuzzle, nftCoin.puzzle_hash, nftPuzzleHash)
+    }
+    throw new Error("failed to construct puzzle, different hash encountered")
+  }
+
+  const nftCoinSpend: CoinSpend = {
+    coin: nftCoin,
+    puzzle_reveal: prefix0x(await puzzle.encodePuzzle(nftPuzzle)),
+    solution: prefix0x(await puzzle.encodePuzzle(nftSolution)),
+  };
+
+  const extreqs = cloneAndAddRequestPuzzleTemporary(net.symbol, requests, inner_p2_puzzle.hash, nftPuzzle, nftPuzzleHash);
+  const nftBundle = await transfer.getSpendBundle([nftCoinSpend], extreqs, net.chainId);
+
+  const feeBundle = fee > 0n
+    ? await constructPureFeeSpendBundle(change_hex, fee, availcoins, requests, net)
+    : undefined;
+
+  const bundle = await combineSpendBundlePure(nftBundle, feeBundle);
+  return bundle;
+}
+
 export async function analyzeNftCoin(
   puz: string | (UncurriedPuzzle | CannotParsePuzzle),
   hintPuzzle: string | undefined,
@@ -352,8 +407,10 @@ export async function analyzeNftCoin(
 
   const nftStateModHash = skipFirstByte0x(nftStateModHash_parsed.raw);
   const metadataUpdaterPuzzleHash = skipFirstByte0x(metadataUpdaterPuzzleHash_parsed.raw);
-  const rawMetadata = await puzzle.disassemblePuzzle(rawMetadata_parsed.raw);
-  const parsed = parseMetadata(sexpAssemble(rawMetadata_parsed.raw));
+  const solsexp = sexpAssemble(solution_hex);
+  const calculatedMetadata = await getCalculatedMetadata(rawMetadata_parsed.raw as Hex0x, metadataUpdaterPuzzleHash, solsexp);
+  const rawMetadata = disassemble(calculatedMetadata);
+  const parsed = parseMetadata(calculatedMetadata);
   const metadata = getNftMetadataInfo(parsed);
 
   // nft_ownership_layer
@@ -393,7 +450,6 @@ export async function analyzeNftCoin(
   const tradePricePercentage = sexpAssemble(tradePricePercentage_parsed.raw).as_int();
 
   if (transfer_sgn_struct != root_sgn_struct.raw) throw new Error("abnormal, SINGLETON_STRUCT is different in top_layer and ownership_transfer");
-  const solsexp = sexpAssemble(solution_hex);
   const { didOwner, p2Owner, updaterInSolution } = await getOwnerFromSolution(solsexp);
 
   const nextCoinName = await getNextCoinName0x(parsed_puzzle.hex, solution_hex, getCoinName0x(coin));
@@ -494,6 +550,22 @@ export async function getTransferNftByDidInnerSolution(tgt_hex: string, didLaunc
   return nftSolution;
 }
 
+export async function getUpdateNftInnerSolution(
+  tgt_hex: string,
+  metadataUpdater: string,
+  key: CnsDataKey | NftDataKey,
+  value: string,
+): Promise<string> {
+  const amount = 1n;
+  tgt_hex = prefix0x(tgt_hex);
+  const val = value.startsWith("0x") ? value : `"${value}"`;
+  const mkeys = getNftMetadataKeys();
+
+  // `-24` is the update metadata magic condition
+  const nftSolution = `() (q (-24 ${metadataUpdater} (${toNumber(mkeys[key])} . ${val})) (51 ${tgt_hex} ${amount} (${tgt_hex}))) ()`;
+  return nftSolution;
+}
+
 async function getOwnerFromSolution(sol: SExp): Promise<{
   didOwner: string | undefined,
   p2Owner: string | undefined,
@@ -528,22 +600,27 @@ async function getOwnerFromSolution(sol: SExp): Promise<{
   return { didOwner, p2Owner, updaterInSolution };
 }
 
+async function getCalculatedMetadata(currentMetadata: Hex0x, updaterPuzzleHash: string, sol: SExp,): Promise<SExp> {
+  const updateSol = findByPath(sol, "rrfffrfrf");
+  const magic = findByPath(updateSol, "f");
+  if (magic.as_int() != -24)
+    return sexpAssemble(currentMetadata);
+  const prog = findByPath(updateSol, "rf").as_bin().hex();
+  const argument = findByPath(updateSol, "rrf");
+  const pars = SExp.to([sexpAssemble(currentMetadata), updaterPuzzleHash, argument]).as_bin().hex();
+
+  const result = await puzzle.executePuzzleHex(prog, pars)
+  const sexpResult = sexpAssemble(result.raw);
+  const metadata = findByPath(sexpResult, "ff");
+  return metadata;
+}
+
 async function constructMetadataString(metadata: MetadataValues): Promise<string> {
   if (!metadata.imageUri) throw new Error("empty image uri is not allowed");
   if (metadata.imageUri.indexOf("\"") >= 0) throw new Error("image uri should processed before proceeding");
 
   const mkeys = getNftMetadataKeys();
-  const toNumber = function (hex: string | undefined): string | undefined {
-    if (!hex) return hex;
-    const num = parseInt(hex, 16);
-    return num.toFixed(0);
-  }
-  const uriToStr = function (uri: string | string[] | undefined): string {
-    if (!uri) return "";
-    if (typeof uri === "string") return ` "${uri}"`;
-    return " " + uri.map(_ => `"${_}"`).join(" ");
 
-  };
   const md = "(" + [
     `${toNumber(mkeys.imageUri)}${uriToStr(metadata.imageUri)}`,
     metadata.imageHash ? `${toNumber(mkeys.imageHash)} . ${prefix0x(metadata.imageHash)}` : toNumber(mkeys.imageHash),
@@ -570,6 +647,18 @@ async function constructMetadataString(metadata: MetadataValues): Promise<string
 
   return md;
 }
+
+function toNumber(hex: string | undefined): string | undefined {
+  if (!hex) return hex;
+  const num = parseInt(hex, 16);
+  return num.toFixed(0);
+}
+
+function uriToStr(uri: string | string[] | undefined): string {
+  if (!uri) return "";
+  if (typeof uri === "string") return ` "${uri}"`;
+  return " " + uri.map(_ => `"${_}"`).join(" ");
+};
 
 async function constructNftStatePuzzle(
   rawMetadata: string,
