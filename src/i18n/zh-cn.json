@@ -1372,5 +1372,17 @@
         "delete": "确定要移除该网络吗？"
       }
     }
+  },
+  "updateCns": {
+    "ui": {
+      "title": "更改 CNS 地址",
+      "confirmation": "即将更新你的域名绑定信息。<br/>请务必再次检查你的交易内容。",
+      "label": {
+        "updateTo": "更新至",
+        "cns": "CNS",
+        "targetAddress": "Target Address",
+        "currentBindingAddress": "当前绑定地址"
+      }
+    }
   }
 }

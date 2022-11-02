@@ -1,7 +1,7 @@
 <template>
   <confirmation
     :value="bundle"
-    :title="'Update CNS Address'"
+    :title="$t('updateCns.ui.title')"
     @close="close()"
     @back="cancel()"
     @sign="sign()"
@@ -16,7 +16,7 @@
       <b-field>
         <img v-if="nft.metadata.uri" :src="nft.metadata.uri" class="image is-64x64" />
         <img v-else src="@/assets/nft-no-image.png" class="image is-64x64" />
-        <span class="pl-2 has-text-grey">
+        <span class="pl-2 has-text-grey break-word">
           <p>
             {{ nft.metadata.name }}
             <br />
@@ -24,22 +24,41 @@
           </p>
         </span>
       </b-field>
-      <b-field label="Target Address">
-        <b-input v-model="address"></b-input>
-      </b-field>
+      <address-field
+        :label="$t('updateCns.ui.label.targetAddress')"
+        :inputAddress="address"
+        @updateAddress="updateAddress"
+        @updateContactName="updateContactName"
+      ></address-field>
       <fee-selector v-model="fee"></fee-selector>
     </template>
     <template #confirm>
       <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-        <span v-html="$sanitize($tc('moveNft.ui.confirmation'))"></span>
+        <span v-html="$sanitize($tc('updateCns.ui.confirmation'))"></span>
       </b-notification>
       <div class="mb-3">
         <b-field>
+          <span class="break-word has-text-grey is-size-7" style="width: 80%">
+            <span class="has-text-weight-bold is-size-5 has-text-dark">{{ $tc("updateCns.ui.label.cns") }}</span
+            ><br />
+            {{ $tc("updateCns.ui.label.currentBindingAddress") }}<br />
+            {{ currentAddress }}
+          </span>
+          <div>
+            <b-tooltip :label="nft.metadata.uri" multilined position="is-left" class="break-word">
+              <a :href="nft.metadata.uri" target="_blank">
+                <img v-if="nft.metadata.uri" :src="nft.metadata.uri" class="image is-96x96" />
+                <img v-else src="@/assets/nft-no-image.png" class="image is-96x96"
+              /></a>
+            </b-tooltip>
+          </div>
+        </b-field>
+        <b-field>
           <template #label>
-            <span class="is-size-6">{{ $t("moveNft.ui.label.move") }}</span>
-            <span class="is-pulled-right">
-              <img v-if="nft.metadata.uri" :src="nft.metadata.uri" class="nft-image" />
-              <img v-else src="@/assets/nft-no-image.png" class="nft-image" />
+            <span class="is-size-6">{{ $t("updateCns.ui.label.updateTo") }}</span>
+            <span class="is-size-6 is-pulled-right">
+              <span v-if="contactName" class="tag is-primary is-light">{{ contactName }}</span>
+              <b-tooltip :label="address" multilined position="is-left" class="break-word">{{ shorten(address) }}</b-tooltip>
             </span>
           </template>
         </b-field>
@@ -63,7 +82,7 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import { SpendBundle } from "@/models/wallet";
 import { AccountEntity, OneTokenInfo } from "@/models/account";
 import store from "@/store";
-import TokenAmountField from "@/components/Send/TokenAmountField.vue";
+import AddressField from "@/components/Common/AddressField.vue";
 import coinHandler from "@/services/transfer/coin";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import { CnsDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
@@ -83,10 +102,10 @@ import { prefix0x } from "@/services/coin/condition";
 @Component({
   components: {
     KeyBox,
-    TokenAmountField,
     FeeSelector,
     BundleSummary,
     Confirmation,
+    AddressField,
   },
 })
 export default class NftUpdate extends Vue {
@@ -101,6 +120,7 @@ export default class NftUpdate extends Vue {
   public submitting = false;
   public fee = 0n;
   public address = "";
+  public contactName = "";
 
   get currentAddress(): string {
     try {
@@ -128,6 +148,15 @@ export default class NftUpdate extends Vue {
     this.step = "Input";
   }
 
+  updateAddress(value: string): void {
+    this.address = value;
+    this.reset();
+  }
+
+  updateContactName(value: string): void {
+    this.contactName = value;
+  }
+
   cancel(): void {
     if (this.bundle) {
       this.reset();
@@ -141,7 +170,6 @@ export default class NftUpdate extends Vue {
   }
 
   async mounted(): Promise<void> {
-    this.address = this.currentAddress;
     await this.loadCoins();
   }
 
@@ -230,8 +258,8 @@ export default class NftUpdate extends Vue {
 </script>
 
 <style scoped lang="scss">
-.break-string {
-  word-break: break-word;
+.break-word {
+  word-break: break-all;
 }
 img.nft-image {
   width: 100px;
