@@ -450,7 +450,11 @@ export async function analyzeNftCoin(
   const tradePricePercentage = sexpAssemble(tradePricePercentage_parsed.raw).as_int();
 
   if (transfer_sgn_struct != root_sgn_struct.raw) throw new Error("abnormal, SINGLETON_STRUCT is different in top_layer and ownership_transfer");
-  const { didOwner, p2Owner, updaterInSolution } = await getOwnerFromSolution(solsexp);
+
+  const { didOwner, p2Owner, updaterInSolution } =
+    ("mod" in p2InnerPuzzle_parsed && p2InnerPuzzle_parsed.mod == "settlement_payments")
+      ? await getOwnerFromSolutionForSettlementInnerPuzzle(solsexp)
+      : await getOwnerFromSolutionForP2InnerPuzzle(solsexp);
 
   const nextCoinName = await getNextCoinName0x(parsed_puzzle.hex, solution_hex, getCoinName0x(coin));
 
@@ -566,7 +570,28 @@ export async function getUpdateNftInnerSolution(
   return nftSolution;
 }
 
-async function getOwnerFromSolution(sol: SExp): Promise<{
+async function getOwnerFromSolutionForSettlementInnerPuzzle(sol: SExp): Promise<{
+  didOwner: string | undefined,
+  p2Owner: string | undefined,
+  updaterInSolution: boolean,
+}> {
+  /*
+  example:
+  (
+    (0x50c22cecf983e330fff93adb93e87959ef466dbd217bc589a08e817825fcfda0 0xb974105be7bc131155a5800659c0d96180ada64d34adc05ae57c8f55dfff4679 1) 1 
+    (
+      (
+        (
+          (0x9b0b7fe0bb3dea99b8fda6f891398b3310ff48fa99f3b717d54b2a26392edfb4 
+            (0x7eddb6c424762b7a1008db41b4b9a60f48cce2215e0e303f56b3a66ce8da9598 1 
+              (0x7eddb6c424762b7a1008db41b4b9a60f48cce2215e0e303f56b3a66ce8da9598)))))))
+  */
+
+  const p2Owner = findByPath(sol, "rrffffrff").as_bin().hex();
+  return { didOwner: undefined, p2Owner, updaterInSolution: false };
+}
+
+async function getOwnerFromSolutionForP2InnerPuzzle(sol: SExp): Promise<{
   didOwner: string | undefined,
   p2Owner: string | undefined,
   updaterInSolution: boolean,
