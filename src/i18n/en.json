@@ -1372,5 +1372,17 @@
         "delete": "Are you sure to remove this network?"
       }
     }
+  },
+  "updateCns": {
+    "ui": {
+      "title": "Update CNS Address",
+      "confirmation": "You will update the binding information for your domain name.<br/>Please review your transaction.",
+      "label": {
+        "updateTo": "Update to",
+        "cns": "CNS",
+        "targetAddress": "Target Address",
+        "currentBindingAddress": "Current binding address"
+      }
+    }
   }
 }
