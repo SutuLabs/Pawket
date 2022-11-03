@@ -61,7 +61,7 @@ import { NotificationProgrammatic as Notification } from "buefy";
 import { NftCoinAnalysisResult } from "@/models/nft";
 import { DidCoinAnalysisResult } from "@/services/coin/did";
 import store from "@/store";
-import puzzle from "@/services/crypto/puzzle";
+import puzzle, { PuzzleDetail } from "@/services/crypto/puzzle";
 import { prefix0x, unprefix0x } from "@/services/coin/condition";
 import utility from "@/services/crypto/utility";
 import { getSignMessage, signMessage, verifySignature } from "@/services/crypto/sign";
@@ -79,6 +79,7 @@ export default class SignMessage extends Vue {
   @Prop() public account!: AccountEntity;
   @Prop() public nft!: NftCoinAnalysisResult | undefined;
   @Prop() public did!: DidCoinAnalysisResult | undefined;
+  @Prop() public requests!: PuzzleDetail[];
   @Prop() public xch!: string | undefined;
   @Prop() public initMessage!: string | undefined;
 
@@ -178,7 +179,7 @@ export default class SignMessage extends Vue {
         return;
       }
 
-      const requests = this.account.addressPuzzles.find((_) => _.symbol == xchSymbol())?.puzzles;
+      const requests = this.requests ?? this.account.addressPuzzles.find((_) => _.symbol == xchSymbol())?.puzzles;
       if (!requests) {
         Notification.open({
           message: "Account initialization not finish.",

@@ -163,7 +163,7 @@
 import { AccountEntity, AccountTokens, CustomCat, OneTokenInfo, TokenInfo } from "@/models/account";
 import { getCatIdDict, getCatNames, getTokenInfo } from "@/services/view/cat";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import receive, { DidDetail, NftDetail, TokenPuzzleAddress, TokenPuzzleDetail } from "@/services/crypto/receive";
+import receive, { DidDetail, NftDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
 import { ensureAddress, rpcUrl, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { CoinRecord, convertToOriginCoin, GetRecordsResponse } from "@/models/wallet";
 import debug from "@/services/api/debug";
@@ -207,7 +207,7 @@ export default class ScanAssets extends Vue {
   didList: DidDetail[] = [];
   catList: CatCoinAnalysisResult[] = [];
   tokenBalance: AccountTokens = {};
-  allRequests: TokenPuzzleAddress[] = [];
+  allRequests: TokenPuzzleDetail[] = [];
   puzCache: { [symbol: string]: PuzzleDetail[] } = {};
   allRecords: CoinRecord[] = [];
   isLoading = false;
@@ -530,6 +530,7 @@ export default class ScanAssets extends Vue {
       props: {
         account: this.account,
         did: analysis,
+        requests: this.allRequests.find((_) => _.symbol == xchSymbol())?.puzzles,
       },
     });
   }
