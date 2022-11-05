@@ -266,7 +266,7 @@ export default class MakeOffer extends Vue {
       // console.log("const bundle=", JSON.stringify(bundle, null, 2), ";");
       // console.log("coinHandler.getAssetsRequestDetail", JSON.stringify(this.account, null, 2), ";");
       this.bundle = bundle;
-      this.offerText = await encodeOffer(bundle);
+      this.offerText = await encodeOffer(bundle, 4);
 
       this.step = "Confirmation";
     } catch (error) {

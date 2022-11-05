@@ -118,7 +118,7 @@ test('create and accept nft offer for xch', async () => {
     nonce
   );
   expect(bundle).toMatchSnapshot("bundle");
-  const offerText = await encodeOffer(bundle);
+  const offerText = await encodeOffer(bundle, 4);
   expect(offerText).toMatchSnapshot("offer text");
 
   const makerBundle = await decodeOffer(offerText);

@@ -8,6 +8,7 @@ import { assemble, disassemble } from 'clvm_tools/clvm_tools/binutils';
 import puzzle from "../crypto/puzzle";
 import { modshex } from "../coin/mods";
 
+// sync with `chia\wallet\util\puzzle_compression.py`
 const initDict = [
   modshex["p2_delegated_puzzle_or_hidden_puzzle"]
   + modshex["cat_v1"],
@@ -18,6 +19,7 @@ const initDict = [
   + modshex["nft_metadata_updater_default"]
   + modshex["nft_ownership_transfer_program_one_way_claim_with_royalties"],
   modshex["cat_v2"],
+  modshex["settlement_payments_v1"],
 ]
   .map((t => Buffer.from(t, "hex")))
 
@@ -87,7 +89,7 @@ export async function decodeOffer(offerText: string): Promise<SpendBundle> {
   return bundle;
 }
 
-export async function encodeOffer(bundle: SpendBundle, prefix = "offer", ver: number | undefined = undefined): Promise<string> {
+export async function encodeOffer(bundle: SpendBundle, ver: number | undefined = undefined, prefix = "offer"): Promise<string> {
   // big endian
   const chunks: Buffer[] = [];
   const spendnum = bundle.coin_spends.length;

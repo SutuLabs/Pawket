@@ -7,7 +7,7 @@
           {{ $t("offline.client.show.hint") }}
         </div>
         <div v-else>
-           {{ $t("offline.client.show.overflow") }}
+          {{ $t("offline.client.show.overflow") }}
         </div>
       </center>
       <b-field>
@@ -45,7 +45,7 @@ export default class OfflineSendShowBundle extends Vue {
     setTimeout(async () => {
       try {
         // console.log(this.bundle)
-        this.qrcode = await encodeOffer(this.bundle, "bundle");
+        this.qrcode = await encodeOffer(this.bundle, undefined, "bundle");
       } catch (err) {
         console.warn("failed to encode bundle", err);
         this.qrcode = "";

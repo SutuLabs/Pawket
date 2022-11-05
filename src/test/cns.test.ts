@@ -177,7 +177,7 @@ async function testMintCnsAndOffer(
     targetAddress, changeAddress, 200n, 0n, metadata, availcoinsForMaker, tokenPuzzles,
     royaltyAddressHex, tradePricePercentage, net, nonce, intermediate_sk);
 
-  const offerText = await encodeOffer(offerBundle);
+  const offerText = await encodeOffer(offerBundle, 4);
   expect(offerText).toMatchSnapshot("offer text");
 
   // for offer taker

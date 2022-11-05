@@ -198,7 +198,7 @@ Instance.init().then(() => {
         net,
         r.nonce,
         r.intermediateKey);
-      const offer = await encodeOffer(offerBundle);
+      const offer = await encodeOffer(offerBundle, 4);
 
       res.send(JSON.stringify({
         offer,
