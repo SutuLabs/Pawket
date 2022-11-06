@@ -21,6 +21,7 @@ export async function submitBundle(bundle: SpendBundle, setSubmitting: (state: b
       tc("send.messages.error.NO_TRANSACTIONS_WHILE_SYNCING")
       tc("send.messages.error.INVALID_FEE_TOO_CLOSE_TO_ZERO")
       tc("send.messages.error.COIN_AMOUNT_NEGATIVE")
+      tc("send.messages.error.PENDING")
    */
   try {
     const resp = await fetch(rpcUrl() + "Wallet/pushtx", {
@@ -40,19 +41,21 @@ export async function submitBundle(bundle: SpendBundle, setSubmitting: (state: b
       });
       success();
     } else {
-      const err = typeof(json.error) === "string" ? json.error.match('error ([A-Z_]+)') : null;
+      const err = typeof (json.error) === "string" ? json.error.match('error ([A-Z_]+)') : null;
       const errMsg = err !== null ? err[1] : '';
       const path = "send.messages.error." + errMsg
-      const msg = tc(path) === undefined ? json.error : tc(path);
+      const msg = tc(path) == path ? json.error : tc(path);
       Notification.open({
         message: tc("send.ui.messages.getFailedResponse") + msg,
         type: "is-danger",
+        duration: 10000,
       });
     }
   } catch (error) {
     Notification.open({
       message: tc("send.ui.messages.failedToSubmit") + error,
       type: "is-danger",
+      duration: 10000,
     });
     console.warn(error);
     setSubmitting(false);

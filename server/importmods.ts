@@ -6,6 +6,11 @@ import { sexpAssemble } from '../src/services/coin/analyzer';
 
 const suffix = ".clvm.hex";
 
+const nameMappings: { [key: string]: string } = {
+  settlement_payments: "settlement_payments_v1",
+  settlement_payments_old: "settlement_payments",
+};
+
 Instance.init().then(async () => {
   const writeTypeFile = async function (dirname: string, typename: string) {
     const progdata: { [name: string]: string } = {};
@@ -24,7 +29,8 @@ Instance.init().then(async () => {
       try {
         const hex = content.trim();
         const d = await puzzle.disassemblePuzzle(hex);
-        const key = filename.slice(0, filename.length - suffix.length);
+        const originKey = filename.slice(0, filename.length - suffix.length);
+        const key = nameMappings[originKey] || originKey;
         progdata[key] = d;
         hexdata[key] = hex;
         const prog = sexpAssemble(hex);
