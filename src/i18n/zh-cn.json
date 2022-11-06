@@ -299,7 +299,8 @@
         "INVALID_FEE_TOO_CLOSE_TO_ZERO": "费用无效，或费用太低",
         "COIN_AMOUNT_NEGATIVE": "硬币的金额无效，不能为负数",
         "INVALID_ADDRESS": "地址无效",
-        "ADDRESS_NOT_MATCH_NETWORK": "所填写地址与当前网络不符，请填写正确的地址。"
+        "ADDRESS_NOT_MATCH_NETWORK": "所填写地址与当前网络不符，请填写正确的地址。",
+        "PENDING": "交易已经提交到内存池，请等待交易完成"
       }
     }
   },
