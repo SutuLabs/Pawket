@@ -10,6 +10,16 @@
       <b-notification type="is-warning" has-icon role="alert" :closable="false">
         {{ $t("addNetwork.ui.warning") }}
       </b-notification>
+      <b-field :label="$t('addNetwork.ui.label.rpcUrl')">
+        <b-input
+          v-model="rpcUrl"
+          required
+          :disabled="mode == 'View'"
+          ref="rpcUrl"
+          oninvalid="setCustomValidity(' ')"
+          oninput="setCustomValidity('')"
+        ></b-input>
+      </b-field>
       <b-field :label="$t('addNetwork.ui.label.networkName')">
         <b-input
           v-model="networkName"
@@ -17,16 +27,6 @@
           :disabled="mode != 'Add'"
           maxlength="36"
           ref="networkName"
-          oninvalid="setCustomValidity(' ')"
-          oninput="setCustomValidity('')"
-        ></b-input>
-      </b-field>
-      <b-field :label="$t('addNetwork.ui.label.rpcUrl')">
-        <b-input
-          v-model="rpcUrl"
-          required
-          :disabled="mode == 'View'"
-          ref="rpcUrl"
           oninvalid="setCustomValidity(' ')"
           oninput="setCustomValidity('')"
         ></b-input>

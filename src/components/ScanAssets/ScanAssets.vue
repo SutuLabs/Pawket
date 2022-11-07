@@ -107,9 +107,15 @@
                   <key-box :value="nft.address" :showValue="true"></key-box>
                 </td>
                 <td>
-                  <b-button type="is-primary" size="is-small" outlined @click="transfer(nft)" :disabled="status == 'Scanning'">{{
-                    $t("scanAssets.ui.button.send")
-                  }}</b-button>
+                  <b-button
+                    type="is-primary"
+                    size="is-small"
+                    outlined
+                    @click="transfer(nft)"
+                    :disabled="status == 'Scanning' && isLoading"
+                    :loading="isLoading"
+                    >{{ $t("scanAssets.ui.button.send") }}</b-button
+                  >
                 </td>
               </tr>
             </tbody>
@@ -124,7 +130,8 @@
                     type="is-primary"
                     size="is-small"
                     outlined
-                    :disabled="status == 'Scanning'"
+                    :disabled="status == 'Scanning' && isLoading"
+                    :loading="isLoading"
                     @click="openSignMessage(did.analysis)"
                     >{{ $t("scanAssets.ui.button.sign") }}</b-button
                   >
@@ -144,7 +151,8 @@
                     size="is-small"
                     outlined
                     @click="add(unprefix0x(cat.tailProgramHash))"
-                    :disabled="status == 'Scanning'"
+                    :disabled="status == 'Scanning' && isLoading"
+                    :loading="isLoading"
                     >{{ $t("scanAssets.ui.button.add") }}</b-button
                   >
                 </td>

@@ -139,6 +139,7 @@ export default class ManageCats extends Vue {
           this.$emit("refresh");
           this.$emit("close");
         },
+        onCancel: () => (this.submitting = false),
       });
     } else {
       await store.dispatch("persistent");
@@ -183,6 +184,7 @@ export default class ManageCats extends Vue {
       return;
     }
     this.assetIds.push({ name: this.name.toUpperCase(), id: this.assetId });
+    this.submit();
     this.reset();
   }
 

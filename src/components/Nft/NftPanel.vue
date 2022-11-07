@@ -56,6 +56,12 @@
                           >{{ $t("nftDetail.ui.dropdown.spaceScan") }}
                         </b-dropdown-item>
                       </a>
+                      <a class="has-text-dark" :href="mintGardenUrl + nft.address" target="_blank">
+                        <b-dropdown-item aria-role="listitem"
+                          ><b-icon class="media-left" icon="open-in-new" size="is-small"></b-icon
+                          >{{ $t("nftDetail.ui.dropdown.mintGarden") }}
+                        </b-dropdown-item>
+                      </a>
                       <a class="has-text-dark" @click="setAsProfilePic(nft.metadata.uri)">
                         <b-dropdown-item aria-role="listitem">
                           <b-icon class="media-left" icon="account-box" size="is-small"></b-icon
@@ -103,7 +109,7 @@ export default class NftPanel extends Vue {
   public refreshing = false;
   profile: Profile = "All";
   selectedDid = "";
-
+  public mintGardenUrl = "https://mintgarden.io/nfts/";
 
   get selectedAccount(): number {
     return store.state.account.selectedAccount;
