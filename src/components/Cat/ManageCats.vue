@@ -183,6 +183,7 @@ export default class ManageCats extends Vue {
       return;
     }
     this.assetIds.push({ name: this.name.toUpperCase(), id: this.assetId });
+    this.submit();
     this.reset();
   }
 
