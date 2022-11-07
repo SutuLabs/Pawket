@@ -139,6 +139,7 @@ export default class ManageCats extends Vue {
           this.$emit("refresh");
           this.$emit("close");
         },
+        onCancel: () => (this.submitting = false),
       });
     } else {
       await store.dispatch("persistent");
