@@ -36,20 +36,32 @@ export async function getSignMessage(message: string): Promise<Uint8Array> {
 }
 
 export function calculate_synthetic_secret_key(BLS: ModuleInstance, secret_key: PrivateKey, hidden_puzzle_hash: Uint8Array): PrivateKey {
-  const secret_exponent = bigint_from_bytes(Bytes.from(secret_key.serialize()), { signed: true });
-  const public_key = secret_key.get_g1();
-  const synthetic_offset = calculate_synthetic_offset(public_key, hidden_puzzle_hash);
-  const synthetic_secret_exponent = (secret_exponent + synthetic_offset) % GROUP_ORDER
-  const blob = bigint_to_bytes(synthetic_secret_exponent).raw();
-  const synthetic_secret_key = BLS.PrivateKey.from_bytes(blob, true)
-  return synthetic_secret_key;
+  try {
+    const secret_exponent = bigint_from_bytes(Bytes.from(secret_key.serialize()), { signed: true });
+    const public_key = secret_key.get_g1();
+    const synthetic_offset = calculate_synthetic_offset(public_key, hidden_puzzle_hash);
+    const synthetic_secret_exponent = (secret_exponent + synthetic_offset) % GROUP_ORDER
+    const synthetic_secret_key = BLS.PrivateKey.from_bytes(bigint_to_uint8array_padding(synthetic_secret_exponent), true)
+    return synthetic_secret_key;
+  } catch (error) {
+    throw new Error("failed to calculate synthetic secret key, due to " + error);
+  }
 }
 
 export function calculate_synthetic_public_key(BLS: ModuleInstance, public_key: G1Element, hidden_puzzle_hash: Uint8Array): G1Element {
-  const synthetic_offset = BLS.PrivateKey.from_bytes(bigint_to_bytes(
-    calculate_synthetic_offset(public_key, hidden_puzzle_hash)).raw(), true);
+  const synthetic_offset = BLS.PrivateKey.from_bytes(bigint_to_uint8array_padding(
+    calculate_synthetic_offset(public_key, hidden_puzzle_hash)), true);
 
   return public_key.add(synthetic_offset.get_g1());
+}
+
+export function bigint_to_uint8array_padding(v: bigint, expectLength = 32): Uint8Array {
+  const blob = bigint_to_bytes(v).raw();
+  if (blob.length >= expectLength) return blob;
+
+  const padded = new Uint8Array(expectLength);
+  padded.set(blob, expectLength - blob.length);
+  return padded;
 }
 
 function decodeMessage(message: string | Uint8Array): Uint8Array {
