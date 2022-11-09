@@ -4,7 +4,7 @@
       <template #trigger>
         <button class="button is-white" aria-haspopup="true" aria-controls="dropdown-menu">
           <span :class="getdotStyle(networkId)"> <i class="mdi mdi-brightness-1"></i> </span>
-          <span>{{ networkId }}</span>
+          <span class="has-text-grey">{{ networkId }}</span>
           <span class="icon is-small"> <i class="mdi mdi-menu-down"></i> </span>
         </button>
       </template>
