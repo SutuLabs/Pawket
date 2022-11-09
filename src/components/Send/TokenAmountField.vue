@@ -42,7 +42,13 @@
         {{ token }}
       </option>
     </b-select>
-    <b-input :value="amount" expanded :disabled="!amountEditable" @input="input"></b-input>
+    <b-input
+      :value="amount"
+      expanded
+      :disabled="!amountEditable"
+      @input="input"
+      onkeypress="return event.charCode != 32"
+    ></b-input>
     <p class="control">
       <span class="button is-static">{{ selectedToken }}</span>
     </p>
@@ -83,7 +89,7 @@ export default class TokenAmountField extends Vue {
   public selectMax = false;
 
   input(val: string): void {
-    this.$emit("input", val);
+    this.$emit("input", val.replace(/\s/g, ""));
   }
 
   @Watch("value")
@@ -97,11 +103,11 @@ export default class TokenAmountField extends Vue {
   }
 
   set amount(value: string) {
-    this.value = value;
+    this.value = value.replace(/\s/g, "");
   }
 
   get amount(): string {
-    return this.value;
+    return this.value.replace(/\s/g, "");
   }
 
   get amountMessage(): string {
