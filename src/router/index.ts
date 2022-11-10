@@ -212,6 +212,16 @@ const routes: Array<RouteConfig> = [
     ],
   },
   {
+    path: "/connect",
+    component: () => import(/* webpackChunkName: "settings" */ "@/components/Connect/Connect.vue"),
+    children: [
+      {
+        path: "take-offer",
+        component: () => import(/* webpackChunkName: "settings" */ "@/components/Offer/Take.vue"),
+      },
+    ]
+  },
+  {
     path: "/",
     redirect: () => {
       return { path: "/home" };
@@ -225,7 +235,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.path == from.path) return;
-  if (to.path.startsWith("/create") || to.name == "Login" || store.state.vault.unlocked) next();
+  if (to.path.startsWith("/create") || to.name == "Login" || to.path.startsWith("/connect") || store.state.vault.unlocked) next();
   else if (localStorage.getItem("SETTINGS") == null) next({ name: "Create" });
   else next({ name: "Login" });
 });

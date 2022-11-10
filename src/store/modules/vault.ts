@@ -257,7 +257,7 @@ export async function getPasswordHash(password: string): Promise<string> {
   return await utility.strongHash(password, store.state.vault.salt, PasswordHashIteration);
 }
 
-async function getEncryptKey(password: string): Promise<string> {
+export async function getEncryptKey(password: string): Promise<string> {
   return await utility.strongHash(password, store.state.vault.salt, EncryptKeyHashIteration);
 }
 
