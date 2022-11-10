@@ -1,16 +1,19 @@
 <template>
   <div id="app" ref="container">
-    <b-notification type="is-primary" class="column is-6 is-offset-3" style="position: fixed; top: 0; z-index: 100" v-if="test">
-      {{ $t("accountDetail.message.notification.test") }}
-    </b-notification>
-    <nav-bar></nav-bar>
-    <keep-alive>
-      <router-view />
-    </keep-alive>
-    <mobile-nav v-if="showNavigation"></mobile-nav>
-    <div class="my-3 is-hidden-tablet">&nbsp;</div>
-    <div class="my-6 is-hidden-mobile">&nbsp;</div>
-    <pawket-footer></pawket-footer>
+    <div v-if="!path.startsWith('/connect')">
+      <b-notification type="is-primary" class="column is-6 is-offset-3" style="position: fixed; top: 0; z-index: 100" v-if="test">
+        {{ $t("accountDetail.message.notification.test") }}
+      </b-notification>
+      <nav-bar></nav-bar>
+      <keep-alive>
+        <router-view />
+      </keep-alive>
+      <mobile-nav v-if="showNavigation"></mobile-nav>
+      <div class="my-3 is-hidden-tablet">&nbsp;</div>
+      <div class="my-6 is-hidden-mobile">&nbsp;</div>
+      <pawket-footer></pawket-footer>
+    </div>
+    <router-view v-else />
   </div>
 </template>
 <script lang="ts">
@@ -34,6 +37,10 @@ export default class App extends Vue {
 
   refreshActiveTime(): void {
     this.lastActive = Date.now();
+  }
+
+  get path(): string {
+    return this.$route.path;
   }
 
   get debugMode(): boolean {
