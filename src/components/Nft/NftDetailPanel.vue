@@ -245,7 +245,7 @@
                 </li>
                 <li>
                   <span class="has-text-grey">{{ $t("nftDetail.ui.details.licenseUrl") }}</span
-                  ><span class="is-pulled-right">
+                  ><span class="is-pulled-right" v-if="nft.analysis.metadata.licenseUri">
                     <a :href="nft.analysis.metadata.licenseUri" target="_blank"
                       ><b-icon icon="open-in-new" size="is-small"></b-icon></a
                   ></span>
@@ -328,8 +328,7 @@ export default class NftDetailPanel extends Vue {
   @Prop() public metadata!: NftOffChainMetadata;
   @Prop() public dids!: DidDetail[];
   public showMore = false;
-  public mintGardenUrl = "https://mintgarden.io/nfts/"
-
+  public mintGardenUrl = "https://mintgarden.io/nfts/";
 
   @Emit("close")
   close(): void {
