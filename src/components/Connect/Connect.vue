@@ -17,37 +17,39 @@
       </div>
       <p class="help is-danger is-size-6" v-if="!isCorrect">{{ $t("verifyPassword.message.error.incorrectPassword") }}</p>
       <div class="has-text-info">Make sure you trust the site you connect</div>
-      <footer class="is-fixed-bottom my-6 px-4">
+      <footer class="is-fixed-bottom py-6 px-4 has-background-white-ter">
         <button class="button is-pulled-left" @click="close">Cancel</button>
         <button class="button is-pulled-right is-primary" @click="confirm">Next</button>
       </footer>
     </div>
     <div v-if="stage == 'Account'">
       <div>Select an account to use on this site</div>
-      <div class="box m-3">
-        <a
-          v-for="(account, idx) in accounts"
-          :key="idx"
-          :class="{ 'panel-block': true, 'list-item': idx }"
-          @click="selectedAcc = idx"
-        >
-          <input type="radio" class="mr-2 has-text-primary" :checked="selectedAcc == idx" />
-          <figure class="image is-32x32" style="margin: auto">
-            <img v-if="account.profilePic" class="is-rounded cover" :src="account.profilePic" />
-            <img v-else class="is-rounded" src="@/assets/account-circle.svg" />
-          </figure>
-          <div class="column is-flex my-0 py-0">
-            <div class="py-1">
-              <p class="is-size-6">{{ account.name }}({{ account.key.fingerprint }})</p>
-              <p class="is-size-7 has-text-grey has-text-left" v-if="account.tokens && account.tokens.hasOwnProperty('XCH')">
-                {{ demojo(account.tokens["XCH"].amount) }}
-              </p>
-              <p class="is-size-7 has-text-grey has-text-left" v-else>Loading Balance..</p>
+      <div class="pb-10">
+        <div class="box m-3">
+          <a
+            v-for="(account, idx) in accounts"
+            :key="idx"
+            :class="{ 'panel-block': true, 'list-item': idx }"
+            @click="selectedAcc = idx"
+          >
+            <input type="radio" class="mr-2 has-text-primary" :checked="selectedAcc == idx" />
+            <figure class="image is-32x32" style="margin: auto">
+              <img v-if="account.profilePic" class="is-rounded cover" :src="account.profilePic" />
+              <img v-else class="is-rounded" src="@/assets/account-circle.svg" />
+            </figure>
+            <div class="column is-flex my-0 py-0">
+              <div class="py-1">
+                <p class="is-size-6">{{ account.name }}({{ account.key.fingerprint }})</p>
+                <p class="is-size-7 has-text-grey has-text-left" v-if="account.tokens && account.tokens.hasOwnProperty('XCH')">
+                  {{ demojo(account.tokens["XCH"].amount) }}
+                </p>
+                <p class="is-size-7 has-text-grey has-text-left" v-else>Loading Balance..</p>
+              </div>
             </div>
-          </div>
-        </a>
+          </a>
+        </div>
       </div>
-      <footer class="is-fixed-bottom my-6 px-4">
+      <footer class="is-fixed-bottom py-6 px-4 has-background-white-ter">
         <button class="button is-pulled-left" @click="close()">Cancel</button>
         <button class="button is-pulled-right is-primary" @click="openApp()">Connect</button>
       </footer>
@@ -158,6 +160,7 @@ export default class Connect extends Vue {
     this.$buefy.modal.open({
       parent: this,
       component: TakeOffer,
+      onCancel: this.close,
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
@@ -181,5 +184,9 @@ export default class Connect extends Vue {
   position: fixed;
   bottom: 0;
   width: 100vw;
+}
+
+.pb-10 {
+  padding-bottom: 10rem;
 }
 </style>
