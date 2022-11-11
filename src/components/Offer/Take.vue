@@ -561,7 +561,14 @@ export default class TakeOffer extends Vue {
 
   async submit(): Promise<void> {
     if (!this.bundle) return;
-    submitBundle(this.bundle, (_) => (this.submitting = _), this.close);
+    submitBundle(
+      this.bundle,
+      (_) => (this.submitting = _),
+      () => {
+        this.close;
+        this.$emit("success");
+      }
+    );
   }
 
   debugBundle(): void {
