@@ -1,7 +1,7 @@
 <template>
   <div class="has-text-centered mt-6">
     <div class="box mx-6 is-flex is-justify-content-center">
-      <img :src="`${origin}/favicon.ico`" class="image is-24x24 mx-3" />{{ origin }}
+      <img v-if="origin" :src="`${origin}/favicon.ico`" class="image is-24x24 mx-3" />{{ origin }}
     </div>
     <div class="is-size-3 has-text-weighted-bold mb-6">Connect With Pawket</div>
     <div v-if="stage == 'Verify'">
@@ -17,37 +17,39 @@
       </div>
       <p class="help is-danger is-size-6" v-if="!isCorrect">{{ $t("verifyPassword.message.error.incorrectPassword") }}</p>
       <div class="has-text-info">Make sure you trust the site you connect</div>
-      <footer class="is-fixed-bottom my-6 px-4">
+      <footer class="is-fixed-bottom py-4 px-4 has-background-white-ter">
         <button class="button is-pulled-left" @click="close">Cancel</button>
         <button class="button is-pulled-right is-primary" @click="confirm">Next</button>
       </footer>
     </div>
     <div v-if="stage == 'Account'">
       <div>Select an account to use on this site</div>
-      <div class="box m-3">
-        <a
-          v-for="(account, idx) in accounts"
-          :key="idx"
-          :class="{ 'panel-block': true, 'list-item': idx }"
-          @click="selectedAcc = idx"
-        >
-          <input type="radio" class="mr-2 has-text-primary" :checked="selectedAcc == idx" />
-          <figure class="image is-32x32" style="margin: auto">
-            <img v-if="account.profilePic" class="is-rounded cover" :src="account.profilePic" />
-            <img v-else class="is-rounded" src="@/assets/account-circle.svg" />
-          </figure>
-          <div class="column is-flex my-0 py-0">
-            <div class="py-1">
-              <p class="is-size-6">{{ account.name }}({{ account.key.fingerprint }})</p>
-              <p class="is-size-7 has-text-grey has-text-left" v-if="account.tokens && account.tokens.hasOwnProperty('XCH')">
-                {{ demojo(account.tokens["XCH"].amount) }}
-              </p>
-              <p class="is-size-7 has-text-grey has-text-left" v-else>Loading Balance..</p>
+      <div class="pb-10">
+        <div class="box m-3">
+          <a
+            v-for="(account, idx) in accounts"
+            :key="idx"
+            :class="{ 'panel-block': true, 'list-item': idx }"
+            @click="selectedAcc = idx"
+          >
+            <input type="radio" class="mr-2 has-text-primary" :checked="selectedAcc == idx" />
+            <figure class="image is-32x32" style="margin: auto">
+              <img v-if="account.profilePic" class="is-rounded cover" :src="account.profilePic" />
+              <img v-else class="is-rounded" src="@/assets/account-circle.svg" />
+            </figure>
+            <div class="column is-flex my-0 py-0">
+              <div class="py-1">
+                <p class="is-size-6">{{ account.name }}({{ account.key.fingerprint }})</p>
+                <p class="is-size-7 has-text-grey has-text-left" v-if="account.tokens && account.tokens.hasOwnProperty(symbol)">
+                  {{ demojo(account.tokens[symbol].amount, null, -1, symbol) }}
+                </p>
+                <p class="is-size-7 has-text-grey has-text-left" v-else>Loading Balance..</p>
+              </div>
             </div>
-          </div>
-        </a>
+          </a>
+        </div>
       </div>
-      <footer class="is-fixed-bottom my-6 px-4">
+      <footer class="is-fixed-bottom py-4 px-4 has-background-white-ter">
         <button class="button is-pulled-left" @click="close()">Cancel</button>
         <button class="button is-pulled-right is-primary" @click="openApp()">Connect</button>
       </footer>
@@ -64,7 +66,8 @@ import receive from "@/services/crypto/receive";
 import utility from "@/services/crypto/utility";
 import store from "@/store";
 import { getAllCats } from "@/store/modules/account";
-import { rpcUrl } from "@/store/modules/network";
+import { NotificationProgrammatic as Notification } from "buefy";
+import { NetworkDetail, NetworkInfo } from "@/store/modules/network";
 import { getEncryptKey, isPasswordCorrect } from "@/store/modules/vault";
 import { Component, Vue } from "vue-property-decorator";
 import TakeOffer from "../Offer/Take.vue";
@@ -79,6 +82,7 @@ export default class Connect extends Vue {
   public origin = "";
   public app = "";
   public data = "";
+  public network: NetworkDetail | null = null;
 
   async confirm(): Promise<void> {
     if (!(await isPasswordCorrect(this.password))) {
@@ -102,30 +106,46 @@ export default class Connect extends Vue {
     return this.accounts[this.selectedAcc];
   }
 
+  get networks(): NetworkInfo {
+    return store.state.network.networks;
+  }
+
   get tokenList(): CustomCat[] {
     return getAllCats(this.account);
+  }
+
+  get rpcUrl(): string {
+    return this.network?.rpcUrl ?? "";
+  }
+
+  get prefix(): string {
+    return this.network?.prefix ?? "";
+  }
+
+  get symbol(): string {
+    return this.network?.symbol ?? "";
   }
 
   clearErrorMsg(): void {
     this.isCorrect = true;
   }
 
-  demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null, digits = -1): string {
-    return demojo(mojo, token, digits);
+  demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null, digits = -1, symbol: string | null = null): string {
+    return demojo(mojo, token, digits, symbol);
   }
 
   async setFirstAddress(account: AccountEntity): Promise<void> {
     const privkey = utility.fromHexString(account.key.privateKey);
     const derive = await utility.derive(privkey, false);
     const firstWalletAddressPubkey = utility.toHexString(derive([12381, 8444, 2, 0]).get_g1().serialize());
-    Vue.set(account, "firstAddress", await puzzle.getAddress(firstWalletAddressPubkey, "xch"));
+    Vue.set(account, "firstAddress", await puzzle.getAddress(firstWalletAddressPubkey, this.prefix));
   }
 
   async getXchBalance(account: AccountEntity): Promise<void> {
     const privatekey = utility.fromHexString(account.key.privateKey);
-    const ps = await puzzle.getPuzzleDetails(privatekey, "XCH");
-    const requests = [{ symbol: "XCH", puzzles: ps }];
-    const records = await receive.getCoinRecords(requests, false, rpcUrl());
+    const ps = await puzzle.getPuzzleDetails(privatekey, this.symbol);
+    const requests = [{ symbol: this.symbol, puzzles: ps }];
+    const records = await receive.getCoinRecords(requests, false, this.rpcUrl);
     const tokenBalance = receive.getTokenBalance(requests, records);
     Vue.set(account, "tokens", tokenBalance);
   }
@@ -136,12 +156,32 @@ export default class Connect extends Vue {
     return JSON.parse((await encryption.decrypt(store.state.vault.encryptedAccounts, encryptKey)) || "[]");
   }
 
+  setNetwork(networkId: string): boolean {
+    if (!networkId) return false;
+    for (let key in this.networks) {
+      if (this.networks[key].chainId == networkId) {
+        this.network = this.networks[key];
+        return true;
+      }
+    }
+    return false;
+  }
+
   mounted(): void {
     window.addEventListener("message", (event: MessageEvent) => {
       if (event.origin == window.location.origin) return;
       this.origin = event.origin;
       const data = JSON.parse(event.data);
       this.app = data.app;
+      if (!this.setNetwork(data.network)) {
+        Notification.open({
+          message: "the specified network does not exist",
+          type: "is-danger",
+          position: "is-top",
+          duration: 5000,
+        });
+        setTimeout(() => this.close(), 5000);
+      }
       this.data = data.data;
     });
   }
@@ -167,6 +207,7 @@ export default class Connect extends Vue {
         tokenList: this.tokenList,
         inputOfferText: this.data,
       },
+      events: { success: close },
     });
   }
 
@@ -181,5 +222,9 @@ export default class Connect extends Vue {
   position: fixed;
   bottom: 0;
   width: 100vw;
+}
+
+.pb-10 {
+  padding-bottom: 10rem;
 }
 </style>
