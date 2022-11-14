@@ -41,7 +41,7 @@
               <div class="py-1">
                 <p class="is-size-6">{{ account.name }}({{ account.key.fingerprint }})</p>
                 <p class="is-size-7 has-text-grey has-text-left" v-if="account.tokens && account.tokens.hasOwnProperty(symbol)">
-                  {{ demojo(account.tokens[symbol].amount, null, -1, symbol) }}
+                  {{ demojo(account.tokens[symbol].amount) }}
                 </p>
                 <p class="is-size-7 has-text-grey has-text-left" v-else>Loading Balance..</p>
               </div>
@@ -67,7 +67,7 @@ import utility from "@/services/crypto/utility";
 import store from "@/store";
 import { getAllCats } from "@/store/modules/account";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { NetworkDetail, NetworkInfo } from "@/store/modules/network";
+import { NetworkInfo, rpcUrl, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getEncryptKey, isPasswordCorrect } from "@/store/modules/vault";
 import { Component, Vue } from "vue-property-decorator";
 import TakeOffer from "../Offer/Take.vue";
@@ -82,7 +82,7 @@ export default class Connect extends Vue {
   public origin = "";
   public app = "";
   public data = "";
-  public network: NetworkDetail | null = null;
+  public initialNetworkId = "";
 
   async confirm(): Promise<void> {
     if (!(await isPasswordCorrect(this.password))) {
@@ -91,6 +91,7 @@ export default class Connect extends Vue {
     }
     this.isCorrect = true;
     this.accounts = await this.getAccounts();
+    this.accounts = this.accounts.filter((acc) => acc.key.privateKey);
     if (this.accounts.length > 1) {
       this.stage = "Account";
       for (let i = 0; i < this.accounts.length; i++) {
@@ -115,15 +116,15 @@ export default class Connect extends Vue {
   }
 
   get rpcUrl(): string {
-    return this.network?.rpcUrl ?? "";
+    return rpcUrl();
   }
 
   get prefix(): string {
-    return this.network?.prefix ?? "";
+    return xchPrefix();
   }
 
   get symbol(): string {
-    return this.network?.symbol ?? "";
+    return xchSymbol();
   }
 
   clearErrorMsg(): void {
@@ -160,7 +161,8 @@ export default class Connect extends Vue {
     if (!networkId) return false;
     for (let key in this.networks) {
       if (this.networks[key].chainId == networkId) {
-        this.network = this.networks[key];
+        const network = this.networks[key];
+        store.dispatch("switchNetwork", network.name);
         return true;
       }
     }
@@ -173,6 +175,7 @@ export default class Connect extends Vue {
       this.origin = event.origin;
       const data = JSON.parse(event.data);
       this.app = data.app;
+      this.initialNetworkId = store.state.network.networkId;
       if (!this.setNetwork(data.network)) {
         Notification.open({
           message: "the specified network does not exist",
@@ -207,11 +210,22 @@ export default class Connect extends Vue {
         tokenList: this.tokenList,
         inputOfferText: this.data,
       },
-      events: { success: close },
+      events: { success: this.success },
     });
   }
 
+  success(): void {
+    Notification.open({
+      message: "Submitted Successfully!",
+      type: "is-primary",
+      position: "is-top",
+      duration: 5000,
+    });
+    setTimeout(() => this.close(), 5000);
+  }
+
   close(): void {
+    store.dispatch("switchNetwork", this.initialNetworkId);
     window.close();
   }
 }
