@@ -2,6 +2,7 @@ import { GetParentPuzzleResponse } from "@/models/api";
 import { OriginCoin } from "@/models/wallet";
 import { NetworkContext } from "@/services/coin/coinUtility";
 import { prefix0x } from "@/services/coin/condition";
+import { assertSpendbundle } from "@/services/coin/spendbundle";
 import puzzle from "@/services/crypto/puzzle";
 import utility from "@/services/crypto/utility";
 import transfer, { SymbolCoins } from "@/services/transfer/transfer";
@@ -45,6 +46,7 @@ test('Cat Transfer', async () => {
   const plan = await transfer.generateSpendPlan({ "CAT": [coin] }, [{ symbol: "CAT", address: tgt_hex, amount: 300n, memos: [tgt_hex] }], change_hex, 0n, net.symbol);
   expect(plan).toMatchSnapshot("plan");
   const bundle = await transfer.generateSpendBundleIncludingCat(plan, [{ symbol: "CAT", puzzles }], [], net);
+  await assertSpendbundle(bundle, net.chainId);
   expect(bundle).toMatchSnapshot("bundle");
 });
 
@@ -79,6 +81,7 @@ test('Cat Transfer2', async () => {
   const plan = await transfer.generateSpendPlan({ "CAT": [coin] }, [{ symbol: "CAT", address: tgt_hex, amount: 300n, memos: [tgt_hex] }], change_hex, 0n, net.symbol);
   expect(plan).toMatchSnapshot("plan");
   const bundle = await transfer.generateSpendBundleIncludingCat(plan, [{ symbol: "CAT", puzzles }], [], net);
+  await assertSpendbundle(bundle, net.chainId);
   expect(bundle).toMatchSnapshot("bundle");
 });
 
@@ -124,6 +127,7 @@ test('Multi Cat Coin Transfer', async () => {
   const plan = await transfer.generateSpendPlan(availcoins, [{ symbol: "CAT", address: tgt_hex, amount: 1900n, memos: [tgt_hex] }], change_hex, 0n, net.symbol);
   expect(plan).toMatchSnapshot("plan");
   const bundle = await transfer.generateSpendBundleIncludingCat(plan, [{ symbol: "CAT", puzzles }], [], net);
+  await assertSpendbundle(bundle, net.chainId);
   expect(bundle).toMatchSnapshot("bundle");
 });
 
@@ -173,5 +177,6 @@ test('Multi Cat Coin Transfer 2', async () => {
   const plan = transfer.generateSpendPlan(availcoins, [{ symbol: "CAT", address: tgt_hex, amount: 60000n, memos: [tgt_hex] }], change_hex, 0n, net.symbol);
   expect(plan).toMatchSnapshot("plan");
   const bundle = await transfer.generateSpendBundleIncludingCat(plan, [{ symbol: "CAT", puzzles }], [], net);
+  await assertSpendbundle(bundle, net.chainId);
   expect(bundle).toMatchSnapshot("bundle");
 });

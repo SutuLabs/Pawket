@@ -8,6 +8,7 @@ import { combineSpendBundle, generateNftOffer, generateOfferPlan, getReversePlan
 import { SymbolCoins } from "@/services/transfer/transfer";
 import { NftDetail } from "@/services/crypto/receive";
 import { NetworkContext } from "@/services/coin/coinUtility";
+import { assertSpendbundle } from "@/services/coin/spendbundle";
 
 function xchPrefix() { return "txch"; }
 function xchSymbol() { return "TXCH"; }
@@ -154,6 +155,7 @@ test('create and accept nft offer for xch', async () => {
   );
   expect(takerBundle).toMatchSnapshot("takerBundle");
   const combined = await combineSpendBundle([makerBundle, takerBundle]);
+  await assertSpendbundle(combined, net.chainId);
   expect(combined).toMatchSnapshot("combined");
 });
 

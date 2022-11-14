@@ -18,6 +18,8 @@ beforeAll(async () => {
   await Instance.init();
 })
 
+jest.setTimeout(30000);
+
 test('Basic Cryptography', async () => {
   const hash = await utility.hash("test");
   expect(hash).toMatchSnapshot("hash");

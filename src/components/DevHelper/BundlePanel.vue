@@ -235,7 +235,7 @@ import { modsdict, modsprog } from "@/services/coin/mods";
 import UncurryPuzzle from "@/components/DevHelper/UncurryPuzzle.vue";
 import AnnouncementList from "@/components/DevHelper/AnnouncementList.vue";
 import { decodeOffer } from "@/services/offer/encoding";
-import { rpcUrl, xchPrefix } from "@/store/modules/network";
+import { chainId, rpcUrl, xchPrefix } from "@/store/modules/network";
 import { getCoinName } from "@/services/coin/coinUtility";
 import debug from "@/services/api/debug";
 import { demojo } from "@/filters/unitConversion";
@@ -474,7 +474,7 @@ export default class BundlePanel extends Vue {
 
   public async check(): Promise<void> {
     if (!this.bundle) return;
-    var result = await checkSpendBundle(this.bundle);
+    var result = await checkSpendBundle(this.bundle, chainId());
     if (!result) return;
     Vue.set(this, "puzzleAnnoCreates", result.puzzleAnnoCreates);
     Vue.set(this, "puzzleAnnoAsserted", result.puzzleAnnoAsserted);

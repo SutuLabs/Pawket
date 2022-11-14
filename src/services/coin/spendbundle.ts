@@ -1,5 +1,4 @@
-import { SpendBundle } from "@/models/wallet";
-import { chainId } from "@/store/modules/network";
+import { SpendBundle } from "../../models/wallet";
 import { Bytes } from "clvm";
 import puzzle, { ExecuteResult } from "../crypto/puzzle";
 import { sha256 } from "../offer/bundler";
@@ -58,7 +57,7 @@ interface SpendBundleCheckResult {
   sigVerified: SignatureVerificationResult;
 }
 
-export async function checkSpendBundle(bundle: SpendBundle | undefined): Promise<SpendBundleCheckResult | undefined> {
+export async function checkSpendBundle(bundle: SpendBundle | undefined, chainId: string): Promise<SpendBundleCheckResult | undefined> {
   if (!bundle) return undefined;
   const puzzleAnnoCreates: AnnouncementCoin[] = [];
   const puzzleAnnoAsserted: AnnouncementCoin[] = [];
@@ -172,7 +171,7 @@ export async function checkSpendBundle(bundle: SpendBundle | undefined): Promise
 
   let sigVerified: SignatureVerificationResult = "None";
   try {
-    sigVerified = verifySig(bundle, aggSigMessages);
+    sigVerified = verifySig(bundle, aggSigMessages, chainId);
   } catch (error) {
     sigVerified = "Failed";
     console.warn("failed to verify signature", error);
@@ -191,12 +190,12 @@ export async function checkSpendBundle(bundle: SpendBundle | undefined): Promise
   }
 }
 
-export function verifySig(bundle: SpendBundle, aggSigMessages: AggSigMessage[]): SignatureVerificationResult {
+export function verifySig(bundle: SpendBundle, aggSigMessages: AggSigMessage[], chainId: string): SignatureVerificationResult {
   if (!bundle || !bundle.aggregated_signature) return "Empty";
   const BLS = Instance.BLS;
   if (!BLS) throw new Error("BLS not initialized");
   try {
-    const AGG_SIG_ME_ADDITIONAL_DATA = getUint8ArrayFromHexString(chainId());
+    const AGG_SIG_ME_ADDITIONAL_DATA = getUint8ArrayFromHexString(chainId);
     const msgs = aggSigMessages.map((_) =>
       _.coinName
         ? Uint8Array.from([
@@ -217,4 +216,25 @@ export function verifySig(bundle: SpendBundle, aggSigMessages: AggSigMessage[]):
 
 export function getUint8ArrayFromHexString(hex: string): Uint8Array {
   return Bytes.from(unprefix0x(hex), "hex").raw();
+}
+
+export async function assertSpendbundle(bundle: SpendBundle, chainId: string): Promise<void> {
+  const result = await checkSpendBundle(bundle, chainId);
+  if (!result) throw new Error("Failed to check bundle");
+  assertSpendbundleCheckResult(result);
+}
+
+export function assertSpendbundleCheckResult(result: SpendBundleCheckResult): void {
+  if (result.sigVerified != "Verified") throw new Error(`Spendbundle signature not pass the check: ${result.sigVerified}`);
+  if (result.coinAvailability.some(_ => _.availability == "Unexecutable")) throw new Error("Unexecutable coin found");
+  checkAnnouncement(result.coinAnnoAsserted, result.coinAnnoCreates, "coin");
+  checkAnnouncement(result.puzzleAnnoAsserted, result.puzzleAnnoCreates, "puzzle");
+}
+
+function checkAnnouncement(asserted: AnnouncementCoin[], creates: AnnouncementCoin[], type: string): void {
+  const misAsserted = asserted.filter(a => creates.every(c => a.message != c.message));
+  if (misAsserted.length > 0)
+    throw new Error(`Some ${type} asserts are not fulfilled: ${misAsserted.map(_ => `${_.coinIndex}`).join(",")}
+  Asserted: ${asserted.map(_ => `[${_.coinIndex}]${_.message}`).join(",")}
+  Creates: ${creates.map(_ => `[${_.coinIndex}]${_.message}`).join(",")}`);
 }

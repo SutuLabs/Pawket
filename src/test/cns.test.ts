@@ -17,6 +17,7 @@ import { NetworkContext } from "@/services/coin/coinUtility";
 import { prefix0x } from "@/services/coin/condition";
 
 import cnscoin1 from "./cases/cnscoin1.json"
+import { assertSpendbundle } from "@/services/coin/spendbundle";
 
 const net: NetworkContext = {
   prefix: "xch",
@@ -65,6 +66,7 @@ test('Prepare CNS bootstrap coins', async () => {
 
   const spendBundle = await getBootstrapSpendBundle(
     target_hex, change_hex, fee, availcoins, tokenPuzzles, count, net, sk);
+  await assertSpendbundle(spendBundle, net.chainId);
   expect(spendBundle).toMatchSnapshot("spendbundle");
 });
 
@@ -82,6 +84,7 @@ async function testMintCns(
   targetAddresses: string[] | undefined = undefined,
 ): Promise<void> {
   const spendBundle = await mintOneCns(fee, metadata, targetAddresses);
+  await assertSpendbundle(spendBundle, net.chainId);
   expect(spendBundle).toMatchSnapshot("spendbundle");
   const cs = spendBundle.coin_spends[2];
   await testAnalyzeCnsCoin(cs, "");
@@ -216,6 +219,7 @@ async function testMintCnsAndOffer(
   );
   expect(takerBundle).toMatchSnapshot("takerBundle");
   const combined = await combineSpendBundle([makerBundle, takerBundle]);
+  await assertSpendbundle(combined, net.chainId);
   expect(combined).toMatchSnapshot("combined");
 }
 
@@ -272,6 +276,7 @@ export async function testUpdateCns(fee: bigint): Promise<void> {
   if (finalAnalysis == null) fail("null finalAnalysis");
   expect(finalAnalysis).toMatchSnapshot("finalAnalysis");
 
+  await assertSpendbundle(spendBundle, net.chainId);
   expect(spendBundle).toMatchSnapshot("spendbundle");
 }
 

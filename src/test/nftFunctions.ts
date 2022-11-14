@@ -13,6 +13,7 @@ import nftcoin7 from "./cases/nftcoin7.json"
 import { NftMetadataValues } from "@/models/nft";
 import { didAnalysis, knownCoins } from "./cases/nft.test.data";
 import { NetworkContext } from "@/services/coin/coinUtility";
+import { assertSpendbundle } from "@/services/coin/spendbundle";
 
 const net: NetworkContext = {
   prefix: "txch",
@@ -50,6 +51,7 @@ export async function testMintNft(
     targetAddress, changeAddress, fee, metadata, availcoins, tokenPuzzles, royaltyAddressHex,
     tradePricePercentage, net, didAnalysis,
     "00186eae4cd4a3ec609ca1a8c1cda8467e3cb7cbbbf91a523d12d31129d5f8d7", targetAddresses);
+  await assertSpendbundle(spendBundle, net.chainId);
   expect(spendBundle).toMatchSnapshot("spendbundle");
 }
 
@@ -81,6 +83,7 @@ export async function testTransferNft(fee: bigint, didAnalysis: DidCoinAnalysisR
 
   const spendBundle = await generateTransferNftBundle(
     targetAddress, changeAddress, fee, nftCoin, analysis, availcoins, tokenPuzzles, net, didAnalysis);
+  await assertSpendbundle(spendBundle, net.chainId);
   expect(spendBundle).toMatchSnapshot("spendbundle");
 }
 
@@ -115,6 +118,7 @@ export async function testUpdateNft(fee: bigint): Promise<void> {
 
   const spendBundle = await generateUpdatedNftBundle(
     changeAddress, fee, nftCoin, analysis, "NFT", "imageUri", "https://example.com/a.jpg", availcoins, tokenPuzzles, net);
+  await assertSpendbundle(spendBundle, net.chainId);
   expect(spendBundle).toMatchSnapshot("spendbundle");
 }
 

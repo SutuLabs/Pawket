@@ -1,6 +1,7 @@
 import { OriginCoin } from "@/models/wallet";
 import { analyzeCatCoin } from "@/services/coin/cat";
 import { NetworkContextWithOptionalApi } from "@/services/coin/coinUtility";
+import { assertSpendbundle } from "@/services/coin/spendbundle";
 import puzzle from "@/services/crypto/puzzle";
 import utility from "@/services/crypto/utility";
 import { generateMintCatBundle } from "@/services/mint/cat";
@@ -47,6 +48,7 @@ test('Mint Cat', async () => {
   );
 
   expect(spendBundle).toMatchSnapshot("spendbundle");
+  await assertSpendbundle(spendBundle, net.chainId);
   expect(assetId).toMatchSnapshot("assetid");
 });
 

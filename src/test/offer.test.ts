@@ -9,6 +9,7 @@ import { getAccountAddressDetails } from "@/services/util/account";
 import { AccountEntity, PersistentCustomCat } from "@/models/account";
 import { prefix0x } from "@/services/coin/condition";
 import { NetworkContext } from "@/services/coin/coinUtility";
+import { assertSpendbundle } from "@/services/coin/spendbundle";
 
 function xchPrefix() { return "xch"; }
 function xchSymbol() { return "XCH"; }
@@ -178,6 +179,7 @@ test('Take Offer Xch For CAT', async () => {
   const takerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, net, nonce, "cat_v1");
   expect(takerBundle).toMatchSnapshot("taker bundle");
   const combined = await combineSpendBundle([makerBundle, takerBundle]);
+  await assertSpendbundle(combined, net.chainId);
   expect(combined).toMatchSnapshot("bundle");
 });
 
@@ -212,6 +214,7 @@ test('Take Offer CAT For Xch', async () => {
   expect(takerBundle).toMatchSnapshot("taker bundle");
   const combined = await combineSpendBundle([makerBundle, takerBundle]);
   expect(combined).toMatchSnapshot("bundle");
+  await assertSpendbundle(combined, net.chainId);
 });
 
 function getCatNameDict(_account?: AccountEntity): { [id: string]: string } {
