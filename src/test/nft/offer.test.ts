@@ -1,5 +1,5 @@
 import { GetParentPuzzleResponse } from "@/models/api";
-import { getTestAccount } from "./utility";
+import { getTestAccount } from "../utility";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
 import { getOfferSummary, OfferEntity, OfferPlan } from "@/services/offer/summary";
 import { Instance } from "@/services/util/instance";

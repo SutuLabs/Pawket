@@ -1,4 +1,4 @@
-import { getTestAccount } from "./utility";
+import { getTestAccount } from "../utility";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import { analyzeNftCoin, generateMintNftBundle, generateUpdatedNftBundle, getBootstrapSpendBundle } from "@/services/coin/nft";
 import puzzle from "@/services/crypto/puzzle";
@@ -7,7 +7,7 @@ import { Instance } from "@/services/util/instance";
 import { getAccountAddressDetails } from "@/services/util/account";
 
 import { CnsMetadataValues } from "@/models/nft";
-import { cnsMetadata, knownCoins } from "./cases/cns.test.data";
+import { cnsMetadata, knownCoins } from "./cns.test.data";
 import { CoinSpend, convertToOriginCoin, SpendBundle } from "@/models/wallet";
 import { combineSpendBundle, generateNftOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
@@ -16,7 +16,7 @@ import { generateMintCnsOffer } from "@/services/offer/cns";
 import { NetworkContext } from "@/services/coin/coinUtility";
 import { prefix0x } from "@/services/coin/condition";
 
-import cnscoin1 from "./cases/cnscoin1.json"
+import cnscoin1 from "../cases/cnscoin1.json"
 import { assertSpendbundle } from "@/services/coin/spendbundle";
 
 const net: NetworkContext = {

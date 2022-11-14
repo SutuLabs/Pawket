@@ -7,7 +7,7 @@ import puzzle from "@/services/crypto/puzzle";
 import utility from "@/services/crypto/utility";
 import transfer, { SymbolCoins } from "@/services/transfer/transfer";
 import { Instance } from "@/services/util/instance";
-import { knownCoins } from "./cases/catTransfer.test.data";
+import { knownCoins } from "./transfer.test.data";
 
 const net: NetworkContext = {
   prefix: "xch",

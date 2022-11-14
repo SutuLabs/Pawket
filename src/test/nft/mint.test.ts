@@ -1,6 +1,6 @@
 import { Instance } from "@/services/util/instance";
-import { nftMetadata } from "./cases/nft.test.data";
-import { testMintNft } from "./nftFunctions";
+import { nftMetadata } from "./nft.test.data";
+import { testMintNft } from "./functions";
 
 beforeAll(async () => {
   await Instance.init();

@@ -1,5 +1,5 @@
 import { convertToOriginCoin } from "@/models/wallet";
-import { getTestAccount } from "./utility";
+import { getTestAccount } from "../utility";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import { analyzeNftCoin, generateMintNftBundle, generateTransferNftBundle, generateUpdatedNftBundle } from "@/services/coin/nft";
 import puzzle from "@/services/crypto/puzzle";
@@ -7,11 +7,11 @@ import { GetParentPuzzleResponse } from "@/models/api";
 import { getAccountAddressDetails } from "@/services/util/account";
 import { DidCoinAnalysisResult } from "@/services/coin/did";
 
-import nftcoin0 from "./cases/nftcoin0.json"
-import nftcoin7 from "./cases/nftcoin7.json"
+import nftcoin0 from "../cases/nftcoin0.json"
+import nftcoin7 from "../cases/nftcoin7.json"
 
 import { NftMetadataValues } from "@/models/nft";
-import { didAnalysis, knownCoins } from "./cases/nft.test.data";
+import { didAnalysis, knownCoins } from "./nft.test.data";
 import { NetworkContext } from "@/services/coin/coinUtility";
 import { assertSpendbundle } from "@/services/coin/spendbundle";
 

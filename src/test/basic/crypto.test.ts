@@ -10,8 +10,8 @@ import { analyzeNftCoin } from "@/services/coin/nft";
 import { getSignMessage, signMessage, verifySignature } from "@/services/crypto/sign";
 import { PrivateKey } from "@chiamine/bls-signatures";
 
-import didcoin2 from "./cases/didcoin2.json"
-import nftcoin6 from "./cases/nftcoin6.json"
+import didcoin2 from "../cases/didcoin2.json"
+import nftcoin6 from "../cases/nftcoin6.json"
 import { ByteBase, CryptographyService, EcPrivateKey, EcPublicKey } from "@/services/crypto/encryption";
 
 beforeAll(async () => {

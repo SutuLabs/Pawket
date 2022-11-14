@@ -1,16 +1,16 @@
 import { analyzeNftCoin } from "@/services/coin/nft";
 import { Instance } from "@/services/util/instance";
 
-import nftcoin1 from "./cases/nftcoin1.json"
-import nftcoin2 from "./cases/nftcoin2.json"
-import nftcoin3 from "./cases/nftcoin3.json"
-import nftcoin4 from "./cases/nftcoin4.json"
-import nftcoin5 from "./cases/nftcoin5.json"
-import nftcoin8 from "./cases/nftcoin8.json"
-import nftcoin9 from "./cases/nftcoin9.json"
+import nftcoin1 from "../cases/nftcoin1.json"
+import nftcoin2 from "../cases/nftcoin2.json"
+import nftcoin3 from "../cases/nftcoin3.json"
+import nftcoin4 from "../cases/nftcoin4.json"
+import nftcoin5 from "../cases/nftcoin5.json"
+import nftcoin8 from "../cases/nftcoin8.json"
+import nftcoin9 from "../cases/nftcoin9.json"
 
-import { nftMetadata } from "./cases/nft.test.data";
-import { testMintNft, testUpdateNft } from "./nftFunctions";
+import { nftMetadata } from "./nft.test.data";
+import { testMintNft, testUpdateNft } from "./functions";
 
 beforeAll(async () => {
   await Instance.init();

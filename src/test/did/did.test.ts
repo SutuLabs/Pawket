@@ -1,14 +1,14 @@
 import { Instance } from "@/services/util/instance";
 import { convertToOriginCoin } from "@/models/wallet";
-import { getTestAccount } from "./utility";
+import { getTestAccount } from "../utility";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import puzzle from "@/services/crypto/puzzle";
 import { GetParentPuzzleResponse } from "@/models/api";
 import { getAccountAddressDetails } from "@/services/util/account";
 import { analyzeDidCoin, generateMintDidBundle } from "@/services/coin/did";
 
-import didcoin1 from "./cases/didcoin1.json"
-import { knownCoins } from "./cases/nft.test.data";
+import didcoin1 from "../cases/didcoin1.json"
+import { knownCoins } from "../nft/nft.test.data";
 import { NetworkContext } from "@/services/coin/coinUtility";
 import { assertSpendbundle } from "@/services/coin/spendbundle";
 
