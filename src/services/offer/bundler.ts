@@ -1,6 +1,6 @@
 import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
 import { Bytes } from "clvm";
-import { CoinConditions, ConditionType, Hex0x, prefix0x } from '../coin/condition';
+import { CoinConditions, ConditionType, Hex0x, prefix0x, unprefix0x } from '../coin/condition';
 import puzzle, { PlaintextPuzzle } from "../crypto/puzzle";
 import { ConditionOpcode } from "../coin/opcode";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
@@ -21,7 +21,7 @@ export async function generateOffer(
   offered: OfferPlan[],
   requested: OfferEntity[],
   puzzles: TokenPuzzleDetail[],
-  net:NetworkContext,
+  net: NetworkContext,
   nonceHex: string | null = null,
   catModName: "cat_v1" | "cat_v2" = "cat_v2",
 ): Promise<SpendBundle> {
@@ -151,8 +151,10 @@ export async function generateOffer(
   return transfer.getSpendBundle(spends, puzzleCopy, net.chainId);
 }
 
-export function sha256(...args: (string | Uint8Array)[]): string {
-  const cont = new Uint8Array(args.map(_ => Bytes.from(_, "hex").raw()).reduce((acc, cur) => [...acc, ...cur], [] as number[]));
+export function sha256(...args: (Hex0x | string | Uint8Array)[]): string {
+  const cont = new Uint8Array(args
+    .map(_ => Bytes.from(typeof _ === "string" ? unprefix0x(_) : _, "hex").raw())
+    .reduce((acc, cur) => [...acc, ...cur], [] as number[]));
   const result = Bytes.SHA256(cont);
   return prefix0x(result.hex());
 }
