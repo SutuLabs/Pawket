@@ -9,9 +9,6 @@ import nftcoin5 from "../cases/nftcoin5.json"
 import nftcoin8 from "../cases/nftcoin8.json"
 import nftcoin9 from "../cases/nftcoin9.json"
 
-import { nftMetadata } from "./nft.test.data";
-import { testMintNft, testUpdateNft } from "./functions";
-
 beforeAll(async () => {
   await Instance.init();
 })
@@ -37,12 +34,3 @@ test('Analyze Nft 5', async () => await testAnalyzeNftCoin(nftcoin5, "bae24162ef
 test('Analyze Nft 8', async () => await testAnalyzeNftCoin(nftcoin8, "7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10"));
 // first minted cns nft
 test('Analyze Nft 9', async () => await testAnalyzeNftCoin(nftcoin9, "55bf9e6b0fda4c6657e243f97db8845b5a3b854667edd80f5e621a1ed9e648cc"));
-
-test('Mint Nft', async () => {
-  await testMintNft(0n, nftMetadata);
-  await testMintNft(8889n, nftMetadata);
-});
-
-test('Update Nft', async () => {
-  await testUpdateNft(0n);
-});

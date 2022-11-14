@@ -1,0 +1,108 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Prepare CNS bootstrap coins: spendbundle 1`] = `
+Object {
+  "aggregated_signature": "0x85b2fcf01bb343eb0232901698eeb8656c749d9bcb2f7a2ef41b7943644269472a62ac962cd643378f8394bab1e745de055e8bdc44fabbd561943014016aaf7542b9c474c151d853e1d84453c9c023b18b5671fdb4aef58ce796988a011a1d48",
+  "coin_spends": Array [
+    Object {
+      "coin": Object {
+        "amount": 23n,
+        "parent_coin_info": "0xc4badc175d119df8006fd8e96ad84c475e743275e70d6c16f43cf83fb75df021",
+        "puzzle_hash": "0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b092c7027d455e843b1226b757c1dd5e124e0e6ddab3549036a4684b410182fdfd1eee459eb76a4d6d73e94f90fbe6eb1dff018080",
+      "solution": "0xff80ffff01ffff33ffa0d4b6b47b409215438ea21aaee024978e3f77be69703c8d0c0b56d2aa1bf48514ff0180ffff33ffa07df1f15126986137ec536c9622bc0e179e003eaacb80f414c8e9bdc6c78ec93eff0180ffff33ffa018790cc0307580f97ab574790b5d6df468d0731ff22b1cb84633918ef8bc6d08ff0180ffff33ffa076e217ca2e841e9dbf9ae3a781d5fcb785b6ba7e5cff3539a1b691b8c5f39414ff0180ffff33ffa04d75e2db26f791397f5852331917b0f80df48086787aeddbed609b1f1ecfbae3ff0180ffff33ffa02a9a38c475d39d7d08d215621c215004cd3803167a914e2dde3ca54c92f565b9ff0180ffff33ffa025345ffa379e2fddfdd8ec5a1f73d4673db3c13b9cfb455741293a5c7a0d00ffff0180ffff33ffa0523f6dd8d5e93ccc91f35762012b06704ec58bf5ded360169e0eda9a2b4ab5a5ff0180ffff33ffa0461f88c07af2d21f41ef7be9e159d492843f197e11c780d1c9a9bb477dd31c71ff0180ffff33ffa0fd51a8082b3b1388d325464a090c4a269866dbab4ce716535b2bbf9006e392a5ff0180ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff0d8080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 1n,
+        "parent_coin_info": "0x18494efb9385b2604bb168f070540d42e8133f3b7204ab74896d8c21a6c73cc0",
+        "puzzle_hash": "0xd4b6b47b409215438ea21aaee024978e3f77be69703c8d0c0b56d2aa1bf48514",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b082f99159ffdf03708b449d52e5eb7dafde7f57a2d6635fbccdb1932b9fd1d73163feeaa1ddad6b93b4d933a6bbee3a5aff018080",
+      "solution": "0xff80ffff01ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff018080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 1n,
+        "parent_coin_info": "0x18494efb9385b2604bb168f070540d42e8133f3b7204ab74896d8c21a6c73cc0",
+        "puzzle_hash": "0x7df1f15126986137ec536c9622bc0e179e003eaacb80f414c8e9bdc6c78ec93e",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b095c42d5bed266bbaa0916e5477e3278c4fab6341583e91add000bfd8d374cf8aa313d89aea6782050c05963e3a1c3a44ff018080",
+      "solution": "0xff80ffff01ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff018080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 1n,
+        "parent_coin_info": "0x18494efb9385b2604bb168f070540d42e8133f3b7204ab74896d8c21a6c73cc0",
+        "puzzle_hash": "0x18790cc0307580f97ab574790b5d6df468d0731ff22b1cb84633918ef8bc6d08",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a73f8eaaebde20e4758c877f3ab659079e0e4e835ba99023b9ad018fba16de8139cb9209467656e79060c04058369060ff018080",
+      "solution": "0xff80ffff01ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff018080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 1n,
+        "parent_coin_info": "0x18494efb9385b2604bb168f070540d42e8133f3b7204ab74896d8c21a6c73cc0",
+        "puzzle_hash": "0x76e217ca2e841e9dbf9ae3a781d5fcb785b6ba7e5cff3539a1b691b8c5f39414",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0ab197e05c1c475cce2e9232f2bdf69e82d84c492607da30e6847e86dec898635368c4e9e658e9096e117d21206e922baff018080",
+      "solution": "0xff80ffff01ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff018080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 1n,
+        "parent_coin_info": "0x18494efb9385b2604bb168f070540d42e8133f3b7204ab74896d8c21a6c73cc0",
+        "puzzle_hash": "0x4d75e2db26f791397f5852331917b0f80df48086787aeddbed609b1f1ecfbae3",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b09761c3e95673f8593a65418ecb4457ffa3ff207099d77cd6e30102eed8d451ca4cacdf1baccb21750f8b98e9adb3633dff018080",
+      "solution": "0xff80ffff01ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff018080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 1n,
+        "parent_coin_info": "0x18494efb9385b2604bb168f070540d42e8133f3b7204ab74896d8c21a6c73cc0",
+        "puzzle_hash": "0x2a9a38c475d39d7d08d215621c215004cd3803167a914e2dde3ca54c92f565b9",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b081da07b52d4e08df48dea15bd9189bef12843149338071c9e6edae6d8c0c811e67c02932f98a2d46ce083d84812840e2ff018080",
+      "solution": "0xff80ffff01ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff018080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 1n,
+        "parent_coin_info": "0x18494efb9385b2604bb168f070540d42e8133f3b7204ab74896d8c21a6c73cc0",
+        "puzzle_hash": "0x25345ffa379e2fddfdd8ec5a1f73d4673db3c13b9cfb455741293a5c7a0d00ff",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b08d9a05678bbf80631497f72cd5b92e8a63a19ddcba76447bfaff37ac3c746825342fbd4ad1b0af399d43d009d07475aeff018080",
+      "solution": "0xff80ffff01ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff018080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 1n,
+        "parent_coin_info": "0x18494efb9385b2604bb168f070540d42e8133f3b7204ab74896d8c21a6c73cc0",
+        "puzzle_hash": "0x523f6dd8d5e93ccc91f35762012b06704ec58bf5ded360169e0eda9a2b4ab5a5",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b081675f0b9e91116b013bb35ee53ebb349be651684ebb4d6c9c0ca18ff8898eb9530e6f840079db23f8fe26cc453341d8ff018080",
+      "solution": "0xff80ffff01ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff018080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 1n,
+        "parent_coin_info": "0x18494efb9385b2604bb168f070540d42e8133f3b7204ab74896d8c21a6c73cc0",
+        "puzzle_hash": "0x461f88c07af2d21f41ef7be9e159d492843f197e11c780d1c9a9bb477dd31c71",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0b667d74db6caa1e6c1154435800bc7baeed1d06a870d7ee427d3b5660e4722dfbe13c2e2c0cb1fd837240b086405a458ff018080",
+      "solution": "0xff80ffff01ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff018080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 1n,
+        "parent_coin_info": "0x18494efb9385b2604bb168f070540d42e8133f3b7204ab74896d8c21a6c73cc0",
+        "puzzle_hash": "0xfd51a8082b3b1388d325464a090c4a269866dbab4ce716535b2bbf9006e392a5",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a15aae698d29e55475704328beec7a77ec48ecf93bc5674ef320b274bfa24e0b652ec704b8652d839d4efc2931d91afcff018080",
+      "solution": "0xff80ffff01ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff018080ff8080",
+    },
+  ],
+}
+`;

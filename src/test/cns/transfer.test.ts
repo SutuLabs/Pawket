@@ -1,0 +1,3 @@
+test('Transfer CNS', async () => {
+  //
+});
