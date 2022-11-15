@@ -191,8 +191,8 @@ async function testMintCnsAndOffer(
   );
   const takerBundle = await transfer.getSpendBundle(utakerBundle, tokenPuzzles, net.chainId);
   expect(takerBundle).toMatchSnapshot("takerBundle");
-  const ubundle = await combineOfferSpendBundle([makerBundle, takerBundle]);
-  const bundle = await transfer.getSpendBundle(ubundle, tokenPuzzles, net.chainId);
+  const bundle = await combineOfferSpendBundle([makerBundle, takerBundle]);
+  // const bundle = await transfer.getSpendBundle(ubundle, tokenPuzzles, net.chainId);
   await assertSpendbundle(bundle, net.chainId);
   expect(bundle).toMatchSnapshot("combined");
 }

@@ -399,7 +399,7 @@ export async function generateNftOffer(
     if (off.id) {
       //NFT
       if (nftcoin) {
-        const spbundle: SpendBundle = await generateTransferNftBundle(
+        const spbundle: UnsignedSpendBundle = await generateTransferNftBundle(
           puzzle.getAddressFromPuzzleHash(settlement_tgt, net.symbol),
           puzzle.getAddressFromPuzzleHash("0x0000000000000000000000000000000000000000000000000000000000000000", net.symbol),
           0n,

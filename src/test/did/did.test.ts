@@ -1,7 +1,7 @@
 import { Instance } from "@/services/util/instance";
 import { convertToOriginCoin } from "@/models/wallet";
 import { getTestAccount } from "../utility";
-import { SymbolCoins } from "@/services/transfer/transfer";
+import transfer, { SymbolCoins } from "@/services/transfer/transfer";
 import puzzle from "@/services/crypto/puzzle";
 import { GetParentPuzzleResponse } from "@/models/api";
 import { getAccountAddressDetails } from "@/services/util/account";
@@ -51,8 +51,9 @@ async function testMintDid(fee: bigint): Promise<void> {
     ]
   };
 
-  const spendBundle = await generateMintDidBundle(targetAddress, changeAddress, fee, {}, availcoins, tokenPuzzles, net);
-  await assertSpendbundle(spendBundle.spendBundle, net.chainId);
+  const ubundle = await generateMintDidBundle(targetAddress, changeAddress, fee, {}, availcoins, tokenPuzzles, net);
+  const spendBundle = await transfer.getSpendBundle(ubundle, tokenPuzzles, net.chainId);
+  await assertSpendbundle(spendBundle, net.chainId);
   expect(spendBundle).toMatchSnapshot("spendbundle");
 }
 

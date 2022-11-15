@@ -1,5 +1,5 @@
 import { getTestAccount } from "../utility";
-import { SymbolCoins } from "@/services/transfer/transfer";
+import transfer, { SymbolCoins } from "@/services/transfer/transfer";
 import { analyzeNftCoin, generateUpdatedNftBundle } from "@/services/coin/nft";
 import puzzle from "@/services/crypto/puzzle";
 import { GetParentPuzzleResponse } from "@/models/api";
@@ -58,14 +58,15 @@ export async function testUpdateCns(fee: bigint): Promise<void> {
     ]
   };
 
-  const spendBundle = await generateUpdatedNftBundle(
+  const ubundle = await generateUpdatedNftBundle(
     changeAddress, fee, nftCoin, analysis, "CNS", "address", update_hex, availcoins, tokenPuzzles, net);
 
-  const finalCoin = spendBundle.coin_spends[0];
+  const finalCoin = ubundle.coin_spends[0];
   const finalAnalysis = await analyzeNftCoin(finalCoin.puzzle_reveal, analysis.p2Owner, finalCoin.coin, finalCoin.solution);
   if (finalAnalysis == null) fail("null finalAnalysis");
   expect(finalAnalysis).toMatchSnapshot("finalAnalysis");
 
+  const spendBundle = await transfer.getSpendBundle(ubundle, tokenPuzzles, net.chainId);
   await assertSpendbundle(spendBundle, net.chainId);
   expect(spendBundle).toMatchSnapshot("spendbundle");
 }

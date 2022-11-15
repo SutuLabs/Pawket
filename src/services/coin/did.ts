@@ -1,8 +1,8 @@
-import { CoinSpend, OriginCoin, SpendBundle } from "../../models/wallet";
+import { CoinSpend, OriginCoin, SpendBundle, UnsignedSpendBundle } from "../../models/wallet";
 import { disassemble } from "clvm_tools/clvm_tools/binutils";
 import puzzle from "../crypto/puzzle";
-import { TokenPuzzleDetail } from "../crypto/receive";
-import { combineSpendBundle} from "../mint/cat";
+import { TokenPuzzleDetail, TokenPuzzleObserver } from "../crypto/receive";
+import { combineSpendBundle } from "../mint/cat";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { prefix0x } from "./condition";
 import { modshash, modshex, modsprog } from "./mods";
@@ -43,9 +43,9 @@ export async function generateMintDidBundle(
   fee: bigint,
   metadata: DidMetadata,
   availcoins: SymbolCoins,
-  requests: TokenPuzzleDetail[],
+  requests: TokenPuzzleObserver[],
   net: NetworkContext,
-): Promise<MintDidInfo> {
+): Promise<UnsignedSpendBundle> {
   // console.log(
   //   `const targetAddress="${targetAddress}";\n`
   //   + `const changeAddress="${changeAddress}";\n`
@@ -119,16 +119,14 @@ export async function generateMintDidBundle(
   };
   // console.log("didCoinSpend", didCoinSpend)
 
-  const extreqs = cloneAndAddRequestPuzzleTemporary(net.symbol, requests, inner_p2_puzzle.hash, didPuzzle, didPuzzleHash);
+  // const extreqs = cloneAndAddRequestPuzzleTemporary(net.symbol, requests, inner_p2_puzzle.hash, didPuzzle, didPuzzleHash);
   // console.log("extreqs", extreqs, { coin_spends: [launcherCoinSpend, didCoinSpend] }, chainId);
 
-  const bundles = await transfer.getSpendBundle([launcherCoinSpend, didCoinSpend], extreqs, net.chainId, true);
+  // const bundles = await transfer.getSpendBundle([launcherCoinSpend, didCoinSpend], requests, net.chainId, true);
   // console.log("bundles", bundles)
-  const bundle = await combineSpendBundle(bootstrapSpendBundle, bundles);
+  const bundle = combineSpendBundle(bootstrapSpendBundle, [launcherCoinSpend, didCoinSpend]);
 
-  return {
-    spendBundle: bundle,
-  };
+  return bundle;
 }
 
 async function constructDidInnerPuzzle(

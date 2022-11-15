@@ -53,6 +53,7 @@ test('Mint Cat', async () => {
   newPuzzles.push(
     {
       privateKey: puzzle.getPrivateKeyFromHex(sk_hex),
+      synPubKey: "()", // don't care
       hash: unprefix0x(catPuzzle.hash),
       address: "",
     },
