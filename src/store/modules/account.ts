@@ -152,6 +152,18 @@ store.registerModule<IAccountState>("account", {
       }
 
       const requests = await getAccountAddressDetails(account, parameters.maxId);
+      // init account tokens
+      if (!account.tokens || !account.tokens[requests[0].symbol]) {
+        const tokenBalances: AccountTokens = {};
+        for (let i = 0; i < requests.length; i++) {
+          const token = requests[i];
+          tokenBalances[token.symbol] = {
+            amount: -1n,
+            addresses: token.puzzles.map((_) => ({ address: _.address, type: _.type, coins: [] })),
+          };
+        }
+        Vue.set(account, "tokens", tokenBalances);
+      }
       try {
         const records = await receive.getCoinRecords(requests, true, rpcUrl());
         rootState.network.peekHeight = records.peekHeight;
@@ -163,17 +175,6 @@ store.registerModule<IAccountState>("account", {
         state.offline = false;
       } catch (error) {
         console.warn("error get account balance", error);
-        if (!account.tokens || !account.tokens[requests[0].symbol]) {
-          const tokenBalances: AccountTokens = {};
-          for (let i = 0; i < requests.length; i++) {
-            const token = requests[i];
-            tokenBalances[token.symbol] = {
-              amount: -1n,
-              addresses: token.puzzles.map((_) => ({ address: _.address, type: _.type, coins: [] })),
-            };
-          }
-          Vue.set(account, "tokens", tokenBalances);
-        }
         state.offline = true;
       }
 
