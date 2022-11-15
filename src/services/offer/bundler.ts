@@ -1,4 +1,4 @@
-import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
+import { CoinSpend, OriginCoin, SpendBundle, UnsignedSpendBundle } from "@/models/wallet";
 import { Bytes } from "clvm";
 import { CoinConditions, ConditionType, Hex0x, prefix0x, unprefix0x } from '../coin/condition';
 import puzzle, { PlaintextPuzzle } from "../crypto/puzzle";
@@ -207,14 +207,8 @@ export function getReversePlan(
   };
 }
 
-export async function combineSpendBundle(spendbundles: SpendBundle[]): Promise<SpendBundle> {
+export async function combineOfferSpendBundle(spendbundles: UnsignedSpendBundle[]): Promise<UnsignedSpendBundle> {
   if (spendbundles.length != 2) throw new Error("unexpected length of spendbundle");
-
-  const BLS = Instance.BLS;
-  if (!BLS) throw new Error("BLS not initialized");
-  const sigs = spendbundles.map((_) => BLS.G2Element.from_bytes(Bytes.from(_.aggregated_signature, "hex").raw()));
-  const agg_sig = BLS.AugSchemeMPL.aggregate(sigs);
-  const sig = Bytes.from(agg_sig.serialize()).hex();
 
   const summaries = await Promise.all(spendbundles.map((_) => getOfferSummary(_)));
   for (let i = 0; i < summaries.length; i++) {
@@ -271,7 +265,6 @@ export async function combineSpendBundle(spendbundles: SpendBundle[]): Promise<S
 
   const spends = spendbundles.flatMap((_) => _.coin_spends);
   return {
-    aggregated_signature: prefix0x(sig),
     coin_spends: spends,
   };
 }

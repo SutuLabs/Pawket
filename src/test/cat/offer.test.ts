@@ -2,7 +2,7 @@ import { GetParentPuzzleResponse } from "@/models/api";
 import { getTestAccount } from "../utility";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
 import { getOfferSummary, OfferEntity, OfferPlan } from "@/services/offer/summary";
-import { combineSpendBundle, generateOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
+import { combineOfferSpendBundle, generateOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import { Instance } from "@/services/util/instance";
 import { getAccountAddressDetails } from "@/services/util/account";
@@ -178,7 +178,7 @@ test('Take Offer Xch For CAT', async () => {
   expect(offplan).toMatchSnapshot("offer plan");
   const takerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, net, nonce, "cat_v1");
   expect(takerBundle).toMatchSnapshot("taker bundle");
-  const combined = await combineSpendBundle([makerBundle, takerBundle]);
+  const combined = await combineOfferSpendBundle([makerBundle, takerBundle]);
   await assertSpendbundle(combined, net.chainId);
   expect(combined).toMatchSnapshot("bundle");
 });
@@ -212,7 +212,7 @@ test('Take Offer CAT For Xch', async () => {
   expect(offplan).toMatchSnapshot("offer plan");
   const takerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, net, nonce, "cat_v1");
   expect(takerBundle).toMatchSnapshot("taker bundle");
-  const combined = await combineSpendBundle([makerBundle, takerBundle]);
+  const combined = await combineOfferSpendBundle([makerBundle, takerBundle]);
   expect(combined).toMatchSnapshot("bundle");
   await assertSpendbundle(combined, net.chainId);
 });

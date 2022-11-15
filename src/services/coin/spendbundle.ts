@@ -225,7 +225,10 @@ export async function assertSpendbundle(bundle: SpendBundle, chainId: string): P
 }
 
 export function assertSpendbundleCheckResult(result: SpendBundleCheckResult): void {
-  if (result.sigVerified != "Verified") throw new Error(`Spendbundle signature not pass the check: ${result.sigVerified}`);
+  if (result.sigVerified != "Verified") throw new Error(`Spendbundle signature not pass the check: ${result.sigVerified}
+  MSGs: (CoinName : PubKey : Message)
+    ${result.aggSigMessages.map(_ => `[${String(_.coinIndex).padStart(2, ' ')}]${_.coinName}:${_.publicKey}:${_.message}`).join("\n    ")}
+`);
   if (result.coinAvailability.some(_ => _.availability == "Unexecutable")) throw new Error("Unexecutable coin found");
   checkAnnouncement(result.coinAnnoAsserted, result.coinAnnoCreates, "coin");
   checkAnnouncement(result.puzzleAnnoAsserted, result.puzzleAnnoCreates, "puzzle");

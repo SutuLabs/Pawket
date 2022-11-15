@@ -3,7 +3,7 @@ import { Bytes } from "clvm";
 import { CoinSpend, OriginCoin, SpendBundle, UnsignedSpendBundle } from "@/models/wallet";
 import { GetParentPuzzleResponse } from "@/models/api";
 import { DEFAULT_HIDDEN_PUZZLE_HASH } from "../coin/consts";
-import { CoinConditions, ConditionType, Hex0x, prefix0x } from "../coin/condition";
+import { CoinConditions, ConditionType, Hex0x, prefix0x, unprefix0x } from "../coin/condition";
 import puzzle, { PuzzlePrivateKey } from "../crypto/puzzle";
 import { TokenPuzzleObserver, TokenPuzzlePrivateKey } from "../crypto/receive";
 import stdBundle from "./stdBundle";
@@ -99,7 +99,7 @@ class Transfer {
     ubundle: UnsignedSpendBundle,
     puzzles: TokenPuzzlePrivateKey[],
     chainId: string,
-    noSign = false,
+    allSignCheck = false,
   ): Promise<G2Element> {
     const BLS = Instance.BLS;
     if (!BLS) throw new Error("BLS not initialized");
@@ -112,7 +112,8 @@ class Transfer {
       const coin_spend = css[i];
       if (coin_spend.coin.parent_coin_info == "0x0000000000000000000000000000000000000000000000000000000000000000") continue;
       const puz = getPuzDetail(coin_spend.coin.puzzle_hash);
-      if (!puz && !noSign) throw new Error(`cannot find puzzle ${coin_spend.coin.puzzle_hash}`);
+      if (!puz && allSignCheck) throw new Error(`cannot find puzzle ${coin_spend.coin.puzzle_hash}`);
+
       const puzzle_reveal = await puzzle.disassemblePuzzle(coin_spend.puzzle_reveal);
 
       const synthetic_sk = puz
@@ -121,7 +122,7 @@ class Transfer {
       const coinname = getCoinNameHex(coin_spend.coin);
 
       const result = await puzzle.calcPuzzleResult(puzzle_reveal, await puzzle.disassemblePuzzle(coin_spend.solution));
-      const signature = await this.signSolution(BLS, result, synthetic_sk, coinname, chainId);
+      const signature = await this.signSolution(BLS, result, synthetic_sk, coinname, chainId, allSignCheck);
 
       sigs.push(signature);
     }
@@ -131,18 +132,26 @@ class Transfer {
     return agg_sig;
   }
 
-  public async getSpendBundle(ubundle: UnsignedSpendBundle | CoinSpend[],
+  public async getSpendBundle(ubundle: SpendBundle | UnsignedSpendBundle | CoinSpend[],
     puzzles: TokenPuzzlePrivateKey[],
     chainId: string,
-    noSign = false,
+    allSignCheck = false,
   ): Promise<SpendBundle> {
-    ubundle = Array.isArray(ubundle) ? { coin_spends: ubundle } : ubundle;
-    const agg_sig = await this.getSignaturesFromUnsignedSpendBundle(ubundle, puzzles, chainId, noSign);
+    const BLS = Instance.BLS;
+    if (!BLS) throw new Error("BLS not initialized");
 
+    const bundle: UnsignedSpendBundle | SpendBundle = Array.isArray(ubundle) ? { coin_spends: ubundle } : ubundle;
+    let agg_sig = await this.getSignaturesFromUnsignedSpendBundle(bundle, puzzles, chainId, allSignCheck);
+
+    if ("aggregated_signature" in bundle && (bundle as SpendBundle).aggregated_signature)
+      agg_sig = BLS.AugSchemeMPL.aggregate([
+        agg_sig,
+        BLS.G2Element.from_bytes(Bytes.from(unprefix0x((bundle as SpendBundle).aggregated_signature), "hex").raw()),
+      ]);
     const sig = Bytes.from(agg_sig.serialize()).hex();
     return {
       aggregated_signature: prefix0x(sig),
-      coin_spends: ubundle.coin_spends,
+      coin_spends: bundle.coin_spends,
     }
   }
 
@@ -160,6 +169,7 @@ class Transfer {
     synthetic_sk: PrivateKey | undefined,
     coinname: Bytes,
     chainId: string,
+    allSignCheck = false,
   ): Promise<G2Element> {
     const conds = puzzle.parseConditions(solution_executed_result);
     const sigs: G2Element[] = [];
@@ -175,7 +185,9 @@ class Transfer {
         const AGG_SIG_ME_ADDITIONAL_DATA = Bytes.from(chainId, "hex");
         const msg = Uint8Array.from([...args[1], ...coinname.raw(), ...AGG_SIG_ME_ADDITIONAL_DATA.raw()]);
         const pk_hex = Bytes.from(args[0]).hex();
-        if (!synthetic_sk) throw new Error("synthetic_sk is required. maybe puzzle is not find.");
+        if (!synthetic_sk && allSignCheck) throw new Error("synthetic_sk is required. maybe puzzle is not find.");
+        if (!synthetic_sk) continue;
+
         const synthetic_pk_hex = Bytes.from(synthetic_sk.get_g1().serialize()).hex();
         if (pk_hex != synthetic_pk_hex) throw new Error("wrong args due to pk != synthetic_pk");
         const sig = BLS.AugSchemeMPL.sign(synthetic_sk, msg);

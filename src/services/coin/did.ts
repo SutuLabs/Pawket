@@ -2,7 +2,7 @@ import { CoinSpend, OriginCoin, SpendBundle } from "../../models/wallet";
 import { disassemble } from "clvm_tools/clvm_tools/binutils";
 import puzzle from "../crypto/puzzle";
 import { TokenPuzzleDetail } from "../crypto/receive";
-import { combineSpendBundlePure } from "../mint/cat";
+import { combineSpendBundle} from "../mint/cat";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { prefix0x } from "./condition";
 import { modshash, modshex, modsprog } from "./mods";
@@ -124,7 +124,7 @@ export async function generateMintDidBundle(
 
   const bundles = await transfer.getSpendBundle([launcherCoinSpend, didCoinSpend], extreqs, net.chainId, true);
   // console.log("bundles", bundles)
-  const bundle = await combineSpendBundlePure(bootstrapSpendBundle, bundles);
+  const bundle = await combineSpendBundle(bootstrapSpendBundle, bundles);
 
   return {
     spendBundle: bundle,

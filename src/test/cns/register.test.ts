@@ -9,7 +9,7 @@ import { getAccountAddressDetails } from "@/services/util/account";
 import { CnsMetadataValues } from "@/models/nft";
 import { cnsMetadata, knownCoins } from "./cns.test.data";
 import { CoinSpend, SpendBundle } from "@/models/wallet";
-import { combineSpendBundle, generateNftOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
+import { combineOfferSpendBundle, generateNftOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
 import { getOfferSummary } from "@/services/offer/summary";
 import { generateMintCnsOffer } from "@/services/offer/cns";
@@ -186,7 +186,7 @@ async function testMintCnsAndOffer(
     nonce
   );
   expect(takerBundle).toMatchSnapshot("takerBundle");
-  const combined = await combineSpendBundle([makerBundle, takerBundle]);
+  const combined = await combineOfferSpendBundle([makerBundle, takerBundle]);
   await assertSpendbundle(combined, net.chainId);
   expect(combined).toMatchSnapshot("combined");
 }

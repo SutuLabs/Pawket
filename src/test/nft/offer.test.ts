@@ -4,7 +4,7 @@ import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
 import { getOfferSummary, OfferEntity, OfferPlan } from "@/services/offer/summary";
 import { Instance } from "@/services/util/instance";
 import { getAccountAddressDetails } from "@/services/util/account";
-import { combineSpendBundle, generateNftOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
+import { combineOfferSpendBundle, generateNftOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import { NftDetail } from "@/services/crypto/receive";
 import { NetworkContext } from "@/services/coin/coinUtility";
@@ -154,7 +154,7 @@ test('create and accept nft offer for xch', async () => {
     nonce
   );
   expect(takerBundle).toMatchSnapshot("takerBundle");
-  const combined = await combineSpendBundle([makerBundle, takerBundle]);
+  const combined = await combineOfferSpendBundle([makerBundle, takerBundle]);
   await assertSpendbundle(combined, net.chainId);
   expect(combined).toMatchSnapshot("combined");
 });

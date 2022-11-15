@@ -1,8 +1,8 @@
-import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
+import { CoinSpend, OriginCoin, PartialSpendBundle, SpendBundle, UnsignedSpendBundle } from "@/models/wallet";
 import puzzle, { PlaintextPuzzle } from "../crypto/puzzle";
-import receive, { TokenPuzzleDetail } from "../crypto/receive";
-import { combineSpendBundlePure } from "../mint/cat";
-import { curryMod } from "../offer/bundler";
+import receive, { TokenPuzzleDetail, TokenPuzzleObserver } from "../crypto/receive";
+import { combineSpendBundle } from "../mint/cat";
+import { combineOfferSpendBundle, curryMod } from "../offer/bundler";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { formatAmount, Hex0x, prefix0x, skipFirstByte0x } from "./condition";
 import { modshash, modshex, modsprog } from "./mods";
@@ -23,7 +23,7 @@ import { CnsCoinAnalysisResult, CnsMetadataKeys, CnsMetadataValues } from "@/mod
 type MetadataValues = NftMetadataValues | CnsMetadataValues;
 
 export interface MintNftInfo {
-  spendBundle: SpendBundle;
+  spendBundle: UnsignedSpendBundle;
 }
 
 // - singleton_top_layer_v1_1
@@ -83,7 +83,7 @@ export async function generateMintNftBundle(
   let didPreviousCoin = didAnalysis?.coin;
   let proof = !didPreviousCoin ? undefined : await catBundle.getLineageProof(didPreviousCoin.parent_coin_info, net.api, 2);
   const didPuzzleHash = !didAnalysis ? undefined : prefix0x(await puzzle.getPuzzleHashFromPuzzle(didAnalysis.rawPuzzle));
-  let bundle: SpendBundle = bootstrapSpendBundle;
+  let bundle: UnsignedSpendBundle = bootstrapSpendBundle;
   for (let i = 0; i < metadatas.length; i++) {
     const offset = metadatas.length == 1 ? 0 : 1;
     const metadata = metadatas[i];
@@ -139,7 +139,7 @@ export async function generateMintNftBundle(
     };
     const extreqs = cloneAndAddRequestPuzzleTemporary(net.symbol, requests, inner_p2_puzzle.hash, nftPuzzle, nftPuzzleHash);
     const nftBundle = await transfer.getSpendBundle([launcherCoinSpend, nftCoinSpend], extreqs, net.chainId, true);
-    bundle = await combineSpendBundlePure(bundle, nftBundle);
+    bundle = await combineSpendBundle(bundle, nftBundle);
 
     if (didAnalysis && proof && didPreviousCoin && didPuzzleHash) {
       const didBundle = await getDidBundle(didAnalysis, proof, amount, launcherCoinId, didPreviousCoin, didPuzzleHash, requests, net);
@@ -155,7 +155,7 @@ export async function generateMintNftBundle(
         puzzle_hash: didPuzzleHash,
         amount: didPreviousCoin.amount,
       };
-      bundle = await combineSpendBundlePure(bundle, didBundle);
+      bundle = await combineSpendBundle(bundle, didBundle);
     }
   }
 
@@ -206,11 +206,11 @@ export async function getBootstrapSpendBundle(
   target_hex: Hex0x,
   fee: bigint,
   availcoins: SymbolCoins,
-  requests: TokenPuzzleDetail[],
+  requests: TokenPuzzleObserver[],
   count: number,
   net: NetworkContext,
   privateKey: string | undefined = undefined,
-): Promise<SpendBundle> {
+): Promise<PartialSpendBundle | UnsignedSpendBundle> {
   const amount = 1n; // always 1 mojo for 1 NFT
   const baseSymbol = net.symbol;
 
@@ -242,9 +242,11 @@ export async function getBootstrapSpendBundle(
       onlycoin[baseSymbol] = [{ puzzle_hash: tgt.address, amount: tgt.amount, parent_coin_info: parent }];
       const bootstrapTgts: TransferTarget[] = [{ address: prefix0x(target_hex), amount, symbol: baseSymbol }];
       const bootstrapSpendPlan = transfer.generateSpendPlan(onlycoin, bootstrapTgts, change_hex, 0n, baseSymbol);
-      const bootstrapSpendBundle = await transfer.generateSpendBundleWithoutCat(bootstrapSpendPlan, puzzles, [], net);
+      const bootstrapUnsignedSpendBundle = await transfer.generateSpendBundleWithoutCat(bootstrapSpendPlan, puzzles, [], net);
+      // console.dir(puzzles, { depth: 8 });
+      const bootstrapSpendBundle = await transfer.getSpendBundle(bootstrapUnsignedSpendBundle, puzzles, net.chainId);
 
-      spendBundle = await combineSpendBundlePure(spendBundle, bootstrapSpendBundle);
+      spendBundle = await combineSpendBundle(spendBundle, bootstrapSpendBundle);
     }
 
     return spendBundle;
@@ -307,7 +309,7 @@ export async function generateTransferNftBundle(
     ? await constructPureFeeSpendBundle(change_hex, fee, availcoins, requests, net)
     : undefined;
 
-  const bundle = await combineSpendBundlePure(nftBundle, didBundle, feeBundle);
+  const bundle = await combineSpendBundle(nftBundle, didBundle, feeBundle);
   return bundle;
 }
 
@@ -320,10 +322,10 @@ export async function generateUpdatedNftBundle(
   key: CnsDataKey | NftDataKey,
   value: string,
   availcoins: SymbolCoins,
-  requests: TokenPuzzleDetail[],
+  requests: TokenPuzzleObserver[],
   net: NetworkContext,
   targetAddress: string | undefined = undefined,
-): Promise<SpendBundle> {
+): Promise<UnsignedSpendBundle> {
   const tgt_hex = !targetAddress
     ? analysis.p2Owner
     : prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
@@ -362,7 +364,7 @@ export async function generateUpdatedNftBundle(
     ? await constructPureFeeSpendBundle(change_hex, fee, availcoins, requests, net)
     : undefined;
 
-  const bundle = await combineSpendBundlePure(nftBundle, feeBundle);
+  const bundle = await combineSpendBundle(nftBundle, feeBundle);
   return bundle;
 }
 
@@ -757,7 +759,7 @@ async function constructPureFeeSpendBundle(
   availcoins: SymbolCoins,
   requests: TokenPuzzleDetail[],
   net: NetworkContext,
-): Promise<SpendBundle> {
+): Promise<UnsignedSpendBundle> {
   const feeTgts: TransferTarget[] = [{
     address: "0x0000000000000000000000000000000000000000000000000000000000000000",
     amount: 0n,

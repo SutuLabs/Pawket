@@ -1,5 +1,5 @@
 import { getTestAccount } from "../utility";
-import { SymbolCoins } from "@/services/transfer/transfer";
+import transfer, { SymbolCoins } from "@/services/transfer/transfer";
 import { getBootstrapSpendBundle } from "@/services/coin/nft";
 import { GetParentPuzzleResponse } from "@/models/api";
 import { Instance } from "@/services/util/instance";
@@ -51,10 +51,11 @@ test('Prepare CNS bootstrap coins', async () => {
   const tokenPuzzles = await getAccountAddressDetails(account, [], tokenInfo(), xchPrefix(), xchSymbol(), undefined, "cat_v2");
   const sk = "00186eae4cd4a3ec609ca1a8c1cda8467e3cb7cbbbf91a523d12d31129d5f8d7";
 
-  const spendBundle = await getBootstrapSpendBundle(
+  const ubundle = await getBootstrapSpendBundle(
     target_hex, change_hex, fee, availcoins, tokenPuzzles, count, net, sk);
-  await assertSpendbundle(spendBundle, net.chainId);
-  expect(spendBundle).toMatchSnapshot("spendbundle");
+  const bundle = await transfer.getSpendBundle(ubundle, tokenPuzzles, net.chainId);
+  await assertSpendbundle(bundle, net.chainId);
+  expect(bundle).toMatchSnapshot("spendbundle");
 });
 
 

@@ -1,5 +1,5 @@
-import puzzle, { ExecuteResult, PlaintextPuzzle, PuzzleDetail } from "../crypto/puzzle";
-import { TokenPuzzleDetail } from "../crypto/receive";
+import puzzle, { ExecuteResult, PlaintextPuzzle, PuzzleDetail, PuzzleObserver } from "../crypto/puzzle";
+import { TokenPuzzleDetail, TokenPuzzleObserver } from "../crypto/receive";
 import { curryMod } from "../offer/bundler";
 import { getNumber, Hex0x, prefix0x, unprefix0x } from "./condition";
 import { modshash, modsprog } from "./mods";
@@ -26,10 +26,10 @@ export async function constructSingletonTopLayerPuzzle(
 
 export function getPuzzleDetail(
   tgt_hex: string,
-  requests: TokenPuzzleDetail[]
-): PuzzleDetail {
+  requests: TokenPuzzleObserver[]
+): PuzzleObserver {
 
-  const puzzleDict: { [key: string]: PuzzleDetail } = Object.assign({}, ...requests.flatMap((_) => _.puzzles).map((x) => ({ [prefix0x(x.hash)]: x })));
+  const puzzleDict: { [key: string]: PuzzleObserver } = Object.assign({}, ...requests.flatMap((_) => _.puzzles).map((x) => ({ [prefix0x(x.hash)]: x })));
   const getPuzDetail = (hash: string) => {
     const puz = puzzleDict[hash];
     if (!puz) throw new Error(`cannot find puzzle: (${hash}) in (${requests.flatMap(_ => _.puzzles).map(_ => _.hash).join(", ")})`);
@@ -43,17 +43,18 @@ export function getPuzzleDetail(
 
 export function cloneAndAddRequestPuzzleTemporary(
   baseSymbol: string,
-  requests: TokenPuzzleDetail[],
+  requests: TokenPuzzleObserver[],
   originalHash: string,
   newPuzzle: string,
   newPuzzleHash: Hex0x,
-): TokenPuzzleDetail[] {
+  synPubKey: Hex0x,
+): TokenPuzzleObserver[] {
   const extreqs = Array.from(requests.map((_) => ({ symbol: _.symbol, puzzles: Array.from(_.puzzles.map((_) => ({ ..._ }))) })));
   const puzs = extreqs.find((_) => _.symbol == baseSymbol);
   const nftReq = puzs?.puzzles.find((_) => unprefix0x(originalHash) == _.hash);
   if (!puzs || !nftReq) throw new Error(`cannot find inner puzzle hash [${unprefix0x(originalHash)}] from ` + JSON.stringify(extreqs));
   puzs.puzzles.push({
-    privateKey: nftReq.privateKey,
+    synPubKey,
     puzzle: newPuzzle,
     hash: newPuzzleHash,
     address: "",

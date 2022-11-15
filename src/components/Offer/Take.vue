@@ -209,7 +209,7 @@ import coinHandler from "@/services/transfer/coin";
 import { getOfferSummary, OfferSummary } from "@/services/offer/summary";
 import { decodeOffer } from "@/services/offer/encoding";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { combineSpendBundle, generateNftOffer, generateOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
+import { combineOfferSpendBundle, generateNftOffer, generateOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
 import { Hex0x, prefix0x } from "@/services/coin/condition";
 import puzzle from "@/services/crypto/puzzle";
 import store from "@/store";
@@ -510,7 +510,7 @@ export default class TakeOffer extends Vue {
         const fee = isReceivingCat ? BigInt(this.fee) : 0n;
         const offplan = await generateOfferPlan(revSummary.offered, change_hex, this.availcoins, fee, xchSymbol());
         const takerBundle = await generateOffer(offplan, revSummary.requested, this.tokenPuzzles, networkContext());
-        const combined = await combineSpendBundle([this.makerBundle, takerBundle]);
+        const combined = await combineOfferSpendBundle([this.makerBundle, takerBundle]);
         // for creating unit test
         // console.log("const change_hex=", change_hex, ";");
         // console.log("const bundle=", JSON.stringify(combined, null, 2), ";");
@@ -539,7 +539,7 @@ export default class TakeOffer extends Vue {
           this.tokenPuzzles,
           networkContext()
         );
-        const combined = await combineSpendBundle([this.makerBundle, takerBundle]);
+        const combined = await combineOfferSpendBundle([this.makerBundle, takerBundle]);
         // for creating unit test
         // console.log("const change_hex=", change_hex, ";");
         // console.log("const bundle=", JSON.stringify(combined, null, 2), ";");

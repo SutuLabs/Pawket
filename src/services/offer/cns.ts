@@ -8,7 +8,7 @@ import { getCoinName0x, NetworkContext } from "../coin/coinUtility";
 import receive, { TokenPuzzleDetail } from "../crypto/receive";
 import { generateOfferPlan, generateNftOffer } from "./bundler";
 import { prefix0x } from "../coin/condition";
-import { combineSpendBundlePure } from "../mint/cat";
+import { combineSpendBundle} from "../mint/cat";
 import { GetParentPuzzleResponse } from "@/models/api";
 import { OfferEntity } from "./summary";
 import utility from "../crypto/utility";
@@ -88,6 +88,6 @@ export async function generateMintCnsOffer(
   const offerBundle = await generateNftOffer(
     offplan, analysis, nextCoin, reqs, requests, net, nonceHex);
 
-  const offerCombineBundle = await combineSpendBundlePure(spendBundle, offerBundle);
+  const offerCombineBundle = combineSpendBundle(spendBundle, offerBundle);
   return offerCombineBundle;
 }
