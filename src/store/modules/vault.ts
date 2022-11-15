@@ -22,6 +22,7 @@ export interface IVaultState {
   experiment: boolean;
   currency: CurrencyType;
   selectedAccount: number;
+  offline: boolean
 }
 
 const PasswordHashIteration = 6000;
@@ -41,6 +42,7 @@ store.registerModule<IVaultState>("vault", {
       experiment: false,
       currency: CurrencyType.USDT,
       selectedAccount: 0,
+      offline: false,
     };
   },
   actions: {
@@ -55,6 +57,8 @@ store.registerModule<IVaultState>("vault", {
       if (locale) i18n.locale = locale;
 
       const memsetting = await ustore.getItem("MEMORY_STATE");
+      const offline = localStorage.getItem("OFFLINE_MODE");
+      if (offline && offline == "on") state.offline = true;
 
       if (ustore.type == "background" && memsetting) {
         const sts = JSON.parse(memsetting) as IRootState;

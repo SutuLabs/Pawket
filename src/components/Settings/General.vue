@@ -21,6 +21,11 @@
           </option>
         </b-select>
       </b-field>
+      <b-field>
+        <template #label
+          >{{ $t("settings.general.label.offlineMode") }}<b-switch class="is-pulled-right" v-model="offlineMode"></b-switch>
+        </template>
+      </b-field>
     </section>
   </div>
 </template>
@@ -64,6 +69,20 @@ export default class General extends Vue {
     return store.state.network.networks;
   }
 
+  get offlineMode(): boolean {
+    return store.state.vault.offline;
+  }
+
+  set offlineMode(value: boolean) {
+    if (value) {
+      Vue.set(store.state.vault, "offline", true);
+      localStorage.setItem("OFFLINE_MODE", "on");
+    } else {
+      Vue.set(store.state.vault, "offline", false);
+      localStorage.setItem("OFFLINE_MODE", "off");
+    }
+  }
+
   get network(): string {
     return store.state.network.networkId;
   }
@@ -81,7 +100,7 @@ export default class General extends Vue {
     localStorage.setItem("Locale", value);
   }
 
-    get selectedAccount(): number {
+  get selectedAccount(): number {
     return store.state.account.selectedAccount;
   }
 

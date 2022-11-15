@@ -60,7 +60,7 @@ export default class NetworkSelector extends Vue {
   }
 
   get offline(): boolean {
-    return store.state.account.offline;
+    return store.state.vault.offline;
   }
 
   getdotStyle(networkId: string, greyOnOffline = true): string {
