@@ -192,6 +192,9 @@
         "donate": "You are donating to the developers.",
         "observeMode": "Interaction function disabled in Observe Mode",
         "offline": "Currently in offline mode.",
+        "turnOffPrefix": "Click",
+        "turnOff": "here",
+        "turnOffSuffix": "to turn off.",
         "test": "Note: kitten.pawket.app is a test site where you can experience some unreleased new features."
       }
     }
@@ -899,7 +902,8 @@
       "label": {
         "language": "Language",
         "network": "Network",
-        "currency": "Currency Conversion"
+        "currency": "Currency Conversion",
+        "offlineMode": "Offline Mode"
       }
     },
     "security": {

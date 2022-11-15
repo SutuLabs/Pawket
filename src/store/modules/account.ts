@@ -64,7 +64,6 @@ export interface IAccountState {
   accounts: AccountEntity[];
   tokenInfo: TokenInfo;
   refreshing: boolean;
-  offline: boolean;
 }
 
 store.registerModule<IAccountState>("account", {
@@ -74,7 +73,6 @@ store.registerModule<IAccountState>("account", {
       accounts: [],
       selectedAccount: 0,
       refreshing: false,
-      offline: false,
     };
   },
   actions: {
@@ -172,10 +170,8 @@ store.registerModule<IAccountState>("account", {
 
         Vue.set(account, "activities", activities);
         Vue.set(account, "tokens", tokenBalances);
-        state.offline = false;
       } catch (error) {
         console.warn("error get account balance", error);
-        state.offline = true;
       }
 
       resetState();
