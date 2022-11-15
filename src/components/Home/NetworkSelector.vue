@@ -48,6 +48,7 @@ export default class NetworkSelector extends Vue {
 
   set networkId(value: string) {
     store.dispatch("switchNetwork", value);
+    store.dispatch("refreshBalance");
   }
 
   get experimentMode(): boolean {

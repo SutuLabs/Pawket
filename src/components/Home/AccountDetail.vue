@@ -159,10 +159,6 @@ export default class AccountDetail extends Vue {
     return store.state.network.networkId;
   }
 
-  set networkId(value: string) {
-    store.dispatch("switchNetwork", value);
-  }
-
   get networks(): NetworkInfo {
     return store.state.network.networks;
   }
