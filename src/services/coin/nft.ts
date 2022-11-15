@@ -23,7 +23,7 @@ import { CnsCoinAnalysisResult, CnsMetadataKeys, CnsMetadataValues } from "@/mod
 type MetadataValues = NftMetadataValues | CnsMetadataValues;
 
 export interface MintNftInfo {
-  spendBundle: UnsignedSpendBundle;
+  spendBundle: PartialSpendBundle;
 }
 
 // - singleton_top_layer_v1_1
@@ -137,7 +137,8 @@ export async function generateMintNftBundle(
       puzzle_reveal: prefix0x(await puzzle.encodePuzzle(nftPuzzle)),
       solution: prefix0x(await puzzle.encodePuzzle(nftSolution)),
     };
-    const extreqs = cloneAndAddRequestPuzzleTemporary(net.symbol, requests, inner_p2_puzzle.hash, nftPuzzle, nftPuzzleHash);
+
+    // const extreqs = cloneAndAddRequestPuzzleTemporary(net.symbol, requests, inner_p2_puzzle.hash, nftPuzzle, nftPuzzleHash);
     const nftBundle = await transfer.getSpendBundle([launcherCoinSpend, nftCoinSpend], extreqs, net.chainId, true);
     bundle = await combineSpendBundle(bundle, nftBundle);
 

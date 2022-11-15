@@ -17,7 +17,8 @@ export interface ExecuteResultCondition {
 
 export interface ExecuteResult {
   raw: string;
-  conditions: ExecuteResultCondition[];
+  conditions: ConditionEntity[];
+  sexp: SExp;
 }
 
 export type PlaintextPuzzle = string;
@@ -26,6 +27,7 @@ export type AddressType = "Observed" | "Hardened" | "Unknown";
 
 export interface PuzzlePrivateKey extends PuzzleAddress {
   privateKey: PrivateKey;
+  synPubKey: Hex0x;
 }
 
 export interface PuzzleDetail extends PuzzleObserver {
@@ -313,18 +315,20 @@ class PuzzleMaker {
     const solution_result = await this.calcPuzzleResult(puz, solution);
 
     const conds = assemble(solution_result);
-    const argarr = Array.from(conds.as_iter()).map((_) => Array.from(_.as_iter()).map((_) => disassemble(_)));
-    const solution_results = argarr.map((_) => ({ op: Number(_[0]), args: _.slice(1) }));
-    return { raw: solution_result, conditions: solution_results };
+    // const argarr = Array.from(conds.as_iter()).map((_) => Array.from(_.as_iter()).map((_) => disassemble(_)));
+    // const solution_results = argarr.map((_) => ({ op: Number(_[0]), args: _.slice(1) }));
+    const solution_results = this.parseConditions(conds);
+    return { raw: solution_result, conditions: solution_results, sexp: conds };
   }
 
   async executePuzzleHex(puz_hex: string, solution_hex: string): Promise<ExecuteResult> {
     const solution_result_hex = await this.calcPuzzleResult(puz_hex, solution_hex, "--hex", "--dump");
 
     const conds = sexpAssemble(solution_result_hex);
-    const argarr = Array.from(conds.as_iter()).map((_) => Array.from(_.as_iter()).map((_) => prefix0x((isAtom(_) ? _.atom : _.as_bin()).hex())));
-    const solution_results = argarr.map((_) => ({ op: Number(_[0]), args: _.slice(1) }));
-    return { raw: solution_result_hex, conditions: solution_results };
+    // const argarr = Array.from(conds.as_iter()).map((_) => Array.from(_.as_iter()).map((_) => prefix0x((isAtom(_) ? _.atom : _.as_bin()).hex())));
+    // const solution_results = argarr.map((_) => ({ op: Number(_[0]), args: _.slice(1) }));
+    const solution_results = this.parseConditions(conds);
+    return { raw: solution_result_hex, conditions: solution_results, sexp: conds };
   }
 }
 

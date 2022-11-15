@@ -1,11 +1,11 @@
 import { SpendBundle } from "../../models/wallet";
 import { Bytes } from "clvm";
-import puzzle, { ExecuteResult } from "../crypto/puzzle";
+import puzzle, { ConditionArgs, ExecuteResult } from "../crypto/puzzle";
 import { sha256 } from "../offer/bundler";
 import { Instance } from "../util/instance";
 import { uncurryPuzzle, sexpAssemble, convertUncurriedPuzzle, getModsPath } from "./analyzer";
 import { getCoinName0x } from "./coinUtility";
-import { getNumber, unprefix0x } from "./condition";
+import { getNumber, prefix0x, unprefix0x } from "./condition";
 import { modshex } from "./mods";
 import { ConditionOpcode } from "./opcode";
 
@@ -89,45 +89,54 @@ export async function checkSpendBundle(bundle: SpendBundle | undefined, chainId:
         }
       }
 
+      const getFirstLevelArg = function (args: ConditionArgs): Uint8Array {
+        if (Array.isArray(args)) throw new Error("Unexpected array met in processing announcement.");
+        if (!args) throw new Error("Unexpected empty arg met in processing announcement");
+        return args;
+      }
+      const getFirstLevelArgMsg = function (args: ConditionArgs): string {
+        return prefix0x(Bytes.from(getFirstLevelArg(args)).hex());
+      }
+
       puzzleAnnoCreates.push(
         ...result.conditions
-          .filter((_) => _.op == ConditionOpcode.CREATE_PUZZLE_ANNOUNCEMENT)
-          .map((_) => ({ coinIndex: i, message: sha256(cs.coin.puzzle_hash, _.args[0]) }))
+          .filter((_) => _.code == ConditionOpcode.CREATE_PUZZLE_ANNOUNCEMENT)
+          .map((_) => ({ coinIndex: i, message: sha256(cs.coin.puzzle_hash, getFirstLevelArg(_.args[0])) }))
       );
       puzzleAnnoAsserted.push(
         ...result.conditions
-          .filter((_) => _.op == ConditionOpcode.ASSERT_PUZZLE_ANNOUNCEMENT)
-          .map((_) => ({ coinIndex: i, message: _.args[0] }))
+          .filter((_) => _.code == ConditionOpcode.ASSERT_PUZZLE_ANNOUNCEMENT)
+          .map((_) => ({ coinIndex: i, message: getFirstLevelArgMsg(_.args[0]) }))
       );
       coinAnnoCreates.push(
         ...result.conditions
-          .filter((_) => _.op == ConditionOpcode.CREATE_COIN_ANNOUNCEMENT)
-          .map((_) => ({ coinIndex: i, message: sha256(getCoinName0x(cs.coin), _.args[0]) }))
+          .filter((_) => _.code == ConditionOpcode.CREATE_COIN_ANNOUNCEMENT)
+          .map((_) => ({ coinIndex: i, message: sha256(getCoinName0x(cs.coin), getFirstLevelArg(_.args[0])) }))
       );
       coinAnnoAsserted.push(
         ...result.conditions
-          .filter((_) => _.op == ConditionOpcode.ASSERT_COIN_ANNOUNCEMENT)
-          .map((_) => ({ coinIndex: i, message: _.args[0] }))
+          .filter((_) => _.code == ConditionOpcode.ASSERT_COIN_ANNOUNCEMENT)
+          .map((_) => ({ coinIndex: i, message: getFirstLevelArgMsg(_.args[0]) }))
       );
 
       newCoins.push(
         ...result.conditions
-          .filter((_) => _.op == ConditionOpcode.CREATE_COIN)
+          .filter((_) => _.code == ConditionOpcode.CREATE_COIN)
           .map((_) => ({
             coinIndex: ca.coinIndex,
-            amount: getNumber(_.args[1]),
-            coinName: getCoinName0x({ parent_coin_info: ca.coinName, puzzle_hash: _.args[0], amount: getNumber(_.args[1]) }),
+            amount: getNumber(getFirstLevelArgMsg(_.args[1])),
+            coinName: getCoinName0x({ parent_coin_info: ca.coinName, puzzle_hash: getFirstLevelArgMsg(_.args[0]), amount: getNumber(getFirstLevelArgMsg(_.args[1])) }),
           }))
       );
       aggSigMessages.push(
         ...result.conditions
-          .filter((_) => _.op == ConditionOpcode.AGG_SIG_ME)
-          .map((_) => ({ coinIndex: i, coinName: ca.coinName, publicKey: _.args[0], message: _.args[1] }))
+          .filter((_) => _.code == ConditionOpcode.AGG_SIG_ME)
+          .map((_) => ({ coinIndex: i, coinName: ca.coinName, publicKey: getFirstLevelArgMsg(_.args[0]), message: getFirstLevelArgMsg(_.args[1]) }))
       );
       aggSigMessages.push(
         ...result.conditions
-          .filter((_) => _.op == ConditionOpcode.AGG_SIG_UNSAFE)
-          .map((_) => ({ coinIndex: i, coinName: "", publicKey: _.args[0], message: _.args[1] }))
+          .filter((_) => _.code == ConditionOpcode.AGG_SIG_UNSAFE)
+          .map((_) => ({ coinIndex: i, coinName: "", publicKey: getFirstLevelArgMsg(_.args[0]), message: getFirstLevelArgMsg(_.args[1]) }))
       );
 
       const uncPuzzle = await uncurryPuzzle(sexpAssemble(cs.puzzle_reveal), cs.puzzle_reveal);

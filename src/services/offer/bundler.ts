@@ -145,8 +145,9 @@ export async function generateOffer(
   return transfer.getSpendBundle(spends, puzzleCopy, net.chainId);
 }
 
-export function sha256(...args: (Hex0x | string | Uint8Array)[]): string {
+export function sha256(...args: (Hex0x | string | Uint8Array | undefined)[]): string {
   const cont = new Uint8Array(args
+    .filter((_): _ is Hex0x | string | Uint8Array => !!_)
     .map(_ => Bytes.from(typeof _ === "string" ? unprefix0x(_) : _, "hex").raw())
     .reduce((acc, cur) => [...acc, ...cur], [] as number[]));
   const result = Bytes.SHA256(cont);

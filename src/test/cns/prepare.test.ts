@@ -1,4 +1,4 @@
-import { getTestAccount } from "../utility";
+import { getTestAccount, logBundle } from "../utility";
 import transfer, { SymbolCoins } from "@/services/transfer/transfer";
 import { getBootstrapSpendBundle } from "@/services/coin/nft";
 import { GetParentPuzzleResponse } from "@/models/api";
