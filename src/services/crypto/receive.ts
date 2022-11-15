@@ -1,6 +1,5 @@
 import { CoinRecord, convertToOriginCoin, GetRecordsResponse, OriginCoin } from "../../models/wallet";
-import puzzle, { PuzzleAddress } from "./puzzle";
-import { PuzzleDetail } from "./puzzle";
+import puzzle, { PuzzleAddress, PuzzleDetail, PuzzleObserver, PuzzlePrivateKey } from "./puzzle";
 import utility from "./utility";
 import { CustomCat, AccountTokens, AccountTokenAddress, TokenInfo } from "../../models/account";
 import { analyzeNftCoin, getScalarString } from "../coin/nft";
@@ -12,6 +11,16 @@ import { CoinSpend } from "../../models/wallet";
 export interface TokenPuzzleDetail {
   symbol: string;
   puzzles: PuzzleDetail[];
+}
+
+export interface TokenPuzzlePrivateKey {
+  symbol: string;
+  puzzles: PuzzlePrivateKey[];
+}
+
+export interface TokenPuzzleObserver {
+  symbol: string;
+  puzzles: PuzzleObserver[];
 }
 
 export interface TokenPuzzleAddress {

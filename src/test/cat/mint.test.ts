@@ -1,10 +1,12 @@
 import { OriginCoin } from "@/models/wallet";
 import { analyzeCatCoin } from "@/services/coin/cat";
 import { NetworkContextWithOptionalApi } from "@/services/coin/coinUtility";
+import { unprefix0x } from "@/services/coin/condition";
 import { assertSpendbundle } from "@/services/coin/spendbundle";
-import puzzle from "@/services/crypto/puzzle";
+import puzzle, { PuzzlePrivateKey } from "@/services/crypto/puzzle";
 import utility from "@/services/crypto/utility";
 import { generateMintCatBundle } from "@/services/mint/cat";
+import transfer from "@/services/transfer/transfer";
 import { Instance } from "@/services/util/instance";
 
 const net: NetworkContextWithOptionalApi = {
@@ -32,23 +34,33 @@ test('Mint Cat', async () => {
   const memo = "hello";
   const fee = 1n;
   const amount = 10n;
-  const requests = await puzzle.getPuzzleDetails(utility.fromHexString(sk_hex), "xch", 0, 1);
+  const puzzles = await puzzle.getPuzzleDetails(utility.fromHexString(sk_hex), "xch", 0, 1);
+  const obPuzs = puzzle.getObserverPuzzles(puzzles);
 
-  const { spendBundle, assetId } = await generateMintCatBundle(
+  const { spendBundle, assetId, catPuzzle } = await generateMintCatBundle(
     tgt_addr,
     change_addr,
     amount,
     fee,
     memo,
     { [xchSymbol()]: [coin] },
-    sk_hex,
-    [{ puzzles: requests, symbol: xchSymbol() }],
+    [{ puzzles: obPuzs, symbol: xchSymbol() }],
     net,
     "cat_v1",
   );
 
-  expect(spendBundle).toMatchSnapshot("spendbundle");
-  await assertSpendbundle(spendBundle, net.chainId);
+  const newPuzzles: PuzzlePrivateKey[] = Object.assign([], puzzles);
+  newPuzzles.push(
+    {
+      privateKey: puzzle.getPrivateKeyFromHex(sk_hex),
+      hash: unprefix0x(catPuzzle.hash),
+      address: "",
+    },
+  );
+
+  const bundle = await transfer.getSpendBundle(spendBundle, [{ puzzles: newPuzzles, symbol: xchSymbol() }], net.chainId)
+  await assertSpendbundle(bundle, net.chainId);
+  expect(bundle).toMatchSnapshot("spendbundle");
   expect(assetId).toMatchSnapshot("assetid");
 });
 

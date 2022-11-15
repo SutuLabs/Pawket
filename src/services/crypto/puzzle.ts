@@ -24,9 +24,17 @@ export type PlaintextPuzzle = string;
 
 export type AddressType = "Observed" | "Hardened" | "Unknown";
 
-export interface PuzzleDetail extends PuzzleAddress {
+export interface PuzzlePrivateKey extends PuzzleAddress {
   privateKey: PrivateKey;
+}
+
+export interface PuzzleDetail extends PuzzleObserver {
+  privateKey: PrivateKey;
+}
+
+export interface PuzzleObserver extends PuzzleAddress {
   puzzle: PlaintextPuzzle;
+  synPubKey: Hex0x;
 }
 
 export interface PuzzleAddress {
@@ -71,6 +79,11 @@ class PuzzleMaker {
 
   public async getPuzzleHash(pubkey: string): Promise<string> {
     const synPubkey = await this.getSyntheticKey(pubkey);
+    const puzzle = this.getPuzzle(synPubkey);
+    return await this.getPuzzleHashFromPuzzle(puzzle);
+  }
+
+  public async getPuzzleHashFromSyntheticKey(synPubkey: string): Promise<string> {
     const puzzle = this.getPuzzle(synPubkey);
     return await this.getPuzzleHashFromPuzzle(puzzle);
   }
@@ -175,6 +188,16 @@ class PuzzleMaker {
     return await this.getPuzzleDetailsInner(privateKey, async (spk) => this.getCatPuzzle(spk, assetId, catModName), startIndex, endIndex, prefix, true)
   }
 
+  public getObserverPuzzles(details: PuzzleDetail[]): PuzzleObserver[] {
+    return details.map(_ => ({
+      hash: _.hash,
+      address: _.address,
+      type: _.type,
+      puzzle: _.puzzle,
+      synPubKey: _.synPubKey,
+    }));
+  }
+
   private async getPuzzleDetailsInner(
     privateKey: Uint8Array,
     getPuzzle: (pubkey: string) => Promise<string>,
@@ -193,6 +216,7 @@ class PuzzleMaker {
       const address = this.getAddressFromPuzzleHash(hash, prefix);
       details.push({
         privateKey: privkey,
+        synPubKey: prefix0x(synpubkey),
         hash: hash,
         puzzle: puzzle,
         address,

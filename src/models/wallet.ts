@@ -46,8 +46,11 @@ export interface CoinSpend {
     solution: Hex0x;
 }
 
-export interface SpendBundle {
+export interface SpendBundle extends UnsignedSpendBundle {
     aggregated_signature: Hex0x;
+}
+
+export interface UnsignedSpendBundle {
     coin_spends: CoinSpend[];
 }
 

@@ -1,11 +1,11 @@
 import { PrivateKey, G2Element, ModuleInstance } from "@chiamine/bls-signatures";
 import { Bytes } from "clvm";
-import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
+import { CoinSpend, OriginCoin, SpendBundle, UnsignedSpendBundle } from "@/models/wallet";
 import { GetParentPuzzleResponse } from "@/models/api";
 import { DEFAULT_HIDDEN_PUZZLE_HASH } from "../coin/consts";
 import { CoinConditions, ConditionType, Hex0x, prefix0x } from "../coin/condition";
-import puzzle, { PuzzleDetail } from "../crypto/puzzle";
-import { TokenPuzzleDetail } from "../crypto/receive";
+import puzzle, { PuzzlePrivateKey } from "../crypto/puzzle";
+import { TokenPuzzleObserver, TokenPuzzlePrivateKey } from "../crypto/receive";
 import stdBundle from "./stdBundle";
 import { ConditionOpcode } from "../coin/opcode";
 import catBundle from "./catBundle";
@@ -55,28 +55,28 @@ class Transfer {
 
   public async generateSpendBundleWithoutCat(
     plan: SpendPlan,
-    puzzles: TokenPuzzleDetail[],
+    puzzles: TokenPuzzleObserver[],
     catAdditionalConditions: ConditionType[],
     net: NetworkContextWithOptionalApi,
-  ): Promise<SpendBundle> {
+  ): Promise<UnsignedSpendBundle> {
     return await this.generateSpendBundleInternal(plan, puzzles, catAdditionalConditions, net);
   }
 
   public async generateSpendBundleIncludingCat(
     plan: SpendPlan,
-    puzzles: TokenPuzzleDetail[],
+    puzzles: TokenPuzzleObserver[],
     catAdditionalConditions: ConditionType[],
     net: NetworkContext,
-  ): Promise<SpendBundle> {
+  ): Promise<UnsignedSpendBundle> {
     return await this.generateSpendBundleInternal(plan, puzzles, catAdditionalConditions, net);
   }
 
   public async generateSpendBundleInternal(
     plan: SpendPlan,
-    puzzles: TokenPuzzleDetail[],
+    puzzles: TokenPuzzleObserver[],
     catAdditionalConditions: ConditionType[],
     net: NetworkContextWithOptionalApi,
-  ): Promise<SpendBundle> {
+  ): Promise<UnsignedSpendBundle> {
     const coin_spends: CoinSpend[] = [];
 
     for (const symbol in plan) {
@@ -91,20 +91,22 @@ class Transfer {
       }
     }
 
-    return this.getSpendBundle(coin_spends, puzzles, net.chainId);
+    return { coin_spends };
+    // return this.getSpendBundle(coin_spends, puzzles, net.chainId);
   }
 
-  public async getSignaturesFromCoinSpends(
-    css: CoinSpend[],
-    puzzles: TokenPuzzleDetail[],
+  public async getSignaturesFromUnsignedSpendBundle(
+    ubundle: UnsignedSpendBundle,
+    puzzles: TokenPuzzlePrivateKey[],
     chainId: string,
     noSign = false,
   ): Promise<G2Element> {
     const BLS = Instance.BLS;
     if (!BLS) throw new Error("BLS not initialized");
-    const puzzleDict: { [key: string]: PuzzleDetail } = Object.assign({}, ...puzzles.flatMap(_ => _.puzzles).map((x) => ({ [prefix0x(x.hash)]: x })));
-    const getPuzDetail = (hash: string): PuzzleDetail | undefined => { return puzzleDict[hash]; }
+    const puzzleDict: { [key: string]: PuzzlePrivateKey } = Object.assign({}, ...puzzles.flatMap(_ => _.puzzles).map((x) => ({ [prefix0x(x.hash)]: x })));
+    const getPuzDetail = (hash: string): PuzzlePrivateKey | undefined => { return puzzleDict[hash]; }
 
+    const css = ubundle.coin_spends;
     const sigs: G2Element[] = [];
     for (let i = 0; i < css.length; i++) {
       const coin_spend = css[i];
@@ -129,17 +131,18 @@ class Transfer {
     return agg_sig;
   }
 
-  public async getSpendBundle(coin_spends: CoinSpend[],
-    puzzles: TokenPuzzleDetail[],
+  public async getSpendBundle(ubundle: UnsignedSpendBundle | CoinSpend[],
+    puzzles: TokenPuzzlePrivateKey[],
     chainId: string,
     noSign = false,
   ): Promise<SpendBundle> {
-    const agg_sig = await this.getSignaturesFromCoinSpends(coin_spends, puzzles, chainId, noSign);
+    ubundle = Array.isArray(ubundle) ? { coin_spends: ubundle } : ubundle;
+    const agg_sig = await this.getSignaturesFromUnsignedSpendBundle(ubundle, puzzles, chainId, noSign);
 
     const sig = Bytes.from(agg_sig.serialize()).hex();
     return {
       aggregated_signature: prefix0x(sig),
-      coin_spends
+      coin_spends: ubundle.coin_spends,
     }
   }
 

@@ -30,6 +30,8 @@ export class CoinConditions {
   }
 }
 
+export type Hex = string;
+
 export type Hex0x = "()" | `0x${string}`;
 
 export function prefix0x(str: string): Hex0x {

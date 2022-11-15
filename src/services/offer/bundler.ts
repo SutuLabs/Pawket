@@ -50,16 +50,8 @@ export async function generateOffer(
     return puz_anno_id;
   }
 
-  const puzzleCopy: TokenPuzzleDetail[] = puzzles.map((_) => ({
-    symbol: _.symbol,
-    puzzles: _.puzzles.map((puzz) => ({
-      privateKey: puzz.privateKey,
-      hash: puzz.hash,
-      address: puzz.address,
-      puzzle: puzz.puzzle,
-      type: puzz.type,
-    })),
-  }));
+  const puzzleCopy: TokenPuzzleDetail[] = Object.assign({}, puzzles);
+
   // generate requested
   for (let i = 0; i < requested.length; i++) {
     const req = requested[i];
@@ -75,6 +67,7 @@ export async function generateOffer(
       // put special target into puzzle reverse dict
       puzzleCopy.filter(_ => _.symbol == net.symbol)[0].puzzles.push({
         privateKey: puzzle.getEmptyPrivateKey(), // this private key will not really calculated due to no AGG_SIG_ME exist in this spend
+        synPubKey: "()", // same reason as above
         puzzle: puzzle_reveal_text,
         hash: settlement_tgt,
         address: "",
@@ -109,6 +102,7 @@ export async function generateOffer(
       // put special target into puzzle reverse dict
       puzzleCopy.filter(_ => _.symbol == req.symbol)[0].puzzles.push({
         privateKey: puzzle.getEmptyPrivateKey(), // this private key will not really calculated due to no AGG_SIG_ME exist in this spend
+        synPubKey: "()", // same reason as above
         puzzle: puzzle_reveal_text,
         hash: cat_settlement_tgt,
         address: "",
@@ -314,22 +308,14 @@ export async function generateNftOffer(
     return puz_anno_id;
   };
 
-  const puzzleCopy: TokenPuzzleDetail[] = puzzles.map((_) => ({
-    symbol: _.symbol,
-    puzzles: _.puzzles.map((puzz) => ({
-      privateKey: puzz.privateKey,
-      hash: puzz.hash,
-      address: puzz.address,
-      puzzle: puzz.puzzle,
-      type: puzz.type,
-    })),
-  }));
+  const puzzleCopy: TokenPuzzleDetail[] = Object.assign({}, puzzles);
 
   // put special target into puzzle reverse dict
   puzzleCopy
     .filter((_) => _.symbol == net.symbol)[0]
     .puzzles.push({
       privateKey: puzzle.getEmptyPrivateKey(), // this private key will not really calculated due to no AGG_SIG_ME exist in this spend
+      synPubKey: "()", // same reason as above
       puzzle: modsprog["settlement_payments"],
       hash: settlement_tgt,
       address: "",
@@ -372,6 +358,7 @@ export async function generateNftOffer(
         .filter((_) => _.symbol == net.symbol)[0]
         .puzzles.push({
           privateKey: puzzle.getEmptyPrivateKey(), // this private key will not really calculated due to no AGG_SIG_ME exist in this spend
+          synPubKey: "()", // same reason as above
           puzzle: nftPuzzle,
           hash: nftPuzzleHash,
           address: "",
@@ -419,12 +406,15 @@ export async function generateNftOffer(
           puzzles,
           net,
         );
+        const nftPuz = puzzles
+          .filter((_) => _.symbol == net.symbol)[0]
+          .puzzles
+          .filter((_) => prefix0x(_.hash) == prefix0x(nft.hintPuzzle))[0];
         puzzleCopy
           .filter((_) => _.symbol == net.symbol)[0]
           .puzzles.push({
-            privateKey: puzzles
-              .filter((_) => _.symbol == net.symbol)[0]
-              .puzzles.filter((_) => prefix0x(_.hash) == prefix0x(nft.hintPuzzle))[0].privateKey,
+            privateKey: nftPuz.privateKey,
+            synPubKey: nftPuz.synPubKey,
             puzzle: "()",
             hash: nftcoin.puzzle_hash,
             address: "",

@@ -1,12 +1,11 @@
-import { Bytes } from "clvm";
 import { CoinSpend, OriginCoin } from "@/models/wallet";
 import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
 import { uncurry } from "clvm_tools";
 import { SExp, Tuple } from "clvm";
 import { ConditionType, formatAmount, prefix0x, toNumberString } from "../coin/condition";
-import puzzle, { PuzzleDetail } from "../crypto/puzzle";
+import puzzle, { PuzzleObserver } from "../crypto/puzzle";
 import transfer, { GetPuzzleApiCallback, TokenSpendPlan } from "./transfer";
-import { TokenPuzzleDetail } from "../crypto/receive";
+import { TokenPuzzleObserver } from "../crypto/receive";
 import { getCoinName } from "../coin/coinUtility";
 
 export interface LineageProof {
@@ -19,13 +18,13 @@ class CatBundle {
 
   public async generateCoinSpends(
     plan: TokenSpendPlan,
-    puzzles: TokenPuzzleDetail[],
+    puzzles: TokenPuzzleObserver[],
     additionalConditions: ConditionType[] = [],
     getPuzzle: GetPuzzleApiCallback,
   ): Promise<CoinSpend[]> {
     const coin_spends: CoinSpend[] = [];
 
-    const puzzleDict: { [key: string]: PuzzleDetail } = Object.assign({}, ...puzzles.flatMap(_ => _.puzzles).map((x) => ({ [prefix0x(x.hash)]: x })));
+    const puzzleDict: { [key: string]: PuzzleObserver } = Object.assign({}, ...puzzles.flatMap(_ => _.puzzles).map((x) => ({ [prefix0x(x.hash)]: x })));
     const getPuzDetail = (hash: string) => {
       const puz = puzzleDict[hash];
       if (!puz) throw new Error("cannot find puzzle");
@@ -45,8 +44,8 @@ class CatBundle {
         : "(() (q) ())";
 
       const nextCoin_puz = getPuzDetail(nextcoin.puzzle_hash);
-      const nextCoin_pk = Bytes.from(nextCoin_puz.privateKey.get_g1().serialize()).hex();
-      const nextCoin_inner_puzzle_hash = await puzzle.getPuzzleHash(nextCoin_pk);
+      const nextCoin_pk = nextCoin_puz.synPubKey;
+      const nextCoin_inner_puzzle_hash = await puzzle.getPuzzleHashFromSyntheticKey(nextCoin_pk);
 
       const cs = await this.generateCoinSpend(
         coin, prevcoin, nextcoin, nextCoin_inner_puzzle_hash, subtotal, puz, inner_puzzle_solution, getPuzzle);
@@ -138,7 +137,7 @@ class CatBundle {
     nextCoin: OriginCoin,
     nextCoin_inner_puzzle_hash: string,
     subtotal: bigint,
-    puz: PuzzleDetail,
+    puz: PuzzleObserver,
     inner_puzzle_solution: string,
     getPuzzle: GetPuzzleApiCallback,
   ): Promise<CoinSpend> {
@@ -155,7 +154,7 @@ class CatBundle {
     nextCoin: OriginCoin,
     nextCoin_inner_puzzle_hash: string,
     subtotal: bigint,
-    puz: PuzzleDetail,
+    puz: PuzzleObserver,
     inner_puzzle_solution: string,
     getPuzzle: GetPuzzleApiCallback,
   ): Promise<string> {

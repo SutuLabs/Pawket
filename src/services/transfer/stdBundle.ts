@@ -1,19 +1,19 @@
 import { CoinSpend } from "@/models/wallet";
 import { ConditionType, prefix0x } from "../coin/condition";
-import puzzle, { PuzzleDetail } from "../crypto/puzzle";
+import puzzle, { PuzzleObserver } from "../crypto/puzzle";
 import transfer, { TokenSpendPlan } from "./transfer";
-import { TokenPuzzleDetail } from "../crypto/receive";
+import { TokenPuzzleObserver } from "../crypto/receive";
 
 class StdBundle {
 
   public async generateCoinSpends(
     plan: TokenSpendPlan,
-    puzzles: TokenPuzzleDetail[],
+    puzzles: TokenPuzzleObserver[],
     additionalConditions: ConditionType[] = [],
   ): Promise<CoinSpend[]> {
     const coin_spends: CoinSpend[] = [];
 
-    const puzzleDict: { [key: string]: PuzzleDetail } = Object.assign({}, ...puzzles.flatMap(_ => _.puzzles).map((x) => ({ [prefix0x(x.hash)]: x })));
+    const puzzleDict: { [key: string]: PuzzleObserver } = Object.assign({}, ...puzzles.flatMap(_ => _.puzzles).map((x) => ({ [prefix0x(x.hash)]: x })));
     const getPuzDetail = (hash: string) => {
       const puz = puzzleDict[hash];
       if (!puz) throw new Error("cannot find puzzle");
