@@ -1,4 +1,4 @@
-import { SpendBundle } from "../../models/wallet";
+import { SpendBundle, UnsignedSpendBundle } from "../../models/wallet";
 import { SymbolCoins } from "../transfer/transfer";
 import { analyzeNftCoin, generateMintNftBundle } from "../coin/nft";
 import puzzle from "../crypto/puzzle";
@@ -8,7 +8,7 @@ import { getCoinName0x, NetworkContext } from "../coin/coinUtility";
 import receive, { TokenPuzzleDetail } from "../crypto/receive";
 import { generateOfferPlan, generateNftOffer } from "./bundler";
 import { prefix0x } from "../coin/condition";
-import { combineSpendBundle} from "../mint/cat";
+import { combineSpendBundle, combineUnsignedSpendBundle } from "../mint/cat";
 import { GetParentPuzzleResponse } from "@/models/api";
 import { OfferEntity } from "./summary";
 import utility from "../crypto/utility";
@@ -27,7 +27,7 @@ export async function generateMintCnsOffer(
   net: NetworkContext,
   nonceHex: string | null = null,
   privateKey: string | undefined = undefined,
-): Promise<SpendBundle> {
+): Promise<UnsignedSpendBundle> {
   const target_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(changeAddress));
   const reqs = [
@@ -48,7 +48,7 @@ export async function generateMintCnsOffer(
   const intermediateAddress = ps[0].address;
   requests.filter(_ => _.symbol == net.symbol)[0].puzzles.push(...ps);
 
-  const { spendBundle } = await generateMintNftBundle(
+  const spendBundle = await generateMintNftBundle(
     intermediateAddress, changeAddress, fee, metadata, availcoins, requests, royaltyAddressHex,
     tradePricePercentage, net, undefined, undefined, undefined, true);
 
@@ -88,6 +88,6 @@ export async function generateMintCnsOffer(
   const offerBundle = await generateNftOffer(
     offplan, analysis, nextCoin, reqs, requests, net, nonceHex);
 
-  const offerCombineBundle = combineSpendBundle(spendBundle, offerBundle);
+  const offerCombineBundle = combineUnsignedSpendBundle(spendBundle, offerBundle);
   return offerCombineBundle;
 }

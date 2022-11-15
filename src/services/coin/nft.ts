@@ -1,7 +1,7 @@
 import { CoinSpend, OriginCoin, PartialSpendBundle, SpendBundle, UnsignedSpendBundle } from "@/models/wallet";
 import puzzle, { PlaintextPuzzle } from "../crypto/puzzle";
 import receive, { TokenPuzzleDetail, TokenPuzzleObserver } from "../crypto/receive";
-import { combineSpendBundle } from "../mint/cat";
+import { combineSpendBundle, combineUnsignedSpendBundle } from "../mint/cat";
 import { combineOfferSpendBundle, curryMod } from "../offer/bundler";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { formatAmount, Hex0x, prefix0x, skipFirstByte0x } from "./condition";
@@ -23,7 +23,7 @@ import { CnsCoinAnalysisResult, CnsMetadataKeys, CnsMetadataValues } from "@/mod
 type MetadataValues = NftMetadataValues | CnsMetadataValues;
 
 export interface MintNftInfo {
-  spendBundle: PartialSpendBundle;
+  spendBundle: UnsignedSpendBundle;
 }
 
 // - singleton_top_layer_v1_1
@@ -55,7 +55,7 @@ export async function generateMintNftBundle(
   privateKey: string | undefined = undefined,
   targetAddresses: string[] | undefined = undefined,
   isCns = false,
-): Promise<MintNftInfo> {
+): Promise<UnsignedSpendBundle> {
   const amount = 1n; // always 1 mojo for 1 NFT
   const intermediate_hex = prefix0x(puzzle.getPuzzleHashFromAddress(nftIntermediateAddress));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(changeAddress));
@@ -139,8 +139,8 @@ export async function generateMintNftBundle(
     };
 
     // const extreqs = cloneAndAddRequestPuzzleTemporary(net.symbol, requests, inner_p2_puzzle.hash, nftPuzzle, nftPuzzleHash);
-    const nftBundle = await transfer.getSpendBundle([launcherCoinSpend, nftCoinSpend], extreqs, net.chainId, true);
-    bundle = await combineSpendBundle(bundle, nftBundle);
+    // const nftBundle = await transfer.getSpendBundle([launcherCoinSpend, nftCoinSpend], extreqs, net.chainId, true);
+    bundle = combineUnsignedSpendBundle(bundle, [launcherCoinSpend, nftCoinSpend]);
 
     if (didAnalysis && proof && didPreviousCoin && didPuzzleHash) {
       const didBundle = await getDidBundle(didAnalysis, proof, amount, launcherCoinId, didPreviousCoin, didPuzzleHash, requests, net);
@@ -171,9 +171,7 @@ export async function generateMintNftBundle(
   //   + `\nconst availcoins=${JSON.stringify(availcoins, null, 2)};`
   //   + `\nconst expect: SpendBundle=${JSON.stringify(bundle, null, 2)};`);
 
-  return {
-    spendBundle: bundle,
-  };
+  return bundle;
 }
 
 async function getDidBundle(

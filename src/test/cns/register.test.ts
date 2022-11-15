@@ -1,5 +1,5 @@
 import { getTestAccount } from "../utility";
-import { SymbolCoins } from "@/services/transfer/transfer";
+import transfer, { SymbolCoins } from "@/services/transfer/transfer";
 import { analyzeNftCoin, generateMintNftBundle } from "@/services/coin/nft";
 import puzzle from "@/services/crypto/puzzle";
 import { GetParentPuzzleResponse } from "@/models/api";
@@ -85,10 +85,11 @@ async function mintOneCns(
     ]
   };
   const sk = "00186eae4cd4a3ec609ca1a8c1cda8467e3cb7cbbbf91a523d12d31129d5f8d7";
-  const { spendBundle } = await generateMintNftBundle(
+  const ubundle = await generateMintNftBundle(
     targetAddress, changeAddress, fee, metadata, availcoins, tokenPuzzles, royaltyAddressHex,
     tradePricePercentage, net, undefined, sk, targetAddresses, true);
-  return spendBundle;
+  const bundle = await transfer.getSpendBundle(ubundle, tokenPuzzles, net.chainId);
+  return bundle;
 }
 
 test('Create CNS Offer And Accept', async () => {
@@ -144,9 +145,12 @@ async function testMintCnsAndOffer(
   const royaltyAddressHex = "7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10";
   const tradePricePercentage = 500;
 
-  const offerBundle = await generateMintCnsOffer(
+  const uofferBundle = await generateMintCnsOffer(
     targetAddress, changeAddress, 200n, 0n, metadata, availcoinsForMaker, tokenPuzzles,
     royaltyAddressHex, tradePricePercentage, net, nonce, intermediate_sk);
+
+  // combine into one spendbundle
+  const offerBundle = await transfer.getSpendBundle(uofferBundle, tokenPuzzles, net.chainId);
 
   const offerText = await encodeOffer(offerBundle, 4);
   expect(offerText).toMatchSnapshot("offer text");
@@ -176,7 +180,7 @@ async function testMintCnsAndOffer(
     royalty_amount
   );
   expect(offplangen).toMatchSnapshot("offplangen");
-  const takerBundle = await generateNftOffer(
+  const utakerBundle = await generateNftOffer(
     offplangen,
     analysis,
     undefined,
@@ -185,10 +189,12 @@ async function testMintCnsAndOffer(
     net,
     nonce
   );
+  const takerBundle = await transfer.getSpendBundle(utakerBundle, tokenPuzzles, net.chainId);
   expect(takerBundle).toMatchSnapshot("takerBundle");
-  const combined = await combineOfferSpendBundle([makerBundle, takerBundle]);
-  await assertSpendbundle(combined, net.chainId);
-  expect(combined).toMatchSnapshot("combined");
+  const ubundle = await combineOfferSpendBundle([makerBundle, takerBundle]);
+  const bundle = await transfer.getSpendBundle(ubundle, tokenPuzzles, net.chainId);
+  await assertSpendbundle(bundle, net.chainId);
+  expect(bundle).toMatchSnapshot("combined");
 }
 
 async function testAnalyzeCnsCoin(coin: CoinSpend, hintPuzzle: string): Promise<void> {

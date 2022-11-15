@@ -5,7 +5,7 @@ import { sha256 } from "../offer/bundler";
 import { Instance } from "../util/instance";
 import { uncurryPuzzle, sexpAssemble, convertUncurriedPuzzle, getModsPath } from "./analyzer";
 import { getCoinName0x } from "./coinUtility";
-import { getNumber, prefix0x, unprefix0x } from "./condition";
+import { getFirstLevelArg, getFirstLevelArgMsg, getNumber, prefix0x, unprefix0x } from "./condition";
 import { modshex } from "./mods";
 import { ConditionOpcode } from "./opcode";
 
@@ -89,34 +89,25 @@ export async function checkSpendBundle(bundle: SpendBundle | undefined, chainId:
         }
       }
 
-      const getFirstLevelArg = function (args: ConditionArgs): Uint8Array {
-        if (Array.isArray(args)) throw new Error("Unexpected array met in processing announcement.");
-        if (!args) throw new Error("Unexpected empty arg met in processing announcement");
-        return args;
-      }
-      const getFirstLevelArgMsg = function (args: ConditionArgs): string {
-        return prefix0x(Bytes.from(getFirstLevelArg(args)).hex());
-      }
-
       puzzleAnnoCreates.push(
         ...result.conditions
           .filter((_) => _.code == ConditionOpcode.CREATE_PUZZLE_ANNOUNCEMENT)
-          .map((_) => ({ coinIndex: i, message: sha256(cs.coin.puzzle_hash, getFirstLevelArg(_.args[0])) }))
+          .map((_) => ({ coinIndex: i, message: sha256(cs.coin.puzzle_hash, getFirstLevelArg(_.args.at(0))) }))
       );
       puzzleAnnoAsserted.push(
         ...result.conditions
           .filter((_) => _.code == ConditionOpcode.ASSERT_PUZZLE_ANNOUNCEMENT)
-          .map((_) => ({ coinIndex: i, message: getFirstLevelArgMsg(_.args[0]) }))
+          .map((_) => ({ coinIndex: i, message: getFirstLevelArgMsg(_.args.at(0)) }))
       );
       coinAnnoCreates.push(
         ...result.conditions
           .filter((_) => _.code == ConditionOpcode.CREATE_COIN_ANNOUNCEMENT)
-          .map((_) => ({ coinIndex: i, message: sha256(getCoinName0x(cs.coin), getFirstLevelArg(_.args[0])) }))
+          .map((_) => ({ coinIndex: i, message: sha256(getCoinName0x(cs.coin), getFirstLevelArg(_.args.at(0))) }))
       );
       coinAnnoAsserted.push(
         ...result.conditions
           .filter((_) => _.code == ConditionOpcode.ASSERT_COIN_ANNOUNCEMENT)
-          .map((_) => ({ coinIndex: i, message: getFirstLevelArgMsg(_.args[0]) }))
+          .map((_) => ({ coinIndex: i, message: getFirstLevelArgMsg(_.args.at(0)) }))
       );
 
       newCoins.push(
@@ -124,19 +115,19 @@ export async function checkSpendBundle(bundle: SpendBundle | undefined, chainId:
           .filter((_) => _.code == ConditionOpcode.CREATE_COIN)
           .map((_) => ({
             coinIndex: ca.coinIndex,
-            amount: getNumber(getFirstLevelArgMsg(_.args[1])),
-            coinName: getCoinName0x({ parent_coin_info: ca.coinName, puzzle_hash: getFirstLevelArgMsg(_.args[0]), amount: getNumber(getFirstLevelArgMsg(_.args[1])) }),
+            amount: getNumber(getFirstLevelArgMsg(_.args.at(1))),
+            coinName: getCoinName0x({ parent_coin_info: ca.coinName, puzzle_hash: getFirstLevelArgMsg(_.args.at(0)), amount: getNumber(getFirstLevelArgMsg(_.args.at(1))) }),
           }))
       );
       aggSigMessages.push(
         ...result.conditions
           .filter((_) => _.code == ConditionOpcode.AGG_SIG_ME)
-          .map((_) => ({ coinIndex: i, coinName: ca.coinName, publicKey: getFirstLevelArgMsg(_.args[0]), message: getFirstLevelArgMsg(_.args[1]) }))
+          .map((_) => ({ coinIndex: i, coinName: ca.coinName, publicKey: getFirstLevelArgMsg(_.args.at(0)), message: getFirstLevelArgMsg(_.args.at(1)) }))
       );
       aggSigMessages.push(
         ...result.conditions
           .filter((_) => _.code == ConditionOpcode.AGG_SIG_UNSAFE)
-          .map((_) => ({ coinIndex: i, coinName: "", publicKey: getFirstLevelArgMsg(_.args[0]), message: getFirstLevelArgMsg(_.args[1]) }))
+          .map((_) => ({ coinIndex: i, coinName: "", publicKey: getFirstLevelArgMsg(_.args.at(0)), message: getFirstLevelArgMsg(_.args.at(1)) }))
       );
 
       const uncPuzzle = await uncurryPuzzle(sexpAssemble(cs.puzzle_reveal), cs.puzzle_reveal);

@@ -1,7 +1,7 @@
 import puzzle, { ExecuteResult, PlaintextPuzzle, PuzzleDetail, PuzzleObserver } from "../crypto/puzzle";
 import { TokenPuzzleDetail, TokenPuzzleObserver } from "../crypto/receive";
 import { curryMod } from "../offer/bundler";
-import { getNumber, Hex0x, prefix0x, unprefix0x } from "./condition";
+import { getFirstLevelArgMsg, getNumber, Hex0x, prefix0x, unprefix0x } from "./condition";
 import { modshash, modsprog } from "./mods";
 import { Bytes, SExp } from "clvm";
 import { assemble } from "clvm_tools/clvm_tools/binutils";
@@ -117,10 +117,10 @@ export async function getNextCoinName0x(puzzle_hex: string, solution_hex: string
 
   try {
     const coinCond = result.conditions
-      .filter((_) => _.op == ConditionOpcode.CREATE_COIN && getNumber(_.args.at(1) ?? "0") % 2n == 1n).at(0);
+      .filter((_) => _.code == ConditionOpcode.CREATE_COIN && getNumber(getFirstLevelArgMsg(_.args.at(1)) ?? "0") % 2n == 1n).at(0);
     if (!coinCond) return undefined;
-    const nextcoin_puzhash = prefix0x(coinCond.args.at(0) ?? "()");
-    const amount = getNumber(coinCond.args.at(1) ?? "0");
+    const nextcoin_puzhash = prefix0x(getFirstLevelArgMsg(coinCond.args.at(0)) ?? "()");
+    const amount = getNumber(getFirstLevelArgMsg(coinCond.args.at(1)) ?? "0");
     const nextCoinName = getCoinName0x({ parent_coin_info: thisCoinName, amount, puzzle_hash: nextcoin_puzhash });
     return nextCoinName;
   } catch (err) {

@@ -150,26 +150,27 @@ async function constructExternalBundle(
 //   }
 // }
 
-export function combineUnsignedSpendBundle(...spendbundles: (UnsignedSpendBundle | undefined)[]): UnsignedSpendBundle {
+export function combineUnsignedSpendBundle(...spendbundles: (UnsignedSpendBundle | CoinSpend[] | undefined)[]): UnsignedSpendBundle {
   return combineSpendBundleInternal(...spendbundles);
 }
 
-export function combineSpendBundle(...spendbundles: (SpendBundle | UnsignedSpendBundle | undefined)[]): SpendBundle {
+export function combineSpendBundle(...spendbundles: (SpendBundle | UnsignedSpendBundle | CoinSpend[] | undefined)[]): SpendBundle {
   return combineSpendBundleInternal(...spendbundles) as SpendBundle;
 }
 
-export function combineSpendBundleInternal(...spendbundles: (UnsignedSpendBundle | undefined)[]): UnsignedSpendBundle;
-export function combineSpendBundleInternal(...spendbundles: (SpendBundle | UnsignedSpendBundle | undefined)[]): SpendBundle;
+export function combineSpendBundleInternal(...spendbundles: (UnsignedSpendBundle | CoinSpend[] | undefined)[]): UnsignedSpendBundle;
+export function combineSpendBundleInternal(...spendbundles: (SpendBundle | UnsignedSpendBundle | CoinSpend[] | undefined)[]): SpendBundle;
 export function combineSpendBundleInternal(
-  ...spendbundles: (SpendBundle | UnsignedSpendBundle | undefined)[]
+  ...spendbundles: (SpendBundle | UnsignedSpendBundle | CoinSpend[] | undefined)[]
 ): UnsignedSpendBundle | SpendBundle {
 
   const BLS = Instance.BLS;
   if (!BLS) throw new Error("BLS not initialized");
 
+  // const bundle: UnsignedSpendBundle | SpendBundle = Array.isArray(ubundle) ? { coin_spends: ubundle } : ubundle;
   const coin_spends = spendbundles
-    .filter((_): _ is UnsignedSpendBundle => !!_)
-    .flatMap(_ => _.coin_spends);
+    .filter((_): _ is UnsignedSpendBundle | CoinSpend[] => !!_)
+    .flatMap(_ => Array.isArray(_) ? _ : _.coin_spends);
   const sigs = spendbundles
     .map(_ => _ && "aggregated_signature" in _ && _.aggregated_signature)
     .filter((_): _ is Hex0x => !!_)
