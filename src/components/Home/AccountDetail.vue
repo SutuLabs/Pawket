@@ -137,8 +137,6 @@ import AddressAccountQr from "./AddressAccountQr.vue";
 import { getAllCats } from "@/store/modules/account";
 import NetworkSelector from "./NetworkSelector.vue";
 
-type Mode = "Verify" | "Create";
-
 @Component({
   components: {
     KeyBox,
@@ -148,7 +146,6 @@ type Mode = "Verify" | "Create";
   },
 })
 export default class AccountDetail extends Vue {
-  public mode: Mode = "Verify";
   public exchangeRate = -1;
   public showOfflineNotification = true;
   public timeoutId?: ReturnType<typeof setTimeout>;
@@ -301,7 +298,6 @@ export default class AccountDetail extends Vue {
   }
 
   mounted(): void {
-    this.mode = store.state.vault.passwordHash ? "Verify" : "Create";
     this.autoRefresh(60);
   }
 
