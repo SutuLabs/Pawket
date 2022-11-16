@@ -36,6 +36,7 @@ export type Hex = string;
 export type Hex0x = "()" | `0x${string}`;
 
 export function prefix0x(str: string): Hex0x {
+  if (!str) return "()";
   if (str == "()") return str;
   return str.startsWith("0x") ? (str as Hex0x) : `0x${str}`;
 }
@@ -77,6 +78,14 @@ export function getFirstLevelArg(args: ConditionArgs): Uint8Array {
 
 export function getFirstLevelArgMsg(args: ConditionArgs): string {
   return prefix0x(Bytes.from(getFirstLevelArg(args)).hex());
+}
+
+export function getArgMsg(arg: ConditionArgs): string {
+  if (!arg) return "";
+  if (Array.isArray(arg)) {
+    return `(${arg.map((_) => getArgMsg(_)).join(" ")})`;
+  }
+  return prefix0x(Bytes.from(arg).hex());
 }
 
 export const conditionInfos: ConditionInfo[] = [

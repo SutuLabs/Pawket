@@ -115,7 +115,7 @@
                 </div>
               </b-tooltip>
               <ul v-if="sol.args.length > 0" class="args_list ellipsis-item">
-                <li v-for="(arg, i) in sol.args" :key="i" :title="arg">{{ arg }}</li>
+                <li v-for="(arg, i) in sol.args" :key="i" :title="getArgMsg(arg)">{{ getArgMsg(arg) }}</li>
                 <li v-if="sol.code == 60">
                   <b-tag type="is-primary is-light">annoID:</b-tag>
                   {{ sha256(used_coin_name, sol.args[0]) }}
@@ -229,7 +229,15 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import puzzle, { ConditionArgs, ConditionEntity } from "@/services/crypto/puzzle";
 import { beautifyLisp } from "@/services/coin/lisp";
-import { conditionDict, ConditionInfo, prefix0x, getNumber, Hex0x, getFirstLevelArgMsg } from "@/services/coin/condition";
+import {
+  conditionDict,
+  ConditionInfo,
+  prefix0x,
+  getNumber,
+  Hex0x,
+  getFirstLevelArgMsg,
+  getArgMsg,
+} from "@/services/coin/condition";
 import { modsdict, modsprog } from "@/services/coin/mods";
 import UncurryPuzzle from "@/components/DevHelper/UncurryPuzzle.vue";
 import AnnouncementList from "@/components/DevHelper/AnnouncementList.vue";
@@ -478,6 +486,10 @@ export default class BundlePanel extends Vue {
       parent_coin_info: this.used_coin_name,
     };
     return getCoinName(coin);
+  }
+
+  public getArgMsg(arg: ConditionArgs): string {
+    return getArgMsg(arg);
   }
 
   public async check(): Promise<void> {

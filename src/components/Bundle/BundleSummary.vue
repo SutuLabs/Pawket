@@ -71,7 +71,7 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import { SpendBundle } from "@/services/spendbundle";
 import puzzle from "@/services/crypto/puzzle";
 import { disassemble } from "clvm_tools/clvm_tools/binutils";
-import { getFirstLevelArgMsg, getNumber, unprefix0x } from "@/services/coin/condition";
+import { getArgMsg, getFirstLevelArgMsg, getNumber, unprefix0x } from "@/services/coin/condition";
 import { modshexdict } from "@/services/coin/mods";
 import store from "@/store";
 import { debugBundle } from "@/services/view/bundleAction";
@@ -204,18 +204,25 @@ export default class BundleSummary extends Vue {
     const result = await puzzle.executePuzzleHex(puz_hex, solution_hex);
     const coins: CoinType[] = result.conditions
       .filter((_) => _.code == ConditionOpcode.CREATE_COIN)
-      .map((_) => ({
-        address: puzzle.getAddressFromPuzzleHash(getFirstLevelArgMsg(_.args[0]), xchPrefix()),
-        amount: getNumber(getFirstLevelArgMsg(_.args[1])),
-        args: _.args[2]
-          ? Array.from(sexpAssemble(getFirstLevelArgMsg(_.args[2])).as_iter()).map((_) => disassemble(_ as SExp))
-          : [],
-      }))
+      .map((_) => {
+        const rawArgs = _.args.at(2);
+        const args =
+          rawArgs && Array.isArray(rawArgs)
+            ? rawArgs.map((_) => getArgMsg(_)) //
+            : !rawArgs
+            ? [] //
+            : [getArgMsg(rawArgs)];
+        return {
+          address: puzzle.getAddressFromPuzzleHash(getFirstLevelArgMsg(_.args.at(0)), xchPrefix()),
+          amount: getNumber(getFirstLevelArgMsg(_.args.at(1))),
+          args,
+        };
+      })
       .map((_) => ({
         address: _.address,
         amount: _.amount,
-        hint: this.tryGetHintAddress(_.args[0]),
-        memo: _.args[1],
+        hint: this.tryGetHintAddress(_.args.at(0)),
+        memo: _.args.at(1),
         others: _.args.slice(2),
       }));
     return coins;
