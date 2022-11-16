@@ -1,4 +1,4 @@
-import { CoinSpend, OriginCoin } from "@/models/wallet";
+import { CoinSpend, OriginCoin } from "@/services/spendbundle";
 import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
 import { uncurry } from "clvm_tools";
 import { SExp, Tuple } from "clvm";

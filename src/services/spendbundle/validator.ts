@@ -1,13 +1,13 @@
-import { SpendBundle } from "../../models/wallet";
+import { SpendBundle } from "./defs";
 import { Bytes } from "clvm";
 import puzzle, { ConditionArgs, ExecuteResult } from "../crypto/puzzle";
 import { sha256 } from "../offer/bundler";
 import { Instance } from "../util/instance";
-import { uncurryPuzzle, sexpAssemble, convertUncurriedPuzzle, getModsPath } from "./analyzer";
-import { getCoinName0x } from "./coinUtility";
-import { getFirstLevelArg, getFirstLevelArgMsg, getNumber, prefix0x, unprefix0x } from "./condition";
-import { modshex } from "./mods";
-import { ConditionOpcode } from "./opcode";
+import { uncurryPuzzle, sexpAssemble, convertUncurriedPuzzle, getModsPath } from "../coin/analyzer";
+import { getCoinName0x } from "../coin/coinUtility";
+import { getFirstLevelArg, getFirstLevelArgMsg, getNumber, prefix0x, unprefix0x } from "../coin/condition";
+import { modshex } from "../coin/mods";
+import { ConditionOpcode } from "../coin/opcode";
 
 export interface AnnouncementCoin {
   coinIndex: number;

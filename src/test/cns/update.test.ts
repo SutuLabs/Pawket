@@ -7,11 +7,10 @@ import { Instance } from "@/services/util/instance";
 import { getAccountAddressDetails } from "@/services/util/account";
 
 import { knownCoins } from "./cns.test.data";
-import { convertToOriginCoin } from "@/models/wallet";
-import { NetworkContext } from "@/services/coin/coinUtility";
+import { convertToOriginCoin, NetworkContext } from "@/services/coin/coinUtility";
 
 import cnscoin1 from "../cases/cnscoin1.json"
-import { assertSpendbundle } from "@/services/coin/spendbundle";
+import { assertSpendbundle } from "@/services/spendbundle/validator";
 
 const net: NetworkContext = {
   prefix: "xch",

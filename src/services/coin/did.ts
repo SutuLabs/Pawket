@@ -1,8 +1,7 @@
-import { CoinSpend, OriginCoin, SpendBundle, UnsignedSpendBundle } from "../../models/wallet";
+import { CoinSpend, combineSpendBundle, OriginCoin, SpendBundle, UnsignedSpendBundle } from "../spendbundle";
 import { disassemble } from "clvm_tools/clvm_tools/binutils";
 import puzzle from "../crypto/puzzle";
 import { TokenPuzzleDetail, TokenPuzzleObserver } from "../crypto/receive";
-import { combineSpendBundle } from "../mint/cat";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { prefix0x } from "./condition";
 import { modshash, modshex, modsprog } from "./mods";

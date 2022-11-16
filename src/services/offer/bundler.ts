@@ -1,4 +1,4 @@
-import { CoinSpend, OriginCoin, SpendBundle, UnsignedSpendBundle } from "@/models/wallet";
+import { CoinSpend, OriginCoin, SpendBundle, UnsignedSpendBundle } from "@/services/spendbundle";
 import { Bytes } from "clvm";
 import { CoinConditions, ConditionType, Hex0x, prefix0x, unprefix0x } from '../coin/condition';
 import puzzle, { PlaintextPuzzle } from "../crypto/puzzle";

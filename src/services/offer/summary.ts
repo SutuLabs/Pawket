@@ -1,4 +1,4 @@
-import { CoinSpend, SpendBundle, UnsignedSpendBundle } from "../../models/wallet";
+import { CoinSpend, SpendBundle, UnsignedSpendBundle } from "../spendbundle/defs";
 import { Bytes, SExp, Tuple } from "clvm";
 import { getNumber, Hex0x, prefix0x } from '../coin/condition';
 import { assemble, disassemble } from 'clvm_tools/clvm_tools/binutils';

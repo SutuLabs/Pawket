@@ -1,10 +1,9 @@
 import puzzle from "@/services/crypto/puzzle";
 import utility from "@/services/crypto/utility";
 import transfer from "@/services/transfer/transfer";
-import { getCoinName } from "@/services/coin/coinUtility";
+import { convertToOriginCoin, getCoinName } from "@/services/coin/coinUtility";
 import { Instance } from "@/services/util/instance";
 import { analyzeDidCoin } from "@/services/coin/did";
-import { convertToOriginCoin } from "@/models/wallet";
 import { prefix0x } from "@/services/coin/condition";
 import { analyzeNftCoin } from "@/services/coin/nft";
 import { getSignMessage, signMessage, verifySignature } from "@/services/crypto/sign";

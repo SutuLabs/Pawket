@@ -9,7 +9,7 @@ import { getAccountAddressDetails } from "@/services/util/account";
 import { AccountEntity, PersistentCustomCat } from "@/models/account";
 import { prefix0x } from "@/services/coin/condition";
 import { NetworkContext } from "@/services/coin/coinUtility";
-import { assertSpendbundle } from "@/services/coin/spendbundle";
+import { assertSpendbundle } from "@/services/spendbundle/validator";
 
 function xchPrefix() { return "xch"; }
 function xchSymbol() { return "XCH"; }

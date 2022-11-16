@@ -1,8 +1,8 @@
 import { GetParentPuzzleResponse } from "@/models/api";
-import { OriginCoin } from "@/models/wallet";
+import { OriginCoin } from "@/services/spendbundle";
 import { NetworkContext } from "@/services/coin/coinUtility";
 import { prefix0x } from "@/services/coin/condition";
-import { assertSpendbundle } from "@/services/coin/spendbundle";
+import { assertSpendbundle } from "@/services/spendbundle/validator";
 import puzzle from "@/services/crypto/puzzle";
 import utility from "@/services/crypto/utility";
 import transfer, { SymbolCoins } from "@/services/transfer/transfer";

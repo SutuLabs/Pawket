@@ -1,4 +1,4 @@
-import { SpendBundle } from "@/models/wallet";
+import { SpendBundle } from "@/services/spendbundle";
 import { AccountEntity } from "@/models/account";
 import { GetParentPuzzleResponse } from "@/models/api";
 

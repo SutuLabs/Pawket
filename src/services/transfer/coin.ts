@@ -1,4 +1,5 @@
-import { CoinItem, CoinRecord, OriginCoin } from "@/models/wallet";
+import { CoinItem, CoinRecord } from "@/models/wallet";
+import { OriginCoin } from "@/services/spendbundle";
 import store from "@/store";
 import { prefix0x } from "../coin/condition";
 import receive, { TokenPuzzleAddress, TokenPuzzleDetail } from "../crypto/receive";

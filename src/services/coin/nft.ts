@@ -1,7 +1,6 @@
-import { CoinSpend, OriginCoin, PartialSpendBundle, SpendBundle, UnsignedSpendBundle } from "@/models/wallet";
+import { CoinSpend, combineSpendBundle, OriginCoin, PartialSpendBundle, SpendBundle, UnsignedSpendBundle } from "@/services/spendbundle";
 import puzzle, { PlaintextPuzzle } from "../crypto/puzzle";
 import receive, { TokenPuzzleDetail, TokenPuzzleObserver } from "../crypto/receive";
-import { combineSpendBundle } from "../mint/cat";
 import { combineOfferSpendBundle, curryMod } from "../offer/bundler";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { formatAmount, Hex0x, prefix0x, skipFirstByte0x } from "./condition";

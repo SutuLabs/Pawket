@@ -1,14 +1,12 @@
-import { SpendBundle, UnsignedSpendBundle } from "../../models/wallet";
+import { SpendBundle, UnsignedSpendBundle , combineSpendBundle, OriginCoin } from "../spendbundle";
 import { SymbolCoins } from "../transfer/transfer";
 import { analyzeNftCoin, generateMintNftBundle } from "../coin/nft";
 import puzzle from "../crypto/puzzle";
 import { CnsMetadataValues } from "../../models/nft";
-import { OriginCoin } from "../../models/wallet";
 import { getCoinName0x, NetworkContext } from "../coin/coinUtility";
 import receive, { TokenPuzzleDetail } from "../crypto/receive";
 import { generateOfferPlan, generateNftOffer } from "./bundler";
 import { prefix0x } from "../coin/condition";
-import { combineSpendBundle } from "../mint/cat";
 import { GetParentPuzzleResponse } from "@/models/api";
 import { OfferEntity } from "./summary";
 import utility from "../crypto/utility";

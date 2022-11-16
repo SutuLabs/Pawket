@@ -1,5 +1,5 @@
 import { GetCoinSolutionResponse } from "@/models/api";
-import { CoinSpend } from "@/models/wallet";
+import { CoinSpend } from "@/services/spendbundle";
 
 class DebugApi {
   public async getCoinSolution(coinId: string, rpcUrl: string): Promise<CoinSpend> {

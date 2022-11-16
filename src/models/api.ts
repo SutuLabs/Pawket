@@ -1,4 +1,4 @@
-import { CoinSpend } from "./wallet";
+import { CoinSpend } from "../services/spendbundle";
 
 export interface ApiResponse {
   error?: string;

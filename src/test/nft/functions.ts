@@ -1,4 +1,3 @@
-import { convertToOriginCoin } from "@/models/wallet";
 import { getTestAccount } from "../utility";
 import transfer, { SymbolCoins } from "@/services/transfer/transfer";
 import { analyzeNftCoin, generateMintNftBundle, generateTransferNftBundle, generateUpdatedNftBundle } from "@/services/coin/nft";
@@ -12,8 +11,8 @@ import nftcoin7 from "../cases/nftcoin7.json"
 
 import { NftMetadataValues } from "@/models/nft";
 import { didAnalysis, knownCoins } from "./nft.test.data";
-import { NetworkContext } from "@/services/coin/coinUtility";
-import { assertSpendbundle } from "@/services/coin/spendbundle";
+import { convertToOriginCoin, NetworkContext } from "@/services/coin/coinUtility";
+import { assertSpendbundle } from "@/services/spendbundle/validator";
 
 const net: NetworkContext = {
   prefix: "txch",

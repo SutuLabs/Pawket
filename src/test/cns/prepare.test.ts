@@ -8,7 +8,7 @@ import { getAccountAddressDetails } from "@/services/util/account";
 import { knownCoins } from "./cns.test.data";
 import { NetworkContext } from "@/services/coin/coinUtility";
 
-import { assertSpendbundle } from "@/services/coin/spendbundle";
+import { assertSpendbundle } from "@/services/spendbundle/validator";
 
 const net: NetworkContext = {
   prefix: "xch",

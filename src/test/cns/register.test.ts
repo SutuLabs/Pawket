@@ -8,7 +8,7 @@ import { getAccountAddressDetails } from "@/services/util/account";
 
 import { CnsMetadataValues } from "@/models/nft";
 import { cnsMetadata, knownCoins } from "./cns.test.data";
-import { CoinSpend, SpendBundle } from "@/models/wallet";
+import { CoinSpend, SpendBundle } from "@/services/spendbundle";
 import { combineOfferSpendBundle, generateNftOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
 import { getOfferSummary } from "@/services/offer/summary";
@@ -16,7 +16,7 @@ import { generateMintCnsOffer } from "@/services/offer/cns";
 import { NetworkContext } from "@/services/coin/coinUtility";
 import { prefix0x } from "@/services/coin/condition";
 
-import { assertSpendbundle } from "@/services/coin/spendbundle";
+import { assertSpendbundle } from "@/services/spendbundle/validator";
 
 const net: NetworkContext = {
   prefix: "xch",

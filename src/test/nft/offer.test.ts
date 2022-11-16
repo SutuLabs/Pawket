@@ -8,7 +8,7 @@ import { combineOfferSpendBundle, generateNftOffer, generateOfferPlan, getRevers
 import transfer, { SymbolCoins } from "@/services/transfer/transfer";
 import { NftDetail } from "@/services/crypto/receive";
 import { NetworkContext } from "@/services/coin/coinUtility";
-import { assertSpendbundle } from "@/services/coin/spendbundle";
+import { assertSpendbundle } from "@/services/spendbundle/validator";
 
 function xchPrefix() { return "txch"; }
 function xchSymbol() { return "TXCH"; }

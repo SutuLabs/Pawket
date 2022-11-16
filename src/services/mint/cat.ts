@@ -1,5 +1,4 @@
-import { Bytes } from "clvm";
-import { CoinSpend, OriginCoin, PartialSpendBundle, SpendBundle, UnsignedSpendBundle } from "@/models/wallet";
+import { CoinSpend, combineSpendBundle, OriginCoin, PartialSpendBundle, SpendBundle, UnsignedSpendBundle } from "@/services/spendbundle";
 import { Hex0x, prefix0x } from "../coin/condition";
 import puzzle from "../crypto/puzzle";
 import { TokenPuzzleObserver } from "../crypto/receive";
@@ -125,65 +124,6 @@ async function constructExternalBundle(
   const solution = prefix0x(await puzzle.encodePuzzle(catsln));
 
   const coin_spends: CoinSpend[] = [{ coin, puzzle_reveal, solution }];
-
-  return new UnsignedSpendBundle(coin_spends);
-}
-
-// export async function combineSpendBundlePure(
-//   ...spendbundles: (SpendBundle | undefined)[]
-// ): Promise<SpendBundle> {
-//   const BLS = Instance.BLS;
-//   if (!BLS) throw new Error("BLS not initialized");
-
-//   const withsigs = spendbundles
-//     .filter(_ => _ && _.aggregated_signature) as SpendBundle[];
-//   const sigs = withsigs
-//     .map(_ => BLS.G2Element.from_bytes(Bytes.from(_.aggregated_signature, "hex").raw()));
-//   const agg_sig = BLS.AugSchemeMPL.aggregate(sigs);
-//   const sig = Bytes.from(agg_sig.serialize()).hex();
-
-//   const spends = withsigs.flatMap(_ => _.coin_spends);
-
-//   return {
-//     aggregated_signature: prefix0x(sig),
-//     coin_spends: spends,
-//   }
-// }
-
-// export function combineUnsignedSpendBundle(...spendbundles: (UnsignedSpendBundle | CoinSpend[] | undefined)[]): UnsignedSpendBundle {
-//   return combineSpendBundleInternal(...spendbundles);
-// }
-
-// export function combineSpendBundle(...spendbundles: (SpendBundle | UnsignedSpendBundle | CoinSpend[] | undefined)[]): SpendBundle {
-//   return combineSpendBundleInternal(...spendbundles) as SpendBundle;
-// }
-
-export function combineSpendBundle(...spendbundles: (UnsignedSpendBundle | CoinSpend[] | undefined)[]): UnsignedSpendBundle;
-export function combineSpendBundle(...spendbundles: (SpendBundle | UnsignedSpendBundle | CoinSpend[] | undefined)[]): PartialSpendBundle;
-export function combineSpendBundle(...spendbundles: (PartialSpendBundle | UnsignedSpendBundle | CoinSpend[] | undefined)[]): PartialSpendBundle;
-export function combineSpendBundle(
-  ...spendbundles: (SpendBundle | PartialSpendBundle | UnsignedSpendBundle | CoinSpend[] | undefined)[]
-): UnsignedSpendBundle | PartialSpendBundle | SpendBundle {
-
-  const BLS = Instance.BLS;
-  if (!BLS) throw new Error("BLS not initialized");
-
-  // const bundle: UnsignedSpendBundle | SpendBundle = Array.isArray(ubundle) ? { coin_spends: ubundle } : ubundle;
-  const coin_spends = spendbundles
-    .filter((_): _ is UnsignedSpendBundle | CoinSpend[] => !!_)
-    .flatMap(_ => Array.isArray(_) ? _ : _.coin_spends);
-  const sigs = spendbundles
-    .map(_ => _ && "aggregated_signature" in _ && _.aggregated_signature)
-    .filter((_): _ is Hex0x => !!_)
-    .map(_ => BLS.G2Element.from_bytes(Bytes.from(_, "hex").raw()));
-  if (sigs.length > 0) {
-    const agg_sig = BLS.AugSchemeMPL.aggregate(sigs);
-    const sig = Bytes.from(agg_sig.serialize()).hex();
-    return {
-      aggregated_signature: prefix0x(sig),
-      coin_spends,
-    };
-  }
 
   return new UnsignedSpendBundle(coin_spends);
 }

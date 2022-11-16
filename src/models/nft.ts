@@ -1,5 +1,5 @@
 import { Hex0x } from "@/services/coin/condition";
-import { OriginCoin } from "./wallet";
+import { OriginCoin } from "../services/spendbundle";
 
 export interface NftItemAttribute {
   trait_type: string;

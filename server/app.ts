@@ -7,7 +7,7 @@ import { analyzeCoin, convertUncurriedPuzzle, getModsPath, parseBlock, parseCoin
 import { Hex0x, prefix0x } from '../src/services/coin/condition';
 import { encodeOffer } from "../src/services/offer/encoding";
 import { generateMintCnsOffer } from "../src/services/offer/cns";
-import { OriginCoin } from '../src/models/wallet';
+import { OriginCoin } from '../src/services/spendbundle';
 import transfer, { SymbolCoins } from '../src/services/transfer/transfer';
 import { TokenPuzzleDetail } from '../src/services/crypto/receive';
 import utility from '../src/services/crypto/utility';
