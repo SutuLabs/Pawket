@@ -46,14 +46,29 @@ export interface CoinSpend {
     solution: Hex0x;
 }
 
-export type PartialSpendBundle = SpendBundle;
-
-export interface SpendBundle extends UnsignedSpendBundle {
+export interface SpendBundle {
     aggregated_signature: Hex0x;
+    coin_spends: CoinSpend[];
 }
 
-export interface UnsignedSpendBundle {
-    coin_spends: CoinSpend[];
+export class UnsignedSpendBundle {
+    public coin_spends: CoinSpend[];
+    public type = "unsigned";
+
+    constructor(coin_spends: CoinSpend[]) {
+        this.coin_spends = coin_spends;
+    }
+}
+
+export class PartialSpendBundle {
+    public aggregated_signature: Hex0x;
+    public coin_spends: CoinSpend[];
+    public type = "partial";
+
+    constructor(coin_spends: CoinSpend[], aggregated_signature: Hex0x) {
+        this.coin_spends = coin_spends;
+        this.aggregated_signature = aggregated_signature;
+    }
 }
 
 export function convertToOriginCoin(coin: CoinItem | { amount: number, parent_coin_info: Hex0x | string, puzzle_hash: Hex0x | string }): OriginCoin {

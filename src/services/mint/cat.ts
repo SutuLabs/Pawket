@@ -126,7 +126,7 @@ async function constructExternalBundle(
 
   const coin_spends: CoinSpend[] = [{ coin, puzzle_reveal, solution }];
 
-  return { coin_spends };
+  return new UnsignedSpendBundle(coin_spends);
 }
 
 // export async function combineSpendBundlePure(
@@ -150,19 +150,20 @@ async function constructExternalBundle(
 //   }
 // }
 
-export function combineUnsignedSpendBundle(...spendbundles: (UnsignedSpendBundle | CoinSpend[] | undefined)[]): UnsignedSpendBundle {
-  return combineSpendBundleInternal(...spendbundles);
-}
+// export function combineUnsignedSpendBundle(...spendbundles: (UnsignedSpendBundle | CoinSpend[] | undefined)[]): UnsignedSpendBundle {
+//   return combineSpendBundleInternal(...spendbundles);
+// }
 
-export function combineSpendBundle(...spendbundles: (SpendBundle | UnsignedSpendBundle | CoinSpend[] | undefined)[]): SpendBundle {
-  return combineSpendBundleInternal(...spendbundles) as SpendBundle;
-}
+// export function combineSpendBundle(...spendbundles: (SpendBundle | UnsignedSpendBundle | CoinSpend[] | undefined)[]): SpendBundle {
+//   return combineSpendBundleInternal(...spendbundles) as SpendBundle;
+// }
 
-export function combineSpendBundleInternal(...spendbundles: (UnsignedSpendBundle | CoinSpend[] | undefined)[]): UnsignedSpendBundle;
-export function combineSpendBundleInternal(...spendbundles: (SpendBundle | UnsignedSpendBundle | CoinSpend[] | undefined)[]): SpendBundle;
-export function combineSpendBundleInternal(
-  ...spendbundles: (SpendBundle | UnsignedSpendBundle | CoinSpend[] | undefined)[]
-): UnsignedSpendBundle | SpendBundle {
+export function combineSpendBundle(...spendbundles: (UnsignedSpendBundle | CoinSpend[] | undefined)[]): UnsignedSpendBundle;
+export function combineSpendBundle(...spendbundles: (SpendBundle | UnsignedSpendBundle | CoinSpend[] | undefined)[]): PartialSpendBundle;
+export function combineSpendBundle(...spendbundles: (PartialSpendBundle | UnsignedSpendBundle | CoinSpend[] | undefined)[]): PartialSpendBundle;
+export function combineSpendBundle(
+  ...spendbundles: (SpendBundle | PartialSpendBundle | UnsignedSpendBundle | CoinSpend[] | undefined)[]
+): UnsignedSpendBundle | PartialSpendBundle | SpendBundle {
 
   const BLS = Instance.BLS;
   if (!BLS) throw new Error("BLS not initialized");
@@ -184,5 +185,5 @@ export function combineSpendBundleInternal(
     };
   }
 
-  return { coin_spends };
+  return new UnsignedSpendBundle(coin_spends);
 }

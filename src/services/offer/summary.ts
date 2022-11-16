@@ -1,4 +1,4 @@
-import { CoinSpend, UnsignedSpendBundle } from "../../models/wallet";
+import { CoinSpend, SpendBundle, UnsignedSpendBundle } from "../../models/wallet";
 import { Bytes, SExp, Tuple } from "clvm";
 import { getNumber, Hex0x, prefix0x } from '../coin/condition';
 import { assemble, disassemble } from 'clvm_tools/clvm_tools/binutils';
@@ -13,7 +13,7 @@ import { parseMetadata } from "../coin/singleton";
 import { analyzeNftCoin, getNftMetadataInfo, getScalarString } from "../coin/nft";
 import { NftDetail } from "../crypto/receive";
 
-export async function getOfferSummary(bundle: UnsignedSpendBundle): Promise<OfferSummary> {
+export async function getOfferSummary(bundle: UnsignedSpendBundle | SpendBundle): Promise<OfferSummary> {
 
   const ocs = getOfferedCoins(bundle);
   const rcs = getRequestedCoins(bundle);
@@ -144,10 +144,10 @@ export async function internalUncurry(puz: string): Promise<UncurriedPuzzle> {
 
 const EmptyParent = "0x0000000000000000000000000000000000000000000000000000000000000000";
 
-function getOfferedCoins(bundle: UnsignedSpendBundle): CoinSpend[] {
+function getOfferedCoins(bundle: UnsignedSpendBundle | SpendBundle): CoinSpend[] {
   return bundle.coin_spends.filter(_ => _.coin.parent_coin_info != EmptyParent)
 }
-function getRequestedCoins(bundle: UnsignedSpendBundle): CoinSpend[] {
+function getRequestedCoins(bundle: UnsignedSpendBundle | SpendBundle): CoinSpend[] {
   return bundle.coin_spends.filter(_ => _.coin.parent_coin_info == EmptyParent)
 }
 

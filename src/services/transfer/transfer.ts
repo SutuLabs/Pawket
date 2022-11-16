@@ -1,6 +1,6 @@
 import { PrivateKey, G2Element, ModuleInstance } from "@chiamine/bls-signatures";
 import { Bytes } from "clvm";
-import { CoinSpend, OriginCoin, SpendBundle, UnsignedSpendBundle } from "@/models/wallet";
+import { CoinSpend, OriginCoin, PartialSpendBundle, SpendBundle, UnsignedSpendBundle } from "@/models/wallet";
 import { GetParentPuzzleResponse } from "@/models/api";
 import { DEFAULT_HIDDEN_PUZZLE_HASH } from "../coin/consts";
 import { CoinConditions, ConditionType, Hex, Hex0x, prefix0x, unprefix0x } from "../coin/condition";
@@ -91,12 +91,12 @@ class Transfer {
       }
     }
 
-    return { coin_spends };
+    return new UnsignedSpendBundle(coin_spends);
     // return this.getSpendBundle(coin_spends, puzzles, net.chainId);
   }
 
-  public async getSignaturesFromUnsignedSpendBundle(
-    ubundle: UnsignedSpendBundle,
+  public async getSignaturesFromSpendBundle(
+    ubundle: UnsignedSpendBundle | SpendBundle | PartialSpendBundle,
     puzzles: TokenPuzzlePrivateKey[],
     chainId: string,
     allSignCheck = false,
@@ -150,8 +150,8 @@ class Transfer {
     const BLS = Instance.BLS;
     if (!BLS) throw new Error("BLS not initialized");
 
-    const bundle: UnsignedSpendBundle | SpendBundle = Array.isArray(ubundle) ? { coin_spends: ubundle } : ubundle;
-    let agg_sig = await this.getSignaturesFromUnsignedSpendBundle(bundle, puzzles, chainId, allSignCheck);
+    const bundle: UnsignedSpendBundle | SpendBundle = Array.isArray(ubundle) ? new UnsignedSpendBundle(ubundle) : ubundle;
+    let agg_sig = await this.getSignaturesFromSpendBundle(bundle, puzzles, chainId, allSignCheck);
 
     if ("aggregated_signature" in bundle && (bundle as SpendBundle).aggregated_signature)
       agg_sig = BLS.AugSchemeMPL.aggregate([

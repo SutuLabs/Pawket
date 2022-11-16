@@ -1,7 +1,7 @@
 import { CoinSpend, OriginCoin, PartialSpendBundle, SpendBundle, UnsignedSpendBundle } from "@/models/wallet";
 import puzzle, { PlaintextPuzzle } from "../crypto/puzzle";
 import receive, { TokenPuzzleDetail, TokenPuzzleObserver } from "../crypto/receive";
-import { combineSpendBundle, combineUnsignedSpendBundle } from "../mint/cat";
+import { combineSpendBundle } from "../mint/cat";
 import { combineOfferSpendBundle, curryMod } from "../offer/bundler";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { formatAmount, Hex0x, prefix0x, skipFirstByte0x } from "./condition";
@@ -140,7 +140,7 @@ export async function generateMintNftBundle(
 
     // const extreqs = cloneAndAddRequestPuzzleTemporary(net.symbol, requests, inner_p2_puzzle.hash, nftPuzzle, nftPuzzleHash);
     // const nftBundle = await transfer.getSpendBundle([launcherCoinSpend, nftCoinSpend], extreqs, net.chainId, true);
-    bundle = combineUnsignedSpendBundle(bundle, [launcherCoinSpend, nftCoinSpend]);
+    bundle = combineSpendBundle(bundle, [launcherCoinSpend, nftCoinSpend]);
 
     if (didAnalysis && proof && didPreviousCoin && didPuzzleHash) {
       const didBundle = await getDidBundle(didAnalysis, proof, amount, launcherCoinId, didPreviousCoin, didPuzzleHash, requests, net);
@@ -197,7 +197,7 @@ async function getDidBundle(
 
   // const extreqs = cloneAndAddRequestPuzzleTemporary(net.symbol, requests, didP2InnerPuzzleHash, "()", didPuzzleHash);
   // const bundle = await transfer.getSpendBundle([didCoinSpend], requests, net.chainId);
-  return { coin_spends: [didCoinSpend] };
+  return new UnsignedSpendBundle([didCoinSpend]);
 }
 
 export async function getBootstrapSpendBundle(
@@ -749,7 +749,7 @@ async function constructDidSpendBundle(
   };
   // const extreqs2 = cloneAndAddRequestPuzzleTemporary(net.symbol, requests, didP2InnerPuzzleHash, "()", didPuzzleHash);
   // const bundle = await transfer.getSpendBundle([didCoinSpend], extreqs2, net.chainId);
-  return { coin_spends: [didCoinSpend] };
+  return new UnsignedSpendBundle([didCoinSpend]);
 }
 
 async function constructPureFeeSpendBundle(

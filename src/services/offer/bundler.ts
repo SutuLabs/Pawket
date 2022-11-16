@@ -141,7 +141,7 @@ export async function generateOffer(
     }
   }
 
-  return { coin_spends: spends };
+  return new UnsignedSpendBundle(spends);
 
   // // combine into one spendbundle
   // return transfer.getSpendBundle(spends, puzzleCopy, net.chainId);
@@ -448,7 +448,7 @@ export async function generateNftOffer(
     }
   }
 
-  return { coin_spends: spends };
+  return new UnsignedSpendBundle(spends);
 }
 
 export async function curryMod(mod: string, ...args: string[]): Promise<PlaintextPuzzle | null> {
