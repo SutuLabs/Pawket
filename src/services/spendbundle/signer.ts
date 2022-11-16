@@ -44,7 +44,6 @@ async function getSignaturesFromSpendBundle(
   const BLS = Instance.BLS;
   if (!BLS) throw new Error("BLS not initialized");
   const puzzleDict: { [key: string]: PuzzlePrivateKey } = Object.assign({}, ...puzzles.flatMap(_ => _.puzzles).map((x) => ({ [unprefix0x(x.synPubKey)]: x })));
-  // console.dir(puzzleDict, { depth: 0 });
   const getPuzDetail = (synPubKey: Hex): PuzzlePrivateKey | undefined => { return puzzleDict[synPubKey]; }
 
   const css = ubundle.coin_spends;
@@ -59,32 +58,23 @@ async function getSignaturesFromSpendBundle(
     const synPubKey = !synPubKeyUint8 ? undefined : Bytes.from(synPubKeyUint8).hex();
 
     const puz = !synPubKey ? undefined : getPuzDetail(synPubKey);
-    // if (!puz ) {
-    //   console.log(`cannot find puzzle by synthetic public key ${synPubKey}`);
-    // }
     if (!puz && allSignCheck) throw new Error(`cannot find puzzle by synthetic public key ${synPubKey}`);
-
-    // const puzzle_reveal = await puzzle.disassemblePuzzle(coin_spend.puzzle_reveal);
 
     const synthetic_sk = puz
       ? calculate_synthetic_secret_key(BLS, puz.privateKey, DEFAULT_HIDDEN_PUZZLE_HASH.raw())
       : undefined;
+
     const coinname = getCoinNameHex(coin_spend.coin);
-
     const signature = await signSolution(BLS, result.conditions, synthetic_sk, coinname, chainId, allSignCheck);
-
     sigs.push(signature);
   }
 
-  // console.log(sigs);
   const agg_sig = BLS.AugSchemeMPL.aggregate(sigs);
-
   return agg_sig;
 }
 
 async function signSolution(
   BLS: ModuleInstance,
-  // solution_executed_result: string,
   conds: ConditionEntity[],
   synthetic_sk: PrivateKey | undefined,
   coinname: Bytes,
@@ -92,7 +82,6 @@ async function signSolution(
   allSignCheck = false,
 ): Promise<G2Element> {
   const AGG_SIG_ME_ADDITIONAL_DATA = Bytes.from(chainId, "hex");
-  // const conds = puzzle.parseConditions(solution_executed_result);
   const sigs: G2Element[] = [];
 
   for (let i = 0; i < conds.length; i++) {
@@ -109,7 +98,6 @@ async function signSolution(
       if (!synthetic_sk) continue;
 
       const synthetic_pk_hex = Bytes.from(synthetic_sk.get_g1().serialize()).hex();
-      // console.log(synthetic_pk_hex, msg);
       if (pk_hex != synthetic_pk_hex) throw new Error("wrong args due to pk != synthetic_pk");
       const sig = BLS.AugSchemeMPL.sign(synthetic_sk, msg);
       sigs.push(sig);

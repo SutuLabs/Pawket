@@ -183,7 +183,6 @@ test('Take Offer Xch For CAT', async () => {
   const takerBundle = await signSpendBundle(utakerBundle, tokenPuzzles, net.chainId);
   expect(takerBundle).toMatchSnapshot("taker bundle");
   const combined = await combineOfferSpendBundle([makerBundle, takerBundle]);
-  // const combined = await signSpendBundle(ucombined, tokenPuzzles, net.chainId);
   await assertSpendbundle(combined, net.chainId);
   expect(combined).toMatchSnapshot("bundle");
 });
@@ -219,7 +218,6 @@ test('Take Offer CAT For Xch', async () => {
   const takerBundle = await signSpendBundle(utakerBundle, tokenPuzzles, net.chainId);
   expect(takerBundle).toMatchSnapshot("taker bundle");
   const combined = await combineOfferSpendBundle([makerBundle, takerBundle]);
-  // const combined = await signSpendBundle(ucombined, tokenPuzzles, net.chainId);
   await assertSpendbundle(combined, net.chainId);
   expect(combined).toMatchSnapshot("bundle");
 });

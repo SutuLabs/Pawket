@@ -149,7 +149,6 @@ class Transfer {
       conditions.push(...additionalConditions);
 
     const delegated_puzzle_solution = this.getDelegatedPuzzle(conditions);
-    // const solution_executed_result = delegated_puzzle_solution;
     const solution_reveal = "(() " + delegated_puzzle_solution + " ())";
 
     return solution_reveal;

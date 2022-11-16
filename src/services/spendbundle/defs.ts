@@ -49,7 +49,6 @@ export function combineSpendBundle(
   const BLS = Instance.BLS;
   if (!BLS) throw new Error("BLS not initialized");
 
-  // const bundle: UnsignedSpendBundle | SpendBundle = Array.isArray(ubundle) ? { coin_spends: ubundle } : ubundle;
   const coin_spends = spendbundles
     .filter((_): _ is UnsignedSpendBundle | CoinSpend[] => !!_)
     .flatMap(_ => Array.isArray(_) ? _ : _.coin_spends);
