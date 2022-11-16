@@ -1,4 +1,4 @@
-import { OriginCoin, signSpendBundle } from "@/services/spendbundle";
+import { OriginCoin, signSpendBundle } from "../spendbundle";
 import { NetworkContextWithOptionalApi } from "../coin/coinUtility";
 import { prefix0x } from "../coin/condition";
 import puzzle from "../crypto/puzzle";

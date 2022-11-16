@@ -10,7 +10,7 @@ import puzzle from '../crypto/puzzle';
 import { analyzeCatCoin } from './cat';
 import { analyzeDidCoin } from './did';
 import { analyzeNftCoin } from './nft';
-import { OriginCoin } from '@/services/spendbundle';
+import { OriginCoin } from '../spendbundle';
 
 export interface SimplePuzzle {
   mod: ModName,

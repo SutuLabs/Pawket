@@ -1,4 +1,4 @@
-import { CoinSpend } from "@/services/spendbundle";
+import { CoinSpend } from "../spendbundle";
 import { ConditionType, prefix0x } from "../coin/condition";
 import puzzle, { PuzzleObserver } from "../crypto/puzzle";
 import transfer, { TokenSpendPlan } from "./transfer";

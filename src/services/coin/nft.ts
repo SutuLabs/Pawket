@@ -1,4 +1,4 @@
-import { CoinSpend, combineSpendBundle, OriginCoin, PartialSpendBundle, signSpendBundle, UnsignedSpendBundle } from "@/services/spendbundle";
+import { CoinSpend, combineSpendBundle, OriginCoin, PartialSpendBundle, signSpendBundle, UnsignedSpendBundle } from "../spendbundle";
 import puzzle, { PlaintextPuzzle } from "../crypto/puzzle";
 import receive, { TokenPuzzleDetail, TokenPuzzleObserver } from "../crypto/receive";
 import { curryMod } from "../offer/bundler";

@@ -1,6 +1,6 @@
 import { PrivateKey, G2Element, ModuleInstance } from "@chiamine/bls-signatures";
 import { Bytes } from "clvm";
-import { CoinSpend, PartialSpendBundle, SpendBundle, UnsignedSpendBundle } from "@/services/spendbundle";
+import { CoinSpend, PartialSpendBundle, SpendBundle, UnsignedSpendBundle } from "../spendbundle";
 import { DEFAULT_HIDDEN_PUZZLE_HASH } from "../coin/consts";
 import { Hex, prefix0x, unprefix0x } from "../coin/condition";
 import puzzle, { ConditionEntity, PuzzlePrivateKey } from "../crypto/puzzle";
