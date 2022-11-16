@@ -1,22 +1,24 @@
 import { PrivateKey, G2Element, ModuleInstance } from "@chiamine/bls-signatures";
 import { Bytes } from "clvm";
-import { CoinSpend, OriginCoin, PartialSpendBundle, SpendBundle, UnsignedSpendBundle } from "@/services/spendbundle";
+import { CoinSpend, PartialSpendBundle, SpendBundle, UnsignedSpendBundle } from "@/services/spendbundle";
 import { DEFAULT_HIDDEN_PUZZLE_HASH } from "../coin/consts";
-import { CoinConditions, ConditionType, Hex, Hex0x, prefix0x, unprefix0x } from "../coin/condition";
+import { Hex, prefix0x, unprefix0x } from "../coin/condition";
 import puzzle, { ConditionEntity, PuzzlePrivateKey } from "../crypto/puzzle";
-import { TokenPuzzleObserver, TokenPuzzlePrivateKey } from "../crypto/receive";
+import { TokenPuzzlePrivateKey } from "../crypto/receive";
 import { ConditionOpcode } from "../coin/opcode";
-import { getCoinNameHex, NetworkContext, NetworkContextWithOptionalApi } from "../coin/coinUtility";
+import { getCoinNameHex, NetworkContext } from "../coin/coinUtility";
 import { Instance } from "../util/instance";
 import { calculate_synthetic_secret_key } from "../crypto/sign";
 
 export async function signSpendBundle(ubundle: SpendBundle | UnsignedSpendBundle | CoinSpend[],
   puzzles: TokenPuzzlePrivateKey[],
-  chainId: string,
+  chainId: string | NetworkContext,
   allSignCheck = false,
 ): Promise<SpendBundle> {
   const BLS = Instance.BLS;
   if (!BLS) throw new Error("BLS not initialized");
+
+  chainId = typeof chainId === "string" ? chainId : chainId.chainId;
 
   const bundle: UnsignedSpendBundle | SpendBundle = Array.isArray(ubundle) ? new UnsignedSpendBundle(ubundle) : ubundle;
   let agg_sig = await getSignaturesFromSpendBundle(bundle, puzzles, chainId, allSignCheck);

@@ -45,11 +45,11 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { TokenPuzzleDetail } from "@/services/crypto/receive";
 import store from "@/store";
-import { SpendBundle } from "@/models/wallet";
+import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
 import coinHandler from "@/services/transfer/coin";
-import { debugBundle, submitBundle } from "@/services/view/bundle";
+import { debugBundle, submitBundle } from "@/services/view/bundleAction";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import OfflineSendShowBundle from "@/components/Offline/OfflineSendShowBundle.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
@@ -186,9 +186,16 @@ export default class MintDid extends Vue {
       // const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: this.selectedToken, memos: [tgt_hex, memo] }];
       // const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
       // this.bundle = await transfer.generateSpendBundle(plan, this.requests, [], xchSymbol(), chainId());
-      this.bundle = await (
-        await generateMintDidBundle(tgt, change, this.feeBigInt, {}, this.availcoins, this.requests, networkContext())
-      ).spendBundle;
+      const ubundle = await generateMintDidBundle(
+        tgt,
+        change,
+        this.feeBigInt,
+        {},
+        this.availcoins,
+        this.requests,
+        networkContext()
+      );
+      this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());
     } catch (error) {
       Notification.open({
         message: this.$tc("send.ui.messages.failedToSign") + error,

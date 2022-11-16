@@ -85,7 +85,7 @@ import { ensureAddress, rpcUrl, xchPrefix } from "@/store/modules/network";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import puzzle from "@/services/crypto/puzzle";
 import debug from "@/services/api/debug";
-import { CoinSpend } from "@/models/wallet";
+import { CoinSpend } from "@/services/spendbundle";
 import { analyzeNftCoin, getScalarString } from "@/services/coin/nft";
 
 @Component({

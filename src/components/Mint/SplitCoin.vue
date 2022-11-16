@@ -66,12 +66,12 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { TokenPuzzleDetail } from "@/services/crypto/receive";
 import store from "@/store";
-import { OriginCoin, SpendBundle } from "@/models/wallet";
+import { OriginCoin, signSpendBundle, SpendBundle } from "@/services/spendbundle";
 import bigDecimal from "js-big-decimal";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
 import coinHandler from "@/services/transfer/coin";
-import { debugBundle, submitBundle } from "@/services/view/bundle";
+import { debugBundle, submitBundle } from "@/services/view/bundleAction";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import SendSummary from "@/components/Send/SendSummary.vue";
@@ -322,7 +322,7 @@ export default class SplitCoin extends Vue {
       const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
       const target_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.address));
 
-      const spendBundle = await getBootstrapSpendBundle(
+      const ubundle = await getBootstrapSpendBundle(
         change_hex,
         target_hex,
         BigInt(this.fee),
@@ -333,8 +333,8 @@ export default class SplitCoin extends Vue {
       );
 
       this.coinSummary = "parent_coin_id,puzzle_hash,amount\n";
-      for (let i = 0; i < spendBundle.coin_spends.length; i++) {
-        const cs = spendBundle.coin_spends[i];
+      for (let i = 0; i < ubundle.coin_spends.length; i++) {
+        const cs = ubundle.coin_spends[i];
         if (cs.coin.amount != 1n) continue;
         const bootstrapCoinId = getCoinName0x(cs.coin);
         const splitCoin: OriginCoin = {
@@ -345,7 +345,7 @@ export default class SplitCoin extends Vue {
         this.coinSummary += `${splitCoin.parent_coin_info},${splitCoin.puzzle_hash},1\n`;
       }
 
-      this.bundle = spendBundle;
+      this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());
     } catch (error) {
       Notification.open({
         message: this.$tc("mintCat.ui.messages.failedToSign") + error,

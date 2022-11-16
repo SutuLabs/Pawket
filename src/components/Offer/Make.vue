@@ -115,7 +115,7 @@
 <script lang="ts">
 import { Component, Vue, Prop, Emit, Watch } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import { SpendBundle } from "@/models/wallet";
+import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
 import { AccountEntity } from "@/models/account";
 import { prefix0x } from "@/services/coin/condition";
 import store from "@/store";
@@ -259,13 +259,8 @@ export default class MakeOffer extends Vue {
       const reqs: OfferEntity[] = getOfferEntities(this.requests, change_hex, this.catIds, xchSymbol());
 
       const offplan = await generateOfferPlan(offs, change_hex, this.availcoins, 0n, xchSymbol());
-      const bundle = await generateOffer(offplan, reqs, this.tokenPuzzles, networkContext());
-      // for creating unit test
-      // console.log("const offplan=", JSON.stringify([offplan], null, 2), ";");
-      // console.log("const reqs=", JSON.stringify(reqs, null, 2), ";");
-      // console.log("const bundle=", JSON.stringify(bundle, null, 2), ";");
-      // console.log("coinHandler.getAssetsRequestDetail", JSON.stringify(this.account, null, 2), ";");
-      this.bundle = bundle;
+      const ubundle = await generateOffer(offplan, reqs, this.tokenPuzzles, networkContext());
+      const bundle = await signSpendBundle(ubundle, this.tokenPuzzles, networkContext());
       this.offerText = await encodeOffer(bundle, 4);
 
       this.step = "Confirmation";

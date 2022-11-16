@@ -1,5 +1,5 @@
 <template>
-    <confirmation
+  <confirmation
     :value="bundle"
     :title="$t('nftTransfer.ui.title')"
     @close="close()"
@@ -9,42 +9,42 @@
     @confirm="submit()"
     :showClose="true"
     :loading="submitting"
-      :disabled="!validity || submitting"
+    :disabled="!validity || submitting"
     :submitting="submitting"
   >
     <template #sign>
       <div>
-          <div class="has-text-centered">
-            <p class="has-text-grey pb-3">{{ $t("nftTransfer.ui.description") }}</p>
-            <img v-if="uri" :src="uri" class="image is-128x128" />
-            <img v-else src="@/assets/nft-no-image.png" class="image is-128x128" />
-            <p>{{ nft.name }}</p>
-          </div>
-          <address-field
-            :inputAddress="address"
-            :addressEditable="addressEditable"
-            @updateAddress="updateAddress"
-            @updateEffectiveAddress="updateEffectiveAddress"
-            @updateContactName="updateContactName"
-          ></address-field>
-
-          <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
+        <div class="has-text-centered">
+          <p class="has-text-grey pb-3">{{ $t("nftTransfer.ui.description") }}</p>
+          <img v-if="uri" :src="uri" class="image is-128x128" />
+          <img v-else src="@/assets/nft-no-image.png" class="image is-128x128" />
+          <p>{{ nft.name }}</p>
         </div>
+        <address-field
+          :inputAddress="address"
+          :addressEditable="addressEditable"
+          @updateAddress="updateAddress"
+          @updateEffectiveAddress="updateEffectiveAddress"
+          @updateContactName="updateContactName"
+        ></address-field>
+
+        <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
+      </div>
     </template>
     <template #confirm>
       <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-          <span v-html="$sanitize($tc('nftTransfer.ui.summary.confirmation'))"></span>
-        </b-notification>
-        <send-summary
-          :nftUri="uri"
-          :nftHash="hash"
-          :fee="feeBigInt"
-          :address="signAddress"
-          :leadingText="$t('mintNft.ui.summary.label.leadingText')"
-          :total="total"
-          :contactName="contactName"
-        ></send-summary>
-        <bundle-summary :account="account" :bundle="bundle" :ignoreError="true" class="mt-3"></bundle-summary>
+        <span v-html="$sanitize($tc('nftTransfer.ui.summary.confirmation'))"></span>
+      </b-notification>
+      <send-summary
+        :nftUri="uri"
+        :nftHash="hash"
+        :fee="feeBigInt"
+        :address="signAddress"
+        :leadingText="$t('mintNft.ui.summary.label.leadingText')"
+        :total="total"
+        :contactName="contactName"
+      ></send-summary>
+      <bundle-summary :account="account" :bundle="bundle" :ignoreError="true" class="mt-3"></bundle-summary>
     </template>
   </confirmation>
 </template>
@@ -56,12 +56,12 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { NftDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
 import store from "@/store";
-import { SpendBundle } from "@/models/wallet";
+import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
 import bigDecimal from "js-big-decimal";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
 import coinHandler from "@/services/transfer/coin";
-import { debugBundle, submitBundle } from "@/services/view/bundle";
+import { debugBundle, submitBundle } from "@/services/view/bundleAction";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import SendSummary from "@/components/Send/SendSummary.vue";
@@ -272,7 +272,7 @@ export default class NftTransfer extends Vue {
         return;
       }
 
-      const spendBundle = await generateTransferNftBundle(
+      const ubundle = await generateTransferNftBundle(
         this.signAddress,
         this.account.firstAddress,
         BigInt(this.fee),
@@ -283,7 +283,7 @@ export default class NftTransfer extends Vue {
         networkContext()
       );
 
-      this.bundle = spendBundle;
+      this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());
     } catch (error) {
       Notification.open({
         message: this.$tc("mintNft.ui.messages.failedToSign") + error,

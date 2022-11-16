@@ -63,12 +63,12 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { CnsDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
 import store from "@/store";
-import { SpendBundle } from "@/models/wallet";
+import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
 import bigDecimal from "js-big-decimal";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
 import coinHandler from "@/services/transfer/coin";
-import { debugBundle, submitBundle } from "@/services/view/bundle";
+import { debugBundle, submitBundle } from "@/services/view/bundleAction";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import { networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
@@ -267,7 +267,7 @@ export default class BuyCns extends Vue {
         return;
       }
 
-      const spendBundle = await generateTransferNftBundle(
+      const ubundle = await generateTransferNftBundle(
         this.address,
         this.account.firstAddress,
         BigInt(this.fee),
@@ -278,7 +278,7 @@ export default class BuyCns extends Vue {
         networkContext()
       );
 
-      this.bundle = spendBundle;
+      this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());
     } catch (error) {
       Notification.open({
         message: this.$tc("mintNft.ui.messages.failedToSign") + error,

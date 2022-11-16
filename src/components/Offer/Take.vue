@@ -199,7 +199,7 @@
 <script lang="ts">
 import { Component, Vue, Prop, Emit, Watch } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import { SpendBundle } from "@/models/wallet";
+import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
 import { getCatIdDict, getCatNameDict, getTokenInfo } from "@/services/view/cat";
 import { AccountEntity, CustomCat, OneTokenInfo, TokenInfo } from "@/models/account";
 import { demojo } from "@/filters/unitConversion";
@@ -209,11 +209,17 @@ import coinHandler from "@/services/transfer/coin";
 import { getOfferSummary, OfferSummary } from "@/services/offer/summary";
 import { decodeOffer } from "@/services/offer/encoding";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { combineOfferSpendBundle, generateNftOffer, generateOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
+import {
+  combineOfferSpendBundle,
+  generateNftOffer,
+  generateOffer,
+  generateOfferPlan,
+  getReversePlan,
+} from "@/services/offer/bundler";
 import { Hex0x, prefix0x } from "@/services/coin/condition";
 import puzzle from "@/services/crypto/puzzle";
 import store from "@/store";
-import { debugBundle, submitBundle } from "@/services/view/bundle";
+import { debugBundle, submitBundle } from "@/services/view/bundleAction";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import ManageCats from "@/components/Cat/ManageCats.vue";
 import OfflineSendShowBundle from "@/components/Offline/OfflineSendShowBundle.vue";
@@ -509,7 +515,8 @@ export default class TakeOffer extends Vue {
         }
         const fee = isReceivingCat ? BigInt(this.fee) : 0n;
         const offplan = await generateOfferPlan(revSummary.offered, change_hex, this.availcoins, fee, xchSymbol());
-        const takerBundle = await generateOffer(offplan, revSummary.requested, this.tokenPuzzles, networkContext());
+        const utakerBundle = await generateOffer(offplan, revSummary.requested, this.tokenPuzzles, networkContext());
+        const takerBundle = await signSpendBundle(utakerBundle, this.tokenPuzzles, networkContext());
         const combined = await combineOfferSpendBundle([this.makerBundle, takerBundle]);
         // for creating unit test
         // console.log("const change_hex=", change_hex, ";");
@@ -531,7 +538,7 @@ export default class TakeOffer extends Vue {
           xchSymbol(),
           royalty_amount
         );
-        const takerBundle = await generateNftOffer(
+        const utakerBundle = await generateNftOffer(
           offplan,
           nft.analysis,
           undefined,
@@ -539,6 +546,7 @@ export default class TakeOffer extends Vue {
           this.tokenPuzzles,
           networkContext()
         );
+        const takerBundle = await signSpendBundle(utakerBundle, this.tokenPuzzles, networkContext());
         const combined = await combineOfferSpendBundle([this.makerBundle, takerBundle]);
         // for creating unit test
         // console.log("const change_hex=", change_hex, ";");

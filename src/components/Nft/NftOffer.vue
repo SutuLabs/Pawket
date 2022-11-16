@@ -76,7 +76,7 @@
 <script lang="ts">
 import { Component, Vue, Prop, Emit } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import { SpendBundle } from "@/models/wallet";
+import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
 import { AccountEntity } from "@/models/account";
 import store from "@/store";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
@@ -189,7 +189,15 @@ export default class NftOffer extends Vue {
       // console.log("const reqs=" + JSON.stringify(reqs, null, 2) + ";");
       // console.log("const availcoins=" + JSON.stringify(this.availcoins, null, 2) + ";");
       const offplan = await generateOfferPlan(offs, change_hex, this.availcoins, 0n, xchSymbol());
-      const bundle = await generateNftOffer(offplan, this.nft.analysis, this.nft.coin, reqs, this.tokenPuzzles, networkContext());
+      const ubundle = await generateNftOffer(
+        offplan,
+        this.nft.analysis,
+        this.nft.coin,
+        reqs,
+        this.tokenPuzzles,
+        networkContext()
+      );
+      const bundle = await signSpendBundle(ubundle, this.tokenPuzzles, networkContext());
       this.bundle = bundle;
       this.offerText = await encodeOffer(bundle, 4);
 

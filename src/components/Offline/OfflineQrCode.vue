@@ -77,7 +77,7 @@ import QrcodeVue from "qrcode.vue";
 import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from "vue-qrcode-reader";
 import puzzle, { PuzzleAddress } from "@/services/crypto/puzzle";
 import { decodeAddress, initCameraHandleError } from "@/services/view/camera";
-import { OriginCoin } from "@/models/wallet";
+import { OriginCoin } from "@/services/spendbundle";
 import coinHandler, { compareOriginCoin } from "@/services/transfer/coin";
 import { decodeOffer } from "@/services/offer/encoding";
 import OfflineSendConfirmBundle from "@/components/Offline/OfflineSendConfirmBundle.vue";

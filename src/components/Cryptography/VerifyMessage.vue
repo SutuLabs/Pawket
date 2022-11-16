@@ -46,7 +46,7 @@ import puzzle from "@/services/crypto/puzzle";
 import { prefix0x, unprefix0x } from "@/services/coin/condition";
 import { getSignMessage, verifySignature } from "@/services/crypto/sign";
 import { rpcUrl } from "@/store/modules/network";
-import { CoinSpend } from "@/models/wallet";
+import { CoinSpend } from "@/services/spendbundle";
 import debug from "@/services/api/debug";
 import { analyzeNftCoin } from "@/services/coin/nft";
 import utility from "@/services/crypto/utility";

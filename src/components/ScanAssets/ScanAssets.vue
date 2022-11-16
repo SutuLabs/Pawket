@@ -173,7 +173,7 @@ import { getCatIdDict, getCatNames, getTokenInfo } from "@/services/view/cat";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import receive, { DidDetail, NftDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
 import { ensureAddress, rpcUrl, xchPrefix, xchSymbol } from "@/store/modules/network";
-import { CoinRecord, convertToOriginCoin, GetRecordsResponse } from "@/models/wallet";
+import { CoinRecord, GetRecordsResponse } from "@/models/wallet";
 import debug from "@/services/api/debug";
 import { analyzeNftCoin, getScalarString } from "@/services/coin/nft";
 import puzzle, { PuzzleDetail } from "@/services/crypto/puzzle";
@@ -194,6 +194,7 @@ import store from "@/store";
 import { analyzeDidCoin, DidCoinAnalysisResult } from "@/services/coin/did";
 import KeyBox from "../Common/KeyBox.vue";
 import SignMessage from "../Cryptography/SignMessage.vue";
+import { convertToOriginCoin } from "@/services/coin/coinUtility";
 
 type Option = "Token" | "NftV1" | "CatV2" | "DidV1";
 type Mode = "option" | "result";
