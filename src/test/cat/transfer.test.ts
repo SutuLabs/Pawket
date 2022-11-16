@@ -1,5 +1,5 @@
 import { GetParentPuzzleResponse } from "@/models/api";
-import { OriginCoin } from "@/services/spendbundle";
+import { OriginCoin, signSpendBundle } from "@/services/spendbundle";
 import { NetworkContext } from "@/services/coin/coinUtility";
 import { prefix0x } from "@/services/coin/condition";
 import { assertSpendbundle } from "@/services/spendbundle/validator";
@@ -47,7 +47,7 @@ test('Cat Transfer', async () => {
   expect(plan).toMatchSnapshot("plan");
   const obPuzzles = puzzle.getObserverPuzzles(puzzles);
   const ubundle = await transfer.generateSpendBundleIncludingCat(plan, [{ symbol: "CAT", puzzles: obPuzzles }], [], net);
-  const bundle = await transfer.getSpendBundle(ubundle, [{ symbol: "CAT", puzzles }], net.chainId)
+  const bundle = await signSpendBundle(ubundle, [{ symbol: "CAT", puzzles }], net.chainId)
   await assertSpendbundle(bundle, net.chainId);
   expect(bundle).toMatchSnapshot("bundle");
 });
@@ -84,7 +84,7 @@ test('Cat Transfer2', async () => {
   expect(plan).toMatchSnapshot("plan");
   const obPuzzles = puzzle.getObserverPuzzles(puzzles);
   const ubundle = await transfer.generateSpendBundleIncludingCat(plan, [{ symbol: "CAT", puzzles: obPuzzles }], [], net);
-  const bundle = await transfer.getSpendBundle(ubundle, [{ symbol: "CAT", puzzles }], net.chainId)
+  const bundle = await signSpendBundle(ubundle, [{ symbol: "CAT", puzzles }], net.chainId)
   await assertSpendbundle(bundle, net.chainId);
   expect(bundle).toMatchSnapshot("bundle");
 });
@@ -132,7 +132,7 @@ test('Multi Cat Coin Transfer', async () => {
   expect(plan).toMatchSnapshot("plan");
   const obPuzzles = puzzle.getObserverPuzzles(puzzles);
   const ubundle = await transfer.generateSpendBundleIncludingCat(plan, [{ symbol: "CAT", puzzles: obPuzzles }], [], net);
-  const bundle = await transfer.getSpendBundle(ubundle, [{ symbol: "CAT", puzzles }], net.chainId)
+  const bundle = await signSpendBundle(ubundle, [{ symbol: "CAT", puzzles }], net.chainId)
   await assertSpendbundle(bundle, net.chainId);
   expect(bundle).toMatchSnapshot("bundle");
 });
@@ -184,7 +184,7 @@ test('Multi Cat Coin Transfer 2', async () => {
   expect(plan).toMatchSnapshot("plan");
   const obPuzzles = puzzle.getObserverPuzzles(puzzles);
   const ubundle = await transfer.generateSpendBundleIncludingCat(plan, [{ symbol: "CAT", puzzles: obPuzzles }], [], net);
-  const bundle = await transfer.getSpendBundle(ubundle, [{ symbol: "CAT", puzzles }], net.chainId)
+  const bundle = await signSpendBundle(ubundle, [{ symbol: "CAT", puzzles }], net.chainId)
   await assertSpendbundle(bundle, net.chainId);
   expect(bundle).toMatchSnapshot("bundle");
 });

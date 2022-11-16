@@ -9,6 +9,7 @@ import { knownCoins } from "./cns.test.data";
 import { NetworkContext } from "@/services/coin/coinUtility";
 
 import { assertSpendbundle } from "@/services/spendbundle/validator";
+import { signSpendBundle } from "@/services/spendbundle";
 
 const net: NetworkContext = {
   prefix: "xch",
@@ -53,7 +54,7 @@ test('Prepare CNS bootstrap coins', async () => {
 
   const ubundle = await getBootstrapSpendBundle(
     target_hex, change_hex, fee, availcoins, tokenPuzzles, count, net, sk);
-  const bundle = await transfer.getSpendBundle(ubundle, tokenPuzzles, net.chainId);
+  const bundle = await signSpendBundle(ubundle, tokenPuzzles, net.chainId);
   await assertSpendbundle(bundle, net.chainId);
   expect(bundle).toMatchSnapshot("spendbundle");
 });

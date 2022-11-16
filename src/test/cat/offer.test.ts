@@ -10,6 +10,7 @@ import { AccountEntity, PersistentCustomCat } from "@/models/account";
 import { prefix0x } from "@/services/coin/condition";
 import { NetworkContext } from "@/services/coin/coinUtility";
 import { assertSpendbundle } from "@/services/spendbundle/validator";
+import { signSpendBundle } from "@/services/spendbundle";
 
 function xchPrefix() { return "xch"; }
 function xchSymbol() { return "XCH"; }
@@ -86,7 +87,7 @@ test('Make Offer 1', async () => {
 
   const nonce = "71bdf5d923a48956a8d26a36c6ea4a9959de221ff2ee986bce4827e5f037ceb8";
   const ubundle = await generateOffer(offplan, reqs, tokenPuzzles, net, nonce, "cat_v1");
-  const bundle = await transfer.getSpendBundle(ubundle, tokenPuzzles, net.chainId);
+  const bundle = await signSpendBundle(ubundle, tokenPuzzles, net.chainId);
   const encoded = await encodeOffer(bundle, 2);
 
   expect(bundle).toMatchSnapshot("bundle");
@@ -144,7 +145,7 @@ test('Make Offer 2', async () => {
 
   const nonce = "741f8564b6637aee92dd68548cfe7df8ec35b20029235565244944febd68bf8d";
   const ubundle = await generateOffer(offplan, reqs, tokenPuzzles, net, nonce, "cat_v1");
-  const bundle = await transfer.getSpendBundle(ubundle, tokenPuzzles, net.chainId);
+  const bundle = await signSpendBundle(ubundle, tokenPuzzles, net.chainId);
   const encoded = await encodeOffer(bundle, 2);
 
   expect(bundle).toMatchSnapshot("bundle");
@@ -179,10 +180,10 @@ test('Take Offer Xch For CAT', async () => {
   const offplan = await generateOfferPlan(revSummary.offered, change_hex, availcoins, 0n, xchSymbol());
   expect(offplan).toMatchSnapshot("offer plan");
   const utakerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, net, nonce, "cat_v1");
-  const takerBundle = await transfer.getSpendBundle(utakerBundle, tokenPuzzles, net.chainId);
+  const takerBundle = await signSpendBundle(utakerBundle, tokenPuzzles, net.chainId);
   expect(takerBundle).toMatchSnapshot("taker bundle");
   const combined = await combineOfferSpendBundle([makerBundle, takerBundle]);
-  // const combined = await transfer.getSpendBundle(ucombined, tokenPuzzles, net.chainId);
+  // const combined = await signSpendBundle(ucombined, tokenPuzzles, net.chainId);
   await assertSpendbundle(combined, net.chainId);
   expect(combined).toMatchSnapshot("bundle");
 });
@@ -215,10 +216,10 @@ test('Take Offer CAT For Xch', async () => {
   const offplan = await generateOfferPlan(revSummary.offered, change_hex, availcoins, 0n, xchSymbol());
   expect(offplan).toMatchSnapshot("offer plan");
   const utakerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, net, nonce, "cat_v1");
-  const takerBundle = await transfer.getSpendBundle(utakerBundle, tokenPuzzles, net.chainId);
+  const takerBundle = await signSpendBundle(utakerBundle, tokenPuzzles, net.chainId);
   expect(takerBundle).toMatchSnapshot("taker bundle");
   const combined = await combineOfferSpendBundle([makerBundle, takerBundle]);
-  // const combined = await transfer.getSpendBundle(ucombined, tokenPuzzles, net.chainId);
+  // const combined = await signSpendBundle(ucombined, tokenPuzzles, net.chainId);
   await assertSpendbundle(combined, net.chainId);
   expect(combined).toMatchSnapshot("bundle");
 });

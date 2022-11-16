@@ -10,6 +10,7 @@ import didcoin1 from "../cases/didcoin1.json"
 import { knownCoins } from "../nft/nft.test.data";
 import { convertToOriginCoin, NetworkContext } from "@/services/coin/coinUtility";
 import { assertSpendbundle } from "@/services/spendbundle/validator";
+import { signSpendBundle } from "@/services/spendbundle";
 
 function tokenInfo() { return {}; }
 const net: NetworkContext = {
@@ -51,7 +52,7 @@ async function testMintDid(fee: bigint): Promise<void> {
   };
 
   const ubundle = await generateMintDidBundle(targetAddress, changeAddress, fee, {}, availcoins, tokenPuzzles, net);
-  const spendBundle = await transfer.getSpendBundle(ubundle, tokenPuzzles, net.chainId);
+  const spendBundle = await signSpendBundle(ubundle, tokenPuzzles, net.chainId);
   await assertSpendbundle(spendBundle, net.chainId);
   expect(spendBundle).toMatchSnapshot("spendbundle");
 }

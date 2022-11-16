@@ -121,7 +121,7 @@ export async function generateMintDidBundle(
   // const extreqs = cloneAndAddRequestPuzzleTemporary(net.symbol, requests, inner_p2_puzzle.hash, didPuzzle, didPuzzleHash);
   // console.log("extreqs", extreqs, { coin_spends: [launcherCoinSpend, didCoinSpend] }, chainId);
 
-  // const bundles = await transfer.getSpendBundle([launcherCoinSpend, didCoinSpend], requests, net.chainId, true);
+  // const bundles = await signSpendBundle([launcherCoinSpend, didCoinSpend], requests, net.chainId, true);
   // console.log("bundles", bundles)
   const bundle = combineSpendBundle(bootstrapSpendBundle, [launcherCoinSpend, didCoinSpend]);
 

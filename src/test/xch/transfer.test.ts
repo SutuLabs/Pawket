@@ -1,4 +1,4 @@
-import { OriginCoin } from "@/services/spendbundle";
+import { OriginCoin, signSpendBundle } from "@/services/spendbundle";
 import { NetworkContextWithOptionalApi } from "@/services/coin/coinUtility";
 import { prefix0x } from "@/services/coin/condition";
 import { assertSpendbundle } from "@/services/spendbundle/validator";
@@ -44,7 +44,7 @@ test('Standard Transfer', async () => {
   const obPuzzles = puzzle.getObserverPuzzles(puzzles);
   expect(obPuzzles).toMatchSnapshot("observer puzzles");
   const ubundle = await transfer.generateSpendBundleWithoutCat(plan, [{ symbol: xchSymbol(), puzzles: obPuzzles }], [], net);
-  const bundle = await transfer.getSpendBundle(ubundle, [{ symbol: xchSymbol(), puzzles }], net.chainId)
+  const bundle = await signSpendBundle(ubundle, [{ symbol: xchSymbol(), puzzles }], net.chainId)
   await assertSpendbundle(bundle, net.chainId);
   expect(bundle).toMatchSnapshot("bundle");
 });

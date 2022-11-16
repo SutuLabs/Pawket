@@ -9,6 +9,7 @@ import transfer, { SymbolCoins } from "@/services/transfer/transfer";
 import { NftDetail } from "@/services/crypto/receive";
 import { NetworkContext } from "@/services/coin/coinUtility";
 import { assertSpendbundle } from "@/services/spendbundle/validator";
+import { signSpendBundle } from "@/services/spendbundle";
 
 function xchPrefix() { return "txch"; }
 function xchSymbol() { return "TXCH"; }
@@ -118,7 +119,7 @@ test('create and accept nft offer for xch', async () => {
     net,
     nonce
   );
-  const bundle = await transfer.getSpendBundle(ubundle, tokenPuzzles, net.chainId);
+  const bundle = await signSpendBundle(ubundle, tokenPuzzles, net.chainId);
   expect(bundle).toMatchSnapshot("bundle");
   const offerText = await encodeOffer(bundle, 4);
   expect(offerText).toMatchSnapshot("offer text");
@@ -154,7 +155,7 @@ test('create and accept nft offer for xch', async () => {
     net,
     nonce
   );
-  const takerBundle = await transfer.getSpendBundle(utakerBundle, tokenPuzzles, net.chainId);
+  const takerBundle = await signSpendBundle(utakerBundle, tokenPuzzles, net.chainId);
   expect(takerBundle).toMatchSnapshot("takerBundle");
   const combined = await combineOfferSpendBundle([makerBundle, takerBundle]);
   await assertSpendbundle(combined, net.chainId);

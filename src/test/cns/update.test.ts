@@ -11,6 +11,7 @@ import { convertToOriginCoin, NetworkContext } from "@/services/coin/coinUtility
 
 import cnscoin1 from "../cases/cnscoin1.json"
 import { assertSpendbundle } from "@/services/spendbundle/validator";
+import { signSpendBundle } from "@/services/spendbundle";
 
 const net: NetworkContext = {
   prefix: "xch",
@@ -65,7 +66,7 @@ export async function testUpdateCns(fee: bigint): Promise<void> {
   if (finalAnalysis == null) fail("null finalAnalysis");
   expect(finalAnalysis).toMatchSnapshot("finalAnalysis");
 
-  const spendBundle = await transfer.getSpendBundle(ubundle, tokenPuzzles, net.chainId);
+  const spendBundle = await signSpendBundle(ubundle, tokenPuzzles, net.chainId);
   await assertSpendbundle(spendBundle, net.chainId);
   expect(spendBundle).toMatchSnapshot("spendbundle");
 }

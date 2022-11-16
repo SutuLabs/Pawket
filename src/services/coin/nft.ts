@@ -1,4 +1,4 @@
-import { CoinSpend, combineSpendBundle, OriginCoin, PartialSpendBundle, SpendBundle, UnsignedSpendBundle } from "@/services/spendbundle";
+import { CoinSpend, combineSpendBundle, OriginCoin, PartialSpendBundle, signSpendBundle, SpendBundle, UnsignedSpendBundle } from "@/services/spendbundle";
 import puzzle, { PlaintextPuzzle } from "../crypto/puzzle";
 import receive, { TokenPuzzleDetail, TokenPuzzleObserver } from "../crypto/receive";
 import { combineOfferSpendBundle, curryMod } from "../offer/bundler";
@@ -138,7 +138,7 @@ export async function generateMintNftBundle(
     };
 
     // const extreqs = cloneAndAddRequestPuzzleTemporary(net.symbol, requests, inner_p2_puzzle.hash, nftPuzzle, nftPuzzleHash);
-    // const nftBundle = await transfer.getSpendBundle([launcherCoinSpend, nftCoinSpend], extreqs, net.chainId, true);
+    // const nftBundle = await signSpendBundle([launcherCoinSpend, nftCoinSpend], extreqs, net.chainId, true);
     bundle = combineSpendBundle(bundle, [launcherCoinSpend, nftCoinSpend]);
 
     if (didAnalysis && proof && didPreviousCoin && didPuzzleHash) {
@@ -195,7 +195,7 @@ async function getDidBundle(
   };
 
   // const extreqs = cloneAndAddRequestPuzzleTemporary(net.symbol, requests, didP2InnerPuzzleHash, "()", didPuzzleHash);
-  // const bundle = await transfer.getSpendBundle([didCoinSpend], requests, net.chainId);
+  // const bundle = await signSpendBundle([didCoinSpend], requests, net.chainId);
   return new UnsignedSpendBundle([didCoinSpend]);
 }
 
@@ -242,7 +242,7 @@ export async function getBootstrapSpendBundle(
       const bootstrapSpendPlan = transfer.generateSpendPlan(onlycoin, bootstrapTgts, change_hex, 0n, baseSymbol);
       const bootstrapUnsignedSpendBundle = await transfer.generateSpendBundleWithoutCat(bootstrapSpendPlan, puzzles, [], net);
       // console.dir(puzzles, { depth: 8 });
-      const bootstrapSpendBundle = await transfer.getSpendBundle(bootstrapUnsignedSpendBundle, puzzles, net.chainId);
+      const bootstrapSpendBundle = await signSpendBundle(bootstrapUnsignedSpendBundle, puzzles, net.chainId);
 
       spendBundle = await combineSpendBundle(spendBundle, bootstrapSpendBundle);
     }
@@ -297,7 +297,7 @@ export async function generateTransferNftBundle(
 
 
   // const extreqs = cloneAndAddRequestPuzzleTemporary(net.symbol, requests, inner_p2_puzzle.hash, nftPuzzle, nftPuzzleHash);
-  // const nftBundle = await transfer.getSpendBundle([nftCoinSpend], extreqs, net.chainId);
+  // const nftBundle = await signSpendBundle([nftCoinSpend], extreqs, net.chainId);
 
   const didBundle = didAnalysis
     ? await constructDidSpendBundle(didAnalysis, analysis.launcherId, requests, net)
@@ -356,7 +356,7 @@ export async function generateUpdatedNftBundle(
   };
 
   // const extreqs = cloneAndAddRequestPuzzleTemporary(net.symbol, requests, inner_p2_puzzle.hash, nftPuzzle, nftPuzzleHash);
-  // const nftBundle = await transfer.getSpendBundle([nftCoinSpend], extreqs, net.chainId);
+  // const nftBundle = await signSpendBundle([nftCoinSpend], extreqs, net.chainId);
 
   const feeBundle = fee > 0n
     ? await constructPureFeeSpendBundle(change_hex, fee, availcoins, requests, net)
@@ -747,7 +747,7 @@ async function constructDidSpendBundle(
     solution: prefix0x(await puzzle.encodePuzzle(didSolution)),
   };
   // const extreqs2 = cloneAndAddRequestPuzzleTemporary(net.symbol, requests, didP2InnerPuzzleHash, "()", didPuzzleHash);
-  // const bundle = await transfer.getSpendBundle([didCoinSpend], extreqs2, net.chainId);
+  // const bundle = await signSpendBundle([didCoinSpend], extreqs2, net.chainId);
   return new UnsignedSpendBundle([didCoinSpend]);
 }
 

@@ -13,6 +13,7 @@ import { NftMetadataValues } from "@/models/nft";
 import { didAnalysis, knownCoins } from "./nft.test.data";
 import { convertToOriginCoin, NetworkContext } from "@/services/coin/coinUtility";
 import { assertSpendbundle } from "@/services/spendbundle/validator";
+import { signSpendBundle } from "@/services/spendbundle";
 
 const net: NetworkContext = {
   prefix: "txch",
@@ -50,7 +51,7 @@ export async function testMintNft(
     targetAddress, changeAddress, fee, metadata, availcoins, tokenPuzzles, royaltyAddressHex,
     tradePricePercentage, net, didAnalysis,
     "00186eae4cd4a3ec609ca1a8c1cda8467e3cb7cbbbf91a523d12d31129d5f8d7", targetAddresses);
-  const spendBundle = await transfer.getSpendBundle(ubundle, tokenPuzzles, net.chainId);
+  const spendBundle = await signSpendBundle(ubundle, tokenPuzzles, net.chainId);
   await assertSpendbundle(spendBundle, net.chainId);
   expect(spendBundle).toMatchSnapshot("spendbundle");
 }
@@ -83,7 +84,7 @@ export async function testTransferNft(fee: bigint, didAnalysis: DidCoinAnalysisR
 
   const ubundle = await generateTransferNftBundle(
     targetAddress, changeAddress, fee, nftCoin, analysis, availcoins, tokenPuzzles, net, didAnalysis);
-  const spendBundle = await transfer.getSpendBundle(ubundle, tokenPuzzles, net.chainId);
+  const spendBundle = await signSpendBundle(ubundle, tokenPuzzles, net.chainId);
   await assertSpendbundle(spendBundle, net.chainId);
   expect(spendBundle).toMatchSnapshot("spendbundle");
 }
@@ -119,7 +120,7 @@ export async function testUpdateNft(fee: bigint): Promise<void> {
 
   const ubundle = await generateUpdatedNftBundle(
     changeAddress, fee, nftCoin, analysis, "NFT", "imageUri", "https://example.com/a.jpg", availcoins, tokenPuzzles, net);
-  const spendBundle = await transfer.getSpendBundle(ubundle, tokenPuzzles, net.chainId);
+  const spendBundle = await signSpendBundle(ubundle, tokenPuzzles, net.chainId);
   await assertSpendbundle(spendBundle, net.chainId);
   expect(spendBundle).toMatchSnapshot("spendbundle");
 }

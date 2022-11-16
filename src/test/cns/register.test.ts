@@ -8,7 +8,7 @@ import { getAccountAddressDetails } from "@/services/util/account";
 
 import { CnsMetadataValues } from "@/models/nft";
 import { cnsMetadata, knownCoins } from "./cns.test.data";
-import { CoinSpend, SpendBundle } from "@/services/spendbundle";
+import { CoinSpend, signSpendBundle, SpendBundle } from "@/services/spendbundle";
 import { combineOfferSpendBundle, generateNftOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
 import { getOfferSummary } from "@/services/offer/summary";
@@ -88,7 +88,7 @@ async function mintOneCns(
   const ubundle = await generateMintNftBundle(
     targetAddress, changeAddress, fee, metadata, availcoins, tokenPuzzles, royaltyAddressHex,
     tradePricePercentage, net, undefined, sk, targetAddresses, true);
-  const bundle = await transfer.getSpendBundle(ubundle, tokenPuzzles, net.chainId);
+  const bundle = await signSpendBundle(ubundle, tokenPuzzles, net.chainId);
   return bundle;
 }
 
@@ -150,7 +150,7 @@ async function testMintCnsAndOffer(
     royaltyAddressHex, tradePricePercentage, net, nonce, intermediate_sk);
 
   // combine into one spendbundle
-  const offerBundle = await transfer.getSpendBundle(uofferBundle, tokenPuzzles, net.chainId);
+  const offerBundle = await signSpendBundle(uofferBundle, tokenPuzzles, net.chainId);
 
   const offerText = await encodeOffer(offerBundle, 4);
   expect(offerText).toMatchSnapshot("offer text");
@@ -189,10 +189,10 @@ async function testMintCnsAndOffer(
     net,
     nonce
   );
-  const takerBundle = await transfer.getSpendBundle(utakerBundle, tokenPuzzles, net.chainId);
+  const takerBundle = await signSpendBundle(utakerBundle, tokenPuzzles, net.chainId);
   expect(takerBundle).toMatchSnapshot("takerBundle");
   const bundle = await combineOfferSpendBundle([makerBundle, takerBundle]);
-  // const bundle = await transfer.getSpendBundle(ubundle, tokenPuzzles, net.chainId);
+  // const bundle = await signSpendBundle(ubundle, tokenPuzzles, net.chainId);
   await assertSpendbundle(bundle, net.chainId);
   expect(bundle).toMatchSnapshot("combined");
 }

@@ -1,4 +1,4 @@
-import { OriginCoin } from "@/services/spendbundle";
+import { OriginCoin, signSpendBundle } from "@/services/spendbundle";
 import { analyzeCatCoin } from "@/services/coin/cat";
 import { NetworkContextWithOptionalApi } from "@/services/coin/coinUtility";
 import { unprefix0x } from "@/services/coin/condition";
@@ -59,7 +59,7 @@ test('Mint Cat', async () => {
     },
   );
 
-  const bundle = await transfer.getSpendBundle(spendBundle, [{ puzzles: newPuzzles, symbol: xchSymbol() }], net.chainId)
+  const bundle = await signSpendBundle(spendBundle, [{ puzzles: newPuzzles, symbol: xchSymbol() }], net.chainId)
   await assertSpendbundle(bundle, net.chainId);
   expect(bundle).toMatchSnapshot("spendbundle");
   expect(assetId).toMatchSnapshot("assetid");
