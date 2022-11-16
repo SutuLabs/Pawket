@@ -21,7 +21,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import store from "@/store";
 import OfflineSendShowBundle from "@/components/Offline/OfflineSendShowBundle.vue";
-import { SpendBundle } from "@/models/wallet";
+import { SpendBundle } from "@/services/spendbundle";
 
 @Component({
   components: {

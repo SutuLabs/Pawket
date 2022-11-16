@@ -1,14 +1,12 @@
-import { SpendBundle } from "../../models/wallet";
+import { UnsignedSpendBundle, combineSpendBundle, OriginCoin } from "../spendbundle";
 import { SymbolCoins } from "../transfer/transfer";
 import { analyzeNftCoin, generateMintNftBundle } from "../coin/nft";
 import puzzle from "../crypto/puzzle";
 import { CnsMetadataValues } from "../../models/nft";
-import { OriginCoin } from "../../models/wallet";
 import { getCoinName0x, NetworkContext } from "../coin/coinUtility";
 import receive, { TokenPuzzleDetail } from "../crypto/receive";
 import { generateOfferPlan, generateNftOffer } from "./bundler";
 import { prefix0x } from "../coin/condition";
-import { combineSpendBundlePure } from "../mint/cat";
 import { GetParentPuzzleResponse } from "@/models/api";
 import { OfferEntity } from "./summary";
 import utility from "../crypto/utility";
@@ -27,7 +25,7 @@ export async function generateMintCnsOffer(
   net: NetworkContext,
   nonceHex: string | null = null,
   privateKey: string | undefined = undefined,
-): Promise<SpendBundle> {
+): Promise<UnsignedSpendBundle> {
   const target_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(changeAddress));
   const reqs = [
@@ -48,7 +46,7 @@ export async function generateMintCnsOffer(
   const intermediateAddress = ps[0].address;
   requests.filter(_ => _.symbol == net.symbol)[0].puzzles.push(...ps);
 
-  const { spendBundle } = await generateMintNftBundle(
+  const spendBundle = await generateMintNftBundle(
     intermediateAddress, changeAddress, fee, metadata, availcoins, requests, royaltyAddressHex,
     tradePricePercentage, net, undefined, undefined, undefined, true);
 
@@ -88,6 +86,6 @@ export async function generateMintCnsOffer(
   const offerBundle = await generateNftOffer(
     offplan, analysis, nextCoin, reqs, requests, net, nonceHex);
 
-  const offerCombineBundle = await combineSpendBundlePure(spendBundle, offerBundle);
+  const offerCombineBundle = combineSpendBundle(spendBundle, offerBundle);
   return offerCombineBundle;
 }

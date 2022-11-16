@@ -99,36 +99,36 @@
           <ul class="args_list">
             <li v-for="(sol, i) in solution_results" :key="i">
               <b-tooltip
-                v-if="conditionsdict[sol.op]"
-                :label="conditionsdict[sol.op].args + '\n' + conditionsdict[sol.op].desc"
+                v-if="conditionsdict[sol.code]"
+                :label="conditionsdict[sol.code].args + '\n' + conditionsdict[sol.code].desc"
                 multilined
               >
                 <div class="control mr-2">
                   <div class="tags has-addons">
                     <span class="tag is-info">
-                      {{ conditionsdict[sol.op].id }}
+                      {{ conditionsdict[sol.code].id }}
                     </span>
                     <span class="tag is-info is-light">
-                      {{ conditionsdict[sol.op].name }}
+                      {{ conditionsdict[sol.code].name }}
                     </span>
                   </div>
                 </div>
               </b-tooltip>
               <ul v-if="sol.args.length > 0" class="args_list ellipsis-item">
-                <li v-for="(arg, i) in sol.args" :key="i" :title="arg">{{ arg }}</li>
-                <li v-if="sol.op == 60">
+                <li v-for="(arg, i) in sol.args" :key="i" :title="getArgMsg(arg)">{{ getArgMsg(arg) }}</li>
+                <li v-if="sol.code == 60">
                   <b-tag type="is-primary is-light">annoID:</b-tag>
                   {{ sha256(used_coin_name, sol.args[0]) }}
                 </li>
-                <li v-if="sol.op == 62">
+                <li v-if="sol.code == 62">
                   <b-tag type="is-primary is-light">annoID:</b-tag>
                   {{ sha256(bundle.coin_spends[selectedCoin].coin.puzzle_hash, sol.args[0]) }}
                 </li>
-                <li v-if="sol.op == 51">
+                <li v-if="sol.code == 51">
                   <b-tag type="is-primary is-light">amount:</b-tag>
                   {{ getNumber(sol.args[1]) }}
                 </li>
-                <li v-if="sol.op == 51">
+                <li v-if="sol.code == 51">
                   <b-tag type="is-primary is-light"
                     >Name:
                     <b-tooltip label="Find Coin Name">
@@ -227,50 +227,37 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
-import puzzle, { ExecuteResult } from "@/services/crypto/puzzle";
+import puzzle, { ConditionArgs, ConditionEntity } from "@/services/crypto/puzzle";
 import { beautifyLisp } from "@/services/coin/lisp";
-import { Bytes } from "clvm";
-import { conditionDict, ConditionInfo, prefix0x, getNumber, unprefix0x, Hex0x } from "@/services/coin/condition";
-import { modsdict, modshex, modsprog } from "@/services/coin/mods";
+import {
+  conditionDict,
+  ConditionInfo,
+  prefix0x,
+  getNumber,
+  Hex0x,
+  getFirstLevelArgMsg,
+  getArgMsg,
+} from "@/services/coin/condition";
+import { modsdict, modsprog } from "@/services/coin/mods";
 import UncurryPuzzle from "@/components/DevHelper/UncurryPuzzle.vue";
 import AnnouncementList from "@/components/DevHelper/AnnouncementList.vue";
 import { decodeOffer } from "@/services/offer/encoding";
 import { chainId, rpcUrl, xchPrefix } from "@/store/modules/network";
-import { getCoinName, getCoinName0x } from "@/services/coin/coinUtility";
-import { ConditionOpcode } from "@/services/coin/opcode";
+import { getCoinName } from "@/services/coin/coinUtility";
 import debug from "@/services/api/debug";
-import { Instance } from "@/services/util/instance";
 import { demojo } from "@/filters/unitConversion";
 import { OneTokenInfo } from "@/models/account";
-import { convertUncurriedPuzzle, getModsPath, sexpAssemble, uncurryPuzzle } from "@/services/coin/analyzer";
-
-export interface AnnouncementCoin {
-  coinIndex: number;
-  message: string;
-}
-
-interface CoinAvailability {
-  coinName: string;
-  coinIndex: number;
-  availability: "Unknown" | "Unexecutable" | "Settlement" | "Available" | "Used" | "NotFound" | "Ephemeral";
-  dependenceIndex?: number;
-}
-
-interface AggSigMessage {
-  coinName: string;
-  coinIndex: number;
-  publicKey: string;
-  message: string;
-}
-
-interface CoinIndexInfo {
-  coinIndex: number;
-  coinName: string;
-  amount: bigint;
-  nextIndex?: number;
-  mods?: string;
-}
+import {
+  AggSigMessage,
+  AnnouncementCoin,
+  checkSpendBundle,
+  CoinAvailability,
+  CoinIndexInfo,
+  CoinSpend,
+  OriginCoin,
+  SpendBundle,
+} from "@/services/spendbundle";
+import { sha256 } from "@/services/offer/bundler";
 
 @Component({
   components: {
@@ -289,7 +276,7 @@ export default class BundlePanel extends Vue {
   public solution = "";
   public solution_result = "";
   public selectedCoin = -1;
-  public solution_results: { op: number; args: string[] }[] = [];
+  public solution_results: ConditionEntity[] = [];
   public bundle: SpendBundle | null = null;
   public autoCalculation = false;
   public solution_executor: "NORMAL" | "SETTLEMENT" | "ERROR" = "NORMAL";
@@ -483,169 +470,61 @@ export default class BundlePanel extends Vue {
     this.used_coin_tgt_address = puzzle.getAddressFromPuzzleHash(c.coin.puzzle_hash, xchPrefix());
   }
 
-  public sha256(...args: string[]): string {
-    const cont = new Uint8Array(
-      args.map((_) => Bytes.from(unprefix0x(_), "hex").raw()).reduce((acc, cur) => [...acc, ...cur], [] as number[])
-    );
-    const result = Bytes.SHA256(cont);
-    return prefix0x(result.hex());
+  public sha256(...args: (Hex0x | string | Uint8Array | undefined | ConditionArgs)[]): string {
+    return sha256(...args);
   }
 
-  public getNumber(arg: string): bigint {
-    return getNumber(arg);
+  public getNumber(arg: string | ConditionArgs): bigint {
+    return getNumber(typeof arg === "string" ? arg : getFirstLevelArgMsg(arg));
   }
 
-  public getCoinNameInternal(...args: string[]): string {
+  public getCoinNameInternal(...args: ConditionArgs[]): string {
     if (!this.bundle) return "";
     const coin: OriginCoin = {
-      puzzle_hash: prefix0x(args[0]),
+      puzzle_hash: prefix0x(getFirstLevelArgMsg(args[0])),
       amount: this.getNumber(args[1]),
       parent_coin_info: this.used_coin_name,
     };
     return getCoinName(coin);
   }
 
-  public async check(): Promise<void> {
-    if (!this.bundle) return;
-    this.puzzleAnnoCreates = [];
-    this.puzzleAnnoAsserted = [];
-    this.coinAnnoCreates = [];
-    this.coinAnnoAsserted = [];
-    // this.coinAvailability = [];
-    Vue.set(this, "coinAvailability", []);
-    const coinsForAvail: CoinAvailability[] = [];
-    const newCoins: CoinIndexInfo[] = [];
-    this.aggSigMessages = [];
-    this.coinMods = [];
-    try {
-      for (let i = 0; i < this.bundle.coin_spends.length; i++) {
-        const cs = this.bundle.coin_spends[i];
-        const ca: CoinAvailability = { coinName: getCoinName0x(cs.coin), coinIndex: i, availability: "Unknown" };
-        coinsForAvail.push(ca);
-        let result: ExecuteResult | undefined = undefined;
-        try {
-          result = await puzzle.executePuzzleHex(cs.puzzle_reveal, cs.solution);
-        } catch (err) {
-          try {
-            result = await puzzle.executePuzzleHex(modshex["settlement_payments"], cs.solution);
-            ca.availability = "Settlement";
-          } catch (err) {
-            console.warn("error executing puzzle", err);
-            ca.availability = "Unexecutable";
-            continue;
-          }
-        }
-
-        this.puzzleAnnoCreates.push(
-          ...result.conditions
-            .filter((_) => _.op == ConditionOpcode.CREATE_PUZZLE_ANNOUNCEMENT)
-            .map((_) => ({ coinIndex: i, message: this.sha256(cs.coin.puzzle_hash, _.args[0]) }))
-        );
-        this.puzzleAnnoAsserted.push(
-          ...result.conditions
-            .filter((_) => _.op == ConditionOpcode.ASSERT_PUZZLE_ANNOUNCEMENT)
-            .map((_) => ({ coinIndex: i, message: _.args[0] }))
-        );
-        this.coinAnnoCreates.push(
-          ...result.conditions
-            .filter((_) => _.op == ConditionOpcode.CREATE_COIN_ANNOUNCEMENT)
-            .map((_) => ({ coinIndex: i, message: this.sha256(getCoinName0x(cs.coin), _.args[0]) }))
-        );
-        this.coinAnnoAsserted.push(
-          ...result.conditions
-            .filter((_) => _.op == ConditionOpcode.ASSERT_COIN_ANNOUNCEMENT)
-            .map((_) => ({ coinIndex: i, message: _.args[0] }))
-        );
-
-        newCoins.push(
-          ...result.conditions
-            .filter((_) => _.op == ConditionOpcode.CREATE_COIN)
-            .map((_) => ({
-              coinIndex: ca.coinIndex,
-              amount: getNumber(_.args[1]),
-              coinName: getCoinName0x({ parent_coin_info: ca.coinName, puzzle_hash: _.args[0], amount: getNumber(_.args[1]) }),
-            }))
-        );
-        this.aggSigMessages.push(
-          ...result.conditions
-            .filter((_) => _.op == ConditionOpcode.AGG_SIG_ME)
-            .map((_) => ({ coinIndex: i, coinName: ca.coinName, publicKey: _.args[0], message: _.args[1] }))
-        );
-        this.aggSigMessages.push(
-          ...result.conditions
-            .filter((_) => _.op == ConditionOpcode.AGG_SIG_UNSAFE)
-            .map((_) => ({ coinIndex: i, coinName: "", publicKey: _.args[0], message: _.args[1] }))
-        );
-
-        const uncPuzzle = await uncurryPuzzle(sexpAssemble(cs.puzzle_reveal), cs.puzzle_reveal);
-        const decPuzzle = convertUncurriedPuzzle(uncPuzzle);
-        const mods = getModsPath(decPuzzle);
-        this.coinMods.push({ mods, coinIndex: i });
-      }
-
-      Vue.set(this, "createdCoins", {});
-      newCoins.forEach((c) => {
-        this.createdCoins[c.coinName] = c;
-      });
-
-      for (let i = 0; i < coinsForAvail.length; i++) {
-        const ca = coinsForAvail[i];
-        this.coinAvailability.push(ca);
-
-        if (ca.availability == "Unexecutable" || ca.availability == "Settlement") continue;
-        if (this.createdCoins[ca.coinName]) {
-          this.createdCoins[ca.coinName].nextIndex = ca.coinIndex;
-          ca.dependenceIndex = this.createdCoins[ca.coinName].coinIndex;
-          ca.availability = "Ephemeral";
-          continue;
-        }
-        debug
-          .getCoinSolution(ca.coinName, rpcUrl())
-          .then((resp) => {
-            if (!resp.puzzle_reveal && !resp.solution) {
-              ca.availability = "Available";
-            } else {
-              ca.availability = "Used";
-            }
-          })
-          .catch(() => {
-            ca.availability = "NotFound";
-          });
-      }
-    } catch (err) {
-      throw new Error("cannot check bundle: " + err);
-    }
-
-    try {
-      this.verifySig();
-    } catch (error) {
-      this.sigVerified = "None";
-      console.warn("failed to verify signature", error);
-    }
-    this.renderMermaid();
+  public getArgMsg(arg: ConditionArgs): string {
+    return getArgMsg(arg);
   }
 
-  public verifySig(): void {
-    if (!this.bundle || !this.bundle.aggregated_signature) return;
-    const BLS = Instance.BLS;
-    if (!BLS) throw new Error("BLS not initialized");
-    try {
-      const AGG_SIG_ME_ADDITIONAL_DATA = getUint8ArrayFromHexString(chainId());
-      const msgs = this.aggSigMessages.map((_) =>
-        _.coinName
-          ? Uint8Array.from([
-              ...getUint8ArrayFromHexString(_.message),
-              ...getUint8ArrayFromHexString(_.coinName),
-              ...AGG_SIG_ME_ADDITIONAL_DATA,
-            ])
-          : getUint8ArrayFromHexString(_.message)
-      );
-      const pks = this.aggSigMessages.map((_) => BLS.G1Element.from_bytes(getUint8ArrayFromHexString(_.publicKey)));
-      const aggsig = BLS.G2Element.from_bytes(getUint8ArrayFromHexString(this.bundle.aggregated_signature));
-      this.sigVerified = BLS.AugSchemeMPL.aggregate_verify(pks, msgs, aggsig) ? "Verified" : "Failed";
-    } catch (err) {
-      throw new Error("cannot verify sig: " + err);
+  public async check(): Promise<void> {
+    if (!this.bundle) return;
+    var result = await checkSpendBundle(this.bundle, chainId());
+    if (!result) return;
+    Vue.set(this, "puzzleAnnoCreates", result.puzzleAnnoCreates);
+    Vue.set(this, "puzzleAnnoAsserted", result.puzzleAnnoAsserted);
+    Vue.set(this, "coinAnnoCreates", result.coinAnnoCreates);
+    Vue.set(this, "coinAnnoAsserted", result.coinAnnoAsserted);
+    Vue.set(this, "coinAvailability", result.coinAvailability);
+    Vue.set(this, "aggSigMessages", result.aggSigMessages);
+    Vue.set(this, "coinMods", result.coinMods);
+    Vue.set(this, "sigVerified", result.sigVerified);
+
+    for (let i = 0; i < this.coinAvailability.length; i++) {
+      const ca = this.coinAvailability[i];
+
+      if (ca.availability == "Unexecutable" || ca.availability == "Settlement" || ca.availability == "Ephemeral") continue;
+
+      debug
+        .getCoinSolution(ca.coinName, rpcUrl())
+        .then((resp) => {
+          if (!resp.puzzle_reveal && !resp.solution) {
+            ca.availability = "Available";
+          } else {
+            ca.availability = "Used";
+          }
+        })
+        .catch(() => {
+          ca.availability = "NotFound";
+        });
     }
+
+    this.renderMermaid();
   }
 
   public async renderMermaid(): Promise<void> {
@@ -744,10 +623,6 @@ export default class BundlePanel extends Vue {
       throw error;
     }
   }
-}
-
-export function getUint8ArrayFromHexString(hex: string): Uint8Array {
-  return Bytes.from(unprefix0x(hex), "hex").raw();
 }
 </script>
 

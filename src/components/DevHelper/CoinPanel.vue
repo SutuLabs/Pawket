@@ -33,7 +33,7 @@
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import debug from "../../services/api/debug";
-import { CoinSpend } from "@/models/wallet";
+import { CoinSpend } from "@/services/spendbundle";
 import BundlePanel from "@/components/DevHelper/BundlePanel.vue";
 import puzzle from "@/services/crypto/puzzle";
 import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";

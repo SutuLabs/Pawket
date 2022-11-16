@@ -16,7 +16,7 @@ beforeAll(async () => {
   await Instance.init();
 })
 
-jest.setTimeout(15000);
+jest.setTimeout(30000);
 
 describe("Parsing API test", () => {
   test('Block Parsing Case 1', () => testCase("/parse_block", bcase1));

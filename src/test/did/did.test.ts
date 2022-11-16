@@ -1,15 +1,16 @@
 import { Instance } from "@/services/util/instance";
-import { convertToOriginCoin } from "@/models/wallet";
-import { getTestAccount } from "./utility";
+import { getTestAccount } from "../utility";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import puzzle from "@/services/crypto/puzzle";
 import { GetParentPuzzleResponse } from "@/models/api";
 import { getAccountAddressDetails } from "@/services/util/account";
 import { analyzeDidCoin, generateMintDidBundle } from "@/services/coin/did";
 
-import didcoin1 from "./cases/didcoin1.json"
-import { knownCoins } from "./cases/nft.test.data";
-import { NetworkContext } from "@/services/coin/coinUtility";
+import didcoin1 from "../cases/didcoin1.json"
+import { knownCoins } from "../nft/nft.test.data";
+import { convertToOriginCoin, NetworkContext } from "@/services/coin/coinUtility";
+import { assertSpendbundle } from "@/services/spendbundle/validator";
+import { signSpendBundle } from "@/services/spendbundle";
 
 function tokenInfo() { return {}; }
 const net: NetworkContext = {
@@ -50,7 +51,9 @@ async function testMintDid(fee: bigint): Promise<void> {
     ]
   };
 
-  const spendBundle = await generateMintDidBundle(targetAddress, changeAddress, fee, {}, availcoins, tokenPuzzles, net);
+  const ubundle = await generateMintDidBundle(targetAddress, changeAddress, fee, {}, availcoins, tokenPuzzles, net);
+  const spendBundle = await signSpendBundle(ubundle, tokenPuzzles, net.chainId);
+  await assertSpendbundle(spendBundle, net.chainId);
   expect(spendBundle).toMatchSnapshot("spendbundle");
 }
 

@@ -1,4 +1,4 @@
-import { Hex0x, prefix0x } from "../services/coin/condition";
+import { Hex0x } from "../services/coin/condition";
 
 export interface GetRecordsRequest {
     puzzleHashes: string[];
@@ -32,35 +32,4 @@ export interface CoinItem {
     amount: number;
     parentCoinInfo: Hex0x;
     puzzleHash: Hex0x;
-}
-
-export interface OriginCoin {
-    amount: bigint;
-    parent_coin_info: Hex0x;
-    puzzle_hash: Hex0x;
-}
-
-export interface CoinSpend {
-    coin: OriginCoin;
-    puzzle_reveal: Hex0x;
-    solution: Hex0x;
-}
-
-export interface SpendBundle {
-    aggregated_signature: Hex0x;
-    coin_spends: CoinSpend[];
-}
-
-export function convertToOriginCoin(coin: CoinItem | { amount: number, parent_coin_info: Hex0x | string, puzzle_hash: Hex0x | string }): OriginCoin {
-    return "parentCoinInfo" in coin
-        ? {
-            amount: BigInt(coin.amount),
-            parent_coin_info: coin.parentCoinInfo,
-            puzzle_hash: coin.puzzleHash,
-        }
-        : {
-            amount: BigInt(coin.amount),
-            parent_coin_info: prefix0x(coin.parent_coin_info),
-            puzzle_hash: prefix0x(coin.puzzle_hash),
-        };
 }

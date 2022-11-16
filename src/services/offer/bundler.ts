@@ -1,10 +1,10 @@
-import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
+import { CoinSpend, OriginCoin, SpendBundle, UnsignedSpendBundle } from "../spendbundle";
 import { Bytes } from "clvm";
-import { CoinConditions, ConditionType, Hex0x, prefix0x } from '../coin/condition';
-import puzzle, { PlaintextPuzzle } from "../crypto/puzzle";
+import { CoinConditions, ConditionType, Hex0x, prefix0x, unprefix0x } from '../coin/condition';
+import puzzle, { ConditionArgs, PlaintextPuzzle } from "../crypto/puzzle";
 import { ConditionOpcode } from "../coin/opcode";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
-import { TokenPuzzleDetail } from "../crypto/receive";
+import { TokenPuzzleDetail, TokenPuzzlePrivateKey } from "../crypto/receive";
 import catBundle from "../transfer/catBundle";
 import stdBundle from "../transfer/stdBundle";
 import { getOfferSummary, OfferEntity, OfferPlan, OfferSummary } from "./summary";
@@ -20,11 +20,11 @@ import crypto from "../crypto/isoCrypto"
 export async function generateOffer(
   offered: OfferPlan[],
   requested: OfferEntity[],
-  puzzles: TokenPuzzleDetail[],
-  net:NetworkContext,
+  puzzles: TokenPuzzlePrivateKey[],
+  net: NetworkContext,
   nonceHex: string | null = null,
   catModName: "cat_v1" | "cat_v2" = "cat_v2",
-): Promise<SpendBundle> {
+): Promise<UnsignedSpendBundle> {
   if (offered.length != 1 || requested.length != 1) throw new Error("currently, only support single offer/request");
 
   const settlement_tgt = "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79";
@@ -50,16 +50,8 @@ export async function generateOffer(
     return puz_anno_id;
   }
 
-  const puzzleCopy: TokenPuzzleDetail[] = puzzles.map((_) => ({
-    symbol: _.symbol,
-    puzzles: _.puzzles.map((puzz) => ({
-      privateKey: puzz.privateKey,
-      hash: puzz.hash,
-      address: puzz.address,
-      puzzle: puzz.puzzle,
-      type: puzz.type,
-    })),
-  }));
+  const puzzleCopy: TokenPuzzleDetail[] = Object.assign([], puzzles);
+
   // generate requested
   for (let i = 0; i < requested.length; i++) {
     const req = requested[i];
@@ -75,6 +67,7 @@ export async function generateOffer(
       // put special target into puzzle reverse dict
       puzzleCopy.filter(_ => _.symbol == net.symbol)[0].puzzles.push({
         privateKey: puzzle.getEmptyPrivateKey(), // this private key will not really calculated due to no AGG_SIG_ME exist in this spend
+        synPubKey: "()", // same reason as above
         puzzle: puzzle_reveal_text,
         hash: settlement_tgt,
         address: "",
@@ -109,6 +102,7 @@ export async function generateOffer(
       // put special target into puzzle reverse dict
       puzzleCopy.filter(_ => _.symbol == req.symbol)[0].puzzles.push({
         privateKey: puzzle.getEmptyPrivateKey(), // this private key will not really calculated due to no AGG_SIG_ME exist in this spend
+        synPubKey: "()", // same reason as above
         puzzle: puzzle_reveal_text,
         hash: cat_settlement_tgt,
         address: "",
@@ -147,12 +141,14 @@ export async function generateOffer(
     }
   }
 
-  // combine into one spendbundle
-  return transfer.getSpendBundle(spends, puzzleCopy, net.chainId);
+  return new UnsignedSpendBundle(spends);
 }
 
-export function sha256(...args: (string | Uint8Array)[]): string {
-  const cont = new Uint8Array(args.map(_ => Bytes.from(_, "hex").raw()).reduce((acc, cur) => [...acc, ...cur], [] as number[]));
+export function sha256(...args: (Hex0x | string | Uint8Array | undefined | ConditionArgs)[]): string {
+  const cont = new Uint8Array(args
+    .filter((_): _ is Hex0x | string | Uint8Array | ConditionArgs[] => !!_)
+    .map(_ => Array.isArray(_) ? new Uint8Array() : Bytes.from(typeof _ === "string" ? unprefix0x(_) : _, "hex").raw())
+    .reduce((acc, cur) => [...acc, ...cur], [] as number[]));
   const result = Bytes.SHA256(cont);
   return prefix0x(result.hex());
 }
@@ -211,7 +207,7 @@ export function getReversePlan(
   };
 }
 
-export async function combineSpendBundle(spendbundles: SpendBundle[]): Promise<SpendBundle> {
+export async function combineOfferSpendBundle(spendbundles: SpendBundle[]): Promise<SpendBundle> {
   if (spendbundles.length != 2) throw new Error("unexpected length of spendbundle");
 
   const BLS = Instance.BLS;
@@ -288,7 +284,7 @@ export async function generateNftOffer(
   puzzles: TokenPuzzleDetail[],
   net: NetworkContext,
   nonceHex: string | null = null
-): Promise<SpendBundle> {
+): Promise<UnsignedSpendBundle> {
   const settlement_tgt = "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79";
   const spends: CoinSpend[] = [];
   const puz_anno_ids: string[] = [];
@@ -312,22 +308,14 @@ export async function generateNftOffer(
     return puz_anno_id;
   };
 
-  const puzzleCopy: TokenPuzzleDetail[] = puzzles.map((_) => ({
-    symbol: _.symbol,
-    puzzles: _.puzzles.map((puzz) => ({
-      privateKey: puzz.privateKey,
-      hash: puzz.hash,
-      address: puzz.address,
-      puzzle: puzz.puzzle,
-      type: puzz.type,
-    })),
-  }));
+  const puzzleCopy: TokenPuzzleDetail[] = Object.assign([], puzzles);
 
   // put special target into puzzle reverse dict
   puzzleCopy
     .filter((_) => _.symbol == net.symbol)[0]
     .puzzles.push({
       privateKey: puzzle.getEmptyPrivateKey(), // this private key will not really calculated due to no AGG_SIG_ME exist in this spend
+      synPubKey: "()", // same reason as above
       puzzle: modsprog["settlement_payments"],
       hash: settlement_tgt,
       address: "",
@@ -370,6 +358,7 @@ export async function generateNftOffer(
         .filter((_) => _.symbol == net.symbol)[0]
         .puzzles.push({
           privateKey: puzzle.getEmptyPrivateKey(), // this private key will not really calculated due to no AGG_SIG_ME exist in this spend
+          synPubKey: "()", // same reason as above
           puzzle: nftPuzzle,
           hash: nftPuzzleHash,
           address: "",
@@ -407,7 +396,7 @@ export async function generateNftOffer(
     if (off.id) {
       //NFT
       if (nftcoin) {
-        const spbundle: SpendBundle = await generateTransferNftBundle(
+        const spbundle: UnsignedSpendBundle = await generateTransferNftBundle(
           puzzle.getAddressFromPuzzleHash(settlement_tgt, net.symbol),
           puzzle.getAddressFromPuzzleHash("0x0000000000000000000000000000000000000000000000000000000000000000", net.symbol),
           0n,
@@ -417,12 +406,15 @@ export async function generateNftOffer(
           puzzles,
           net,
         );
+        const nftPuz = puzzles
+          .filter((_) => _.symbol == net.symbol)[0]
+          .puzzles
+          .filter((_) => prefix0x(_.hash) == prefix0x(nft.hintPuzzle))[0];
         puzzleCopy
           .filter((_) => _.symbol == net.symbol)[0]
           .puzzles.push({
-            privateKey: puzzles
-              .filter((_) => _.symbol == net.symbol)[0]
-              .puzzles.filter((_) => prefix0x(_.hash) == prefix0x(nft.hintPuzzle))[0].privateKey,
+            privateKey: nftPuz.privateKey,
+            synPubKey: nftPuz.synPubKey,
             puzzle: "()",
             hash: nftcoin.puzzle_hash,
             address: "",
@@ -453,8 +445,7 @@ export async function generateNftOffer(
     }
   }
 
-  // combine into one spendbundle
-  return transfer.getSpendBundle(spends, puzzleCopy, net.chainId);
+  return new UnsignedSpendBundle(spends);
 }
 
 export async function curryMod(mod: string, ...args: string[]): Promise<PlaintextPuzzle | null> {

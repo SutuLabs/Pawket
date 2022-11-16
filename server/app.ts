@@ -4,10 +4,10 @@ import puzzle from "../src/services/crypto/puzzle";
 import { Instance } from "../src/services/util/instance";
 import { assemble } from "clvm_tools/clvm_tools/binutils";
 import { analyzeCoin, convertUncurriedPuzzle, getModsPath, parseBlock, parseCoin, sexpAssemble, simplifyPuzzle, uncurryPuzzle } from "../src/services/coin/analyzer";
-import { Hex0x } from '../src/services/coin/condition';
+import { Hex0x, prefix0x } from '../src/services/coin/condition';
 import { encodeOffer } from "../src/services/offer/encoding";
 import { generateMintCnsOffer } from "../src/services/offer/cns";
-import { OriginCoin } from '../src/models/wallet';
+import { OriginCoin, signSpendBundle } from '../src/services/spendbundle';
 import { SymbolCoins } from '../src/services/transfer/transfer';
 import { TokenPuzzleDetail } from '../src/services/crypto/receive';
 import utility from '../src/services/crypto/utility';
@@ -167,11 +167,14 @@ Instance.init().then(() => {
         return;
       }
 
+      const pubkey = utility.toHexString(sk.get_g1().serialize());
+      const synPubKey = prefix0x(await puzzle.getSyntheticKey(pubkey));
       const tokenPuzzles: TokenPuzzleDetail[] = [{
         symbol: r.symbol,
         puzzles: [
           {
             privateKey: sk,
+            synPubKey,
             puzzle: r.puzzleText,
             hash: r.puzzleHash,
             address: "",
@@ -185,7 +188,7 @@ Instance.init().then(() => {
         symbol: r.symbol,
         api: (_) => getLineageProofPuzzle(_, "https://walletapi.chiabee.net/"),
       };
-      const offerBundle = await generateMintCnsOffer(
+      const uofferBundle = await generateMintCnsOffer(
         r.targetAddress,
         r.changeAddress,
         BigInt(r.price),
@@ -198,6 +201,7 @@ Instance.init().then(() => {
         net,
         r.nonce,
         r.intermediateKey);
+      const offerBundle = await signSpendBundle(uofferBundle, tokenPuzzles, net.chainId);
       const offer = await encodeOffer(offerBundle, 4);
 
       res.send(JSON.stringify({

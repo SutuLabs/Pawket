@@ -77,7 +77,7 @@
 <script lang="ts">
 import { Component, Vue, Prop, Emit } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import { SpendBundle } from "@/models/wallet";
+import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
 import { AccountEntity, OneTokenInfo } from "@/models/account";
 import store from "@/store";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
@@ -89,7 +89,7 @@ import { NotificationProgrammatic as Notification } from "buefy";
 import { getOfferSummary, OfferSummary } from "@/services/offer/summary";
 import { decodeOffer } from "@/services/offer/encoding";
 import { networkContext, xchSymbol } from "@/store/modules/network";
-import { submitBundle } from "@/services/view/bundle";
+import { submitBundle } from "@/services/view/bundleAction";
 import { generateTransferNftBundle } from "@/services/coin/nft";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import { demojo } from "@/filters/unitConversion";
@@ -211,7 +211,7 @@ export default class NftMove extends Vue {
         return;
       }
 
-      const spendBundle = await generateTransferNftBundle(
+      const ubundle = await generateTransferNftBundle(
         this.account.firstAddress,
         this.account.firstAddress,
         BigInt(this.fee),
@@ -223,7 +223,7 @@ export default class NftMove extends Vue {
         this.selectedDid.analysis
       );
 
-      this.bundle = spendBundle;
+      this.bundle = await signSpendBundle(ubundle, this.tokenPuzzles, networkContext());
       this.step = "Confirmation";
     } catch (error) {
       Notification.open({

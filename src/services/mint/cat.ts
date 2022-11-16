@@ -1,17 +1,16 @@
-import { Bytes } from "clvm";
-import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
-import { Hex0x, prefix0x, unprefix0x } from "../coin/condition";
+import { CoinSpend, combineSpendBundle, OriginCoin, UnsignedSpendBundle } from "../spendbundle";
+import { Hex0x, prefix0x } from "../coin/condition";
 import puzzle from "../crypto/puzzle";
-import { TokenPuzzleDetail } from "../crypto/receive";
+import { TokenPuzzleObserver } from "../crypto/receive";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { curryMod } from "../offer/bundler";
 import { modshash, modsprog } from "../coin/mods";
 import { getCoinName0x, NetworkContextWithOptionalApi } from "../coin/coinUtility";
-import { Instance } from "../util/instance";
 
 export interface MintCatInfo {
-  spendBundle: SpendBundle;
-  assetId: string;
+  spendBundle: UnsignedSpendBundle;
+  assetId: Hex0x;
+  catPuzzle: PuzzleInfo;
 }
 
 interface CatPuzzleResponse {
@@ -33,8 +32,7 @@ export async function generateMintCatBundle(
   fee: bigint,
   memo: string,
   availcoins: SymbolCoins,
-  sk_hex: string,
-  requests: TokenPuzzleDetail[],
+  requests: TokenPuzzleObserver[],
   net: NetworkContextWithOptionalApi,
   catModName: "cat_v1" | "cat_v2" = "cat_v2",
 ): Promise<MintCatInfo> {
@@ -47,12 +45,13 @@ export async function generateMintCatBundle(
 
   const { innerPuzzle, catPuzzle, assetId, bootstrapCoin } = await constructCatPuzzle(tgt_hex, change_hex, amount, fee, memo, availcoins, net.symbol, catModName);
   const ibundle = await constructInternalBundle(catPuzzle.hash, change_hex, amount, fee, availcoins, requests, net);
-  const ebundle = await constructExternalBundle(innerPuzzle, catPuzzle, bootstrapCoin, amount, sk_hex, net.chainId);
-  const bundle = await combineSpendBundlePure(ibundle, ebundle);
+  const ebundle = await constructExternalBundle(innerPuzzle, catPuzzle, bootstrapCoin, amount);
+  const bundle = combineSpendBundle(ibundle, ebundle);
 
   return {
     spendBundle: bundle,
     assetId,
+    catPuzzle,
   }
 }
 
@@ -99,9 +98,9 @@ async function constructInternalBundle(
   amount: bigint,
   fee: bigint,
   availcoins: SymbolCoins,
-  requests: TokenPuzzleDetail[],
+  requests: TokenPuzzleObserver[],
   net: NetworkContextWithOptionalApi,
-): Promise<SpendBundle> {
+): Promise<UnsignedSpendBundle> {
   const baseSymbol = Object.keys(availcoins)[0];
   const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: baseSymbol },];
   tgts[0].address = tgt_hex;
@@ -115,9 +114,7 @@ async function constructExternalBundle(
   catPuzzle: PuzzleInfo,
   bootstrapCoin: Hex0x,
   amount: bigint,
-  sk_hex: string,
-  chainId: string,
-): Promise<SpendBundle> {
+): Promise<UnsignedSpendBundle> {
   const coin: OriginCoin = { parent_coin_info: bootstrapCoin, amount, puzzle_hash: catPuzzle.hash };
   const coin_name = getCoinName0x(coin);
 
@@ -125,43 +122,7 @@ async function constructExternalBundle(
   const puzzle_reveal = prefix0x(await puzzle.encodePuzzle(catPuzzle.plaintext));
   const solution = prefix0x(await puzzle.encodePuzzle(catsln));
 
-  const cs: CoinSpend[] = [{ coin, puzzle_reveal, solution }];
+  const coin_spends: CoinSpend[] = [{ coin, puzzle_reveal, solution }];
 
-  const tempSymbol = "TEMP_SYMBOL";
-  const puzzles: TokenPuzzleDetail[] = [
-    {
-      symbol: tempSymbol,
-      puzzles: [
-        {
-          privateKey: puzzle.getPrivateKeyFromHex(sk_hex),
-          puzzle: catPuzzle.plaintext,
-          hash: unprefix0x(catPuzzle.hash),
-          address: "",
-        },
-      ],
-    },
-  ];
-  const bundle = await transfer.getSpendBundle(cs, puzzles, chainId);
-  return bundle;
-}
-
-export async function combineSpendBundlePure(
-  ...spendbundles: (SpendBundle | undefined)[]
-): Promise<SpendBundle> {
-  const BLS = Instance.BLS;
-  if (!BLS) throw new Error("BLS not initialized");
-
-  const withsigs = spendbundles
-    .filter(_ => _ && _.aggregated_signature) as SpendBundle[];
-  const sigs = withsigs
-    .map(_ => BLS.G2Element.from_bytes(Bytes.from(_.aggregated_signature, "hex").raw()));
-  const agg_sig = BLS.AugSchemeMPL.aggregate(sigs);
-  const sig = Bytes.from(agg_sig.serialize()).hex();
-
-  const spends = withsigs.flatMap(_ => _.coin_spends);
-
-  return {
-    aggregated_signature: prefix0x(sig),
-    coin_spends: spends,
-  }
+  return new UnsignedSpendBundle(coin_spends);
 }

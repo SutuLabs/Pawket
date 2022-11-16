@@ -1,17 +1,27 @@
-import { CoinRecord, convertToOriginCoin, GetRecordsResponse, OriginCoin } from "../../models/wallet";
-import puzzle, { PuzzleAddress } from "./puzzle";
-import { PuzzleDetail } from "./puzzle";
+import { CoinRecord,  GetRecordsResponse } from "../../models/wallet";
+import puzzle, { PuzzleAddress, PuzzleDetail, PuzzleObserver, PuzzlePrivateKey } from "./puzzle";
 import utility from "./utility";
 import { CustomCat, AccountTokens, AccountTokenAddress, TokenInfo } from "../../models/account";
 import { analyzeNftCoin, getScalarString } from "../coin/nft";
 import debug from "../api/debug";
 import { analyzeDidCoin, DidCoinAnalysisResult } from "../coin/did";
 import { NftCoinAnalysisResult, CnsCoinAnalysisResult  } from "../../models/nft";
-import { CoinSpend } from "../../models/wallet";
+import { CoinSpend, OriginCoin } from "../spendbundle";
+import { convertToOriginCoin } from "../coin/coinUtility";
 
 export interface TokenPuzzleDetail {
   symbol: string;
   puzzles: PuzzleDetail[];
+}
+
+export interface TokenPuzzlePrivateKey {
+  symbol: string;
+  puzzles: PuzzlePrivateKey[];
+}
+
+export interface TokenPuzzleObserver {
+  symbol: string;
+  puzzles: PuzzleObserver[];
 }
 
 export interface TokenPuzzleAddress {

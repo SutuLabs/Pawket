@@ -78,14 +78,14 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { TokenPuzzleDetail } from "@/services/crypto/receive";
 import store from "@/store";
-import { OriginCoin, SpendBundle } from "@/models/wallet";
+import { OriginCoin, signSpendBundle, SpendBundle } from "@/services/spendbundle";
 import puzzle from "@/services/crypto/puzzle";
 import bigDecimal from "js-big-decimal";
 import { Hex0x, prefix0x } from "@/services/coin/condition";
 import transfer, { SymbolCoins, TransferTarget } from "@/services/transfer/transfer";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
 import coinHandler from "@/services/transfer/coin";
-import { debugBundle, submitBundle } from "@/services/view/bundle";
+import { debugBundle, submitBundle } from "@/services/view/bundleAction";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import OfflineSendShowBundle from "@/components/Offline/OfflineSendShowBundle.vue";
 import { CurrencyType } from "@/services/exchange/currencyType";
@@ -364,7 +364,8 @@ export default class Send extends Vue {
       const memo = this.memo.replace(/[&/\\#,+()$~%.'":*?<>{}\[\] ]/g, "_");
       const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: this.selectedToken, memos: [tgt_hex, memo] }];
       const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
-      this.bundle = await transfer.generateSpendBundleIncludingCat(plan, this.requests, [], networkContext());
+      const ubundle = await transfer.generateSpendBundleIncludingCat(plan, this.requests, [], networkContext());
+      this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());
     } catch (error) {
       Notification.open({
         message: this.$tc("send.ui.messages.failedToSign") + error,

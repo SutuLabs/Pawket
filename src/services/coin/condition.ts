@@ -2,6 +2,7 @@ import { Bytes, bigint_to_bytes } from "clvm";
 import { ConditionOpcode } from "./opcode";
 import { SExp } from "clvm";
 import { disassemble } from "clvm_tools";
+import { ConditionArgs } from "../crypto/puzzle";
 
 export interface ConditionInfo {
   name: string;
@@ -30,9 +31,12 @@ export class CoinConditions {
   }
 }
 
+export type Hex = string;
+
 export type Hex0x = "()" | `0x${string}`;
 
 export function prefix0x(str: string): Hex0x {
+  if (!str) return "()";
   if (str == "()") return str;
   return str.startsWith("0x") ? (str as Hex0x) : `0x${str}`;
 }
@@ -64,6 +68,24 @@ export function getNumber(str: string): bigint {
 export function toNumberString(number: bigint): string {
   if (!number) return "()";
   return disassemble(SExp.to(number));
+}
+
+export function getFirstLevelArg(args: ConditionArgs): Uint8Array {
+  if (Array.isArray(args)) throw new Error("Unexpected array met in processing announcement.");
+  if (!args) throw new Error("Unexpected empty arg met in processing announcement");
+  return args;
+}
+
+export function getFirstLevelArgMsg(args: ConditionArgs): string {
+  return prefix0x(Bytes.from(getFirstLevelArg(args)).hex());
+}
+
+export function getArgMsg(arg: ConditionArgs): string {
+  if (!arg) return "";
+  if (Array.isArray(arg)) {
+    return `(${arg.map((_) => getArgMsg(_)).join(" ")})`;
+  }
+  return prefix0x(Bytes.from(arg).hex());
 }
 
 export const conditionInfos: ConditionInfo[] = [

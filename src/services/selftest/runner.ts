@@ -1,4 +1,4 @@
-import { SpendBundle } from "@/models/wallet";
+import { SpendBundle } from "@/services/spendbundle";
 import store from "@/store";
 import { testCoinName, testCryptography, testPuzzleAssemble } from "./cryptoTest";
 import { testStandardTransfer } from "./stdTransferTest";

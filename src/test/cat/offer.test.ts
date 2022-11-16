@@ -1,14 +1,16 @@
 import { GetParentPuzzleResponse } from "@/models/api";
-import { getTestAccount } from "./utility";
+import { getTestAccount } from "../utility";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
 import { getOfferSummary, OfferEntity, OfferPlan } from "@/services/offer/summary";
-import { combineSpendBundle, generateOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
+import { combineOfferSpendBundle, generateOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import { Instance } from "@/services/util/instance";
 import { getAccountAddressDetails } from "@/services/util/account";
 import { AccountEntity, PersistentCustomCat } from "@/models/account";
 import { prefix0x } from "@/services/coin/condition";
 import { NetworkContext } from "@/services/coin/coinUtility";
+import { assertSpendbundle } from "@/services/spendbundle/validator";
+import { signSpendBundle } from "@/services/spendbundle";
 
 function xchPrefix() { return "xch"; }
 function xchSymbol() { return "XCH"; }
@@ -84,7 +86,8 @@ test('Make Offer 1', async () => {
   const tokenPuzzles = await getAccountAddressDetails(account, [], tokenInfo(), xchPrefix(), xchSymbol(), undefined, "cat_v1");
 
   const nonce = "71bdf5d923a48956a8d26a36c6ea4a9959de221ff2ee986bce4827e5f037ceb8";
-  const bundle = await generateOffer(offplan, reqs, tokenPuzzles, net, nonce, "cat_v1");
+  const ubundle = await generateOffer(offplan, reqs, tokenPuzzles, net, nonce, "cat_v1");
+  const bundle = await signSpendBundle(ubundle, tokenPuzzles, net.chainId);
   const encoded = await encodeOffer(bundle, 2);
 
   expect(bundle).toMatchSnapshot("bundle");
@@ -141,7 +144,8 @@ test('Make Offer 2', async () => {
   const tokenPuzzles = await getAccountAddressDetails(account, [], tokenInfo(), xchPrefix(), xchSymbol(), undefined, "cat_v1");
 
   const nonce = "741f8564b6637aee92dd68548cfe7df8ec35b20029235565244944febd68bf8d";
-  const bundle = await generateOffer(offplan, reqs, tokenPuzzles, net, nonce, "cat_v1");
+  const ubundle = await generateOffer(offplan, reqs, tokenPuzzles, net, nonce, "cat_v1");
+  const bundle = await signSpendBundle(ubundle, tokenPuzzles, net.chainId);
   const encoded = await encodeOffer(bundle, 2);
 
   expect(bundle).toMatchSnapshot("bundle");
@@ -175,9 +179,11 @@ test('Take Offer Xch For CAT', async () => {
   expect(revSummary).toMatchSnapshot("reverse summary");
   const offplan = await generateOfferPlan(revSummary.offered, change_hex, availcoins, 0n, xchSymbol());
   expect(offplan).toMatchSnapshot("offer plan");
-  const takerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, net, nonce, "cat_v1");
+  const utakerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, net, nonce, "cat_v1");
+  const takerBundle = await signSpendBundle(utakerBundle, tokenPuzzles, net.chainId);
   expect(takerBundle).toMatchSnapshot("taker bundle");
-  const combined = await combineSpendBundle([makerBundle, takerBundle]);
+  const combined = await combineOfferSpendBundle([makerBundle, takerBundle]);
+  await assertSpendbundle(combined, net.chainId);
   expect(combined).toMatchSnapshot("bundle");
 });
 
@@ -208,12 +214,15 @@ test('Take Offer CAT For Xch', async () => {
   expect(revSummary).toMatchSnapshot("reverse summary");
   const offplan = await generateOfferPlan(revSummary.offered, change_hex, availcoins, 0n, xchSymbol());
   expect(offplan).toMatchSnapshot("offer plan");
-  const takerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, net, nonce, "cat_v1");
+  const utakerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, net, nonce, "cat_v1");
+  const takerBundle = await signSpendBundle(utakerBundle, tokenPuzzles, net.chainId);
   expect(takerBundle).toMatchSnapshot("taker bundle");
-  const combined = await combineSpendBundle([makerBundle, takerBundle]);
+  const combined = await combineOfferSpendBundle([makerBundle, takerBundle]);
+  await assertSpendbundle(combined, net.chainId);
   expect(combined).toMatchSnapshot("bundle");
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getCatNameDict(_account?: AccountEntity): { [id: string]: string } {
   const cats: PersistentCustomCat[] = [];
   return Object.assign(
@@ -222,16 +231,3 @@ function getCatNameDict(_account?: AccountEntity): { [id: string]: string } {
     ...(cats.map((_) => ({ [prefix0x(_.id)]: _.name })))
   );
 }
-
-test('Nft Offer Encoding', async () => {
-  const offerText = "offer1qqph3wlykhv8jcmqvpsxygqqwc7hynr6hum6e0mnf72sn7uvvkpt68eyumkhelprk0adeg42nlelk2mpafsyjlm5pqpj3d5qlw5ahcth6kx0ngg9f86uv020an49fvs6ck6txnv0rln9agqcwdury5yf6tln2sga05j39pecf6v7e4the24umkerjl6z2ew0t83u33hd8648hl4hx2whdtrqyppztjqa48nzy2npkwn5ukghhald6sh0ewnlkv4ukmvnk4qxa58e6yymhrme38tmevzjxdsejejnjh6kxwerj937t95t06mgm43sdut9aam54un9d3vs8r29geuqjd36qcen5p5r9r3llruwcyxvzvgcfrd9u59leg583l7a3v87a80xvndhgf7f0hmerucfl5gjdv0z26mexhmv4xvl7lupmmtwyyuh6a60en4h2jd0rt8jm7ju680383wa246t9td69a08l6c4l00qlkr4yfw0szzqx6wl72xav8z6tenk246uwk48hhvj309le95u845tkyn2z4ewzvf67fpekpps8terxlz80mqqjlkpqt0lnct9lcs5hmqupnm0mandvr9xkeu4tj6jektym58s8l6cumycwc8e5t60lqwy3jff9qnz9d7lm095jt3f9l9zcn69f0vuej7xelwvs26x9ldycj6v4fx5esjd8t9vcf6dxm9n52xv4erv50wwfa9vej9tc49nq23n9yav52efcgnn5we0e3xja3kw8gsj60f0f09ynjk9ylgrqd9jl0vzh362pgejzc7td5fl59mwmu98ugsptlw7nlvljtdmvlv2l8mmunggle8dwt8mlpl3qydlnw2q6ujdr434t8zlj72quuqthpllp7jvptyzn2d9s4y6daffc42ej9gea8zljeteuhyun62er9nztfdfv4r2tjgxxenzn6f475vjvf4fu52un9sed9vet9wxfgs8w2tpawjmwvefx5ln3ffl2zjj6fqfv908sxarp3f9yqerwcupj2fmm3532js3kam7fe8djtpm29wxpujvs739w8pwx092kx47400tjznjtmrqy9d7npy596lna2n0n88akke26u7knshext3hzelf3m8m4ueya5eclctjefhlw4ulh2f00g6vh4l7lzumjs24ka8emkd4dhk7yzfku7k4wtk0h36t6x6tkyar525gjfa5v3c9gars2zdcull732pqk8c5f863g9ydjam57k4u4adtrzjy84809uu8rhhf2jlvt4ckax9flxc0q52akmd657hqv4dkh0mx0dj0ttkgtayhtltf6tlk835f228fy3kaf9az03tun4tc3akre93zwf60gmt573ks3r97g83c5lkakvzull5lt0a5ye7x4hhr88wt628w58ks9y6l55nqa249m7ljv2dxslq85svsrnxsvaqvaqemzqkkkrwm7kcxpqehdnn27hnmfnylg47km0y470lwhwtth46nakw5ssruv04eue2lntm3679gnstkwmrum3l0nveva6l46wgnvfs62esr9t6e7u9vl40upkkl7az888ktmx4uw8g2z0kfyde553ng4u2axs6px9nee3f8utazrlkr95xcznvvrs8xrwyqzxcht3qxseqkjg2cp0fusg4yrpsnv0w8l7llpdez0v8587tkkapa4gsv9y8a5xse23vq7xk9m4uyj4rh4afx3dtswfwrwtk84w6w462282tkzuk20fzhe4a8h65h79nmrkwt466qd9rvf0aufv007r5eu5h4ek8dmjwhu6dqg7w4z6hw8uva0h7gfuuzmzj5ek4weeey2rcvph0yatljdslmyh8kk8vd77v3pwxwljxa0ty7mctm00xmxatwsxxjjqrr2s9t553343a";
-  const bundle = await decodeOffer(offerText);
-  const summary = await getOfferSummary(bundle);
-
-  expect(summary).toMatchSnapshot("summary");
-  expect(bundle).toMatchSnapshot("bundle");
-
-  const encoded = await encodeOffer(bundle, 3);
-
-  expect(encoded).toBe(offerText);
-});

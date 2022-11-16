@@ -1,6 +1,8 @@
 import { Hex0x, prefix0x } from "./condition";
 import { Bytes, bigint_to_bytes } from "clvm";
 import { GetPuzzleApiCallback } from "../transfer/transfer";
+import { CoinItem } from "@/models/wallet";
+import { OriginCoin } from "../spendbundle";
 
 export interface NetworkContext {
   prefix: string;
@@ -37,4 +39,18 @@ export function getCoinNameHex(coin: CompatibleCoin): Bytes {
   const cont = pci.concat(ph).concat(a);
   const coinname = Bytes.SHA256(cont);
   return coinname;
+}
+
+export function convertToOriginCoin(coin: CoinItem | { amount: number, parent_coin_info: Hex0x | string, puzzle_hash: Hex0x | string }): OriginCoin {
+  return "parentCoinInfo" in coin
+    ? {
+      amount: BigInt(coin.amount),
+      parent_coin_info: coin.parentCoinInfo,
+      puzzle_hash: coin.puzzleHash,
+    }
+    : {
+      amount: BigInt(coin.amount),
+      parent_coin_info: prefix0x(coin.parent_coin_info),
+      puzzle_hash: prefix0x(coin.puzzle_hash),
+    };
 }

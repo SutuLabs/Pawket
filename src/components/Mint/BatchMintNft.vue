@@ -103,12 +103,12 @@ import { AccountEntity } from "@/models/account";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { TokenPuzzleDetail } from "@/services/crypto/receive";
-import { SpendBundle } from "@/models/wallet";
+import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
 import puzzle from "@/services/crypto/puzzle";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
 import coinHandler from "@/services/transfer/coin";
-import { submitBundle } from "@/services/view/bundle";
+import { submitBundle } from "@/services/view/bundleAction";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import { csvToArray } from "@/services/util/csv";
@@ -256,7 +256,7 @@ export default class BatchMintNft extends Vue {
 
       const royaltyAddressHex = puzzle.getPuzzleHashFromAddress(this.royaltyAddress);
       const tradePricePercentage = this.royaltyPercentage * 100;
-      const { spendBundle } = await generateMintNftBundle(
+      const ubundle = await generateMintNftBundle(
         this.account.firstAddress,
         this.account.firstAddress,
         BigInt(this.fee),
@@ -270,7 +270,7 @@ export default class BatchMintNft extends Vue {
         undefined,
         addresses
       );
-      this.bundle = spendBundle;
+      this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());
     } catch (error) {
       Notification.open({
         message: this.$tc("batchSend.ui.messages.failedToSign") + error,

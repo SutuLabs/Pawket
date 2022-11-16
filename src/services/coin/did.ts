@@ -1,14 +1,13 @@
-import { CoinSpend, OriginCoin, SpendBundle } from "../../models/wallet";
+import { CoinSpend, combineSpendBundle, OriginCoin, SpendBundle, UnsignedSpendBundle } from "../spendbundle";
 import { disassemble } from "clvm_tools/clvm_tools/binutils";
 import puzzle from "../crypto/puzzle";
-import { TokenPuzzleDetail } from "../crypto/receive";
-import { combineSpendBundlePure } from "../mint/cat";
+import { TokenPuzzleObserver } from "../crypto/receive";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { prefix0x } from "./condition";
 import { modshash, modshex, modsprog } from "./mods";
 import { bytesToHex0x } from "../crypto/utility";
 import { getCoinName0x, NetworkContext } from "./coinUtility";
-import { cloneAndAddRequestPuzzleTemporary, constructSingletonTopLayerPuzzle, getNextCoinName0x, getPuzzleDetail, ParsedMetadata, parseMetadata, SingletonStructList } from "./singleton";
+import { constructSingletonTopLayerPuzzle, getNextCoinName0x, getPuzzleDetail, ParsedMetadata, parseMetadata, SingletonStructList } from "./singleton";
 import { curryMod } from "../offer/bundler";
 import { CannotParsePuzzle, expectModArgs, sexpAssemble, UncurriedPuzzle, uncurryPuzzle } from "./analyzer";
 import { sha256tree } from "clvm_tools";
@@ -43,19 +42,9 @@ export async function generateMintDidBundle(
   fee: bigint,
   metadata: DidMetadata,
   availcoins: SymbolCoins,
-  requests: TokenPuzzleDetail[],
+  requests: TokenPuzzleObserver[],
   net: NetworkContext,
-): Promise<MintDidInfo> {
-  // console.log(
-  //   `const targetAddress="${targetAddress}";\n`
-  //   + `const changeAddress="${changeAddress}";\n`
-  //   + `const fee=${fee}n;\n`
-  //   + `const metadata=${JSON.stringify(metadata, null, 2)};\n`
-  //   + `const availcoins=${JSON.stringify(availcoins, null, 2)};\n`
-  //   + `const requests=${JSON.stringify(requests, null, 2)};\n`
-  //   + `const baseSymbol="${baseSymbol}";\n`
-  //   + `const chainId="${chainId}";\n`
-  // );
+): Promise<UnsignedSpendBundle> {
 
   const amount = 1n; // always 1 mojo for 1 DID
   const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
@@ -80,7 +69,6 @@ export async function generateMintDidBundle(
     puzzle_hash: prefix0x(modshash["singleton_launcher"]),
   };
   const launcherCoinId = getCoinName0x(launcherCoin);
-  // console.log("launcherCoinId", launcherCoinId)
 
   const didInnerPuzzle = await constructDidInnerPuzzle(inner_p2_puzzle.puzzle, "()", 0, launcherCoinId, "()");
   const didPuzzle = await constructSingletonTopLayerPuzzle(
@@ -98,7 +86,6 @@ export async function generateMintDidBundle(
   };
 
   const launcherSolution = `(${didPuzzleHash} ${amount} ())`;
-  // console.log("launcherSolution", launcherSolution, inner_p2_puzzle)
 
   const didInnerPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(didInnerPuzzle));
   // lineage_proof my_amount inner_puzzle(solution(p2_inner or metadata updater) my_amount)
@@ -117,18 +104,9 @@ export async function generateMintDidBundle(
     puzzle_reveal: prefix0x(await puzzle.encodePuzzle(didPuzzle)),
     solution: prefix0x(await puzzle.encodePuzzle(didSolution)),
   };
-  // console.log("didCoinSpend", didCoinSpend)
 
-  const extreqs = cloneAndAddRequestPuzzleTemporary(net.symbol, requests, inner_p2_puzzle.hash, didPuzzle, didPuzzleHash);
-  // console.log("extreqs", extreqs, { coin_spends: [launcherCoinSpend, didCoinSpend] }, chainId);
-
-  const bundles = await transfer.getSpendBundle([launcherCoinSpend, didCoinSpend], extreqs, net.chainId, true);
-  // console.log("bundles", bundles)
-  const bundle = await combineSpendBundlePure(bootstrapSpendBundle, bundles);
-
-  return {
-    spendBundle: bundle,
-  };
+  const bundle = combineSpendBundle(bootstrapSpendBundle, [launcherCoinSpend, didCoinSpend]);
+  return bundle;
 }
 
 async function constructDidInnerPuzzle(

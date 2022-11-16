@@ -1,7 +1,7 @@
-import puzzle, { ExecuteResult, PlaintextPuzzle, PuzzleDetail } from "../crypto/puzzle";
-import { TokenPuzzleDetail } from "../crypto/receive";
+import puzzle, { ExecuteResult, PlaintextPuzzle, PuzzleObserver } from "../crypto/puzzle";
+import { TokenPuzzleObserver } from "../crypto/receive";
 import { curryMod } from "../offer/bundler";
-import { getNumber, Hex0x, prefix0x, unprefix0x } from "./condition";
+import { getFirstLevelArgMsg, getNumber, Hex0x, prefix0x } from "./condition";
 import { modshash, modsprog } from "./mods";
 import { Bytes, SExp } from "clvm";
 import { assemble } from "clvm_tools/clvm_tools/binutils";
@@ -26,10 +26,10 @@ export async function constructSingletonTopLayerPuzzle(
 
 export function getPuzzleDetail(
   tgt_hex: string,
-  requests: TokenPuzzleDetail[]
-): PuzzleDetail {
+  requests: TokenPuzzleObserver[]
+): PuzzleObserver {
 
-  const puzzleDict: { [key: string]: PuzzleDetail } = Object.assign({}, ...requests.flatMap((_) => _.puzzles).map((x) => ({ [prefix0x(x.hash)]: x })));
+  const puzzleDict: { [key: string]: PuzzleObserver } = Object.assign({}, ...requests.flatMap((_) => _.puzzles).map((x) => ({ [prefix0x(x.hash)]: x })));
   const getPuzDetail = (hash: string) => {
     const puz = puzzleDict[hash];
     if (!puz) throw new Error(`cannot find puzzle: (${hash}) in (${requests.flatMap(_ => _.puzzles).map(_ => _.hash).join(", ")})`);
@@ -38,28 +38,6 @@ export function getPuzzleDetail(
 
   const inner_p2_puzzle = getPuzDetail(tgt_hex);
   return inner_p2_puzzle;
-}
-
-
-export function cloneAndAddRequestPuzzleTemporary(
-  baseSymbol: string,
-  requests: TokenPuzzleDetail[],
-  originalHash: string,
-  newPuzzle: string,
-  newPuzzleHash: Hex0x,
-): TokenPuzzleDetail[] {
-  const extreqs = Array.from(requests.map((_) => ({ symbol: _.symbol, puzzles: Array.from(_.puzzles.map((_) => ({ ..._ }))) })));
-  const puzs = extreqs.find((_) => _.symbol == baseSymbol);
-  const nftReq = puzs?.puzzles.find((_) => unprefix0x(originalHash) == _.hash);
-  if (!puzs || !nftReq) throw new Error(`cannot find inner puzzle hash [${unprefix0x(originalHash)}] from ` + JSON.stringify(extreqs));
-  puzs.puzzles.push({
-    privateKey: nftReq.privateKey,
-    puzzle: newPuzzle,
-    hash: newPuzzleHash,
-    address: "",
-    type: nftReq.type,
-  });
-  return extreqs;
 }
 
 export function parseMetadata(
@@ -116,10 +94,10 @@ export async function getNextCoinName0x(puzzle_hex: string, solution_hex: string
 
   try {
     const coinCond = result.conditions
-      .filter((_) => _.op == ConditionOpcode.CREATE_COIN && getNumber(_.args.at(1) ?? "0") % 2n == 1n).at(0);
+      .filter((_) => _.code == ConditionOpcode.CREATE_COIN && getNumber(getFirstLevelArgMsg(_.args.at(1)) ?? "0") % 2n == 1n).at(0);
     if (!coinCond) return undefined;
-    const nextcoin_puzhash = prefix0x(coinCond.args.at(0) ?? "()");
-    const amount = getNumber(coinCond.args.at(1) ?? "0");
+    const nextcoin_puzhash = prefix0x(getFirstLevelArgMsg(coinCond.args.at(0)) ?? "()");
+    const amount = getNumber(getFirstLevelArgMsg(coinCond.args.at(1)) ?? "0");
     const nextCoinName = getCoinName0x({ parent_coin_info: thisCoinName, amount, puzzle_hash: nextcoin_puzhash });
     return nextCoinName;
   } catch (err) {

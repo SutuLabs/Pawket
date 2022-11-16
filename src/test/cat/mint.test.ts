@@ -1,7 +1,9 @@
-import { OriginCoin } from "@/models/wallet";
+import { OriginCoin, signSpendBundle } from "@/services/spendbundle";
 import { analyzeCatCoin } from "@/services/coin/cat";
 import { NetworkContextWithOptionalApi } from "@/services/coin/coinUtility";
-import puzzle from "@/services/crypto/puzzle";
+import { unprefix0x } from "@/services/coin/condition";
+import { assertSpendbundle } from "@/services/spendbundle/validator";
+import puzzle, { PuzzlePrivateKey } from "@/services/crypto/puzzle";
 import utility from "@/services/crypto/utility";
 import { generateMintCatBundle } from "@/services/mint/cat";
 import { Instance } from "@/services/util/instance";
@@ -31,22 +33,34 @@ test('Mint Cat', async () => {
   const memo = "hello";
   const fee = 1n;
   const amount = 10n;
-  const requests = await puzzle.getPuzzleDetails(utility.fromHexString(sk_hex), "xch", 0, 1);
+  const puzzles = await puzzle.getPuzzleDetails(utility.fromHexString(sk_hex), "xch", 0, 1);
+  const obPuzs = puzzle.getObserverPuzzles(puzzles);
 
-  const { spendBundle, assetId } = await generateMintCatBundle(
+  const { spendBundle, assetId, catPuzzle } = await generateMintCatBundle(
     tgt_addr,
     change_addr,
     amount,
     fee,
     memo,
     { [xchSymbol()]: [coin] },
-    sk_hex,
-    [{ puzzles: requests, symbol: xchSymbol() }],
+    [{ puzzles: obPuzs, symbol: xchSymbol() }],
     net,
     "cat_v1",
   );
 
-  expect(spendBundle).toMatchSnapshot("spendbundle");
+  const newPuzzles: PuzzlePrivateKey[] = Object.assign([], puzzles);
+  newPuzzles.push(
+    {
+      privateKey: puzzle.getPrivateKeyFromHex(sk_hex),
+      synPubKey: "()", // don't care
+      hash: unprefix0x(catPuzzle.hash),
+      address: "",
+    },
+  );
+
+  const bundle = await signSpendBundle(spendBundle, [{ puzzles: newPuzzles, symbol: xchSymbol() }], net.chainId)
+  await assertSpendbundle(bundle, net.chainId);
+  expect(bundle).toMatchSnapshot("spendbundle");
   expect(assetId).toMatchSnapshot("assetid");
 });
 

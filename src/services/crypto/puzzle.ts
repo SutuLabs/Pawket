@@ -3,11 +3,11 @@ import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
 import { PrivateKey } from "@chiamine/bls-signatures";
 import utility from "./utility";
-import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
+import { assemble } from "clvm_tools/clvm_tools/binutils";
 import { Instance } from "../util/instance";
 import { modsdict } from "../coin/mods";
 import { Hex0x, prefix0x, unprefix0x } from "../coin/condition";
-import { SExp, isAtom, TToJavascript } from "clvm";
+import { SExp, TToJavascript } from "clvm";
 import { sexpAssemble } from "../coin/analyzer";
 
 export interface ExecuteResultCondition {
@@ -17,16 +17,26 @@ export interface ExecuteResultCondition {
 
 export interface ExecuteResult {
   raw: string;
-  conditions: ExecuteResultCondition[];
+  conditions: ConditionEntity[];
+  sexp: SExp;
 }
 
 export type PlaintextPuzzle = string;
 
 export type AddressType = "Observed" | "Hardened" | "Unknown";
 
-export interface PuzzleDetail extends PuzzleAddress {
+export interface PuzzlePrivateKey extends PuzzleAddress {
   privateKey: PrivateKey;
+  synPubKey: Hex0x;
+}
+
+export interface PuzzleDetail extends PuzzleObserver {
+  privateKey: PrivateKey;
+}
+
+export interface PuzzleObserver extends PuzzleAddress {
   puzzle: PlaintextPuzzle;
+  synPubKey: Hex0x;
 }
 
 export interface PuzzleAddress {
@@ -71,6 +81,11 @@ class PuzzleMaker {
 
   public async getPuzzleHash(pubkey: string): Promise<string> {
     const synPubkey = await this.getSyntheticKey(pubkey);
+    const puzzle = this.getPuzzle(synPubkey);
+    return await this.getPuzzleHashFromPuzzle(puzzle);
+  }
+
+  public async getPuzzleHashFromSyntheticKey(synPubkey: string): Promise<string> {
     const puzzle = this.getPuzzle(synPubkey);
     return await this.getPuzzleHashFromPuzzle(puzzle);
   }
@@ -175,6 +190,16 @@ class PuzzleMaker {
     return await this.getPuzzleDetailsInner(privateKey, async (spk) => this.getCatPuzzle(spk, assetId, catModName), startIndex, endIndex, prefix, true)
   }
 
+  public getObserverPuzzles(details: PuzzleDetail[]): PuzzleObserver[] {
+    return details.map(_ => ({
+      hash: _.hash,
+      address: _.address,
+      type: _.type,
+      puzzle: _.puzzle,
+      synPubKey: _.synPubKey,
+    }));
+  }
+
   private async getPuzzleDetailsInner(
     privateKey: Uint8Array,
     getPuzzle: (pubkey: string) => Promise<string>,
@@ -193,6 +218,7 @@ class PuzzleMaker {
       const address = this.getAddressFromPuzzleHash(hash, prefix);
       details.push({
         privateKey: privkey,
+        synPubKey: prefix0x(synpubkey),
         hash: hash,
         puzzle: puzzle,
         address,
@@ -289,18 +315,16 @@ class PuzzleMaker {
     const solution_result = await this.calcPuzzleResult(puz, solution);
 
     const conds = assemble(solution_result);
-    const argarr = Array.from(conds.as_iter()).map((_) => Array.from(_.as_iter()).map((_) => disassemble(_)));
-    const solution_results = argarr.map((_) => ({ op: Number(_[0]), args: _.slice(1) }));
-    return { raw: solution_result, conditions: solution_results };
+    const solution_results = this.parseConditions(conds);
+    return { raw: solution_result, conditions: solution_results, sexp: conds };
   }
 
   async executePuzzleHex(puz_hex: string, solution_hex: string): Promise<ExecuteResult> {
     const solution_result_hex = await this.calcPuzzleResult(puz_hex, solution_hex, "--hex", "--dump");
 
     const conds = sexpAssemble(solution_result_hex);
-    const argarr = Array.from(conds.as_iter()).map((_) => Array.from(_.as_iter()).map((_) => prefix0x((isAtom(_) ? _.atom : _.as_bin()).hex())));
-    const solution_results = argarr.map((_) => ({ op: Number(_[0]), args: _.slice(1) }));
-    return { raw: solution_result_hex, conditions: solution_results };
+    const solution_results = this.parseConditions(conds);
+    return { raw: solution_result_hex, conditions: solution_results, sexp: conds };
   }
 }
 

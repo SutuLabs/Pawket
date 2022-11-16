@@ -1,5 +1,4 @@
-import { convertToOriginCoin } from "@/models/wallet";
-import { getTestAccount } from "./utility";
+import { getTestAccount } from "../utility";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import { analyzeNftCoin, generateMintNftBundle, generateTransferNftBundle, generateUpdatedNftBundle } from "@/services/coin/nft";
 import puzzle from "@/services/crypto/puzzle";
@@ -7,12 +6,14 @@ import { GetParentPuzzleResponse } from "@/models/api";
 import { getAccountAddressDetails } from "@/services/util/account";
 import { DidCoinAnalysisResult } from "@/services/coin/did";
 
-import nftcoin0 from "./cases/nftcoin0.json"
-import nftcoin7 from "./cases/nftcoin7.json"
+import nftcoin0 from "../cases/nftcoin0.json"
+import nftcoin7 from "../cases/nftcoin7.json"
 
 import { NftMetadataValues } from "@/models/nft";
-import { didAnalysis, knownCoins } from "./cases/nft.test.data";
-import { NetworkContext } from "@/services/coin/coinUtility";
+import { didAnalysis, knownCoins } from "./nft.test.data";
+import { convertToOriginCoin, NetworkContext } from "@/services/coin/coinUtility";
+import { assertSpendbundle } from "@/services/spendbundle/validator";
+import { signSpendBundle } from "@/services/spendbundle";
 
 const net: NetworkContext = {
   prefix: "txch",
@@ -46,10 +47,12 @@ export async function testMintNft(
       },
     ]
   };
-  const { spendBundle } = await generateMintNftBundle(
+  const ubundle = await generateMintNftBundle(
     targetAddress, changeAddress, fee, metadata, availcoins, tokenPuzzles, royaltyAddressHex,
     tradePricePercentage, net, didAnalysis,
     "00186eae4cd4a3ec609ca1a8c1cda8467e3cb7cbbbf91a523d12d31129d5f8d7", targetAddresses);
+  const spendBundle = await signSpendBundle(ubundle, tokenPuzzles, net.chainId);
+  await assertSpendbundle(spendBundle, net.chainId);
   expect(spendBundle).toMatchSnapshot("spendbundle");
 }
 
@@ -79,8 +82,10 @@ export async function testTransferNft(fee: bigint, didAnalysis: DidCoinAnalysisR
     ]
   };
 
-  const spendBundle = await generateTransferNftBundle(
+  const ubundle = await generateTransferNftBundle(
     targetAddress, changeAddress, fee, nftCoin, analysis, availcoins, tokenPuzzles, net, didAnalysis);
+  const spendBundle = await signSpendBundle(ubundle, tokenPuzzles, net.chainId);
+  await assertSpendbundle(spendBundle, net.chainId);
   expect(spendBundle).toMatchSnapshot("spendbundle");
 }
 
@@ -113,8 +118,10 @@ export async function testUpdateNft(fee: bigint): Promise<void> {
     ]
   };
 
-  const spendBundle = await generateUpdatedNftBundle(
+  const ubundle = await generateUpdatedNftBundle(
     changeAddress, fee, nftCoin, analysis, "NFT", "imageUri", "https://example.com/a.jpg", availcoins, tokenPuzzles, net);
+  const spendBundle = await signSpendBundle(ubundle, tokenPuzzles, net.chainId);
+  await assertSpendbundle(spendBundle, net.chainId);
   expect(spendBundle).toMatchSnapshot("spendbundle");
 }
 

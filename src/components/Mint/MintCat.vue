@@ -68,12 +68,12 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { TokenPuzzleDetail } from "@/services/crypto/receive";
 import store from "@/store";
-import { SpendBundle } from "@/models/wallet";
+import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
 import bigDecimal from "js-big-decimal";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
 import coinHandler from "@/services/transfer/coin";
-import { debugBundle, submitBundle } from "@/services/view/bundle";
+import { debugBundle, submitBundle } from "@/services/view/bundleAction";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import SendSummary from "@/components/Send/SendSummary.vue";
@@ -338,13 +338,12 @@ export default class MintCat extends Vue {
         BigInt(this.fee),
         this.memo,
         this.availcoins,
-        this.account.key.privateKey,
         this.requests,
         networkContext(),
         "cat_v2"
       );
 
-      this.bundle = spendBundle;
+      this.bundle = await signSpendBundle(spendBundle, this.requests, networkContext());
       this.assetId = assetId;
     } catch (error) {
       Notification.open({

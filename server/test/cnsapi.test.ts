@@ -7,7 +7,7 @@ beforeAll(async () => {
   await Instance.init();
 })
 
-jest.setTimeout(15000);
+jest.setTimeout(30000);
 
 describe("CNS", () => {
   test('offer generation', async () => {

@@ -25,7 +25,7 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import QrcodeVue from "qrcode.vue";
-import { SpendBundle } from "@/models/wallet";
+import { SpendBundle } from "@/services/spendbundle";
 import { encodeOffer } from "@/services/offer/encoding";
 
 @Component({

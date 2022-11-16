@@ -68,13 +68,13 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import { SpendBundle } from "@/models/wallet";
+import { SpendBundle } from "@/services/spendbundle";
 import puzzle from "@/services/crypto/puzzle";
 import { disassemble } from "clvm_tools/clvm_tools/binutils";
-import { getNumber, unprefix0x } from "@/services/coin/condition";
+import { getArgMsg, getFirstLevelArgMsg, getNumber, unprefix0x } from "@/services/coin/condition";
 import { modshexdict } from "@/services/coin/mods";
 import store from "@/store";
-import { debugBundle } from "@/services/view/bundle";
+import { debugBundle } from "@/services/view/bundleAction";
 import { ConditionOpcode } from "@/services/coin/opcode";
 import { uncurry } from "clvm_tools/clvm_tools/curry";
 import { SExp, Tuple } from "clvm";
@@ -203,17 +203,26 @@ export default class BundleSummary extends Vue {
   async executePuzzle(puz_hex: string, solution_hex: string): Promise<CoinType[]> {
     const result = await puzzle.executePuzzleHex(puz_hex, solution_hex);
     const coins: CoinType[] = result.conditions
-      .filter((_) => _.op == ConditionOpcode.CREATE_COIN)
-      .map((_) => ({
-        address: puzzle.getAddressFromPuzzleHash(_.args[0], xchPrefix()),
-        amount: getNumber(_.args[1]),
-        args: _.args[2] ? Array.from(sexpAssemble(_.args[2]).as_iter()).map((_) => disassemble(_ as SExp)) : [],
-      }))
+      .filter((_) => _.code == ConditionOpcode.CREATE_COIN)
+      .map((_) => {
+        const rawArgs = _.args.at(2);
+        const args =
+          rawArgs && Array.isArray(rawArgs)
+            ? rawArgs.map((_) => getArgMsg(_)) //
+            : !rawArgs
+            ? [] //
+            : [getArgMsg(rawArgs)];
+        return {
+          address: puzzle.getAddressFromPuzzleHash(getFirstLevelArgMsg(_.args.at(0)), xchPrefix()),
+          amount: getNumber(getFirstLevelArgMsg(_.args.at(1))),
+          args,
+        };
+      })
       .map((_) => ({
         address: _.address,
         amount: _.amount,
-        hint: this.tryGetHintAddress(_.args[0]),
-        memo: _.args[1],
+        hint: this.tryGetHintAddress(_.args.at(0)),
+        memo: _.args.at(1),
         others: _.args.slice(2),
       }));
     return coins;

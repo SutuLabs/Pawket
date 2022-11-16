@@ -1,6 +1,6 @@
 import { tc } from "@/i18n/i18n";
 import { ApiResponse } from "@/models/api";
-import { SpendBundle } from "@/models/wallet";
+import { SpendBundle } from "@/services/spendbundle";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { ModalProgrammatic as Modal } from "buefy";
 import DevHelper from "@/components/DevHelper/DevHelper.vue";

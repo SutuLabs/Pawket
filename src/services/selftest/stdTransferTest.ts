@@ -1,4 +1,4 @@
-import { OriginCoin } from "@/models/wallet";
+import { OriginCoin, signSpendBundle } from "../spendbundle";
 import { NetworkContextWithOptionalApi } from "../coin/coinUtility";
 import { prefix0x } from "../coin/condition";
 import puzzle from "../crypto/puzzle";
@@ -33,7 +33,8 @@ export async function testStandardTransfer(): Promise<void> {
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(change_addr));
   const puzzles = await puzzle.getPuzzleDetails(utility.fromHexString(sk_hex), "xch", 0, 5);
   const plan = await transfer.generateSpendPlan({ [xchSymbol()]: [coin] }, [{ symbol: xchSymbol(), address: tgt_hex, amount: 1_000_000n, }], change_hex, 0n, xchSymbol());
-  const bundle = await transfer.generateSpendBundleWithoutCat(plan, [{ symbol: xchSymbol(), puzzles }], [], net);
+  const ubundle = await transfer.generateSpendBundleWithoutCat(plan, [{ symbol: xchSymbol(), puzzles }], [], net);
+  const bundle = await signSpendBundle(ubundle, [{ symbol: xchSymbol(), puzzles }], net.chainId)
   assert(
     "0x81198e68402824e0585fac43d79edf3efe19e4651747f4e9b8d28f6a8a5c319dac67d4a0c03ad957cbb7d7c3c955605d03d6c5750e0aa44baf73ddaa5fcfbe74e3cb922034b72656f0df410ff6ef8e81b56b1a6a0c9bddd9331b7a9c90f897ce",
     bundle?.aggregated_signature
