@@ -1,5 +1,5 @@
 import { getTestAccount } from "../utility";
-import transfer, { SymbolCoins } from "@/services/transfer/transfer";
+import { SymbolCoins } from "@/services/transfer/transfer";
 import { analyzeNftCoin, generateMintNftBundle } from "@/services/coin/nft";
 import puzzle from "@/services/crypto/puzzle";
 import { GetParentPuzzleResponse } from "@/models/api";
@@ -192,7 +192,6 @@ async function testMintCnsAndOffer(
   const takerBundle = await signSpendBundle(utakerBundle, tokenPuzzles, net.chainId);
   expect(takerBundle).toMatchSnapshot("takerBundle");
   const bundle = await combineOfferSpendBundle([makerBundle, takerBundle]);
-  // const bundle = await signSpendBundle(ubundle, tokenPuzzles, net.chainId);
   await assertSpendbundle(bundle, net.chainId);
   expect(bundle).toMatchSnapshot("combined");
 }

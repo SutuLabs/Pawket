@@ -1,43 +1,42 @@
 import { Bytes } from "clvm";
-import { CoinItem } from "@/models/wallet";
 import { Hex0x, prefix0x } from "../coin/condition";
 import { Instance } from "../util/instance";
 
 export interface OriginCoin {
-    amount: bigint;
-    parent_coin_info: Hex0x;
-    puzzle_hash: Hex0x;
+  amount: bigint;
+  parent_coin_info: Hex0x;
+  puzzle_hash: Hex0x;
 }
 
 export interface CoinSpend {
-    coin: OriginCoin;
-    puzzle_reveal: Hex0x;
-    solution: Hex0x;
+  coin: OriginCoin;
+  puzzle_reveal: Hex0x;
+  solution: Hex0x;
 }
 
 export interface SpendBundle {
-    aggregated_signature: Hex0x;
-    coin_spends: CoinSpend[];
+  aggregated_signature: Hex0x;
+  coin_spends: CoinSpend[];
 }
 
 export class UnsignedSpendBundle {
-    public coin_spends: CoinSpend[];
-    public type = "unsigned";
+  public coin_spends: CoinSpend[];
+  public type = "unsigned";
 
-    constructor(coin_spends: CoinSpend[]) {
-        this.coin_spends = coin_spends;
-    }
+  constructor(coin_spends: CoinSpend[]) {
+    this.coin_spends = coin_spends;
+  }
 }
 
 export class PartialSpendBundle {
-    public aggregated_signature: Hex0x;
-    public coin_spends: CoinSpend[];
-    public type = "partial";
+  public aggregated_signature: Hex0x;
+  public coin_spends: CoinSpend[];
+  public type = "partial";
 
-    constructor(coin_spends: CoinSpend[], aggregated_signature: Hex0x) {
-        this.coin_spends = coin_spends;
-        this.aggregated_signature = aggregated_signature;
-    }
+  constructor(coin_spends: CoinSpend[], aggregated_signature: Hex0x) {
+    this.coin_spends = coin_spends;
+    this.aggregated_signature = aggregated_signature;
+  }
 }
 
 export function combineSpendBundle(...spendbundles: (UnsignedSpendBundle | CoinSpend[] | undefined)[]): UnsignedSpendBundle;

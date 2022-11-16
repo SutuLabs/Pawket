@@ -2,7 +2,7 @@ import { Hex0x, prefix0x } from "./condition";
 import { Bytes, bigint_to_bytes } from "clvm";
 import { GetPuzzleApiCallback } from "../transfer/transfer";
 import { CoinItem } from "@/models/wallet";
-import { OriginCoin } from "../spendbundle/defs";
+import { OriginCoin } from "../spendbundle";
 
 export interface NetworkContext {
   prefix: string;

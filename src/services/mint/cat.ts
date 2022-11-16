@@ -1,4 +1,4 @@
-import { CoinSpend, combineSpendBundle, OriginCoin, PartialSpendBundle, SpendBundle, UnsignedSpendBundle } from "@/services/spendbundle";
+import { CoinSpend, combineSpendBundle, OriginCoin, UnsignedSpendBundle } from "../spendbundle";
 import { Hex0x, prefix0x } from "../coin/condition";
 import puzzle from "../crypto/puzzle";
 import { TokenPuzzleObserver } from "../crypto/receive";
@@ -6,7 +6,6 @@ import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { curryMod } from "../offer/bundler";
 import { modshash, modsprog } from "../coin/mods";
 import { getCoinName0x, NetworkContextWithOptionalApi } from "../coin/coinUtility";
-import { Instance } from "../util/instance";
 
 export interface MintCatInfo {
   spendBundle: UnsignedSpendBundle;

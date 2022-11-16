@@ -3,7 +3,7 @@ import { getTestAccount } from "../utility";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
 import { getOfferSummary, OfferEntity, OfferPlan } from "@/services/offer/summary";
 import { combineOfferSpendBundle, generateOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
-import transfer, { SymbolCoins } from "@/services/transfer/transfer";
+import { SymbolCoins } from "@/services/transfer/transfer";
 import { Instance } from "@/services/util/instance";
 import { getAccountAddressDetails } from "@/services/util/account";
 import { AccountEntity, PersistentCustomCat } from "@/models/account";
@@ -224,6 +224,7 @@ test('Take Offer CAT For Xch', async () => {
   expect(combined).toMatchSnapshot("bundle");
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getCatNameDict(_account?: AccountEntity): { [id: string]: string } {
   const cats: PersistentCustomCat[] = [];
   return Object.assign(

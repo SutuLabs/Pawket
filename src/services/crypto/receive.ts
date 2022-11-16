@@ -6,7 +6,7 @@ import { analyzeNftCoin, getScalarString } from "../coin/nft";
 import debug from "../api/debug";
 import { analyzeDidCoin, DidCoinAnalysisResult } from "../coin/did";
 import { NftCoinAnalysisResult, CnsCoinAnalysisResult  } from "../../models/nft";
-import { CoinSpend, OriginCoin } from "../spendbundle/defs";
+import { CoinSpend, OriginCoin } from "../spendbundle";
 import { convertToOriginCoin } from "../coin/coinUtility";
 
 export interface TokenPuzzleDetail {

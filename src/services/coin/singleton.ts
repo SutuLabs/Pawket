@@ -1,7 +1,7 @@
-import puzzle, { ExecuteResult, PlaintextPuzzle, PuzzleDetail, PuzzleObserver } from "../crypto/puzzle";
-import { TokenPuzzleDetail, TokenPuzzleObserver } from "../crypto/receive";
+import puzzle, { ExecuteResult, PlaintextPuzzle, PuzzleObserver } from "../crypto/puzzle";
+import { TokenPuzzleObserver } from "../crypto/receive";
 import { curryMod } from "../offer/bundler";
-import { getFirstLevelArgMsg, getNumber, Hex0x, prefix0x, unprefix0x } from "./condition";
+import { getFirstLevelArgMsg, getNumber, Hex0x, prefix0x } from "./condition";
 import { modshash, modsprog } from "./mods";
 import { Bytes, SExp } from "clvm";
 import { assemble } from "clvm_tools/clvm_tools/binutils";
@@ -38,29 +38,6 @@ export function getPuzzleDetail(
 
   const inner_p2_puzzle = getPuzDetail(tgt_hex);
   return inner_p2_puzzle;
-}
-
-
-export function cloneAndAddRequestPuzzleTemporary(
-  baseSymbol: string,
-  requests: TokenPuzzleObserver[],
-  originalHash: string,
-  newPuzzle: string,
-  newPuzzleHash: Hex0x,
-  synPubKey: Hex0x,
-): TokenPuzzleObserver[] {
-  const extreqs = Array.from(requests.map((_) => ({ symbol: _.symbol, puzzles: Array.from(_.puzzles.map((_) => ({ ..._ }))) })));
-  const puzs = extreqs.find((_) => _.symbol == baseSymbol);
-  const nftReq = puzs?.puzzles.find((_) => unprefix0x(originalHash) == _.hash);
-  if (!puzs || !nftReq) throw new Error(`cannot find inner puzzle hash [${unprefix0x(originalHash)}] from ` + JSON.stringify(extreqs));
-  puzs.puzzles.push({
-    synPubKey,
-    puzzle: newPuzzle,
-    hash: newPuzzleHash,
-    address: "",
-    type: nftReq.type,
-  });
-  return extreqs;
 }
 
 export function parseMetadata(

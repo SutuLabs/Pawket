@@ -6,7 +6,6 @@ import { assertSpendbundle } from "@/services/spendbundle/validator";
 import puzzle, { PuzzlePrivateKey } from "@/services/crypto/puzzle";
 import utility from "@/services/crypto/utility";
 import { generateMintCatBundle } from "@/services/mint/cat";
-import transfer from "@/services/transfer/transfer";
 import { Instance } from "@/services/util/instance";
 
 const net: NetworkContextWithOptionalApi = {

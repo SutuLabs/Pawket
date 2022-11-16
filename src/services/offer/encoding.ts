@@ -1,4 +1,4 @@
-import { CoinSpend, OriginCoin, SpendBundle } from "../spendbundle/defs";
+import { CoinSpend, OriginCoin, SpendBundle } from "../spendbundle";
 import { bech32m } from "@scure/base";
 import zlib from 'zlib';
 import { Buffer } from 'buffer';

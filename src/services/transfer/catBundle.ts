@@ -129,8 +129,6 @@ class CatBundle {
     return solution;
   }
 
-
-
   private async generateCoinSpend(
     coin: OriginCoin,
     prevCoin: OriginCoin,
@@ -143,7 +141,7 @@ class CatBundle {
   ): Promise<CoinSpend> {
     const puzzle_reveal = prefix0x(await puzzle.encodePuzzle(puz.puzzle));
     const solution = await this.generateSolution(
-      coin, prevCoin, nextCoin, nextCoin_inner_puzzle_hash, subtotal, puz, inner_puzzle_solution, getPuzzle);
+      coin, prevCoin, nextCoin, nextCoin_inner_puzzle_hash, subtotal, inner_puzzle_solution, getPuzzle);
     const solution_hex = prefix0x(await puzzle.encodePuzzle(solution));
     return { coin, puzzle_reveal, solution: solution_hex };
   }
@@ -154,7 +152,6 @@ class CatBundle {
     nextCoin: OriginCoin,
     nextCoin_inner_puzzle_hash: string,
     subtotal: bigint,
-    puz: PuzzleObserver,
     inner_puzzle_solution: string,
     getPuzzle: GetPuzzleApiCallback,
   ): Promise<string> {

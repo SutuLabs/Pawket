@@ -3,11 +3,11 @@ import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
 import { PrivateKey } from "@chiamine/bls-signatures";
 import utility from "./utility";
-import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
+import { assemble } from "clvm_tools/clvm_tools/binutils";
 import { Instance } from "../util/instance";
 import { modsdict } from "../coin/mods";
 import { Hex0x, prefix0x, unprefix0x } from "../coin/condition";
-import { SExp, isAtom, TToJavascript } from "clvm";
+import { SExp, TToJavascript } from "clvm";
 import { sexpAssemble } from "../coin/analyzer";
 
 export interface ExecuteResultCondition {
@@ -315,8 +315,6 @@ class PuzzleMaker {
     const solution_result = await this.calcPuzzleResult(puz, solution);
 
     const conds = assemble(solution_result);
-    // const argarr = Array.from(conds.as_iter()).map((_) => Array.from(_.as_iter()).map((_) => disassemble(_)));
-    // const solution_results = argarr.map((_) => ({ op: Number(_[0]), args: _.slice(1) }));
     const solution_results = this.parseConditions(conds);
     return { raw: solution_result, conditions: solution_results, sexp: conds };
   }
@@ -325,8 +323,6 @@ class PuzzleMaker {
     const solution_result_hex = await this.calcPuzzleResult(puz_hex, solution_hex, "--hex", "--dump");
 
     const conds = sexpAssemble(solution_result_hex);
-    // const argarr = Array.from(conds.as_iter()).map((_) => Array.from(_.as_iter()).map((_) => prefix0x((isAtom(_) ? _.atom : _.as_bin()).hex())));
-    // const solution_results = argarr.map((_) => ({ op: Number(_[0]), args: _.slice(1) }));
     const solution_results = this.parseConditions(conds);
     return { raw: solution_result_hex, conditions: solution_results, sexp: conds };
   }

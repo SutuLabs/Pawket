@@ -1,5 +1,5 @@
 import { getTestAccount } from "../utility";
-import transfer, { SymbolCoins } from "@/services/transfer/transfer";
+import { SymbolCoins } from "@/services/transfer/transfer";
 import { analyzeNftCoin, generateUpdatedNftBundle } from "@/services/coin/nft";
 import puzzle from "@/services/crypto/puzzle";
 import { GetParentPuzzleResponse } from "@/models/api";

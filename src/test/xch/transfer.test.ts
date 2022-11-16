@@ -2,7 +2,7 @@ import { OriginCoin, signSpendBundle } from "@/services/spendbundle";
 import { NetworkContextWithOptionalApi } from "@/services/coin/coinUtility";
 import { prefix0x } from "@/services/coin/condition";
 import { assertSpendbundle } from "@/services/spendbundle/validator";
-import puzzle, { PuzzleObserver } from "@/services/crypto/puzzle";
+import puzzle from "@/services/crypto/puzzle";
 import utility from "@/services/crypto/utility";
 import transfer from "@/services/transfer/transfer";
 import { Instance } from "@/services/util/instance";

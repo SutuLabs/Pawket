@@ -1,7 +1,7 @@
 import { CoinSpend, OriginCoin, SpendBundle, UnsignedSpendBundle } from "@/services/spendbundle";
 import { Bytes } from "clvm";
 import { CoinConditions, ConditionType, Hex0x, prefix0x, unprefix0x } from '../coin/condition';
-import puzzle, { PlaintextPuzzle } from "../crypto/puzzle";
+import puzzle, { ConditionArgs, PlaintextPuzzle } from "../crypto/puzzle";
 import { ConditionOpcode } from "../coin/opcode";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { TokenPuzzleDetail, TokenPuzzlePrivateKey } from "../crypto/receive";
@@ -142,15 +142,12 @@ export async function generateOffer(
   }
 
   return new UnsignedSpendBundle(spends);
-
-  // // combine into one spendbundle
-  // return transfer.getSpendBundle(spends, puzzleCopy, net.chainId);
 }
 
-export function sha256(...args: (Hex0x | string | Uint8Array | undefined)[]): string {
+export function sha256(...args: (Hex0x | string | Uint8Array | undefined | ConditionArgs)[]): string {
   const cont = new Uint8Array(args
-    .filter((_): _ is Hex0x | string | Uint8Array => !!_)
-    .map(_ => Bytes.from(typeof _ === "string" ? unprefix0x(_) : _, "hex").raw())
+    .filter((_): _ is Hex0x | string | Uint8Array | ConditionArgs[] => !!_)
+    .map(_ => Array.isArray(_) ? new Uint8Array() : Bytes.from(typeof _ === "string" ? unprefix0x(_) : _, "hex").raw())
     .reduce((acc, cur) => [...acc, ...cur], [] as number[]));
   const result = Bytes.SHA256(cont);
   return prefix0x(result.hex());

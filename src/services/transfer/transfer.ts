@@ -1,17 +1,10 @@
-import { PrivateKey, G2Element, ModuleInstance } from "@chiamine/bls-signatures";
-import { Bytes } from "clvm";
-import { CoinSpend, OriginCoin, PartialSpendBundle, SpendBundle, UnsignedSpendBundle } from "@/services/spendbundle";
+import { CoinSpend, OriginCoin, UnsignedSpendBundle } from "@/services/spendbundle";
 import { GetParentPuzzleResponse } from "@/models/api";
-import { DEFAULT_HIDDEN_PUZZLE_HASH } from "../coin/consts";
-import { CoinConditions, ConditionType, Hex, Hex0x, prefix0x, unprefix0x } from "../coin/condition";
-import puzzle, { ConditionEntity, PuzzlePrivateKey } from "../crypto/puzzle";
-import { TokenPuzzleObserver, TokenPuzzlePrivateKey } from "../crypto/receive";
+import { CoinConditions, ConditionType, Hex0x } from "../coin/condition";
+import { TokenPuzzleObserver } from "../crypto/receive";
 import stdBundle from "./stdBundle";
-import { ConditionOpcode } from "../coin/opcode";
 import catBundle from "./catBundle";
-import { getCoinNameHex, NetworkContext, NetworkContextWithOptionalApi } from "../coin/coinUtility";
-import { Instance } from "../util/instance";
-import { calculate_synthetic_secret_key } from "../crypto/sign";
+import { NetworkContext, NetworkContextWithOptionalApi } from "../coin/coinUtility";
 
 export type GetPuzzleApiCallback = (parentCoinId: string) => Promise<GetParentPuzzleResponse | undefined>;
 
@@ -92,7 +85,6 @@ class Transfer {
     }
 
     return new UnsignedSpendBundle(coin_spends);
-    // return this.getSpendBundle(coin_spends, puzzles, net.chainId);
   }
 
   public getDelegatedPuzzle(conditions: (string | string[])[][]): string {
@@ -140,7 +132,6 @@ class Transfer {
 
     return [];
   }
-
 
   public getSolution(targets: TransferTarget[], additionalConditions: ConditionType[]): string {
 

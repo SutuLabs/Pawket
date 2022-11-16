@@ -99,36 +99,36 @@
           <ul class="args_list">
             <li v-for="(sol, i) in solution_results" :key="i">
               <b-tooltip
-                v-if="conditionsdict[sol.op]"
-                :label="conditionsdict[sol.op].args + '\n' + conditionsdict[sol.op].desc"
+                v-if="conditionsdict[sol.code]"
+                :label="conditionsdict[sol.code].args + '\n' + conditionsdict[sol.code].desc"
                 multilined
               >
                 <div class="control mr-2">
                   <div class="tags has-addons">
                     <span class="tag is-info">
-                      {{ conditionsdict[sol.op].id }}
+                      {{ conditionsdict[sol.code].id }}
                     </span>
                     <span class="tag is-info is-light">
-                      {{ conditionsdict[sol.op].name }}
+                      {{ conditionsdict[sol.code].name }}
                     </span>
                   </div>
                 </div>
               </b-tooltip>
               <ul v-if="sol.args.length > 0" class="args_list ellipsis-item">
                 <li v-for="(arg, i) in sol.args" :key="i" :title="arg">{{ arg }}</li>
-                <li v-if="sol.op == 60">
+                <li v-if="sol.code == 60">
                   <b-tag type="is-primary is-light">annoID:</b-tag>
                   {{ sha256(used_coin_name, sol.args[0]) }}
                 </li>
-                <li v-if="sol.op == 62">
+                <li v-if="sol.code == 62">
                   <b-tag type="is-primary is-light">annoID:</b-tag>
                   {{ sha256(bundle.coin_spends[selectedCoin].coin.puzzle_hash, sol.args[0]) }}
                 </li>
-                <li v-if="sol.op == 51">
+                <li v-if="sol.code == 51">
                   <b-tag type="is-primary is-light">amount:</b-tag>
                   {{ getNumber(sol.args[1]) }}
                 </li>
-                <li v-if="sol.op == 51">
+                <li v-if="sol.code == 51">
                   <b-tag type="is-primary is-light"
                     >Name:
                     <b-tooltip label="Find Coin Name">
@@ -227,10 +227,9 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import { CoinSpend, OriginCoin, SpendBundle } from "@/models/wallet";
-import puzzle from "@/services/crypto/puzzle";
+import puzzle, { ConditionArgs, ConditionEntity } from "@/services/crypto/puzzle";
 import { beautifyLisp } from "@/services/coin/lisp";
-import { conditionDict, ConditionInfo, prefix0x, getNumber, Hex0x } from "@/services/coin/condition";
+import { conditionDict, ConditionInfo, prefix0x, getNumber, Hex0x, getFirstLevelArgMsg } from "@/services/coin/condition";
 import { modsdict, modsprog } from "@/services/coin/mods";
 import UncurryPuzzle from "@/components/DevHelper/UncurryPuzzle.vue";
 import AnnouncementList from "@/components/DevHelper/AnnouncementList.vue";
@@ -240,7 +239,16 @@ import { getCoinName } from "@/services/coin/coinUtility";
 import debug from "@/services/api/debug";
 import { demojo } from "@/filters/unitConversion";
 import { OneTokenInfo } from "@/models/account";
-import { AggSigMessage, AnnouncementCoin, checkSpendBundle, CoinAvailability, CoinIndexInfo } from "@/services/coin/spendbundle";
+import {
+  AggSigMessage,
+  AnnouncementCoin,
+  checkSpendBundle,
+  CoinAvailability,
+  CoinIndexInfo,
+  CoinSpend,
+  OriginCoin,
+  SpendBundle,
+} from "@/services/spendbundle";
 import { sha256 } from "@/services/offer/bundler";
 
 @Component({
@@ -260,7 +268,7 @@ export default class BundlePanel extends Vue {
   public solution = "";
   public solution_result = "";
   public selectedCoin = -1;
-  public solution_results: { op: number; args: string[] }[] = [];
+  public solution_results: ConditionEntity[] = [];
   public bundle: SpendBundle | null = null;
   public autoCalculation = false;
   public solution_executor: "NORMAL" | "SETTLEMENT" | "ERROR" = "NORMAL";
@@ -454,18 +462,18 @@ export default class BundlePanel extends Vue {
     this.used_coin_tgt_address = puzzle.getAddressFromPuzzleHash(c.coin.puzzle_hash, xchPrefix());
   }
 
-  public sha256(...args: (Hex0x | string | Uint8Array)[]): string {
+  public sha256(...args: (Hex0x | string | Uint8Array | undefined | ConditionArgs)[]): string {
     return sha256(...args);
   }
 
-  public getNumber(arg: string): bigint {
-    return getNumber(arg);
+  public getNumber(arg: string | ConditionArgs): bigint {
+    return getNumber(typeof arg === "string" ? arg : getFirstLevelArgMsg(arg));
   }
 
-  public getCoinNameInternal(...args: string[]): string {
+  public getCoinNameInternal(...args: ConditionArgs[]): string {
     if (!this.bundle) return "";
     const coin: OriginCoin = {
-      puzzle_hash: prefix0x(args[0]),
+      puzzle_hash: prefix0x(getFirstLevelArgMsg(args[0])),
       amount: this.getNumber(args[1]),
       parent_coin_info: this.used_coin_name,
     };

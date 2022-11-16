@@ -1,11 +1,11 @@
 import { GetParentPuzzleResponse } from "@/models/api";
 import { getTestAccount } from "../utility";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
-import { getOfferSummary, OfferEntity, OfferPlan } from "@/services/offer/summary";
+import { getOfferSummary, OfferEntity } from "@/services/offer/summary";
 import { Instance } from "@/services/util/instance";
 import { getAccountAddressDetails } from "@/services/util/account";
 import { combineOfferSpendBundle, generateNftOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
-import transfer, { SymbolCoins } from "@/services/transfer/transfer";
+import { SymbolCoins } from "@/services/transfer/transfer";
 import { NftDetail } from "@/services/crypto/receive";
 import { NetworkContext } from "@/services/coin/coinUtility";
 import { assertSpendbundle } from "@/services/spendbundle/validator";

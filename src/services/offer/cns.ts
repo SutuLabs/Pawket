@@ -1,4 +1,4 @@
-import { SpendBundle, UnsignedSpendBundle , combineSpendBundle, OriginCoin } from "../spendbundle";
+import { UnsignedSpendBundle, combineSpendBundle, OriginCoin } from "../spendbundle";
 import { SymbolCoins } from "../transfer/transfer";
 import { analyzeNftCoin, generateMintNftBundle } from "../coin/nft";
 import puzzle from "../crypto/puzzle";
