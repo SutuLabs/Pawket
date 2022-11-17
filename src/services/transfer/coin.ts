@@ -5,9 +5,10 @@ import { prefix0x } from "../coin/condition";
 import receive, { TokenPuzzleAddress, TokenPuzzleDetail } from "../crypto/receive";
 import { getAccountCats } from "@/store/modules/account";
 import { SymbolCoins } from "./transfer";
-import { rpcUrl, xchPrefix, xchSymbol } from "@/store/modules/network";
+import { networkId, rpcUrl, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { AccountEntity } from "@/models/account";
 import { getAccountAddressDetails } from "../util/account";
+import { coinFilter } from "../coin/coinUtility";
 
 
 class CoinHandler {
@@ -22,7 +23,7 @@ class CoinHandler {
   }
 
   public async getAvailableCoins(requests: TokenPuzzleAddress[], tokenNames: string[]): Promise<SymbolCoins> {
-    const coins = (await receive.getActivities(requests, false, rpcUrl()))
+    let coins = (await receive.getActivities(requests, false, rpcUrl()))
       .filter((_) => _.coin)
       .map((_) => _.coin as CoinItem)
       .map((_) => ({
@@ -30,6 +31,8 @@ class CoinHandler {
         parent_coin_info: _.parentCoinInfo,
         puzzle_hash: _.puzzleHash,
       }));
+
+    coins = coinFilter(coins, networkId())
 
     const availcoins = tokenNames
       .map((symbol) => {

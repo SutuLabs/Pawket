@@ -66,7 +66,6 @@ import { xchPrefix } from "@/store/modules/network";
 export default class UtxoDetail extends Vue {
   @Prop() public activity!: CoinRecord;
   @Prop() public tokenInfo!: TokenInfo;
-  public showDetail = false;
 
   @Emit("close")
   close(): void {

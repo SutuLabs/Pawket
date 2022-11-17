@@ -644,7 +644,9 @@
     "ui": {
       "label": {
         "cost": "发送",
-        "receive": "接收"
+        "receive": "接收",
+        "queue": "队列中",
+        "confirmed":"已确认"
       },
       "text": {
         "empty": "暂无交易记录"
@@ -663,11 +665,20 @@
         "spentHeight": "花费区块高度",
         "confirmedHeight": "确认区块高度",
         "parentCoinInfo": "父硬币信息",
-        "puzzleHash": "地址"
+        "puzzleHash": "地址",
+        "coinName": "硬币名",
+        "coins": "硬币详情",
+        "pending": "进行中"
+      },
+      "button": {
+        "unlockCoins": "解锁硬币"
       },
       "tooltip": {
         "copy": "复制"
       }
+    },
+    "message": {
+      "unlockCoins": "取消锁定不会取消交易。取消锁定后，该硬币可以自由使用，但此交易仍有成功的概率。确定要取消锁定吗？"
     }
   },
   "sendSummary": {

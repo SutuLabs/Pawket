@@ -8,6 +8,10 @@ import { getLineageProofPuzzle } from "@/services/transfer/call";
 export function xchPrefix(): string {
   return store.state.network.prefix;
 }
+
+export function networkId(): string {
+  return store.state.network.networkId;
+}
 export function xchSymbol(): string {
   return store.state.network.symbol;
 }
