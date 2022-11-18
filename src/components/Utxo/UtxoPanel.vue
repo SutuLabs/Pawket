@@ -21,7 +21,7 @@
           </div>
         </div>
         <div class="column has-text-right has-text-grey-dark is-5">
-          <span> -{{ demojo(ptxn.amount, tokenInfo[ptxn.symbol]) }}</span>
+          <p v-for="(amount, symbol) of ptxn.amount" :key="symbol">{{ demojo(amount, tokenInfo[symbol]) }}</p>
         </div>
       </a>
     </div>
@@ -86,7 +86,7 @@ import { getTokenInfo } from "@/services/view/cat";
 import store from "@/store";
 import { LockedCoin, PendingTransaction } from "@/services/coin/coinUtility";
 import PendingTxnDetail from "./PendingTxnDetail.vue";
-import { networkId } from "@/store/modules/network";
+import { networkId, xchSymbol } from "@/store/modules/network";
 
 @Component({})
 export default class UtxoPanel extends Vue {
@@ -126,18 +126,23 @@ export default class UtxoPanel extends Vue {
   get pendingTransactions(): Record<number, PendingTransaction> {
     const lcStr = localStorage.getItem("LOCKED_COINS");
     let lc: LockedCoin[] = lcStr ? JSON.parse(lcStr) : [];
-    lc = lc.filter((l) => l.network == networkId());
+    const accountFinger = store.state.account.accounts[store.state.account.selectedAccount].key.fingerprint;
+    lc = lc.filter((l) => l.network == networkId() && l.accountFinger == accountFinger);
+    // make pendingTransactions update with activities
+    this.account.activities?.keys();
+
     const tx = lc.reduce((prev, curr) => {
       if (!prev[curr.transactionTime])
         prev[curr.transactionTime] = {
           coin: [],
-          amount: 0n,
           time: curr.transactionTime,
-          symbol: curr.symbol,
           network: curr.network,
+          amount: {},
         };
       prev[curr.transactionTime].coin.push(curr);
-      prev[curr.transactionTime].amount += curr.coin.amount;
+      const symbol = curr.coin.symbol ?? xchSymbol();
+      if (!prev[curr.transactionTime].amount[symbol]) prev[curr.transactionTime].amount[symbol] = 0n;
+      prev[curr.transactionTime].amount[symbol] += BigInt(curr.coin.amount);
       return prev;
     }, {} as Record<number, PendingTransaction>);
     return tx;

@@ -3,6 +3,7 @@ import { Bytes, bigint_to_bytes } from "clvm";
 import { GetPuzzleApiCallback } from "../transfer/transfer";
 import { CoinItem } from "@/models/wallet";
 import { CoinSpend, OriginCoin } from "../spendbundle";
+import store from "@/store";
 
 export interface NetworkContext {
   prefix: string;
@@ -28,24 +29,25 @@ export interface LockedCoin {
   coinName: string;
   coin: OriginCoin;
   transactionTime: number;
-  symbol: string;
   network: string;
+  symbol?: string;
+  accountFinger: number;
 }
 
 export interface PendingTransaction {
   coin: LockedCoin[];
-  amount: bigint;
   time: number;
   network: string;
-  symbol: string;
+  amount: { [key: string]: bigint };
 }
 
-export async function lockCoins(coinSpends: CoinSpend[], transactionTime: number, symbol: string, network: string): Promise<void> {
+export async function lockCoins(coinSpends: CoinSpend[], transactionTime: number, network: string): Promise<void> {
   const lcStr = localStorage.getItem("LOCKED_COINS");
   const lc: LockedCoin[] = lcStr ? JSON.parse(lcStr) : [];
+  const accountFinger = store.state.account.accounts[store.state.account.selectedAccount].key.fingerprint;
   for (const cs of coinSpends) {
     const coinName = getCoinName(cs.coin);
-    lc.push({ coinName: coinName, coin: cs.coin, transactionTime: transactionTime, symbol: symbol, network: network });
+    lc.push({ coinName: coinName, coin: cs.coin, transactionTime: transactionTime, network: network, symbol: cs.coin.symbol, accountFinger: accountFinger });
   }
   localStorage.setItem("LOCKED_COINS", JSON.stringify(lc));
 }
@@ -63,7 +65,8 @@ export async function unlockCoins(coins: OriginCoin[]): Promise<void> {
 export function coinFilter(coins: OriginCoin[], network: string): OriginCoin[] {
   const lcStr = localStorage.getItem("LOCKED_COINS");
   let lc: LockedCoin[] = lcStr ? JSON.parse(lcStr) : [];
-  lc = lc.filter((l) => l.network == network);
+  const accountFinger = store.state.account.accounts[store.state.account.selectedAccount].key.fingerprint;
+  lc = lc.filter((l) => l.network == network && l.accountFinger == accountFinger);
   return coins.filter(coin => {
     const name = getCoinName(coin);
     return lc.findIndex(c => c.coinName == name) == -1;
@@ -87,16 +90,18 @@ export function getCoinNameHex(coin: CompatibleCoin): Bytes {
   return coinname;
 }
 
-export function convertToOriginCoin(coin: CoinItem | { amount: number, parent_coin_info: Hex0x | string, puzzle_hash: Hex0x | string }): OriginCoin {
+export function convertToOriginCoin(coin: CoinItem | { amount: number, parent_coin_info: Hex0x | string, puzzle_hash: Hex0x | string, symbol?: string }): OriginCoin {
   return "parentCoinInfo" in coin
     ? {
       amount: BigInt(coin.amount),
       parent_coin_info: coin.parentCoinInfo,
       puzzle_hash: coin.puzzleHash,
+      symbol: coin.symbol,
     }
     : {
       amount: BigInt(coin.amount),
       parent_coin_info: prefix0x(coin.parent_coin_info),
       puzzle_hash: prefix0x(coin.puzzle_hash),
+      symbol: coin.symbol
     };
 }

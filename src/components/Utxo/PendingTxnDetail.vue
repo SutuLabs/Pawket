@@ -9,9 +9,8 @@
     </header>
     <section class="modal-card-body">
       <b-field :label="$t('utxoDetail.ui.label.amount')" custom-class="is-medium has-text-weight-normal">
-        <span class="has-text-dark is-size-5 has-text-right">
-          -{{ demojo(pendingTransaction.amount, tokenInfo[pendingTransaction.symbol]) }}
-          <span class="has-text-grey is-size-7">{{ pendingTransaction.amount }} mojos</span>
+        <span class="has-text-grey is-size-5 has-text-left">
+          <p v-for="(amount, symbol) of pendingTransaction.amount" :key="symbol">{{ demojo(amount, tokenInfo[symbol]) }}</p>
         </span>
       </b-field>
       <b-field :label="$t('utxoDetail.ui.label.time')" custom-class="is-medium has-text-weight-normal">
@@ -22,7 +21,7 @@
         <thead>
           <tr class="has-text-centered">
             <th>{{ $t("utxoDetail.ui.label.coinName") }}</th>
-            <th>{{ $t("utxoDetail.ui.label.amount") }}</th>
+            <th>{{ $t("utxoDetail.ui.label.amount") }}(mojos)</th>
             <th class="is-hidden-mobile">{{ $t("utxoDetail.ui.label.parentCoinInfo") }}</th>
             <th class="is-hidden-mobile">{{ $t("utxoDetail.ui.label.puzzleHash") }}</th>
           </tr>
@@ -32,7 +31,10 @@
             <td>
               <key-box :tooltip="$t('common.tooltip.copy')" :value="c.coinName" :showValue="true"></key-box>
             </td>
-            <td>{{ c.coin.amount }} mojos</td>
+            <td class="is-size-7">
+              <span class="tag is-primary is-light">{{ c.coin.symbol }}</span>
+              {{ c.coin.amount }}
+            </td>
             <td class="is-hidden-mobile">
               <key-box :tooltip="$t('common.tooltip.copy')" :value="c.coin.parent_coin_info" :showValue="true"></key-box>
             </td>

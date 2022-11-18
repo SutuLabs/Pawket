@@ -4,9 +4,9 @@ import { SpendBundle } from "@/services/spendbundle";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { ModalProgrammatic as Modal } from "buefy";
 import DevHelper from "@/components/DevHelper/DevHelper.vue";
-import { networkId, rpcUrl, xchSymbol } from "@/store/modules/network";
+import { networkId, rpcUrl } from "@/store/modules/network";
 import { lockCoins } from "../coin/coinUtility";
-export async function submitBundle(bundle: SpendBundle, setSubmitting: (state: boolean) => void, success: () => void, symbol: string = xchSymbol()): Promise<void> {
+export async function submitBundle(bundle: SpendBundle, setSubmitting: (state: boolean) => void, success: () => void): Promise<void> {
   setSubmitting(true);
   /** 
    * Do not delele! For avoiding check i18n failure.
@@ -41,7 +41,7 @@ export async function submitBundle(bundle: SpendBundle, setSubmitting: (state: b
         type: "is-primary",
       });
       const txnTime = Date.now()
-      lockCoins(bundle.coin_spends, txnTime, symbol, networkId());
+      lockCoins(bundle.coin_spends, txnTime, networkId());
       success();
     } else {
       const err = typeof (json.error) === "string" ? json.error.match('error ([A-Z_]+)') : null;

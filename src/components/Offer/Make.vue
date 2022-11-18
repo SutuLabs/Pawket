@@ -83,18 +83,18 @@
     <footer class="modal-card-foot is-block">
       <div>
         <b-button
-          v-if="!bundle"
+          v-if="!offerText"
           :label="$t('common.button.cancel')"
           class="is-pulled-left"
           @click="$router.push('/home')"
         ></b-button>
         <b-button
-          v-if="bundle"
+          v-if="offerText"
           :label="$t('offer.make.ui.button.done')"
           class="is-pulled-left"
           @click="$router.push('/home')"
         ></b-button>
-        <b-button v-if="!bundle" type="is-primary" :loading="signing" @click="sign()">
+        <b-button v-if="!offerText" type="is-primary" :loading="signing" @click="sign()">
           {{ $t("offer.make.ui.button.sign") }}
         </b-button>
       </div>
@@ -102,7 +102,7 @@
         <b-button
           :label="$t('offer.make.ui.button.uploadToDexie')"
           :loading="uploading"
-          v-if="bundle"
+          v-if="offerText"
           type="is-primary"
           class="is-pulled-right"
           @click="uploadToDexie()"
@@ -126,9 +126,9 @@ import { TokenPuzzleDetail } from "@/services/crypto/receive";
 import puzzle from "@/services/crypto/puzzle";
 import DevHelper from "@/components/DevHelper/DevHelper.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { getOfferEntities, getOfferSummary, OfferEntity, OfferSummary, OfferTokenAmount } from "@/services/offer/summary";
+import { getOfferEntities,  OfferEntity, OfferSummary, OfferTokenAmount } from "@/services/offer/summary";
 import { getCatIdDict, getCatNameDict, getCatNames } from "@/services/view/cat";
-import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
+import {  encodeOffer } from "@/services/offer/encoding";
 import { generateOffer, generateOfferPlan } from "@/services/offer/bundler";
 import bigDecimal from "js-big-decimal";
 import { networkContext, xchSymbol } from "@/store/modules/network";
@@ -237,13 +237,6 @@ export default class MakeOffer extends Vue {
     if (!this.availcoins) {
       this.availcoins = await coinHandler.getAvailableCoins(this.tokenPuzzles, coinHandler.getTokenNames(this.account));
     }
-  }
-
-  async updateOffer(): Promise<void> {
-    this.offerBundle = null;
-    this.offerBundle = await decodeOffer(this.offerText);
-    this.summary = null;
-    this.summary = await getOfferSummary(this.offerBundle);
   }
 
   async sign(): Promise<void> {

@@ -4,6 +4,7 @@ import { Instance } from "../util/instance";
 
 export interface OriginCoin {
   amount: bigint;
+  symbol?: string;
   parent_coin_info: Hex0x;
   puzzle_hash: Hex0x;
 }
