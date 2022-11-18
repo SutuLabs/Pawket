@@ -151,7 +151,8 @@
     </section>
     <footer class="modal-card-foot is-block">
       <div>
-        <b-button :label="$t('offer.take.ui.button.cancel')" class="is-pulled-left" @click="close()"></b-button>
+        <b-button v-if="!bundle" :label="$t('offer.take.ui.button.cancel')" class="is-pulled-left" @click="cancel()"></b-button>
+        <b-button v-if="bundle" :label="$t('common.button.back')" class="is-pulled-left" @click="cancel()"></b-button>
         <template v-if="showTest && debugMode">
           <b-button
             class="is-pulled-left"
@@ -290,6 +291,15 @@ export default class TakeOffer extends Vue {
   close(): void {
     if (this.path.endsWith("take-offer")) this.$router.back();
     return;
+  }
+
+  cancel(): void {
+    if (this.bundle) {
+      this.step = "Input";
+      this.bundle = null;
+    } else {
+      this.close();
+    }
   }
 
   get path(): string {
