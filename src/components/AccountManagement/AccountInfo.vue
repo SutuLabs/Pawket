@@ -122,7 +122,7 @@
 <script lang="ts">
 import utility from "@/services/crypto/utility";
 import store from "@/store";
-import { AccountEntity } from "@/models/account";
+import { AccountEntity, AccountType } from "@/models/account";
 import { isPasswordCorrect } from "@/store/modules/vault";
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import { accountTypeConverter } from "@/filters/accountTypeConversion";
@@ -175,7 +175,7 @@ export default class AccountDetail extends Vue {
     return store.state.app.debug;
   }
 
-  accountTypeConverter(accountType: string): string {
+  accountTypeConverter(accountType: AccountType): string {
     return accountTypeConverter(accountType);
   }
 

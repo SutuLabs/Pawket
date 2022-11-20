@@ -7,9 +7,11 @@ import { AccountEntity, AccountTokens, AccountType, CustomCat, TokenInfo } from 
 import {
   DEFAULT_ADDRESS_RETRIEVAL_COUNT,
   getAccountAddressDetails as getAccountAddressDetailsExternal,
+  getAccountPuzzleObservers,
 } from "@/services/util/account";
 import { convertToOriginCoin, unlockCoins } from "@/services/coin/coinUtility";
 import { OriginCoin } from "@/services/spendbundle";
+import { prefix0x } from "@/services/coin/condition";
 
 export function getAccountCats(account: AccountEntity): CustomCat[] {
   return account.allCats?.filter((c) => convertToChainId(c.network) == chainId()) ?? [];
@@ -115,6 +117,15 @@ store.registerModule<IAccountState>("account", {
       await dispatch("initWalletAddress");
       await dispatch("persistent");
     },
+    async createAccountByPublicKey({ state, dispatch }, { name, publicKey }: { name: string; publicKey: string }) {
+      state.accounts.push(
+        getAccountEntity(
+          { compatibleMnemonic: "", fingerprint: account.getFingerprint(publicKey), privateKey: "", publicKey: prefix0x(publicKey) },
+          name, "PublicKey", undefined, undefined)
+      );
+      await dispatch("initWalletAddress");
+      await dispatch("persistent");
+    },
     setProfilePic({ state, dispatch }, { idx, profilePic }: { idx: number; profilePic: string }) {
       state.accounts.splice(idx, 1, Object.assign({}, state.accounts[idx], { profilePic }));
       dispatch("persistent");
@@ -142,44 +153,50 @@ store.registerModule<IAccountState>("account", {
         clearTimeout(to);
         state.refreshing = false;
       }
-      if (!parameters) parameters = { idx: state.selectedAccount, maxId: -1 };
-      let idx = parameters.idx;
-      if (typeof idx !== "number" || idx <= 0) idx = state.selectedAccount;
-      const account = state.accounts[idx];
-      if (!account) {
-        resetState();
-        return;
-      }
-
-      const requests = await getAccountAddressDetails(account, parameters.maxId);
-      // init account tokens
-      if (!account.tokens || !account.tokens[requests[0].symbol]) {
-        const tokenBalances: AccountTokens = {};
-        for (let i = 0; i < requests.length; i++) {
-          const token = requests[i];
-          tokenBalances[token.symbol] = {
-            amount: -1n,
-            addresses: token.puzzles.map((_) => ({ address: _.address, type: _.type, coins: [] })),
-          };
-        }
-        Vue.set(account, "tokens", tokenBalances);
-      }
       try {
-        const records = await receive.getCoinRecords(requests, true, rpcUrl());
-        rootState.network.peekHeight = records.peekHeight;
-        const activities = receive.convertActivities(requests, records);
-        const tokenBalances = receive.getTokenBalance(requests, records);
-        const coins = activities.map(act => {
-          if (act.spent && act.coin) return convertToOriginCoin(act.coin)
-        })
-        unlockCoins(coins as OriginCoin[]);
-        Vue.set(account, "activities", activities);
-        Vue.set(account, "tokens", tokenBalances);
-      } catch (error) {
-        console.warn("error get account balance", error);
-      }
+        if (!parameters) parameters = { idx: state.selectedAccount, maxId: -1 };
+        let idx = parameters.idx;
+        if (typeof idx !== "number" || idx <= 0) idx = state.selectedAccount;
+        const account = state.accounts[idx];
+        if (!account) {
+          resetState();
+          return;
+        }
 
-      resetState();
+        const requests = await getAccountAddressDetails(account, parameters.maxId);
+        // init account tokens
+        if (!account.tokens || !account.tokens[requests[0].symbol]) {
+          const tokenBalances: AccountTokens = {};
+          for (let i = 0; i < requests.length; i++) {
+            const token = requests[i];
+            tokenBalances[token.symbol] = {
+              amount: -1n,
+              addresses: token.puzzles.map((_) => ({ address: _.address, type: _.type, coins: [] })),
+            };
+          }
+          Vue.set(account, "tokens", tokenBalances);
+        }
+        try {
+          const records = await receive.getCoinRecords(requests, true, rpcUrl());
+          rootState.network.peekHeight = records.peekHeight;
+          const activities = receive.convertActivities(requests, records);
+          const tokenBalances = receive.getTokenBalance(requests, records);
+          const coins = activities.map(act => {
+            if (act.spent && act.coin) return convertToOriginCoin(act.coin)
+          })
+          unlockCoins(coins as OriginCoin[]);
+          Vue.set(account, "activities", activities);
+          Vue.set(account, "tokens", tokenBalances);
+        } catch (error) {
+          console.warn("error get account balance", error);
+        }
+      }
+      catch (error) {
+        console.warn("error refresh account balance", error);
+      }
+      finally {
+        resetState();
+      }
     },
     async refreshNfts({ dispatch }, parameters: { idx: number; maxId: number }) {
       await dispatch("refreshAssets", Object.assign({ coinType: "NftV1" }, parameters));
@@ -276,15 +293,25 @@ export async function getAccountAddressDetails(
       ? <TokenPuzzleAddress[]>[
         { symbol: xchSymbol(), puzzles: [{ hash: account.puzzleHash, type: "Unknown", address: account.firstAddress }] },
       ]
-      : await getAccountAddressDetailsExternal(
-        account,
-        getAccountCats(account),
-        store.state.account.tokenInfo,
-        xchPrefix(),
-        xchSymbol(),
-        maxId,
-        "cat_v2"
-      );
+      : account.type == "PublicKey"
+        ? await getAccountPuzzleObservers(
+          account,
+          getAccountCats(account),
+          store.state.account.tokenInfo,
+          xchPrefix(),
+          xchSymbol(),
+          maxId,
+          "cat_v2"
+        )
+        : await getAccountAddressDetailsExternal(
+          account,
+          getAccountCats(account),
+          store.state.account.tokenInfo,
+          xchPrefix(),
+          xchSymbol(),
+          maxId,
+          "cat_v2"
+        );
 
   return requests;
 }

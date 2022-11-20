@@ -1,10 +1,11 @@
-import { PrivateKey, ModuleInstance } from "@chiamine/bls-signatures";
+import { PrivateKey, G1Element, ModuleInstance } from "@chiamine/bls-signatures";
 import { prefix0x, unprefix0x } from "../coin/condition";
 import { Bytes } from "clvm";
 import crypto from "./isoCrypto";
 import { Instance } from "../util/instance";
 
 type deriveCallback = (path: number[]) => PrivateKey;
+type derivePkCallback = (path: number[]) => G1Element;
 
 class Utility {
   toHexString(byteArray: Uint8Array) {
@@ -35,6 +36,21 @@ class Utility {
     if (!BLS) throw new Error("BLS not initialized");
     const sk = BLS.PrivateKey.from_bytes(privateKey, false);
     return (path: number[]) => this.derivePath(BLS, sk, path, hardened);
+  }
+
+  derivePkPath(BLS: ModuleInstance, pk: G1Element, path: number[]): G1Element {
+    for (let i = 0; i < path.length; i++) {
+      const p = path[i];
+      pk =  BLS.AugSchemeMPL.derive_child_pk_unhardened(pk, p); 
+    }
+    return pk;
+  }
+
+  async derivePk(publicKey: Uint8Array): Promise<derivePkCallback> {
+    const BLS = Instance.BLS;
+    if (!BLS) throw new Error("BLS not initialized");
+    const pk = BLS.G1Element.from_bytes(publicKey);
+    return (path: number[]) => this.derivePkPath(BLS, pk, path);
   }
 
   async getPrivateKey(privateKey: Uint8Array): Promise<PrivateKey> {

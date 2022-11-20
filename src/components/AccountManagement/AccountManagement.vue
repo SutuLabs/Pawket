@@ -34,6 +34,9 @@
             <b-tag v-if="account.type == 'Legacy'" rounded class="has-background-grey-lighter">{{
               $t("accountManagement.ui.label.imported")
             }}</b-tag>
+            <b-tag v-if="account.type == 'PublicKey'" rounded class="has-background-grey-lighter">{{
+              $t("accountManagement.ui.label.publicKey")
+            }}</b-tag>
           </div>
           <div class="column py-1">
             <span @click.stop="showDetail(idx)"
@@ -67,6 +70,14 @@
           <span class="mx-2">{{ $t("accountManagement.ui.button.addByAddress") }}</span>
         </b-tooltip>
       </a>
+      <a v-if="debugMode" href="javascript:void(0)" class="panel-block" @click="addByPublicKey()">
+        <b-tooltip :label="'Add by Public Key'" multilined size="is-small">
+          <span class="panel-icon">
+            <b-icon icon="plus-thick"></b-icon>
+          </span>
+          <span class="mx-2">Add by Public Key</span>
+        </b-tooltip>
+      </a>
       <a href="javascript:void(0)" class="panel-block" @click="addByLegacy()">
         <b-tooltip :label="$t('accountManagement.ui.tooltip.addByLegacy')" multilined size="is-small">
           <span class="panel-icon">
@@ -98,6 +109,7 @@ import AddByAddress from "./AddAccount/AddByAddress.vue";
 import AddByMnemonic from "./AddAccount/AddByMnemonic.vue";
 import AddBySerial from "./AddAccount/AddBySerial.vue";
 import AddByPassword from "./AddAccount/AddByPassword.vue";
+import AddByPublicKey from "./AddAccount/AddByPublicKey.vue";
 import { isMobile } from "@/services/view/responsive";
 import { sortable } from "@/directives/sortable";
 
@@ -272,6 +284,17 @@ export default class AccountManagement extends Vue {
     this.$buefy.modal.open({
       parent: this,
       component: AddByAddress,
+      hasModalCard: true,
+      fullScreen: isMobile(),
+      trapFocus: true,
+      canCancel: [""],
+    });
+  }
+
+  async addByPublicKey(): Promise<void> {
+    this.$buefy.modal.open({
+      parent: this,
+      component: AddByPublicKey,
       hasModalCard: true,
       fullScreen: isMobile(),
       trapFocus: true,

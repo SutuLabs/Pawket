@@ -1,7 +1,7 @@
 import * as clvm_tools from "clvm_tools";
 import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
-import { PrivateKey } from "@chiamine/bls-signatures";
+import { PrivateKey, G1Element } from "@chiamine/bls-signatures";
 import utility from "./utility";
 import { assemble } from "clvm_tools/clvm_tools/binutils";
 import { Instance } from "../util/instance";
@@ -232,6 +232,47 @@ class PuzzleMaker {
         const privkey = deriveUnhardened([12381, 8444, 2, i]);
         await add(privkey, false);
       }
+    }
+
+    return details;
+  }
+
+  public async getPuzzleObservers(pubKey: string | Uint8Array, prefix: string, startIndex = 0, endIndex = 10): Promise<PuzzleObserver[]> {
+    if (typeof pubKey === "string") pubKey = utility.fromHexString(pubKey);
+    return await this.getPuzzleObserversInner(pubKey, async (spk) => this.getPuzzle(spk), startIndex, endIndex, prefix)
+  }
+
+  public async getCatPuzzleObservers(
+    pubKey: Uint8Array, assetId: string, prefix: string, startIndex = 0, endIndex = 10, catModName: "cat_v1" | "cat_v2"
+  ): Promise<PuzzleObserver[]> {
+    return await this.getPuzzleObserversInner(pubKey, async (spk) => this.getCatPuzzle(spk, assetId, catModName), startIndex, endIndex, prefix)
+  }
+
+  private async getPuzzleObserversInner(
+    publicKey: Uint8Array,
+    getPuzzle: (pubkey: string) => Promise<string>,
+    startIndex: number,
+    endIndex: number,
+    prefix: string): Promise<PuzzleObserver[]> {
+    const derive = await utility.derivePk(publicKey);
+    const details: PuzzleObserver[] = [];
+    const add = async (pk: G1Element) => {
+      const pubkey = utility.toHexString(pk.serialize());
+      const synpubkey = await this.getSyntheticKey(pubkey);
+      const puzzle = await getPuzzle(synpubkey);
+      const hash = await this.getPuzzleHashFromPuzzle(puzzle);
+      const address = this.getAddressFromPuzzleHash(hash, prefix);
+      details.push({
+        synPubKey: prefix0x(synpubkey),
+        hash: hash,
+        puzzle: puzzle,
+        address,
+        type: "Observed"
+      });
+    }
+    for (let i = startIndex; i < endIndex; i++) {
+      const pk = derive([12381, 8444, 2, i]);
+      await add(pk);
     }
 
     return details;

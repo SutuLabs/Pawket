@@ -7,6 +7,7 @@
     @sign="sign()"
     @cancel="cancel()"
     @confirm="offline ? showSend() : submit()"
+    :sign-btn="account.type == 'PublicKey' ? 'Generate' : 'Sign'"
     :confirmBtn="offline ? $t('send.ui.button.showSend') : $t('send.ui.button.submit')"
     :showClose="showClose"
     :loading="submitting"
@@ -81,7 +82,7 @@ import store from "@/store";
 import { OriginCoin, signSpendBundle, SpendBundle } from "@/services/spendbundle";
 import puzzle from "@/services/crypto/puzzle";
 import bigDecimal from "js-big-decimal";
-import { Hex0x, prefix0x } from "@/services/coin/condition";
+import { Hex, Hex0x, prefix0x } from "@/services/coin/condition";
 import transfer, { SymbolCoins, TransferTarget } from "@/services/transfer/transfer";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
 import coinHandler from "@/services/transfer/coin";
@@ -286,12 +287,15 @@ export default class Send extends Vue {
     this.maxStatus = "Loading";
 
     if (!this.requests || this.requests.length == 0) {
-      this.requests = await coinHandler.getAssetsRequestDetail(this.account);
+      this.requests = this.account.type == "PublicKey" ? [] : await coinHandler.getAssetsRequestDetail(this.account);
     }
 
     if (!this.availcoins) {
       try {
-        this.availcoins = await coinHandler.getAvailableCoins(this.requests, coinHandler.getTokenNames(this.account));
+        this.availcoins = await coinHandler.getAvailableCoins(
+          await coinHandler.getAssetsRequestObserver(this.account),
+          coinHandler.getTokenNames(this.account)
+        );
       } catch (err) {
         this.offline = true;
       }
@@ -360,8 +364,13 @@ export default class Send extends Vue {
       const memo = this.memo.replace(/[&/\\#,+()$~%.'":*?<>{}\[\] ]/g, "_");
       const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: this.selectedToken, memos: [tgt_hex, memo] }];
       const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
-      const ubundle = await transfer.generateSpendBundleIncludingCat(plan, this.requests, [], networkContext());
+      const observers = await coinHandler.getAssetsRequestObserver(this.account);
+      const ubundle = await transfer.generateSpendBundleIncludingCat(plan, observers, [], networkContext());
       this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());
+
+      if (this.account.type == "PublicKey") {
+        await this.offlineSignBundle();
+      }
     } catch (error) {
       Notification.open({
         message: this.$tc("send.ui.messages.failedToSign") + error,
@@ -433,6 +442,22 @@ export default class Send extends Vue {
   changeFee(): void {
     this.reset();
     if (this.selectMax) this.setMax();
+  }
+
+  async offlineSignBundle(): Promise<void> {
+    this.$buefy.modal.open({
+      parent: this,
+      component: (await import("@/components/Offline/OfflineSpendBundleQr.vue")).default,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      props: { bundle: this.bundle, mode: "ONLINE_CLIENT" },
+      events: {
+        signature: (sig: Hex): void => {
+          if (this.bundle) this.bundle.aggregated_signature = prefix0x(sig);
+        },
+      },
+    });
   }
 
   async offlineScan(): Promise<void> {
