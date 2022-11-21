@@ -40,7 +40,6 @@ class CoinHandler {
         return { symbol, coins: coins.filter((_) => tgtpuzs.findIndex((p) => p == _.puzzle_hash) > -1) };
       })
       .reduce((a, c) => ({ ...a, [c.symbol]: c.coins }), {});
-
     return availcoins;
   }
 

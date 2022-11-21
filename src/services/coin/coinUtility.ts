@@ -44,10 +44,12 @@ export interface PendingTransaction {
 export async function lockCoins(coinSpends: CoinSpend[], transactionTime: number, network: string): Promise<void> {
   const lcStr = localStorage.getItem("LOCKED_COINS");
   const lc: LockedCoin[] = lcStr ? JSON.parse(lcStr) : [];
-  const accountFinger = store.state.account.accounts[store.state.account.selectedAccount].key.fingerprint;
+  const account = store.state.account.accounts[store.state.account.selectedAccount];
+  const accountFinger = account.key.fingerprint;
   for (const cs of coinSpends) {
     const coinName = getCoinName(cs.coin);
-    lc.push({ coinName: coinName, coin: cs.coin, transactionTime: transactionTime, network: network, symbol: cs.coin.symbol, accountFinger: accountFinger });
+    const idx = account.activities?.findIndex(act => act.coin?.puzzleHash == cs.coin.puzzle_hash);
+    if (idx != undefined && idx > -1) lc.push({ coinName: coinName, coin: cs.coin, transactionTime: transactionTime, network: network, symbol: account.activities && account.activities[idx].symbol, accountFinger: accountFinger });
   }
   localStorage.setItem("LOCKED_COINS", JSON.stringify(lc));
 }
@@ -96,12 +98,10 @@ export function convertToOriginCoin(coin: CoinItem | { amount: number, parent_co
       amount: BigInt(coin.amount),
       parent_coin_info: coin.parentCoinInfo,
       puzzle_hash: coin.puzzleHash,
-      symbol: coin.symbol,
     }
     : {
       amount: BigInt(coin.amount),
       parent_coin_info: prefix0x(coin.parent_coin_info),
       puzzle_hash: prefix0x(coin.puzzle_hash),
-      symbol: coin.symbol
     };
 }

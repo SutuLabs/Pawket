@@ -22,7 +22,6 @@ class Transfer {
       if (!Object.prototype.hasOwnProperty.call(availcoins, symbol)) continue;
 
       const coins = availcoins[symbol];
-      coins.forEach(coin => coin.symbol = symbol);
       const tgts = targets.filter(_ => _.symbol == symbol);
 
       const outgoingExtra = (symbol == tokenSymbol) ? fee : 0n;

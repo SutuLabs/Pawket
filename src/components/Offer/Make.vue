@@ -126,14 +126,15 @@ import { TokenPuzzleDetail } from "@/services/crypto/receive";
 import puzzle from "@/services/crypto/puzzle";
 import DevHelper from "@/components/DevHelper/DevHelper.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { getOfferEntities,  OfferEntity, OfferSummary, OfferTokenAmount } from "@/services/offer/summary";
+import { getOfferEntities, OfferEntity, OfferSummary, OfferTokenAmount } from "@/services/offer/summary";
 import { getCatIdDict, getCatNameDict, getCatNames } from "@/services/view/cat";
-import {  encodeOffer } from "@/services/offer/encoding";
+import { encodeOffer } from "@/services/offer/encoding";
 import { generateOffer, generateOfferPlan } from "@/services/offer/bundler";
 import bigDecimal from "js-big-decimal";
-import { networkContext, xchSymbol } from "@/store/modules/network";
+import { networkContext, networkId, xchSymbol } from "@/store/modules/network";
 import dexie from "@/services/api/dexie";
 import { tc } from "@/i18n/i18n";
+import { lockCoins } from "@/services/coin/coinUtility";
 
 @Component({
   components: {
@@ -254,6 +255,8 @@ export default class MakeOffer extends Vue {
       const offplan = await generateOfferPlan(offs, change_hex, this.availcoins, 0n, xchSymbol());
       const ubundle = await generateOffer(offplan, reqs, this.tokenPuzzles, networkContext());
       const bundle = await signSpendBundle(ubundle, this.tokenPuzzles, networkContext());
+      
+      lockCoins(bundle.coin_spends, Date.now(), networkId());
       this.offerText = await encodeOffer(bundle, 4);
 
       this.step = "Confirmation";

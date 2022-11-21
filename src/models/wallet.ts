@@ -32,5 +32,4 @@ export interface CoinItem {
     amount: number;
     parentCoinInfo: Hex0x;
     puzzleHash: Hex0x;
-    symbol?: string;
 }

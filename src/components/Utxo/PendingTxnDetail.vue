@@ -32,7 +32,7 @@
               <key-box :tooltip="$t('common.tooltip.copy')" :value="c.coinName" :showValue="true"></key-box>
             </td>
             <td class="is-size-7">
-              <span class="tag is-primary is-light">{{ c.coin.symbol }}</span>
+              <span class="tag is-primary is-light">{{ c.symbol }}</span>
               {{ c.coin.amount }}
             </td>
             <td class="is-hidden-mobile">

@@ -140,7 +140,7 @@ export default class UtxoPanel extends Vue {
           amount: {},
         };
       prev[curr.transactionTime].coin.push(curr);
-      const symbol = curr.coin.symbol ?? xchSymbol();
+      const symbol = curr.symbol ?? xchSymbol();
       if (!prev[curr.transactionTime].amount[symbol]) prev[curr.transactionTime].amount[symbol] = 0n;
       prev[curr.transactionTime].amount[symbol] += BigInt(curr.coin.amount);
       return prev;
