@@ -174,7 +174,7 @@ export default class MintCat extends Vue {
   }
 
   get network(): string {
-    return chainId()
+    return chainId();
   }
 
   get debugMode(): boolean {
