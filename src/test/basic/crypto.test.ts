@@ -7,7 +7,7 @@ import { analyzeDidCoin } from "@/services/coin/did";
 import { prefix0x } from "@/services/coin/condition";
 import { analyzeNftCoin } from "@/services/coin/nft";
 import { getSignMessage, signMessage, verifySignature } from "@/services/crypto/sign";
-import { PrivateKey } from "@chiamine/bls-signatures";
+import { G2Element, PrivateKey } from "@chiamine/bls-signatures";
 
 import didcoin2 from "../cases/didcoin2.json"
 import nftcoin6 from "../cases/nftcoin6.json"
@@ -172,3 +172,37 @@ async function testEncryption(plaintext: string): Promise<void> {
   expect(enc).toMatchSnapshot("encrypted");
   expect(dec).toMatchSnapshot("decrypted");
 }
+
+test('BLS Aggregation', async () => {
+  const BLS = Instance.BLS;
+  if (!BLS) throw new Error("BLS not initialized");
+
+  const sigs = [
+    'c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+    'ac217e250273a881566563ffa4e296f7ed24ff6c44289b732875b67a0306766fd0e0675ec22cef94e5a7d349aba39ee103b33249be47c33a37698a5000fdda59b0bb39df89f74e6a457002ab5da32cafe24f7987e7722331736a9e2622c179d5',
+  ].map(_ => BLS.G2Element.from_bytes(utility.fromHexString(_)));
+
+  const serialize = (sig: G2Element | undefined): string => {
+    if (!sig) return "";
+    return utility.toHexString(sig.serialize());
+  }
+  const a1 = BLS.AugSchemeMPL.aggregate(sigs.slice(0, 1));
+  const a2 = BLS.AugSchemeMPL.aggregate(sigs.slice(0, 2));
+  const a3 = BLS.AugSchemeMPL.aggregate(sigs.slice(1, 2));
+  const a4 = BLS.AugSchemeMPL.aggregate([a1, a3]);
+  const a5 = BLS.AugSchemeMPL.aggregate([a1, a2]);
+  const a8 = BLS.AugSchemeMPL.aggregate([a3]);
+  expect(serialize(a1)).toBe(serialize(sigs.at(0)));
+  expect(serialize(a2)).toBe(serialize(sigs.at(1)));
+  expect(serialize(a3)).toBe(serialize(a2));
+  expect(serialize(a4)).toBe(serialize(a2));
+  expect(serialize(a5)).toBe(serialize(a2));
+  expect(serialize(a8)).toBe(serialize(a2));
+
+  const a6 = BLS.AugSchemeMPL.aggregate([a3, a2]);
+  const a7 = BLS.AugSchemeMPL.aggregate([a2, a3]);
+
+  expect(serialize(a6)).not.toBe(serialize(a2));
+  expect(serialize(a6)).toMatchSnapshot();
+  expect(serialize(a7)).toBe(serialize(a6));
+});

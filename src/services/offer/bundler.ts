@@ -161,7 +161,7 @@ export async function generateOfferPlan(
   availcoins: SymbolCoins,
   fee: bigint,
   tokenSymbol: string,
-  royaltyFee = 0n,
+  royaltyFee: bigint | undefined = undefined,
 ): Promise<OfferPlan[]> {
   const plans: OfferPlan[] = [];
 
@@ -177,11 +177,12 @@ export async function generateOfferPlan(
 
     const royaltyTgt: TransferTarget = {
       address: settlement_tgt,
-      amount: royaltyFee,
+      amount: royaltyFee ?? 0n,
       symbol: tokenSymbol,
       memos: undefined,
     };
-    const tgts = royaltyFee == 0n ? [tgt] : [tgt, royaltyTgt]
+    // always create royalty coin even it's 0, the official client generate puzzle assert for that coin
+    const tgts = royaltyFee === undefined ? [tgt] : [tgt, royaltyTgt]
 
     const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, fee, tokenSymbol);
     const keys = Object.keys(plan);

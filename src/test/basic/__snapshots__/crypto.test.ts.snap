@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`BLS Aggregation 1`] = `"b48d90ebddc4fafc50d68fd0b6902583479c1ec77788d6a2dfaae1c9b4559b4909f0fa9933d475711a79a0e8c7e562ea0d406d8caa53a97f0b40ea2a37a5eab15ccdad6f1c8f1b4bd82302ef07b2037d54ee9ab7a22cc0938ba3e329e5b445b7"`;
+
 exports[`Basic Cryptography: address 1`] = `"xch13akv0y3er0qvdjwzks2gm4ljj7qpynrh6rcsnwc6y0hyfgzdj89sr43zcp"`;
 
 exports[`Basic Cryptography: farmerpubkey 1`] = `"99f181b1b30865339eea4e61172e64282ed1793022363f6635affbfb2aa2f4384ef10df47a445f92d685c7265488777e"`;
