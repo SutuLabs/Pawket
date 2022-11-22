@@ -428,20 +428,22 @@ export async function generateNftOffer(
       const parent = getCoinName0x(sp[sp.length - 1].coin);
       // royalty_amount = uint64(offered_amount * royalty_percentage / 10000)
       const amount = (off.plan.targets[0].amount * BigInt(nft.tradePricePercentage)) / BigInt(10000);
-      const solution_text = `((${prefix0x(nft.launcherId)} (${prefix0x(nft.royaltyAddress)} ${amount} (${prefix0x(
-        nft.royaltyAddress
-      )}))))`;
-      const solution = prefix0x(await puzzle.encodePuzzle(solution_text));
-      const roysp: CoinSpend = {
-        coin: {
-          parent_coin_info: parent,
-          amount,
-          puzzle_hash: settlement_tgt,
-        },
-        puzzle_reveal: modshex0x["settlement_payments"],
-        solution,
-      };
-      spends.push(roysp);
+      if (amount > 0) {
+        const solution_text = `((${prefix0x(nft.launcherId)} (${prefix0x(nft.royaltyAddress)} ${amount} (${prefix0x(
+          nft.royaltyAddress
+        )}))))`;
+        const solution = prefix0x(await puzzle.encodePuzzle(solution_text));
+        const roysp: CoinSpend = {
+          coin: {
+            parent_coin_info: parent,
+            amount,
+            puzzle_hash: settlement_tgt,
+          },
+          puzzle_reveal: modshex0x["settlement_payments"],
+          solution,
+        };
+        spends.push(roysp);
+      }
     }
   }
 
