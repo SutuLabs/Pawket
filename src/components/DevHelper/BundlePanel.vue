@@ -361,6 +361,7 @@ export default class BundlePanel extends Vue {
     this.coinAnnoAsserted = [];
     this.coinAvailability = [];
     this.aggSigMessages = [];
+    this.createdCoins = {};
     this.coinMods = [];
     this.sigVerified = "None";
     this.mgraphGenerated = false;
@@ -504,6 +505,7 @@ export default class BundlePanel extends Vue {
     Vue.set(this, "aggSigMessages", result.aggSigMessages);
     Vue.set(this, "coinMods", result.coinMods);
     Vue.set(this, "sigVerified", result.sigVerified);
+    Vue.set(this, "createdCoins", result.createdCoins);
 
     for (let i = 0; i < this.coinAvailability.length; i++) {
       const ca = this.coinAvailability[i];
