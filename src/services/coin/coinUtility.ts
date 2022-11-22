@@ -42,12 +42,7 @@ export interface PendingTransaction {
 }
 
 export async function lockCoins(coinSpends: CoinSpend[], transactionTime: number, network: string): Promise<void> {
-  let lc: LockedCoin[] = [];
-  try {
-    lc = getLockedCoinsFromLocalStorage()
-  } catch (error) {
-    lc = [];
-  }
+  const lc: LockedCoin[] = getLockedCoinsFromLocalStorage();
   const account = store.state.account.accounts[store.state.account.selectedAccount];
   const accountFinger = account.key.fingerprint;
   for (const cs of coinSpends) {
@@ -59,12 +54,7 @@ export async function lockCoins(coinSpends: CoinSpend[], transactionTime: number
 }
 
 export async function unlockCoins(coins: OriginCoin[]): Promise<void> {
-  let lc: LockedCoin[] = [];
-  try {
-    lc = getLockedCoinsFromLocalStorage()
-  } catch (error) {
-    lc = [];
-  }
+  let lc: LockedCoin[] = getLockedCoinsFromLocalStorage();
   for (const coin of coins) {
     if (!coin) continue
     const cname = getCoinName(coin);
@@ -74,12 +64,7 @@ export async function unlockCoins(coins: OriginCoin[]): Promise<void> {
 }
 
 export function coinFilter(coins: OriginCoin[], network: string): OriginCoin[] {
-  let lc: LockedCoin[] = [];
-  try {
-    lc = getLockedCoinsFromLocalStorage()
-  } catch (error) {
-    lc = [];
-  }
+  let lc: LockedCoin[] = getLockedCoinsFromLocalStorage();
   const accountFinger = store.state.account.accounts[store.state.account.selectedAccount].key.fingerprint;
   lc = lc.filter((l) => l.network == network && l.accountFinger == accountFinger);
   return coins.filter(coin => {
@@ -90,7 +75,12 @@ export function coinFilter(coins: OriginCoin[], network: string): OriginCoin[] {
 
 export function getLockedCoinsFromLocalStorage(): LockedCoin[] {
   const lcStr = localStorage.getItem("LOCKED_COINS");
-  const lc: LockedCoin[] = lcStr ? JSON.parse(lcStr) : [];
+  let lc: LockedCoin[];
+  try {
+    lc = lcStr ? JSON.parse(lcStr) : []
+  } catch (error) {
+    lc = [];
+  }
   return lc;
 }
 

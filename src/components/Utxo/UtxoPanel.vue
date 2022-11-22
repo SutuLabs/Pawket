@@ -131,12 +131,7 @@ export default class UtxoPanel extends Vue {
   }
 
   getPendingTransactions(): Record<number, PendingTransaction> {
-    let lc: LockedCoin[] = [];
-    try {
-      lc = getLockedCoinsFromLocalStorage();
-    } catch (error) {
-      lc = [];
-    }
+    let lc: LockedCoin[] = getLockedCoinsFromLocalStorage();
     const accountFinger = store.state.account.accounts[store.state.account.selectedAccount].key.fingerprint;
     lc = lc.filter((l) => l.network == chainId() && l.accountFinger == accountFinger);
 
