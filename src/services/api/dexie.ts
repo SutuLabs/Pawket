@@ -1,21 +1,16 @@
 import { DexieOfferResponse } from "@/models/dexieOffer";
 import { Market, Markets } from "@/models/market";
-import store from "@/store";
-import { rpcUrl } from "@/store/modules/network";
+import { chainId, mainnetChainId, rpcUrl } from "@/store/modules/network";
 
 class Dexie {
   public dexieIconUrl = "https://icons.dexie.space/";
 
-  private networkId(): string {
-    return store.state.network.networkId;
-  }
-
   private dexieOfferUrl(): string {
-    return this.networkId() == "mainnet" ? "https://api.dexie.space/v1" : "https://api-testnet.dexie.space/v1";
+    return chainId() == mainnetChainId() ? "https://api.dexie.space/v1" : "https://api-testnet.dexie.space/v1";
   }
 
   private dexieMarketUrl(): string {
-    return this.networkId() == "mainnet" ? "https://api.dexie.space/v1" : "https://testnet.dexie.space/v1";
+    return chainId() == mainnetChainId() ? "https://api.dexie.space/v1" : "https://testnet.dexie.space/v1";
   }
 
   public async getOffer(

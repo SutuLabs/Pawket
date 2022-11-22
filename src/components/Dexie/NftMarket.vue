@@ -28,8 +28,8 @@
 import { isMobile } from "@/services/view/responsive";
 import { Component, Vue } from "vue-property-decorator";
 import Dexie from "@/services/api/dexie";
-import store from "@/store";
 import { MarketItem, Markets } from "@/models/market";
+import { chainId, mainnetChainId } from "@/store/modules/network";
 
 @Component({})
 export default class NftMarket extends Vue {
@@ -42,7 +42,7 @@ export default class NftMarket extends Vue {
   }
 
   get network(): string {
-    return store.state.network.networkId;
+    return chainId();
   }
 
   get iconUrlPrefix(): string {
@@ -66,7 +66,7 @@ export default class NftMarket extends Vue {
 
   mounted(): void {
     this.activeTab = this.marketType == "cat" ? 1 : 0;
-    if (this.network == "mainnet") {
+    if (this.network == mainnetChainId()) {
       const nft = localStorage.getItem("NFT_MARKET");
       if (nft) this.nftMarkets = JSON.parse(nft) as Markets;
       this.updateMarket();

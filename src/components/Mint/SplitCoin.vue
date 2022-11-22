@@ -166,10 +166,6 @@ export default class SplitCoin extends Vue {
     return this.feeBigInt + this.numericAmount;
   }
 
-  get network(): string {
-    return store.state.network.networkId;
-  }
-
   get debugMode(): boolean {
     return store.state.app.debug;
   }

@@ -106,10 +106,6 @@ export default class MintDid extends Vue {
     return this.selectedToken == xchSymbol() ? 12 : 3;
   }
 
-  get network(): string {
-    return store.state.network.networkId;
-  }
-
   get tokenNames(): string[] {
     return getCatNames(this.account);
   }

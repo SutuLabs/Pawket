@@ -81,7 +81,7 @@
 import store from "@/store";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import AddressBook, { Contact } from "@/components/AddressBook/AddressBook.vue";
-import { ensureAddress, rpcUrl, xchPrefix } from "@/store/modules/network";
+import { chainId, convertToChainId, ensureAddress, rpcUrl, xchPrefix } from "@/store/modules/network";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import puzzle from "@/services/crypto/puzzle";
 import debug from "@/services/api/debug";
@@ -135,7 +135,7 @@ export default class AddressField extends Vue {
   }
 
   get network(): string {
-    return store.state.network.networkId;
+    return chainId();
   }
 
   get outputAddress(): string {
@@ -183,7 +183,7 @@ export default class AddressField extends Vue {
     }
     let contacts = JSON.parse(contactsJson);
     for (let c of contacts) {
-      this.contacts.push({ name: c.name, address: c.address, network: c.network ? c.network : "mainnet" });
+      this.contacts.push({ name: c.name, address: c.address, network: convertToChainId(c.network) });
     }
   }
 

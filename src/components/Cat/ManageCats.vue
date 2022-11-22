@@ -70,6 +70,7 @@ import { Bytes } from "clvm";
 import SearchCat from "@/components/Cat/SearchCat.vue";
 import { TailInfo } from "@/services/api/tailDb";
 import { unprefix0x } from "@/services/coin/condition";
+import { chainId, convertToChainId } from "@/store/modules/network";
 
 @Component({
   directives: {
@@ -230,9 +231,9 @@ export default class ManageCats extends Vue {
   }
 
   async submit(): Promise<void> {
-    const network = store.state.network.networkId;
+    const network = chainId();
     this.account.allCats = this.account.allCats
-      .filter((_) => _.network != network)
+      .filter((_) => convertToChainId(_.network) != network)
       .concat(this.assetIds.map((_) => ({ name: _.name, id: _.id, img: _.img, network })));
     this.account.addressGenerated = 0;
   }

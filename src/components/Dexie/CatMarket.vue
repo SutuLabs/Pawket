@@ -31,8 +31,8 @@
 import { isMobile } from "@/services/view/responsive";
 import { Component, Vue } from "vue-property-decorator";
 import Dexie from "@/services/api/dexie";
-import store from "@/store";
 import { MarketItem, Markets } from "@/models/market";
+import { chainId, mainnetChainId } from "@/store/modules/network";
 
 @Component({})
 export default class CatMarket extends Vue {
@@ -45,7 +45,7 @@ export default class CatMarket extends Vue {
   }
 
   get network(): string {
-    return store.state.network.networkId;
+    return chainId();
   }
 
   get iconUrlPrefix(): string {
@@ -68,7 +68,7 @@ export default class CatMarket extends Vue {
   }
 
   mounted(): void {
-    if (this.network == "mainnet") {
+    if (this.network == mainnetChainId()) {
       const cat = localStorage.getItem("CAT_MARKET");
       if (cat) this.markets = JSON.parse(cat) as Markets;
       this.updateMarket();
