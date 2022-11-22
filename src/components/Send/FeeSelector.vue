@@ -72,6 +72,10 @@ export default class FeeSelector extends Vue {
     if (!newValue) newValue = 0;
     if (newValue != this.value) this.$emit("input", newValue);
   }
+
+  mounted(): void {
+    this.fee = this.value ?? 0;
+  }
 }
 </script>
 
