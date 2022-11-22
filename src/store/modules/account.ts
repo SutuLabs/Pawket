@@ -2,7 +2,7 @@ import store from "@/store";
 import account, { AccountKey } from "@/services/crypto/account";
 import Vue from "vue";
 import receive, { CoinClassType, DidDetail, TokenPuzzleAddress } from "@/services/crypto/receive";
-import { rpcUrl, xchPrefix, xchSymbol } from "./network";
+import { convertToChainId, chainId, rpcUrl, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { AccountEntity, AccountTokens, AccountType, CustomCat, TokenInfo } from "@/models/account";
 import {
   DEFAULT_ADDRESS_RETRIEVAL_COUNT,
@@ -12,7 +12,7 @@ import { convertToOriginCoin, unlockCoins } from "@/services/coin/coinUtility";
 import { OriginCoin } from "@/services/spendbundle";
 
 export function getAccountCats(account: AccountEntity): CustomCat[] {
-  return account.allCats?.filter((c) => c.network == store.state.network.networkId) ?? [];
+  return account.allCats?.filter((c) => convertToChainId(c.network) == chainId()) ?? [];
 }
 
 export function getDefaultCats(): CustomCat[] {

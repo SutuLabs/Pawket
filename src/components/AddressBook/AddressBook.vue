@@ -85,7 +85,7 @@ import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import AddressBookField from "./AddressBookFields.vue";
 import AddressDetail from "./AddressDetail.vue";
 import TopBar from "@/components/Common/TopBar.vue";
-import { ensureAddress } from "@/store/modules/network";
+import { chainId, convertToChainId, ensureAddress } from "@/store/modules/network";
 
 type Mode = "List" | "Add";
 type Parent = "Send" | "Configure";
@@ -108,7 +108,7 @@ export default class AddressBook extends Vue {
   public showInnerAcc = false;
 
   get network(): string {
-    return store.state.network.networkId;
+    return chainId();
   }
 
   get title(): string {
@@ -170,7 +170,7 @@ export default class AddressBook extends Vue {
     this.contacts = [];
     let contacts = JSON.parse(contactsJson);
     for (let c of contacts) {
-      this.contacts.push({ name: c.name, address: c.address, network: c.network ? c.network : "mainnet" });
+      this.contacts.push({ name: c.name, address: c.address, network: convertToChainId(c.network) });
     }
   }
 

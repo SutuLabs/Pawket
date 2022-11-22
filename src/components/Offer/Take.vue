@@ -321,10 +321,6 @@ export default class TakeOffer extends Vue {
     return getCatNameDict(this.account);
   }
 
-  get network(): string {
-    return store.state.network.networkId;
-  }
-
   get catIds(): { [name: string]: string } {
     return getCatIdDict(this.account);
   }

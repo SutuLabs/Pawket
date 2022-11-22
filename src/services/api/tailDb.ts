@@ -1,4 +1,4 @@
-import store from "@/store";
+import { chainId, mainnetChainId } from "@/store/modules/network";
 import UniStorage from "../storage";
 
 interface Tail {
@@ -79,7 +79,7 @@ class TailDb {
   }
 
   public async getTails(): Promise<TailInfo[]> {
-    if (store.state.network.networkId !== "mainnet") return [];
+    if (chainId() != mainnetChainId()) return [];
     let tails: TailInfo[] = [];
     await this.checkAndUpdate();
     const t = await this.ustore.getItem(this.storageKey);

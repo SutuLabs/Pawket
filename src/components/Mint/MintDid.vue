@@ -54,7 +54,7 @@ import FeeSelector from "@/components/Send/FeeSelector.vue";
 import OfflineSendShowBundle from "@/components/Offline/OfflineSendShowBundle.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import SendSummary from "@/components/Send/SendSummary.vue";
-import { networkContext, xchSymbol } from "@/store/modules/network";
+import {  networkContext, xchSymbol } from "@/store/modules/network";
 import { getCatNames } from "@/services/view/cat";
 import TopBar from "@/components/Common/TopBar.vue";
 import { generateMintDidBundle } from "@/services/coin/did";
@@ -104,10 +104,6 @@ export default class MintDid extends Vue {
 
   get decimal(): number {
     return this.selectedToken == xchSymbol() ? 12 : 3;
-  }
-
-  get network(): string {
-    return store.state.network.networkId;
   }
 
   get tokenNames(): string[] {

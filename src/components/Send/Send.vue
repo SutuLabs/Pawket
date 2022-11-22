@@ -91,7 +91,7 @@ import OfflineSendShowBundle from "@/components/Offline/OfflineSendShowBundle.vu
 import { CurrencyType } from "@/services/exchange/currencyType";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import SendSummary from "@/components/Send/SendSummary.vue";
-import { networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
+import { convertToChainId, networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getCatNames, getTokenInfo } from "@/services/view/cat";
 import AddressField from "@/components/Common/AddressField.vue";
 import TopBar from "@/components/Common/TopBar.vue";
@@ -180,10 +180,6 @@ export default class Send extends Vue {
     return this.selectedToken == xchSymbol() ? 12 : 3;
   }
 
-  get network(): string {
-    return store.state.network.networkId;
-  }
-
   updateContacts(): void {
     const contactsJson = localStorage.getItem("CONTACTS");
     if (contactsJson == null) {
@@ -191,7 +187,7 @@ export default class Send extends Vue {
     }
     let contacts = JSON.parse(contactsJson);
     for (let c of contacts) {
-      this.contacts.push({ name: c.name, address: c.address, network: c.network ? c.network : "mainnet" });
+      this.contacts.push({ name: c.name, address: c.address, network: convertToChainId(c.network) });
     }
   }
 
