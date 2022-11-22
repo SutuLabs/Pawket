@@ -4,7 +4,8 @@ import { SpendBundle } from "@/services/spendbundle";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { ModalProgrammatic as Modal } from "buefy";
 import DevHelper from "@/components/DevHelper/DevHelper.vue";
-import { rpcUrl } from "@/store/modules/network";
+import { chainId, rpcUrl } from "@/store/modules/network";
+import { lockCoins } from "../coin/coinUtility";
 export async function submitBundle(bundle: SpendBundle, setSubmitting: (state: boolean) => void, success: () => void): Promise<void> {
   setSubmitting(true);
   /** 
@@ -39,6 +40,8 @@ export async function submitBundle(bundle: SpendBundle, setSubmitting: (state: b
         message: tc("send.ui.messages.submitted"),
         type: "is-primary",
       });
+      const txnTime = Date.now()
+      lockCoins(bundle.coin_spends, txnTime, chainId());
       success();
     } else {
       const err = typeof (json.error) === "string" ? json.error.match('error ([A-Z_]+)') : null;

@@ -8,6 +8,8 @@ import {
   DEFAULT_ADDRESS_RETRIEVAL_COUNT,
   getAccountAddressDetails as getAccountAddressDetailsExternal,
 } from "@/services/util/account";
+import { convertToOriginCoin, unlockCoins } from "@/services/coin/coinUtility";
+import { OriginCoin } from "@/services/spendbundle";
 
 export function getAccountCats(account: AccountEntity): CustomCat[] {
   return account.allCats?.filter((c) => c.network == store.state.network.networkId) ?? [];
@@ -167,7 +169,10 @@ store.registerModule<IAccountState>("account", {
         rootState.network.peekHeight = records.peekHeight;
         const activities = receive.convertActivities(requests, records);
         const tokenBalances = receive.getTokenBalance(requests, records);
-
+        const coins = activities.map(act => {
+          if (act.spent && act.coin) return convertToOriginCoin(act.coin)
+        })
+        unlockCoins(coins as OriginCoin[]);
         Vue.set(account, "activities", activities);
         Vue.set(account, "tokens", tokenBalances);
       } catch (error) {

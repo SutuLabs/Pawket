@@ -1,6 +1,5 @@
 <template>
   <div class="column nav-box">
-    <b-loading :active="!token" :is-full-page="false"></b-loading>
     <div :class="{ box: !isMobile }">
       <div class="notification has-background-grey-dark has-text-centered has-text-info-light py-2" v-if="offline">
         {{ $t("accountDetail.message.notification.offline") }}

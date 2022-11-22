@@ -644,7 +644,9 @@
     "ui": {
       "label": {
         "cost": "Send",
-        "receive": "Receive"
+        "receive": "Receive",
+        "queue": "Queue",
+        "confirmed": "Confirmed"
       },
       "text": {
         "empty": "You have no transactions."
@@ -663,11 +665,20 @@
         "spentHeight": "Spent Height",
         "confirmedHeight": "Confirmed Height",
         "parentCoinInfo": "ParentCoinInfo",
-        "puzzleHash": "Address"
+        "puzzleHash": "Address",
+        "coinName": "Coin Name",
+        "coins": "Coins",
+        "pending": "Pending"
+      },
+      "button": {
+        "unlockCoins": "Unlock Coins"
       },
       "tooltip": {
         "copy": "Copy"
       }
+    },
+    "message": {
+      "unlockCoins": "Unlocking the coin will not cancel the transaction. The coin can be used freely, but the transaction still has a probability of success. Are you sure you want to unlock the coins?"
     }
   },
   "sendSummary": {
