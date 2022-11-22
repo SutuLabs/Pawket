@@ -1,7 +1,7 @@
 <template>
   <div class="modal-card">
     <b-loading :is-full-page="true" v-model="submitting"></b-loading>
-    <top-bar :title="$t('addByAddress.ui.title')" @close="close()" :showClose="true"></top-bar>
+    <top-bar :title="$t('addByPublicKey.ui.title')" @close="close()" :showClose="true"></top-bar>
     <section class="modal-card-body">
       <b-field :label="$t('addByAddress.ui.label.name')">
         <b-input
@@ -42,7 +42,7 @@ import TopBar from "@/components/Common/TopBar.vue";
 import { prefix0x } from "@/services/coin/condition";
 
 @Component({ components: { TopBar } })
-export default class AddByAddress extends Vue {
+export default class AddByPublicKey extends Vue {
   @Prop({ default: 24 }) public mnemonicLen!: number;
   @Prop() public title!: string;
   public name = "";

@@ -281,6 +281,7 @@ function getAccountEntity(
     extraInfo: {},
     addressGenerated: 0,
     addressPuzzles: [],
+    publicKey: account.publicKey
   };
 }
 

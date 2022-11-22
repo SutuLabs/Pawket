@@ -517,7 +517,8 @@
       "title": "添加地址钱包",
       "label": {
         "name": "账户名",
-        "address": "地址"
+        "address": "地址",
+        "publicKey": "公钥"
       },
       "message": {
         "nameRequired": "账户名不能为空",
@@ -1009,7 +1010,9 @@
         "serial": "序列账户",
         "address": "地址账户",
         "imported": "导入账户",
-        "passPhrase": "影子钱包"
+        "passPhrase": "影子钱包",
+        "publicKey": "公钥钱包",
+        "unknown": "未知"
       },
       "button": {
         "addBySerial": "新增序列账户",
@@ -1400,6 +1403,11 @@
         "targetAddress": "Target Address",
         "currentBindingAddress": "当前绑定地址"
       }
+    }
+  },
+  "addByPublicKey": {
+    "ui": {
+      "title": "添加公钥钱包"
     }
   }
 }

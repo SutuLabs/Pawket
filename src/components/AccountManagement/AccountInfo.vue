@@ -72,7 +72,7 @@
         <ul v-if="showDetail">
           <li>
             {{ $t("accountInfo.ui.label.masterPublicKey") }}:
-            <key-box :value="masterpubkey" :showValue="true"></key-box>
+            <key-box :value="masterpubkey || account.publicKey" :showValue="true"></key-box>
           </li>
           <li>
             {{ $t("accountInfo.ui.label.farmerPublicKey") }}:

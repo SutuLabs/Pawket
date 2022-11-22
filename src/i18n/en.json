@@ -517,7 +517,8 @@
       "title": "Add By Address",
       "label": {
         "name": "Account Name",
-        "address": "Address"
+        "address": "Address",
+        "publicKey": "PublicKey"
       },
       "message": {
         "nameRequired": "Account name is required.",
@@ -1004,19 +1005,21 @@
   "accountManagement": {
     "ui": {
       "title": "Account Management",
+      "label": {
+        "default": "Default",
+        "serial": "Serial",
+        "address": "Address",
+        "imported": "Imported",
+        "passPhrase": "Passphrase",
+        "publicKey": "PublicKey",
+        "unknown": "Unknown"
+      },
       "button": {
         "addBySerial": "Add by Serial",
         "addByPassword": "Add Shadow Wallet",
         "addByLegacy": "Import Chia Official Wallet（24-word）",
         "addByMnemonic": "Import Nucle/Goby Wallet（12-word）",
         "addByAddress": "Add by Address(Observation Mode)"
-      },
-      "label": {
-        "default": "Default",
-        "serial": "Serial",
-        "address": "Address",
-        "imported": "Imported",
-        "passPhrase": "Passphrase"
       },
       "tooltip": {
         "addBySerial": "Derived serial accounts are created in order.",
@@ -1400,6 +1403,11 @@
         "targetAddress": "Target Address",
         "currentBindingAddress": "Current binding address"
       }
+    }
+  },
+  "addByPublicKey": {
+    "ui": {
+      "title": "Add Account by PublicKey"
     }
   }
 }
