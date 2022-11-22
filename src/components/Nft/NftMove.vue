@@ -33,7 +33,7 @@
           ><p>{{ nft.metadata.name }}</p>
         </span>
       </b-field>
-      <fee-selector v-model="fee"></fee-selector>
+      <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
     </template>
     <template #confirm>
       <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
@@ -64,7 +64,7 @@
           <template #label>
             <span class="is-size-6 has-text-grey">{{ $t("sendSummary.ui.label.fee") }}</span>
             <span class="is-size-6 is-pulled-right has-text-grey">
-              {{ demojo(fee) }}
+              {{ demojo(feeBigInt) }}
             </span>
           </template>
         </b-field>
@@ -120,10 +120,14 @@ export default class NftMove extends Vue {
   public signing = false;
   public submitting = false;
   public selectedDid: DidDetail | null = null;
-  public fee = 0n;
+  public fee = 0;
 
   get dids(): DidDetail[] {
     return this.account.dids || [];
+  }
+
+  get feeBigInt(): bigint {
+    return BigInt(this.fee);
   }
 
   get bundleText(): string {
@@ -146,6 +150,10 @@ export default class NftMove extends Vue {
   reset(): void {
     this.bundle = null;
     this.step = "Input";
+  }
+
+  changeFee(): void {
+    this.reset();
   }
 
   cancel(): void {
@@ -214,7 +222,7 @@ export default class NftMove extends Vue {
       const ubundle = await generateTransferNftBundle(
         this.account.firstAddress,
         this.account.firstAddress,
-        BigInt(this.fee),
+        this.feeBigInt,
         this.nft.coin,
         this.nft.analysis,
         this.availcoins,
