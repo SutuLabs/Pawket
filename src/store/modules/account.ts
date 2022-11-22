@@ -170,7 +170,7 @@ store.registerModule<IAccountState>("account", {
         const activities = receive.convertActivities(requests, records);
         const tokenBalances = receive.getTokenBalance(requests, records);
         const coins = activities.map(act => {
-          if (act.coin) return convertToOriginCoin(act.coin)
+          if (act.spent && act.coin) return convertToOriginCoin(act.coin)
         })
         unlockCoins(coins as OriginCoin[]);
         Vue.set(account, "activities", activities);

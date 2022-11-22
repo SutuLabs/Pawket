@@ -79,20 +79,21 @@
 import { demojo } from "@/filters/unitConversion";
 import { CoinRecord } from "@/models/wallet";
 import { AccountEntity, OneTokenInfo, TokenInfo } from "@/models/account";
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import UtxoDetail from "@/components/Utxo/UtxoDetail.vue";
 import { isMobile } from "@/services/view/responsive";
 import { getTokenInfo } from "@/services/view/cat";
 import store from "@/store";
-import { LockedCoin, PendingTransaction } from "@/services/coin/coinUtility";
+import { getLockedCoinsFromLocalStorage, LockedCoin, PendingTransaction } from "@/services/coin/coinUtility";
 import PendingTxnDetail from "./PendingTxnDetail.vue";
-import { networkId, xchSymbol } from "@/store/modules/network";
+import { chainId, xchSymbol } from "@/store/modules/network";
 
 @Component({})
 export default class UtxoPanel extends Vue {
   public perPage = 10;
   public rangeBefore = 1;
   public rangeAfter = 1;
+  public pendingTransactions: Record<number, PendingTransaction> = {};
   current = 1;
 
   showUtxo(activity: CoinRecord): void {
@@ -123,13 +124,20 @@ export default class UtxoPanel extends Vue {
     return this.account.activities ?? [];
   }
 
-  get pendingTransactions(): Record<number, PendingTransaction> {
-    const lcStr = localStorage.getItem("LOCKED_COINS");
-    let lc: LockedCoin[] = lcStr ? JSON.parse(lcStr) : [];
+  @Watch("activities")
+  onActsChange(): void {
+    this.pendingTransactions = this.getPendingTransactions();
+  }
+
+  getPendingTransactions(): Record<number, PendingTransaction> {
+    let lc: LockedCoin[] = [];
+    try {
+      lc = getLockedCoinsFromLocalStorage();
+    } catch (error) {
+      lc = [];
+    }
     const accountFinger = store.state.account.accounts[store.state.account.selectedAccount].key.fingerprint;
-    lc = lc.filter((l) => l.network == networkId() && l.accountFinger == accountFinger);
-    // make pendingTransactions update with activities
-    this.account.activities?.keys();
+    lc = lc.filter((l) => l.network == chainId() && l.accountFinger == accountFinger);
 
     const tx = lc.reduce((prev, curr) => {
       if (!prev[curr.transactionTime])
@@ -197,6 +205,10 @@ export default class UtxoPanel extends Vue {
 
   demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null, digits = -1): string {
     return demojo(mojo, token, digits);
+  }
+
+  mounted(): void {
+    this.pendingTransactions = this.getPendingTransactions();
   }
 }
 </script>

@@ -5,7 +5,7 @@ import { prefix0x } from "../coin/condition";
 import receive, { TokenPuzzleAddress, TokenPuzzleDetail } from "../crypto/receive";
 import { getAccountCats } from "@/store/modules/account";
 import { SymbolCoins } from "./transfer";
-import { networkId, rpcUrl, xchPrefix, xchSymbol } from "@/store/modules/network";
+import { chainId, rpcUrl, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { AccountEntity } from "@/models/account";
 import { getAccountAddressDetails } from "../util/account";
 import { coinFilter } from "../coin/coinUtility";
@@ -32,7 +32,7 @@ class CoinHandler {
         puzzle_hash: _.puzzleHash,
       }));
 
-    coins = coinFilter(coins, networkId())
+    coins = coinFilter(coins, chainId())
 
     const availcoins = tokenNames
       .map((symbol) => {

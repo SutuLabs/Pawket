@@ -42,8 +42,12 @@ export interface PendingTransaction {
 }
 
 export async function lockCoins(coinSpends: CoinSpend[], transactionTime: number, network: string): Promise<void> {
-  const lcStr = localStorage.getItem("LOCKED_COINS");
-  const lc: LockedCoin[] = lcStr ? JSON.parse(lcStr) : [];
+  let lc: LockedCoin[] = [];
+  try {
+    lc = getLockedCoinsFromLocalStorage()
+  } catch (error) {
+    lc = [];
+  }
   const account = store.state.account.accounts[store.state.account.selectedAccount];
   const accountFinger = account.key.fingerprint;
   for (const cs of coinSpends) {
@@ -55,8 +59,12 @@ export async function lockCoins(coinSpends: CoinSpend[], transactionTime: number
 }
 
 export async function unlockCoins(coins: OriginCoin[]): Promise<void> {
-  const lcStr = localStorage.getItem("LOCKED_COINS");
-  let lc: LockedCoin[] = lcStr ? JSON.parse(lcStr) : [];
+  let lc: LockedCoin[] = [];
+  try {
+    lc = getLockedCoinsFromLocalStorage()
+  } catch (error) {
+    lc = [];
+  }
   for (const coin of coins) {
     const cname = getCoinName(coin);
     lc = lc.filter(c => c.coinName !== cname);
@@ -65,14 +73,24 @@ export async function unlockCoins(coins: OriginCoin[]): Promise<void> {
 }
 
 export function coinFilter(coins: OriginCoin[], network: string): OriginCoin[] {
-  const lcStr = localStorage.getItem("LOCKED_COINS");
-  let lc: LockedCoin[] = lcStr ? JSON.parse(lcStr) : [];
+  let lc: LockedCoin[] = [];
+  try {
+    lc = getLockedCoinsFromLocalStorage()
+  } catch (error) {
+    lc = [];
+  }
   const accountFinger = store.state.account.accounts[store.state.account.selectedAccount].key.fingerprint;
   lc = lc.filter((l) => l.network == network && l.accountFinger == accountFinger);
   return coins.filter(coin => {
     const name = getCoinName(coin);
     return lc.findIndex(c => c.coinName == name) == -1;
   });
+}
+
+export function getLockedCoinsFromLocalStorage(): LockedCoin[] {
+  const lcStr = localStorage.getItem("LOCKED_COINS");
+  const lc: LockedCoin[] = lcStr ? JSON.parse(lcStr) : [];
+  return lc;
 }
 
 export function getCoinName0x(coin: CompatibleCoin): Hex0x {
@@ -92,7 +110,7 @@ export function getCoinNameHex(coin: CompatibleCoin): Bytes {
   return coinname;
 }
 
-export function convertToOriginCoin(coin: CoinItem | { amount: number, parent_coin_info: Hex0x | string, puzzle_hash: Hex0x | string, symbol?: string }): OriginCoin {
+export function convertToOriginCoin(coin: CoinItem | { amount: number, parent_coin_info: Hex0x | string, puzzle_hash: Hex0x | string }): OriginCoin {
   return "parentCoinInfo" in coin
     ? {
       amount: BigInt(coin.amount),

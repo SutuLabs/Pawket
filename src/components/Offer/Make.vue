@@ -131,7 +131,7 @@ import { getCatIdDict, getCatNameDict, getCatNames } from "@/services/view/cat";
 import { encodeOffer } from "@/services/offer/encoding";
 import { generateOffer, generateOfferPlan } from "@/services/offer/bundler";
 import bigDecimal from "js-big-decimal";
-import { networkContext, networkId, xchSymbol } from "@/store/modules/network";
+import { chainId, networkContext, xchSymbol } from "@/store/modules/network";
 import dexie from "@/services/api/dexie";
 import { tc } from "@/i18n/i18n";
 import { lockCoins } from "@/services/coin/coinUtility";
@@ -255,8 +255,8 @@ export default class MakeOffer extends Vue {
       const offplan = await generateOfferPlan(offs, change_hex, this.availcoins, 0n, xchSymbol());
       const ubundle = await generateOffer(offplan, reqs, this.tokenPuzzles, networkContext());
       const bundle = await signSpendBundle(ubundle, this.tokenPuzzles, networkContext());
-      
-      lockCoins(bundle.coin_spends, Date.now(), networkId());
+
+      lockCoins(bundle.coin_spends, Date.now(), chainId());
       this.offerText = await encodeOffer(bundle, 4);
 
       this.step = "Confirmation";
