@@ -117,6 +117,7 @@ export default class UtxoPanel extends Vue {
       fullScreen: isMobile(),
       canCancel: ["outside", "escape"],
       props: { pendingTransaction: ptxn, tokenInfo: this.tokenInfo },
+      events: { update: () => (this.pendingTransactions = this.getPendingTransactions()) },
     });
   }
 

@@ -95,6 +95,7 @@ export default class PendingTxnDetail extends Vue {
       onConfirm: () => {
         const coins = this.pendingTransaction.coin.map((c) => c.coin);
         unlockCoins(coins);
+        this.$emit("update")
         this.close();
       },
     });

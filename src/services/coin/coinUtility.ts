@@ -66,6 +66,7 @@ export async function unlockCoins(coins: OriginCoin[]): Promise<void> {
     lc = [];
   }
   for (const coin of coins) {
+    if (!coin) continue
     const cname = getCoinName(coin);
     lc = lc.filter(c => c.coinName !== cname);
   }
