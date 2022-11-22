@@ -161,7 +161,7 @@ export async function generateOfferPlan(
   availcoins: SymbolCoins,
   fee: bigint,
   tokenSymbol: string,
-  royaltyFee = 0n,
+  royaltyFee: bigint | undefined = undefined,
 ): Promise<OfferPlan[]> {
   const plans: OfferPlan[] = [];
 
@@ -177,11 +177,12 @@ export async function generateOfferPlan(
 
     const royaltyTgt: TransferTarget = {
       address: settlement_tgt,
-      amount: royaltyFee,
+      amount: royaltyFee ?? 0n,
       symbol: tokenSymbol,
       memos: undefined,
     };
-    const tgts = royaltyFee == 0n ? [tgt] : [tgt, royaltyTgt]
+    // always create royalty coin even it's 0, the official client generate puzzle assert for that coin
+    const tgts = royaltyFee === undefined ? [tgt] : [tgt, royaltyTgt]
 
     const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, fee, tokenSymbol);
     const keys = Object.keys(plan);
@@ -428,22 +429,20 @@ export async function generateNftOffer(
       const parent = getCoinName0x(sp[sp.length - 1].coin);
       // royalty_amount = uint64(offered_amount * royalty_percentage / 10000)
       const amount = (off.plan.targets[0].amount * BigInt(nft.tradePricePercentage)) / BigInt(10000);
-      if (amount > 0) {
-        const solution_text = `((${prefix0x(nft.launcherId)} (${prefix0x(nft.royaltyAddress)} ${amount} (${prefix0x(
-          nft.royaltyAddress
-        )}))))`;
-        const solution = prefix0x(await puzzle.encodePuzzle(solution_text));
-        const roysp: CoinSpend = {
-          coin: {
-            parent_coin_info: parent,
-            amount,
-            puzzle_hash: settlement_tgt,
-          },
-          puzzle_reveal: modshex0x["settlement_payments"],
-          solution,
-        };
-        spends.push(roysp);
-      }
+      const solution_text = `((${prefix0x(nft.launcherId)} (${prefix0x(nft.royaltyAddress)} ${amount} (${prefix0x(
+        nft.royaltyAddress
+      )}))))`;
+      const solution = prefix0x(await puzzle.encodePuzzle(solution_text));
+      const roysp: CoinSpend = {
+        coin: {
+          parent_coin_info: parent,
+          amount,
+          puzzle_hash: settlement_tgt,
+        },
+        puzzle_reveal: modshex0x["settlement_payments"],
+        solution,
+      };
+      spends.push(roysp);
     }
   }
 
