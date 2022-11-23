@@ -1,4 +1,3 @@
-import { Hex0x } from "@/services/coin/condition";
 import { AccountKey } from "@/services/crypto/account";
 import { AddressType } from "@/services/crypto/puzzle";
 import { DidDetail, NftDetail, TokenPuzzleDetail, TokenPuzzleObserver } from "@/services/crypto/receive";
@@ -43,7 +42,6 @@ export interface AccountEntity extends PersistentAccount {
   addressPuzzles: TokenPuzzleDetail[];
   observePuzzles?: TokenPuzzleObserver[];
   addressGenerated: number;
-  publicKey?: Hex0x;
 }
 
 export interface CustomCat {

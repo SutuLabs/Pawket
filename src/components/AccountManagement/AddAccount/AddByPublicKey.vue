@@ -72,7 +72,7 @@ export default class AddByPublicKey extends Vue {
     }
 
     for (const acc of store.state.account.accounts) {
-      if (acc.type === "PublicKey" && acc.publicKey === this.publicKey) {
+      if (acc.type === "PublicKey" && acc.key.publicKey === this.publicKey) {
         this.isLegalAddress = false;
         this.errorMessage = this.$tc("addByAddress.ui.message.duplicateAddress");
         return;
