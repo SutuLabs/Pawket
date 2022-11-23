@@ -7,6 +7,7 @@
     @sign="sign()"
     @cancel="cancel()"
     @confirm="offline ? showSend() : submit()"
+    :signBtn="account.type == 'PublicKey' ? $t('common.button.generate') : $t('common.button.sign')"
     :confirmBtn="offline ? $t('send.ui.button.showSend') : $t('send.ui.button.submit')"
     :showClose="true"
     :loading="submitting"
@@ -60,6 +61,7 @@ import TopBar from "@/components/Common/TopBar.vue";
 import { generateMintDidBundle } from "@/services/coin/did";
 import { demojo } from "@/filters/unitConversion";
 import Confirmation from "../Common/Confirmation.vue";
+import { Hex, prefix0x } from "@/services/coin/condition";
 
 @Component({
   components: {
@@ -143,12 +145,15 @@ export default class MintDid extends Vue {
     this.maxStatus = "Loading";
 
     if (!this.requests || this.requests.length == 0) {
-      this.requests = await coinHandler.getAssetsRequestDetail(this.account);
+      this.requests = this.account.type == "PublicKey" ? [] : await coinHandler.getAssetsRequestDetail(this.account);
     }
 
     if (!this.availcoins) {
       try {
-        this.availcoins = await coinHandler.getAvailableCoins(this.requests, coinHandler.getTokenNames(this.account));
+        this.availcoins = await coinHandler.getAvailableCoins(
+          await coinHandler.getAssetsRequestObserver(this.account),
+          coinHandler.getTokenNames(this.account)
+        );
       } catch (err) {
         this.offline = true;
       }
@@ -182,16 +187,12 @@ export default class MintDid extends Vue {
       // const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: this.selectedToken, memos: [tgt_hex, memo] }];
       // const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
       // this.bundle = await transfer.generateSpendBundle(plan, this.requests, [], xchSymbol(), chainId());
-      const ubundle = await generateMintDidBundle(
-        tgt,
-        change,
-        this.feeBigInt,
-        {},
-        this.availcoins,
-        this.requests,
-        networkContext()
-      );
+      const observers = await coinHandler.getAssetsRequestObserver(this.account);
+      const ubundle = await generateMintDidBundle(tgt, change, this.feeBigInt, {}, this.availcoins, observers, networkContext());
       this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());
+      if (this.account.type == "PublicKey") {
+        await this.offlineSignBundle();
+      }
     } catch (error) {
       Notification.open({
         message: this.$tc("send.ui.messages.failedToSign") + error,
@@ -225,6 +226,22 @@ export default class MintDid extends Vue {
       hasModalCard: true,
       trapFocus: false,
       props: { bundle: this.bundle },
+    });
+  }
+
+  async offlineSignBundle(): Promise<void> {
+    this.$buefy.modal.open({
+      parent: this,
+      component: (await import("@/components/Offline/OfflineSpendBundleQr.vue")).default,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      props: { bundle: this.bundle, mode: "ONLINE_CLIENT" },
+      events: {
+        signature: (sig: Hex): void => {
+          if (this.bundle) this.bundle.aggregated_signature = prefix0x(sig);
+        },
+      },
     });
   }
 }

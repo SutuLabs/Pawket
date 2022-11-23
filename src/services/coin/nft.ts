@@ -1,6 +1,6 @@
 import { CoinSpend, combineSpendBundle, OriginCoin, PartialSpendBundle, signSpendBundle, UnsignedSpendBundle } from "../spendbundle";
 import puzzle, { PlaintextPuzzle } from "../crypto/puzzle";
-import receive, { TokenPuzzleDetail, TokenPuzzleObserver } from "../crypto/receive";
+import receive, { TokenPuzzleObserver } from "../crypto/receive";
 import { curryMod } from "../offer/bundler";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { formatAmount, Hex0x, prefix0x, skipFirstByte0x } from "./condition";
@@ -46,7 +46,7 @@ export async function generateMintNftBundle(
   fee: bigint,
   metadatas: MetadataValues | MetadataValues[],
   availcoins: SymbolCoins,
-  requests: TokenPuzzleDetail[],
+  requests: TokenPuzzleObserver[],
   royaltyAddressHex: string,
   tradePricePercentage: number,
   net: NetworkContext,

@@ -16,6 +16,7 @@
       "submit": "提交",
       "delete": "删除",
       "sign": "签名",
+      "generate": "生成",
       "copy": "复制"
     },
     "tooltip": {
@@ -336,7 +337,6 @@
         },
         "button": {
           "done": "完成",
-          "sign": "签名",
           "uploadToDexie": "上传至 Dexie"
         },
         "field": {
@@ -374,7 +374,6 @@
         },
         "button": {
           "cancel": "取消",
-          "sign": "签名",
           "submit": "提交",
           "upload": "上传 Offer 文件"
         },
@@ -647,7 +646,7 @@
         "cost": "发送",
         "receive": "接收",
         "queue": "队列中",
-        "confirmed":"已确认"
+        "confirmed": "已确认"
       },
       "text": {
         "empty": "暂无交易记录"

@@ -4,7 +4,7 @@ import { CoinConditions, ConditionType, Hex0x, prefix0x, unprefix0x } from '../c
 import puzzle, { ConditionArgs, PlaintextPuzzle } from "../crypto/puzzle";
 import { ConditionOpcode } from "../coin/opcode";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
-import { TokenPuzzleDetail, TokenPuzzlePrivateKey } from "../crypto/receive";
+import { TokenPuzzleDetail, TokenPuzzleObserver } from "../crypto/receive";
 import catBundle from "../transfer/catBundle";
 import stdBundle from "../transfer/stdBundle";
 import { getOfferSummary, OfferEntity, OfferPlan, OfferSummary } from "./summary";
@@ -20,7 +20,7 @@ import crypto from "../crypto/isoCrypto"
 export async function generateOffer(
   offered: OfferPlan[],
   requested: OfferEntity[],
-  puzzles: TokenPuzzlePrivateKey[],
+  puzzles: TokenPuzzleObserver[],
   net: NetworkContext,
   nonceHex: string | null = null,
   catModName: "cat_v1" | "cat_v2" = "cat_v2",
@@ -281,7 +281,7 @@ export async function generateNftOffer(
   nft: NftCoinAnalysisResult,
   nftcoin: OriginCoin | undefined,
   requested: OfferEntity[],
-  puzzles: TokenPuzzleDetail[],
+  puzzles: TokenPuzzleObserver[],
   net: NetworkContext,
   nonceHex: string | null = null
 ): Promise<UnsignedSpendBundle> {
@@ -406,15 +406,11 @@ export async function generateNftOffer(
           puzzles,
           net,
         );
-        const nftPuz = puzzles
-          .filter((_) => _.symbol == net.symbol)[0]
-          .puzzles
-          .filter((_) => prefix0x(_.hash) == prefix0x(nft.hintPuzzle))[0];
         puzzleCopy
           .filter((_) => _.symbol == net.symbol)[0]
           .puzzles.push({
-            privateKey: nftPuz.privateKey,
-            synPubKey: nftPuz.synPubKey,
+            privateKey: puzzle.getEmptyPrivateKey(),
+            synPubKey: "()",
             puzzle: "()",
             hash: nftcoin.puzzle_hash,
             address: "",

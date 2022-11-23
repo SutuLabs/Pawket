@@ -74,7 +74,7 @@
         <b-button v-if="!bundle" :label="$t('common.button.cancel')" class="is-pulled-left" @click="cancel()"></b-button>
         <b-button v-if="bundle" :label="$t('common.button.back')" class="is-pulled-left" @click="cancel()"></b-button>
         <b-button
-          :label="$t('common.button.sign')"
+          :label="account.type == 'PublicKey' ? $t('common.button.generate') : $t('common.button.sign')"
           v-if="!bundle"
           type="is-primary"
           @click="sign()"
@@ -116,6 +116,7 @@ import { networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { NftMetadataValues } from "@/models/nft";
 import { generateMintNftBundle } from "@/services/coin/nft";
 import store from "@/store";
+import { Hex, prefix0x } from "@/services/coin/condition";
 
 @Component({
   components: {
@@ -181,11 +182,14 @@ export default class BatchMintNft extends Vue {
     this.status = "Loading";
 
     if (!this.requests || this.requests.length == 0) {
-      this.requests = await coinHandler.getAssetsRequestDetail(this.account);
+      this.requests = this.account.type == "PublicKey" ? [] : await coinHandler.getAssetsRequestDetail(this.account);
     }
 
     if (!this.availcoins) {
-      this.availcoins = await coinHandler.getAvailableCoins(this.requests, coinHandler.getTokenNames(this.account));
+      this.availcoins = await coinHandler.getAvailableCoins(
+        await coinHandler.getAssetsRequestObserver(this.account),
+        coinHandler.getTokenNames(this.account)
+      );
     }
 
     this.status = "Loaded";
@@ -253,7 +257,7 @@ export default class BatchMintNft extends Vue {
         });
         addresses.push(targetAddress);
       }
-
+      const observers = await coinHandler.getAssetsRequestObserver(this.account);
       const royaltyAddressHex = puzzle.getPuzzleHashFromAddress(this.royaltyAddress);
       const tradePricePercentage = this.royaltyPercentage * 100;
       const ubundle = await generateMintNftBundle(
@@ -262,7 +266,7 @@ export default class BatchMintNft extends Vue {
         BigInt(this.fee),
         metadatas,
         this.availcoins,
-        this.requests,
+        observers,
         royaltyAddressHex,
         tradePricePercentage,
         networkContext(),
@@ -271,6 +275,9 @@ export default class BatchMintNft extends Vue {
         addresses
       );
       this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());
+      if (this.account.type == "PublicKey") {
+        await this.offlineSignBundle();
+      }
     } catch (error) {
       Notification.open({
         message: this.$tc("batchSend.ui.messages.failedToSign") + error,
@@ -360,6 +367,22 @@ http://localhost:8080/img/logo.d9691df6.svg,B1EA9E8E58A58B5934ED53A780DF5104248D
     this.file = f[0];
     this.afterUploadCsv(f[0]);
     this.dragfile = [];
+  }
+
+  async offlineSignBundle(): Promise<void> {
+    this.$buefy.modal.open({
+      parent: this,
+      component: (await import("@/components/Offline/OfflineSpendBundleQr.vue")).default,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      props: { bundle: this.bundle, mode: "ONLINE_CLIENT" },
+      events: {
+        signature: (sig: Hex): void => {
+          if (this.bundle) this.bundle.aggregated_signature = prefix0x(sig);
+        },
+      },
+    });
   }
 }
 </script>

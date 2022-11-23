@@ -177,7 +177,7 @@
           class="is-pulled-left"
           :disabed="observeMode"
         >
-          {{ $t("offer.take.ui.button.sign") }}
+          {{ account.type == "PublicKey" ? $t("common.button.generate") : $t("common.button.sign") }}
           <b-loading :is-full-page="false" :active="!tokenPuzzles || !availcoins"></b-loading>
         </b-button>
         <button v-if="debugMode" class="test-btn is-pulled-left" @click="showTest = !showTest"></button>
@@ -217,7 +217,7 @@ import {
   generateOfferPlan,
   getReversePlan,
 } from "@/services/offer/bundler";
-import { Hex0x, prefix0x } from "@/services/coin/condition";
+import { Hex, Hex0x, prefix0x } from "@/services/coin/condition";
 import puzzle from "@/services/crypto/puzzle";
 import store from "@/store";
 import { debugBundle, submitBundle } from "@/services/view/bundleAction";
@@ -472,11 +472,14 @@ export default class TakeOffer extends Vue {
 
   async loadCoins(): Promise<void> {
     if (!this.tokenPuzzles || this.tokenPuzzles.length == 0) {
-      this.tokenPuzzles = await coinHandler.getAssetsRequestDetail(this.account);
+      this.tokenPuzzles = this.account.type == "PublicKey" ? [] : await coinHandler.getAssetsRequestDetail(this.account);
     }
 
     if (!this.availcoins) {
-      this.availcoins = await coinHandler.getAvailableCoins(this.tokenPuzzles, coinHandler.getTokenNames(this.account));
+      this.availcoins = await coinHandler.getAvailableCoins(
+        await coinHandler.getAssetsRequestObserver(this.account),
+        coinHandler.getTokenNames(this.account)
+      );
     }
   }
 
@@ -521,13 +524,18 @@ export default class TakeOffer extends Vue {
         }
         const fee = isReceivingCat ? BigInt(this.fee) : 0n;
         const offplan = await generateOfferPlan(revSummary.offered, change_hex, this.availcoins, fee, xchSymbol());
-        const utakerBundle = await generateOffer(offplan, revSummary.requested, this.tokenPuzzles, networkContext());
+        const observers = await coinHandler.getAssetsRequestObserver(this.account);
+        const utakerBundle = await generateOffer(offplan, revSummary.requested, observers, networkContext());
         const takerBundle = await signSpendBundle(utakerBundle, this.tokenPuzzles, networkContext());
         const combined = await combineOfferSpendBundle([this.makerBundle, takerBundle]);
         // for creating unit test
         // console.log("const change_hex=", change_hex, ";");
         // console.log("const bundle=", JSON.stringify(combined, null, 2), ";");
         this.bundle = combined;
+
+        if (this.account.type == "PublicKey") {
+          await this.offlineSignBundle();
+        }
       } else {
         const revSummary = getReversePlan(this.summary, change_hex, this.cats);
         const fee = BigInt(this.fee);
@@ -544,12 +552,13 @@ export default class TakeOffer extends Vue {
           xchSymbol(),
           royalty_amount
         );
+        const observers = await coinHandler.getAssetsRequestObserver(this.account);
         const utakerBundle = await generateNftOffer(
           offplan,
           nft.analysis,
           undefined,
           revSummary.requested,
-          this.tokenPuzzles,
+          observers,
           networkContext()
         );
         const takerBundle = await signSpendBundle(utakerBundle, this.tokenPuzzles, networkContext());
@@ -558,6 +567,9 @@ export default class TakeOffer extends Vue {
         // console.log("const change_hex=", change_hex, ";");
         // console.log("const bundle=", JSON.stringify(combined, null, 2), ";");
         this.bundle = combined;
+        if (this.account.type == "PublicKey") {
+          await this.offlineSignBundle();
+        }
       }
       this.step = "Confirmation";
     } catch (error) {
@@ -623,6 +635,22 @@ export default class TakeOffer extends Vue {
 
   copy(text: string): void {
     store.dispatch("copy", text);
+  }
+
+  async offlineSignBundle(): Promise<void> {
+    this.$buefy.modal.open({
+      parent: this,
+      component: (await import("@/components/Offline/OfflineSpendBundleQr.vue")).default,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      props: { bundle: this.bundle, mode: "ONLINE_CLIENT" },
+      events: {
+        signature: (sig: Hex): void => {
+          if (this.bundle) this.bundle.aggregated_signature = prefix0x(sig);
+        },
+      },
+    });
   }
 }
 </script>

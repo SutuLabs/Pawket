@@ -95,7 +95,7 @@
           @click="$router.push('/home')"
         ></b-button>
         <b-button v-if="!offerText" type="is-primary" :loading="signing" @click="sign()">
-          {{ $t("offer.make.ui.button.sign") }}
+          {{ account.type == "PublicKey" ? $t("common.button.generate") : $t("common.button.sign") }}
         </b-button>
       </div>
       <div>
@@ -117,7 +117,7 @@ import { Component, Vue, Prop, Emit, Watch } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
 import { AccountEntity } from "@/models/account";
-import { prefix0x } from "@/services/coin/condition";
+import { Hex, prefix0x } from "@/services/coin/condition";
 import store from "@/store";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
 import coinHandler from "@/services/transfer/coin";
@@ -232,11 +232,14 @@ export default class MakeOffer extends Vue {
 
   async loadCoins(): Promise<void> {
     if (!this.tokenPuzzles || this.tokenPuzzles.length == 0) {
-      this.tokenPuzzles = await coinHandler.getAssetsRequestDetail(this.account);
+      this.tokenPuzzles = this.account.type == "PublicKey" ? [] : await coinHandler.getAssetsRequestDetail(this.account);
     }
 
     if (!this.availcoins) {
-      this.availcoins = await coinHandler.getAvailableCoins(this.tokenPuzzles, coinHandler.getTokenNames(this.account));
+      this.availcoins = await coinHandler.getAvailableCoins(
+        await coinHandler.getAssetsRequestObserver(this.account),
+        coinHandler.getTokenNames(this.account)
+      );
     }
   }
 
@@ -253,8 +256,13 @@ export default class MakeOffer extends Vue {
       const reqs: OfferEntity[] = getOfferEntities(this.requests, change_hex, this.catIds, xchSymbol());
 
       const offplan = await generateOfferPlan(offs, change_hex, this.availcoins, 0n, xchSymbol());
-      const ubundle = await generateOffer(offplan, reqs, this.tokenPuzzles, networkContext());
+      const observers = await coinHandler.getAssetsRequestObserver(this.account);
+      const ubundle = await generateOffer(offplan, reqs, observers, networkContext());
       const bundle = await signSpendBundle(ubundle, this.tokenPuzzles, networkContext());
+
+      if (this.account.type == "PublicKey") {
+        await this.offlineSignBundle();
+      }
 
       lockCoins(bundle.coin_spends, Date.now(), chainId());
       this.offerText = await encodeOffer(bundle, 4);
@@ -303,6 +311,22 @@ export default class MakeOffer extends Vue {
       type: "is-primary",
     });
     this.uploading = false;
+  }
+
+  async offlineSignBundle(): Promise<void> {
+    this.$buefy.modal.open({
+      parent: this,
+      component: (await import("@/components/Offline/OfflineSpendBundleQr.vue")).default,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      props: { bundle: this.bundle, mode: "ONLINE_CLIENT" },
+      events: {
+        signature: (sig: Hex): void => {
+          if (this.bundle) this.bundle.aggregated_signature = prefix0x(sig);
+        },
+      },
+    });
   }
 
   debugBundle(): void {

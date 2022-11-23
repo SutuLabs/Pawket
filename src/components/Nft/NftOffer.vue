@@ -56,7 +56,7 @@
         <b-button v-if="bundle" :label="$t('offer.make.ui.button.done')" class="is-pulled-left" @click="close()"></b-button>
         <b-button v-else :label="$t('common.button.cancel')" class="is-pulled-left" @click="close()"></b-button>
         <b-button v-if="!bundle" type="is-primary" :loading="signing" @click="sign()">
-          {{ $t("offer.make.ui.button.sign") }}
+          {{ account.type == "PublicKey" ? $t("common.button.generate") : $t("common.button.sign") }}
         </b-button>
       </div>
       <div>
@@ -88,7 +88,7 @@ import { NotificationProgrammatic as Notification } from "buefy";
 import { getOfferEntities, getOfferSummary, OfferEntity, OfferSummary, OfferTokenAmount } from "@/services/offer/summary";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
 import { networkContext, xchSymbol } from "@/store/modules/network";
-import { prefix0x } from "@/services/coin/condition";
+import { Hex, prefix0x } from "@/services/coin/condition";
 import puzzle from "@/services/crypto/puzzle";
 import { generateNftOffer, generateOfferPlan } from "@/services/offer/bundler";
 import dexie from "@/services/api/dexie";
@@ -148,11 +148,14 @@ export default class NftOffer extends Vue {
 
   async loadCoins(): Promise<void> {
     if (!this.tokenPuzzles || this.tokenPuzzles.length == 0) {
-      this.tokenPuzzles = await coinHandler.getAssetsRequestDetail(this.account);
+      this.tokenPuzzles = this.account.type == "PublicKey" ? [] : await coinHandler.getAssetsRequestDetail(this.account);
     }
 
     if (!this.availcoins) {
-      this.availcoins = await coinHandler.getAvailableCoins(this.tokenPuzzles, coinHandler.getTokenNames(this.account));
+      this.availcoins = await coinHandler.getAvailableCoins(
+        await coinHandler.getAssetsRequestObserver(this.account),
+        coinHandler.getTokenNames(this.account)
+      );
     }
   }
 
@@ -189,19 +192,17 @@ export default class NftOffer extends Vue {
       // console.log("const reqs=" + JSON.stringify(reqs, null, 2) + ";");
       // console.log("const availcoins=" + JSON.stringify(this.availcoins, null, 2) + ";");
       const offplan = await generateOfferPlan(offs, change_hex, this.availcoins, 0n, xchSymbol());
-      const ubundle = await generateNftOffer(
-        offplan,
-        this.nft.analysis,
-        this.nft.coin,
-        reqs,
-        this.tokenPuzzles,
-        networkContext()
-      );
+      const observers = await coinHandler.getAssetsRequestObserver(this.account);
+      const ubundle = await generateNftOffer(offplan, this.nft.analysis, this.nft.coin, reqs, observers, networkContext());
       const bundle = await signSpendBundle(ubundle, this.tokenPuzzles, networkContext());
       this.bundle = bundle;
       this.offerText = await encodeOffer(bundle, 4);
 
       this.step = "Confirmation";
+
+      if (this.account.type == "PublicKey") {
+        await this.offlineSignBundle();
+      }
     } catch (error) {
       Notification.open({
         message: this.$tc("offer.make.messages.failedToSign") + error,
@@ -255,6 +256,22 @@ export default class NftOffer extends Vue {
       trapFocus: true,
       canCancel: [""],
       props: { inputBundleText: this.bundleJson },
+    });
+  }
+
+  async offlineSignBundle(): Promise<void> {
+    this.$buefy.modal.open({
+      parent: this,
+      component: (await import("@/components/Offline/OfflineSpendBundleQr.vue")).default,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      props: { bundle: this.bundle, mode: "ONLINE_CLIENT" },
+      events: {
+        signature: (sig: Hex): void => {
+          if (this.bundle) this.bundle.aggregated_signature = prefix0x(sig);
+        },
+      },
     });
   }
 }

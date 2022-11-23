@@ -33,7 +33,7 @@
       <div>
         <b-button class="is-pulled-left" :label="$t('mintNft.ui.button.cancel')" @click="cancel()"></b-button>
         <b-button
-          :label="$t('mintNft.ui.button.sign')"
+          :label="account.type == 'PublicKey' ? $t('common.button.generate') : $t('common.button.sign')"
           v-if="!bundle"
           type="is-primary"
           class="is-pulled-left"
@@ -78,6 +78,7 @@ import AddressField from "@/components/Common/AddressField.vue";
 import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
 import BuyCnsSummary from "@/components/Cns/BuyCnsSummary.vue";
+import { Hex, prefix0x } from "@/services/coin/condition";
 
 @Component({
   components: {
@@ -198,11 +199,14 @@ export default class BuyCns extends Vue {
     this.maxStatus = "Loading";
 
     if (!this.requests || this.requests.length == 0) {
-      this.requests = await coinHandler.getAssetsRequestDetail(this.account);
+      this.requests = this.account.type == "PublicKey" ? [] : await coinHandler.getAssetsRequestDetail(this.account);
     }
 
     if (!this.availcoins) {
-      this.availcoins = await coinHandler.getAvailableCoins(this.requests, this.tokenNames);
+      this.availcoins = await coinHandler.getAvailableCoins(
+        await coinHandler.getAssetsRequestObserver(this.account),
+        coinHandler.getTokenNames(this.account)
+      );
     }
 
     if (!this.availcoins || !this.availcoins[this.selectedToken]) {
@@ -267,6 +271,8 @@ export default class BuyCns extends Vue {
         return;
       }
 
+      const observers = await coinHandler.getAssetsRequestObserver(this.account);
+
       const ubundle = await generateTransferNftBundle(
         this.address,
         this.account.firstAddress,
@@ -274,11 +280,14 @@ export default class BuyCns extends Vue {
         this.cns.coin,
         this.cns.analysis,
         this.availcoins,
-        this.requests,
+        observers,
         networkContext()
       );
 
       this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());
+      if (this.account.type == "PublicKey") {
+        await this.offlineSignBundle();
+      }
     } catch (error) {
       Notification.open({
         message: this.$tc("mintNft.ui.messages.failedToSign") + error,
@@ -322,6 +331,22 @@ export default class BuyCns extends Vue {
 
   changeFee(): void {
     this.reset();
+  }
+
+  async offlineSignBundle(): Promise<void> {
+    this.$buefy.modal.open({
+      parent: this,
+      component: (await import("@/components/Offline/OfflineSpendBundleQr.vue")).default,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      props: { bundle: this.bundle, mode: "ONLINE_CLIENT" },
+      events: {
+        signature: (sig: Hex): void => {
+          if (this.bundle) this.bundle.aggregated_signature = prefix0x(sig);
+        },
+      },
+    });
   }
 }
 </script>

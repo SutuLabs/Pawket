@@ -7,7 +7,7 @@
     @sign="sign()"
     @cancel="cancel()"
     @confirm="offline ? showSend() : submit()"
-    :sign-btn="account.type == 'PublicKey' ? 'Generate' : 'Sign'"
+    :sign-btn="account.type == 'PublicKey' ?  $t('common.button.generate') : $t('common.button.sign')"
     :confirmBtn="offline ? $t('send.ui.button.showSend') : $t('send.ui.button.submit')"
     :showClose="showClose"
     :loading="submitting"

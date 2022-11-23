@@ -8,6 +8,7 @@
     @cancel="cancel()"
     @confirm="submit()"
     :showClose="true"
+    :signBtn="account.type == 'PublicKey' ? $t('common.button.generate') : $t('common.button.sign')"
     :loading="signing"
     :disabled="submitting"
     :submitting="submitting"
@@ -96,6 +97,7 @@ import { demojo } from "@/filters/unitConversion";
 import { shorten } from "@/filters/addressConversion";
 import BundleSummary from "../Bundle/BundleSummary.vue";
 import Confirmation from "../Common/Confirmation.vue";
+import { Hex, prefix0x } from "@/services/coin/condition";
 
 @Component({
   components: {
@@ -186,11 +188,14 @@ export default class NftMove extends Vue {
 
   async loadCoins(): Promise<void> {
     if (!this.tokenPuzzles || this.tokenPuzzles.length == 0) {
-      this.tokenPuzzles = await coinHandler.getAssetsRequestDetail(this.account);
+      this.tokenPuzzles = this.account.type == "PublicKey" ? [] : await coinHandler.getAssetsRequestDetail(this.account);
     }
 
     if (!this.availcoins) {
-      this.availcoins = await coinHandler.getAvailableCoins(this.tokenPuzzles, coinHandler.getTokenNames(this.account));
+      this.availcoins = await coinHandler.getAvailableCoins(
+        await coinHandler.getAssetsRequestObserver(this.account),
+        coinHandler.getTokenNames(this.account)
+      );
     }
   }
 
@@ -219,6 +224,8 @@ export default class NftMove extends Vue {
         return;
       }
 
+      const observers = await coinHandler.getAssetsRequestObserver(this.account);
+
       const ubundle = await generateTransferNftBundle(
         this.account.firstAddress,
         this.account.firstAddress,
@@ -226,13 +233,16 @@ export default class NftMove extends Vue {
         this.nft.coin,
         this.nft.analysis,
         this.availcoins,
-        this.tokenPuzzles,
+        observers,
         networkContext(),
         this.selectedDid.analysis
       );
 
       this.bundle = await signSpendBundle(ubundle, this.tokenPuzzles, networkContext());
       this.step = "Confirmation";
+      if (this.account.type == "PublicKey") {
+        await this.offlineSignBundle();
+      }
     } catch (error) {
       Notification.open({
         message: this.$tc("mintNft.ui.messages.failedToSign") + error,
@@ -261,6 +271,22 @@ export default class NftMove extends Vue {
       trapFocus: true,
       canCancel: [""],
       props: { inputBundleText: this.bundleJson },
+    });
+  }
+
+  async offlineSignBundle(): Promise<void> {
+    this.$buefy.modal.open({
+      parent: this,
+      component: (await import("@/components/Offline/OfflineSpendBundleQr.vue")).default,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      props: { bundle: this.bundle, mode: "ONLINE_CLIENT" },
+      events: {
+        signature: (sig: Hex): void => {
+          if (this.bundle) this.bundle.aggregated_signature = prefix0x(sig);
+        },
+      },
     });
   }
 }
