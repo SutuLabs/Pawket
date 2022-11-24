@@ -162,7 +162,7 @@
         "tooltip": {
           "donate": "向开发者捐赠",
           "scanAssets": "资产扫描",
-          "proxy": "离线代理",
+          "proxy": "离线签名",
           "takeOffer": "接受 Offer",
           "makeOffer": "发起 Offer",
           "batchSend": "批量发送",
@@ -174,7 +174,7 @@
         "button": {
           "donate": "捐赠",
           "scanAssets": "资产扫描",
-          "proxy": "离线代理",
+          "proxy": "离线签名",
           "takeOffer": "接受 Offer",
           "makeOffer": "发起 Offer",
           "batchSend": "批量发送",
@@ -447,8 +447,8 @@
       },
       "scan": {
         "title": "扫描二维码",
-        "numberField": "硬币",
-        "numberMessage": "用离线设备扫描以下二维码来获取硬币信息",
+        "numberField": "未签名的信息",
+        "numberMessage": "用离线设备扫描以下二维码。",
         "titleTooltip": "该功能用于离线设备上的交易发送，请从离线设备开始用起。"
       },
       "confirmBundle": {
@@ -462,12 +462,12 @@
     },
     "client": {
       "text": {
-        "status": "已获取硬币数量：{coin}"
+        "status": "已扫描: {fragment} / {total} fragment(s)."
       },
       "scan": {
         "title": "扫描二维码",
-        "numberField": "地址",
-        "numberMessage": "用离线代理扫描以下二维码来获取硬币信息",
+        "numberField": "签名信息",
+        "numberMessage": "请使用在线设备扫码该二维码。",
         "scrollDown": "下滑页面扫描二维码。"
       },
       "button": {

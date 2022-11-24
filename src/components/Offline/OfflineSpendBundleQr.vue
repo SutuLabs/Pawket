@@ -46,10 +46,9 @@
       <div>
         <b-button :label="$t('offline.ui.button.cancel')" @click="close()"></b-button>
       </div>
-      <div v-if="mode == 'ONLINE_CLIENT'" class="is-pulled-right">
-      </div>
+      <div v-if="mode == 'ONLINE_CLIENT'" class="is-pulled-right"></div>
       <div v-if="mode == 'OFFLINE_CLIENT'" class="is-pulled-right">
-        <span class="tag">
+        <span class="tag" v-if="receiveTotal > -1">
           {{ $t("offline.client.text.status", { coin: Object.keys(receives).length, total: receiveTotal }) }}
         </span>
       </div>
@@ -161,7 +160,6 @@ export default class OfflineSpendBundleQr extends Vue {
     if (this.path.endsWith("proxy")) this.$router.back();
     return;
   }
-
 
   async onDecode(result: string): Promise<void> {
     try {

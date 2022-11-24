@@ -258,14 +258,14 @@ export default class MakeOffer extends Vue {
       const offplan = await generateOfferPlan(offs, change_hex, this.availcoins, 0n, xchSymbol());
       const observers = await coinHandler.getAssetsRequestObserver(this.account);
       const ubundle = await generateOffer(offplan, reqs, observers, networkContext());
-      const bundle = await signSpendBundle(ubundle, this.tokenPuzzles, networkContext());
+      this.bundle = await signSpendBundle(ubundle, this.tokenPuzzles, networkContext());
 
       if (this.account.type == "PublicKey") {
         await this.offlineSignBundle();
       }
 
-      lockCoins(bundle.coin_spends, Date.now(), chainId());
-      this.offerText = await encodeOffer(bundle, 4);
+      lockCoins(this.bundle.coin_spends, Date.now(), chainId());
+      this.offerText = await encodeOffer(this.bundle, 4);
 
       this.step = "Confirmation";
     } catch (error) {
