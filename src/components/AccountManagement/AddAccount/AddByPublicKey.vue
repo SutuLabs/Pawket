@@ -23,7 +23,7 @@
           type="text"
           required
           :custom-class="isLegalAddress ? '' : 'is-danger'"
-          :validation-message="$t('addByAddress.ui.message.addressRequired')"
+          :validation-message="$t('addByPublicKey.ui.message.publicKeyRequired')"
           @input.native.enter="clearErrorMsg()"
         ></b-input>
       </b-field>

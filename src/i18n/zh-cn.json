@@ -1407,7 +1407,10 @@
   },
   "addByPublicKey": {
     "ui": {
-      "title": "添加公钥钱包"
+      "title": "添加公钥钱包",
+      "message": {
+        "publicKeyRequired": "公钥不能为空。"
+      }
     }
   }
 }

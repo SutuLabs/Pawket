@@ -1407,7 +1407,10 @@
   },
   "addByPublicKey": {
     "ui": {
-      "title": "Add Account by PublicKey"
+      "title": "Add Account by PublicKey",
+      "message": {
+        "publicKeyRequired": "PublicKey is required."
+      }
     }
   }
 }

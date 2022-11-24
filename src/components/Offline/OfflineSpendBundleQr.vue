@@ -49,7 +49,7 @@
       <div v-if="mode == 'ONLINE_CLIENT'" class="is-pulled-right"></div>
       <div v-if="mode == 'OFFLINE_CLIENT'" class="is-pulled-right">
         <span class="tag" v-if="receiveTotal > -1">
-          {{ $t("offline.client.text.status", { coin: Object.keys(receives).length, total: receiveTotal }) }}
+          {{ $t("offline.client.text.status", { fragment: Object.keys(receives).length, total: receiveTotal }) }}
         </span>
       </div>
     </footer>
