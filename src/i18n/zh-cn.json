@@ -328,7 +328,8 @@
         "panel": {
           "information": "信息",
           "hint": {
-            "thisIsYourOffer": "这是你的 Offer 信息"
+            "thisIsYourOffer": "这是你的 Offer 信息",
+            "unsignedOffer": "签名失败，Offer 无效。"
           }
         },
         "label": {

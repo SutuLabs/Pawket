@@ -328,7 +328,8 @@
         "panel": {
           "information": "Information",
           "hint": {
-            "thisIsYourOffer": "This is your offer text."
+            "thisIsYourOffer": "This is your offer text.",
+            "unsignedOffer": "Signature failed, invalid Offer"
           }
         },
         "label": {

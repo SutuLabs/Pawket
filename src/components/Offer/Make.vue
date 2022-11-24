@@ -62,7 +62,7 @@
             </ul>
           </template>
         </b-field>
-        <b-field :message="$t('offer.make.ui.panel.hint.thisIsYourOffer')">
+        <b-field :message="signed ? $t('offer.make.ui.panel.hint.thisIsYourOffer') : ''">
           <template #label>
             {{ $t("offer.make.ui.label.yourOfferTitle") }}
             <key-box icon="checkbox-multiple-blank-outline" :value="offerText" tooltip="Copy" position="is-right"></key-box>
@@ -70,6 +70,7 @@
           </template>
           <b-input type="textarea" :value="offerText" disabled></b-input>
         </b-field>
+        <span v-if="!signed" class="has-text-danger is-size-6">{{ $t("offer.make.ui.panel.hint.unsignedOffer") }}</span>
         <b-field v-if="debugMode && bundle">
           <template #label>
             {{ $t("offer.make.ui.label.bundle") }}
@@ -153,6 +154,7 @@ export default class MakeOffer extends Vue {
   public tokenPuzzles: TokenPuzzleDetail[] = [];
   public signing = false;
   public uploading = false;
+  public signed = true;
 
   public requests: OfferTokenAmount[] = [{ token: xchSymbol(), amount: "0" }];
   public offers: OfferTokenAmount[] = [{ token: xchSymbol(), amount: "0" }];
@@ -261,6 +263,7 @@ export default class MakeOffer extends Vue {
       this.bundle = await signSpendBundle(ubundle, this.tokenPuzzles, networkContext());
 
       if (this.account.type == "PublicKey") {
+        this.signed = false;
         await this.offlineSignBundle();
       }
 
@@ -323,7 +326,10 @@ export default class MakeOffer extends Vue {
       props: { bundle: this.bundle, mode: "ONLINE_CLIENT" },
       events: {
         signature: (sig: Hex): void => {
-          if (this.bundle) this.bundle.aggregated_signature = prefix0x(sig);
+          if (this.bundle) {
+            this.bundle.aggregated_signature = prefix0x(sig);
+            this.signed = true;
+          }
         },
       },
     });
