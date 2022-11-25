@@ -1,13 +1,14 @@
-import { CoinRecord,  GetRecordsResponse } from "../../models/wallet";
+import { CoinRecord, GetRecordsResponse } from "../../models/wallet";
 import puzzle, { PuzzleAddress, PuzzleDetail, PuzzleObserver, PuzzlePrivateKey } from "./puzzle";
 import utility from "./utility";
 import { CustomCat, AccountTokens, AccountTokenAddress, TokenInfo } from "../../models/account";
 import { analyzeNftCoin, getScalarString } from "../coin/nft";
 import debug from "../api/debug";
 import { analyzeDidCoin, DidCoinAnalysisResult } from "../coin/did";
-import { NftCoinAnalysisResult, CnsCoinAnalysisResult  } from "../../models/nft";
+import { NftCoinAnalysisResult, CnsCoinAnalysisResult } from "../../models/nft";
 import { CoinSpend, OriginCoin } from "../spendbundle";
 import { convertToOriginCoin } from "../coin/coinUtility";
+import { Hex0x } from "../coin/condition";
 
 export interface TokenPuzzleDetail {
   symbol: string;
@@ -97,6 +98,34 @@ class Receive {
     for (let i = 0; i < assets.length; i++) {
       const assetId = assets[i].id;
       const ps = await puzzle.getCatPuzzleDetails(privkey, assetId, prefix, startId, maxId, catModName);
+      tokens.push(Object.assign({}, assets[i], { puzzles: ps }));
+    }
+
+    return tokens;
+  }
+
+  async getAssetsRequestObserver(
+    pk_hex: Hex0x,
+    startId: number,
+    maxId: number,
+    customCats: CustomCat[],
+    tokenInfo: TokenInfo,
+    prefix: string,
+    symbol: string,
+    catModName: "cat_v1" | "cat_v2"
+  ): Promise<TokenPuzzleObserver[]> {
+    const pubkey = utility.fromHexString(pk_hex);
+    const xchToken = { symbol, puzzles: await puzzle.getPuzzleObservers(pubkey, prefix, startId, maxId) };
+    const tokens: TokenPuzzleObserver[] = [xchToken];
+    const standardAssets = Object.values(tokenInfo)
+      .filter((_) => _.id)
+      .map((_) => ({ symbol: _.symbol, id: _.id ?? "" }));
+    const accountAssets = (customCats ?? []).map((_) => ({ symbol: _.name, id: _.id }));
+    const assets = standardAssets.concat(accountAssets);
+
+    for (let i = 0; i < assets.length; i++) {
+      const assetId = assets[i].id;
+      const ps = await puzzle.getCatPuzzleObservers(pubkey, assetId, prefix, startId, maxId, catModName);
       tokens.push(Object.assign({}, assets[i], { puzzles: ps }));
     }
 

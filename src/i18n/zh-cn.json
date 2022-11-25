@@ -16,6 +16,7 @@
       "submit": "提交",
       "delete": "删除",
       "sign": "签名",
+      "generate": "生成",
       "copy": "复制"
     },
     "tooltip": {
@@ -161,7 +162,7 @@
         "tooltip": {
           "donate": "向开发者捐赠",
           "scanAssets": "资产扫描",
-          "proxy": "离线代理",
+          "proxy": "离线签名",
           "takeOffer": "接受 Offer",
           "makeOffer": "发起 Offer",
           "batchSend": "批量发送",
@@ -173,7 +174,7 @@
         "button": {
           "donate": "捐赠",
           "scanAssets": "资产扫描",
-          "proxy": "离线代理",
+          "proxy": "离线签名",
           "takeOffer": "接受 Offer",
           "makeOffer": "发起 Offer",
           "batchSend": "批量发送",
@@ -327,7 +328,8 @@
         "panel": {
           "information": "信息",
           "hint": {
-            "thisIsYourOffer": "这是你的 Offer 信息"
+            "thisIsYourOffer": "这是你的 Offer 信息",
+            "unsignedOffer": "签名失败，Offer 无效。"
           }
         },
         "label": {
@@ -336,7 +338,6 @@
         },
         "button": {
           "done": "完成",
-          "sign": "签名",
           "uploadToDexie": "上传至 Dexie"
         },
         "field": {
@@ -374,7 +375,6 @@
         },
         "button": {
           "cancel": "取消",
-          "sign": "签名",
           "submit": "提交",
           "upload": "上传 Offer 文件"
         },
@@ -448,8 +448,8 @@
       },
       "scan": {
         "title": "扫描二维码",
-        "numberField": "硬币",
-        "numberMessage": "用离线设备扫描以下二维码来获取硬币信息",
+        "numberField": "未签名的信息",
+        "numberMessage": "用离线设备扫描以下二维码。",
         "titleTooltip": "该功能用于离线设备上的交易发送，请从离线设备开始用起。"
       },
       "confirmBundle": {
@@ -463,12 +463,12 @@
     },
     "client": {
       "text": {
-        "status": "已获取硬币数量：{coin}"
+        "status": "已扫描: {fragment} / {total} fragment(s)."
       },
       "scan": {
         "title": "扫描二维码",
-        "numberField": "地址",
-        "numberMessage": "用离线代理扫描以下二维码来获取硬币信息",
+        "numberField": "签名信息",
+        "numberMessage": "请使用在线设备扫码该二维码。",
         "scrollDown": "下滑页面扫描二维码。"
       },
       "button": {
@@ -517,7 +517,8 @@
       "title": "添加地址钱包",
       "label": {
         "name": "账户名",
-        "address": "地址"
+        "address": "地址",
+        "publicKey": "公钥"
       },
       "message": {
         "nameRequired": "账户名不能为空",
@@ -646,7 +647,7 @@
         "cost": "发送",
         "receive": "接收",
         "queue": "队列中",
-        "confirmed":"已确认"
+        "confirmed": "已确认"
       },
       "text": {
         "empty": "暂无交易记录"
@@ -1009,7 +1010,9 @@
         "serial": "序列账户",
         "address": "地址账户",
         "imported": "导入账户",
-        "passPhrase": "影子钱包"
+        "passPhrase": "影子钱包",
+        "publicKey": "公钥钱包",
+        "unknown": "未知"
       },
       "button": {
         "addBySerial": "新增序列账户",
@@ -1399,6 +1402,14 @@
         "cns": "CNS",
         "targetAddress": "Target Address",
         "currentBindingAddress": "当前绑定地址"
+      }
+    }
+  },
+  "addByPublicKey": {
+    "ui": {
+      "title": "添加公钥钱包",
+      "message": {
+        "publicKeyRequired": "公钥不能为空。"
       }
     }
   }

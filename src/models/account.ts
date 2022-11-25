@@ -1,10 +1,10 @@
 import { AccountKey } from "@/services/crypto/account";
 import { AddressType } from "@/services/crypto/puzzle";
-import { DidDetail, NftDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
+import { DidDetail, NftDetail, TokenPuzzleDetail, TokenPuzzleObserver } from "@/services/crypto/receive";
 import { DonwloadedNftCollection } from "./nft";
 import { CoinRecord } from "./wallet";
 
-export type AccountType = "Serial" | "Password" | "Legacy" | "Address";
+export type AccountType = "Serial" | "Password" | "Legacy" | "Address" | "PublicKey";
 
 export interface AccountTokenAddress {
   address: string;
@@ -40,6 +40,7 @@ export interface AccountEntity extends PersistentAccount {
   extraInfo: DonwloadedNftCollection;
   dids?: DidDetail[];
   addressPuzzles: TokenPuzzleDetail[];
+  observePuzzles?: TokenPuzzleObserver[];
   addressGenerated: number;
 }
 

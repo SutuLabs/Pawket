@@ -4,13 +4,15 @@ import {
 } from "bip39";
 
 import pbkdf2Hmac from "pbkdf2-hmac";
+import { Hex, Hex0x } from "../coin/condition";
 import { Instance } from "../util/instance";
 import utility from "./utility";
 
 export interface AccountKey {
-  compatibleMnemonic: string;
+  compatibleMnemonic?: string;
   fingerprint: number;
-  privateKey: string;
+  privateKey?: string;
+  publicKey?: Hex0x;
 }
 
 class AccountHelper {
@@ -57,6 +59,14 @@ class AccountHelper {
       fingerprint: pk.get_fingerprint(),
       privateKey: utility.toHexString(sk.serialize()),
     };
+  }
+
+  getFingerprint(pubkey: Hex | Hex0x): number {
+    const BLS = Instance.BLS;
+    if (!BLS) throw new Error("BLS not initialized");
+
+    const pk = BLS.G1Element.from_bytes(utility.fromHexString(pubkey));
+    return pk.get_fingerprint();
   }
 }
 

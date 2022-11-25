@@ -2,18 +2,28 @@ import { CoinItem, CoinRecord } from "@/models/wallet";
 import { OriginCoin } from "@/services/spendbundle";
 import store from "@/store";
 import { prefix0x } from "../coin/condition";
-import receive, { TokenPuzzleAddress, TokenPuzzleDetail } from "../crypto/receive";
+import receive, { TokenPuzzleAddress, TokenPuzzleDetail, TokenPuzzleObserver } from "../crypto/receive";
 import { getAccountCats } from "@/store/modules/account";
 import { SymbolCoins } from "./transfer";
 import { chainId, rpcUrl, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { AccountEntity } from "@/models/account";
-import { getAccountAddressDetails } from "../util/account";
 import { coinFilter } from "../coin/coinUtility";
+import { getAccountAddressDetails, getAccountPuzzleObservers } from "../util/account";
 
 
 class CoinHandler {
   public async getAssetsRequestDetail(account: AccountEntity): Promise<TokenPuzzleDetail[]> {
     return await getAccountAddressDetails(
+      account,
+      getAccountCats(account),
+      store.state.account.tokenInfo,
+      xchPrefix(),
+      xchSymbol()
+    );
+  }
+
+  public async getAssetsRequestObserver(account: AccountEntity): Promise<TokenPuzzleObserver[]> {
+    return await getAccountPuzzleObservers(
       account,
       getAccountCats(account),
       store.state.account.tokenInfo,

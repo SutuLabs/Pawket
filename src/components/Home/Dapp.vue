@@ -154,7 +154,6 @@ import BatchSend from "@/components/Transfer/BatchSend.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import Donate from "@/components/Settings/Donate.vue";
 import { isMobile } from "@/services/view/responsive";
-import { xchPrefix } from "@/store/modules/network";
 import VerifyMessage from "../Cryptography/VerifyMessage.vue";
 import DecryptMessage from "../Cryptography/DecryptMessage.vue";
 import EncryptMessage from "../Cryptography/EncryptMessage.vue";
@@ -296,13 +295,13 @@ export default class Dapp extends Vue {
   async showProxy(): Promise<void> {
     this.$buefy.modal.open({
       parent: this,
-      component: (await import("@/components/Offline/OfflineQrCode.vue")).default,
+      component: (await import("@/components/Offline/OfflineSpendBundleQr.vue")).default,
       hasModalCard: true,
       fullScreen: isMobile(),
       onCancel: () => this.$router.back(),
       canCancel: ["escape", "outside"],
       trapFocus: true,
-      props: { mode: "PROXY", prefix: xchPrefix() },
+      props: { mode: "OFFLINE_CLIENT", account: this.account },
     });
   }
 

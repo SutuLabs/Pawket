@@ -7,6 +7,7 @@
     @sign="sign()"
     @cancel="cancel()"
     @confirm="submit()"
+    :signBtn="account.type == 'PublicKey' ? $t('common.button.generate') : $t('common.button.sign')"
     :showClose="true"
     :loading="submitting"
     :disabled="!validity || submitting"
@@ -126,6 +127,7 @@ import { generateMintNftBundle } from "@/services/coin/nft";
 import { NftMetadataValues } from "@/models/nft";
 import puzzle from "@/services/crypto/puzzle";
 import Confirmation from "../Common/Confirmation.vue";
+import { Hex, prefix0x } from "@/services/coin/condition";
 
 interface NftFormInfo {
   uri: string;
@@ -311,11 +313,14 @@ export default class MintNft extends Vue {
     this.maxStatus = "Loading";
 
     if (!this.requests || this.requests.length == 0) {
-      this.requests = await coinHandler.getAssetsRequestDetail(this.account);
+      this.requests = this.account.type == "PublicKey" ? [] : await coinHandler.getAssetsRequestDetail(this.account);
     }
 
     if (!this.availcoins) {
-      this.availcoins = await coinHandler.getAvailableCoins(this.requests, this.tokenNames);
+      this.availcoins = await coinHandler.getAvailableCoins(
+        await coinHandler.getAssetsRequestObserver(this.account),
+        coinHandler.getTokenNames(this.account)
+      );
     }
 
     if (!this.availcoins || !this.availcoins[this.selectedToken]) {
@@ -402,13 +407,14 @@ export default class MintNft extends Vue {
         serialTotal: Math.floor(this.serialTotal).toString(16),
       };
 
+      const observers = await coinHandler.getAssetsRequestObserver(this.account);
       const ubundle = await generateMintNftBundle(
         this.address,
         this.account.firstAddress,
         BigInt(this.fee),
         md,
         this.availcoins,
-        this.requests,
+        observers,
         puzzle.getPuzzleHashFromAddress(this.royaltyAddress),
         this.royaltyPercentage * 100,
         networkContext(),
@@ -418,6 +424,10 @@ export default class MintNft extends Vue {
       );
 
       this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());
+
+      if (this.account.type == "PublicKey") {
+        await this.offlineSignBundle();
+      }
     } catch (error) {
       Notification.open({
         message: this.$tc("mintNft.ui.messages.failedToSign") + error,
@@ -461,6 +471,22 @@ export default class MintNft extends Vue {
 
   changeFee(): void {
     this.reset();
+  }
+
+  async offlineSignBundle(): Promise<void> {
+    this.$buefy.modal.open({
+      parent: this,
+      component: (await import("@/components/Offline/OfflineSpendBundleQr.vue")).default,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      props: { bundle: this.bundle, mode: "ONLINE_CLIENT" },
+      events: {
+        signature: (sig: Hex): void => {
+          if (this.bundle) this.bundle.aggregated_signature = prefix0x(sig);
+        },
+      },
+    });
   }
 }
 </script>

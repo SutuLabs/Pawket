@@ -7,6 +7,7 @@
     @sign="sign()"
     @cancel="cancel()"
     @confirm="submit()"
+    :signBtn="account.type == 'PublicKey' ? $t('common.button.generate') : $t('common.button.sign')"
     :showClose="true"
     :loading="submitting"
     :disabled="!validity || submitting"
@@ -84,6 +85,7 @@ import { Bytes } from "clvm";
 import { getTokenInfo } from "@/services/view/cat";
 import AddressField from "@/components/Common/AddressField.vue";
 import Confirmation from "../Common/Confirmation.vue";
+import { Hex, prefix0x } from "@/services/coin/condition";
 
 @Component({
   components: {
@@ -250,11 +252,14 @@ export default class MintCat extends Vue {
     this.maxStatus = "Loading";
 
     if (!this.requests || this.requests.length == 0) {
-      this.requests = await coinHandler.getAssetsRequestDetail(this.account);
+      this.requests = this.account.type == "PublicKey" ? [] : await coinHandler.getAssetsRequestDetail(this.account);
     }
 
     if (!this.availcoins) {
-      this.availcoins = await coinHandler.getAvailableCoins(this.requests, this.tokenNames);
+      this.availcoins = await coinHandler.getAvailableCoins(
+        await coinHandler.getAssetsRequestObserver(this.account),
+        coinHandler.getTokenNames(this.account)
+      );
     }
 
     if (!this.availcoins || !this.availcoins[this.selectedToken]) {
@@ -331,6 +336,8 @@ export default class MintCat extends Vue {
         return;
       }
 
+      const observers = await coinHandler.getAssetsRequestObserver(this.account);
+
       const { spendBundle, assetId } = await generateMintCatBundle(
         this.signAddress,
         this.account.firstAddress,
@@ -338,13 +345,16 @@ export default class MintCat extends Vue {
         BigInt(this.fee),
         this.memo,
         this.availcoins,
-        this.requests,
+        observers,
         networkContext(),
         "cat_v2"
       );
 
       this.bundle = await signSpendBundle(spendBundle, this.requests, networkContext());
       this.assetId = assetId;
+      if (this.account.type == "PublicKey") {
+        await this.offlineSignBundle();
+      }
     } catch (error) {
       Notification.open({
         message: this.$tc("mintCat.ui.messages.failedToSign") + error,
@@ -394,6 +404,22 @@ export default class MintCat extends Vue {
   changeFee(): void {
     this.reset();
     if (this.selectMax) this.setMax();
+  }
+
+  async offlineSignBundle(): Promise<void> {
+    this.$buefy.modal.open({
+      parent: this,
+      component: (await import("@/components/Offline/OfflineSpendBundleQr.vue")).default,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      props: { bundle: this.bundle, mode: "ONLINE_CLIENT" },
+      events: {
+        signature: (sig: Hex): void => {
+          if (this.bundle) this.bundle.aggregated_signature = prefix0x(sig);
+        },
+      },
+    });
   }
 }
 </script>

@@ -16,6 +16,7 @@
       "submit": "Submit",
       "delete": "Delete",
       "sign": "Sign",
+      "generate": "Generate",
       "copy": "Copy"
     },
     "tooltip": {
@@ -161,7 +162,7 @@
         "tooltip": {
           "donate": "Donate to Support Development",
           "scanAssets": "Scan Assets",
-          "proxy": "Proxy",
+          "proxy": "Offline Sign",
           "takeOffer": "Take Offer",
           "makeOffer": "Make Offer",
           "batchSend": "Batch Send",
@@ -173,7 +174,7 @@
         "button": {
           "donate": "Donate",
           "scanAssets": "Scan Assets",
-          "proxy": "Proxy",
+          "proxy": "Offline Sign",
           "takeOffer": "Take Offer",
           "makeOffer": "Make Offer",
           "batchSend": "Batch Send",
@@ -327,7 +328,8 @@
         "panel": {
           "information": "Information",
           "hint": {
-            "thisIsYourOffer": "This is your offer text."
+            "thisIsYourOffer": "This is your offer text.",
+            "unsignedOffer": "Signature failed, invalid Offer"
           }
         },
         "label": {
@@ -336,7 +338,6 @@
         },
         "button": {
           "done": "Done",
-          "sign": "Sign",
           "uploadToDexie": "Upload to Dexie"
         },
         "field": {
@@ -374,7 +375,6 @@
         },
         "button": {
           "cancel": "Cancel",
-          "sign": "Sign",
           "submit": "Submit",
           "upload": "Upload Offer File"
         },
@@ -448,8 +448,8 @@
       },
       "scan": {
         "title": "Proxy Scan",
-        "numberField": "Coins",
-        "numberMessage": "Use offline device to scan these coins.",
+        "numberField": "Unsigned Messages",
+        "numberMessage": "Use offline device to scan these QR codes.",
         "titleTooltip": "This is a gateway for your transaction send from an offline device, please start with an offline Pawket."
       },
       "confirmBundle": {
@@ -463,12 +463,12 @@
     },
     "client": {
       "text": {
-        "status": "Retrieved {coin} coin(s)."
+        "status": "Scanned: {fragment} / {total} fragment(s)."
       },
       "scan": {
         "title": "Scan QR",
-        "numberField": "Addresses",
-        "numberMessage": "Use Proxy to scan these addresses.",
+        "numberField": "Signed Message",
+        "numberMessage": "Please use an online device to scan the QR code.",
         "scrollDown": "Scroll down the page to scan the QR code."
       },
       "button": {
@@ -517,7 +517,8 @@
       "title": "Add By Address",
       "label": {
         "name": "Account Name",
-        "address": "Address"
+        "address": "Address",
+        "publicKey": "PublicKey"
       },
       "message": {
         "nameRequired": "Account name is required.",
@@ -1004,19 +1005,21 @@
   "accountManagement": {
     "ui": {
       "title": "Account Management",
+      "label": {
+        "default": "Default",
+        "serial": "Serial",
+        "address": "Address",
+        "imported": "Imported",
+        "passPhrase": "Passphrase",
+        "publicKey": "PublicKey",
+        "unknown": "Unknown"
+      },
       "button": {
         "addBySerial": "Add by Serial",
         "addByPassword": "Add Shadow Wallet",
         "addByLegacy": "Import Chia Official Wallet（24-word）",
         "addByMnemonic": "Import Nucle/Goby Wallet（12-word）",
         "addByAddress": "Add by Address(Observation Mode)"
-      },
-      "label": {
-        "default": "Default",
-        "serial": "Serial",
-        "address": "Address",
-        "imported": "Imported",
-        "passPhrase": "Passphrase"
       },
       "tooltip": {
         "addBySerial": "Derived serial accounts are created in order.",
@@ -1399,6 +1402,14 @@
         "cns": "CNS",
         "targetAddress": "Target Address",
         "currentBindingAddress": "Current binding address"
+      }
+    }
+  },
+  "addByPublicKey": {
+    "ui": {
+      "title": "Add Account by PublicKey",
+      "message": {
+        "publicKeyRequired": "PublicKey is required."
       }
     }
   }
