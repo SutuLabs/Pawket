@@ -20,24 +20,25 @@
       <div class="columns">
         <div v-if="qrcodes.length > 0" class="column">
           <b-field
-            v-if="qrcodes.length > 1"
             :label="mode == 'OFFLINE_CLIENT' ? $t('offline.client.scan.numberField') : $t('offline.proxy.scan.numberField')"
             :message="mode == 'OFFLINE_CLIENT' ? $t('offline.client.scan.numberMessage') : $t('offline.proxy.scan.numberMessage')"
           >
-            <b-slider size="is-large" v-model="selectedQr" :max="qrcodes.length - 1" @change="stopLoop()"> </b-slider>
+            <b-slider
+              v-if="qrcodes.length > 1"
+              size="is-large"
+              v-model="selectedQr"
+              :max="qrcodes.length - 1"
+              @change="stopLoop()"
+            >
+            </b-slider>
           </b-field>
 
           <center>
             <qrcode-vue :value="qrcodes[qrcodes.length > 1 ? selectedQr : 0]" size="250"></qrcode-vue>
+            <div class="is-hidden-tablet" v-if="mode === 'ONLINE_CLIENT'">{{ $t("offline.client.scan.scrollDown") }}</div>
           </center>
         </div>
         <div class="column">
-          <div
-            v-if="mode === 'OFFLINE_CLIENT' && cameraInited"
-            class="pb-5 is-size-6 has-text-primary has-text-weight-bold has-text-centered is-hidden-tablet"
-          >
-            {{ $t("offline.client.scan.scrollDown") }}
-          </div>
           <qrcode-stream v-if="cameraStatus != 'off'" :camera="cameraStatus" @decode="onDecode" @init="onInit" />
         </div>
       </div>
