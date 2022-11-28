@@ -50,7 +50,7 @@ export async function generateOffer(
     return puz_anno_id;
   }
 
-  const puzzleCopy: TokenPuzzleDetail[] = Object.assign([], puzzles);
+  const puzzleCopy: TokenPuzzleDetail[] = puzzles.map((_) => Object.assign({}, { symbol: _.symbol, puzzles: Object.assign([], _.puzzles) }))
 
   // generate requested
   for (let i = 0; i < requested.length; i++) {
@@ -309,7 +309,7 @@ export async function generateNftOffer(
     return puz_anno_id;
   };
 
-  const puzzleCopy: TokenPuzzleDetail[] = Object.assign([], puzzles);
+  const puzzleCopy: TokenPuzzleDetail[] = puzzles.map((_) => Object.assign({}, { symbol: _.symbol, puzzles: Object.assign([], _.puzzles) }))
 
   // put special target into puzzle reverse dict
   puzzleCopy
