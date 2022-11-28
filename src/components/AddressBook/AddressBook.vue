@@ -225,21 +225,6 @@ export default class AddressBook extends Vue {
     this.updateContacts();
   }
 
-  async scanQrCode(): Promise<void> {
-    this.$buefy.modal.open({
-      parent: this,
-      component: (await import("@/components/Common/ScanQrCode.vue")).default,
-      hasModalCard: true,
-      trapFocus: true,
-      props: {},
-      events: {
-        scanned: (value: string): void => {
-          this.address = value;
-        },
-      },
-    });
-  }
-
   showDetail(contact: Contact, index: number, editable = true): void {
     if (this.parent === "Send") {
       this.selected(contact.address);

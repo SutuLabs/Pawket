@@ -73,6 +73,7 @@
           <li>
             {{ $t("accountInfo.ui.label.masterPublicKey") }}:
             <key-box :value="masterpubkey || account.key.publicKey" :showValue="true"></key-box>
+            <qrcode-vue :value="masterpubkey || account.key.publicKey" size="150"></qrcode-vue>
           </li>
           <li>
             {{ $t("accountInfo.ui.label.farmerPublicKey") }}:
@@ -129,9 +130,10 @@ import { accountTypeConverter } from "@/filters/accountTypeConversion";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import TopBar from "@/components/Common/TopBar.vue";
 import encryption from "@/services/crypto/encryption";
+import QrcodeVue from "qrcode.vue";
 
 @Component({
-  components: { TopBar, KeyBox },
+  components: { TopBar, KeyBox, QrcodeVue },
 })
 export default class AccountDetail extends Vue {
   @Prop() public idx!: number;

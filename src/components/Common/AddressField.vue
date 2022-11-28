@@ -87,6 +87,7 @@ import puzzle from "@/services/crypto/puzzle";
 import debug from "@/services/api/debug";
 import { CoinSpend } from "@/services/spendbundle";
 import { analyzeNftCoin, getScalarString } from "@/services/coin/nft";
+import { decodeAddress } from "@/services/view/camera";
 
 @Component({
   components: {
@@ -252,7 +253,7 @@ export default class AddressField extends Vue {
       events: {
         scanned: (value: string): void => {
           this.reset();
-          this.address = value;
+          this.address = decodeAddress(xchPrefix(), value) ?? this.address;
         },
       },
     });
