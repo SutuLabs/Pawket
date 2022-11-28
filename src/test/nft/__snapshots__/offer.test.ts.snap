@@ -806,30 +806,7 @@ exports[`create and accept nft offer for xch: offplan 1`] = `
 Array [
   Object {
     "id": "74cc7e5904310477bae6e250910da9fee0e604b93d73a180cbd052d12f56769a",
-    "plan": Object {
-      "coins": Array [
-        Object {
-          "amount": 200n,
-          "parent_coin_info": "0x46f951c709f81aca66e12d744b36f220ac89bc171338ec9fe8c012eb76d5266c",
-          "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
-        },
-      ],
-      "targets": Array [
-        Object {
-          "address": "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79",
-          "amount": 1n,
-          "memos": Array [
-            "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79",
-          ],
-          "symbol": "TXCH",
-        },
-        Object {
-          "address": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
-          "amount": 199n,
-          "symbol": "TXCH",
-        },
-      ],
-    },
+    "plan": undefined,
   },
 ]
 `;

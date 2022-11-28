@@ -81,7 +81,7 @@ test('create and accept nft offer for xch', async () => {
   const offs: OfferEntity[] = [
     {
       "id": "74cc7e5904310477bae6e250910da9fee0e604b93d73a180cbd052d12f56769a",
-      "amount": 1n,
+      "amount": 0n,
       "royalty": 800,
       "nft_uri": "https://guggero.github.io/cryptography-toolkit/images/fork-me-on-github-ribbon.png"
     }

@@ -70,7 +70,7 @@ export async function generateMintCnsOffer(
   const offs: OfferEntity[] = [
     {
       "id": analysis.launcherId,
-      "amount": 1n,
+      "amount": 0n,
       "royalty": analysis.tradePricePercentage,
       "nft_uri": "something unimportant"
     }
