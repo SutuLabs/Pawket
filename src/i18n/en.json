@@ -449,7 +449,7 @@
       "scan": {
         "title": "Sign",
         "numberField": "Unsigned Messages",
-        "numberMessage": "Use offline device to scan these QR codes.",
+        "numberMessage": "Scan these following QR codes with Offline Sign. ( Note: Please switch to the wallet corresponding to the public key account first. )",
         "titleTooltip": "This is a gateway for your transaction send from an offline device, please start with an offline Pawket."
       },
       "confirmBundle": {
