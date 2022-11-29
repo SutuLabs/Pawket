@@ -56,8 +56,7 @@
       },
       "button": {
         "home": "Home",
-        "developer": "Developer",
-        "proxy": "Proxy"
+        "developer": "Developer"
       },
       "error": {
         "READ_VERSION_FAILED": "Failed to read version."

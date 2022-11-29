@@ -56,8 +56,7 @@
       },
       "button": {
         "home": "主页",
-        "developer": "开发者工具",
-        "proxy": "离线代理"
+        "developer": "开发者工具"
       },
       "error": {
         "READ_VERSION_FAILED": "读取版本信息失败"

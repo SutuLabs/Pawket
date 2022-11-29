@@ -18,11 +18,6 @@
           <b-icon icon="developer-board" size="is-small"></b-icon>
           {{ $t("footer.ui.button.developer") }}
         </a>
-        |
-        <a href="javascript:void(0)" size="is-small" @click="showProxy()" class="has-color-link">
-          <b-icon icon="router-network" size="is-small"></b-icon>
-          {{ $t("footer.ui.button.proxy") }}
-        </a>
       </p>
     </div>
   </footer>
@@ -31,7 +26,6 @@
 import { tc } from "@/i18n/i18n";
 import { isMobile } from "@/services/view/responsive";
 import store from "@/store";
-import { xchPrefix } from "@/store/modules/network";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { Component, Vue } from "vue-property-decorator";
 import DevHelper from "../DevHelper/DevHelper.vue";
@@ -56,18 +50,6 @@ export default class PawketFooter extends Vue {
       trapFocus: true,
       fullScreen: isMobile(),
       canCancel: [""],
-    });
-  }
-
-  async showProxy(): Promise<void> {
-    this.$buefy.modal.open({
-      parent: this,
-      component: (await import("@/components/Offline/OfflineQrCode.vue")).default,
-      hasModalCard: true,
-      trapFocus: true,
-      fullScreen: isMobile(),
-      canCancel: [""],
-      props: { mode: "PROXY", prefix: xchPrefix() },
     });
   }
 

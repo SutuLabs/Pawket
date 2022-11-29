@@ -364,7 +364,7 @@ export default class Send extends Vue {
       const memo = this.memo.replace(/[&/\\#,+()$~%.'":*?<>{}\[\] ]/g, "_");
       const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: this.selectedToken, memos: [tgt_hex, memo] }];
       const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
-      const observers = this.requests ?? (await coinHandler.getAssetsRequestObserver(this.account));
+      const observers = this.requests.length ? this.requests : await coinHandler.getAssetsRequestObserver(this.account);
       const ubundle = await transfer.generateSpendBundleIncludingCat(plan, observers, [], networkContext());
       if (this.account.type == "PublicKey") {
         this.bundle = await signSpendBundle(ubundle, [], networkContext());
