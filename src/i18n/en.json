@@ -1028,7 +1028,7 @@
         "addByLegacy": "Import Chia official wallet.",
         "addByMnemonic": "Import Nucle/Goby wallet.",
         "addByAddress": "Read-only is supported in this mode.",
-        "addByPublicKey": "By adding the PublicKey of the offline wallet, the offline wallet is assisted to initiate and complete the transaction."
+        "addByPublicKey": "Add the public key of the offline wallet to help to initiate and complete transactions."
       },
       "modal": {
         "addByLegacy": "Import Chia Official Wallet",
