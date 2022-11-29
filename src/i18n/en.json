@@ -1019,14 +1019,16 @@
         "addByPassword": "Add Shadow Wallet",
         "addByLegacy": "Import Chia Official Wallet（24-word）",
         "addByMnemonic": "Import Nucle/Goby Wallet（12-word）",
-        "addByAddress": "Add by Address(Observation Mode)"
+        "addByAddress": "Add by Address(Observation Mode)",
+        "addByPublicKey": "Add by Public Key"
       },
       "tooltip": {
         "addBySerial": "Derived serial accounts are created in order.",
         "addByPassword": "Account protected by MNEMONIC and PASSPHRASE. Enter the same PASSPHRASE to access the same account.",
         "addByLegacy": "Import Chia official wallet.",
         "addByMnemonic": "Import Nucle/Goby wallet.",
-        "addByAddress": "Read-only is supported in this mode."
+        "addByAddress": "Read-only is supported in this mode.",
+        "addByPublicKey": "Add by Public Key"
       },
       "modal": {
         "addByLegacy": "Import Chia Official Wallet",

@@ -1019,14 +1019,16 @@
         "addByPassword": "新增影子钱包",
         "addByLegacy": "导入 Chia 客户端账户(24词)",
         "addByMnemonic": "导入 Nucle/Goby 账户(12词)",
-        "addByAddress": "新增地址账户（观察模式）"
+        "addByAddress": "新增地址账户（观察模式）",
+        "addByPublicKey": "新增公钥钱包"
       },
       "tooltip": {
         "addBySerial": "按顺序创建派生的序列账户。",
         "addByPassword": "由【助记词+口令】保护的账户。输入相同的口令即可进入相同的账户。",
         "addByLegacy": "导入 Chia 客户端账户。",
         "addByMnemonic": "导入 Nucle/Goby 账户。",
-        "addByAddress": "该模式下仅支持阅读。"
+        "addByAddress": "该模式下仅支持阅读。",
+        "addByPublicKey": "新增公钥钱包"
       },
       "modal": {
         "addByLegacy": "导入 Chia 客户端账户",

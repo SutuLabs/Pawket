@@ -70,12 +70,12 @@
           <span class="mx-2">{{ $t("accountManagement.ui.button.addByAddress") }}</span>
         </b-tooltip>
       </a>
-      <a v-if="debugMode" href="javascript:void(0)" class="panel-block" @click="addByPublicKey()">
-        <b-tooltip :label="'Add by Public Key'" multilined size="is-small">
+      <a href="javascript:void(0)" class="panel-block" @click="addByPublicKey()">
+        <b-tooltip :label="$t('accountManagement.ui.tooltip.addByPublicKey')" multilined size="is-small">
           <span class="panel-icon">
             <b-icon icon="plus-thick"></b-icon>
           </span>
-          <span class="mx-2">Add by Public Key</span>
+          <span class="mx-2">{{ $t("accountManagement.ui.button.addByPublicKey") }}</span>
         </b-tooltip>
       </a>
       <a href="javascript:void(0)" class="panel-block" @click="addByLegacy()">

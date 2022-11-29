@@ -312,22 +312,6 @@ export default class BuyCns extends Vue {
     debugBundle(this, this.bundle);
   }
 
-  async scanQrCode(): Promise<void> {
-    this.$buefy.modal.open({
-      parent: this,
-      component: (await import("@/components/Common/ScanQrCode.vue")).default,
-      hasModalCard: true,
-      trapFocus: true,
-      props: {},
-      events: {
-        scanned: (value: string): void => {
-          this.reset();
-          this.address = value;
-        },
-      },
-    });
-  }
-
   changeFee(): void {
     this.reset();
   }

@@ -27,6 +27,8 @@
 </template>
 
 <script lang="ts">
+import { decodeAddress } from "@/services/view/camera";
+import { xchPrefix } from "@/store/modules/network";
 import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
 import { Component, Prop, Vue } from "vue-property-decorator";
@@ -77,7 +79,7 @@ export default class AddressBookField extends Vue {
       props: {},
       events: {
         scanned: (value: string): void => {
-          this.address = value;
+          this.address = decodeAddress(xchPrefix(), value) ?? this.address;
         },
       },
     });

@@ -23,7 +23,7 @@
             </b-tooltip>
           </div>
         </b-tab-item>
-        <b-tab-item :label="$t('explorerLink.ui.label.nonObserver')" icon="security" value="Hardened">
+        <b-tab-item :label="$t('explorerLink.ui.label.nonObserver')" icon="security" value="Hardened" v-if="account.type != 'PublicKey'">
           <div class="has-text-centered">
             <qrcode-vue :value="externalExplorerPrefix + address" size="200"></qrcode-vue>
             <key-box icon="checkbox-multiple-blank-outline" :value="address" :showValue="true"></key-box>

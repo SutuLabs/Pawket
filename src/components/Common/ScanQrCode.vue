@@ -7,11 +7,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Emit } from "vue-property-decorator";
+import { Component,  Vue, Emit } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from "vue-qrcode-reader";
-import { decodeAddress, initCameraHandleError } from "@/services/view/camera";
-import { xchPrefix } from "@/store/modules/network";
+import { initCameraHandleError } from "@/services/view/camera";
 
 @Component({
   components: {
@@ -22,8 +21,6 @@ import { xchPrefix } from "@/store/modules/network";
   },
 })
 export default class ScanQrCode extends Vue {
-  @Prop({ default: xchPrefix() }) public prefix!: string;
-  public result = "";
   public error = "";
   public cameraStatus = "auto";
 
@@ -34,12 +31,8 @@ export default class ScanQrCode extends Vue {
   }
 
   async onDecode(result: string): Promise<void> {
-    this.result = decodeAddress(this.prefix, result) ?? this.result;
-
-    if (this.result) {
-      this.$emit("scanned", this.result);
-      this.close();
-    }
+    this.$emit("scanned", result);
+    this.close();
   }
 
   async onInit(promise: Promise<void>): Promise<void> {

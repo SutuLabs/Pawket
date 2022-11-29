@@ -22,10 +22,16 @@
           v-model="publicKey"
           type="text"
           required
+          expanded
           :custom-class="isLegalAddress ? '' : 'is-danger'"
           :validation-message="$t('addByPublicKey.ui.message.publicKeyRequired')"
           @input.native.enter="clearErrorMsg()"
         ></b-input>
+        <p class="control">
+          <b-button @click="scanQrCode()">
+            <b-icon icon="scan-helper"></b-icon>
+          </b-button>
+        </p>
       </b-field>
     </section>
     <footer class="modal-card-foot is-justify-content-space-between">
@@ -86,6 +92,21 @@ export default class AddByPublicKey extends Vue {
 
   submit(): void {
     this.addAccount().finally(() => (this.submitting = false));
+  }
+
+  async scanQrCode(): Promise<void> {
+    this.$buefy.modal.open({
+      parent: this,
+      component: (await import("@/components/Common/ScanQrCode.vue")).default,
+      hasModalCard: true,
+      trapFocus: true,
+      props: {},
+      events: {
+        scanned: (value: string): void => {
+          this.publicKey = value;
+        },
+      },
+    });
   }
 }
 </script>
