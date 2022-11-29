@@ -466,7 +466,7 @@
         "status": "已扫描: {fragment} / {total} fragment(s)."
       },
       "scan": {
-        "title": "扫描二维码",
+        "title": "离线签名",
         "numberField": "签名信息",
         "numberMessage": "请使用在线设备扫码该二维码。",
         "scrollDown": "下滑页面扫描二维码。"
@@ -1011,7 +1011,7 @@
         "address": "地址账户",
         "imported": "导入账户",
         "passPhrase": "影子钱包",
-        "publicKey": "公钥钱包",
+        "publicKey": "公钥账户",
         "unknown": "未知"
       },
       "button": {
@@ -1020,7 +1020,7 @@
         "addByLegacy": "导入 Chia 客户端账户(24词)",
         "addByMnemonic": "导入 Nucle/Goby 账户(12词)",
         "addByAddress": "新增地址账户（观察模式）",
-        "addByPublicKey": "新增公钥钱包"
+        "addByPublicKey": "新增公钥账户"
       },
       "tooltip": {
         "addBySerial": "按顺序创建派生的序列账户。",
@@ -1028,7 +1028,7 @@
         "addByLegacy": "导入 Chia 客户端账户。",
         "addByMnemonic": "导入 Nucle/Goby 账户。",
         "addByAddress": "该模式下仅支持阅读。",
-        "addByPublicKey": "新增公钥钱包"
+        "addByPublicKey": "通过添加离线钱包的公钥，辅助该离线钱包发起交易。"
       },
       "modal": {
         "addByLegacy": "导入 Chia 客户端账户",
@@ -1409,7 +1409,7 @@
   },
   "addByPublicKey": {
     "ui": {
-      "title": "添加公钥钱包",
+      "title": "添加公钥账户",
       "message": {
         "publicKeyRequired": "公钥不能为空。"
       }
