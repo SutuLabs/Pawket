@@ -171,12 +171,12 @@
 import { AccountEntity, AccountTokens, CustomCat, OneTokenInfo, TokenInfo } from "@/models/account";
 import { getCatIdDict, getCatNames, getTokenInfo } from "@/services/view/cat";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import receive, { DidDetail, NftDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
+import receive, { DidDetail, NftDetail, TokenPuzzleObserver } from "@/services/crypto/receive";
 import { ensureAddress, rpcUrl, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { CoinRecord, GetRecordsResponse } from "@/models/wallet";
 import debug from "@/services/api/debug";
 import { analyzeNftCoin, getScalarString } from "@/services/coin/nft";
-import puzzle, { PuzzleDetail } from "@/services/crypto/puzzle";
+import puzzle, { PuzzleObserver } from "@/services/crypto/puzzle";
 import { analyzeCatCoin, CatCoinAnalysisResult } from "@/services/coin/cat";
 import utility from "@/services/crypto/utility";
 import { demojo } from "@/filters/unitConversion";
@@ -216,8 +216,8 @@ export default class ScanAssets extends Vue {
   didList: DidDetail[] = [];
   catList: CatCoinAnalysisResult[] = [];
   tokenBalance: AccountTokens = {};
-  allRequests: TokenPuzzleDetail[] = [];
-  puzCache: { [symbol: string]: PuzzleDetail[] } = {};
+  allRequests: TokenPuzzleObserver[] = [];
+  puzCache: { [symbol: string]: PuzzleObserver[] } = {};
   allRecords: CoinRecord[] = [];
   isLoading = false;
 
@@ -347,24 +347,32 @@ export default class ScanAssets extends Vue {
 
   async scan(): Promise<void> {
     try {
-      const privatekey = utility.fromHexString(this.account.key.privateKey);
       let symbol = xchSymbol();
       const prefix = xchPrefix();
-      let requests: TokenPuzzleDetail[] = [];
-      let ps: PuzzleDetail[] = [];
+      let requests: TokenPuzzleObserver[] = [];
+      let ps: PuzzleObserver[] = [];
       if (this.option == "Token" && this.token != "XCH") {
-        console.log(this.puzCache[this.token]?.length, 2 * (this.current + 100));
         if (this.puzCache[this.token] && this.puzCache[this.token].length >= 2 * (this.current + 100)) {
           ps = this.puzCache[this.token].slice(this.current, this.current + 200);
         } else {
-          ps = await puzzle.getCatPuzzleDetails(
-            privatekey,
-            this.catIds[this.token],
-            prefix,
-            this.current,
-            this.current + 100,
-            "cat_v2"
-          );
+          ps =
+            this.account.type == "PublicKey"
+              ? await puzzle.getCatPuzzleObservers(
+                  utility.fromHexString(this.account.key.publicKey),
+                  this.catIds[this.token],
+                  prefix,
+                  this.current,
+                  this.current + 100,
+                  "cat_v2"
+                )
+              : await puzzle.getCatPuzzleDetails(
+                  utility.fromHexString(this.account.key.privateKey),
+                  this.catIds[this.token],
+                  prefix,
+                  this.current,
+                  this.current + 100,
+                  "cat_v2"
+                );
           this.puzCache[this.token] = this.puzCache[this.token] ? this.puzCache[this.token].concat(ps) : ps;
         }
         symbol = this.token;
@@ -372,7 +380,20 @@ export default class ScanAssets extends Vue {
         if (this.puzCache["XCH"] && this.puzCache["XCH"].length >= 2 * (this.current + 100)) {
           ps = this.puzCache["XCH"].slice(this.current, this.current + 200);
         } else {
-          ps = await puzzle.getPuzzleDetails(privatekey, prefix, this.current, this.current + 100);
+          ps =
+            this.account.type == "PublicKey"
+              ? await puzzle.getPuzzleObservers(
+                  utility.fromHexString(this.account.key.publicKey),
+                  prefix,
+                  this.current,
+                  this.current + 100
+                )
+              : await puzzle.getPuzzleDetails(
+                  utility.fromHexString(this.account.key.privateKey),
+                  prefix,
+                  this.current,
+                  this.current + 100
+                );
           this.puzCache["XCH"] = this.puzCache["XCH"] ? this.puzCache["XCH"].concat(ps) : ps;
         }
       }

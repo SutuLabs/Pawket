@@ -277,7 +277,7 @@ export default class NftTransfer extends Vue {
         return;
       }
 
-      const observers = await coinHandler.getAssetsRequestObserver(this.account);
+      const observers = this.requests ?? (await coinHandler.getAssetsRequestObserver(this.account));
 
       const ubundle = await generateTransferNftBundle(
         this.signAddress,
@@ -290,9 +290,11 @@ export default class NftTransfer extends Vue {
         networkContext()
       );
 
-      this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());
       if (this.account.type == "PublicKey") {
+        this.bundle = await signSpendBundle(ubundle, [], networkContext());
         await this.offlineSignBundle();
+      }else {
+        this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());
       }
     } catch (error) {
       Notification.open({

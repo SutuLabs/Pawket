@@ -7,7 +7,7 @@
     @sign="sign()"
     @cancel="cancel()"
     @confirm="offline ? showSend() : submit()"
-    :sign-btn="account.type == 'PublicKey' ?  $t('common.button.generate') : $t('common.button.sign')"
+    :sign-btn="account.type == 'PublicKey' ? $t('common.button.generate') : $t('common.button.sign')"
     :confirmBtn="offline ? $t('send.ui.button.showSend') : $t('send.ui.button.submit')"
     :showClose="showClose"
     :loading="submitting"
@@ -364,12 +364,13 @@ export default class Send extends Vue {
       const memo = this.memo.replace(/[&/\\#,+()$~%.'":*?<>{}\[\] ]/g, "_");
       const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: this.selectedToken, memos: [tgt_hex, memo] }];
       const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
-      const observers = await coinHandler.getAssetsRequestObserver(this.account);
+      const observers = this.requests ?? (await coinHandler.getAssetsRequestObserver(this.account));
       const ubundle = await transfer.generateSpendBundleIncludingCat(plan, observers, [], networkContext());
-      this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());
-
       if (this.account.type == "PublicKey") {
+        this.bundle = await signSpendBundle(ubundle, [], networkContext());
         await this.offlineSignBundle();
+      } else {
+        this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());
       }
     } catch (error) {
       Notification.open({
