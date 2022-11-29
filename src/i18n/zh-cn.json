@@ -1028,7 +1028,7 @@
         "addByLegacy": "导入 Chia 客户端账户。",
         "addByMnemonic": "导入 Nucle/Goby 账户。",
         "addByAddress": "该模式下仅支持阅读。",
-        "addByPublicKey": "通过添加离线钱包的公钥，辅助该离线钱包发起并完成交易。"
+        "addByPublicKey": "添加离线钱包的公钥，以帮助发起和完成交易。"
       },
       "modal": {
         "addByLegacy": "导入 Chia 客户端账户",
