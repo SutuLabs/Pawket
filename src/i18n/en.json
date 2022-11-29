@@ -468,8 +468,8 @@
       "scan": {
         "title": "Offline Sign",
         "numberField": "Signed Message",
-        "numberMessage": "Please use the online device you just traded to scan the QR code.",
-        "scrollDown": "Scroll down the page, and scan the QR code of the signed message on the offline device."
+        "numberMessage": "Please scan this QR code with the online device that just initiated the transaction.",
+        "scrollDown": "Scroll down the page, and scan the QR code on the offline device to get the signed message."
       },
       "button": {
         "finish": "Finish"
