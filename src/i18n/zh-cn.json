@@ -1402,7 +1402,7 @@
       "label": {
         "updateTo": "更新至",
         "cns": "CNS",
-        "targetAddress": "Target Address",
+        "targetAddress": "目标地址",
         "currentBindingAddress": "当前绑定地址"
       }
     }
