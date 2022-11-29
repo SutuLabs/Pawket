@@ -449,7 +449,7 @@
       "scan": {
         "title": "签名",
         "numberField": "未签名的信息",
-        "numberMessage": "打开离线设备，使用（该公钥所属钱包）离线签名扫描以下二维码。",
+        "numberMessage": "使用离线签名扫描以下二维码。（注意切换至该公钥账户对应的钱包）",
         "titleTooltip": "该功能用于离线设备上的交易发送，请从离线设备开始用起。"
       },
       "confirmBundle": {
