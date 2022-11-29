@@ -446,9 +446,9 @@
         "gettingCoins": "Getting..."
       },
       "scan": {
-        "title": "Proxy Scan",
+        "title": "Sign",
         "numberField": "Unsigned Messages",
-        "numberMessage": "Use offline device to scan these QR codes.",
+        "numberMessage": "Scan these following QR codes with Offline Sign. ( Note: Please switch to the wallet corresponding to the public key account first. )",
         "titleTooltip": "This is a gateway for your transaction send from an offline device, please start with an offline Pawket."
       },
       "confirmBundle": {
@@ -465,10 +465,10 @@
         "status": "Scanned: {fragment} / {total} fragment(s)."
       },
       "scan": {
-        "title": "Scan QR",
+        "title": "Offline Sign",
         "numberField": "Signed Message",
-        "numberMessage": "Please use an online device to scan the QR code.",
-        "scrollDown": "Scroll down the page to scan the QR code."
+        "numberMessage": "Please scan this QR code with the online device that just initiated the transaction.",
+        "scrollDown": "Scroll down the page, and scan the QR code on the offline device to get the signed message."
       },
       "button": {
         "finish": "Finish"
@@ -1019,7 +1019,7 @@
         "addByLegacy": "Import Chia Official Wallet（24-word）",
         "addByMnemonic": "Import Nucle/Goby Wallet（12-word）",
         "addByAddress": "Add by Address(Observation Mode)",
-        "addByPublicKey": "Add by Public Key"
+        "addByPublicKey": "Add by PublicKey"
       },
       "tooltip": {
         "addBySerial": "Derived serial accounts are created in order.",
@@ -1027,7 +1027,7 @@
         "addByLegacy": "Import Chia official wallet.",
         "addByMnemonic": "Import Nucle/Goby wallet.",
         "addByAddress": "Read-only is supported in this mode.",
-        "addByPublicKey": "Add by Public Key"
+        "addByPublicKey": "Add the public key of the offline wallet to help to initiate and complete transactions."
       },
       "modal": {
         "addByLegacy": "Import Chia Official Wallet",
