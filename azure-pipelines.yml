@@ -14,7 +14,7 @@ variables:
   extArtifactName: chia-wallet-ext
   mixchArtifactName: chia-mixch
   serverArtifactName: chia-server
-  versionNumber: '0.1.$(Build.BuildNumber)'
+  versionNumber: '0.2.$(Build.BuildNumber)'
   qaEnvironment: 'chiabee_wallet_qa'
   qaFtp: 'chiabee_wallet_dev_ftp'
   prEnvironment: 'chiabee_wallet_pr'
