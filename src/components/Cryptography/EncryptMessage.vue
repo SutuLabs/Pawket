@@ -5,59 +5,85 @@
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
-      <template v-if="!result">
-        <b-field label="Encrypt with Profile">
-          <b-dropdown v-model="selectedDid">
-            <template #trigger>
-              <b-button :label="selectedDid ? selectedDid.name : $t('moveNft.ui.label.selectDid')" icon-right="menu-down" />
-              <p class="has-text-danger is-size-7" v-if="!selectedDid">{{ $t("moveNft.ui.label.selectDid") }}</p>
-            </template>
+      <b-tabs position="is-centered" expanded @input="result = ''">
+        <b-tab-item label="Single Message">
+          <template v-if="!result">
+            <b-field label="Encrypt with Profile" :message="'Public Key: ' + pubKeyText">
+              <b-dropdown v-model="selectedDid">
+                <template #trigger>
+                  <b-button :label="selectedDid ? selectedDid.name : $t('moveNft.ui.label.selectDid')" icon-right="menu-down" />
+                  <p class="has-text-danger is-size-7" v-if="!selectedDid">{{ $t("moveNft.ui.label.selectDid") }}</p>
+                </template>
+                <b-dropdown-item v-for="did in dids" :key="did.did" :value="did">{{ did.name }}</b-dropdown-item>
+              </b-dropdown>
+            </b-field>
+            <b-field label="Receiver Public Key">
+              <b-input v-model="recPubKey" type="text"></b-input>
+            </b-field>
+            <b-field label="Message">
+              <b-input v-model="message" type="textarea"></b-input>
+            </b-field>
+          </template>
+          <template v-if="result">
+            <b-input type="textarea" v-model="result" rows="18"></b-input>
+          </template>
+        </b-tab-item>
+        <b-tab-item label="Multiple Messages">
+          <template v-if="!result">
+            <b-field label="Encrypt with Profile" :message="'Public Key: ' + pubKeyText">
+              <b-dropdown v-model="selectedDid">
+                <template #trigger>
+                  <b-button :label="selectedDid ? selectedDid.name : $t('moveNft.ui.label.selectDid')" icon-right="menu-down" />
+                  <p class="has-text-danger is-size-7" v-if="!selectedDid">{{ $t("moveNft.ui.label.selectDid") }}</p>
+                </template>
 
-            <b-dropdown-item v-for="did in dids" :key="did.did" :value="did">{{ did.name }}</b-dropdown-item>
-          </b-dropdown>
-        </b-field>
+                <b-dropdown-item v-for="did in dids" :key="did.did" :value="did">{{ did.name }}</b-dropdown-item>
+              </b-dropdown>
+            </b-field>
 
-        <span class="label">
-          <b-tooltip :label="$t('batchSend.ui.tooltip.upload')" position="is-right">
-            <b-upload v-model="file" accept=".csv" class="file-label" @input="afterUploadCsv">
-              <b-tag icon="tray-arrow-up" size="is-small">{{ $t("batchSend.ui.button.upload") }}</b-tag>
-            </b-upload>
-          </b-tooltip>
-          <b-tooltip :label="$t('batchSend.ui.tooltip.help')" position="is-bottom" multilined>
-            <b-icon icon="help-circle" size="is-small"> </b-icon>
-          </b-tooltip>
-          <a @click="fillSample"
-            ><span class="is-size-7 is-underlined">{{ $t("batchSend.ui.field.csv.fillSample") }}</span></a
-          >
-          <span class="is-size-7">{{ $t("batchSend.ui.field.csv.or") }}</span>
-          <a :href="csvSampleUri" :download="$t('batchSend.ui.field.csv.sampleName') + '.csv'"
-            ><span class="is-size-7 is-underlined">{{ $t("batchSend.ui.field.csv.downloadSample") }}</span></a
-          >
-        </span>
-        <b-field>
-          <b-input type="textarea" v-model="csv" v-show="!isDragging"></b-input>
-        </b-field>
-        <b-field v-show="isDragging">
-          <b-upload v-model="dragfile" drag-drop expanded multiple @input="afterDragged">
-            <section class="section">
-              <div class="content has-text-centered">
-                <p>
-                  <b-icon icon="upload" size="is-large"> </b-icon>
-                </p>
-                <p>{{ $t("batchSend.ui.field.csv.drag") }}</p>
-              </div>
-            </section>
-          </b-upload>
-        </b-field>
-        <b-field>
-          <b-tag v-if="file" icon="paperclip" size="is-small" closable aria-close-label="Close tag" @close="deleteFile">
-            {{ file.name }}
-          </b-tag>
-        </b-field>
-      </template>
-      <template v-if="result">
-        <b-input type="textarea" v-model="result" rows="18"></b-input>
-      </template>
+            <span class="label">
+              <b-tooltip :label="$t('batchSend.ui.tooltip.upload')" position="is-right">
+                <b-upload v-model="file" accept=".csv" class="file-label" @input="afterUploadCsv">
+                  <b-tag icon="tray-arrow-up" size="is-small">{{ $t("batchSend.ui.button.upload") }}</b-tag>
+                </b-upload>
+              </b-tooltip>
+              <b-tooltip :label="$t('batchSend.ui.tooltip.help')" position="is-bottom" multilined>
+                <b-icon icon="help-circle" size="is-small"> </b-icon>
+              </b-tooltip>
+              <a @click="fillSample"
+                ><span class="is-size-7 is-underlined">{{ $t("batchSend.ui.field.csv.fillSample") }}</span></a
+              >
+              <span class="is-size-7">{{ $t("batchSend.ui.field.csv.or") }}</span>
+              <a :href="csvSampleUri" :download="$t('batchSend.ui.field.csv.sampleName') + '.csv'"
+                ><span class="is-size-7 is-underlined">{{ $t("batchSend.ui.field.csv.downloadSample") }}</span></a
+              >
+            </span>
+            <b-field>
+              <b-input type="textarea" v-model="csv" v-show="!isDragging"></b-input>
+            </b-field>
+            <b-field v-show="isDragging">
+              <b-upload v-model="dragfile" drag-drop expanded multiple @input="afterDragged">
+                <section class="section">
+                  <div class="content has-text-centered">
+                    <p>
+                      <b-icon icon="upload" size="is-large"> </b-icon>
+                    </p>
+                    <p>{{ $t("batchSend.ui.field.csv.drag") }}</p>
+                  </div>
+                </section>
+              </b-upload>
+            </b-field>
+            <b-field>
+              <b-tag v-if="file" icon="paperclip" size="is-small" closable aria-close-label="Close tag" @close="deleteFile">
+                {{ file.name }}
+              </b-tag>
+            </b-field>
+          </template>
+          <template v-if="result">
+            <b-input type="textarea" v-model="result" rows="18"></b-input>
+          </template>
+        </b-tab-item>
+      </b-tabs>
     </section>
     <footer class="modal-card-foot is-block">
       <div>
@@ -69,7 +95,7 @@
           v-if="!result"
           class="is-pulled-right"
           type="is-primary"
-          @click="encrypt()"
+          @click="toEncrypt()"
           :loading="submitting"
           :disabled="submitting"
         ></b-button>
@@ -118,6 +144,8 @@ export default class EncryptMessage extends Vue {
   public isDragging = false;
   public transitioning = false;
   public result = "";
+  public recPubKey = "";
+  public message = "";
 
   public requests: TokenPuzzleDetail[] = [];
   public selectedDid: DidDetail | null = null;
@@ -132,8 +160,43 @@ export default class EncryptMessage extends Vue {
     }
   }
 
+  reset(): void {
+    this.csv = "";
+    this.file = null;
+    this.dragfile = [];
+    this.recPubKey = "";
+    this.message = "";
+  }
+
   get path(): string {
     return this.$route.path;
+  }
+
+  get sk_hex(): string {
+    if (!this.selectedDid) return "";
+    const requests = this.account.addressPuzzles.find((_) => _.symbol == xchSymbol())?.puzzles;
+    if (!requests) {
+      return "";
+    }
+    const ph = prefix0x(this.selectedDid.hintPuzzle);
+    const sk_arr = requests.find((_) => prefix0x(_.hash) == ph)?.privateKey?.serialize();
+    if (!sk_arr) {
+      return "";
+    }
+
+    const sk_hex = utility.toHexString(sk_arr);
+    return sk_hex;
+  }
+
+  get pubKeyText(): string {
+    const ecc = new CryptographyService();
+    const sk = EcPrivateKey.parse(this.sk_hex);
+    if (!sk) {
+      return "";
+    }
+    const pubKey = ecc.getPublicKey(this.sk_hex).toHex();
+    const pubKeyText = puzzle.getAddressFromPuzzleHash(pubKey, "curve25519");
+    return pubKeyText;
   }
 
   @Watch("path")
@@ -151,32 +214,30 @@ export default class EncryptMessage extends Vue {
     this.$router.push("/home");
   }
 
+  async toEncrypt(): Promise<void> {
+    if (this.csv) {
+      this.encrypt();
+    } else {
+      this.csv = `target1,${this.recPubKey},${this.message}`;
+      this.encrypt();
+    }
+  }
+
   async encrypt(): Promise<void> {
-    if (!this.selectedDid) return;
     this.submitting = true;
-    const ecc = new CryptographyService();
     try {
-      const requests = this.account.addressPuzzles.find((_) => _.symbol == xchSymbol())?.puzzles;
-      if (!requests) {
-        this.submitting = false;
-        return;
-      }
-      const ph = prefix0x(this.selectedDid.hintPuzzle);
-      const sk_arr = requests.find((_) => prefix0x(_.hash) == ph)?.privateKey?.serialize();
-      if (!sk_arr) {
+      if (!this.pubKeyText) {
         this.submitting = false;
         return;
       }
 
-      const sk_hex = utility.toHexString(sk_arr);
-      const sk = EcPrivateKey.parse(sk_hex);
+      const sk = EcPrivateKey.parse(this.sk_hex);
       if (!sk) {
         this.submitting = false;
         return;
       }
-      const pubKey = ecc.getPublicKey(sk_hex).toHex();
-      const pubKeyText = puzzle.getAddressFromPuzzleHash(pubKey, "curve25519");
 
+      const ecc = new CryptographyService();
       const inputs = csvToArray(this.csv);
 
       let result = "";
@@ -190,7 +251,7 @@ export default class EncryptMessage extends Vue {
 
         const enc = await ecc.encrypt(msg, pk, sk);
         result += `------------------------------ ${comment} ------------------------------
-Sender Public Key: ${pubKeyText}
+Sender Public Key: ${this.pubKeyText}
 Receiver Public Key: ${pktext}
 Encrypted Message: ${enc}
 `;
@@ -203,8 +264,10 @@ Encrypted Message: ${enc}
         autoClose: false,
       });
       console.warn(error);
+      this.reset();
       this.submitting = false;
     }
+    this.reset();
     this.submitting = false;
   }
 
