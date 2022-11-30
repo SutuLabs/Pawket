@@ -62,7 +62,7 @@
               <div class="b-tooltip">
                 <a @click="$router.push('/home/receive')" href="javascript:void(0)" class="has-text-primary">
                   <div class="mx-5">
-                    <b-icon icon="download-circle" size="is-medium"> </b-icon>
+                    <b-icon icon="arrow-down" size="is-medium"> </b-icon>
                     <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.receive") }}</p>
                   </div>
                 </a>
@@ -70,8 +70,16 @@
               <div class="b-tooltip">
                 <a @click="$router.push('/home/send')" href="javascript:void(0)" class="has-text-primary">
                   <div class="mr-5">
-                    <b-icon icon="arrow-right-circle" size="is-medium"> </b-icon>
+                    <b-icon icon="arrow-right" size="is-medium"> </b-icon>
                     <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.send") }}</p>
+                  </div>
+                </a>
+              </div>
+              <div class="b-tooltip">
+                <a @click="$router.push('/home/scan')" href="javascript:void(0)" class="has-text-primary">
+                  <div class="mr-5">
+                    <b-icon icon="line-scan" size="is-medium"> </b-icon>
+                    <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.scan") }}</p>
                   </div>
                 </a>
               </div>
@@ -138,6 +146,7 @@ import { isMobile } from "@/services/view/responsive";
 import AddressAccountQr from "./AddressAccountQr.vue";
 import { getAllCats } from "@/store/modules/account";
 import NetworkSelector from "./NetworkSelector.vue";
+import Scan from "../Scan/Scan.vue";
 
 @Component({
   components: {
@@ -220,6 +229,9 @@ export default class AccountDetail extends Vue {
         break;
       case "/home/send":
         this.showSend();
+        break;
+      case "/home/scan":
+        this.showScan();
         break;
       case "/home/receive":
         this.openLink();
@@ -383,6 +395,19 @@ export default class AccountDetail extends Vue {
       fullScreen: isMobile(),
       canCancel: [""],
       props: { account: this.account, rate: this.rate, currency: this.currency },
+      events: { close: this.handleModalClose },
+    });
+  }
+
+  showScan(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: Scan,
+      hasModalCard: true,
+      trapFocus: true,
+      fullScreen: isMobile(),
+      canCancel: [""],
+      props: { account: this.account },
       events: { close: this.handleModalClose },
     });
   }

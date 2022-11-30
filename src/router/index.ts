@@ -48,6 +48,10 @@ const routes: Array<RouteConfig> = [
         component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
       },
       {
+        path: "scan",
+        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
+      },
+      {
         path: "receive",
         component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
       },

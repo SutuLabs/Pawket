@@ -141,6 +141,7 @@
       "button": {
         "receive": "Receive",
         "send": "Send",
+        "scan": "Scan",
         "confirm": "Confirm",
         "cancel": "Cancel",
         "manageCats": "Manage CATs"

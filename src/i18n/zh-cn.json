@@ -141,6 +141,7 @@
       "button": {
         "receive": "接收",
         "send": "发送",
+        "scan": "扫描",
         "confirm": "确认",
         "cancel": "取消",
         "manageCats": "管理 CATs"
