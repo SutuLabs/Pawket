@@ -5,7 +5,7 @@
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
-      <b-tabs position="is-centered" expanded @input="result = ''">
+      <b-tabs position="is-centered" expanded v-if="!result">
         <b-tab-item label="Single Message">
           <template v-if="!result">
             <b-field label="Encrypt with Profile" :message="'Public Key: ' + pubKeyText">
@@ -23,9 +23,6 @@
             <b-field label="Message">
               <b-input v-model="message" type="textarea"></b-input>
             </b-field>
-          </template>
-          <template v-if="result">
-            <b-input type="textarea" v-model="result" rows="18"></b-input>
           </template>
         </b-tab-item>
         <b-tab-item label="Multiple Messages">
@@ -79,15 +76,16 @@
               </b-tag>
             </b-field>
           </template>
-          <template v-if="result">
-            <b-input type="textarea" v-model="result" rows="18"></b-input>
-          </template>
         </b-tab-item>
       </b-tabs>
+      <template v-if="result">
+        <b-input type="textarea" v-model="result" rows="18"></b-input>
+      </template>
     </section>
     <footer class="modal-card-foot is-block">
       <div>
-        <b-button :label="$t('common.button.cancel')" class="is-pulled-left" @click="cancel()"></b-button>
+        <b-button v-if="!result" :label="$t('common.button.cancel')" class="is-pulled-left" @click="cancel()"></b-button>
+        <b-button v-if="result" :label="$t('common.button.back')" class="is-pulled-left" @click="back()"></b-button>
       </div>
       <div>
         <b-button
@@ -120,7 +118,7 @@ import { NotificationProgrammatic as Notification } from "buefy";
 import { DidDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
 import puzzle from "@/services/crypto/puzzle";
 import { csvToArray } from "@/services/util/csv";
-import { xchPrefix, xchSymbol } from "@/store/modules/network";
+import { xchSymbol } from "@/store/modules/network";
 import store from "@/store";
 import { prefix0x } from "@/services/coin/condition";
 import utility from "@/services/crypto/utility";
@@ -210,6 +208,12 @@ export default class EncryptMessage extends Vue {
     return;
   }
 
+  back(): void {
+    this.result = "";
+    this.selectedDid = null;
+    this.reset();
+  }
+
   cancel(): void {
     this.$router.push("/home");
   }
@@ -272,15 +276,11 @@ Encrypted Message: ${enc}
   }
 
   get csvSampleUri(): string {
-    const address = puzzle.getAddressFromPuzzleHash(
-      "d19c05a54dacbf2b40ff4843534c47976de90246c3fc42ac1f42ea81b434b8ea",
-      xchPrefix()
-    );
     const dataPrefix = "data:text/csv;charset=utf-8";
-    const fields = `${this.$tc("batchSend.sample.address")},${this.$tc("batchSend.sample.coin")},${this.$tc(
-      "batchSend.sample.amount"
-    )},${this.$tc("batchSend.sample.memo")}\n`;
-    const content = `${dataPrefix},${fields}${address},BSH,150,hello_memo\n${address},${xchSymbol()},150,`;
+    const content = `
+${dataPrefix},target1,curve255191ty3e7p5lpklfmvuy73l3lkp2m4tj4460y9ygzggqj6wqakg24feqtfue8c,message1
+target2,curve255191ty3e7p5lpklfmvuy73l3lkp2m4tj4460y9ygzggqj6wqakg24feqtfue8c,message2
+`.trim();
     return encodeURI(content);
   }
 
