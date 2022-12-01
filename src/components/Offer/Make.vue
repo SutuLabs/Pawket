@@ -267,7 +267,7 @@ export default class MakeOffer extends Vue {
         await this.offlineSignBundle();
       }
 
-      lockCoins(this.bundle.coin_spends, Date.now(), chainId());
+      if (this.bundle && this.signed) lockCoins(this.bundle.coin_spends, Date.now(), chainId());
       this.offerText = await encodeOffer(this.bundle, 4);
 
       this.step = "Confirmation";
@@ -280,7 +280,6 @@ export default class MakeOffer extends Vue {
       console.warn(error);
       this.signing = false;
     }
-
     this.signing = false;
   }
 
@@ -329,6 +328,7 @@ export default class MakeOffer extends Vue {
           if (this.bundle) {
             this.bundle.aggregated_signature = prefix0x(sig);
             this.signed = true;
+            if (this.bundle) lockCoins(this.bundle.coin_spends, Date.now(), chainId());
           }
         },
       },
