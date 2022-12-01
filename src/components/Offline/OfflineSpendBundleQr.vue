@@ -50,7 +50,7 @@
       <div v-if="mode == 'ONLINE_CLIENT'" class="is-pulled-right"></div>
       <div v-if="mode == 'OFFLINE_CLIENT'" class="is-pulled-right">
         <span class="tag" v-if="receiveTotal > -1">
-          {{ $t("offline.client.text.status", { fragment: Object.keys(receives).length, total: receiveTotal }) }}
+          {{ $t("offline.client.text.status", { fragment: received, total: receiveTotal }) }}
         </span>
       </div>
     </footer>
@@ -92,6 +92,7 @@ export default class OfflineSpendBundleQr extends Vue {
   lastScannedAddressTimeMs = 0;
   qrcodes: string[] = [];
   receiveTotal = -1;
+  received = 0;
   receives: { [idx: number]: string } = {};
   receiveBundle: SpendBundle | undefined;
 
@@ -178,9 +179,11 @@ export default class OfflineSpendBundleQr extends Vue {
           return;
         }
         this.receiveTotal = total;
+        this.received++;
         this.receives[index] = result.slice(4);
 
         if (Object.keys(this.receives).length == this.receiveTotal) {
+          this.cameraStatus = "off";
           let b = "";
           for (let i = 0; i < this.receiveTotal; i++) {
             const r = this.receives[i];
