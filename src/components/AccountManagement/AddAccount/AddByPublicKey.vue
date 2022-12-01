@@ -51,6 +51,7 @@ import { prefix0x } from "@/services/coin/condition";
 export default class AddByPublicKey extends Vue {
   @Prop({ default: 24 }) public mnemonicLen!: number;
   @Prop() public title!: string;
+  @Prop() public inputPubKey!: string;
   public name = "";
   public publicKey = "";
   public errorMessage = "";
@@ -107,6 +108,10 @@ export default class AddByPublicKey extends Vue {
         },
       },
     });
+  }
+
+  mounted(): void {
+    if (this.inputPubKey) this.publicKey = this.inputPubKey;
   }
 }
 </script>
