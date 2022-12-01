@@ -1,7 +1,8 @@
 {
   "name": "pawket",
   "version": "0.2.0",
-  "private": true,
+  "license": "GPL-3.0",
+  "author": "SutuLabs",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build:all": "yarn check-i18n --ci && yarn jest --ci && yarn build:pawket && yarn build:mixch",

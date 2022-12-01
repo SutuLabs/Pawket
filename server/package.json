@@ -10,8 +10,8 @@
     "brun": "ts-node brun.ts",
     "test": "jest --coverage=false"
   },
-  "author": "Chiabee",
-  "license": "UNLICENSED",
+  "author": "SutuLabs",
+  "license": "GPL-3.0",
   "dependencies": {
     "clvm_tools": "^0.9.5",
     "cross-env": "^7.0.3",
