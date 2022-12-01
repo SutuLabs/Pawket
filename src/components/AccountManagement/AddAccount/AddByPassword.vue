@@ -3,7 +3,7 @@
     <b-loading :is-full-page="true" v-model="submitting"></b-loading>
     <top-bar :title="$t('addByPassword.ui.title')" @close="close()" :showClose="true"></top-bar>
     <section class="modal-card-body">
-      <b-field :label="$t('addByPassword.ui.label.name')">
+      <b-field :label="$t('addByPassword.ui.label.name')" :type="nameError ? 'is-danger' : ''" :message="nameError">
         <b-input
           ref="name"
           v-model="name"
@@ -50,6 +50,7 @@ export default class AddByPassword extends Vue {
   public password = "";
   public rePassword = "";
   public errorMessage = "";
+  public nameError = "";
   public submitting = false;
 
   close(): void {
@@ -66,8 +67,13 @@ export default class AddByPassword extends Vue {
   }
 
   async addAccount(): Promise<void> {
-    this.submitting = true;
     this.validate();
+    for (const acc of store.state.account.accounts) {
+      if (acc.name === this.name) {
+        this.nameError = this.$tc("addByAddress.ui.message.duplicateName");
+        return;
+      }
+    }
     if (this.password !== this.rePassword) {
       this.errorMessage = this.$tc("addByPassword.ui.message.invalidPassword");
       return;
@@ -77,6 +83,7 @@ export default class AddByPassword extends Vue {
       this.$buefy.dialog.alert(this.$tc("addByPassword.message.error.accountPasswordExists"));
       return;
     }
+    this.submitting = true;
     await store.dispatch("createAccountByPassword", { name: this.name, password: this.password });
     this.close();
   }

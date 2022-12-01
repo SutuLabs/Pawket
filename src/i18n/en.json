@@ -524,6 +524,7 @@
         "addressRequired": "Address is required.",
         "illegalAddress": "Incorrect address.",
         "duplicateAddress": "Duplicate Address",
+        "duplicateName": "Duplicate Name",
         "duplicatePublicKey": "Duplicate PublicKey"
       },
       "button": {

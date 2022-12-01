@@ -3,7 +3,7 @@
     <b-loading :is-full-page="true" v-model="submitting"></b-loading>
     <top-bar :title="$t('addByPublicKey.ui.title')" @close="close()" :showClose="true"></top-bar>
     <section class="modal-card-body">
-      <b-field :label="$t('addByAddress.ui.label.name')">
+      <b-field :label="$t('addByAddress.ui.label.name')" :type="nameError ? 'is-danger' : ''" :message="nameError">
         <b-input
           ref="name"
           v-model="name"
@@ -54,6 +54,7 @@ export default class AddByPublicKey extends Vue {
   public name = "";
   public publicKey = "";
   public errorMessage = "";
+  public nameError = "";
   public submitting = false;
   isLegalAddress = true;
 
@@ -81,6 +82,10 @@ export default class AddByPublicKey extends Vue {
       if (acc.type === "PublicKey" && acc.key.publicKey === prefix0x(this.publicKey)) {
         this.isLegalAddress = false;
         this.errorMessage = this.$tc("addByAddress.ui.message.duplicatePublicKey");
+        return;
+      }
+      if (acc.name === this.name) {
+        this.nameError = this.$tc("addByAddress.ui.message.duplicateName");
         return;
       }
     }

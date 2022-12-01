@@ -524,6 +524,7 @@
         "addressRequired": "地址不能为空",
         "illegalAddress": "地址不正确",
         "duplicateAddress": "地址重复",
+        "duplicateName": "账户名重复",
         "duplicatePublicKey": "公钥重复"
       },
       "button": {
