@@ -23,11 +23,11 @@ beforeAll(async () => {
 
 test('Cat Transfer', async () => {
   const coin: OriginCoin = {
-    amount: 9799n,
-    parent_coin_info: "0x979cea91ab150d99211b9e5705b088c7807aac849d494fecf0419a382fe361f7",
-    puzzle_hash: "0xce8a53f46946e5c5e2aa835d700745d9be3879bc5f6a029a965b7663a5c1f74c",
+    amount: 1900n,
+    parent_coin_info: "0xc37536f1f63b5cabfd37c46761c5436d699179dcb4a15eb8b0da9249b1083e62",
+    puzzle_hash: "0xef4a4e574a85ac8eb90556795577aff351097c4aba8cc057ee0a9db334573c11",
   };
-  const sk_hex = "40fbb0dad159776ed05afbaeac4f4fe1b975e93bf5e9dda9fbf4e375346d12a0";
+  const sk_hex = "55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f";
   const tgt_addr = await puzzle.getAddressFromPuzzleHash(
     "0x3eb239190ce59b4af1e461291b9185cea62d6072fd3718051a530fd8a8218bc0",
     xchPrefix()
@@ -39,9 +39,9 @@ test('Cat Transfer', async () => {
   const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(tgt_addr));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(change_addr));
 
-  const assetId = "78ad32a8c9ea70f27d73e9306fc467bab2a6b15b30289791e37ab6e8612212b1";
+  const assetId = "b3867458a6af107794a09b6083e3f0f05fbece0adae328f4df9ade53a60ca1b3";
 
-  const puzzles = await puzzle.getCatPuzzleDetails(utility.fromHexString(sk_hex), assetId, xchPrefix(), 0, 5, "cat_v1");
+  const puzzles = await puzzle.getCatPuzzleDetails(utility.fromHexString(sk_hex), assetId, xchPrefix(), 0, 5, "cat_v2");
   expect(puzzles).toMatchSnapshot("puzzles");
   const plan = await transfer.generateSpendPlan({ "CAT": [coin] }, [{ symbol: "CAT", address: tgt_hex, amount: 300n, memos: [tgt_hex] }], change_hex, 0n, net.symbol);
   expect(plan).toMatchSnapshot("plan");
@@ -59,12 +59,12 @@ async function localPuzzleApiCall(parentCoinId: string): Promise<GetParentPuzzle
 
 test('Cat Transfer2', async () => {
   const coin: OriginCoin = {
-    amount: 100000000n,
-    parent_coin_info: "0x5c4d6545eb708deb0b5e594403d7038f372c46f18eae853677d20f9a1ec2307d",
-    puzzle_hash: "0x9a3e78995734c97d37e7d497098203117a19cefef1bbfe276bc7903f5e279e1d",
+    amount: 1900n,
+    parent_coin_info: "0xc37536f1f63b5cabfd37c46761c5436d699179dcb4a15eb8b0da9249b1083e62",
+    puzzle_hash: "0xef4a4e574a85ac8eb90556795577aff351097c4aba8cc057ee0a9db334573c11",
   };
 
-  const sk_hex = "40fbb0dad159776ed05afbaeac4f4fe1b975e93bf5e9dda9fbf4e375346d12a0";
+  const sk_hex = "55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f";
   const tgt_addr = await puzzle.getAddressFromPuzzleHash(
     "0x1cf63b7cc60279a1b0745e8f426585ee81d8da0cd2d92dd9b44e6efbd88d40ce",
     xchPrefix()
@@ -77,8 +77,8 @@ test('Cat Transfer2', async () => {
   const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(tgt_addr));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(change_addr));
 
-  const assetId = "6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b";
-  const puzzles = await puzzle.getCatPuzzleDetails(utility.fromHexString(sk_hex), assetId, xchPrefix(), 0, 8, "cat_v1");
+  const assetId = "b3867458a6af107794a09b6083e3f0f05fbece0adae328f4df9ade53a60ca1b3";
+  const puzzles = await puzzle.getCatPuzzleDetails(utility.fromHexString(sk_hex), assetId, xchPrefix(), 0, 8, "cat_v2");
   expect(puzzles).toMatchSnapshot("puzzles");
   const plan = await transfer.generateSpendPlan({ "CAT": [coin] }, [{ symbol: "CAT", address: tgt_hex, amount: 300n, memos: [tgt_hex] }], change_hex, 0n, net.symbol);
   expect(plan).toMatchSnapshot("plan");
