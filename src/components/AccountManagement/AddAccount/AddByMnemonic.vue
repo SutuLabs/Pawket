@@ -3,7 +3,7 @@
     <b-loading :is-full-page="true" v-model="submitting"></b-loading>
     <top-bar :title="title" @close="close()" :showClose="true"></top-bar>
     <section class="modal-card-body">
-      <b-field :label="$t('addByMnemonic.ui.label.name')">
+      <b-field :label="$t('addByMnemonic.ui.label.name')" :type="nameError ? 'is-danger' : ''" :message="nameError">
         <b-input
           ref="name"
           v-model="name"
@@ -53,6 +53,7 @@ export default class AddByMnemonic extends Vue {
   public name = "";
   public mnemonic = "";
   public errorMessage = "";
+  public nameError = "";
   public submitting = false;
 
   close(): void {
@@ -73,7 +74,12 @@ export default class AddByMnemonic extends Vue {
     if (this.name === "" || this.mnemonic === "") {
       return;
     }
-    this.submitting = true;
+    for (const acc of store.state.account.accounts) {
+      if (acc.name === this.name) {
+        this.nameError = this.$tc("addByAddress.ui.message.duplicateName");
+        return;
+      }
+    }
     this.mnemonic = this.mnemonic.replace(/\s+/g, " ").trim();
     if (this.mnemonic.split(" ").length != this.mnemonicLen) {
       this.errorMessage = this.$tc("addByMnemonic.ui.message.invalidMnemonic");
@@ -84,6 +90,8 @@ export default class AddByMnemonic extends Vue {
       this.$buefy.dialog.alert(this.$tc("addByMnemonic.message.error.accountMnemonicExists"));
       return;
     }
+
+    this.submitting = true;
 
     await store.dispatch("createAccountByLegacyMnemonic", { name: this.name, legacyMnemonic: this.mnemonic });
     this.close();

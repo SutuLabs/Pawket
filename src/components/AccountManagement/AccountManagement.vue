@@ -105,6 +105,7 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 import AccountInfo from "./AccountInfo.vue";
 import TopBar from "@/components/Common/TopBar.vue";
 import { notifyPrimary } from "@/services/notification/notification";
+import { NotificationProgrammatic as Notification } from "buefy";
 import AddByAddress from "./AddAccount/AddByAddress.vue";
 import AddByMnemonic from "./AddAccount/AddByMnemonic.vue";
 import AddBySerial from "./AddAccount/AddBySerial.vue";
@@ -229,6 +230,16 @@ export default class AccountManagement extends Vue {
 
   async rename(idx: number): Promise<void> {
     const name = await this.getAccountName(idx);
+    const accounts = store.state.account.accounts;
+    for (let i = 0; i < accounts.length; i++) {
+      if (accounts[i].name === name && idx != i) {
+        Notification.open({
+          message: this.$tc("addByAddress.ui.message.duplicateName"),
+          type: "is-danger",
+        });
+        return this.rename(idx);
+      }
+    }
     store.dispatch("renameAccount", { idx, name });
     notifyPrimary(this.$tc("accountManagement.message.notification.saved"));
   }

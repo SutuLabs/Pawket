@@ -3,7 +3,7 @@
     <b-loading :is-full-page="true" v-model="submitting"></b-loading>
     <top-bar :title="$t('addByAddress.ui.title')" @close="close()" :showClose="true"></top-bar>
     <section class="modal-card-body">
-      <b-field :label="$t('addByAddress.ui.label.name')">
+      <b-field :label="$t('addByAddress.ui.label.name')" :type="nameError ? 'is-danger' : ''" :message="nameError">
         <b-input
           ref="name"
           v-model="name"
@@ -13,7 +13,7 @@
           :validation-message="$t('addByAddress.ui.message.nameRequired')"
         ></b-input>
       </b-field>
-      <b-field :type="errorMessage ? 'is-danger' : ''" :message="errorMessage">
+      <b-field :type="addresserror ? 'is-danger' : ''" :message="addresserror">
         <template #label>
           {{ $t("addByAddress.ui.label.address") }}
         </template>
@@ -49,7 +49,8 @@ export default class AddByAddress extends Vue {
   @Prop() public title!: string;
   public name = "";
   public address = "";
-  public errorMessage = "";
+  public addresserror = "";
+  public nameError = "";
   public submitting = false;
   isLegalAddress = true;
 
@@ -58,7 +59,7 @@ export default class AddByAddress extends Vue {
   }
 
   clearErrorMsg(): void {
-    this.errorMessage = "";
+    this.addresserror = "";
     this.isLegalAddress = true;
   }
 
@@ -76,13 +77,17 @@ export default class AddByAddress extends Vue {
       Bytes.from(bech32m.decodeToBytes(this.address).bytes).hex();
     } catch (error) {
       this.isLegalAddress = false;
-      this.errorMessage = this.$tc("addByAddress.ui.message.illegalAddress");
+      this.addresserror = this.$tc("addByAddress.ui.message.illegalAddress");
       return;
     }
     for (const acc of store.state.account.accounts) {
       if (acc.type === "Address" && acc.firstAddress === this.address) {
         this.isLegalAddress = false;
-        this.errorMessage = this.$tc("addByAddress.ui.message.duplicateAddress");
+        this.addresserror = this.$tc("addByAddress.ui.message.duplicateAddress");
+        return;
+      }
+      if (acc.name === this.name) {
+        this.nameError = this.$tc("addByAddress.ui.message.duplicateName");
         return;
       }
     }

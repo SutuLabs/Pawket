@@ -524,7 +524,9 @@
         "nameRequired": "Account name is required.",
         "addressRequired": "Address is required.",
         "illegalAddress": "Incorrect address.",
-        "duplicateAddress": "Duplicate Address"
+        "duplicateAddress": "Duplicate Address",
+        "duplicateName": "Duplicate Name",
+        "duplicatePublicKey": "Duplicate PublicKey"
       },
       "button": {
         "back": "Back",

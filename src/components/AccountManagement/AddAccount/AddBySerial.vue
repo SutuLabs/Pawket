@@ -3,7 +3,7 @@
     <b-loading :is-full-page="true" v-model="submitting"></b-loading>
     <top-bar :title="$t('addBySerial.ui.title')" @close="close()" :showClose="true"></top-bar>
     <section class="modal-card-body">
-      <b-field :label="$t('addBySerial.ui.label.name')">
+      <b-field :label="$t('addBySerial.ui.label.name')" :type="nameError ? 'is-danger' : ''" :message="nameError">
         <b-input
           ref="name"
           v-model="name"
@@ -30,6 +30,7 @@ import TopBar from "@/components/Common/TopBar.vue";
 export default class AddBySerial extends Vue {
   @Prop({ default: "" }) public defaultName!: string;
   public name = "";
+  public nameError = "";
   public submitting = false;
 
   mounted(): void {
@@ -49,9 +50,14 @@ export default class AddBySerial extends Vue {
   }
 
   async addAccount(): Promise<void> {
-    this.submitting = true;
     this.validate();
-
+    for (const acc of store.state.account.accounts) {
+      if (acc.name === this.name) {
+        this.nameError = this.$tc("addByAddress.ui.message.duplicateName");
+        return;
+      }
+    }
+    this.submitting = true;
     store.dispatch("createAccountBySerial", this.name);
     this.close();
   }
