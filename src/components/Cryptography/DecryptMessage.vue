@@ -1,11 +1,11 @@
 <template>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">Decrypt Message</p>
+      <p class="modal-card-title">{{ $t("decryptMessage.ui.title") }}</p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
-      <b-field label="Public Key">
+      <b-field :label="$t('decryptMessage.ui.label.publicKey')">
         <key-box
           icon="checkbox-multiple-blank-outline"
           :value="pubKey"
@@ -16,11 +16,11 @@
         ></key-box>
       </b-field>
 
-      <b-field :label="$t('verifyMessage.ui.label.message')">
+      <b-field :label="$t('decryptMessage.ui.label.message')">
         <b-input type="textarea" v-model="message" rows="18"></b-input>
       </b-field>
 
-      <b-field v-if="decryptedMessage" :label="$t('verifyMessage.ui.label.result')">
+      <b-field v-if="decryptedMessage" :label="$t('decryptMessage.ui.label.result')">
         <template #message>
           {{ decryptedMessage }}
         </template>
@@ -31,7 +31,13 @@
         <b-button :label="decryptedMessage ? 'Back' : 'Cancel'" class="is-pulled-left" @click="cancel()"></b-button>
       </div>
       <div>
-        <b-button label="Decrypt" type="is-primary" class="is-pulled-right" @click="decrypt()" :loading="submitting"></b-button>
+        <b-button
+          :label="$t('decryptMessage.ui.button.decrypt')"
+          type="is-primary"
+          class="is-pulled-right"
+          @click="decrypt()"
+          :loading="submitting"
+        ></b-button>
       </div>
     </footer>
     <b-loading :is-full-page="false" v-model="submitting"></b-loading>

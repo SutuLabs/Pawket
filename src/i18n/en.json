@@ -170,7 +170,9 @@
           "mintCat": "Issue CAT",
           "mintNft": "Mint NFT",
           "batchMintNft": "Batch Mint",
-          "verify": "Verify Message"
+          "verify": "Verify Message",
+          "encryptMessage": "Encrypt Message",
+          "decryptMessage": "Decrypt Message"
         },
         "button": {
           "donate": "Donate",
@@ -182,7 +184,9 @@
           "mintCat": "Issue CAT",
           "mintNft": "Mint NFT",
           "batchMintNft": "Batch Mint",
-          "verify": "Verify Message"
+          "verify": "Verify Message",
+          "encryptMessage": "Encrypt Message",
+          "decryptMessage": "Decrypt Message"
         }
       }
     },
@@ -1414,6 +1418,38 @@
       "title": "Add Account by PublicKey",
       "message": {
         "publicKeyRequired": "PublicKey is required."
+      }
+    }
+  },
+  "encryptMessage": {
+    "ui": {
+      "title": "Encrypt Message",
+      "tab": {
+        "singleMessage": "Single Message",
+        "multipleMessage": "Multiple Messages"
+      },
+      "label": {
+        "encryptWithDID": "Encrypt with DID",
+        "selectDid": "Select a DID",
+        "publicKey": "Public Key:{publicKey}",
+        "receiverPubKey": "Receiver Public Key",
+        "message": "Message"
+      },
+      "button": {
+        "encrypt": "Encrypt"
+      }
+    }
+  },
+  "decryptMessage": {
+    "ui": {
+      "title": "Decrypt Message",
+      "label": {
+        "publicKey": "Public Key",
+        "message": "Message",
+        "result": "Result"
+      },
+      "button": {
+        "decrypt": "Decrypt"
       }
     }
   }

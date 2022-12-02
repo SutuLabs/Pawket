@@ -73,7 +73,7 @@
                 <a @click="$router.push('/home/send')" href="javascript:void(0)" class="has-text-primary">
                   <div class="mr-5">
                     <span class="icon has-background-primary is-medium is-circle"
-                      ><i class="mdi mdi-arrow-right-thick mdi-24px has-text-white"></i
+                      ><i class="mdi mdi-arrow-right mdi-24px has-text-white"></i
                     ></span>
                     <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.send") }}</p>
                   </div>
