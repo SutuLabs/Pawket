@@ -275,7 +275,6 @@
         "insufficientFunds": "Insufficient funds."
       },
       "tooltip": {
-        "singleCoinExplanation": "Currently it only supports one coin mode, mix coin send is under development.",
         "offlineScan": "You are in offline mode, communicate with proxy via QR code to send transaction."
       },
       "span": {

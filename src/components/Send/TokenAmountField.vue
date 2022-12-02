@@ -10,15 +10,6 @@
     <template #label>
       {{ label }}
       <span class="is-size-6">
-        <b-tooltip
-          v-if="totalAmount >= 0"
-          position="is-right"
-          type="is-light"
-          multilined
-          :label="$t('send.ui.tooltip.singleCoinExplanation')"
-        >
-          <b-icon icon="comment-question" size="is-small" type="is-info" class="px-4"></b-icon>
-        </b-tooltip>
         <b-button v-if="showMaxAmount && maxAmount >= -1" tag="a" type="is-info is-light" size="is-small" @click="setMax()">
           <span v-if="maxAmount == -1"> {{ $t("send.ui.span.loading") }}</span>
           <span v-else>

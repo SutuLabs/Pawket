@@ -210,7 +210,8 @@ export default class BuyCns extends Vue {
     }
 
     if (!this.availcoins) {
-      this.availcoins = await coinHandler.getAvailableCoins(this.requests, this.tokenNames);
+      const coins = await coinHandler.getAvailableCoins(this.requests, this.tokenNames);
+      this.availcoins = coins[0];
     }
 
     if (!this.availcoins || !this.availcoins[this.selectedToken]) {
