@@ -201,7 +201,7 @@ export default class OfflineQrCode extends Vue {
 
     const symbol = "ANY";
 
-    const availcoins = await coinHandler.getAvailableCoins([{ symbol, puzzles: queryHashes }], [symbol]);
+    const availcoins = (await coinHandler.getAvailableCoins([{ symbol, puzzles: queryHashes }], [symbol]))[0];
     for (let i = 0; i < availcoins[symbol].length; i++) {
       const coin = availcoins[symbol][i];
       if (this.coins.findIndex((_) => compareOriginCoin(_, coin)) == -1) this.coins.push(coin);

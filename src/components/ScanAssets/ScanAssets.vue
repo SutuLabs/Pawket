@@ -519,7 +519,8 @@ export default class ScanAssets extends Vue {
   }
 
   send(): void {
-    const availableCoins = coin.getAvailableCoinFromRecords(this.allRequests, this.allRecords, [this.token]);
+    const coins = coin.getAvailableCoinFromRecords(this.allRequests, this.allRecords, [this.token]);
+    const availableCoins = coins[0];
     this.$buefy.modal.open({
       parent: this,
       component: Send,
@@ -537,7 +538,7 @@ export default class ScanAssets extends Vue {
   }
 
   async transfer(nft: NftDetail): Promise<void> {
-    const availableCoins = await coin.getAvailableCoins(this.allRequests, [this.token]);
+    const availableCoins = (await coin.getAvailableCoins(this.allRequests, [this.token]))[0];
     this.$buefy.modal.open({
       parent: this,
       component: NftTransfer,

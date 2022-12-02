@@ -186,10 +186,11 @@ export default class BatchMintNft extends Vue {
     }
 
     if (!this.availcoins) {
-      this.availcoins = await coinHandler.getAvailableCoins(
+      const coins = await coinHandler.getAvailableCoins(
         await coinHandler.getAssetsRequestObserver(this.account),
         coinHandler.getTokenNames(this.account)
       );
+      this.availcoins = coins[0];
     }
 
     this.status = "Loaded";

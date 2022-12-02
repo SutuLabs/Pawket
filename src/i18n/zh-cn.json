@@ -52,7 +52,8 @@
     "ui": {
       "productInfo": {
         "name": "薄荷钱包",
-        "author": "Chiabee"
+        "author": "SutuLabs",
+        "authorLink": "https://github.com/SutuLabs"
       },
       "button": {
         "home": "主页",
@@ -274,7 +275,6 @@
         "insufficientFunds": "余额不足"
       },
       "tooltip": {
-        "singleCoinExplanation": "当前仅支持单币模式",
         "offlineScan": "你现在处于离线模式，可以通过二维码与在线设备沟通来发起交易。"
       },
       "span": {
@@ -970,7 +970,7 @@
         "url": {
           "privacyPolicy": "https://info.pawket.app/zh/privacy-policy",
           "pawketWebsite": "https://info.pawket.app/zh",
-          "github": "https://github.com/Chiabee",
+          "github": "https://github.com/SutuLabs",
           "twitter": "https://twitter.com/pawket_app",
           "discord": "https://discord.com/invite/ndQgpHwe4V"
         }

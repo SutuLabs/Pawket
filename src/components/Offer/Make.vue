@@ -151,6 +151,7 @@ export default class MakeOffer extends Vue {
   public bundle: SpendBundle | null = null;
   public step: "Input" | "Confirmation" = "Input";
   public availcoins: SymbolCoins | null = null;
+  public allcoins: SymbolCoins | null = null;
   public tokenPuzzles: TokenPuzzleDetail[] = [];
   public signing = false;
   public uploading = false;
@@ -208,8 +209,19 @@ export default class MakeOffer extends Vue {
     return xchSymbol();
   }
 
-  getTotalAmount(): string {
-    return "-1";
+  getTotalAmount(token: string): string {
+    if (!this.allcoins || !this.allcoins[token]) {
+      return "-1";
+    }
+    const allcoins = this.allcoins[token].map((_) => _.amount);
+    const decimal = token == xchSymbol() ? 12 : 3;
+
+    const totalAmount = bigDecimal.divide(
+      allcoins.reduce((a, b) => a + b, 0n),
+      Math.pow(10, decimal),
+      decimal
+    );
+    return totalAmount;
   }
 
   getMaxAmount(token: string): string {
@@ -237,11 +249,13 @@ export default class MakeOffer extends Vue {
       this.tokenPuzzles = this.account.type == "PublicKey" ? [] : await coinHandler.getAssetsRequestDetail(this.account);
     }
 
-    if (!this.availcoins) {
-      this.availcoins = await coinHandler.getAvailableCoins(
+    if (!this.availcoins || !this.allcoins) {
+      const coins = await coinHandler.getAvailableCoins(
         await coinHandler.getAssetsRequestObserver(this.account),
         coinHandler.getTokenNames(this.account)
       );
+      this.availcoins = coins[0];
+      this.allcoins = coins[1];
     }
   }
 

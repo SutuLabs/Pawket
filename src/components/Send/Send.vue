@@ -138,6 +138,7 @@ export default class Send extends Vue {
   public memo = "";
   public bundle: SpendBundle | null = null;
   public availcoins: SymbolCoins | null = null;
+  public allcoins: SymbolCoins | null = null;
   public maxAmount = "-1";
   public totalAmount = "-1";
   public INVALID_AMOUNT_MESSAGE = "Invalid amount";
@@ -290,12 +291,14 @@ export default class Send extends Vue {
       this.requests = this.account.type == "PublicKey" ? [] : await coinHandler.getAssetsRequestDetail(this.account);
     }
 
-    if (!this.availcoins) {
+    if (!this.availcoins || !this.allcoins) {
       try {
-        this.availcoins = await coinHandler.getAvailableCoins(
+        const coins = await coinHandler.getAvailableCoins(
           await coinHandler.getAssetsRequestObserver(this.account),
           coinHandler.getTokenNames(this.account)
         );
+        this.availcoins = coins[0];
+        this.allcoins = coins[1];
       } catch (err) {
         this.offline = true;
       }
@@ -307,14 +310,21 @@ export default class Send extends Vue {
 
     const availcoins = this.availcoins[this.selectedToken].map((_) => _.amount);
 
-    this.totalAmount = bigDecimal.divide(
+    this.maxAmount = bigDecimal.divide(
       availcoins.reduce((a, b) => a + b, 0n),
       Math.pow(10, this.decimal),
       this.decimal
     );
 
-    this.maxAmount = this.totalAmount;
-    this.totalAmount = "-1";
+    if (this.allcoins && this.allcoins[this.selectedToken]) {
+      const allcoins = this.allcoins[this.selectedToken].map((_) => _.amount);
+
+      this.totalAmount = bigDecimal.divide(
+        allcoins.reduce((a, b) => a + b, 0n),
+        Math.pow(10, this.decimal),
+        this.decimal
+      );
+    }
 
     this.maxStatus = "Loaded";
   }
