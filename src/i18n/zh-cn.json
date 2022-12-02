@@ -170,7 +170,9 @@
           "mintCat": "发行 CAT",
           "mintNft": "发行 NFT",
           "batchMintNft": "批量发行 NFT",
-          "verify": "信息验证"
+          "verify": "信息验证",
+          "encryptMessage": "加密消息",
+          "decryptMessage": "解密消息"
         },
         "button": {
           "donate": "捐赠",
@@ -182,7 +184,9 @@
           "mintCat": "发行 CAT",
           "mintNft": "发行 NFT",
           "batchMintNft": "批量发行 NFT",
-          "verify": "信息验证"
+          "verify": "信息验证",
+          "encryptMessage": "加密消息",
+          "decryptMessage": "解密消息"
         }
       }
     },
@@ -1414,6 +1418,38 @@
       "title": "添加公钥账户",
       "message": {
         "publicKeyRequired": "公钥不能为空。"
+      }
+    }
+  },
+  "encryptMessage": {
+    "ui": {
+      "title": "消息加密",
+      "tab": {
+        "singleMessage": "单条消息",
+        "multipleMessage": "多条消息"
+      },
+      "label": {
+        "encryptWithDID": "使用 DID 加密",
+        "selectDid": "选择一个 DID",
+        "publicKey": "公钥: {publicKey}",
+        "receiverPubKey": "接收人公钥",
+        "message": "消息"
+      },
+      "button": {
+        "encrypt": "加密"
+      }
+    }
+  },
+  "decryptMessage": {
+    "ui": {
+      "title": "消息解密",
+      "label": {
+        "publicKey": "公钥",
+        "message": "消息",
+        "result": "结果"
+      },
+      "button": {
+        "decrypt": "解密"
       }
     }
   }

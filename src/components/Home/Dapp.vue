@@ -107,22 +107,22 @@
           </a>
         </b-tooltip>
       </div>
-      <div v-if="experimentMode && debugMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
-        <b-tooltip label="Encrypt Message" position="is-right">
+      <div v-if="experimentMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.encryptMessage')" position="is-right">
           <a href="javascript:void(0)" @click="$router.push('/home/encrypt-message')" class="has-text-link">
             <div class="has-text-centered">
               <b-icon icon="lock-outline" size="is-medium"></b-icon>
-              <p class="is-size-7">Encrypt Message</p>
+              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.encryptMessage") }}</p>
             </div>
           </a>
         </b-tooltip>
       </div>
-      <div v-if="experimentMode && debugMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
-        <b-tooltip label="Decrypt Message" position="is-right">
+      <div v-if="experimentMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.decryptMessage')" position="is-right">
           <a href="javascript:void(0)" @click="$router.push('/home/decrypt-message')" class="has-text-link">
             <div class="has-text-centered">
               <b-icon icon="lock-open-variant-outline" size="is-medium"></b-icon>
-              <p class="is-size-7">Decrypt Message</p>
+              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.decryptMessage") }}</p>
             </div>
           </a>
         </b-tooltip>

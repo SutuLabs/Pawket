@@ -62,7 +62,9 @@
               <div class="b-tooltip">
                 <a @click="$router.push('/home/receive')" href="javascript:void(0)" class="has-text-primary">
                   <div class="mx-5">
-                    <b-icon icon="arrow-down" size="is-medium"> </b-icon>
+                    <span class="icon has-background-primary is-medium is-circle"
+                      ><i class="mdi mdi-download mdi-24px has-text-white"></i
+                    ></span>
                     <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.receive") }}</p>
                   </div>
                 </a>
@@ -70,7 +72,9 @@
               <div class="b-tooltip">
                 <a @click="$router.push('/home/send')" href="javascript:void(0)" class="has-text-primary">
                   <div class="mr-5">
-                    <b-icon icon="arrow-right" size="is-medium"> </b-icon>
+                    <span class="icon has-background-primary is-medium is-circle"
+                      ><i class="mdi mdi-arrow-right mdi-24px has-text-white"></i
+                    ></span>
                     <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.send") }}</p>
                   </div>
                 </a>
@@ -78,7 +82,9 @@
               <div class="b-tooltip">
                 <a @click="$router.push('/home/scan')" href="javascript:void(0)" class="has-text-primary">
                   <div class="mr-5">
-                    <b-icon icon="line-scan" size="is-medium"> </b-icon>
+                    <span class="icon has-background-primary is-medium is-circle"
+                      ><i class="mdi mdi-crop-free mdi-24px has-text-white"></i
+                    ></span>
                     <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.scan") }}</p>
                   </div>
                 </a>
@@ -478,5 +484,9 @@ export default class AccountDetail extends Vue {
   height: 100%;
   width: 100%;
   object-fit: cover;
+}
+
+.is-circle {
+  border-radius: 50%;
 }
 </style>

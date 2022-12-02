@@ -1,33 +1,42 @@
 <template>
   <div class="modal-card" @dragenter="dragenter" @dragleave="dragleave">
     <header class="modal-card-head">
-      <p class="modal-card-title">Encrypt Message</p>
+      <p class="modal-card-title">{{ $t("encryptMessage.ui.title") }}</p>
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
       <b-tabs position="is-centered" expanded v-if="!result">
-        <b-tab-item label="Single Message">
+        <b-tab-item :label="$t('encryptMessage.ui.tab.singleMessage')">
           <template v-if="!result">
-            <b-field label="Encrypt with Profile" :message="'Public Key: ' + pubKeyText">
+            <b-field
+              :label="$t('encryptMessage.ui.label.encryptWithDID')"
+              :message="$t('encryptMessage.ui.label.publicKey', { publicKey: pubKeyText })"
+            >
               <b-dropdown v-model="selectedDid">
                 <template #trigger>
-                  <b-button :label="selectedDid ? selectedDid.name : $t('moveNft.ui.label.selectDid')" icon-right="menu-down" />
-                  <p class="has-text-danger is-size-7" v-if="!selectedDid">{{ $t("moveNft.ui.label.selectDid") }}</p>
+                  <b-button
+                    :label="selectedDid ? selectedDid.name : $t('encryptMessage.ui.label.selectDid')"
+                    icon-right="menu-down"
+                  />
+                  <p class="has-text-danger is-size-7" v-if="!selectedDid">{{ $t("encryptMessage.ui.label.selectDid") }}</p>
                 </template>
                 <b-dropdown-item v-for="did in dids" :key="did.did" :value="did">{{ did.name }}</b-dropdown-item>
               </b-dropdown>
             </b-field>
-            <b-field label="Receiver Public Key">
+            <b-field :label="$t('encryptMessage.ui.label.receiverPubKey')">
               <b-input v-model="recPubKey" type="text"></b-input>
             </b-field>
-            <b-field label="Message">
+            <b-field :label="$t('encryptMessage.ui.label.message')">
               <b-input v-model="message" type="textarea"></b-input>
             </b-field>
           </template>
         </b-tab-item>
-        <b-tab-item label="Multiple Messages">
+        <b-tab-item :label="$t('encryptMessage.ui.tab.multipleMessage')">
           <template v-if="!result">
-            <b-field label="Encrypt with Profile" :message="'Public Key: ' + pubKeyText">
+            <b-field
+              :label="$t('encryptMessage.ui.label.encryptWithDID')"
+              :message="$t('encryptMessage.ui.label.publicKey', { publicKey: pubKeyText })"
+            >
               <b-dropdown v-model="selectedDid">
                 <template #trigger>
                   <b-button :label="selectedDid ? selectedDid.name : $t('moveNft.ui.label.selectDid')" icon-right="menu-down" />
@@ -89,7 +98,7 @@
       </div>
       <div>
         <b-button
-          label="Encrypt"
+          :label="$t('encryptMessage.ui.button.encrypt')"
           v-if="!result"
           class="is-pulled-right"
           type="is-primary"
