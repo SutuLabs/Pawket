@@ -84,7 +84,7 @@
         <p>
           <strong>Mixch</strong>
           <span>[{{ version }}]</span> by <b-icon icon="github" size="is-small"></b-icon>
-          <a href="https://github.com/chiabee" target="_blank" class="has-color-link">
+          <a :href="$t('footer.ui.productInfo.authorLink')" target="_blank" class="has-color-link">
             {{ $t("footer.ui.productInfo.author") }}
             <b-icon icon="open-in-new" size="is-small"></b-icon>
           </a>

@@ -52,7 +52,8 @@
     "ui": {
       "productInfo": {
         "name": "Pawket",
-        "author": "Chiabee"
+        "author": "SutuLabs",
+        "authorLink": "https://github.com/SutuLabs"
       },
       "button": {
         "home": "Home",
@@ -970,7 +971,7 @@
         "url": {
           "privacyPolicy": "https://info.pawket.app/privacy-policy",
           "pawketWebsite": "https://info.pawket.app",
-          "github": "https://github.com/Chiabee",
+          "github": "https://github.com/SutuLabs",
           "twitter": "https://twitter.com/pawket_app",
           "discord": "https://discord.com/invite/ndQgpHwe4V"
         }

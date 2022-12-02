@@ -5,7 +5,7 @@
         <strong> {{ $t("footer.ui.productInfo.name") }}</strong>
         <span @click="versionClick()">[{{ version }}]</span><span v-if="debugMode" @click="disableDebug()">[DEBUG]</span> by
         <b-icon icon="github" size="is-small"></b-icon
-        ><a href="https://github.com/chiabee" target="_blank" class="has-color-link">{{ $t("footer.ui.productInfo.author") }}</a
+        ><a :href="$t('footer.ui.productInfo.authorLink')" target="_blank" class="has-color-link">{{ $t("footer.ui.productInfo.author") }}</a
         >.
         <br />
         <a href="https://info.pawket.app/" target="_blank" size="is-small" class="has-color-link">
