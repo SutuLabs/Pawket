@@ -4,6 +4,16 @@
   ; This program returns ((new_metadata new_metadata_updater_puzhash) conditions)
 
   ; Add uri to a field
+  (defun add_url (METADATA key new_url)
+    (if METADATA
+      (if (= (f (f METADATA)) key)
+        (c (c key (c new_url (r (f METADATA)))) (r METADATA))
+        (c (f METADATA) (add_url (r METADATA) key new_url))
+      )
+      ()
+    )
+  )
+  ; Update a field to arbitrary metadata
   (defun update_field (METADATA key new_value)
     (if METADATA
       (if (= (f (f METADATA)) key)
@@ -16,30 +26,22 @@
 
   ; main
   ; returns ((new_metadata new_metadata_updater_puzhash) conditions)
-  ; "ad": address
-  ; "nm": name
-  ; "ch": content hash
-  ; "tt": text
-  ; "dns": dns record
-  ; "pk": public key
-  ; "rr": reserved
+  ; "nm": name ; unmodifiable
+  ; "ex": expiry ; unmodifiable
+  ; "bd": bindings
   (list
     (list
-        (if (all key new_value)
-            (if (any
-              (= key "ad")
-              (= key "ch")
-              (= key "tt")
-              (= key "dns")
-              (= key "pk")
-              (= key "rr")
+      (if (all key new_value)
+          (if (any (= key "bd"))
+              (update_field CURRENT_METADATA key new_value)
+              (if (any (= key "mu") (= key "lu") (= key "u"))
+                  (add_url CURRENT_METADATA key new_url)
+                  CURRENT_METADATA
               )
-                (update_field CURRENT_METADATA key new_value)
-                CURRENT_METADATA
-            )
-            CURRENT_METADATA
-         )
-        METADATA_UPDATER_PUZZLE_HASH)
+          )
+          CURRENT_METADATA
+        )
+      METADATA_UPDATER_PUZZLE_HASH)
     0
   )
 )
