@@ -278,9 +278,6 @@
         "invalidAmount": "金额无效",
         "insufficientFunds": "余额不足"
       },
-      "tooltip": {
-        "offlineScan": "你现在处于离线模式，可以通过二维码与在线设备沟通来发起交易。"
-      },
       "span": {
         "loading": "载入中",
         "maxLeadingText": "最大:"
@@ -446,10 +443,6 @@
   },
   "offline": {
     "proxy": {
-      "text": {
-        "status": "已收集：{collected}, 已查询：{queried}",
-        "gettingCoins": "获取中..."
-      },
       "scan": {
         "title": "签名",
         "numberField": "未签名的信息",
@@ -474,9 +467,6 @@
         "numberField": "签名信息",
         "numberMessage": "请使用刚刚发起交易的在线设备扫描该二维码。",
         "scrollDown": "下滑页面，扫描离线设备上的二维码，以获取签名信息。"
-      },
-      "button": {
-        "finish": "完成"
       },
       "show": {
         "hint": "用离线代理扫描该二维码来发送交易",

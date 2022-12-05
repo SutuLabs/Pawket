@@ -278,9 +278,6 @@
         "invalidAmount": "Invalid amount.",
         "insufficientFunds": "Insufficient funds."
       },
-      "tooltip": {
-        "offlineScan": "You are in offline mode, communicate with proxy via QR code to send transaction."
-      },
       "span": {
         "loading": "Loading",
         "maxLeadingText": "Max:"
@@ -446,10 +443,6 @@
   },
   "offline": {
     "proxy": {
-      "text": {
-        "status": "Collected {collected}, queried {queried}",
-        "gettingCoins": "Getting..."
-      },
       "scan": {
         "title": "Sign",
         "numberField": "Unsigned Messages",
@@ -474,9 +467,6 @@
         "numberField": "Signed Message",
         "numberMessage": "Please scan this QR code with the online device that just initiated the transaction.",
         "scrollDown": "Scroll down the page, and scan the QR code on the offline device to get the signed message."
-      },
-      "button": {
-        "finish": "Finish"
       },
       "show": {
         "hint": "Use Proxy to scan QR to send your transaction.",
