@@ -26,6 +26,9 @@ export async function generateMintCnsOffer(
   nonceHex: string | null = null,
   privateKey: string | undefined = undefined,
 ): Promise<UnsignedSpendBundle> {
+  if (!metadata.expiry) throw new Error("Expiry date is mandatory for CNS.");
+  if (!metadata.name) throw new Error("Name is mandatory for CNS.");
+
   const target_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(changeAddress));
   const reqs = [
