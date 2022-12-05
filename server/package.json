@@ -7,6 +7,7 @@
     "serve": "nodemon server.ts",
     "start": "cross-env MAX_THREAD=0 ts-node server.ts",
     "importmods": "ts-node importmods.ts",
+    "compile": "ts-node compile.ts",
     "brun": "ts-node brun.ts",
     "test": "jest --coverage=false"
   },
