@@ -32,11 +32,6 @@ export const cnsMetadata: CnsMetadataValues = {
   "serialNumber": "21",
   "serialTotal": "63",
   expiry: "",
-  address: "",
   name: "",
-  contentHash: undefined,
-  text: undefined,
-  dns: undefined,
-  publicKey: undefined,
-  reserved: undefined,
+  bindings: {},
 };

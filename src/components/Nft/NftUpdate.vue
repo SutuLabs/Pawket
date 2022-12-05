@@ -211,6 +211,8 @@ export default class NftUpdate extends Vue {
       }
 
       const address_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.address));
+      const md = Object.assign({}, this.nft.analysis.metadata.bindings);
+      md.address = address_hex;
       const observers = await getAssetsRequestObserver(this.account);
       const ubundle = await generateUpdatedNftBundle(
         this.account.firstAddress,
@@ -218,8 +220,8 @@ export default class NftUpdate extends Vue {
         this.nft.coin,
         this.nft.analysis,
         "CNS",
-        "address",
-        address_hex,
+        "bindings",
+        md,
         this.availcoins,
         observers,
         networkContext()

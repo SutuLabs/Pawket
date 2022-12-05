@@ -145,12 +145,18 @@ Instance.init().then(() => {
     let r: CnsOfferRequest | null = null;
     try {
       r = req.body as CnsOfferRequest;
+      if (!r.metadata) {
+        res.status(400).send(JSON.stringify({ success: false, error: "metadata cannot be empty" }))
+        return;
+      }
+      if (!r.metadata.bindings) r.metadata.bindings = {};
+
       // console.log(`${JSON.stringify(r)},`);
 
       r.chainId = r.chainId || "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb";
       r.prefix = r.prefix || "xch";
       r.symbol = r.symbol || "XCH";
-      if (r.metadata.address?.startsWith("xch1")) r.metadata.address = puzzle.getPuzzleHashFromAddress(r.metadata.address);
+      if (r.metadata.bindings.address?.startsWith("xch1")) r.metadata.bindings.address = puzzle.getPuzzleHashFromAddress(r.metadata.bindings.address);
 
       const availcoinsForMaker: SymbolCoins = {
         [r.symbol]: [

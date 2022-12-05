@@ -1,6 +1,6 @@
 import { getTestAccount } from "../utility";
 import { SymbolCoins } from "@/services/transfer/transfer";
-import { analyzeNftCoin, generateMintNftBundle } from "@/services/coin/nft";
+import { analyzeNftCoin } from "@/services/coin/nft";
 import puzzle from "@/services/crypto/puzzle";
 import { GetParentPuzzleResponse } from "@/models/api";
 import { Instance } from "@/services/util/instance";
@@ -8,15 +8,16 @@ import { getAccountAddressDetails } from "@/services/util/account";
 
 import { CnsMetadataValues } from "@/models/nft";
 import { cnsMetadata, knownCoins } from "./cns.test.data";
-import { CoinSpend, signSpendBundle, SpendBundle } from "@/services/spendbundle";
+import { CoinSpend, signSpendBundle } from "@/services/spendbundle";
 import { combineOfferSpendBundle, generateNftOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
 import { getOfferSummary } from "@/services/offer/summary";
 import { generateMintCnsOffer } from "@/services/offer/cns";
 import { NetworkContext } from "@/services/coin/coinUtility";
-import { prefix0x } from "@/services/coin/condition";
+import { Hex, prefix0x } from "@/services/coin/condition";
 
 import { assertSpendbundle } from "@/services/spendbundle/validator";
+import { expiryDate, mintOneCns } from "./functions";
 
 const net: NetworkContext = {
   prefix: "xch",
@@ -26,22 +27,38 @@ const net: NetworkContext = {
 }
 function xchPrefix() { return "xch"; }
 function xchSymbol() { return "XCH"; }
-function chainId() { return "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb"; }
-function tokenInfo() { return {}; }
-function expiryDate() {
-  const dt = new Date(2022, 9, 31, 16, 0, 0); // month have 1 offset, this 2022-10-31
-  return Math.floor(dt.getTime() / 1000 - dt.getTimezoneOffset() * 60).toFixed(0);
-}
 
 beforeAll(async () => {
   await Instance.init();
 })
 
-
-test('Register CNS', async () => {
+test('Register CNS 1', async () => {
   const md = Object.assign({}, cnsMetadata);
   md.name = "hiya.xch";
-  md.address = "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155";
+  md.bindings = {
+    address: "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+  };
+  md.expiry = expiryDate();
+  await testMintCns(0n, md);
+});
+
+test('Register CNS 2: with all bindings data', async () => {
+  const md = Object.assign({}, cnsMetadata);
+  md.name = "hiya.xch";
+  md.bindings = {
+    address: "0x5662b49a357db4f05c2c141452b72fb91e7ec286e9b47d6c287210c63ae5cd3e",
+    did: "3a004a7c4e900167f0807ed53cbbe3c2ca66d0edbeba2fa243aa849d2babd909",// did:chia:18gqy5lzwjqqk0uyq0m2newlrct9xd58dh6azlgjr42zf62atmyys9hrt99
+    publicKey: "59239f069f0dbe9db384f47f1fd82add572ad74f2148812100969c0ed90aaa72",// curve255191ty3e7p5lpklfmvuy73l3lkp2m4tj4460y9ygzggqj6wqakg24feqtfue8c
+    text: "hello world",
+  };
+  md.expiry = expiryDate();
+  await testMintCns(0n, md);
+});
+
+test('Register CNS 3: with empty address', async () => {
+  const md = Object.assign({}, cnsMetadata);
+  md.name = "hiya.xch";
+  md.bindings = {};
   md.expiry = expiryDate();
   await testMintCns(0n, md);
 });
@@ -51,69 +68,36 @@ async function testMintCns(
   metadata: CnsMetadataValues,
   targetAddresses: string[] | undefined = undefined,
 ): Promise<void> {
-  const spendBundle = await mintOneCns(fee, metadata, targetAddresses);
+  const spendBundle = await mintOneCns(fee, metadata, net, targetAddresses);
   await assertSpendbundle(spendBundle, net.chainId);
   expect(spendBundle).toMatchSnapshot("spendbundle");
   const cs = spendBundle.coin_spends[2];
   await testAnalyzeCnsCoin(cs, "");
 }
 
-async function mintOneCns(
-  fee: bigint,
-  metadata: CnsMetadataValues,
-  targetAddresses: string[] | undefined = undefined,
-): Promise<SpendBundle> {
-  const target_hex = "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155";
-  const change_hex = "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155";
-
-  const changeAddress = puzzle.getAddressFromPuzzleHash(change_hex, xchPrefix());
-  const targetAddress = puzzle.getAddressFromPuzzleHash(target_hex, xchPrefix());
-
-  const royaltyAddressHex = "7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10";
-  const tradePricePercentage = 500;
-
-  const account = getTestAccount("55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f");
-
-  const tokenPuzzles = await getAccountAddressDetails(account, [], tokenInfo(), xchPrefix(), xchSymbol(), undefined, "cat_v2");
-  const availcoins: SymbolCoins = {
-    [xchSymbol()]: [
-      {
-        "amount": 4998999984n,
-        "parent_coin_info": "0xf3b7d6d4bdd80b99c539f7ca900288f5dc2ac8fb23559656e981761e90b2fe71",
-        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155"
-      },
-    ]
-  };
-  const sk = "00186eae4cd4a3ec609ca1a8c1cda8467e3cb7cbbbf91a523d12d31129d5f8d7";
-  const ubundle = await generateMintNftBundle(
-    targetAddress, changeAddress, fee, metadata, availcoins, tokenPuzzles, royaltyAddressHex,
-    tradePricePercentage, net, undefined, sk, targetAddresses, true);
-  const bundle = await signSpendBundle(ubundle, tokenPuzzles, net.chainId);
-  return bundle;
-}
-
 test('Create CNS Offer And Accept', async () => {
   const md = Object.assign({}, cnsMetadata);
+  if (!md.bindings) fail("undefined bindings");
   md.name = "hiya.xch";
-  md.address = "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155";
+  md.bindings.address = "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155";
   md.expiry = expiryDate();
-  await testMintCnsAndOffer(0n, md);
+  await testMintCnsAndOffer(0n, md, md.bindings.address);
 });
 
-test('Create CNS Offer And Accept 2', async () => {
+test('Create CNS Offer And Accept 2: empty address binding', async () => {
   const md = Object.assign({}, cnsMetadata);
   md.name = "longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglon.xch";
   expect(md.name.length).toBe(63 + ".xch".length);
-  md.address = "0x5662b49a357db4f05c2c141452b72fb91e7ec286e9b47d6c287210c63ae5cd3e";
   md.expiry = expiryDate();
-  await testMintCnsAndOffer(0n, md);
+  await testMintCnsAndOffer(0n, md, "0x5662b49a357db4f05c2c141452b72fb91e7ec286e9b47d6c287210c63ae5cd3e");
 });
 
 async function testMintCnsAndOffer(
   fee: bigint,
   metadata: CnsMetadataValues,
+  tgt_hex: Hex,
 ): Promise<void> {
-  const target_hex = prefix0x(metadata.address || "");
+  const target_hex = prefix0x(tgt_hex);
   const change_hex = "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155";
 
   const changeAddress = puzzle.getAddressFromPuzzleHash(change_hex, xchPrefix());

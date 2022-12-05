@@ -6,12 +6,13 @@ import { GetParentPuzzleResponse } from "@/models/api";
 import { Instance } from "@/services/util/instance";
 import { getAccountAddressDetails } from "@/services/util/account";
 
-import { knownCoins } from "./cns.test.data";
-import { convertToOriginCoin, NetworkContext } from "@/services/coin/coinUtility";
+import { cnsMetadata, knownCoins } from "./cns.test.data";
+import { getCoinName0x, NetworkContext } from "@/services/coin/coinUtility";
 
-import cnscoin1 from "../cases/cnscoin1.json"
 import { assertSpendbundle } from "@/services/spendbundle/validator";
-import { signSpendBundle } from "@/services/spendbundle";
+import { OriginCoin, signSpendBundle } from "@/services/spendbundle";
+import { CnsCoinAnalysisResult } from "@/models/nft";
+import { expiryDate, mintOneCns } from "./functions";
 
 const net: NetworkContext = {
   prefix: "xch",
@@ -29,18 +30,34 @@ beforeAll(async () => {
 })
 
 export async function testUpdateCns(fee: bigint): Promise<void> {
-  const hintPuzzle = "0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10";
+  const target_hex = "0xd26c36cfd99da03a18a7d47dddd7beb968ff63bd7d3ccc45205fadb6958a571d";// fake address
   const change_hex = "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155";
-  const update_hex = "0xd26c36cfd99da03a18a7d47dddd7beb968ff63bd7d3ccc45205fadb6958a571d";
-  const nftCoin = convertToOriginCoin({
-    "amount": 1,
-    "parent_coin_info": "0x76f8a0a38e04a54a3f08a65bc5860efdd6a52b678060c9747329248a8b1ad0dd",
-    "puzzle_hash": "0xe1d6b7f6088ec67185c53524be7ceeb02df71ed99cdd4f5af1e120c86a3091e4"
-  });
+  const update_hex = "0xf3b7d6d4bdd80b99c539f7ca900288f5dc2ac8fb23559656e981761e90b2fe71";
 
-  const analysis = await analyzeNftCoin(cnscoin1.puzzle_reveal, hintPuzzle, nftCoin, cnscoin1.solution);
-  if (analysis == null) fail("null analysis");
+  const initmd = Object.assign({}, cnsMetadata);
+  initmd.name = "hiya.xch";
+  initmd.bindings = {};
+  initmd.expiry = expiryDate();
+  const mintsb = await mintOneCns(fee, initmd, net, [puzzle.getAddressFromPuzzleHash(target_hex, net.prefix)]);
+  const nftcs = mintsb.coin_spends[2];
+
+  const oanalysis = await analyzeNftCoin(nftcs.puzzle_reveal, "", nftcs.coin, nftcs.solution);
+  if (oanalysis == null) fail("null analysis");
+  if (!("cnsExpiry" in oanalysis)) fail("none-cns analysis");
+  const analysis: CnsCoinAnalysisResult = oanalysis;
   expect(analysis).toMatchSnapshot("analysis");
+  
+  const nextCoin: OriginCoin = {
+    parent_coin_info: getCoinName0x(nftcs.coin),
+    amount: 1n,
+    puzzle_hash: nftcs.coin.puzzle_hash,
+  }
+  knownCoins.push({
+    parentCoinId: nextCoin.parent_coin_info,
+    parentParentCoinId: nftcs.coin.parent_coin_info,
+    amount: Number(nftcs.coin.amount),
+    puzzleReveal: nftcs.puzzle_reveal,
+  })
 
   const account = getTestAccount("55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f");
   account.addressRetrievalCount = 5;
@@ -58,8 +75,11 @@ export async function testUpdateCns(fee: bigint): Promise<void> {
     ]
   };
 
+  const md = Object.assign({}, analysis.metadata.bindings);
+  md.address = update_hex;
+
   const ubundle = await generateUpdatedNftBundle(
-    changeAddress, fee, nftCoin, analysis, "CNS", "address", update_hex, availcoins, tokenPuzzles, net);
+    changeAddress, fee, nextCoin, analysis, "CNS", "bindings", md, availcoins, tokenPuzzles, net);
 
   const finalCoin = ubundle.coin_spends[0];
   const finalAnalysis = await analyzeNftCoin(finalCoin.puzzle_reveal, analysis.p2Owner, finalCoin.coin, finalCoin.solution);

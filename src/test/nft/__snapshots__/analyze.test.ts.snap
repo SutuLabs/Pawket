@@ -223,6 +223,7 @@ Object {
 exports[`Analyze Nft 9: nft analysis result 1`] = `
 Object {
   "cnsAddress": "7ef30e6982a73bac072a5dd1d529353b14376397eb7a78b932ef9829d4260482",
+  "cnsBindings": undefined,
   "cnsExpiry": "1669962981",
   "cnsName": "asdfgh.xch",
   "coin": Object {
