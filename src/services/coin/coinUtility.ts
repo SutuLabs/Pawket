@@ -3,7 +3,7 @@ import { Bytes, bigint_to_bytes } from "clvm";
 import { GetPuzzleApiCallback } from "../transfer/transfer";
 import { CoinItem } from "@/models/wallet";
 import { CoinSpend, OriginCoin } from "../spendbundle";
-import store from "@/store";
+import { AccountEntity } from "@/models/account";
 
 export interface NetworkContext {
   prefix: string;
@@ -41,9 +41,8 @@ export interface PendingTransaction {
   amount: { [key: string]: bigint };
 }
 
-export async function lockCoins(coinSpends: CoinSpend[], transactionTime: number, network: string): Promise<void> {
+export async function lockCoins(account: AccountEntity, coinSpends: CoinSpend[], transactionTime: number, network: string): Promise<void> {
   const lc: LockedCoin[] = getLockedCoinsFromLocalStorage();
-  const account = store.state.account.accounts[store.state.account.selectedAccount];
   const accountFinger = account.key.fingerprint;
   for (const cs of coinSpends) {
     const coinName = getCoinName(cs.coin);
@@ -63,10 +62,9 @@ export async function unlockCoins(coins: OriginCoin[]): Promise<void> {
   localStorage.setItem("LOCKED_COINS", JSON.stringify(lc));
 }
 
-export function coinFilter(coins: OriginCoin[], network: string): OriginCoin[] {
+export function coinFilter(account: AccountEntity, coins: OriginCoin[], network: string): OriginCoin[] {
   let lc: LockedCoin[] = getLockedCoinsFromLocalStorage();
-  const accountFinger = store.state.account.accounts[store.state.account.selectedAccount].key.fingerprint;
-  lc = lc.filter((l) => l.network == network && l.accountFinger == accountFinger);
+  lc = lc.filter((l) => l.network == network && l.accountFinger == account.key.fingerprint);
   return coins.filter(coin => {
     const name = getCoinName(coin);
     return lc.findIndex(c => c.coinName == name) == -1;
