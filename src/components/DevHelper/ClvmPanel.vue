@@ -32,6 +32,7 @@ import puzzle from "@/services/crypto/puzzle";
 import { modsdict } from "@/services/coin/mods";
 import { beautifyLisp, findByPath } from "@/services/coin/lisp";
 import { assemble, disassemble } from "clvm_tools";
+import { unprefix0x } from "@/services/coin/condition";
 
 @Component({
   components: {
@@ -49,9 +50,9 @@ export default class ClvmPanel extends Vue {
   public readonly modsdict = modsdict;
 
   async updateCl(): Promise<void> {
-    if (this.origin_cl.startsWith("0x") || this.origin_cl.startsWith("ff")) {
+    if (this.origin_cl.startsWith("0x") || this.origin_cl.startsWith("ff") || this.origin_cl.indexOf(" ") == -1) {
       this.cl_type = "hex";
-      this.translated_cl = await puzzle.disassemblePuzzle(this.origin_cl);
+      this.translated_cl = await puzzle.disassemblePuzzle(unprefix0x(this.origin_cl));
       this.cl_extra = "";
     } else if (this.origin_cl.trim().indexOf("\n") == -1) {
       this.cl_type = "clvm";
