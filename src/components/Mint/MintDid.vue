@@ -49,7 +49,6 @@ import store from "@/store";
 import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
-import coinHandler from "@/services/transfer/coin";
 import { debugBundle, submitBundle } from "@/services/view/bundleAction";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import OfflineSendShowBundle from "@/components/Offline/OfflineSendShowBundle.vue";
@@ -62,6 +61,7 @@ import { generateMintDidBundle } from "@/services/coin/did";
 import { demojo } from "@/filters/unitConversion";
 import Confirmation from "../Common/Confirmation.vue";
 import { Hex, prefix0x } from "@/services/coin/condition";
+import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
 
 @Component({
   components: {
@@ -145,15 +145,12 @@ export default class MintDid extends Vue {
     this.maxStatus = "Loading";
 
     if (!this.requests || this.requests.length == 0) {
-      this.requests = this.account.type == "PublicKey" ? [] : await coinHandler.getAssetsRequestDetail(this.account);
+      this.requests = this.account.type == "PublicKey" ? [] : await getAssetsRequestDetail(this.account);
     }
 
     if (!this.availcoins) {
       try {
-        const coins = await coinHandler.getAvailableCoins(
-          await coinHandler.getAssetsRequestObserver(this.account),
-          coinHandler.getTokenNames(this.account)
-        );
+        const coins = await getAvailableCoins(this.account);
         this.availcoins = coins[0];
       } catch (err) {
         this.offline = true;
@@ -188,7 +185,7 @@ export default class MintDid extends Vue {
       // const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: this.selectedToken, memos: [tgt_hex, memo] }];
       // const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
       // this.bundle = await transfer.generateSpendBundle(plan, this.requests, [], xchSymbol(), chainId());
-      const observers = await coinHandler.getAssetsRequestObserver(this.account);
+      const observers = await getAssetsRequestObserver(this.account);
       const ubundle = await generateMintDidBundle(tgt, change, this.feeBigInt, {}, this.availcoins, observers, networkContext());
       this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());
       if (this.account.type == "PublicKey") {
@@ -208,7 +205,7 @@ export default class MintDid extends Vue {
 
   async submit(): Promise<void> {
     if (!this.bundle) return;
-    submitBundle(this.bundle, (_) => (this.submitting = _), this.close);
+    submitBundle(this.bundle, this.account, (_) => (this.submitting = _), this.close);
   }
 
   debugBundle(): void {

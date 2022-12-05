@@ -82,7 +82,6 @@ import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
 import { AccountEntity, OneTokenInfo } from "@/models/account";
 import store from "@/store";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
-import coinHandler from "@/services/transfer/coin";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import { DidDetail, NftDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
 import DevHelper from "@/components/DevHelper/DevHelper.vue";
@@ -98,6 +97,7 @@ import { shorten } from "@/filters/addressConversion";
 import BundleSummary from "../Bundle/BundleSummary.vue";
 import Confirmation from "../Common/Confirmation.vue";
 import { Hex, prefix0x } from "@/services/coin/condition";
+import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
 
 @Component({
   components: {
@@ -188,14 +188,11 @@ export default class NftMove extends Vue {
 
   async loadCoins(): Promise<void> {
     if (!this.tokenPuzzles || this.tokenPuzzles.length == 0) {
-      this.tokenPuzzles = this.account.type == "PublicKey" ? [] : await coinHandler.getAssetsRequestDetail(this.account);
+      this.tokenPuzzles = this.account.type == "PublicKey" ? [] : await getAssetsRequestDetail(this.account);
     }
 
     if (!this.availcoins) {
-      const coins = await coinHandler.getAvailableCoins(
-        await coinHandler.getAssetsRequestObserver(this.account),
-        coinHandler.getTokenNames(this.account)
-      );
+      const coins = await getAvailableCoins(this.account);
       this.availcoins = coins[0];
     }
   }
@@ -225,7 +222,7 @@ export default class NftMove extends Vue {
         return;
       }
 
-      const observers = await coinHandler.getAssetsRequestObserver(this.account);
+      const observers = await getAssetsRequestObserver(this.account);
 
       const ubundle = await generateTransferNftBundle(
         this.account.firstAddress,
@@ -258,7 +255,7 @@ export default class NftMove extends Vue {
 
   async submit(): Promise<void> {
     if (!this.bundle) return;
-    submitBundle(this.bundle, (_) => (this.submitting = _), this.close);
+    submitBundle(this.bundle, this.account, (_) => (this.submitting = _), this.close);
 
     await store.dispatch("persistent");
     await store.dispatch("refreshBalance");

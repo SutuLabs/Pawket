@@ -73,7 +73,6 @@ import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
 import bigDecimal from "js-big-decimal";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
-import coinHandler from "@/services/transfer/coin";
 import { debugBundle, submitBundle } from "@/services/view/bundleAction";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
@@ -86,6 +85,7 @@ import { getTokenInfo } from "@/services/view/cat";
 import AddressField from "@/components/Common/AddressField.vue";
 import Confirmation from "../Common/Confirmation.vue";
 import { Hex, prefix0x } from "@/services/coin/condition";
+import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
 
 @Component({
   components: {
@@ -252,14 +252,11 @@ export default class MintCat extends Vue {
     this.maxStatus = "Loading";
 
     if (!this.requests || this.requests.length == 0) {
-      this.requests = this.account.type == "PublicKey" ? [] : await coinHandler.getAssetsRequestDetail(this.account);
+      this.requests = this.account.type == "PublicKey" ? [] : await getAssetsRequestDetail(this.account);
     }
 
     if (!this.availcoins) {
-      const coins = await coinHandler.getAvailableCoins(
-        await coinHandler.getAssetsRequestObserver(this.account),
-        coinHandler.getTokenNames(this.account)
-      );
+      const coins = await getAvailableCoins(this.account);
       this.availcoins = coins[0];
     }
 
@@ -337,7 +334,7 @@ export default class MintCat extends Vue {
         return;
       }
 
-      const observers = await coinHandler.getAssetsRequestObserver(this.account);
+      const observers = await getAssetsRequestObserver(this.account);
 
       const { spendBundle, assetId } = await generateMintCatBundle(
         this.signAddress,
@@ -370,7 +367,7 @@ export default class MintCat extends Vue {
 
   async submit(): Promise<void> {
     if (!this.bundle) return;
-    submitBundle(this.bundle, (_) => (this.submitting = _), this.success);
+    submitBundle(this.bundle, this.account, (_) => (this.submitting = _), this.success);
   }
 
   async success(): Promise<void> {

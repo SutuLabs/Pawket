@@ -84,7 +84,6 @@ import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
 import { AccountEntity, OneTokenInfo } from "@/models/account";
 import store from "@/store";
 import AddressField from "@/components/Common/AddressField.vue";
-import coinHandler from "@/services/transfer/coin";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import { CnsDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
 import DevHelper from "@/components/DevHelper/DevHelper.vue";
@@ -99,6 +98,7 @@ import BundleSummary from "../Bundle/BundleSummary.vue";
 import Confirmation from "../Common/Confirmation.vue";
 import puzzle from "@/services/crypto/puzzle";
 import { Hex, prefix0x } from "@/services/coin/condition";
+import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
 
 @Component({
   components: {
@@ -188,14 +188,11 @@ export default class NftUpdate extends Vue {
 
   async loadCoins(): Promise<void> {
     if (!this.tokenPuzzles || this.tokenPuzzles.length == 0) {
-      this.tokenPuzzles = this.account.type == "PublicKey" ? [] : await coinHandler.getAssetsRequestDetail(this.account);
+      this.tokenPuzzles = this.account.type == "PublicKey" ? [] : await getAssetsRequestDetail(this.account);
     }
 
     if (!this.availcoins) {
-      const coins = await coinHandler.getAvailableCoins(
-        await coinHandler.getAssetsRequestObserver(this.account),
-        coinHandler.getTokenNames(this.account)
-      );
+      const coins = await getAvailableCoins(this.account);
       this.availcoins = coins[0];
     }
   }
@@ -214,7 +211,7 @@ export default class NftUpdate extends Vue {
       }
 
       const address_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.address));
-      const observers = await coinHandler.getAssetsRequestObserver(this.account);
+      const observers = await getAssetsRequestObserver(this.account);
       const ubundle = await generateUpdatedNftBundle(
         this.account.firstAddress,
         BigInt(this.fee),
@@ -247,7 +244,7 @@ export default class NftUpdate extends Vue {
 
   async submit(): Promise<void> {
     if (!this.bundle) return;
-    submitBundle(this.bundle, (_) => (this.submitting = _), this.close);
+    submitBundle(this.bundle, this.account, (_) => (this.submitting = _), this.close);
 
     await store.dispatch("persistent");
     await store.dispatch("refreshBalance");

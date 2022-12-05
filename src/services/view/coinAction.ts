@@ -1,5 +1,5 @@
 import { AccountEntity } from "@/models/account";
-import { TokenPuzzleDetail, TokenPuzzleObserver } from "../crypto/receive";
+import { TokenPuzzleAddress, TokenPuzzleDetail, TokenPuzzleObserver } from "../crypto/receive";
 import { SymbolCoins } from "../transfer/transfer";
 import coinHandler from "@/services/transfer/coin";
 import store from "@/store";
@@ -8,6 +8,14 @@ export async function getAvailableCoins(account: AccountEntity): Promise<[Symbol
   return await coinHandler.getAvailableCoins(
     account,
     await coinHandler.getAssetsRequestObserver(account, store.state.account.tokenInfo),
+    coinHandler.getTokenNames(account, store.state.account.tokenInfo)
+  );
+}
+
+export async function getAvailableCoinsWithRequests(account: AccountEntity, requests: TokenPuzzleAddress[]): Promise<[SymbolCoins, SymbolCoins]> {
+  return await coinHandler.getAvailableCoins(
+    account,
+    requests,
     coinHandler.getTokenNames(account, store.state.account.tokenInfo)
   );
 }

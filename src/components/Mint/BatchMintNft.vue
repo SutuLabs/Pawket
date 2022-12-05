@@ -107,7 +107,6 @@ import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
 import puzzle from "@/services/crypto/puzzle";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
-import coinHandler from "@/services/transfer/coin";
 import { submitBundle } from "@/services/view/bundleAction";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
@@ -117,6 +116,7 @@ import { NftMetadataValues } from "@/models/nft";
 import { generateMintNftBundle } from "@/services/coin/nft";
 import store from "@/store";
 import { Hex, prefix0x } from "@/services/coin/condition";
+import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
 
 @Component({
   components: {
@@ -182,14 +182,11 @@ export default class BatchMintNft extends Vue {
     this.status = "Loading";
 
     if (!this.requests || this.requests.length == 0) {
-      this.requests = this.account.type == "PublicKey" ? [] : await coinHandler.getAssetsRequestDetail(this.account);
+      this.requests = this.account.type == "PublicKey" ? [] : await getAssetsRequestDetail(this.account);
     }
 
     if (!this.availcoins) {
-      const coins = await coinHandler.getAvailableCoins(
-        await coinHandler.getAssetsRequestObserver(this.account),
-        coinHandler.getTokenNames(this.account)
-      );
+      const coins = await getAvailableCoins(this.account);
       this.availcoins = coins[0];
     }
 
@@ -258,7 +255,7 @@ export default class BatchMintNft extends Vue {
         });
         addresses.push(targetAddress);
       }
-      const observers = await coinHandler.getAssetsRequestObserver(this.account);
+      const observers = await getAssetsRequestObserver(this.account);
       const royaltyAddressHex = puzzle.getPuzzleHashFromAddress(this.royaltyAddress);
       const tradePricePercentage = this.royaltyPercentage * 100;
       const ubundle = await generateMintNftBundle(
@@ -293,7 +290,7 @@ export default class BatchMintNft extends Vue {
 
   async submit(): Promise<void> {
     if (!this.bundle) return;
-    submitBundle(this.bundle, (_) => (this.submitting = _), this.close);
+    submitBundle(this.bundle, this.account, (_) => (this.submitting = _), this.close);
   }
 
   get csvSampleUri(): string {

@@ -20,13 +20,6 @@
           </span>
         </b-button>
       </span>
-      <span v-if="offline" class="is-size-6">
-        <b-tooltip position="is-right" type="is-light" multilined :label="$t('send.ui.tooltip.offlineScan')">
-          <b-button tag="a" type="is-primary is-light" size="is-small" @click="offlineScan()">
-            <b-icon icon="qrcode-scan" size="is-small" class="px-4"></b-icon>
-          </b-button>
-        </b-tooltip>
-      </span>
     </template>
     <b-select :value="selectedToken" @input="changeToken">
       <option v-for="token in tokenNames" :key="token" :value="token">
@@ -136,10 +129,6 @@ export default class TokenAmountField extends Vue {
 
   setMax(): void {
     this.$emit("set-max");
-  }
-
-  offlineScan(): void {
-    this.$emit("offline-scan");
   }
 }
 </script>

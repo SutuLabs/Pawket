@@ -64,10 +64,10 @@ import QrcodeVue from "qrcode.vue";
 import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from "vue-qrcode-reader";
 import { initCameraHandleError } from "@/services/view/camera";
 import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
-import coinHandler from "@/services/transfer/coin";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
 import { networkContext, xchPrefix } from "@/store/modules/network";
 import { AccountEntity } from "@/models/account";
+import { getAssetsRequestDetail } from "@/services/view/coinAction";
 
 @Component({
   components: {
@@ -196,7 +196,7 @@ export default class OfflineSpendBundleQr extends Vue {
           }
 
           this.receiveBundle = await decodeOffer(b);
-          const requests = await coinHandler.getAssetsRequestDetail(this.account);
+          const requests = await getAssetsRequestDetail(this.account);
           const bundle = await signSpendBundle(this.receiveBundle, requests, networkContext());
           this.qrcodes = [bundle.aggregated_signature];
         }

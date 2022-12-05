@@ -206,7 +206,6 @@ import { AccountEntity, CustomCat, OneTokenInfo, TokenInfo } from "@/models/acco
 import { demojo } from "@/filters/unitConversion";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import { TokenPuzzleDetail } from "@/services/crypto/receive";
-import coinHandler from "@/services/transfer/coin";
 import { getOfferSummary, OfferSummary } from "@/services/offer/summary";
 import { decodeOffer } from "@/services/offer/encoding";
 import { NotificationProgrammatic as Notification } from "buefy";
@@ -227,6 +226,7 @@ import OfflineSendShowBundle from "@/components/Offline/OfflineSendShowBundle.vu
 import { networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
 import bigDecimal from "js-big-decimal";
 import { shorten } from "@/filters/addressConversion";
+import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
 
 @Component({
   components: {
@@ -472,14 +472,11 @@ export default class TakeOffer extends Vue {
 
   async loadCoins(): Promise<void> {
     if (!this.tokenPuzzles || this.tokenPuzzles.length == 0) {
-      this.tokenPuzzles = this.account.type == "PublicKey" ? [] : await coinHandler.getAssetsRequestDetail(this.account);
+      this.tokenPuzzles = this.account.type == "PublicKey" ? [] : await getAssetsRequestDetail(this.account);
     }
 
     if (!this.availcoins) {
-      const coins = await coinHandler.getAvailableCoins(
-        await coinHandler.getAssetsRequestObserver(this.account),
-        coinHandler.getTokenNames(this.account)
-      );
+      const coins = await getAvailableCoins(this.account);
       this.availcoins = coins[0];
     }
   }
@@ -525,7 +522,7 @@ export default class TakeOffer extends Vue {
         }
         const fee = isReceivingCat ? BigInt(this.fee) : 0n;
         const offplan = await generateOfferPlan(revSummary.offered, change_hex, this.availcoins, fee, xchSymbol());
-        const observers = await coinHandler.getAssetsRequestObserver(this.account);
+        const observers = await getAssetsRequestObserver(this.account);
         const utakerBundle = await generateOffer(offplan, revSummary.requested, observers, networkContext());
         const takerBundle = await signSpendBundle(utakerBundle, this.tokenPuzzles, networkContext());
         const combined = await combineOfferSpendBundle([this.makerBundle, takerBundle]);
@@ -553,7 +550,7 @@ export default class TakeOffer extends Vue {
           xchSymbol(),
           royalty_amount
         );
-        const observers = await coinHandler.getAssetsRequestObserver(this.account);
+        const observers = await getAssetsRequestObserver(this.account);
         const utakerBundle = await generateNftOffer(
           offplan,
           nft.analysis,
@@ -590,6 +587,7 @@ export default class TakeOffer extends Vue {
     if (!this.bundle) return;
     submitBundle(
       this.bundle,
+      this.account,
       (_) => (this.submitting = _),
       () => {
         this.close;
