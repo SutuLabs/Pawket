@@ -38,6 +38,7 @@ import store from "@/store";
 import { SpendBundle } from "@/services/spendbundle";
 import { debugBundle, submitBundle } from "@/services/view/bundleAction";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
+import { AccountEntity } from "@/models/account";
 
 @Component({
   components: {
@@ -62,9 +63,17 @@ export default class OfflineSendConfirmBundle extends Vue {
     return store.state.app.debug;
   }
 
+  get selectedAccount(): number {
+    return store.state.account.selectedAccount;
+  }
+
+  get account(): AccountEntity {
+    return store.state.account.accounts[this.selectedAccount] ?? {};
+  }
+
   async submit(): Promise<void> {
     if (!this.bundle) return;
-    submitBundle(this.bundle, (_) => (this.submitting = _), this.close);
+    submitBundle(this.bundle, this.account, (_) => (this.submitting = _), this.close);
   }
 
   debugBundle(): void {

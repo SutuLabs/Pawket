@@ -6,7 +6,9 @@ import { ModalProgrammatic as Modal } from "buefy";
 import DevHelper from "@/components/DevHelper/DevHelper.vue";
 import { chainId, rpcUrl } from "@/store/modules/network";
 import { lockCoins } from "../coin/coinUtility";
-export async function submitBundle(bundle: SpendBundle, setSubmitting: (state: boolean) => void, success: () => void): Promise<void> {
+import { AccountEntity } from "@/models/account";
+
+export async function submitBundle(bundle: SpendBundle, account: AccountEntity, setSubmitting: (state: boolean) => void, success: () => void): Promise<void> {
   setSubmitting(true);
   /** 
    * Do not delele! For avoiding check i18n failure.
@@ -41,7 +43,7 @@ export async function submitBundle(bundle: SpendBundle, setSubmitting: (state: b
         type: "is-primary",
       });
       const txnTime = Date.now()
-      lockCoins(bundle.coin_spends, txnTime, chainId());
+      lockCoins(account, bundle.coin_spends, txnTime, chainId());
       success();
     } else {
       const err = typeof (json.error) === "string" ? json.error.match('error ([A-Z_]+)') : null;

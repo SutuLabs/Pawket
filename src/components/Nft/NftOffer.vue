@@ -80,7 +80,6 @@ import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
 import { AccountEntity } from "@/models/account";
 import store from "@/store";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
-import coinHandler from "@/services/transfer/coin";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import { NftDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
 import DevHelper from "@/components/DevHelper/DevHelper.vue";
@@ -93,6 +92,7 @@ import puzzle from "@/services/crypto/puzzle";
 import { generateNftOffer, generateOfferPlan } from "@/services/offer/bundler";
 import dexie from "@/services/api/dexie";
 import { tc } from "@/i18n/i18n";
+import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
 
 @Component({
   components: {
@@ -148,14 +148,11 @@ export default class NftOffer extends Vue {
 
   async loadCoins(): Promise<void> {
     if (!this.tokenPuzzles || this.tokenPuzzles.length == 0) {
-      this.tokenPuzzles = this.account.type == "PublicKey" ? [] : await coinHandler.getAssetsRequestDetail(this.account);
+      this.tokenPuzzles = this.account.type == "PublicKey" ? [] : await getAssetsRequestDetail(this.account);
     }
 
     if (!this.availcoins) {
-      const coins = await coinHandler.getAvailableCoins(
-        await coinHandler.getAssetsRequestObserver(this.account),
-        coinHandler.getTokenNames(this.account)
-      );
+      const coins = await getAvailableCoins(this.account);
       this.availcoins = coins[0];
     }
   }
@@ -193,7 +190,7 @@ export default class NftOffer extends Vue {
       // console.log("const reqs=" + JSON.stringify(reqs, null, 2) + ";");
       // console.log("const availcoins=" + JSON.stringify(this.availcoins, null, 2) + ";");
       const offplan = await generateOfferPlan(offs, change_hex, this.availcoins, 0n, xchSymbol());
-      const observers = await coinHandler.getAssetsRequestObserver(this.account);
+      const observers = await getAssetsRequestObserver(this.account);
       const ubundle = await generateNftOffer(offplan, this.nft.analysis, this.nft.coin, reqs, observers, networkContext());
       const bundle = await signSpendBundle(ubundle, this.tokenPuzzles, networkContext());
       this.bundle = bundle;

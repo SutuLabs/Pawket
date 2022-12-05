@@ -121,7 +121,6 @@ import { AccountEntity } from "@/models/account";
 import { Hex, prefix0x } from "@/services/coin/condition";
 import store from "@/store";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
-import coinHandler from "@/services/transfer/coin";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import { TokenPuzzleDetail } from "@/services/crypto/receive";
 import puzzle from "@/services/crypto/puzzle";
@@ -136,6 +135,7 @@ import { chainId, networkContext, xchSymbol } from "@/store/modules/network";
 import dexie from "@/services/api/dexie";
 import { tc } from "@/i18n/i18n";
 import { lockCoins } from "@/services/coin/coinUtility";
+import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
 
 @Component({
   components: {
@@ -246,14 +246,11 @@ export default class MakeOffer extends Vue {
 
   async loadCoins(): Promise<void> {
     if (!this.tokenPuzzles || this.tokenPuzzles.length == 0) {
-      this.tokenPuzzles = this.account.type == "PublicKey" ? [] : await coinHandler.getAssetsRequestDetail(this.account);
+      this.tokenPuzzles = this.account.type == "PublicKey" ? [] : await getAssetsRequestDetail(this.account);
     }
 
     if (!this.availcoins || !this.allcoins) {
-      const coins = await coinHandler.getAvailableCoins(
-        await coinHandler.getAssetsRequestObserver(this.account),
-        coinHandler.getTokenNames(this.account)
-      );
+      const coins = await getAvailableCoins(this.account);
       this.availcoins = coins[0];
       this.allcoins = coins[1];
     }
@@ -272,7 +269,7 @@ export default class MakeOffer extends Vue {
       const reqs: OfferEntity[] = getOfferEntities(this.requests, change_hex, this.catIds, xchSymbol());
 
       const offplan = await generateOfferPlan(offs, change_hex, this.availcoins, 0n, xchSymbol());
-      const observers = await coinHandler.getAssetsRequestObserver(this.account);
+      const observers = await getAssetsRequestObserver(this.account);
       const ubundle = await generateOffer(offplan, reqs, observers, networkContext());
       this.bundle = await signSpendBundle(ubundle, this.tokenPuzzles, networkContext());
 
@@ -281,7 +278,7 @@ export default class MakeOffer extends Vue {
         await this.offlineSignBundle();
       }
 
-      if (this.bundle && this.signed) lockCoins(this.bundle.coin_spends, Date.now(), chainId());
+      if (this.bundle && this.signed) lockCoins(this.account, this.bundle.coin_spends, Date.now(), chainId());
       this.offerText = await encodeOffer(this.bundle, 4);
 
       this.step = "Confirmation";
@@ -342,7 +339,7 @@ export default class MakeOffer extends Vue {
           if (this.bundle) {
             this.bundle.aggregated_signature = prefix0x(sig);
             this.signed = true;
-            if (this.bundle) lockCoins(this.bundle.coin_spends, Date.now(), chainId());
+            if (this.bundle) lockCoins(this.account, this.bundle.coin_spends, Date.now(), chainId());
           }
         },
       },

@@ -92,12 +92,12 @@ import puzzle from "@/services/crypto/puzzle";
 import { Hex, prefix0x } from "@/services/coin/condition";
 import transfer, { SymbolCoins, TransferTarget } from "@/services/transfer/transfer";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
-import coinHandler from "@/services/transfer/coin";
 import { submitBundle } from "@/services/view/bundleAction";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import { csvToArray } from "@/services/util/csv";
 import { networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
+import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
 
 @Component({
   components: {
@@ -158,14 +158,11 @@ export default class BatchSend extends Vue {
     this.status = "Loading";
 
     if (!this.requests || this.requests.length == 0) {
-      this.requests = this.account.type == "PublicKey" ? [] : await coinHandler.getAssetsRequestDetail(this.account);
+      this.requests = await getAssetsRequestDetail(this.account);
     }
 
     if (!this.availcoins) {
-      const coins = await coinHandler.getAvailableCoins(
-        await coinHandler.getAssetsRequestObserver(this.account),
-        coinHandler.getTokenNames(this.account)
-      );
+      const coins = await getAvailableCoins(this.account);
       this.availcoins = coins[0];
     }
 
@@ -223,7 +220,7 @@ export default class BatchSend extends Vue {
       }
 
       const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
-      const observers = await coinHandler.getAssetsRequestObserver(this.account);
+      const observers = await getAssetsRequestObserver(this.account);
       const ubundle = await transfer.generateSpendBundleIncludingCat(plan, observers, [], networkContext());
       this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());
       if (this.account.type == "PublicKey") {
@@ -243,7 +240,7 @@ export default class BatchSend extends Vue {
 
   async submit(): Promise<void> {
     if (!this.bundle) return;
-    submitBundle(this.bundle, (_) => (this.submitting = _), this.close);
+    submitBundle(this.bundle, this.account, (_) => (this.submitting = _), this.close);
   }
 
   get csvSampleUri(): string {

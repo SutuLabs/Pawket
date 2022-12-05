@@ -48,7 +48,6 @@
         @change-token="changeToken"
         @validity="changeValidity"
         @set-max="setMax()"
-        @offline-scan="offlineScan()"
       >
       </token-amount-field>
       <b-field :label="$t('send.ui.label.memo')">
@@ -79,13 +78,12 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { TokenPuzzleDetail } from "@/services/crypto/receive";
 import store from "@/store";
-import { OriginCoin, signSpendBundle, SpendBundle } from "@/services/spendbundle";
+import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
 import puzzle from "@/services/crypto/puzzle";
 import bigDecimal from "js-big-decimal";
 import { Hex, Hex0x, prefix0x } from "@/services/coin/condition";
 import transfer, { SymbolCoins, TransferTarget } from "@/services/transfer/transfer";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
-import coinHandler from "@/services/transfer/coin";
 import { debugBundle, submitBundle } from "@/services/view/bundleAction";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import OfflineSendShowBundle from "@/components/Offline/OfflineSendShowBundle.vue";
@@ -98,6 +96,7 @@ import AddressField from "@/components/Common/AddressField.vue";
 import TopBar from "@/components/Common/TopBar.vue";
 import AddressBook, { Contact } from "@/components/AddressBook/AddressBook.vue";
 import Confirmation from "../Common/Confirmation.vue";
+import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoinsWithRequests } from "@/services/view/coinAction";
 
 @Component({
   components: {
@@ -288,15 +287,12 @@ export default class Send extends Vue {
     this.maxStatus = "Loading";
 
     if (!this.requests || this.requests.length == 0) {
-      this.requests = this.account.type == "PublicKey" ? [] : await coinHandler.getAssetsRequestDetail(this.account);
+      this.requests = this.account.type == "PublicKey" ? [] : await getAssetsRequestDetail(this.account);
     }
 
     if (!this.availcoins || !this.allcoins) {
       try {
-        const coins = await coinHandler.getAvailableCoins(
-          await coinHandler.getAssetsRequestObserver(this.account),
-          coinHandler.getTokenNames(this.account)
-        );
+        const coins = await getAvailableCoinsWithRequests(this.account, this.requests);
         this.availcoins = coins[0];
         this.allcoins = coins[1];
       } catch (err) {
@@ -374,7 +370,7 @@ export default class Send extends Vue {
       const memo = this.memo.replace(/[&/\\#,+()$~%.'":*?<>{}\[\] ]/g, "_");
       const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: this.selectedToken, memos: [tgt_hex, memo] }];
       const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
-      const observers = this.requests.length ? this.requests : await coinHandler.getAssetsRequestObserver(this.account);
+      const observers = this.requests.length ? this.requests : await getAssetsRequestObserver(this.account);
       const ubundle = await transfer.generateSpendBundleIncludingCat(plan, observers, [], networkContext());
       if (this.account.type == "PublicKey") {
         this.bundle = await signSpendBundle(ubundle, [], networkContext());
@@ -396,7 +392,7 @@ export default class Send extends Vue {
 
   async submit(): Promise<void> {
     if (!this.bundle) return;
-    submitBundle(this.bundle, (_) => (this.submitting = _), this.close);
+    submitBundle(this.bundle, this.account, (_) => (this.submitting = _), this.close);
   }
 
   debugBundle(): void {
@@ -450,25 +446,6 @@ export default class Send extends Vue {
       events: {
         signature: (sig: Hex): void => {
           if (this.bundle) this.bundle.aggregated_signature = prefix0x(sig);
-        },
-      },
-    });
-  }
-
-  async offlineScan(): Promise<void> {
-    this.$buefy.modal.open({
-      parent: this,
-      component: (await import("@/components/Offline/OfflineQrCode.vue")).default,
-      hasModalCard: true,
-      trapFocus: true,
-      canCancel: [""],
-      props: { puzzles: this.requests.find((_) => _.symbol == this.selectedToken)?.puzzles },
-      events: {
-        scanned: (coins: OriginCoin[]): void => {
-          this.availcoins = {
-            [xchSymbol()]: coins,
-          };
-          this.loadCoins();
         },
       },
     });
