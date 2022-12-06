@@ -1301,7 +1301,9 @@
         "cancel": "Scanning has not been completed. Are you sure to cancel?"
       },
       "error": {
-        "ABORT_OOM": "Scanning was aborted. Please refresh the page and try again."
+        "ABORT_OOM": "Scanning was aborted. Please refresh the page and try again.",
+        "NETWORK_ERROR": "Network Error. Please try again later.",
+        "UNKNOWN": "Unknown Error. Please try again later."
       }
     }
   },
