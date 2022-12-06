@@ -427,8 +427,21 @@ export default class ScanAssets extends Vue {
             type: "is-danger",
             duration: 5000,
           });
+          return;
         }
-        console.log(error);
+        if (err.match(/NETWORK_ERROR/) || err.match(/Failed to fetch/)) {
+          Notification.open({
+            message: this.$tc("scanAssets.message.error.NETWORK_ERROR"),
+            type: "is-danger",
+            duration: 5000,
+          });
+          return;
+        }
+        Notification.open({
+          message: this.$tc("scanAssets.message.error.UNKNOWN"),
+          type: "is-danger",
+          duration: 5000,
+        });
       }
     }
     this.current += 100;

@@ -154,6 +154,9 @@ class Receive {
         coinType,
       }),
     });
+    if (resp.status != 200) {
+      throw new Error('NETWORK_ERROR: ' + resp.status.toString())
+    }
     const json = (await resp.json()) as GetRecordsResponse;
     return json;
   }
