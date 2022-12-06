@@ -460,7 +460,7 @@ export async function analyzeNftCoin(
     const cnsobj = Object.assign({
       cnsExpiry: metadata.expiry,
       cnsName: metadata.name,
-      cnsAddress: unprefix0x(metadata.bindings?.address ?? metadata.address ?? hintPuzzle),
+      cnsAddress: unprefix0x(metadata.bindings?.address ?? metadata.address ?? p2Owner ?? hintPuzzle),
       cnsBindings: metadata.bindings,
     }, obj) as CnsCoinAnalysisResult;
     return cnsobj;
@@ -549,7 +549,7 @@ async function getOwnerFromSolutionForSettlementInnerPuzzle(sol: SExp): Promise<
               (0x7eddb6c424762b7a1008db41b4b9a60f48cce2215e0e303f56b3a66ce8da9598)))))))
   */
 
-  const p2Owner = findByPath(sol, "rrffffrff").as_bin().hex();
+  const p2Owner = findByPath(sol, "rrffffrff").as_bin().hex().slice(2);
   return { didOwner: undefined, p2Owner, updaterInSolution: false };
 }
 
@@ -755,7 +755,7 @@ function getNftMetadataKeys(): NftMetadataKeys & CnsMetadataKeys & CnsBindingKey
     "expiry": getHex("ex"),
     "name": getHex("nm"),
     "bindings": getHex("bd"),
-    
+
     "address": getHex("ad"),
     "did": getHex("id"),
     "publicKey": getHex("pk"),
