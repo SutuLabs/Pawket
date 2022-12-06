@@ -981,9 +981,6 @@
       }
     }
   },
-  "cns": {
-    "title": "CNS"
-  },
   "explore": {
     "title": "探索",
     "loading": "加载中",

@@ -592,7 +592,7 @@ export default class TakeOffer extends Vue {
       this.bundle,
       (_) => (this.submitting = _),
       () => {
-        this.close;
+        this.close();
         this.$emit("success");
       }
     );
