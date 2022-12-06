@@ -3,7 +3,7 @@ import puzzle, { PlaintextPuzzle } from "../crypto/puzzle";
 import receive, { TokenPuzzleObserver } from "../crypto/receive";
 import { curryMod } from "../offer/bundler";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
-import { formatAmount, Hex0x, prefix0x, skipFirstByte0x } from "./condition";
+import { formatAmount, Hex0x, prefix0x, skipFirstByte0x, unprefix0x } from "./condition";
 import { modshash, modshex, modsprog } from "./mods";
 import utility, { bytesToHex0x } from "../crypto/utility";
 import catBundle, { LineageProof } from "../transfer/catBundle";
@@ -12,7 +12,7 @@ import { constructSingletonTopLayerPuzzle, getNextCoinName0x, getPuzzleDetail, h
 import { findByPath } from "./lisp";
 import { ConditionOpcode } from "./opcode";
 import { DidCoinAnalysisResult } from "./did";
-import { CnsDataKey, NftCoinAnalysisResult, NftDataKey, NftMetadataKeys, NftMetadataValues } from "@/models/nft";
+import { CnsBindingKeys, CnsBindingValues, CnsDataKey, CnsUpdatableDataKey, NftCoinAnalysisResult, NftDataKey, NftMetadataKeys, NftMetadataValues, NftUpdatableDataKey } from "@/models/nft";
 import { CannotParsePuzzle, expectModArgs, sexpAssemble, UncurriedPuzzle, uncurryPuzzle } from "./analyzer";
 import { disassemble, sha256tree } from "clvm_tools";
 import { SExp } from "clvm";
@@ -103,7 +103,7 @@ export async function generateMintNftBundle(
       launcherCoinId,
       prefix0x(modshash["singleton_launcher"]),
       await constructNftStatePuzzle(
-        await constructMetadataString(metadata),
+        constructMetadataString(metadata),
         metadata_updater_hash,
         await constructNftOwnershipPuzzle("()", // first creation, current owner in field is () instead of didAnalysis.launcherId, true owner is in the solution
           await constructNftTransferPuzzle(sgnStruct, royaltyAddressHex, tradePricePercentage),
@@ -286,8 +286,8 @@ export async function generateUpdatedNftBundle(
   nftCoin: OriginCoin,
   analysis: NftCoinAnalysisResult | CnsCoinAnalysisResult,
   updater: "CNS" | "NFT",
-  key: CnsDataKey | NftDataKey,
-  value: string,
+  key: CnsUpdatableDataKey | NftUpdatableDataKey,
+  value: string | CnsBindingValues,
   availcoins: SymbolCoins,
   requests: TokenPuzzleObserver[],
   net: NetworkContext,
@@ -456,11 +456,12 @@ export async function analyzeNftCoin(
   };
   if (!obj.updaterInSolution) delete obj.updaterInSolution;
 
-  if ("expiry" in metadata && metadata.expiry && metadata.address && metadata.name) {
+  if ("expiry" in metadata && metadata.expiry && metadata.name) {
     const cnsobj = Object.assign({
       cnsExpiry: metadata.expiry,
       cnsName: metadata.name,
-      cnsAddress: metadata.address,
+      cnsAddress: unprefix0x(metadata.bindings?.address ?? metadata.address ?? hintPuzzle),
+      cnsBindings: metadata.bindings,
     }, obj) as CnsCoinAnalysisResult;
     return cnsobj;
   }
@@ -519,11 +520,11 @@ export async function getUpdateNftInnerSolution(
   tgt_hex: string,
   metadataUpdater: string,
   key: CnsDataKey | NftDataKey,
-  value: string,
+  value: string | CnsBindingValues,
 ): Promise<string> {
   const amount = 1n;
   tgt_hex = prefix0x(tgt_hex);
-  const val = value.startsWith("0x") ? value : `"${value}"`;
+  const val = typeof value !== "string" ? constructCnsBindingString(value) : value.startsWith("0x") ? value : `"${value}"`;
   const mkeys = getNftMetadataKeys();
 
   // `-24` is the update metadata magic condition
@@ -601,7 +602,7 @@ async function getCalculatedMetadata(currentMetadata: Hex0x, updaterPuzzleHash: 
   return metadata;
 }
 
-async function constructMetadataString(metadata: MetadataValues): Promise<string> {
+function constructMetadataString(metadata: MetadataValues): string {
   if (!metadata.imageUri) throw new Error("empty image uri is not allowed");
   if (metadata.imageUri.indexOf("\"") >= 0) throw new Error("image uri should processed before proceeding");
 
@@ -619,14 +620,24 @@ async function constructMetadataString(metadata: MetadataValues): Promise<string
 
     ...("expiry" in metadata ? [
       metadata.expiry ? `${toNumber(mkeys.expiry)} . ${formatAmount(BigInt(metadata.expiry))}` : undefined,
-      metadata.address ? `${toNumber(mkeys.address)} . ${prefix0x(metadata.address)}` : undefined,
       metadata.name ? `${toNumber(mkeys.name)} . "${metadata.name}"` : undefined,
-      metadata.contentHash ? `${toNumber(mkeys.contentHash)} . "${metadata.contentHash}"` : undefined,
-      metadata.text ? `${toNumber(mkeys.text)} . "${metadata.text}"` : undefined,
-      metadata.dns ? `${toNumber(mkeys.dns)} . "${metadata.dns}"` : undefined,
-      metadata.publicKey ? `${toNumber(mkeys.publicKey)} . "${metadata.publicKey}"` : undefined,
-      metadata.reserved ? `${toNumber(mkeys.reserved)} . "${metadata.reserved}"` : undefined,
+      metadata.bindings ? `${toNumber(mkeys.bindings)} . ${constructCnsBindingString(metadata.bindings)}` : undefined,
     ] : [])
+  ]
+    .filter(_ => _)
+    .map(_ => `(${_})`).join(" ") + ")";
+
+  return md;
+}
+
+function constructCnsBindingString(metadata: CnsBindingValues): string {
+  const mkeys = getNftMetadataKeys();
+
+  const md = "(" + [
+    metadata.address ? `${toNumber(mkeys.address)} . ${prefix0x(metadata.address)}` : undefined,
+    metadata.did ? `${toNumber(mkeys.did)} . ${prefix0x(metadata.did)}` : undefined,
+    metadata.publicKey ? `${toNumber(mkeys.publicKey)} . ${prefix0x(metadata.publicKey)}` : undefined,
+    metadata.text ? `${toNumber(mkeys.text)} . "${metadata.text}"` : undefined,
   ]
     .filter(_ => _)
     .map(_ => `(${_})`).join(" ") + ")";
@@ -726,7 +737,7 @@ async function constructPureFeeSpendBundle(
   return bundle;
 }
 
-function getNftMetadataKeys(): NftMetadataKeys & CnsMetadataKeys {
+function getNftMetadataKeys(): NftMetadataKeys & CnsMetadataKeys & CnsBindingKeys {
   const getHex = function (key: string): string {
     return key.split("").map(_ => _.charCodeAt(0).toString(16)).join("");
   }
@@ -742,24 +753,18 @@ function getNftMetadataKeys(): NftMetadataKeys & CnsMetadataKeys {
     "serialTotal": getHex("st"),
 
     "expiry": getHex("ex"),
-    "address": getHex("ad"),
     "name": getHex("nm"),
-    "contentHash": getHex("ch"),
-    "text": getHex("tt"),
-    "dns": getHex("dns"),
+    "bindings": getHex("bd"),
+    
+    "address": getHex("ad"),
+    "did": getHex("id"),
     "publicKey": getHex("pk"),
-    "reserved": getHex("rr"),
+    "text": getHex("tt"),
   };
 }
 
 export function getNftMetadataInfo(parsed: ParsedMetadata): MetadataValues {
   const mkeys = getNftMetadataKeys();
-
-  const getScalar = function (input: string | string[] | undefined): string | undefined {
-    if (!input) return undefined;
-    if (typeof input !== "string") throw new Error("metadata abnormally present a array");
-    return input;
-  }
 
   const obj: MetadataValues = {
     imageUri: hex2asc(parsed[mkeys.imageUri]) ?? "",
@@ -774,11 +779,7 @@ export function getNftMetadataInfo(parsed: ParsedMetadata): MetadataValues {
     expiry: hex2decSingle(parsed[mkeys.expiry]),
     address: getScalar(parsed[mkeys.address]),
     name: hex2ascSingle(parsed[mkeys.name]),
-    contentHash: hex2ascSingle(parsed[mkeys.contentHash]),
-    text: hex2ascSingle(parsed[mkeys.text]),
-    dns: hex2ascSingle(parsed[mkeys.dns]),
-    publicKey: hex2ascSingle(parsed[mkeys.publicKey]),
-    reserved: hex2ascSingle(parsed[mkeys.reserved]),
+    bindings: getCnsBindingsInfo(parsed[mkeys.bindings]),
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -787,8 +788,40 @@ export function getNftMetadataInfo(parsed: ParsedMetadata): MetadataValues {
   return obj;
 }
 
-export const getScalarString = function (input: string | string[] | undefined, prefer: 1 | -1 = 1): string | undefined {
+export function getCnsBindingsInfo(metalist: string | string[] | undefined): CnsBindingValues | undefined {
+  if (metalist === undefined) return undefined;
+  if (!Array.isArray(metalist)) throw new Error("CNS binding input abnormal format.");
+  const mkeys = getNftMetadataKeys();
+
+  const parsed: ParsedMetadata = {};
+  if (metalist.length == 0 || metalist.length % 2 != 0) throw new Error(`Face abnormal metalist: ` + JSON.stringify(metalist));
+  for (let i = 0; i < metalist.length; i += 2) {
+    const key = metalist.at(i);
+    if (!key) throw new Error('Unexpected metalist: empty key.');
+    const meta = metalist.at(i + 1);
+    parsed[key] = meta;
+  }
+
+  const obj: CnsBindingValues = {
+    address: getScalar(parsed[mkeys.address]),
+    did: getScalar(parsed[mkeys.did]),
+    publicKey: getScalar(parsed[mkeys.publicKey]),
+    text: hex2ascSingle(parsed[mkeys.text]),
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Object.keys(obj).forEach(key => { if ((obj as any)[key] === undefined) delete (obj as any)[key]; });
+
+  return obj;
+}
+
+export const getScalarString = function (input: string | string[] | undefined, prefer: 1 | "MustBeString" = 1): string | undefined {
   if (!input) return input;
   if (typeof input === "string") return input;
+  if (prefer == "MustBeString" && typeof input !== "string") throw new Error("metadata abnormally present a array");
   return prefer == 1 ? input[0] : input.slice(-1)[0];
+}
+
+const getScalar = function (input: string | string[] | undefined): string | undefined {
+  return getScalarString(input, "MustBeString");
 }

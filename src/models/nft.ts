@@ -64,6 +64,7 @@ export interface NftCoinAnalysisResult {
 }
 
 export type NftDataKey = "imageUri" | "imageHash" | "metadataUri" | "metadataHash" | "licenseUri" | "licenseHash" | "serialNumber" | "serialTotal";
+export type NftUpdatableDataKey = "imageUri" | "metadataUri" | "licenseUri";
 
 export interface NftMetadataValues {
   imageUri: string | string[] | undefined;
@@ -81,19 +82,30 @@ export interface CnsCoinAnalysisResult extends NftCoinAnalysisResult {
   cnsExpiry: string;
   cnsName: string;
   cnsAddress: string;
+  cnsBindings: CnsBindingValues;
+  metadata: CnsMetadataValues;
 }
 
 export interface CnsMetadataValues extends NftMetadataValues {
   expiry: string | undefined;
-  address: string | undefined;
   name: string | undefined;
-  contentHash: string | undefined;
-  text: string | undefined;
-  dns: string | undefined;
-  publicKey: string | undefined;
-  reserved: string | undefined;
+  /**
+   * @deprecated Use `bindings.address` instead
+   */
+  address?: string;
+  bindings: CnsBindingValues | undefined;
 };
 
-export type CnsDataKey = NftDataKey | "expiry" | "address" | "name" | "contentHash" | "text" | "dns" | "publicKey" | "reserved";
+export interface CnsBindingValues {
+  address?: string;
+  did?: string;
+  publicKey?: string;
+  text?: string;
+};
+
+export type CnsDataKey = NftDataKey | "expiry" | "address" | "name" | "bindings";
+export type CnsUpdatableDataKey = NftUpdatableDataKey | "bindings";
+export type CnsBindingKey = "did" | "address" | "publicKey" | "text";
+export type CnsBindingKeys = { [key in CnsBindingKey]: string; };
 
 export type CnsMetadataKeys = { [key in CnsDataKey]: string; };

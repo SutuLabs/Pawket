@@ -3,7 +3,7 @@ import { TokenPuzzleObserver } from "../crypto/receive";
 import { curryMod } from "../offer/bundler";
 import { getFirstLevelArgMsg, getNumber, Hex0x, prefix0x } from "./condition";
 import { modshash, modsprog } from "./mods";
-import { Bytes, SExp } from "clvm";
+import { Bytes, SExp, Tuple } from "clvm";
 import { assemble } from "clvm_tools/clvm_tools/binutils";
 import { ConditionOpcode } from "./opcode";
 import { getCoinName0x } from "./coinUtility";
@@ -44,9 +44,12 @@ export function parseMetadata(
   rawmeta: string | SExp,
 ): ParsedMetadata {
   const metaprog = typeof rawmeta === "string" ? assemble(rawmeta) : rawmeta;
-  const metalist = (metaprog.as_javascript() as (Bytes[] | [Bytes, Bytes[]])[])
+  const metalist = (metaprog.as_javascript() as (Bytes[] | [Bytes, Bytes[]] | [Bytes, Tuple<Bytes, Bytes>])[])
     .map(_ => Array.from(_))
-    .map(_ => _.flatMap(it => Array.isArray(it) ? it.map(a => a.hex()) : it.hex()));
+    .map(_ => _.flatMap(it =>
+      (it instanceof Tuple) ? [it.at(0).hex(), it.at(1).hex()]
+        : Array.isArray(it) ? it.map(a => a.hex())
+          : it.hex()));
 
   const parsed: ParsedMetadata = {};
   for (let i = 0; i < metalist.length; i++) {
