@@ -2,7 +2,7 @@
 
 exports[`Analyze CNS NFT 1: nft analysis result 1`] = `
 Object {
-  "cnsAddress": "bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79",
+  "cnsAddress": "5662b49a357db4f05c2c141452b72fb91e7ec286e9b47d6c287210c63ae5cd3e",
   "cnsBindings": undefined,
   "cnsExpiry": "1671672707",
   "cnsName": "xxxicertest.xch",
@@ -32,7 +32,7 @@ Object {
   "nftOwnershipModHash": "0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
   "nftStateModHash": "0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
   "p2InnerPuzzle": "(a (q 2 10 (c 2 (c 3 ()))) (c (q (51 . 62) (a (i 5 (q 4 (c 12 (c (a 30 (c 2 (c 9 ()))) ())) (a 22 (c 2 (c 25 (c (a 10 (c 2 (c 13 ()))) ()))))) ()) 1) (a (i 5 (q 4 (c 8 9) (a 22 (c 2 (c 13 (c 11 ()))))) (q . 11)) 1) 2 (i (l 5) (q 11 (q . 2) (a 30 (c 2 (c 9 ()))) (a 30 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1))",
-  "p2Owner": "a05662b49a357db4f05c2c141452b72fb91e7ec286e9b47d6c287210c63ae5cd3e",
+  "p2Owner": "5662b49a357db4f05c2c141452b72fb91e7ec286e9b47d6c287210c63ae5cd3e",
   "previousOwner": "()",
   "rawMetadata": "((117 \\"https://storage.pawket.app/ipfs/QmQfhEEA4o1h5hY8gnoEkdpQGWE89xNCxQ4w5bsdacSpZN?filename=xxxicertest.xch.jpg\\") (104 . 0xd519e6a8dfb8f9d7b208156d2b32c238bc7629a0140c88804df7f13f99e67901) (28021 \\"https://storage.pawket.app/ipfs/Qmcd2SammSDeJXxB5QiQg9CDCPLMxaMfMQXmWuZzBYBNLq?filename=xxxicertest.xchmetadata.json\\") (28008 . 0x61e1b74b11f9f7550f99e68d99839ddf58c322efbf0ec0f0fa4a7dae5d421b64) (27765) (27752) (29550 . 1) (29556 . 1) (25976 . 0x63a3b383) (28269 . \\"xxxicertest.xch\\") (25188))",
   "royaltyAddress": "0x5ef381bc66ed8e3d87d9622ceb223f964a222bdfcb4001608ec2c99262b6f56a",
@@ -213,7 +213,7 @@ Object {
   "nftOwnershipModHash": "0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
   "nftStateModHash": "0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
   "p2InnerPuzzle": "(a (q 2 10 (c 2 (c 3 ()))) (c (q (51 . 62) (a (i 5 (q 4 (c 12 (c (a 30 (c 2 (c 9 ()))) ())) (a 22 (c 2 (c 25 (c (a 10 (c 2 (c 13 ()))) ()))))) ()) 1) (a (i 5 (q 4 (c 8 9) (a 22 (c 2 (c 13 (c 11 ()))))) (q . 11)) 1) 2 (i (l 5) (q 11 (q . 2) (a 30 (c 2 (c 9 ()))) (a 30 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1))",
-  "p2Owner": "a09835f26fe098d8a0e6488719d15fc770285ae4a5e29ba6ac4f3cf99aede66b28",
+  "p2Owner": "9835f26fe098d8a0e6488719d15fc770285ae4a5e29ba6ac4f3cf99aede66b28",
   "previousOwner": "()",
   "rawMetadata": "((117 \\"https://ejk6hjgqnwntzbows52b53aqmc6bwjsdrg4zea4jm2gw5onnq4.arweave.net/IlX_jpNBtmzyF1pd0HuwQYLwbJkOJuZIDiWaNbrmth0\\") (104 . 0xb984ae995f4886ed8a07a6e4aa3c7374ae0d8974dfd6cf519f2b1e2b147e256e) (28021 \\"https://uzgsmccirvy7yw7aytqrg2nvbq3tchs3g45zxzocqf3umutkereq.arweave.net/pk0mCEiNcfxb4MThE2m1DDcxHls3O5vlwoF3RlJqJEk\\") (28008 . 0x749a787f8672d31ceb68b1b6f3530dbc0772abf9c6e52bb9c03673e5441546df) (27765) (27752 . 0x00) (29550 . 1) (29556 . 1))",
   "royaltyAddress": "0xe1e18f02b8ebf72e227ae11260ff34d417bbfd17a0198ae61fe4b6f3f6832875",
@@ -294,7 +294,7 @@ Object {
   "nftOwnershipModHash": "0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
   "nftStateModHash": "0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
   "p2InnerPuzzle": "(a (q 2 10 (c 2 (c 3 ()))) (c (q (51 . 62) (a (i 5 (q 4 (c 12 (c (a 30 (c 2 (c 9 ()))) ())) (a 22 (c 2 (c 25 (c (a 10 (c 2 (c 13 ()))) ()))))) ()) 1) (a (i 5 (q 4 (c 8 9) (a 22 (c 2 (c 13 (c 11 ()))))) (q . 11)) 1) 2 (i (l 5) (q 11 (q . 2) (a 30 (c 2 (c 9 ()))) (a 30 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1))",
-  "p2Owner": "a07eddb6c424762b7a1008db41b4b9a60f48cce2215e0e303f56b3a66ce8da9598",
+  "p2Owner": "7eddb6c424762b7a1008db41b4b9a60f48cce2215e0e303f56b3a66ce8da9598",
   "previousOwner": "()",
   "rawMetadata": "((117 \\"https://storage.pawket.app/ipfs/QmbGwa3Ve2oXaJUq2nx3iMteK1PSzuqZvZhFrpqmeMNKFq?filename=asdfgh.xch.jpg\\") (104 . 0x8f7cce00d9cdab525511358fe89af4a419d6483b271cfb96fb5ba10120a88cf8) (28021 \\"https://storage.pawket.app/ipfs/QmfFfoPDFrJfwZL54v4RCp4MPk4MjC2CsYnuJQJw8zcc2u?filename=asdfgh.xchmetadata.json\\") (28008 . 0x861ba42c15d58419fa1aaf3c5eb8f3741b5e21775e77d72432a95dd19c905a4c) (27765) (27752) (29550 . 1) (29556 . 1) (25976 . 0x63899ce5) (24932 . 0x7ef30e6982a73bac072a5dd1d529353b14376397eb7a78b932ef9829d4260482) (28269 . \\"asdfgh.xch\\"))",
   "royaltyAddress": "0x5662b49a357db4f05c2c141452b72fb91e7ec286e9b47d6c287210c63ae5cd3e",
