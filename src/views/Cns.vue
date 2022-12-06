@@ -93,6 +93,48 @@
           </div>
         </div>
       </div>
+      <div class="mt-5">
+        <p class="is-size-5 py-4" @click="showCns()">
+          Your CNS <b-button loading size="is-small" rounded v-if="isLoading" type="is-text"></b-button>
+          <b-icon class="is-pulled-right pt-1" :icon="showMyCns ? 'chevron-down' : 'chevron-right'"></b-icon>
+        </p>
+        <div v-if="showMyCns">
+          <ul class="is-flex columns is-multiline is-mobile my-2" v-if="cnses">
+            <li class="column is-4-tablet is-6-mobile" v-for="(cns, i) of cnses" :key="i">
+              <div class="nft-image-container">
+                <img
+                  class="nft-image is-clickable cover"
+                  v-if="cns.metadata.uri"
+                  @click="viewCnsDetail(cns)"
+                  :src="cns.metadata.uri"
+                />
+                <img class="nft-image is-clickable cover" v-else src="@/assets/nft-no-image.png" @click="viewCnsDetail(cns)" />
+                <p class="nft-name has-background-white-ter pt-2 pl-3 is-hidden-mobile">
+                  <span class="is-inline-block truncate">{{
+                    extraInfo[cns.address].metadata ? extraInfo[cns.address].metadata.name : ""
+                  }}</span>
+                  <span class="is-pulled-right">
+                    <b-dropdown aria-role="list" class="is-pulled-right" :mobile-modal="false" position="is-bottom-left">
+                      <template #trigger>
+                        <b-icon icon="dots-vertical" class="is-clickable"></b-icon>
+                      </template>
+                      <a class="has-text-dark" :href="spaceScanUrl + cns.address" target="_blank">
+                        <b-dropdown-item aria-role="listitem"
+                          ><b-icon class="media-left" icon="open-in-new" size="is-small"></b-icon
+                          >{{ $t("nftDetail.ui.dropdown.spaceScan") }}
+                        </b-dropdown-item>
+                      </a>
+                    </b-dropdown>
+                  </span>
+                </p>
+              </div>
+            </li>
+          </ul>
+          <div v-if="!isLoading && !cnses.length" style="min-height: 200px" class="is-hidden-mobile has-text-grey pt-4 is-size-5">
+            No Chia Domain Name Here. Search to Get One.
+          </div>
+        </div>
+      </div>
     </div>
     <div :class="{ modal: true, 'is-active': showModal }">
       <div class="modal-background"></div>
@@ -109,7 +151,24 @@
             </div>
           </div>
           <address-field :inputAddress="address" @updateAddress="updateAddress"></address-field>
-          <p class="has-text-danger is-size-6" v-if="registerErrMsg">{{ registerErrMsg }}</p>
+          <div class="field">
+            <label class="label">Did</label>
+            <div class="control">
+              <input class="input" type="text" v-model="did" />
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">PublicKey</label>
+            <div class="control">
+              <input class="input" type="text" v-model="publicKey" />
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Text</label>
+            <div class="control">
+              <input class="input" type="text" v-model="text" />
+            </div>
+          </div>
         </section>
         <footer class="modal-card-foot is-block">
           <button class="button" @click="showModal = false">Cancel</button>
@@ -138,7 +197,12 @@ import { AccountEntity, CustomCat } from "@/models/account";
 import TakeOffer from "@/components/Offer/Take.vue";
 import { getAllCats } from "@/store/modules/account";
 import { isMobile } from "@/services/view/responsive";
-import { NftDetail } from "@/services/crypto/receive";
+import { DidDetail, NftDetail } from "@/services/crypto/receive";
+import { DonwloadedNftCollection, NftOffChainMetadata } from "@/models/nft";
+import { getScalarString } from "@/services/coin/nft";
+import utility from "@/services/crypto/utility";
+import { unprefix0x } from "@/services/coin/condition";
+import NftDetailPanel from "@/components/Nft/NftDetailPanel.vue";
 
 @Component({
   components: {
@@ -154,11 +218,16 @@ export default class Cns extends Vue {
   public errorMsg = "";
   public showModal = false;
   public address = "";
+  public did = "";
+  public publicKey = "";
+  public text = "";
   public period = 1;
   public price: Price = { price: -1, royaltyPercentage: -1 };
   public registerErrMsg = "";
   public offer = "";
   public registering = false;
+  public showMyCns = false;
+  public isLoading = false;
 
   get path(): string {
     return this.$route.path;
@@ -180,12 +249,82 @@ export default class Cns extends Vue {
     return this.account.nfts?.filter((nft) => nft.analysis != null && "cnsName" in nft.analysis) ?? [];
   }
 
+  get dids(): DidDetail[] {
+    return this.account.dids ?? [];
+  }
+
   get spaceScanUrl(): string {
     return store.state.network.network.spaceScanUrl;
   }
 
   get isMobile(): boolean {
     return isMobile();
+  }
+
+  get extraInfo(): DonwloadedNftCollection {
+    return this.account.extraInfo ?? {};
+  }
+
+  async showCns(): Promise<void> {
+    if (this.showMyCns) {
+      this.showMyCns = false;
+    } else {
+      this.isLoading = true;
+      this.showMyCns = true;
+      await store.dispatch("refreshNfts");
+      this.isLoading = false;
+    }
+  }
+
+  viewCnsDetail(nft: NftDetail): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: NftDetailPanel,
+      hasModalCard: true,
+      trapFocus: true,
+      width: 1000,
+      fullScreen: isMobile(),
+      canCancel: ["outside", "escape"],
+      props: { nft: nft, metadata: this.extraInfo[nft.address].metadata, account: this.account, dids: this.dids },
+    });
+  }
+
+  @Watch("cnses")
+  async downloadRelated(): Promise<void> {
+    for (let i = 0; i < this.cnses.length; i++) {
+      const nft = this.cnses[i];
+      const ext = this.extraInfo[nft.address];
+      if (!ext) {
+        // this.extraInfo[nft.address] = { status: !nft.analysis.metadata.metadataUri ? "NoMetadata" : "Ready" };
+        Vue.set(this.extraInfo, nft.address, {
+          status: !nft.analysis.metadata.metadataUri ? "NoMetadata" : "Ready",
+          metadata: {},
+        });
+        await this.downloadNftMetadata(nft); // don't need wait, just fire and change ui after some information got
+      }
+    }
+    Vue.set(this.account, "extraInfo", this.extraInfo);
+  }
+
+  async downloadNftMetadata(nft: NftDetail): Promise<void> {
+    const uri = getScalarString(nft.analysis.metadata.metadataUri);
+    if (!uri) return;
+    // console.log("start download nft", nft.analysis.metadata.metadataUri);
+    const resp = await fetch(uri);
+    const body = await resp.blob();
+    const bodyhex = utility.toHexString(await utility.purehash(await body.arrayBuffer()));
+    try {
+      const md = JSON.parse(await body.text()) as NftOffChainMetadata;
+      this.extraInfo[nft.address].metadata = md;
+    } catch (error) {
+      if (process.env.NODE_ENV !== "production") {
+        console.warn("cannot parse metadata", error);
+      }
+      this.extraInfo[nft.address].metadata = undefined;
+    }
+    // console.log("downloaded", bodyhex, nft.analysis.metadata.metadataHash, md);
+    this.extraInfo[nft.address].status = "Processed";
+    this.extraInfo[nft.address].matchHash = bodyhex.toLowerCase() == unprefix0x(nft.analysis.metadata.metadataHash).toLowerCase();
   }
 
   @Watch("path")
@@ -223,12 +362,7 @@ export default class Cns extends Vue {
 
   async register(): Promise<void> {
     this.registering = true;
-    if (!this.address.startsWith("xch1")) {
-      this.registerErrMsg = "address should start with xch1";
-      this.registering = false;
-      return;
-    }
-    const res = await register(`${this.name}.xch`, this.address);
+    const res = await register(`${this.name}.xch`, this.address, this.publicKey, this.did, this.text);
     if (res?.success) {
       this.offer = res.offer ?? "";
       this.address = "";
@@ -256,7 +390,7 @@ export default class Cns extends Vue {
         account: this.account,
         tokenList: this.tokenList,
         inputOfferText: this.offer,
-        close: this.showModal = false
+        close: (this.showModal = false),
       },
     });
   }
@@ -294,10 +428,6 @@ export default class Cns extends Vue {
     if (!reg) return new Uint8Array();
     return new Uint8Array(reg.map((byte) => parseInt(byte, 16)));
   }
-
-  mounted(): void {
-    store.dispatch("refreshNfts");
-  }
 }
 </script>
 <style scoped lang="scss">
@@ -320,5 +450,38 @@ export default class Cns extends Vue {
 .nav-box {
   max-width: 1000px;
   margin: auto;
+}
+
+.nft-image-container {
+  position: relative;
+  aspect-ratio: 1 / 1;
+}
+.nft-image {
+  border-radius: 0.5vw;
+  width: 100%;
+  border: 0;
+}
+
+.nft-name {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 40px;
+  border-bottom-right-radius: 0.5vw;
+  border-bottom-left-radius: 0.5vw;
+}
+
+.truncate {
+  width: 90%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cover {
+  object-fit: cover;
+  aspect-ratio: 1 / 1;
+  width: 100%;
 }
 </style>
