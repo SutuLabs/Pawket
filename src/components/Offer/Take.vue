@@ -590,7 +590,7 @@ export default class TakeOffer extends Vue {
       this.account,
       (_) => (this.submitting = _),
       () => {
-        this.close;
+        this.close();
         this.$emit("success");
       }
     );
