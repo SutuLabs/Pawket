@@ -151,24 +151,6 @@
             </div>
           </div>
           <address-field :inputAddress="address" @updateAddress="updateAddress"></address-field>
-          <div class="field">
-            <label class="label">Did</label>
-            <div class="control">
-              <input class="input" type="text" v-model="did" />
-            </div>
-          </div>
-          <div class="field">
-            <label class="label">PublicKey</label>
-            <div class="control">
-              <input class="input" type="text" v-model="publicKey" />
-            </div>
-          </div>
-          <div class="field">
-            <label class="label">Text</label>
-            <div class="control">
-              <input class="input" type="text" v-model="text" />
-            </div>
-          </div>
         </section>
         <footer class="modal-card-foot is-block">
           <button class="button" @click="showModal = false">Cancel</button>
@@ -218,9 +200,6 @@ export default class Cns extends Vue {
   public errorMsg = "";
   public showModal = false;
   public address = "";
-  public did = "";
-  public publicKey = "";
-  public text = "";
   public period = 1;
   public price: Price = { price: -1, royaltyPercentage: -1 };
   public registerErrMsg = "";
@@ -362,7 +341,7 @@ export default class Cns extends Vue {
 
   async register(): Promise<void> {
     this.registering = true;
-    const res = await register(`${this.name}.xch`, this.address, this.publicKey, this.did, this.text);
+    const res = await register(`${this.name}.xch`, this.address);
     if (res?.success) {
       this.offer = res.offer ?? "";
       this.address = "";
