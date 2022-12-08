@@ -3,13 +3,13 @@
     <div v-if="mode == 'Menu'">
       <top-bar :title="$t('importWallet.title')" @close="back()" :showBack="true"></top-bar>
       <div class="columns pt-6 is-centered">
-        <div class="column is-5 menu-btn is-clickable mx-3 mt-4 p-3" @click="import12()">
+        <div class="column is-5 menu-btn is-white is-clickable mx-3 mt-4 p-3" @click="import12()">
           <h2 class="is-size-2 has-text-weight-bold has-text-primary">{{ $t("createSeed.ui.button.12word") }}</h2>
-          <p class="is-size-6">{{ $t("createSeed.ui.button.import12") }}</p>
+          <p class="is-size-6 has-text-dark">{{ $t("createSeed.ui.button.import12") }}</p>
         </div>
-        <div class="column is-5 menu-btn is-clickable mx-3 mt-4 p-3" @click="import24()">
-          <h2 class="is-size-2 has-text-weight-bold">{{ $t("createSeed.ui.button.24word") }}</h2>
-          <p class="is-size-6">{{ $t("createSeed.ui.button.import24") }}</p>
+        <div class="column is-5 menu-btn is-white is-clickable mx-3 mt-4 p-3" @click="import24()">
+          <h2 class="is-size-2 has-text-weight-bold has-text-grey">{{ $t("createSeed.ui.button.24word") }}</h2>
+          <p class="is-size-6 has-text-dark">{{ $t("createSeed.ui.button.import24") }}</p>
         </div>
       </div>
     </div>
@@ -103,7 +103,6 @@ export default class Add extends Vue {
   overflow-x: hidden;
 }
 .menu-btn {
-  background-color: #fff;
   border-radius: 6px;
   box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%), 0 0 0 1px rgb(10 10 10 / 2%);
   color: #4a4a4a;

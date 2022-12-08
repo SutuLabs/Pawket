@@ -77,9 +77,6 @@
         "confirm": "Confirm",
         "clear": "Reset Wallet"
       },
-      "label": {
-        "password": "Password"
-      },
       "title": {
         "verifyPassword": "Verify Password"
       },

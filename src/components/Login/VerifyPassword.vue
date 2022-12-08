@@ -6,8 +6,6 @@
           <section>
             <h1 class="title is-4">{{ $t("verifyPassword.ui.title.verifyPassword") }}</h1>
             <b-field
-              :label="$t('verifyPassword.ui.label.password')"
-              label-position="on-border"
               :type="isCorrect ? '' : 'is-danger'"
             >
               <b-input

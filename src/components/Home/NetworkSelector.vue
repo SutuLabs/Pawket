@@ -2,7 +2,7 @@
   <div>
     <b-dropdown aria-role="list" :triggers="['click', 'hover']" :mobile-modal="false">
       <template #trigger>
-        <button class="button is-white" aria-haspopup="true" aria-controls="dropdown-menu">
+        <button class="button border-less" aria-haspopup="true" aria-controls="dropdown-menu">
           <span :class="getdotStyle(networkId)"> <i class="mdi mdi-brightness-1"></i> </span>
           <span class="has-text-grey">{{ networkId }}</span>
           <span class="icon is-small"> <i class="mdi mdi-menu-down"></i> </span>
@@ -12,7 +12,6 @@
         aria-role="listitem"
         :class="{
           button: true,
-          'is-white': true,
           'dropdown-item': true,
           'has-text-left': true,
           'is-active': networkId == network.name,
@@ -86,4 +85,8 @@ export default class NetworkSelector extends Vue {
   }
 }
 </script>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.border-less {
+  border: none;
+}
+</style>

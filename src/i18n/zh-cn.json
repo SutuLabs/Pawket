@@ -77,9 +77,6 @@
         "confirm": "确认",
         "clear": "重置钱包"
       },
-      "label": {
-        "password": "密码"
-      },
       "title": {
         "verifyPassword": "验证密码"
       },

@@ -67,6 +67,8 @@ export default class App extends Vue {
   mounted(): void {
     store.state.app.debug = localStorage.getItem("DEBUG_MODE") ? localStorage.getItem("DEBUG_MODE") === "true" : false;
     document.body.addEventListener("mouseover", this.refreshActiveTime);
+    const theme = localStorage.getItem("user-theme") ?? "light-theme";
+    document.documentElement.className = theme;
   }
 
   get autoLockTime(): number {
@@ -106,5 +108,62 @@ html {
 #app {
   width: 100%;
   height: 100%;
+}
+
+:root.dark-theme {
+  @import "@/styles/cyborg/bulmaswatch.scss";
+
+  #app,
+  .navbar,
+  .home,
+  body,
+  .has-background,
+  .panel-block,
+  .modal-card-head,
+  html {
+    background-color: $grey-darker;
+    color: $white-ter;
+  }
+
+  .has-text-grey-dark,
+  .has-text-dark,
+  .modal-card-title,
+  .card-header-title,
+  .card,
+  th {
+    color: $white-ter !important;
+  }
+
+  .modal-card-foot,
+  .is-white,
+  .dropdown-content {
+    background-color: $grey-darker;
+  }
+
+  .input,
+  select,
+  textarea,
+  .has-background-white-ter {
+    background-color: $grey !important;
+  }
+
+  .panel-block:hover {
+    background-color: $grey-accent !important;
+  }
+
+  .checkbox {
+    display: inline-flex;
+  }
+
+  .dropdown.is-bottom-left .dropdown-menu {
+    right: 0;
+    left: auto;
+  }
+
+  .b-radio.radio {
+    outline: none;
+    display: inline-flex;
+    align-items: center;
+  }
 }
 </style>
