@@ -802,10 +802,7 @@
         "upload": "选择一个文件生成该 NFT 的哈希值。"
       },
       "button": {
-        "upload": "获取图片哈希",
-        "cancel": "取消",
-        "sign": "签名",
-        "submit": "提交"
+        "upload": "获取图片哈希"
       },
       "messages": {
         "failedToSign": "签名失败: "
@@ -1131,8 +1128,6 @@
         "nftId": "NFT ID:",
         "collection": "收藏集",
         "description": "描述",
-        "ownerAddress": "所属地址",
-        "bindingAddress": "绑定地址",
         "expirationDate": "过期时间"
       },
       "button": {
@@ -1144,7 +1139,15 @@
       },
       "title": {
         "properties": "属性",
+        "bindingInformation": "绑定信息",
         "details": "详情"
+      },
+      "bindingInformation": {
+        "address": "地址",
+        "publicKey": "公钥",
+        "did": "DID",
+        "text": "文本",
+        "edit": "编辑"
       },
       "details": {
         "nftId": "NFT ID:",
@@ -1439,6 +1442,24 @@
       },
       "button": {
         "decrypt": "解密"
+      }
+    }
+  },
+  "bindingInformation": {
+    "ui": {
+      "title": "绑定信息",
+      "label": {
+        "publicKey": "公钥",
+        "did": "DID",
+        "text": "文本"
+      },
+      "notification": "即将更新你的域名绑定信息。<br>请务必再次检查你的交易内容。",
+      "tag": {
+        "currentPk": "当前账户公钥",
+        "fillPk": "填入当前账户公钥"
+      },
+      "button": {
+        "update": "更新"
       }
     }
   }

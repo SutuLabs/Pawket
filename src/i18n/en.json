@@ -802,10 +802,7 @@
         "upload": "Select a file to generate a hash for your NFT."
       },
       "button": {
-        "upload": "Get Image Hash",
-        "cancel": "Cancel",
-        "sign": "Sign",
-        "submit": "Submit"
+        "upload": "Get Image Hash"
       },
       "messages": {
         "failedToSign": "Failed to sign: "
@@ -1131,8 +1128,6 @@
         "nftId": "NFT ID:",
         "collection": "Collection",
         "description": "Description",
-        "ownerAddress": "Owner Address",
-        "bindingAddress": "Binding Address",
         "expirationDate": "Expiration Date"
       },
       "button": {
@@ -1144,7 +1139,15 @@
       },
       "title": {
         "properties": "Properties",
+        "bindingInformation": "Binding Information",
         "details": "Details"
+      },
+      "bindingInformation": {
+        "address": "Address",
+        "publicKey": "Public Key",
+        "did": "DID",
+        "text": "Text",
+        "edit": "Edit"
       },
       "details": {
         "nftId": "NFT ID:",
@@ -1439,6 +1442,24 @@
       },
       "button": {
         "decrypt": "Decrypt"
+      }
+    }
+  },
+  "bindingInformation": {
+    "ui": {
+      "title": "Binding Information",
+      "label": {
+        "publicKey": "Public Key",
+        "did": "DID",
+        "text": "Text"
+      },
+      "notification": "You will update the binding information for your domain name.<br>Please review your transaction.",
+      "tag": {
+        "currentPk": "Current account PK",
+        "fillPk": "Fill in the public key of the current account"
+      },
+      "button": {
+        "update": "Update"
       }
     }
   }

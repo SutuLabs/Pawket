@@ -19,7 +19,6 @@
         icon-left="dns"
         type="is-primary"
         outlined
-        v-if="debugMode"
         :class="{
           'border-less': true,
           'has-background-primary': path.match(/^\/cns\/?/),

@@ -49,35 +49,6 @@
           <b-field :label="$t('nftDetail.ui.label.collection')">{{
             metadata && metadata.collection ? metadata.collection.name : ""
           }}</b-field>
-          <div v-if="nft.analysis.hasOwnProperty('cnsName')" class="mb-2">
-            <b-field :label="$t('nftDetail.ui.label.ownerAddress')">
-              <span class="word-break"
-                >{{ shorten(getAddressFromPuzzleHash(nft.analysis.p2Owner)) }}
-                <key-box
-                  icon="checkbox-multiple-blank-outline"
-                  :value="getAddressFromPuzzleHash(nft.analysis.p2Owner)"
-                  :showValue="false"
-                ></key-box
-              ></span>
-            </b-field>
-            <b-field>
-              <template #label>
-                {{ $t("nftDetail.ui.label.bindingAddress") }}
-                <a href="javascript:void(0)" @click="update()">
-                  <b-icon icon="pencil" size="is-small"></b-icon>
-                </a>
-              </template>
-              <span class="word-break"
-                >{{ shorten(getAddressFromPuzzleHash(nft.analysis.cnsAddress)) }}
-                <key-box
-                  icon="checkbox-multiple-blank-outline"
-                  :value="getAddressFromPuzzleHash(nft.analysis.cnsAddress)"
-                  :showValue="false"
-                ></key-box
-              ></span>
-            </b-field>
-            <b-field :label="$t('nftDetail.ui.label.expirationDate')">{{ metadata.attributes[0].value }}</b-field>
-          </div>
           <b-field :label="$t('nftDetail.ui.label.description')">
             <div v-if="!metadata || !metadata.description" class="pb-6"></div>
             <div v-else-if="metadata.description.length < 100">{{ metadata.description }}</div>
@@ -91,6 +62,9 @@
               >
             </div>
           </b-field>
+          <div v-if="nft.analysis.hasOwnProperty('cnsName')" class="mb-2">
+            <b-field :label="$t('nftDetail.ui.label.expirationDate')">{{ metadata.attributes[0].value }}</b-field>
+          </div>
           <div class="buttons is-hidden-mobile">
             <b-button
               :label="$t('nftDetail.ui.button.transfer')"
@@ -122,6 +96,90 @@
           <hr />
         </div>
         <div class="column is-6-tablet is-12-mobile">
+          <b-collapse class="card" animation="slide" v-if="nft.analysis.cnsExpiry && nft.analysis.cnsAddress">
+            <template #trigger="props">
+              <div class="card-header" role="button" :aria-expanded="props.open">
+                <p class="card-header-title">{{ $t("nftDetail.ui.title.bindingInformation") }}</p>
+                <a class="card-header-icon">
+                  <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"> </b-icon>
+                </a>
+              </div>
+            </template>
+            <div class="card-content">
+              <ul>
+                <li>
+                  <span class="has-text-grey">{{ $t("nftDetail.ui.bindingInformation.address") }}</span
+                  ><span class="is-pulled-right">
+                    <key-box
+                      :value="
+                        nft.analysis.metadata.bindings && nft.analysis.metadata.bindings.address
+                          ? getAddressFromPuzzleHash(nft.analysis.metadata.bindings.address)
+                          : ''
+                      "
+                      :showValue="true"
+                      position="is-left"
+                      tooltipSize="is-small"
+                    ></key-box
+                  ></span>
+                </li>
+                <li>
+                  <span class="has-text-grey">{{ $t("nftDetail.ui.bindingInformation.publicKey") }}</span
+                  ><span class="is-pulled-right">
+                    <key-box
+                      :value="
+                        nft.analysis.metadata.bindings && nft.analysis.metadata.bindings.publicKey
+                          ? nft.analysis.metadata.bindings.publicKey
+                          : ''
+                      "
+                      :showValue="true"
+                      position="is-left"
+                      tooltipSize="is-small"
+                    ></key-box
+                  ></span>
+                </li>
+                <li>
+                  <span class="has-text-grey">{{ $t("nftDetail.ui.bindingInformation.did") }}</span
+                  ><span class="is-pulled-right">
+                    <key-box
+                      :value="
+                        nft.analysis.metadata.bindings && nft.analysis.metadata.bindings.did
+                          ? getDidFromPuzzleHash(nft.analysis.metadata.bindings.did)
+                          : ''
+                      "
+                      :showValue="true"
+                      position="is-left"
+                      tooltipSize="is-small"
+                    ></key-box
+                  ></span>
+                </li>
+                <li>
+                  <span class="has-text-grey">{{ $t("nftDetail.ui.bindingInformation.text") }}</span
+                  ><span class="is-pulled-right">
+                    <key-box
+                      :value="
+                        nft.analysis.metadata.bindings && nft.analysis.metadata.bindings.text
+                          ? nft.analysis.metadata.bindings.text
+                          : ''
+                      "
+                      :showValue="true"
+                      position="is-left"
+                      tooltipSize="is-small"
+                    ></key-box
+                  ></span>
+                </li>
+              </ul>
+              <b-button
+                v-if="updatable"
+                :label="$t('nftDetail.ui.bindingInformation.edit')"
+                type="is-primary"
+                @click="editBindingInfo()"
+                icon-left="pencil"
+                outlined
+                expanded
+                class="mt-2"
+              ></b-button>
+            </div>
+          </b-collapse>
           <b-collapse class="card" animation="slide">
             <template #trigger="props">
               <div class="card-header" role="button" :aria-expanded="props.open">
@@ -315,6 +373,8 @@ import NftUpdate from "./NftUpdate.vue";
 import puzzle from "@/services/crypto/puzzle";
 import { xchPrefix } from "@/store/modules/network";
 import { shorten } from "@/filters/addressConversion";
+import EditCnsBindings from "../Cns/EditCnsBindings.vue";
+import { modshash } from "@/services/coin/mods";
 
 @Component({
   components: {
@@ -337,6 +397,10 @@ export default class NftDetailPanel extends Vue {
 
   get isMobile(): boolean {
     return isMobile();
+  }
+
+  get updatable(): boolean {
+    return this.nft.analysis.metadataUpdaterPuzzleHash == modshash["nft_metadata_updater_cns"];
   }
 
   get spaceScanUrl(): string {
@@ -414,6 +478,18 @@ export default class NftDetailPanel extends Vue {
       trapFocus: true,
       canCancel: [""],
       fullScreen: isMobile(),
+      props: { nft: this.nft, account: this.account },
+    });
+  }
+
+  editBindingInfo(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: EditCnsBindings,
+      hasModalCard: true,
+      trapFocus: true,
+      fullScreen: isMobile(),
+      canCancel: [""],
       props: { nft: this.nft, account: this.account },
     });
   }
