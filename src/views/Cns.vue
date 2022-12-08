@@ -150,7 +150,7 @@
               <input class="input" type="text" disabled :value="name + '.xch'" />
             </div>
           </div>
-          <address-field :inputAddress="address" @updateAddress="updateAddress"></address-field>
+          <address-field :inputAddress="address" @updateAddress="updateAddress" label="Address(Optional)"></address-field>
         </section>
         <footer class="modal-card-foot is-block">
           <button class="button" @click="showModal = false">Cancel</button>

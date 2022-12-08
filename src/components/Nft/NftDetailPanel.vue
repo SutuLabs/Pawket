@@ -96,7 +96,7 @@
           <hr />
         </div>
         <div class="column is-6-tablet is-12-mobile">
-          <b-collapse class="card" animation="slide" v-if="nft.analysis.metadata.hasOwnProperty('bindings')">
+          <b-collapse class="card" animation="slide" v-if="nft.analysis.cnsExpiry && nft.analysis.cnsAddress">
             <template #trigger="props">
               <div class="card-header" role="button" :aria-expanded="props.open">
                 <p class="card-header-title">{{ $t("nftDetail.ui.title.bindingInformation") }}</p>
@@ -111,7 +111,11 @@
                   <span class="has-text-grey">{{ $t("nftDetail.ui.bindingInformation.address") }}</span
                   ><span class="is-pulled-right">
                     <key-box
-                      :value="getAddressFromPuzzleHash(nft.analysis.metadata.bindings.address)"
+                      :value="
+                        nft.analysis.metadata.bindings && nft.analysis.metadata.bindings.address
+                          ? getAddressFromPuzzleHash(nft.analysis.metadata.bindings.address)
+                          : ''
+                      "
                       :showValue="true"
                       position="is-left"
                       tooltipSize="is-small"
@@ -122,7 +126,11 @@
                   <span class="has-text-grey">{{ $t("nftDetail.ui.bindingInformation.publicKey") }}</span
                   ><span class="is-pulled-right">
                     <key-box
-                      :value="nft.analysis.metadata.bindings.publicKey"
+                      :value="
+                        nft.analysis.metadata.bindings && nft.analysis.metadata.bindings.publicKey
+                          ? nft.analysis.metadata.bindings.publicKey
+                          : ''
+                      "
                       :showValue="true"
                       position="is-left"
                       tooltipSize="is-small"
@@ -133,7 +141,11 @@
                   <span class="has-text-grey">{{ $t("nftDetail.ui.bindingInformation.did") }}</span
                   ><span class="is-pulled-right">
                     <key-box
-                      :value="getDidFromPuzzleHash(nft.analysis.metadata.bindings.did)"
+                      :value="
+                        nft.analysis.metadata.bindings && nft.analysis.metadata.bindings.did
+                          ? getDidFromPuzzleHash(nft.analysis.metadata.bindings.did)
+                          : ''
+                      "
                       :showValue="true"
                       position="is-left"
                       tooltipSize="is-small"
@@ -144,7 +156,11 @@
                   <span class="has-text-grey">{{ $t("nftDetail.ui.bindingInformation.text") }}</span
                   ><span class="is-pulled-right">
                     <key-box
-                      :value="nft.analysis.metadata.bindings.text"
+                      :value="
+                        nft.analysis.metadata.bindings && nft.analysis.metadata.bindings.text
+                          ? nft.analysis.metadata.bindings.text
+                          : ''
+                      "
                       :showValue="true"
                       position="is-left"
                       tooltipSize="is-small"
@@ -153,6 +169,7 @@
                 </li>
               </ul>
               <b-button
+                v-if="updatable"
                 :label="$t('nftDetail.ui.bindingInformation.edit')"
                 type="is-primary"
                 @click="editBindingInfo()"
@@ -357,6 +374,7 @@ import puzzle from "@/services/crypto/puzzle";
 import { xchPrefix } from "@/store/modules/network";
 import { shorten } from "@/filters/addressConversion";
 import EditCnsBindings from "../Cns/EditCnsBindings.vue";
+import { modshash } from "@/services/coin/mods";
 
 @Component({
   components: {
@@ -379,6 +397,10 @@ export default class NftDetailPanel extends Vue {
 
   get isMobile(): boolean {
     return isMobile();
+  }
+
+  get updatable(): boolean {
+    return this.nft.analysis.metadataUpdaterPuzzleHash == modshash["nft_metadata_updater_cns"];
   }
 
   get spaceScanUrl(): string {

@@ -106,7 +106,7 @@ import { NotificationProgrammatic as Notification } from "buefy";
 import { submitBundle } from "@/services/view/bundleAction";
 import { demojo } from "@/filters/unitConversion";
 import BundleSummary from "../Bundle/BundleSummary.vue";
-import { CnsMetadataValues } from "@/models/nft";
+import { CnsBindingValues, CnsMetadataValues } from "@/models/nft";
 
 @Component({
   components: { Confirmation, FeeSelector, AddressField, BundleSummary },
@@ -211,7 +211,7 @@ export default class EditCnsBindings extends Vue {
         return;
       }
 
-      const md = Object.assign({}, this.metadata.bindings);
+      const md = Object.assign({}, this.metadata.bindings) as CnsBindingValues;
       if (this.address) {
         const address_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.address));
         md.address = address_hex;

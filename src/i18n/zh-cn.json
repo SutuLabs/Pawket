@@ -1455,8 +1455,8 @@
       },
       "notification": "即将更新你的域名绑定信息。<br>请务必再次检查你的交易内容。",
       "tag": {
-        "currentPk": "填入当前账户公钥",
-        "fillPk": "当前账户公钥"
+        "currentPk": "当前账户公钥",
+        "fillPk": "填入当前账户公钥"
       },
       "button": {
         "update": "更新"
