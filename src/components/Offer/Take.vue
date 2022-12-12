@@ -1,9 +1,6 @@
 <template>
   <div class="modal-card" @dragenter="dragenter" @dragleave="dragleave">
-    <header class="modal-card-head">
-      <p class="modal-card-title">{{ $t("offer.take.ui.title") }}</p>
-      <button type="button" class="delete" @click="close()"></button>
-    </header>
+    <top-bar :title="$t('offer.take.ui.title')" @close="close()" :showClose="true"></top-bar>
     <section class="modal-card-body">
       <b-notification type="is-warning" :closable="false" v-if="observeMode">{{
         $t("offer.take.ui.notification.observation")
@@ -227,11 +224,13 @@ import { networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
 import bigDecimal from "js-big-decimal";
 import { shorten } from "@/filters/addressConversion";
 import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
+import TopBar from "../Common/TopBar.vue";
 
 @Component({
   components: {
     KeyBox,
     FeeSelector,
+    TopBar,
   },
 })
 export default class TakeOffer extends Vue {

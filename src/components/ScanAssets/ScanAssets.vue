@@ -1,9 +1,6 @@
 <template>
   <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">{{ $t("scanAssets.ui.title") }}</p>
-      <button type="button" class="delete" @click="close()"></button>
-    </header>
+    <top-bar :title="$t('scanAssets.ui.title')" @close="close()" :showClose="true"></top-bar>
     <section class="modal-card-body" v-if="mode == 'option'">
       <div class="is-size-6 has-text-info">
         {{ $t("scanAssets.ui.prompt.selectAssetType") }}
@@ -195,13 +192,14 @@ import { analyzeDidCoin, DidCoinAnalysisResult } from "@/services/coin/did";
 import KeyBox from "../Common/KeyBox.vue";
 import SignMessage from "../Cryptography/SignMessage.vue";
 import { convertToOriginCoin } from "@/services/coin/coinUtility";
+import TopBar from "../Common/TopBar.vue";
 
 type Option = "Token" | "NftV1" | "CatV2" | "DidV1";
 type Mode = "option" | "result";
 type Status = "Configuring" | "Scanning" | "Paused" | "Canceled" | "Finished";
 const unknownCat = "Unknown CAT";
 
-@Component({ components: { KeyBox } })
+@Component({ components: { KeyBox, TopBar } })
 export default class ScanAssets extends Vue {
   @Prop() public account!: AccountEntity;
   option: Option = "Token";
