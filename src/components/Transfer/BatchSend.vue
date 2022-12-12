@@ -1,9 +1,6 @@
 <template>
   <div class="modal-card" @dragenter="dragenter" @dragleave="dragleave">
-    <header class="modal-card-head">
-      <p class="modal-card-title">{{ $t("batchSend.ui.title.send") }}</p>
-      <button type="button" class="delete" @click="close()"></button>
-    </header>
+    <top-bar :title="$t('batchSend.ui.title.send')" @close="close()" :showClose="true"></top-bar>
     <section class="modal-card-body">
       <template v-if="!bundle">
         <span class="label">
@@ -98,6 +95,7 @@ import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import { csvToArray } from "@/services/util/csv";
 import { networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
+import TopBar from "../Common/TopBar.vue";
 
 @Component({
   components: {
@@ -105,6 +103,7 @@ import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } f
     FeeSelector,
     TokenAmountField,
     BundleSummary,
+    TopBar,
   },
 })
 export default class BatchSend extends Vue {

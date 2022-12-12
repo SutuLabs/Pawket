@@ -1,9 +1,6 @@
 <template>
   <div class="modal-card" @dragenter="dragenter" @dragleave="dragleave">
-    <header class="modal-card-head">
-      <p class="modal-card-title">{{ $t("batchMintNft.ui.title") }}</p>
-      <button type="button" class="delete" @click="close()"></button>
-    </header>
+    <top-bar :title="$t('batchMintNft.ui.title')" @close="close()" :showClose="true"></top-bar>
     <section class="modal-card-body">
       <template v-if="!bundle">
         <span class="label">
@@ -117,6 +114,7 @@ import { generateMintNftBundle } from "@/services/coin/nft";
 import store from "@/store";
 import { Hex, prefix0x } from "@/services/coin/condition";
 import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
+import TopBar from "../Common/TopBar.vue";
 
 @Component({
   components: {
@@ -124,6 +122,7 @@ import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } f
     FeeSelector,
     TokenAmountField,
     BundleSummary,
+    TopBar,
   },
 })
 export default class BatchMintNft extends Vue {

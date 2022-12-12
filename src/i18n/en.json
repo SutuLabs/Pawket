@@ -77,9 +77,6 @@
         "confirm": "Confirm",
         "clear": "Reset Wallet"
       },
-      "label": {
-        "password": "Password"
-      },
       "title": {
         "verifyPassword": "Verify Password"
       },
@@ -446,8 +443,7 @@
       "scan": {
         "title": "Sign",
         "numberField": "Unsigned Messages",
-        "numberMessage": "Scan these following QR codes with Offline Sign. ( Note: Please switch to the wallet corresponding to the public key account first. )",
-        "titleTooltip": "This is a gateway for your transaction send from an offline device, please start with an offline Pawket."
+        "numberMessage": "Scan these following QR codes with Offline Sign. ( Note: Please switch to the wallet corresponding to the public key account first. )"
       },
       "confirmBundle": {
         "title": "Confirm",

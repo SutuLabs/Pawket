@@ -67,6 +67,8 @@ export default class App extends Vue {
   mounted(): void {
     store.state.app.debug = localStorage.getItem("DEBUG_MODE") ? localStorage.getItem("DEBUG_MODE") === "true" : false;
     document.body.addEventListener("mouseover", this.refreshActiveTime);
+    const theme = localStorage.getItem("user-theme") ?? "light-theme";
+    document.documentElement.className = theme;
   }
 
   get autoLockTime(): number {
@@ -106,5 +108,101 @@ html {
 #app {
   width: 100%;
   height: 100%;
+}
+
+:root.dark-theme {
+  @import "@/styles/cyborg/bulmaswatch.scss";
+
+  #app,
+  .navbar,
+  .home,
+  body,
+  .has-background,
+  .modal-card-head,
+  html {
+    background-color: $grey-accent;
+    color: $white-ter;
+  }
+
+  .navbar-item,
+  .fixed-top {
+    background-color: $grey-accent;
+  }
+
+  .panel-block {
+    background-color: $grey-accent;
+    color: $white-ter;
+  }
+
+  .panel-block:not(:last-child),
+  .border-top-1,
+  .border-bottom {
+    border-color: $grey;
+  }
+
+  .tabs a {
+    color: $white-ter;
+    border-color: $grey;
+  }
+
+  .has-text-grey-dark,
+  .has-text-dark,
+  .modal-card-title,
+  .card-header-title,
+  .card,
+  th {
+    color: $white-ter !important;
+  }
+
+  .modal-card-foot,
+  .is-white,
+  .dropdown-content,
+  .b-slider-thumb {
+    background-color: $grey-darker;
+  }
+
+  .input,
+  .select select,
+  textarea,
+  .has-background-white-ter {
+    background-color: $grey-darker !important;
+    color: $white-ter !important;
+    border-color: $grey;
+  }
+
+  .panel-block:hover {
+    background-color: $grey-darker !important;
+  }
+
+  .checkbox {
+    display: inline-flex;
+  }
+
+  .dropdown.is-bottom-left .dropdown-menu {
+    right: 0;
+    left: auto;
+  }
+
+  hr {
+    color: $grey;
+  }
+
+  .b-radio.radio {
+    outline: none;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .button {
+    background-color: $grey-accent;
+  }
+
+  .border-less {
+    border: 0;
+  }
+
+  .box {
+    box-shadow: 0 0.5em 2em 0 rgb(255 255 255 / 10%), 0 0px 0 1px rgb(255 255 255 / 5%);
+  }
 }
 </style>

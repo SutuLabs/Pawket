@@ -1,21 +1,10 @@
 <template>
   <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">
-        {{ mode == "OFFLINE_CLIENT" ? $t("offline.client.scan.title") : $t("offline.proxy.scan.title") }}
-        <b-tooltip v-if="mode == 'ONLINE_CLIENT'" :label="$t('offline.proxy.scan.titleTooltip')" position="is-bottom" multilined>
-          <b-icon icon="help-circle" size="is-small" class="px-5"></b-icon>
-        </b-tooltip>
-      </p>
-      <button
-        type="button"
-        class="delete"
-        @click="
-          $router.push('/home');
-          $emit('close');
-        "
-      ></button>
-    </header>
+    <top-bar
+      :title="mode == 'OFFLINE_CLIENT' ? $t('offline.client.scan.title') : $t('offline.proxy.scan.title')"
+      @close="close()"
+      :showClose="true"
+    ></top-bar>
     <section class="modal-card-body">
       <div class="columns">
         <div v-if="qrcodes.length > 0" class="column">
@@ -68,11 +57,13 @@ import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
 import { networkContext, xchPrefix } from "@/store/modules/network";
 import { AccountEntity } from "@/models/account";
 import { getAssetsRequestDetail } from "@/services/view/coinAction";
+import TopBar from "../Common/TopBar.vue";
 
 @Component({
   components: {
     KeyBox,
     QrcodeVue,
+    TopBar,
     QrcodeStream,
     QrcodeDropZone,
     QrcodeCapture,

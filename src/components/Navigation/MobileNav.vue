@@ -8,7 +8,6 @@
           'is-expanded': true,
           'is-block': true,
           'has-text-centered': true,
-          'has-background-white': true,
           'has-text-grey': !path.match(/^\/home\/?/),
           'has-text-primary': path.match(/^\/home\/?/),
         }"
@@ -23,7 +22,6 @@
           'is-expanded': true,
           'is-block': true,
           'has-text-centered': true,
-          'has-background-white': true,
           'has-text-grey': !path.match(/^\/cns\/?/),
           'has-text-primary': path.match(/^\/cns\/?/),
         }"
@@ -38,7 +36,6 @@
           'is-expanded': true,
           'is-block': true,
           'has-text-centered': true,
-          'has-background-white': true,
           'has-text-grey': !path.match(/^\/explore\/?/),
           'has-text-primary': path.match(/^\/explore\/?/),
         }"
@@ -54,7 +51,6 @@
           'is-expanded': true,
           'is-block': true,
           'has-text-centered': true,
-          'has-background-white': true,
           'has-text-grey': !path.match(/^\/settings\/?/),
           'has-text-primary': path.match(/^\/settings\/?/),
         }"
@@ -91,5 +87,9 @@ a.has-text-primary:focus {
 
 .top-border {
   border-top: 1px solid #ededed;
+}
+
+.navbar-item {
+  background-color: $white-ter;
 }
 </style>

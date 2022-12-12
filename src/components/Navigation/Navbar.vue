@@ -23,7 +23,7 @@
       <img width="200px" src="@/assets/logo.svg" />
     </div>
     <div class="is-hidden-mobile">
-      <b-navbar>
+      <b-navbar class="border-less">
         <template #brand>
           <b-navbar-item @click="home()">
             <img src="@/assets/logo.svg" :alt="$t('verifyPassword.ui.alt.logoAlt')" />

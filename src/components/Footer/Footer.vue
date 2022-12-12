@@ -2,7 +2,7 @@
   <footer class="footer py-4" :class="{ 'is-hidden-mobile': unlocked, 'position-relative': isMobile }">
     <div class="content has-text-centered">
       <p>
-        <strong> {{ $t("footer.ui.productInfo.name") }}</strong>
+        <span class="has-text-weight-bold"> {{ $t("footer.ui.productInfo.name") }}</span>
         <span @click="versionClick()">[{{ version }}]</span><span v-if="debugMode" @click="disableDebug()">[DEBUG]</span> by
         <b-icon icon="github" size="is-small"></b-icon
         ><a :href="$t('footer.ui.productInfo.authorLink')" target="_blank" class="has-color-link">{{ $t("footer.ui.productInfo.author") }}</a

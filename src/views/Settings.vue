@@ -56,7 +56,7 @@
     </div>
     <router-view class="is-hidden-tablet"></router-view>
     <div class="is-hidden-tablet pb-4 pt-8" v-if="path == '/settings'">
-      <p class="has-text-centered is-size-5 pt-5 pb-2 pr-2 border-bottom fixed-top">{{ $t("settings.menu.title") }}</p>
+      <p class="has-text-centered is-size-5 pt-5 pb-2 pr-2 border-bottom fixed-top top-bar">{{ $t("settings.menu.title") }}</p>
       <router-link role="tab" :to="{ path: '/settings/general' }" class="panel-block py-0 my-0">
         <div class="is-11 is-flex my-1 py-1">
           <div class="mr-2 py-1">
