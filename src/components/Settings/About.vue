@@ -7,7 +7,7 @@
         <p class="pt-2">{{ $t("footer.ui.productInfo.name") }} {{ version }}</p>
       </div>
       <div class="mt-5">
-        <strong>{{ $t("settings.about.links.title") }}</strong>
+        <p class="has-text-weight-bold">{{ $t("settings.about.links.title") }}</p>
         <a :href="$t('settings.about.links.url.privacyPolicy')" target="_blank"
           ><p class="pt-4">{{ $t("settings.about.links.label.privacyPolicy") }}</p></a
         >

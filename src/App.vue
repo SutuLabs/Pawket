@@ -118,11 +118,31 @@ html {
   .home,
   body,
   .has-background,
-  .panel-block,
   .modal-card-head,
   html {
-    background-color: $grey-darker;
+    background-color: $grey-accent;
     color: $white-ter;
+  }
+
+  .navbar-item,
+  .fixed-top {
+    background-color: $grey-accent;
+  }
+
+  .panel-block {
+    background-color: $grey-accent;
+    color: $white-ter;
+  }
+
+  .panel-block:not(:last-child),
+  .border-top-1,
+  .border-bottom {
+    border-color: $grey;
+  }
+
+  .tabs a {
+    color: $white-ter;
+    border-color: $grey;
   }
 
   .has-text-grey-dark,
@@ -136,19 +156,22 @@ html {
 
   .modal-card-foot,
   .is-white,
-  .dropdown-content {
+  .dropdown-content,
+  .b-slider-thumb {
     background-color: $grey-darker;
   }
 
   .input,
-  select,
+  .select select,
   textarea,
   .has-background-white-ter {
-    background-color: $grey !important;
+    background-color: $grey-darker !important;
+    color: $white-ter !important;
+    border-color: $grey;
   }
 
   .panel-block:hover {
-    background-color: $grey-accent !important;
+    background-color: $grey-darker !important;
   }
 
   .checkbox {
@@ -160,10 +183,26 @@ html {
     left: auto;
   }
 
+  hr {
+    color: $grey;
+  }
+
   .b-radio.radio {
     outline: none;
     display: inline-flex;
     align-items: center;
+  }
+
+  .button {
+    background-color: $grey-accent;
+  }
+
+  .border-less {
+    border: 0;
+  }
+
+  .box {
+    box-shadow: 0 0.5em 2em 0 rgb(255 255 255 / 10%), 0 0px 0 1px rgb(255 255 255 / 5%);
   }
 }
 </style>
