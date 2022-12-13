@@ -78,6 +78,7 @@ import { NetworkInfo, rpcUrl, xchPrefix, xchSymbol } from "@/store/modules/netwo
 import { getEncryptKey, isPasswordCorrect } from "@/store/modules/vault";
 import { Component, Vue } from "vue-property-decorator";
 import TakeOffer from "../Offer/Take.vue";
+import Send from "../Send/Send.vue";
 type Stage = "Verify" | "Account" | "App";
 @Component
 export default class Connect extends Vue {
@@ -210,6 +211,9 @@ export default class Connect extends Vue {
       case "take-offer":
         this.openTakeOffer();
         break;
+      case "send":
+        this.send();
+        break;
     }
   }
 
@@ -227,6 +231,18 @@ export default class Connect extends Vue {
         inputOfferText: this.data,
       },
       events: { success: this.success },
+    });
+  }
+
+  send(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: Send,
+      hasModalCard: true,
+      trapFocus: true,
+      fullScreen: true,
+      canCancel: [""],
+      props: { account: this.account, inputAddress: this.data },
     });
   }
 
