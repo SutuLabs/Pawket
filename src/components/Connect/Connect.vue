@@ -242,7 +242,8 @@ export default class Connect extends Vue {
       trapFocus: true,
       fullScreen: true,
       canCancel: [""],
-      props: { account: this.account, inputAddress: this.data },
+      props: { account: this.account, inputAddress: this.data, addressEditable: false },
+      events: { success: this.success },
     });
   }
 
