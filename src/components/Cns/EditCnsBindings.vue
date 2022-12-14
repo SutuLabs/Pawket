@@ -18,7 +18,7 @@
       <b-field>
         <template #label>
           <span>{{ $t("bindingInformation.ui.label.publicKey") }}</span>
-          <span v-if="publicKey == currentPublicKey" class="tag is-primary is-light">{{
+          <span v-if="isCurrentPk" class="tag is-primary is-light">{{
             $t("bindingInformation.ui.tag.currentPk")
           }}</span>
           <span v-else class="is-size-7 is-underlined mx-2 has-text-link is-clickable" @click="fillPubKey()">{{
@@ -59,7 +59,7 @@
       <b-field>
         <template #label>
           <span>{{ $t("bindingInformation.ui.label.publicKey") }}</span>
-          <span v-if="publicKey == currentPublicKey" class="tag is-primary is-light"> Current account PK </span>
+          <span v-if="isCurrentPk" class="tag is-primary is-light"> Current account PK </span>
         </template>
         <b-input v-model="publicKey" type="text" disabled></b-input>
       </b-field>
@@ -134,6 +134,10 @@ export default class EditCnsBindings extends Vue {
 
   get metadata(): CnsMetadataValues {
     return this.nft.analysis.metadata as CnsMetadataValues;
+  }
+
+  get isCurrentPk(): boolean {
+    return prefix0x(this.publicKey) == prefix0x(this.currentPublicKey);
   }
 
   async loadCoins(): Promise<void> {
