@@ -633,11 +633,23 @@ function constructMetadataString(metadata: MetadataValues): string {
 function constructCnsBindingString(metadata: CnsBindingValues): string {
   const mkeys = getNftMetadataKeys();
 
+  // construct unknown binding fields
+  const cloned = Object.assign({}, metadata);
+  delete cloned.address;
+  delete cloned.did;
+  delete cloned.publicKey;
+  delete cloned.text;
+
+  // emit warnings when extra binding fields exist, which is not good practise
+  if (Object.keys(cloned).length > 0)
+    console.warn(`Unknown CNS binding fields: ${Object.keys(cloned).join(",")}\nYou should consider add field to model to strong type it.`);
+
   const md = "(" + [
     metadata.address ? `${toNumber(mkeys.address)} . ${prefix0x(metadata.address)}` : undefined,
     metadata.did ? `${toNumber(mkeys.did)} . ${prefix0x(metadata.did)}` : undefined,
     metadata.publicKey ? `${toNumber(mkeys.publicKey)} . ${prefix0x(metadata.publicKey)}` : undefined,
     metadata.text ? `${toNumber(mkeys.text)} . "${metadata.text}"` : undefined,
+    ...(Object.keys(cloned).map(_ => cloned[_] ? `"${_}" . "${cloned[_]}"` : undefined)),
   ]
     .filter(_ => _)
     .map(_ => `(${_})`).join(" ") + ")";
@@ -808,6 +820,19 @@ export function getCnsBindingsInfo(metalist: string | string[] | undefined): Cns
     publicKey: getScalar(parsed[mkeys.publicKey]),
     text: hex2ascSingle(parsed[mkeys.text]),
   };
+
+  // assign extra unknown binding fields
+  const cloned = Object.assign({}, parsed);
+  delete cloned[mkeys.address];
+  delete cloned[mkeys.did];
+  delete cloned[mkeys.publicKey];
+  delete cloned[mkeys.text];
+
+  for (const key in cloned) {
+    if (Object.prototype.hasOwnProperty.call(cloned, key)) {
+      obj[Buffer.from(key, 'hex').toString()] = hex2ascSingle(cloned[key]);
+    }
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Object.keys(obj).forEach(key => { if ((obj as any)[key] === undefined) delete (obj as any)[key]; });

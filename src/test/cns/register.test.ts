@@ -63,6 +63,25 @@ test('Register CNS 3: with empty address', async () => {
   await testMintCns(0n, md);
 });
 
+test('Register CNS 4: with extra bindings data', async () => {
+  const md = Object.assign({}, cnsMetadata);
+  md.name = "hiya.xch";
+  md.bindings = {
+    address: "0x5662b49a357db4f05c2c141452b72fb91e7ec286e9b47d6c287210c63ae5cd3e",
+    did: "3a004a7c4e900167f0807ed53cbbe3c2ca66d0edbeba2fa243aa849d2babd909",// did:chia:18gqy5lzwjqqk0uyq0m2newlrct9xd58dh6azlgjr42zf62atmyys9hrt99
+    publicKey: "59239f069f0dbe9db384f47f1fd82add572ad74f2148812100969c0ed90aaa72",// curve255191ty3e7p5lpklfmvuy73l3lkp2m4tj4460y9ygzggqj6wqakg24feqtfue8c
+    text: "hello world",
+    hello: "world",
+    bitcoin: "0x5662b49a357db4f05c2c141452b72fb91e7ec286e9b47d6c287210c63ae5cd3e",
+  };
+  md.expiry = expiryDate();
+  // suppress warn of `Unknown CNS binding fields: hello,bitcoin`
+  const spy = jest.spyOn(console, 'warn').mockImplementation();
+  await testMintCns(0n, md);
+  expect(spy).toHaveBeenCalled();
+  spy.mockRestore();
+});
+
 async function testMintCns(
   fee: bigint,
   metadata: CnsMetadataValues,

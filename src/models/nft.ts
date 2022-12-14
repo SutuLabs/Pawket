@@ -101,6 +101,7 @@ export interface CnsBindingValues {
   did?: string;
   publicKey?: string;
   text?: string;
+  [key: string]: string | undefined; // for future-proof binding properties
 };
 
 export type CnsDataKey = NftDataKey | "expiry" | "address" | "name" | "bindings";
