@@ -117,6 +117,7 @@ export default class Send extends Vue {
   @Prop() public inputAddress!: string;
   @Prop() public inputAmount!: string;
   @Prop() public inputAvailableCoins!: SymbolCoins;
+  @Prop() public inputAllCoins!: SymbolCoins;
   @Prop() public inputRequests!: TokenPuzzleDetail[];
   @Prop() public inputSelectedToken!: string;
   @Prop({ default: true }) public addressEditable!: boolean;
@@ -156,6 +157,7 @@ export default class Send extends Vue {
     if (this.inputAmount) this.amount = this.inputAmount;
     if (this.inputAvailableCoins && this.inputSelectedToken && this.inputRequests) {
       this.availcoins = this.inputAvailableCoins;
+      this.allcoins = this.inputAllCoins;
       this.selectedToken = this.inputSelectedToken;
       this.requests = this.inputRequests;
     }
