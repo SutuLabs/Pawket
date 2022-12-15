@@ -21,7 +21,22 @@
           <div id="dropdown-menu" role="menu" v-if="!showDetail && resolveAns && !isResolving">
             <div class="dropdown-content">
               <div class="dropdown-item">
-                <div class="is-flex is-align-items-center is-clickable" v-if="resolveAns.status == 'Found'" @click="showResult()">
+                <div class="is-flex is-align-items-center" v-if="name.length < 6">
+                  <i class="mdi has-text-warning mdi-dots-horizontal-circle mdi-18px"></i>
+                  <span class="is-size-6 ml-2 is-flex-grow-2 break-all"
+                    >{{ name.toLowerCase() }}.xch
+                    <i
+                      class="mdi mdi-help-circle"
+                      title="During the trial operation period of CNS, only names with 6 or more characters can be registered for the time being. In the future, the registration of all names will be gradually opened. Stay tuned!"
+                    ></i
+                  ></span>
+                  <span class="has-text-grey is-size-7"> Not Open Yet </span>
+                </div>
+                <div
+                  class="is-flex is-align-items-center is-clickable"
+                  v-else-if="resolveAns.status == 'Found'"
+                  @click="showResult()"
+                >
                   <i class="mdi has-text-info mdi-arrow-right-bold-circle mdi-18px"></i>
                   <span class="is-size-6 ml-2 is-flex-grow-2 break-all">{{ name.toLowerCase() }}.xch</span>
                   <span class="has-text-grey is-size-7"> Registered </span>
@@ -63,6 +78,21 @@
       <div v-if="showDetail" class="is-flex is-justify-content-center mt-4">
         <div class="column is-11" v-if="resolveAns">
           <span class="is-size-5 has-text-grey mb-4">Result</span>
+          <div class="card mt-4" v-if="name.length < 6">
+            <header class="card-header">
+              <p class="card-header-title break-all">{{ name }}.xch</p>
+            </header>
+            <div class="card-content" v-if="name.length < 6">
+              <div class="content">
+                <p>
+                  <span class="is-size-5 has-text-weight-bold">{{ name }}.xch </span
+                  ><span class="has-text-warning"><i class="mdi mdi-dots-horizontal-circle mdi-18px"></i>NOT OPEN YET</span>
+                </p>
+                During the trial operation period of CNS, only names with 6 or more characters can be registered for the time
+                being. In the future, the registration of all names will be gradually opened. Stay tuned!
+              </div>
+            </div>
+          </div>
           <div class="box mt-4" v-if="resolveAns.status == 'Found'">
             <a class="has-text-link is-size-5 break-all" :href="`https://${name}.xch.cool`" target="_blank"
               >{{ name.toLowerCase() }}.xch<i class="mdi mdi-open-in-new"></i
@@ -336,11 +366,6 @@ export default class Cns extends Vue {
     this.isResolving = true;
     this.name = this.name.replace(/\s/g, "");
     this.name = this.name.split(".")[0];
-    if (this.name.length < 6) {
-      this.errorMsg = "The name is too short, at least 6 characters are required.";
-      this.isResolving = false;
-      return;
-    }
     this.resolveAns = await resolveName(`${this.name}.xch`);
     if (this.resolveAns.status != "Failure") {
       this.ownerAddress = bech32m.encode(
