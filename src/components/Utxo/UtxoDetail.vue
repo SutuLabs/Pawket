@@ -1,13 +1,13 @@
 <template>
   <div class="modal-card">
-    <header class="modal-card-head">
-      <span v-if="activity.spent" class="modal-card-title has-text-dark is-size-5">{{ $t("utxoDetail.ui.title.cost") }}</span>
-      <span v-else class="modal-card-title has-text-dark is-size-5">{{ $t("utxoDetail.ui.title.receive") }}</span>
-      <button type="button" class="delete" @click="close()"></button>
-    </header>
+    <top-bar v-if="activity.spent" :title="$t('utxoDetail.ui.title.cost')" @close="close()" :showClose="true"></top-bar>
+    <top-bar v-else :title="$t('utxoDetail.ui.title.receive')" @close="close()" :showClose="true"></top-bar>
     <section class="modal-card-body">
       <b-field :label="$t('utxoDetail.ui.label.amount')" custom-class="is-medium has-text-weight-normal">
-        <span v-if="activity.coin && activity.symbol && tokenInfo[activity.symbol]" class="has-text-dark is-size-5 has-text-right">
+        <span
+          v-if="activity.coin && activity.symbol && tokenInfo[activity.symbol]"
+          class="has-text-dark is-size-5 has-text-right"
+        >
           {{ activity.spent ? "-" : "+" }}{{ demojo(activity.coin.amount, tokenInfo[activity.symbol]) }}
           <span class="has-text-grey is-size-7">{{ activity.coin.amount }} mojos</span>
         </span>
@@ -25,7 +25,11 @@
       <b-field custom-class="is-medium has-text-weight-normal" :label="$t('utxoDetail.ui.label.confirmedHeight')">
         <p class="has-text-grey">{{ activity.confirmedBlockIndex }}</p>
       </b-field>
-      <b-field :label="$t('utxoDetail.ui.label.parentCoinInfo')" custom-class="is-medium has-text-weight-normal" v-if="activity.coin">
+      <b-field
+        :label="$t('utxoDetail.ui.label.parentCoinInfo')"
+        custom-class="is-medium has-text-weight-normal"
+        v-if="activity.coin"
+      >
         <p class="long-text-wrapper has-text-grey">
           {{ activity.coin.parentCoinInfo }}
           <key-box
@@ -57,10 +61,12 @@ import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import puzzle from "@/services/crypto/puzzle";
 import { xchPrefix } from "@/store/modules/network";
+import TopBar from "../Common/TopBar.vue";
 
 @Component({
   components: {
     KeyBox,
+    TopBar,
   },
 })
 export default class UtxoDetail extends Vue {

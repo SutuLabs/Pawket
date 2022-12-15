@@ -3,7 +3,7 @@
     <div :class="{ box: !isMobile }">
       <div class="mt-10">
         <img src="@/assets/cns.jpg" class="image is-96x96" style="margin: auto" />
-        <p class="has-text-centered is-size-3 mt-5 mb-5 pb-4 has-text-color-cns has-text-weight-bold">Chia Name Service</p>
+        <p class="has-text-centered is-size-3 pb-4 has-text-color-cns has-text-weight-bold">Chia Name Service</p>
         <p class="has-text-centered mb-5 pb-4">(Test Only)</p>
       </div>
       <div class="is-flex is-justify-content-center">
@@ -161,10 +161,7 @@
     <div :class="{ modal: true, 'is-active': showModal }">
       <div class="modal-background"></div>
       <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title">Register {{ name }}.xch</p>
-          <button class="delete" aria-label="close" @click="showModal = false"></button>
-        </header>
+        <top-bar :title="`Register ${name}.xch`" @close="showModal = false" :showClose="true"></top-bar>
         <section class="modal-card-body">
           <div class="field">
             <label class="label">Name</label>
@@ -207,10 +204,12 @@ import { getScalarString } from "@/services/coin/nft";
 import utility from "@/services/crypto/utility";
 import { unprefix0x } from "@/services/coin/condition";
 import NftDetailPanel from "@/components/Nft/NftDetailPanel.vue";
+import TopBar from "@/components/Common/TopBar.vue";
 
 @Component({
   components: {
     AddressField,
+    TopBar,
   },
 })
 export default class Cns extends Vue {

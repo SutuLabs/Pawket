@@ -1,9 +1,6 @@
 <template>
   <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">{{ $t("offer.make.ui.title") }}</p>
-      <button type="button" class="delete" @click="close()"></button>
-    </header>
+    <top-bar :title="$t('offer.make.ui.title')" @close="close()" :showClose="true"></top-bar>
     <section class="modal-card-body">
       <template v-if="step == 'Input'">
         <b-field label="Offer">
@@ -93,11 +90,13 @@ import { generateNftOffer, generateOfferPlan } from "@/services/offer/bundler";
 import dexie from "@/services/api/dexie";
 import { tc } from "@/i18n/i18n";
 import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
+import TopBar from "../Common/TopBar.vue";
 
 @Component({
   components: {
     KeyBox,
     TokenAmountField,
+    TopBar,
   },
 })
 export default class NftOffer extends Vue {
