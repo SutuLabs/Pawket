@@ -1,9 +1,6 @@
 <template>
   <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">Scan</p>
-      <button type="button" class="delete" @click="close()"></button>
-    </header>
+    <top-bar :title="'Scan'" @close="close()" :showClose="true"></top-bar>
     <section class="modal-card-body">
       <b-tabs position="is-center" expanded destroy-on-hide>
         <b-tab-item label="Scan QR Code" class="has-text-centered">
@@ -41,11 +38,13 @@ import { xchPrefix } from "@/store/modules/network";
 import Send from "../Send/Send.vue";
 import { isMobile } from "@/services/view/responsive";
 import AddByPublicKey from "../AccountManagement/AddAccount/AddByPublicKey.vue";
+import TopBar from "../Common/TopBar.vue";
 
 @Component({
   components: {
     KeyBox,
     QrcodeVue,
+    TopBar,
     QrcodeStream,
     QrcodeDropZone,
     QrcodeCapture,

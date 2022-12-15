@@ -1,9 +1,6 @@
 <template>
   <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">{{ $t("did.ui.title.detail") }}</p>
-      <button type="button" class="delete is-pulled-right" @click="close()"></button>
-    </header>
+    <top-bar :title="$t('did.ui.title.detail')" @close="close()" :showClose="true"></top-bar>
     <section class="modal-card-body">
       <b-field :label="$t('did.ui.label.name')">
         <span class="word-break">{{ did.name }}</span>
@@ -38,7 +35,8 @@ import store from "@/store";
 import SignMessage from "../Cryptography/SignMessage.vue";
 import { isMobile } from "@/services/view/responsive";
 import { AccountEntity } from "@/models/account";
-@Component({ components: { KeyBox } })
+import TopBar from "../Common/TopBar.vue";
+@Component({ components: { KeyBox, TopBar } })
 export default class DidDetails extends Vue {
   @Prop() public account!: AccountEntity;
   @Prop() public did!: DidDetail;

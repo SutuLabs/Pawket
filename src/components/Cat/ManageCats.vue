@@ -2,12 +2,7 @@
   <div class="modal-card" style="overflow-y: auto">
     <b-loading :active="submitting" :is-full-page="false"></b-loading>
     <section>
-      <header class="modal-card-head">
-        <p class="modal-card-title">
-          {{ $t("ManageCats.ui.title.ManageCats") }}
-        </p>
-        <button type="button" class="delete" @click="close()"></button>
-      </header>
+      <top-bar :title="$t('ManageCats.ui.title.ManageCats')" @close="close()" :showClose="true"></top-bar>
       <section class="modal-card-body">
         <b-tabs position="is-centered" class="block" expanded v-model="activeTab">
           <b-tab-item :label="$t('ManageCats.ui.label.search')">
@@ -47,8 +42,7 @@
             </div>
           </b-tab-item>
         </b-tabs>
-        <hr class="mt-0 pt-0" />
-        <b-field :label="$t('ManageCats.ui.label.listingCats')">
+        <b-field :label="$t('ManageCats.ui.label.listingCats')" class="border-top-1 pt-5">
           <div class="y-scroll pt-5" style="max-height: 30vh">
             <token-item :catList="assetIds" @remove="remove" v-sortable="sortableOptions" @updateOrder="updateOrder"></token-item>
           </div>
@@ -71,6 +65,7 @@ import SearchCat from "@/components/Cat/SearchCat.vue";
 import { TailInfo } from "@/services/api/tailDb";
 import { unprefix0x } from "@/services/coin/condition";
 import { chainId, convertToChainId } from "@/store/modules/network";
+import TopBar from "../Common/TopBar.vue";
 
 @Component({
   directives: {
@@ -79,6 +74,7 @@ import { chainId, convertToChainId } from "@/store/modules/network";
   components: {
     TokenItem,
     SearchCat,
+    TopBar,
   },
 })
 export default class ManageCats extends Vue {
@@ -264,8 +260,14 @@ export default class ManageCats extends Vue {
 </script>
 
 <style scoped lang="scss">
+@import "~bulma/sass/utilities/derived-variables";
+
 .y-scroll {
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+.border-top-1 {
+  border-top: 1px solid $grey-lighter;
 }
 </style>

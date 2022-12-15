@@ -90,6 +90,6 @@ a.has-text-primary:focus {
 }
 
 .navbar-item {
-  background-color: $white-ter;
+  background-color: $white-ter !important;
 }
 </style>

@@ -1,10 +1,7 @@
 <template>
   <div class="modal-card">
-    <header class="modal-card-head">
-      <p v-if="mode == 'Detail'" class="modal-card-title">{{ $t("addressDetail.ui.title.detail") }}</p>
-      <p v-if="mode == 'Edit'" class="modal-card-title">{{ $t("addressDetail.ui.title.edit") }}</p>
-      <button type="button" class="delete" @click="back()"></button>
-    </header>
+    <top-bar v-if="mode == 'Detail'" :title="$t('addressDetail.ui.title.detail')" @close="back()" :showClose="true"></top-bar>
+    <top-bar v-if="mode == 'Edit'" :title="$t('addressDetail.ui.title.edit')" @close="back()" :showClose="true"></top-bar>
     <section class="modal-card-body" v-if="mode == 'Detail'">
       <b-field :label="$t('addressDetail.ui.label.name')">
         <span>{{ name }}</span>
@@ -41,10 +38,11 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { Contact } from "./AddressBook.vue";
 import AddressBookField from "./AddressBookFields.vue";
 import KeyBox from "@/components/Common/KeyBox.vue";
+import TopBar from "../Common/TopBar.vue";
 
 type Mode = "Detail" | "Edit";
 @Component({
-  components: { KeyBox, AddressBookField },
+  components: { KeyBox, AddressBookField, TopBar },
 })
 export default class AddressDetail extends Vue {
   @Prop() contact?: Contact;

@@ -126,7 +126,7 @@ html {
 
   .navbar-item,
   .fixed-top {
-    background-color: $grey-accent;
+    background-color: $grey-accent !important;
   }
 
   .panel-block {
