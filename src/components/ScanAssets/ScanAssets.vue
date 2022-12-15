@@ -532,6 +532,7 @@ export default class ScanAssets extends Vue {
   send(): void {
     const coins = coin.getAvailableCoinFromRecords(this.account, this.allRequests, this.allRecords, [this.token]);
     const availableCoins = coins[0];
+    const allCoins = coins[1];
     this.$buefy.modal.open({
       parent: this,
       component: Send,
@@ -542,6 +543,7 @@ export default class ScanAssets extends Vue {
         account: this.account,
         inputAddress: ensureAddress(this.account.firstAddress),
         inputAvailableCoins: availableCoins,
+        inputAllCoins: allCoins,
         inputRequests: this.allRequests,
         inputSelectedToken: this.token,
       },
