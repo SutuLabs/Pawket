@@ -17,6 +17,7 @@
       </router-link>
       <router-link
         :to="'/cns'"
+        v-if="debugMode || test"
         :class="{
           'navbar-item': true,
           'is-expanded': true,
@@ -74,6 +75,10 @@ export default class MobileNav extends Vue {
 
   get debugMode(): boolean {
     return store.state.app.debug;
+  }
+
+  get test(): boolean {
+    return window.location.hostname == "kitten.pawket.app";
   }
 }
 </script>
