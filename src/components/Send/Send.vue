@@ -96,7 +96,12 @@ import AddressField from "@/components/Common/AddressField.vue";
 import TopBar from "@/components/Common/TopBar.vue";
 import AddressBook, { Contact } from "@/components/AddressBook/AddressBook.vue";
 import Confirmation from "../Common/Confirmation.vue";
-import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoinsWithRequests } from "@/services/view/coinAction";
+import {
+  getAssetsRequestDetail,
+  getAssetsRequestObserver,
+  getAvailableCoins,
+  getAvailableCoinsWithRequests,
+} from "@/services/view/coinAction";
 
 @Component({
   components: {
@@ -155,10 +160,10 @@ export default class Send extends Vue {
   mounted(): void {
     if (this.inputAddress) this.address = this.inputAddress;
     if (this.inputAmount) this.amount = this.inputAmount;
-    if (this.inputAvailableCoins && this.inputSelectedToken && this.inputRequests) {
+    if (this.inputSelectedToken) this.selectedToken = this.inputSelectedToken;
+    if (this.inputAvailableCoins && this.inputRequests && this.inputAllCoins) {
       this.availcoins = this.inputAvailableCoins;
       this.allcoins = this.inputAllCoins;
-      this.selectedToken = this.inputSelectedToken;
       this.requests = this.inputRequests;
     }
     this.loadCoins();
@@ -294,7 +299,10 @@ export default class Send extends Vue {
 
     if (!this.availcoins || !this.allcoins) {
       try {
-        const coins = await getAvailableCoinsWithRequests(this.account, this.requests);
+        const coins =
+          this.account.type == "PublicKey"
+            ? await getAvailableCoins(this.account)
+            : await getAvailableCoinsWithRequests(this.account, this.requests);
         this.availcoins = coins[0];
         this.allcoins = coins[1];
       } catch (err) {
