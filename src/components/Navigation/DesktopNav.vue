@@ -19,6 +19,7 @@
         icon-left="dns"
         type="is-primary"
         outlined
+        v-if="debugMode || test"
         :class="{
           'border-less': true,
           'has-background-primary': path.match(/^\/cns\/?/),
@@ -78,6 +79,10 @@ export default class DesktopNav extends Vue {
 
   get showNavigation(): boolean {
     return !this.$route.path.startsWith("/create") && this.unlocked;
+  }
+
+  get test(): boolean {
+    return window.location.hostname == "kitten.pawket.app";
   }
 }
 </script>

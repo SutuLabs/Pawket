@@ -30,7 +30,7 @@
               ><span class="has-text-grey">{{ account.key.fingerprint }}</span></b-button
             >
             <network-selector class="is-pulled-left"></network-selector>
-            <b-button v-if="debugMode" @click="toggleTheme()" rounded class="is-pulled-left border-less"
+            <b-button v-if="debugMode || test" @click="toggleTheme()" rounded class="is-pulled-left border-less"
               ><b-icon icon="brightness-6" class="has-text-grey"> </b-icon
             ></b-button>
             <b-tooltip :label="$t('accountDetail.ui.tooltip.errorLog')" class="is-pulled-right">
@@ -461,6 +461,10 @@ export default class AccountDetail extends Vue {
   set theme(theme: string) {
     localStorage.setItem("user-theme", theme);
     document.documentElement.className = theme;
+  }
+
+  get test(): boolean {
+    return window.location.hostname == "kitten.pawket.app";
   }
 }
 </script>
