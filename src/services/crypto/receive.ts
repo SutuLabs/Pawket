@@ -7,8 +7,9 @@ import debug from "../api/debug";
 import { analyzeDidCoin, DidCoinAnalysisResult } from "../coin/did";
 import { NftCoinAnalysisResult, CnsCoinAnalysisResult } from "../../models/nft";
 import { CoinSpend, OriginCoin } from "../spendbundle";
-import { convertToOriginCoin } from "../coin/coinUtility";
-import { Hex0x } from "../coin/condition";
+import { convertToOriginCoin, getCoinName0x } from "../coin/coinUtility";
+import { Hex0x, prefix0x } from "../coin/condition";
+import { getLineageProofPuzzle } from "../transfer/call";
 
 export interface TokenPuzzleDetail {
   symbol: string;
@@ -279,6 +280,17 @@ class Receive {
     }
 
     return { nfts: nftList, dids: didList };
+  }
+
+  async getSpentCoinPuzzle(puzzleHash: Hex0x, rpcUrl: string): Promise<Hex0x | undefined> {
+    const records = await this.getCoinRecords([{ symbol: "", puzzles: [{ hash: puzzleHash, address: "" }] }], true, rpcUrl);
+    const coins = records.coins.reduce((acc, token) => acc.concat(token.records), [] as CoinRecord[]);
+    const firstSpentCoin = coins.filter(_ => _.spent).at(0);
+    if (!firstSpentCoin || !firstSpentCoin.coin) return undefined;
+    const coinName = getCoinName0x(convertToOriginCoin(firstSpentCoin.coin));
+    const coin = await getLineageProofPuzzle(coinName, rpcUrl);
+    if (!coin || !coin.puzzleReveal) return undefined;
+    return prefix0x(coin.puzzleReveal);
   }
 }
 
