@@ -1418,9 +1418,6 @@
       },
       "label": {
         "encryptWithDID": "Encrypt with DID",
-        "selectDid": "Select a DID",
-        "publicKey": "Public Key:{publicKey}",
-        "receiverPubKey": "Receiver Public Key",
         "message": "Message"
       },
       "button": {
@@ -1432,7 +1429,6 @@
     "ui": {
       "title": "Decrypt Message",
       "label": {
-        "publicKey": "Public Key",
         "message": "Message",
         "result": "Result"
       },

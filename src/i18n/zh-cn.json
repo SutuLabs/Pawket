@@ -1418,9 +1418,6 @@
       },
       "label": {
         "encryptWithDID": "使用 DID 加密",
-        "selectDid": "选择一个 DID",
-        "publicKey": "公钥: {publicKey}",
-        "receiverPubKey": "接收人公钥",
         "message": "消息"
       },
       "button": {
@@ -1432,7 +1429,6 @@
     "ui": {
       "title": "消息解密",
       "label": {
-        "publicKey": "公钥",
         "message": "消息",
         "result": "结果"
       },
