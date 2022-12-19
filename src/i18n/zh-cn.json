@@ -1417,7 +1417,9 @@
         "multipleMessage": "多条消息"
       },
       "label": {
-        "encryptWithDID": "使用 DID 加密",
+        "encryptWithAddress": "使用地址加密",
+        "activatePrefix": "地址尚未激活，点此",
+        "activate": "激活",
         "message": "消息"
       },
       "button": {

@@ -8,6 +8,22 @@
       <b-tabs position="is-centered" expanded v-if="!result">
         <b-tab-item :label="$t('encryptMessage.ui.tab.singleMessage')">
           <template v-if="!result">
+            <b-field :label="$t('encryptMessage.ui.label.encryptWithAddress')">
+              <key-box
+                icon="checkbox-multiple-blank-outline"
+                :value="account.firstAddress"
+                :tooltip="account.firstAddress"
+                :showValue="true"
+                :headLength="80"
+                :tailLength="10"
+              ></key-box>
+            </b-field>
+            <b-field v-if="!activities">
+              <p>
+                {{ $t("encryptMessage.ui.label.activatePrefix")
+                }}<u class="is-clickable" @click="activate()">{{ $t("encryptMessage.ui.label.activate") }}</u>
+              </p>
+            </b-field>
             <address-field
               :inputAddress="address"
               :validAddress="validAddress"
@@ -22,8 +38,16 @@
         </b-tab-item>
         <b-tab-item :label="$t('encryptMessage.ui.tab.multipleMessage')">
           <template v-if="!result">
-            <b-field :label="$t('encryptMessage.ui.label.encryptWithDID')"> </b-field>
-
+            <b-field :label="$t('encryptMessage.ui.label.encryptWithAddress')">
+              <key-box
+                icon="checkbox-multiple-blank-outline"
+                :value="account.firstAddress"
+                :tooltip="account.firstAddress"
+                :showValue="true"
+                :headLength="80"
+                :tailLength="10"
+              ></key-box
+            ></b-field>
             <span class="label">
               <b-tooltip :label="$t('batchSend.ui.tooltip.upload')" position="is-right">
                 <b-upload v-model="file" accept=".csv" class="file-label" @input="afterUploadCsv">
@@ -109,6 +133,9 @@ import store from "@/store";
 import { prefix0x } from "@/services/coin/condition";
 import { EcdhHelper } from "@/services/crypto/ecdh";
 import AddressField from "@/components/Common/AddressField.vue";
+import Send from "../Send/Send.vue";
+import { isMobile } from "@/services/view/responsive";
+import { CoinRecord } from "@/models/wallet";
 
 @Component({
   components: {
@@ -140,10 +167,26 @@ export default class EncryptMessage extends Vue {
     return this.account.dids || [];
   }
 
+  get activities(): CoinRecord[] | undefined {
+    return this.account.activities;
+  }
+
   mounted(): void {
     if (!this.account.dids) {
       store.dispatch("refreshDids");
     }
+  }
+
+  activate(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: Send,
+      hasModalCard: true,
+      trapFocus: true,
+      fullScreen: isMobile(),
+      canCancel: [""],
+      props: { account: this.account, inputAddress: this.account.firstAddress, inputAmount: 0 },
+    });
   }
 
   reset(): void {
@@ -237,16 +280,16 @@ Encrypted Message: ${enc}
   get csvSampleUri(): string {
     const dataPrefix = "data:text/csv;charset=utf-8";
     const content = `
-${dataPrefix},target1,curve255191ty3e7p5lpklfmvuy73l3lkp2m4tj4460y9ygzggqj6wqakg24feqtfue8c,message1
-target2,curve255191ty3e7p5lpklfmvuy73l3lkp2m4tj4460y9ygzggqj6wqakg24feqtfue8c,message2
+${dataPrefix},target1,xch10mwmd3pywc4h5yqgmdqmfwdxpayvec3ptc8rq06kkwnxe6x6jkvqhca5gs,message1
+target2,xch10mwmd3pywc4h5yqgmdqmfwdxpayvec3ptc8rq06kkwnxe6x6jkvqhca5gs,message2
 `.trim();
     return encodeURI(content);
   }
 
   fillSample(): void {
     this.csv = `
-target1,curve255191ty3e7p5lpklfmvuy73l3lkp2m4tj4460y9ygzggqj6wqakg24feqtfue8c,message1
-target2,curve255191ty3e7p5lpklfmvuy73l3lkp2m4tj4460y9ygzggqj6wqakg24feqtfue8c,message2
+target1,xch10mwmd3pywc4h5yqgmdqmfwdxpayvec3ptc8rq06kkwnxe6x6jkvqhca5gs,message1
+target2,xch10mwmd3pywc4h5yqgmdqmfwdxpayvec3ptc8rq06kkwnxe6x6jkvqhca5gs,message2
 `.trim();
   }
 

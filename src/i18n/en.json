@@ -1417,7 +1417,9 @@
         "multipleMessage": "Multiple Messages"
       },
       "label": {
-        "encryptWithDID": "Encrypt with DID",
+        "encryptWithAddress": "Encrypt with Address",
+        "activatePrefix": "The address has not been activated, click here to ",
+        "activate": "activate",
         "message": "Message"
       },
       "button": {
