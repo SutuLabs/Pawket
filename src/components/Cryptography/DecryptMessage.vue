@@ -5,17 +5,6 @@
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
-      <b-field :label="$t('decryptMessage.ui.label.publicKey')">
-        <key-box
-          icon="checkbox-multiple-blank-outline"
-          :value="pubKey"
-          :tooltip="pubKey"
-          :showValue="true"
-          :headLength="80"
-          :tailLength="10"
-        ></key-box>
-      </b-field>
-
       <b-field :label="$t('decryptMessage.ui.label.message')">
         <b-input type="textarea" v-model="message" rows="18"></b-input>
       </b-field>
@@ -49,12 +38,10 @@ import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import puzzle from "@/services/crypto/puzzle";
-import { xchSymbol } from "@/store/modules/network";
-import utility from "@/services/crypto/utility";
+import { rpcUrl } from "@/store/modules/network";
 import { AccountEntity } from "@/models/account";
-import { CryptographyService } from "@/services/crypto/encryption";
-import { Bytes } from "clvm";
-import { bech32m } from "@scure/base";
+import { EcdhHelper } from "@/services/crypto/ecdh";
+import { prefix0x } from "@/services/coin/condition";
 
 @Component({
   components: {
@@ -67,19 +54,11 @@ export default class DecryptMessage extends Vue {
 
   public submitting = false;
   public message = "";
-  public pubKey = "";
   public decryptedMessage = "";
   private privateKey = "";
 
   async mounted(): Promise<void> {
     this.message = this.initMessage || this.message;
-    const puz = this.account.addressPuzzles.find((_) => _.symbol == xchSymbol())?.puzzles[0];
-    const ecc = new CryptographyService();
-    if (puz) {
-      const sk = utility.toHexString(puz.privateKey.serialize());
-      this.privateKey = sk;
-      this.pubKey = puzzle.getAddressFromPuzzleHash(ecc.getPublicKey(sk).toHex(), "curve25519");
-    }
   }
 
   get path(): string {
@@ -112,6 +91,7 @@ export default class DecryptMessage extends Vue {
   async decrypt(): Promise<void> {
     this.submitting = true;
     try {
+      const ecdh = new EcdhHelper();
       this.decryptedMessage = "";
 
       const kvp = this.message
@@ -119,11 +99,11 @@ export default class DecryptMessage extends Vue {
         .filter((_) => _.indexOf(":") > -1)
         .map((_) => ({ key: _.substring(0, _.indexOf(":")), value: _.substring(_.indexOf(":") + 2).trim() }));
 
-      const pk = kvp.find((_) => _.key == "Sender Public Key")?.value;
-      const selfpk = kvp.find((_) => _.key == "Receiver Public Key")?.value;
+      const addressFrom = kvp.find((_) => _.key == "Sender Address")?.value;
+      const addressSelf = kvp.find((_) => _.key == "Receiver Address")?.value;
       const encmsg = kvp.find((_) => _.key == "Encrypted Message")?.value;
 
-      if (!pk || !selfpk || !encmsg) {
+      if (!addressFrom || !addressSelf || !encmsg) {
         Notification.open({
           message: "malformat.",
           type: "is-danger",
@@ -133,19 +113,10 @@ export default class DecryptMessage extends Vue {
         return;
       }
 
-      if (selfpk != this.pubKey) {
-        Notification.open({
-          message: "wrong pk.",
-          type: "is-danger",
-          duration: 5000,
-        });
-        this.submitting = false;
-        return;
-      }
+      const phFrom = prefix0x(puzzle.getPuzzleHashFromAddress(addressFrom));
+      const phSelf = prefix0x(puzzle.getPuzzleHashFromAddress(addressSelf));
 
-      const ecc = new CryptographyService();
-      const pkhex = Bytes.from(bech32m.decodeToBytes(pk).bytes).hex();
-      const dec = await ecc.decrypt(encmsg, pkhex, this.privateKey);
+      const dec = await ecdh.decrypt(phFrom, phSelf, encmsg, this.account, rpcUrl());
       this.decryptedMessage = dec;
     } catch (error) {
       Notification.open({

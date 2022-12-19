@@ -8,24 +8,13 @@
       <b-tabs position="is-centered" expanded v-if="!result">
         <b-tab-item :label="$t('encryptMessage.ui.tab.singleMessage')">
           <template v-if="!result">
-            <b-field
-              :label="$t('encryptMessage.ui.label.encryptWithDID')"
-              :message="$t('encryptMessage.ui.label.publicKey', { publicKey: pubKeyText })"
-            >
-              <b-dropdown v-model="selectedDid">
-                <template #trigger>
-                  <b-button
-                    :label="selectedDid ? selectedDid.name : $t('encryptMessage.ui.label.selectDid')"
-                    icon-right="menu-down"
-                  />
-                  <p class="has-text-danger is-size-7" v-if="!selectedDid">{{ $t("encryptMessage.ui.label.selectDid") }}</p>
-                </template>
-                <b-dropdown-item v-for="did in dids" :key="did.did" :value="did">{{ did.name }}</b-dropdown-item>
-              </b-dropdown>
-            </b-field>
-            <b-field :label="$t('encryptMessage.ui.label.receiverPubKey')">
-              <b-input v-model="recPubKey" type="text"></b-input>
-            </b-field>
+            <address-field
+              :inputAddress="address"
+              :validAddress="validAddress"
+              :addressEditable="true"
+              @updateAddress="updateAddress"
+              @updateEffectiveAddress="updateEffectiveAddress"
+            ></address-field>
             <b-field :label="$t('encryptMessage.ui.label.message')">
               <b-input v-model="message" type="textarea"></b-input>
             </b-field>
@@ -33,19 +22,7 @@
         </b-tab-item>
         <b-tab-item :label="$t('encryptMessage.ui.tab.multipleMessage')">
           <template v-if="!result">
-            <b-field
-              :label="$t('encryptMessage.ui.label.encryptWithDID')"
-              :message="$t('encryptMessage.ui.label.publicKey', { publicKey: pubKeyText })"
-            >
-              <b-dropdown v-model="selectedDid">
-                <template #trigger>
-                  <b-button :label="selectedDid ? selectedDid.name : $t('moveNft.ui.label.selectDid')" icon-right="menu-down" />
-                  <p class="has-text-danger is-size-7" v-if="!selectedDid">{{ $t("moveNft.ui.label.selectDid") }}</p>
-                </template>
-
-                <b-dropdown-item v-for="did in dids" :key="did.did" :value="did">{{ did.name }}</b-dropdown-item>
-              </b-dropdown>
-            </b-field>
+            <b-field :label="$t('encryptMessage.ui.label.encryptWithDID')"> </b-field>
 
             <span class="label">
               <b-tooltip :label="$t('batchSend.ui.tooltip.upload')" position="is-right">
@@ -127,17 +104,16 @@ import { NotificationProgrammatic as Notification } from "buefy";
 import { DidDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
 import puzzle from "@/services/crypto/puzzle";
 import { csvToArray } from "@/services/util/csv";
-import { xchSymbol } from "@/store/modules/network";
+import { rpcUrl } from "@/store/modules/network";
 import store from "@/store";
 import { prefix0x } from "@/services/coin/condition";
-import utility from "@/services/crypto/utility";
-import { CryptographyService, EcPrivateKey } from "@/services/crypto/encryption";
-import { Bytes } from "clvm";
-import { bech32m } from "@scure/base";
+import { EcdhHelper } from "@/services/crypto/ecdh";
+import AddressField from "@/components/Common/AddressField.vue";
 
 @Component({
   components: {
     KeyBox,
+    AddressField,
   },
 })
 export default class EncryptMessage extends Vue {
@@ -151,11 +127,14 @@ export default class EncryptMessage extends Vue {
   public isDragging = false;
   public transitioning = false;
   public result = "";
-  public recPubKey = "";
   public message = "";
 
   public requests: TokenPuzzleDetail[] = [];
   public selectedDid: DidDetail | null = null;
+
+  public validAddress = true;
+  public address = "";
+  public signAddress = "";
 
   get dids(): DidDetail[] {
     return this.account.dids || [];
@@ -171,39 +150,12 @@ export default class EncryptMessage extends Vue {
     this.csv = "";
     this.file = null;
     this.dragfile = [];
-    this.recPubKey = "";
+    this.signAddress = "";
     this.message = "";
   }
 
   get path(): string {
     return this.$route.path;
-  }
-
-  get sk_hex(): string {
-    if (!this.selectedDid) return "";
-    const requests = this.account.addressPuzzles.find((_) => _.symbol == xchSymbol())?.puzzles;
-    if (!requests) {
-      return "";
-    }
-    const ph = prefix0x(this.selectedDid.hintPuzzle);
-    const sk_arr = requests.find((_) => prefix0x(_.hash) == ph)?.privateKey?.serialize();
-    if (!sk_arr) {
-      return "";
-    }
-
-    const sk_hex = utility.toHexString(sk_arr);
-    return sk_hex;
-  }
-
-  get pubKeyText(): string {
-    const ecc = new CryptographyService();
-    const sk = EcPrivateKey.parse(this.sk_hex);
-    if (!sk) {
-      return "";
-    }
-    const pubKey = ecc.getPublicKey(this.sk_hex).toHex();
-    const pubKeyText = puzzle.getAddressFromPuzzleHash(pubKey, "curve25519");
-    return pubKeyText;
   }
 
   @Watch("path")
@@ -231,7 +183,8 @@ export default class EncryptMessage extends Vue {
     if (this.csv) {
       this.encrypt();
     } else {
-      this.csv = `target1,${this.recPubKey},${this.message}`;
+      // TODO: deal with \n in message
+      this.csv = `${this.address},${this.signAddress},${this.message}`;
       this.encrypt();
     }
   }
@@ -239,33 +192,30 @@ export default class EncryptMessage extends Vue {
   async encrypt(): Promise<void> {
     this.submitting = true;
     try {
-      if (!this.pubKeyText) {
-        this.submitting = false;
-        return;
-      }
-
-      const sk = EcPrivateKey.parse(this.sk_hex);
-      if (!sk) {
-        this.submitting = false;
-        return;
-      }
-
-      const ecc = new CryptographyService();
+      const ecdh = new EcdhHelper();
       const inputs = csvToArray(this.csv);
 
       let result = "";
+      const myAddress = this.account.firstAddress;
+      if (!myAddress) {
+        this.submitting = false;
+        return;
+      }
+      const myPh = prefix0x(puzzle.getPuzzleHashFromAddress(myAddress));
 
       for (let i = 0; i < inputs.length; i++) {
         const pars = inputs[i];
         const comment = pars[0];
-        const pktext = pars[1];
-        const pk = Bytes.from(bech32m.decodeToBytes(pktext).bytes).hex();
+        const address = pars[1];
+        // TODO: address can be CNS, should resolve before proceeding
+
+        const ph = prefix0x(puzzle.getPuzzleHashFromAddress(address));
         const msg = pars[2];
 
-        const enc = await ecc.encrypt(msg, pk, sk);
+        const enc = await ecdh.encrypt(myPh, ph, msg, this.account, rpcUrl());
         result += `------------------------------ ${comment} ------------------------------
-Sender Public Key: ${this.pubKeyText}
-Receiver Public Key: ${pktext}
+Sender Address: ${myAddress}
+Receiver Address: ${address}
 Encrypted Message: ${enc}
 `;
       }
@@ -351,6 +301,14 @@ target2,curve255191ty3e7p5lpklfmvuy73l3lkp2m4tj4460y9ygzggqj6wqakg24feqtfue8c,me
 
   copy(): void {
     store.dispatch("copy", this.result);
+  }
+
+  updateEffectiveAddress(value: string): void {
+    this.signAddress = value;
+  }
+
+  updateAddress(value: string): void {
+    this.address = value;
   }
 }
 </script>
