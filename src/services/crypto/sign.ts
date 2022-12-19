@@ -39,7 +39,7 @@ export function calculate_synthetic_secret_key(BLS: ModuleInstance, secret_key: 
   try {
     const secret_exponent = bigint_from_bytes(Bytes.from(secret_key.serialize()), { signed: true });
     const public_key = secret_key.get_g1();
-    const synthetic_offset = calculate_synthetic_offset(public_key, hidden_puzzle_hash);
+    const synthetic_offset = calculate_synthetic_offset(public_key.serialize(), hidden_puzzle_hash);
     const synthetic_secret_exponent = (secret_exponent + synthetic_offset) % GROUP_ORDER
     const synthetic_secret_key = BLS.PrivateKey.from_bytes(bigint_to_uint8array_padding(synthetic_secret_exponent), true)
     return synthetic_secret_key;
@@ -50,7 +50,7 @@ export function calculate_synthetic_secret_key(BLS: ModuleInstance, secret_key: 
 
 export function calculate_synthetic_public_key(BLS: ModuleInstance, public_key: G1Element, hidden_puzzle_hash: Uint8Array): G1Element {
   const synthetic_offset = BLS.PrivateKey.from_bytes(bigint_to_uint8array_padding(
-    calculate_synthetic_offset(public_key, hidden_puzzle_hash)), true);
+    calculate_synthetic_offset(public_key.serialize(), hidden_puzzle_hash)), true);
 
   return public_key.add(synthetic_offset.get_g1());
 }
@@ -73,8 +73,8 @@ function decodeMessage(message: string | Uint8Array): Uint8Array {
   return message;
 }
 
-function calculate_synthetic_offset(public_key: G1Element, hidden_puzzle_hash: Uint8Array): bigint {
-  const blob = Bytes.SHA256(new Uint8Array([...public_key.serialize(), ...hidden_puzzle_hash]));
+export function calculate_synthetic_offset(public_key: Uint8Array, hidden_puzzle_hash: Uint8Array): bigint {
+  const blob = Bytes.SHA256(new Uint8Array([...public_key, ...hidden_puzzle_hash]));
   let offset = bigint_from_bytes(blob, { signed: true })
   while (offset < 0) offset += GROUP_ORDER;
   offset %= GROUP_ORDER;

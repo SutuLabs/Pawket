@@ -1,6 +1,7 @@
 import { SpendBundle } from "@/services/spendbundle";
 import { AccountEntity } from "@/models/account";
 import { GetParentPuzzleResponse } from "@/models/api";
+import receive from "@/services/crypto/receive";
 
 export function assert<T>(expectValue: T, actualValue: T, desc: string | undefined = undefined): void {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -28,8 +29,9 @@ export function assertBundle(expect: SpendBundle, actual: SpendBundle): void {
 }
 
 export function getTestAccount(privateKey: string): AccountEntity {
+  const maxId = 4;
   return {
-    addressRetrievalCount: 4,
+    addressRetrievalCount: maxId,
     key: {
       privateKey: privateKey,
       fingerprint: 0,
@@ -42,8 +44,29 @@ export function getTestAccount(privateKey: string): AccountEntity {
     dids: [],
     extraInfo: {},
     allCats: [],
-    addressGenerated: 0,
     addressPuzzles: [],
+    addressGenerated: 0,
+  }
+}
+
+export async function getTestAccountWithPuzzles(privateKey: string): Promise<AccountEntity> {
+  const maxId = 4;
+  return {
+    addressRetrievalCount: maxId,
+    key: {
+      privateKey: privateKey,
+      fingerprint: 0,
+      compatibleMnemonic: "",
+    },
+    name: "",
+    type: "Legacy",
+    tokens: {},
+    nfts: [],
+    dids: [],
+    extraInfo: {},
+    allCats: [],
+    addressPuzzles: await receive.getAssetsRequestDetail(privateKey, 0, maxId, [], {}, "xch", "XCH", "cat_v2"),
+    addressGenerated: maxId,
   }
 }
 

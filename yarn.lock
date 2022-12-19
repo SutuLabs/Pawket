@@ -1409,6 +1409,11 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
+"@noble/bls12-381@^1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@noble/bls12-381/-/bls12-381-1.4.0.tgz#4db0e1577ef85632347e86eee81062acdda6d65b"
+  integrity sha512-mIYqC2jMX7Lcu1QtU/FFftMPDSXNCdlGex6BSf5nPojHjnzzBgs1klFWpB1R8YjqHmOO9xrCzF19f2c42+z3vg==
+
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
   resolved "https://registry.nlark.com/@nodelib/fs.scandir/download/@nodelib/fs.scandir-2.1.5.tgz#7619c2eb21b25483f6d167548b4cfd5a7488c3d5"
