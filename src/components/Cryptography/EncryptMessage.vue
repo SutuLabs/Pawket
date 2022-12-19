@@ -132,7 +132,7 @@ import { rpcUrl } from "@/store/modules/network";
 import store from "@/store";
 import { prefix0x } from "@/services/coin/condition";
 import { EcdhHelper } from "@/services/crypto/ecdh";
-import AddressField from "@/components/Common/AddressField.vue";
+import AddressField, { resolveName } from "@/components/Common/AddressField.vue";
 import Send from "../Send/Send.vue";
 import { isMobile } from "@/services/view/responsive";
 import { CoinRecord } from "@/models/wallet";
@@ -226,8 +226,7 @@ export default class EncryptMessage extends Vue {
     if (this.csv) {
       this.encrypt();
     } else {
-      // TODO: deal with \n in message
-      this.csv = `${this.address},${this.signAddress},${this.message}`;
+      this.csv = `${this.address},${this.signAddress},${this.message.replaceAll("\n", ";")}`;
       this.encrypt();
     }
   }
@@ -250,15 +249,20 @@ export default class EncryptMessage extends Vue {
         const pars = inputs[i];
         const comment = pars[0];
         const address = pars[1];
-        // TODO: address can be CNS, should resolve before proceeding
-
-        const ph = prefix0x(puzzle.getPuzzleHashFromAddress(address));
+        let xchAddress = address;
+        // address can be CNS, should resolve before proceeding
+        if (address.match(/[a-zA-Z0-9-]{4,}\.xch$/)) {
+          const resolveAnswer = await resolveName(address);
+          if (resolveAnswer.status == "Found" && resolveAnswer.data)
+            xchAddress = puzzle.getAddressFromPuzzleHash(resolveAnswer.data, "xch");
+        }
+        const ph = prefix0x(puzzle.getPuzzleHashFromAddress(xchAddress));
         const msg = pars[2];
 
         const enc = await ecdh.encrypt(myPh, ph, msg, this.account, rpcUrl());
         result += `------------------------------ ${comment} ------------------------------
 Sender Address: ${myAddress}
-Receiver Address: ${address}
+Receiver Address: ${xchAddress}
 Encrypted Message: ${enc}
 `;
       }
@@ -280,7 +284,7 @@ Encrypted Message: ${enc}
   get csvSampleUri(): string {
     const dataPrefix = "data:text/csv;charset=utf-8";
     const content = `
-${dataPrefix},target1,xch10mwmd3pywc4h5yqgmdqmfwdxpayvec3ptc8rq06kkwnxe6x6jkvqhca5gs,message1
+${dataPrefix},target1,hann.xch,message1
 target2,xch10mwmd3pywc4h5yqgmdqmfwdxpayvec3ptc8rq06kkwnxe6x6jkvqhca5gs,message2
 `.trim();
     return encodeURI(content);
@@ -288,7 +292,7 @@ target2,xch10mwmd3pywc4h5yqgmdqmfwdxpayvec3ptc8rq06kkwnxe6x6jkvqhca5gs,message2
 
   fillSample(): void {
     this.csv = `
-target1,xch10mwmd3pywc4h5yqgmdqmfwdxpayvec3ptc8rq06kkwnxe6x6jkvqhca5gs,message1
+target1,hann.xch,message1
 target2,xch10mwmd3pywc4h5yqgmdqmfwdxpayvec3ptc8rq06kkwnxe6x6jkvqhca5gs,message2
 `.trim();
   }
