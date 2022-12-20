@@ -18,8 +18,8 @@
                 :tailLength="10"
               ></key-box>
             </b-field>
-            <b-field v-if="!activities">
-              <p>
+            <b-field v-if="!isActivated && !refreshing">
+              <p class="has-text-danger">
                 {{ $t("encryptMessage.ui.label.activatePrefix")
                 }}<u class="is-clickable" @click="activate()">{{ $t("encryptMessage.ui.label.activate") }}</u>
               </p>
@@ -27,6 +27,7 @@
             <address-field
               :inputAddress="address"
               :validAddress="validAddress"
+              :label="$t('encryptMessage.ui.label.receiverAddress')"
               :addressEditable="true"
               @updateAddress="updateAddress"
               @updateEffectiveAddress="updateEffectiveAddress"
@@ -48,6 +49,12 @@
                 :tailLength="10"
               ></key-box
             ></b-field>
+            <b-field v-if="!isActivated && !refreshing">
+              <p class="has-text-danger">
+                {{ $t("encryptMessage.ui.label.activatePrefix")
+                }}<u class="is-clickable" @click="activate()">{{ $t("encryptMessage.ui.label.activate") }}</u>
+              </p>
+            </b-field>
             <span class="label">
               <b-tooltip :label="$t('batchSend.ui.tooltip.upload')" position="is-right">
                 <b-upload v-model="file" accept=".csv" class="file-label" @input="afterUploadCsv">
@@ -135,7 +142,6 @@ import { EcdhHelper } from "@/services/crypto/ecdh";
 import AddressField, { resolveName } from "@/components/Common/AddressField.vue";
 import Send from "../Send/Send.vue";
 import { isMobile } from "@/services/view/responsive";
-import { CoinRecord } from "@/models/wallet";
 
 @Component({
   components: {
@@ -167,8 +173,13 @@ export default class EncryptMessage extends Vue {
     return this.account.dids || [];
   }
 
-  get activities(): CoinRecord[] | undefined {
-    return this.account.activities;
+  get isActivated(): boolean {
+    if (this.account.activities && this.account.activities.find((act) => act.spent == true)) return true;
+    return false;
+  }
+
+  get refreshing(): boolean {
+    return store.state.account.refreshing;
   }
 
   mounted(): void {
@@ -185,7 +196,13 @@ export default class EncryptMessage extends Vue {
       trapFocus: true,
       fullScreen: isMobile(),
       canCancel: [""],
-      props: { account: this.account, inputAddress: this.account.firstAddress, inputAmount: 0 },
+      props: {
+        account: this.account,
+        inputAddress: this.account.firstAddress,
+        inputAmount: 0,
+        amountEditable: false,
+        addressEditable: false,
+      },
     });
   }
 
@@ -260,7 +277,7 @@ export default class EncryptMessage extends Vue {
         const msg = pars[2];
 
         const enc = await ecdh.encrypt(myPh, ph, msg, this.account, rpcUrl());
-        result += `------------------------------ ${comment} ------------------------------
+        result += `-------- ${comment} ---------
 Sender Address: ${myAddress}
 Receiver Address: ${xchAddress}
 Encrypted Message: ${enc}

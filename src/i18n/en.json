@@ -1420,7 +1420,8 @@
         "encryptWithAddress": "Encrypt with Address",
         "activatePrefix": "The address has not been activated, click here to ",
         "activate": "activate",
-        "message": "Message"
+        "message": "Message",
+        "receiverAddress": "Receiver Address"
       },
       "button": {
         "encrypt": "Encrypt"
@@ -1436,6 +1437,13 @@
       },
       "button": {
         "decrypt": "Decrypt"
+      }
+    },
+    "message": {
+      "error": {
+        "CANNOT_FIND_ADDRESS": "The decryption address does not match the Reciever Address.",
+        "INVALID_MESSAGE": "Invalid message.",
+        "INVALID_ADDRESS": "Invalid Sender / Receiver Address."
       }
     }
   },

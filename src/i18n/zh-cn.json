@@ -1417,10 +1417,11 @@
         "multipleMessage": "多条消息"
       },
       "label": {
-        "encryptWithAddress": "使用地址加密",
+        "encryptWithAddress": "加密地址",
         "activatePrefix": "地址尚未激活，点此",
         "activate": "激活",
-        "message": "消息"
+        "message": "消息",
+        "receiverAddress": "接收人地址"
       },
       "button": {
         "encrypt": "加密"
@@ -1436,6 +1437,13 @@
       },
       "button": {
         "decrypt": "解密"
+      }
+    },
+    "message": {
+      "error": {
+        "CANNOT_FIND_ADDRESS": "解密地址与 Reciever Address 不一致。",
+        "INVALID_MESSAGE": "无效消息。",
+        "INVALID_ADDRESS": "无效的发送/接收地址。"
       }
     }
   },

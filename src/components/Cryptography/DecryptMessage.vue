@@ -119,12 +119,33 @@ export default class DecryptMessage extends Vue {
       const dec = await ecdh.decrypt(phFrom, phSelf, encmsg, this.account, rpcUrl());
       this.decryptedMessage = dec;
     } catch (error) {
-      Notification.open({
-        message: this.$tc("batchSend.ui.messages.failedToSign") + error,
-        type: "is-danger",
-        autoClose: false,
-      });
-      console.warn(error);
+      const err = String(error);
+      if (err.match(/Cannot find the address/)) {
+        Notification.open({
+          message: this.$tc("decryptMessage.message.error.CANNOT_FIND_ADDRESS"),
+          type: "is-danger",
+          autoClose: false,
+        });
+      } else if (err.match(/OperationError/)) {
+        Notification.open({
+          message: this.$tc("decryptMessage.message.error.INVALID_MESSAGE"),
+          type: "is-danger",
+          autoClose: false,
+        });
+      } else if (err.match(/Invalid checksum/)) {
+        Notification.open({
+          message: this.$tc("decryptMessage.message.error.INVALID_ADDRESS"),
+          type: "is-danger",
+          autoClose: false,
+        });
+      } else {
+        Notification.open({
+          message: this.$tc("batchSend.ui.messages.failedToSign") + error,
+          type: "is-danger",
+          autoClose: false,
+        });
+        console.warn(error);
+      }
     }
 
     this.submitting = false;
