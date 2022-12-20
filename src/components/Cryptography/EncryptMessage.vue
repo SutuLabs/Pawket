@@ -5,7 +5,7 @@
       <button type="button" class="delete" @click="close()"></button>
     </header>
     <section class="modal-card-body">
-      <b-tabs position="is-centered" expanded v-if="!result">
+      <b-tabs position="is-centered" expanded v-if="!result" @input="reset()">
         <b-tab-item :label="$t('encryptMessage.ui.tab.singleMessage')">
           <template v-if="!result">
             <b-field :label="$t('encryptMessage.ui.label.encryptWithAddress')">
@@ -33,7 +33,7 @@
               @updateEffectiveAddress="updateEffectiveAddress"
             ></address-field>
             <b-field :label="$t('encryptMessage.ui.label.message')">
-              <b-input v-model="message" type="textarea"></b-input>
+              <b-input v-model="message" type="textarea" required ref="message"></b-input>
             </b-field>
           </template>
         </b-tab-item>
@@ -73,7 +73,7 @@
               >
             </span>
             <b-field>
-              <b-input type="textarea" v-model="csv" v-show="!isDragging"></b-input>
+              <b-input type="textarea" v-model="csv" v-show="!isDragging" required ref="csv"></b-input>
             </b-field>
             <b-field v-show="isDragging">
               <b-upload v-model="dragfile" drag-drop expanded multiple @input="afterDragged">
@@ -112,7 +112,7 @@
           type="is-primary"
           @click="toEncrypt()"
           :loading="submitting"
-          :disabled="submitting"
+          :disabled="submitting || (!refreshing && !isActivated)"
         ></b-button>
         <b-button
           :label="$t('common.button.copy')"
@@ -142,6 +142,7 @@ import { EcdhHelper } from "@/services/crypto/ecdh";
 import AddressField, { resolveName } from "@/components/Common/AddressField.vue";
 import Send from "../Send/Send.vue";
 import { isMobile } from "@/services/view/responsive";
+import { bech32m } from "@scure/base";
 
 @Component({
   components: {
@@ -199,8 +200,6 @@ export default class EncryptMessage extends Vue {
       props: {
         account: this.account,
         inputAddress: this.account.firstAddress,
-        inputAmount: 0,
-        amountEditable: false,
         addressEditable: false,
       },
     });
@@ -239,10 +238,27 @@ export default class EncryptMessage extends Vue {
     this.$router.push("/home");
   }
 
+  validate(): boolean {
+    if (!this.address) {
+      this.validAddress = false;
+      return false;
+    }
+    try {
+      bech32m.decodeToBytes(this.address);
+    } catch (error) {
+      this.validAddress = false;
+    }
+    return (this.$refs.message as Vue & { checkHtml5Validity: () => boolean }).checkHtml5Validity();
+  }
+
   async toEncrypt(): Promise<void> {
     if (this.csv) {
       this.encrypt();
     } else {
+      if (!this.validate()) {
+        (this.$refs.csv as Vue & { checkHtml5Validity: () => boolean }).checkHtml5Validity();
+        return;
+      }
       this.csv = `${this.address},${this.signAddress},${this.message.replaceAll("\n", ";")}`;
       this.encrypt();
     }
@@ -373,6 +389,7 @@ target2,xch10mwmd3pywc4h5yqgmdqmfwdxpayvec3ptc8rq06kkwnxe6x6jkvqhca5gs,message2
 
   updateAddress(value: string): void {
     this.address = value;
+    this.validAddress = true;
   }
 }
 </script>

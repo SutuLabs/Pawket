@@ -1418,7 +1418,7 @@
       },
       "label": {
         "encryptWithAddress": "加密地址",
-        "activatePrefix": "地址尚未激活，点此",
+        "activatePrefix": "地址尚未激活，点此完成任意一笔转账来",
         "activate": "激活",
         "message": "消息",
         "receiverAddress": "接收人地址"
@@ -1441,7 +1441,7 @@
     },
     "message": {
       "error": {
-        "CANNOT_FIND_ADDRESS": "解密地址与 Reciever Address 不一致。",
+        "CANNOT_FIND_ADDRESS": "解密地址与 Receiver Address 不一致。",
         "INVALID_MESSAGE": "无效消息。",
         "INVALID_ADDRESS": "无效的发送/接收地址。"
       }
