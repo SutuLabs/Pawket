@@ -1417,11 +1417,11 @@
         "multipleMessage": "多条消息"
       },
       "label": {
-        "encryptWithDID": "使用 DID 加密",
-        "selectDid": "选择一个 DID",
-        "publicKey": "公钥: {publicKey}",
-        "receiverPubKey": "接收人公钥",
-        "message": "消息"
+        "encryptWithAddress": "加密地址",
+        "activatePrefix": "地址尚未激活，点此完成任意一笔转账来",
+        "activate": "激活",
+        "message": "消息",
+        "receiverAddress": "接收人地址"
       },
       "button": {
         "encrypt": "加密"
@@ -1432,12 +1432,18 @@
     "ui": {
       "title": "消息解密",
       "label": {
-        "publicKey": "公钥",
         "message": "消息",
         "result": "结果"
       },
       "button": {
         "decrypt": "解密"
+      }
+    },
+    "message": {
+      "error": {
+        "CANNOT_FIND_ADDRESS": "解密地址与 Receiver Address 不一致。",
+        "INVALID_MESSAGE": "无效消息。",
+        "INVALID_ADDRESS": "无效的发送/接收地址。"
       }
     }
   },

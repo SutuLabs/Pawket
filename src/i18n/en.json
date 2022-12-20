@@ -1417,11 +1417,11 @@
         "multipleMessage": "Multiple Messages"
       },
       "label": {
-        "encryptWithDID": "Encrypt with DID",
-        "selectDid": "Select a DID",
-        "publicKey": "Public Key:{publicKey}",
-        "receiverPubKey": "Receiver Public Key",
-        "message": "Message"
+        "encryptWithAddress": "Encrypt with Address",
+        "activatePrefix": "The address hasn't been activated, click here to make any transfer to ",
+        "activate": "activate",
+        "message": "Message",
+        "receiverAddress": "Receiver Address"
       },
       "button": {
         "encrypt": "Encrypt"
@@ -1432,12 +1432,18 @@
     "ui": {
       "title": "Decrypt Message",
       "label": {
-        "publicKey": "Public Key",
         "message": "Message",
         "result": "Result"
       },
       "button": {
         "decrypt": "Decrypt"
+      }
+    },
+    "message": {
+      "error": {
+        "CANNOT_FIND_ADDRESS": "The decryption address does not match the Receiver Address.",
+        "INVALID_MESSAGE": "Invalid message.",
+        "INVALID_ADDRESS": "Invalid Sender / Receiver Address."
       }
     }
   },
