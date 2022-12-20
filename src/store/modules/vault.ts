@@ -22,7 +22,8 @@ export interface IVaultState {
   experiment: boolean;
   currency: CurrencyType;
   selectedAccount: number;
-  offline: boolean
+  offline: boolean;
+  disconnected: boolean;
 }
 
 const PasswordHashIteration = 6000;
@@ -43,6 +44,7 @@ store.registerModule<IVaultState>("vault", {
       currency: CurrencyType.USDT,
       selectedAccount: 0,
       offline: false,
+      disconnected: false
     };
   },
   actions: {
