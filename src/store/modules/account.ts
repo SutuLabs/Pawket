@@ -178,6 +178,7 @@ store.registerModule<IAccountState>("account", {
         }
         try {
           const records = await receive.getCoinRecords(requests, true, rpcUrl());
+          rootState.vault.disconnected = false;
           rootState.network.peekHeight = records.peekHeight;
           const activities = receive.convertActivities(requests, records);
           const tokenBalances = receive.getTokenBalance(requests, records);
@@ -188,6 +189,7 @@ store.registerModule<IAccountState>("account", {
           Vue.set(account, "activities", activities);
           Vue.set(account, "tokens", tokenBalances);
         } catch (error) {
+          if (String(error).match(/Failed to fetch/)) rootState.vault.disconnected = true;
           console.warn("error get account balance", error);
         }
       }

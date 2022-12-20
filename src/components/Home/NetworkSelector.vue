@@ -3,7 +3,9 @@
     <b-dropdown aria-role="list" :triggers="['click', 'hover']" :mobile-modal="false">
       <template #trigger>
         <button class="button border-less" aria-haspopup="true" aria-controls="dropdown-menu">
-          <span :class="getdotStyle(networkId)"> <i class="mdi mdi-brightness-1"></i> </span>
+          <span :class="getdotStyle(networkId)">
+            <i v-if="!offline" class="mdi mdi-brightness-1"></i> <i v-else class="mdi mdi-alert"></i
+          ></span>
           <span class="has-text-grey">{{ networkId }}</span>
           <span class="icon is-small"> <i class="mdi mdi-menu-down"></i> </span>
         </button>
@@ -59,13 +61,13 @@ export default class NetworkSelector extends Vue {
   }
 
   get offline(): boolean {
-    return store.state.vault.offline;
+    return store.state.vault.disconnected;
   }
 
   getdotStyle(networkId: string, greyOnOffline = true): string {
     let color = "has-text-grey";
     if (this.offline && greyOnOffline) {
-      color = "has-text-dark";
+      color = "has-text-danger";
     } else {
       if (networkId == "testnet10") color = "has-text-info";
       if (networkId == "mainnet") color = "has-text-primary";
