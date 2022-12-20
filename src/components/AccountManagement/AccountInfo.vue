@@ -192,7 +192,7 @@ export default class AccountDetail extends Vue {
 
   remove(): void {
     this.$buefy.dialog.confirm({
-      message: this.$tc("accountManagement.message.confirmation.removeAccount"),
+      message: this.$tc("accountManagement.message.confirmation.removeAccount", undefined, { accountName: this.account.name }),
       confirmText: this.$tc("accountManagement.message.confirmation.confirmText"),
       cancelText: this.$tc("accountManagement.message.confirmation.cancelText"),
       trapFocus: true,

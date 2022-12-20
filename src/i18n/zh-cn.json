@@ -1026,7 +1026,7 @@
     },
     "message": {
       "confirmation": {
-        "removeAccount": "确认删除该账户吗？",
+        "removeAccount": "确认删除「{accountName}」吗？",
         "cancelText": "取消",
         "confirmText": "确认"
       },
