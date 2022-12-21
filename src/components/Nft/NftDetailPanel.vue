@@ -444,7 +444,7 @@ export default class NftDetailPanel extends Vue {
   }
 
   getDidFromPuzzleHash(hash: string, name = false): string {
-    if (!hash) return "";
+    if (!hash || hash.length < 10) return "";
     const did = puzzle.getAddressFromPuzzleHash(hash, "did:chia:");
     if (name) {
       const idx = this.dids.findIndex((d) => d.did == did);
