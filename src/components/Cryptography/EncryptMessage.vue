@@ -253,23 +253,21 @@ export default class EncryptMessage extends Vue {
 
   async toEncrypt(): Promise<void> {
     if (this.csv) {
-      this.encrypt();
+      const inputs = csvToArray(this.csv);
+      this.encrypt(inputs);
     } else {
       if (!this.validate()) {
         (this.$refs.csv as Vue & { checkHtml5Validity: () => boolean }).checkHtml5Validity();
         return;
       }
-      this.csv = `${this.address},${this.signAddress},${this.message.replaceAll("\n", ";")}`;
-      this.encrypt();
+      this.encrypt([[this.address, this.signAddress, this.message]]);
     }
   }
 
-  async encrypt(): Promise<void> {
+  async encrypt(inputs: string[][]): Promise<void> {
     this.submitting = true;
     try {
       const ecdh = new EcdhHelper();
-      const inputs = csvToArray(this.csv);
-
       let result = "";
       const myAddress = this.account.firstAddress;
       if (!myAddress) {
