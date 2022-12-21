@@ -149,7 +149,8 @@ export default class NftPanel extends Vue {
       return [];
     }
     if (this.profile == "All") return this.account.nfts;
-    if (this.profile == "Unassigned") return this.account.nfts.filter((nft) => nft.analysis.didOwner == "");
+    if (this.profile == "Unassigned")
+      return this.account.nfts.filter((nft) => !nft.analysis.didOwner || nft.analysis.didOwner.length < 10);
     const did = this.dids.find((d) => d.name == this.selectedDid);
     if (did) {
       return this.account.nfts.filter((nft) => puzzle.getAddressFromPuzzleHash(nft.analysis.didOwner, "did:chia:") == did.did);
