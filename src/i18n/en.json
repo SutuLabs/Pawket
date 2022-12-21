@@ -1465,5 +1465,17 @@
         "update": "Update"
       }
     }
+  },
+  "scan": {
+    "ui": {
+      "title": "Scan",
+      "label": {
+        "scanQr": "Scan QR Code",
+        "publicKeyQr": "Public Key QR Code"
+      },
+      "hint": {
+        "scan": "Scan Address, PublicKey"
+      }
+    }
   }
 }

@@ -1465,5 +1465,17 @@
         "update": "更新"
       }
     }
+  },
+  "scan": {
+    "ui": {
+      "title": "扫描",
+      "label": {
+        "scanQr": "扫描二维码",
+        "publicKeyQr": "公钥二维码"
+      },
+      "hint": {
+        "scan": "扫描地址，公钥"
+      }
+    }
   }
 }
