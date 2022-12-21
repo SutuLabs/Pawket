@@ -25,6 +25,9 @@
             <b-tag v-if="idx == 0" rounded class="has-background-grey-lighter">{{
               $t("accountManagement.ui.label.default")
             }}</b-tag>
+            <b-tag v-if="idx != 0 && account.type == 'Serial'" rounded class="has-background-grey-lighter">{{
+              $t("accountManagement.ui.label.serial")
+            }}</b-tag>
             <b-tag v-if="account.type == 'Password'" rounded class="has-background-grey-lighter">{{
               $t("accountManagement.ui.label.passPhrase")
             }}</b-tag>

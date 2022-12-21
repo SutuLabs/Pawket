@@ -1,15 +1,15 @@
 <template>
   <div class="modal-card">
-    <top-bar :title="'Scan'" @close="close()" :showClose="true"></top-bar>
+    <top-bar :title="$t('scan.ui.title')" @close="close()" :showClose="true"></top-bar>
     <section class="modal-card-body">
       <b-tabs position="is-center" expanded destroy-on-hide>
-        <b-tab-item label="Scan QR Code" class="has-text-centered">
+        <b-tab-item :label="$t('scan.ui.label.scanQr')" class="has-text-centered">
           <div class="camera-frame my-3">
             <qrcode-stream v-if="cameraStatus != 'off'" :camera="cameraStatus" @decode="onDecode" @init="onInit" />
           </div>
-          <div class="has-text-grey is-size-6">Scan Address, PublicKey</div>
+          <div class="has-text-grey is-size-6">{{ $t("scan.ui.hint.scan") }}</div>
         </b-tab-item>
-        <b-tab-item label="Public Key QR Code" class="has-text-centered">
+        <b-tab-item :label="$t('scan.ui.label.publicKeyQr')" class="has-text-centered">
           <div class="my-3">
             <qrcode-vue :value="masterpubkey || account.key.publicKey" size="200"></qrcode-vue>
           </div>
@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Emit } from "vue-property-decorator";
+import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { AccountEntity, CustomCat } from "@/models/account";
 import QrcodeVue from "qrcode.vue";
@@ -60,6 +60,15 @@ export default class Scan extends Vue {
   @Emit("close")
   close(): void {
     return;
+  }
+
+  get path(): string {
+    return this.$route.path;
+  }
+
+  @Watch("path")
+  onPathChange(): void {
+    this.close();
   }
 
   mounted(): void {

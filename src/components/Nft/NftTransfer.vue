@@ -90,9 +90,10 @@ export default class NftTransfer extends Vue {
   @Prop() public account!: AccountEntity;
   @Prop() public nft!: NftDetail;
   @Prop() public inputAvailableCoins!: SymbolCoins;
+  @Prop() public inputAddress!: string;
+  @Prop({ default: true }) public addressEditable!: boolean;
   @Prop() public inputRequests!: TokenPuzzleDetail[];
 
-  public addressEditable = true;
   public submitting = false;
   public fee = 0;
   public address = "";
@@ -114,6 +115,7 @@ export default class NftTransfer extends Vue {
       this.availcoins = this.inputAvailableCoins;
       this.requests = this.inputRequests;
     }
+    if (this.inputAddress) this.address = this.inputAddress;
     this.loadCoins();
   }
 

@@ -1162,7 +1162,8 @@
       "dropdown": {
         "spaceScan": "在 Spacescan.io 查看",
         "mintGarden": "在 Mintgarden.io 查看",
-        "setAsProfilePic": "设置为账户头像"
+        "setAsProfilePic": "设置为账户头像",
+        "nftBurn": "烧毁NFT"
       },
       "profile": {
         "all": "全部 NFT",
@@ -1462,6 +1463,18 @@
       },
       "button": {
         "update": "更新"
+      }
+    }
+  },
+  "scan": {
+    "ui": {
+      "title": "扫描",
+      "label": {
+        "scanQr": "扫描二维码",
+        "publicKeyQr": "公钥二维码"
+      },
+      "hint": {
+        "scan": "扫描地址，公钥"
       }
     }
   }

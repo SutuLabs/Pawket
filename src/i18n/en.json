@@ -1162,7 +1162,8 @@
       "dropdown": {
         "spaceScan": "View on Spacescan.io",
         "mintGarden": "View on Mintgarden.io",
-        "setAsProfilePic": "Set as Account Avatar"
+        "setAsProfilePic": "Set as Account Avatar",
+        "nftBurn": "Burn NFT"
       },
       "profile": {
         "all": "All NFTs",
@@ -1462,6 +1463,18 @@
       },
       "button": {
         "update": "Update"
+      }
+    }
+  },
+  "scan": {
+    "ui": {
+      "title": "Scan",
+      "label": {
+        "scanQr": "Scan QR Code",
+        "publicKeyQr": "Public Key QR Code"
+      },
+      "hint": {
+        "scan": "Scan Address, PublicKey"
       }
     }
   }

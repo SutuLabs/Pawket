@@ -68,6 +68,12 @@
                           >{{ $t("nftDetail.ui.dropdown.setAsProfilePic") }}
                         </b-dropdown-item>
                       </a>
+                      <a class="has-text-dark" @click="nftBurn(nft)">
+                        <b-dropdown-item aria-role="listitem">
+                          <b-icon class="media-left" icon="trash-can-outline" size="is-small"></b-icon
+                          >{{ $t("nftDetail.ui.dropdown.nftBurn") }}
+                        </b-dropdown-item>
+                      </a>
                     </b-dropdown>
                   </span>
                 </p>
@@ -94,6 +100,7 @@ import { notifyPrimary } from "@/services/notification/notification";
 import puzzle from "@/services/crypto/puzzle";
 import { tc } from "@/i18n/i18n";
 import { shorten } from "@/filters/addressConversion";
+import NftTransfer from "./NftTransfer.vue";
 
 interface CollectionNfts {
   name: string;
@@ -237,6 +244,23 @@ export default class NftPanel extends Vue {
       console.warn(err);
     }
     this.refreshing = false;
+  }
+
+  nftBurn(nft: NftDetail): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: NftTransfer,
+      hasModalCard: true,
+      trapFocus: true,
+      fullScreen: isMobile(),
+      canCancel: [""],
+      props: {
+        nft: nft,
+        account: this.account,
+        inputAddress: "xch1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqm6ks6e8mvy",
+        addressEditable: false,
+      },
+    });
   }
 
   showDetail(nft: NftDetail): void {
