@@ -11,7 +11,7 @@
 
       <b-field v-if="decryptedMessage" :label="$t('decryptMessage.ui.label.result')">
         <template #message>
-          {{ decryptedMessage }}
+          <pre>{{ decryptedMessage }}</pre>
         </template>
       </b-field>
     </section>
