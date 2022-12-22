@@ -232,6 +232,7 @@ ${this.message}`;
       this.submitting = false;
     }
     this.submitting = false;
+    this.$emit("signResult", this.signResult);
   }
 
   copy(): void {
