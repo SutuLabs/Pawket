@@ -13,9 +13,34 @@
           :validation-message="$t('addByAddress.ui.message.nameRequired')"
         ></b-input>
       </b-field>
-      <b-field :type="errorMessage ? 'is-danger' : ''" :message="errorMessage">
+      <b-field :type="errorMessage ? 'is-danger' : ''">
         <template #label>
           {{ $t("addByAddress.ui.label.publicKey") }}
+        </template>
+        <template #message>
+          {{ errorMessage }}
+          <span>
+            <span v-if="!resolveAnswer"></span>
+            <span v-else-if="resolveAnswer.status == 'Failure'">
+              <b-icon type="is-warning" icon="alert-decagram-outline" size="is-small"></b-icon>
+              {{ $t("addressField.ui.resolve.fail") }}
+            </span>
+            <span v-else-if="resolveAnswer.status == 'NotFound'">
+              <b-icon type="is-danger" icon="alert-decagram" size="is-small"></b-icon>
+              {{ $t("addressField.ui.resolve.notFound") }}
+            </span>
+            <span v-else-if="resolveAnswer.status == 'Found'" class="is-flex">
+              <div class="ml-4">
+                <p class="mb-2">
+                  <b-tag type="is-info is-light">{{ publicKey }}</b-tag>
+                </p>
+                <p class="mb-2">
+                  {{ $t("addByAddress.ui.label.publicKey") }}
+                  <key-box icon="checkbox-multiple-blank-outline" :value="resolvedPublicKey" :showValue="true"></key-box>
+                </p>
+              </div>
+            </span>
+          </span>
         </template>
         <b-input
           ref="publicKey"
@@ -23,9 +48,10 @@
           type="text"
           required
           expanded
+          :loading="loading"
+          @input="reset()"
           :custom-class="isLegalAddress ? '' : 'is-danger'"
           :validation-message="$t('addByPublicKey.ui.message.publicKeyRequired')"
-          @input.native.enter="clearErrorMsg()"
         ></b-input>
         <p class="control">
           <b-button @click="scanQrCode()">
@@ -46,8 +72,14 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import store from "@/store/index";
 import TopBar from "@/components/Common/TopBar.vue";
 import { prefix0x } from "@/services/coin/condition";
+import {
+  ResolveFailureAnswer,
+  resolveName,
+  StandardResolveAnswer,
+} from "@/components/Common/AddressField.vue";
+import KeyBox from "@/components/Common/KeyBox.vue";
 
-@Component({ components: { TopBar } })
+@Component({ components: { TopBar, KeyBox } })
 export default class AddByPublicKey extends Vue {
   @Prop({ default: 24 }) public mnemonicLen!: number;
   @Prop() public title!: string;
@@ -57,20 +89,34 @@ export default class AddByPublicKey extends Vue {
   public errorMessage = "";
   public nameError = "";
   public submitting = false;
-  isLegalAddress = true;
+  public isLegalAddress = true;
+  public loading = false;
+  public resolveAnswer: StandardResolveAnswer | ResolveFailureAnswer | null = null;
 
   close(): void {
     this.$emit("close");
   }
 
-  clearErrorMsg(): void {
-    this.errorMessage = "";
-    this.isLegalAddress = true;
-  }
-
   validate(): void {
     (this.$refs.name as Vue & { checkHtml5Validity: () => boolean }).checkHtml5Validity();
     (this.$refs.publicKey as Vue & { checkHtml5Validity: () => boolean }).checkHtml5Validity();
+  }
+
+  async reset(): Promise<void> {
+    if (this.publicKey.match(/[a-zA-Z0-9-]{4,}\.xch$/)) {
+      this.loading = true;
+      this.resolveAnswer = await resolveName(this.publicKey, "publicKey");
+      this.loading = false;
+    } else {
+      this.errorMessage = "";
+      this.isLegalAddress = true;
+      this.resolveAnswer = null;
+    }
+  }
+
+  get resolvedPublicKey(): string {
+    if (this.resolveAnswer?.status == "Found" && this.resolveAnswer.data) return this.resolveAnswer.data;
+    return "";
   }
 
   async addAccount(): Promise<void> {
@@ -79,8 +125,10 @@ export default class AddByPublicKey extends Vue {
       return;
     }
 
+    let publicKey = this.publicKey;
+    if (this.resolvedPublicKey) publicKey = this.resolvedPublicKey;
     for (const acc of store.state.account.accounts) {
-      if (acc.type === "PublicKey" && acc.key.publicKey === prefix0x(this.publicKey)) {
+      if (acc.type === "PublicKey" && acc.key.publicKey === prefix0x(publicKey)) {
         this.isLegalAddress = false;
         this.errorMessage = this.$tc("addByAddress.ui.message.duplicatePublicKey");
         return;
@@ -92,7 +140,7 @@ export default class AddByPublicKey extends Vue {
     }
     this.submitting = true;
 
-    await store.dispatch("createAccountByPublicKey", { name: this.name, publicKey: prefix0x(this.publicKey) });
+    await store.dispatch("createAccountByPublicKey", { name: this.name, publicKey: prefix0x(publicKey) });
     this.close();
   }
 
