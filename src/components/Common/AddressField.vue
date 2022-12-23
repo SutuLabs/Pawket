@@ -318,7 +318,12 @@ export interface ResolveFailureAnswer {
   status: "NotFound" | "Failure";
 }
 
-export async function resolveName(name: string): Promise<StandardResolveAnswer | ResolveFailureAnswer> {
+export type resolveType = "address" | "did" | "publicKey" | "text";
+
+export async function resolveName(
+  name: string,
+  resType: resolveType = "address"
+): Promise<StandardResolveAnswer | ResolveFailureAnswer> {
   try {
     const resp = await fetch(rpcUrl() + "Name/resolve", {
       method: "POST",
@@ -327,7 +332,7 @@ export async function resolveName(name: string): Promise<StandardResolveAnswer |
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        queries: [{ name, type: "address" }],
+        queries: [{ name, type: resType }],
       }),
     });
     const qresp = (await resp.json()) as StandardResolveQueryResponse;
