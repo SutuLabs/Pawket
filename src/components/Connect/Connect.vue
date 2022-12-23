@@ -52,7 +52,7 @@
         </div>
         <footer class="is-fixed-bottom py-4 px-4 has-background-white-ter">
           <button class="button is-pulled-left" @click="close()">Cancel</button>
-          <button class="button is-pulled-right is-primary" @click="openApp()">Connect</button>
+          <b-button class="button is-pulled-right is-primary" @click="openApp()" :loading="loading">Connect</b-button>
         </footer>
       </div>
     </div>
@@ -69,7 +69,7 @@ import { demojo } from "@/filters/unitConversion";
 import { AccountEntity, CustomCat, OneTokenInfo } from "@/models/account";
 import encryption from "@/services/crypto/encryption";
 import puzzle from "@/services/crypto/puzzle";
-import receive from "@/services/crypto/receive";
+import receive, { DidDetail } from "@/services/crypto/receive";
 import utility from "@/services/crypto/utility";
 import store from "@/store";
 import { getAllCats } from "@/store/modules/account";
@@ -79,7 +79,10 @@ import { getEncryptKey, isPasswordCorrect } from "@/store/modules/vault";
 import { Component, Vue } from "vue-property-decorator";
 import TakeOffer from "../Offer/Take.vue";
 import Send from "../Send/Send.vue";
+import SignMessage from "../Cryptography/SignMessage.vue";
 type Stage = "Verify" | "Account" | "App";
+type SignWithDidData = { did: string; message: string };
+type MessageEventSource = Window | MessagePort | ServiceWorker;
 @Component
 export default class Connect extends Vue {
   public password = "";
@@ -87,10 +90,11 @@ export default class Connect extends Vue {
   public stage: Stage = "Verify";
   public selectedAcc = 0;
   public accounts: AccountEntity[] = [];
-  public origin = "";
   public app = "";
   public data = "";
   public initialNetworkId = "";
+  public event: MessageEvent | null = null;
+  public loading = false;
 
   async confirm(): Promise<void> {
     if (!(await isPasswordCorrect(this.password))) {
@@ -113,6 +117,18 @@ export default class Connect extends Vue {
 
   get account(): AccountEntity {
     return this.accounts[this.selectedAcc];
+  }
+
+  get origin(): string {
+    return this.event?.origin ?? "";
+  }
+
+  get source(): MessageEventSource | null {
+    return this.event?.source ?? null;
+  }
+
+  get dids(): DidDetail[] {
+    return this.account.dids ?? [];
   }
 
   get hasAccount(): boolean {
@@ -171,7 +187,9 @@ export default class Connect extends Vue {
   async getAccounts(): Promise<AccountEntity[]> {
     const salt = store.state.vault.salt;
     const encryptKey = salt ? await getEncryptKey(this.password) : this.password;
-    return JSON.parse((await encryption.decrypt(store.state.vault.encryptedAccounts, encryptKey)) || "[]");
+    const accounts = JSON.parse((await encryption.decrypt(store.state.vault.encryptedAccounts, encryptKey)) || "[]");
+    store.state.account.accounts = accounts;
+    return accounts;
   }
 
   setNetwork(networkId: string): boolean {
@@ -188,9 +206,10 @@ export default class Connect extends Vue {
 
   mounted(): void {
     window.addEventListener("message", (event: MessageEvent) => {
-      if (event.origin == window.location.origin) return;
-      this.origin = event.origin;
-      const data = JSON.parse(event.data);
+      Object.freeze(event);
+      this.event = event;
+      if (this.event.origin == window.location.origin) return;
+      const data = JSON.parse(this.event.data);
       this.app = data.app;
       this.initialNetworkId = store.state.network.networkId;
       if (!this.setNetwork(data.network)) {
@@ -213,6 +232,9 @@ export default class Connect extends Vue {
         break;
       case "send":
         this.send();
+        break;
+      case "sign-with-did":
+        this.signWithDid();
         break;
     }
   }
@@ -245,6 +267,52 @@ export default class Connect extends Vue {
       props: { account: this.account, inputAddress: this.data, addressEditable: false },
       events: { success: this.success },
     });
+  }
+
+  async signWithDid(): Promise<void> {
+    this.loading = true;
+    await store.dispatch("refreshDids", { idx: this.selectedAcc });
+    this.loading = false;
+    let data: SignWithDidData | null = null;
+    try {
+      data = JSON.parse(this.data) as SignWithDidData;
+    } catch (error) {
+      Notification.open({
+        message: "Failed To Sign: Invalid Input Data",
+        type: "is-danger",
+        position: "is-top",
+        duration: 5000,
+      });
+    }
+    const idx = this.dids.findIndex((did) => did.did == data?.did);
+    if (idx == -1) {
+      Notification.open({
+        message: "Failed To Sign: The Specified DID Does Not Exist in Current Account",
+        type: "is-danger",
+        position: "is-top",
+        duration: 5000,
+      });
+      return;
+    }
+    this.$buefy.modal.open({
+      parent: this,
+      component: SignMessage,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      fullScreen: true,
+      props: {
+        account: this.account,
+        did: this.dids[idx].analysis,
+        initMessage: data?.message,
+      },
+      events: { signResult: this.sendSignResult },
+    });
+  }
+
+  sendSignResult(res: string): void {
+    this.source?.postMessage(res, { targetOrigin: this.origin });
+    this.success();
   }
 
   success(): void {
