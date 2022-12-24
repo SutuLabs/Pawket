@@ -109,7 +109,7 @@ export async function getOfferSummary(bundle: UnsignedSpendBundle | SpendBundle)
           id,
           amount: getNumber(prefix0x(Bytes.from(cond.args[1] as Uint8Array).hex())),
           target: tgt,
-          cat_target: (assetId && wraptgt != tgt) ? wraptgt : undefined,
+          cat_target: (assetId) ? wraptgt : undefined,
           nft_target: nftId ? wraptgt : undefined,
           nft_detail,
           royalty: (nftId && royalty != -1) ? royalty : undefined,
