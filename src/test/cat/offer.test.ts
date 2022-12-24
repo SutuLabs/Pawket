@@ -230,6 +230,11 @@ test('Take Offer with extra XCH', async () => {
   await testOffer(offerText);
 });
 
+test('Take Offer with fee in original offer', async () => {
+  const offerText = "offer1qqzh3wcuu2rykcmqvpsx2gqqwc7hynr6hum6e0mnf72sn7uvvkpt68eyumkhelprk0adeg42nlelk2mpagr90qq0a37v8lc9m26elwxmwmwhq0drrjdhm3hdsl7dg6cn22lwvv8c6mmvt4rv7aaq5rytqhn7c7pr03mxsxmlv3mk47yjtj7fk40ahnk5tedm0k2s2k5tp603g7ctdmjg9trsvd2hdtrulpyx9p5uhauv0hzdk0jcg4l6lad0na2n0r2yaml2rlnxtjjd40vkdwxu9485j72ljemd0la9krwz8k6a84law4atr6uh9va8uqljglkq94nys5sudk0cmdk0gmdk0gldk0gldktgl0k07s94elqgt7cz7d7e7y77k5mp5mumrvvn2g0hfqkw87sq7wukkqlrwcr8dmdwj8264q32twn8ruxskylaklvrfvfv886c8nj83d04cphrkc9knskjnv8efxe6vv954fq2acyx7verhvxpr0aw8947hk2n7h7ddmr7ul6xqet2ygkjq7l82a4a8m7kxewe82rjugfnhxfw7fnnh74k70half04zqhr4fcdsypdezqqvjymanlsyskd8dczhp9sx2gfjdhlz7wptmdu5lhtm668lj5snctje2g48h48pyhpyk8479uthpdh9pm5ec2k5q40hlctynje7up9rav3tts5vnurvcuzcr43w7a87389ft3k0ucwx7ys6vze79zgdtltls8d73zetj5uzdthadzv39y94kg60mx4rfkh556hlj7k97ex0hhwlhhye88tr0lzlkq6anu40c83nfwwv6fm8udtetetlku9vg8raszzwaawkde6whr6tf0qnv5tgq37hlczgtxjezzacjv9gamhmvge2vhd9gqcakuwtdmzaclh8re5svvwelqrum8nk2wp0daxe6qfspq2s3h5ctxp4cmgv0eemv0wtknaw084vutl8cuawg95d0lc22gk823d5rcgnyzxmxu0ucxzyusxy39e3lr8scjwt2nntu0pwt8u5edu0epk28s788vlcan3vtet6hvm2wff8pt7c6wkvag99dhah7qx6jhc6vy30vk4h9ljlt4a0e9xd3vfmwrh203u8ylwnck290wxv4ch0ur0hl5f4z9w5aue240ttdmwmjuj809nums0yym6qhd98duexlzgvv2a9uf3nr29dtrjyvrx8s6zv3u7vr72tjnuuhewar82qdgs593hzcyzm86lhfntdzs9ua3t6xtqrlxla2uc94dr757fcpq9agrlkwwu3th4jyhdnmc9ncnd0xhkhhc7suc63kvcrz5ea94dxjm8wt0r40nd5w88khw25n8f26e0wvja6r7a63akh50a7ldm6tk656vxa8l9tvm0xunh2dl88u7vzaxqc8g8ule4vt50w3v3zmv4w86gvu27une32a5e4el37nch04mkva4n983m6gajwhahvty7kk3lrdarmdpsqnlg4lmqr83nud";
+  await testOffer(offerText);
+});
+
 async function testOffer(offerText: string): Promise<void> {
 
   const account = getTestAccount("55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f");
@@ -240,22 +245,21 @@ async function testOffer(offerText: string): Promise<void> {
   const change_hex = "0xb379a659194799dfa9171f7770f6935b1644fe48fd6fb596d5df0ac2abff2bda";
   const nonce = "c616dec58b3c9a898b167f4ea26adb27b464c7e28d2656eeb845a525b9f5786c";
 
-  const assetId = summary.requested.at(0)?.id;
+  const assetId = summary.requested.at(0)?.id || summary.offered.at(0)?.id;
 
   const assetName = "CAT";
   const tokenInfo = { [assetName]: { symbol: assetName, decimal: 3, unit: assetName, id: assetId, }, }
   const tokenPuzzles = await getAccountAddressDetails(account, [], tokenInfo, xchPrefix(), xchSymbol(), undefined, "cat_v2");
   const p2Puzzle = tokenPuzzles.at(0)?.puzzles.at(0)?.puzzle;
   if (!p2Puzzle) fail();
-  let availcoins: SymbolCoins = {};
+  const availcoins: SymbolCoins = {};
 
   if (assetId) {
     const { cat, parent } = await createFakeCatCoin(prefix0x(assetId), p2Puzzle);
     knownCoins.push(parent);
-    availcoins = { [assetName]: [cat] };
-  } else {
-    availcoins = { [xchSymbol()]: [await createFakeXchCoin(p2Puzzle)] };
+    availcoins[assetName] = [cat];
   }
+  availcoins[xchSymbol()] = [await createFakeXchCoin(p2Puzzle)];
 
   const cats = getCatNameDict(account, tokenInfo);
   expect(cats).toMatchSnapshot("cats dict");

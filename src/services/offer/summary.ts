@@ -114,6 +114,7 @@ export async function getOfferSummary(bundle: UnsignedSpendBundle | SpendBundle)
           nft_detail,
           royalty: (nftId && royalty != -1) ? royalty : undefined,
           nft_uri: imageUri,
+          coin,
         })
       }
     }
@@ -180,6 +181,7 @@ export interface OfferEntity {
   nft_detail?: NftDetail;
   royalty?: number;
   nft_uri?: string;
+  coin?: CoinSpend;
 }
 
 export interface OfferPlan {

@@ -85,14 +85,14 @@ export async function logBundle(spendBundle: SpendBundle): Promise<void> {
   console.log(JSON.stringify(spendBundle));
 }
 
-const EmptyParent = "0x0000000000000000000000000000000000000000000000000000000000000000";
+const SpecialParent = "0xba70b644f3cd240ac0c500782d53e633d8c1de21bd554c2ee1e190b24d3c8bb2";
 export async function createFakeXchCoin(
   inner_p2_puzzle: string,
   amount = 100000000000000n,// 100 XCH
 ): Promise<OriginCoin> {
   const puzzle_hash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(inner_p2_puzzle));
   return {
-    parent_coin_info: EmptyParent,
+    parent_coin_info: SpecialParent,
     amount,
     puzzle_hash,
   };
@@ -109,7 +109,7 @@ export async function createFakeCatCoin(
   const puzzle_reveal_hex = await puzzle.encodePuzzle(puzzle_reveal);
   const puzzle_hash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(puzzle_reveal));
   const parentCoin = {
-    parent_coin_info: EmptyParent,
+    parent_coin_info: SpecialParent,
     amount,
     puzzle_hash,
   };
@@ -122,7 +122,7 @@ export async function createFakeCatCoin(
   const parent = {
     parentCoinId: cat.parent_coin_info,
     amount: Number(amount),
-    parentParentCoinId: EmptyParent,
+    parentParentCoinId: SpecialParent,
     puzzleReveal: prefix0x(puzzle_reveal_hex),
   };
   return { cat, parent }
