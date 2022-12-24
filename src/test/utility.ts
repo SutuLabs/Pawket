@@ -86,6 +86,18 @@ export async function logBundle(spendBundle: SpendBundle): Promise<void> {
 }
 
 const EmptyParent = "0x0000000000000000000000000000000000000000000000000000000000000000";
+export async function createFakeXchCoin(
+  inner_p2_puzzle: string,
+  amount = 100000000000000n,// 100 XCH
+): Promise<OriginCoin> {
+  const puzzle_hash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(inner_p2_puzzle));
+  return {
+    parent_coin_info: EmptyParent,
+    amount,
+    puzzle_hash,
+  };
+}
+
 export async function createFakeCatCoin(
   assetId: Hex0x,
   inner_p2_puzzle: string,

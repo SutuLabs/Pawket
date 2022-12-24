@@ -1,5 +1,5 @@
 import { GetParentPuzzleResponse } from "@/models/api";
-import { createFakeCatCoin, getTestAccount } from "../utility";
+import { createFakeCatCoin, createFakeXchCoin, getTestAccount } from "../utility";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
 import { getOfferSummary, OfferEntity, OfferPlan } from "@/services/offer/summary";
 import { combineOfferSpendBundle, generateOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
@@ -227,6 +227,10 @@ test('Take Offer CAT For Xch', async () => {
 
 test('Take Offer with extra XCH', async () => {
   const offerText = "offer1qqzh3wcuu2rykcmqvpsxvgqq8e55mct6w4chdkauhaetm8svr28uavw0j9cn8v9udxaljqe8clsk62mqatswm4x3mflmfasl4h75w6ll68d8ld8klul4pdflhpc97c97aaeu9w7kgm3k6uer5vnwg85fv4wp7cp7wakkphxwczhd6ddjtf24qedh55nzsh8fnh4h2jwdwpdad95a4uhj04ma9lkm4hx3drfp82mjhp0szkj4pj4pvpv395yp5ndgxdpxg94gymzq3at64k8hql2kh24j44a58ncepxldyn8f6nawvet3sle65qyafd7qwzg4nxj77c3clk4f4lh4m4wm5al7jq2leraf7luyjjp7lf094qhqe77lejl9pqggw5sph0uxcj9znxd3tlctw7es0a9dra6rkld2hnallwud0e6gupwa2uh0cf3nytc0nfjwm8q7lnrfhm7kj50vvpm0maktqhmsa8zgu3n8yw4jwk6kdspnv5mk89hhwsrd4vxw0atcvzpnwt8u76nurz737lq0ep02qkmr7rjd9wwzexqnah70lw4v0wavhgnrp5gke5a607lxk45cesejz600565jkdxqtgdjpz06l7p9mrcuj00w7r0talw9xewz8e3ejc80q7yhjwcllly2c04h4r4w0l87etlk6rqh006rgxyqrfk0utcgma6l3e95l04pht58eaep97lthtmggwhnsm0c5ckzjlf0gn87l9kr2q92ktlm7cyaa5wdx4zrg8ls8p5t8lnrzla6lnwx9k7plxtnh4lamav8e880wkl3zwy5rzp0hljyhhv07sttwt6ut6xl5ye0ha3u8j4a9h9ydtj77ulavmegkrc0370dlxk423vj3mrsa98ma8fs702tq9mkwexvh968wfata88wlpu37v9kc57u5h5vknvfaj4ls2rhnhdfm0jh87e89vjfc9hv83c6vh8f780yj8ulpw962tuhn4ajdm707t3zjra8fvd9ljej4pl6hzs5mwm079asd40jt5a7xdqm9cwrwyp5a726llem57n07jtxaku7dr7h77ahl77ujcqlf4a2qahva0zym2e9l77k2nmgzz0p2a055z23q9clmwtekwk34j477ht4ttxlh65800fkdncmkhth50hh97twqju2khd9fa862d9maluwrx89kx9rfvle4tr6jjawswtt0ze79eag5l0mwt66wlj98pvw9nnmxmmt3u0syqrl0e9cqenx3l4";
+  await testOffer(offerText);
+});
+
+async function testOffer(offerText: string): Promise<void> {
 
   const account = getTestAccount("55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f");
 
@@ -235,19 +239,23 @@ test('Take Offer with extra XCH', async () => {
   expect(summary).toMatchSnapshot("summary");
   const change_hex = "0xb379a659194799dfa9171f7770f6935b1644fe48fd6fb596d5df0ac2abff2bda";
   const nonce = "c616dec58b3c9a898b167f4ea26adb27b464c7e28d2656eeb845a525b9f5786c";
+
   const assetId = summary.requested.at(0)?.id;
-  if (!assetId) fail();
 
   const assetName = "CAT";
   const tokenInfo = { [assetName]: { symbol: assetName, decimal: 3, unit: assetName, id: assetId, }, }
   const tokenPuzzles = await getAccountAddressDetails(account, [], tokenInfo, xchPrefix(), xchSymbol(), undefined, "cat_v2");
-  // const availcoins = await coinHandler.getAvailableCoins(tokenPuzzles, coinHandler.getTokenNames(account));
   const p2Puzzle = tokenPuzzles.at(0)?.puzzles.at(0)?.puzzle;
   if (!p2Puzzle) fail();
-  const { cat, parent } = await createFakeCatCoin(prefix0x(assetId), p2Puzzle);
-  knownCoins.push(parent);
+  let availcoins: SymbolCoins = {};
 
-  const availcoins: SymbolCoins = { [assetName]: [cat] };
+  if (assetId) {
+    const { cat, parent } = await createFakeCatCoin(prefix0x(assetId), p2Puzzle);
+    knownCoins.push(parent);
+    availcoins = { [assetName]: [cat] };
+  } else {
+    availcoins = { [xchSymbol()]: [await createFakeXchCoin(p2Puzzle)] };
+  }
 
   const cats = getCatNameDict(account, tokenInfo);
   expect(cats).toMatchSnapshot("cats dict");
@@ -261,7 +269,7 @@ test('Take Offer with extra XCH', async () => {
   const combined = await combineOfferSpendBundle([makerBundle, takerBundle]);
   await assertSpendbundle(combined, net.chainId);
   expect(combined).toMatchSnapshot("bundle");
-});
+}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getCatNameDict(_account?: AccountEntity, ti: TokenInfo = tokenInfo()): { [id: string]: string } {
