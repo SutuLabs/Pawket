@@ -86,6 +86,9 @@ export function getCoinName0x(coin: CompatibleCoin): Hex0x {
   return prefix0x(getCoinNameHex(coin).hex());
 }
 
+export function getCoinName(coin: CompatibleCoin): string;
+export function getCoinName(coin: undefined): undefined;
+export function getCoinName(coin: CompatibleCoin | undefined): string | undefined;
 export function getCoinName(coin: CompatibleCoin | undefined): string | undefined {
   if (!coin) return coin;
   return getCoinNameHex(coin).hex();
