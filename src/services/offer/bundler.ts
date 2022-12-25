@@ -11,7 +11,7 @@ import { getOfferSummary, OfferEntity, OfferPlan, OfferSummary } from "./summary
 import { GetParentPuzzleResponse } from "@/models/api";
 import { assemble, curry, disassemble } from "clvm_tools";
 import { modshash, modshex0x, modsprog } from "../coin/mods";
-import { getCoinName0x, NetworkContext } from "../coin/coinUtility";
+import { getCoinName, getCoinName0x, NetworkContext } from "../coin/coinUtility";
 import { Instance } from "../util/instance";
 import { NftCoinAnalysisResult } from "@/models/nft";
 import { generateTransferNftBundle, getTransferNftPuzzle, getTransferNftSolution } from "../coin/nft";
@@ -223,13 +223,24 @@ export async function combineOfferSpendBundle(spendbundles: SpendBundle[]): Prom
 
     if (summary.requested.length != 1) throw new Error("unexpected length of request");
     const req = summary.requested[0];
-    const reqcs = spendbundles[i].coin_spends
-      .filter(_ => _.coin.parent_coin_info == "0x0000000000000000000000000000000000000000000000000000000000000000")[0];
-    const offcs = spendbundles[(i + 1) % summaries.length].coin_spends
-      .filter(_ => _.coin.puzzle_hash != "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79"
-        && _.coin.parent_coin_info != "0x0000000000000000000000000000000000000000000000000000000000000000")
-      .slice(-1)[0];
-    const sumoff = summaries[(i + 1) % summaries.length].offered[0];
+    const reqcs = req.coin;
+    if (!reqcs?.coin) throw new Error("unknown request coin");
+    const offcss = summaries[(i + 1) % summaries.length].offered;
+    if (!(offcss.length == 1
+      || (offcss.length > 1 && offcss.every(_ => getCoinName(_.coin?.coin) == getCoinName(offcss[0].coin?.coin)))))
+      throw new Error("unexpected length of offer coin spends");
+    const offcs = offcss[0].coin;
+    if (!offcs?.coin) throw new Error("unknown offer coin");
+
+    let cat_target: Hex0x | undefined = undefined;
+
+    if (req.id) {
+      const sumoffs = summaries[(i + 1) % summaries.length].offered;
+      if (!(sumoffs.length == 1
+        || (sumoffs.length > 1 && sumoffs.every(_ => _.cat_target == sumoffs[0].cat_target))))
+        throw new Error("unexpected length of summary offers");
+      cat_target = sumoffs[0].cat_target;
+    }
     reqcs.coin.parent_coin_info = getCoinName0x(offcs.coin);
     reqcs.coin.amount = req.amount;
 
@@ -249,11 +260,11 @@ export async function combineOfferSpendBundle(spendbundles: SpendBundle[]): Prom
       reqcs.solution = prefix0x(await puzzle.encodePuzzle(solution));
     } else if (req.id) { // generate cat solution
       const inner_puzzle = await puzzle.disassemblePuzzle(reqcs.solution);
-      if (!sumoff.cat_target) throw new Error("cat target should be parsed");
+      if (!cat_target) throw new Error("cat target should be parsed");
       const offnewcoin: OriginCoin = {
         parent_coin_info: getCoinName0x(offcs.coin),
         amount: req.amount,
-        puzzle_hash: sumoff.cat_target,
+        puzzle_hash: cat_target,
       };
 
       const localPuzzleApiCall = async function (): Promise<GetParentPuzzleResponse> {

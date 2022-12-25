@@ -10,7 +10,7 @@
           <li class="pt-1" v-for="(ent, idx) in arr" :key="idx">
             <b-taglist attached>
               <b-tag v-if="ent.cat_target" type="is-info" :title="ent.id">CAT {{ ent.id.slice(0, 7) + "..." }}</b-tag>
-              <b-tag v-if="ent.nft_target" type="is-info" :title="getNftName(ent.id)">{{
+              <b-tag v-else-if="ent.nft_target" type="is-info" :title="getNftName(ent.id)">{{
                 getNftName(ent.id).slice(0, 20) + "..."
               }}</b-tag>
               <b-tag v-else type="is-info">{{ xchSymbol }}</b-tag>
