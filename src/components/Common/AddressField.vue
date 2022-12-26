@@ -13,7 +13,7 @@
     </template>
     <template #message>
       <span>
-        <span v-if="!resolveAnswer"></span>
+        <span v-if="!resolveAnswer || resolveAnswer.name != address"></span>
         <span v-else-if="resolveAnswer.status == 'Failure'">
           <b-icon type="is-warning" icon="alert-decagram-outline" size="is-small"></b-icon>
           {{ $t("addressField.ui.resolve.fail") }}
@@ -56,13 +56,7 @@
         </span>
       </span>
     </template>
-    <b-input
-      v-model="address"
-      @input="reset()"
-      expanded
-      :disabled="!addressEditable"
-      :custom-class="validAddress ? '' : 'is-danger'"
-    ></b-input>
+    <b-input v-model="address" expanded :disabled="!addressEditable" :custom-class="validAddress ? '' : 'is-danger'"></b-input>
     <p class="control">
       <b-tooltip :label="$t('addressField.ui.tooltip.addressBook')">
         <b-button @click="openAddressBook()" :disabled="!addressEditable">
@@ -106,6 +100,7 @@ export default class AddressField extends Vue {
   public resolveAnswer: StandardResolveAnswer | ResolveFailureAnswer | null = null;
   public proofCoin: CoinSpend | null = null;
   public onChainConfirmationStatus: "None" | "Confirming" | "Confirmed" | "Wrong" = "None";
+  public inputing = false;
 
   mounted(): void {
     if (this.inputAddress) {
@@ -128,6 +123,13 @@ export default class AddressField extends Vue {
   @Watch("address")
   onAddressChanged(): void {
     this.$emit("updateAddress", this.address);
+    if (!this.inputing) {
+      setTimeout(() => {
+        this.reset();
+        this.inputing = false;
+      }, 1000);
+    }
+    this.inputing = true;
   }
 
   @Watch("contactName")
@@ -315,6 +317,7 @@ export interface StandardResolveAnswer {
   status: "Found";
 }
 export interface ResolveFailureAnswer {
+  name: string;
   status: "NotFound" | "Failure";
 }
 
@@ -338,10 +341,10 @@ export async function resolveName(
     const qresp = (await resp.json()) as StandardResolveQueryResponse;
     const answer = qresp.answers?.at(0);
     if (answer) answer.status = "Found";
-    return answer || { status: "NotFound" };
+    return answer || { status: "NotFound", name: name };
   } catch (error) {
     console.warn(error);
-    return { status: "Failure" };
+    return { status: "Failure", name: name };
   }
 }
 </script>
