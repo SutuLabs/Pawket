@@ -210,6 +210,7 @@ export default class EncryptMessage extends Vue {
     this.file = null;
     this.dragfile = [];
     this.signAddress = "";
+    this.address = "";
     this.message = "";
   }
 
