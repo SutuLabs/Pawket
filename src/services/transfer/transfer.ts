@@ -14,8 +14,8 @@ class Transfer {
     availcoins: SymbolCoins,
     targets: TransferTarget[],
     changeAddress: Hex0x,
-    fee: bigint,
-    tokenSymbol: string,
+    fee: bigint | undefined = undefined,
+    tokenSymbol: string | undefined = undefined,
   ): SpendPlan {
     const plan: SpendPlan = {};
     for (const symbol in availcoins) {
@@ -24,7 +24,7 @@ class Transfer {
       const coins = availcoins[symbol];
       const tgts = targets.filter(_ => _.symbol == symbol);
 
-      const outgoingExtra = (symbol == tokenSymbol) ? fee : 0n;
+      const outgoingExtra = ((symbol == tokenSymbol) ? fee : 0n) ?? 0n;
       const outgoingTotal = tgts.reduce((acc, cur) => acc + cur.amount, 0n) + outgoingExtra;
       const incomingCoins = this.findCoins(coins, outgoingTotal);
 
