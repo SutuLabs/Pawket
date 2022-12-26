@@ -1427,6 +1427,11 @@
       "button": {
         "encrypt": "Encrypt"
       }
+    },
+    "message": {
+      "error": {
+        "INACTIVE_ADDRESS": "The receiver address has not been activated."
+      }
     }
   },
   "decryptMessage": {

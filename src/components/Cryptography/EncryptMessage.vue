@@ -299,14 +299,22 @@ Encrypted Message: ${enc}
       }
       this.result = result;
     } catch (error) {
-      Notification.open({
-        message: this.$tc("batchSend.ui.messages.failedToSign") + error,
-        type: "is-danger",
-        autoClose: false,
-      });
-      console.warn(error);
-      this.reset();
+      const errMsg = String(error);
+      if (errMsg.match(/cannot get puzzle from coin/)) {
+        Notification.open({
+          message: this.$tc("encryptMessage.message.error.INACTIVE_ADDRESS"),
+          type: "is-danger",
+          autoClose: false,
+        });
+      } else {
+        Notification.open({
+          message: this.$tc("batchSend.ui.messages.failedToSign") + error,
+          type: "is-danger",
+          autoClose: false,
+        });
+      }
       this.submitting = false;
+      return;
     }
     this.reset();
     this.submitting = false;
