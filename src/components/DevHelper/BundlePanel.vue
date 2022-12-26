@@ -151,6 +151,7 @@
           <b-button tag="a" size="is-small" @click="check()"> Check </b-button>
         </template>
         <template #message>
+          <h3 v-if="mgraphGenerated">Fee: {{ fee }}</h3>
           <AnnouncementList
             :annoAsserted="puzzleAnnoAsserted"
             :annoCreates="puzzleAnnoCreates"
@@ -289,6 +290,7 @@ export default class BundlePanel extends Vue {
   public coinMods: { coinIndex: number; mods: string }[] = [];
   public aggSigMessages: AggSigMessage[] = [];
   public createdCoins: { [key: string]: CoinIndexInfo } = {};
+  public fee = 0n;
   public sigVerified: "None" | "Verified" | "Failed" = "None";
   public mgraphGenerated = false;
   public mermaidSvg = "";
@@ -364,6 +366,7 @@ export default class BundlePanel extends Vue {
     this.createdCoins = {};
     this.coinMods = [];
     this.sigVerified = "None";
+    this.fee = 0n;
     this.mgraphGenerated = false;
 
     await this.changeCoin(0);
@@ -506,6 +509,7 @@ export default class BundlePanel extends Vue {
     Vue.set(this, "coinMods", result.coinMods);
     Vue.set(this, "sigVerified", result.sigVerified);
     Vue.set(this, "createdCoins", result.createdCoins);
+    Vue.set(this, "fee", result.fee);
 
     for (let i = 0; i < this.coinAvailability.length; i++) {
       const ca = this.coinAvailability[i];
