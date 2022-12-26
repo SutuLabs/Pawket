@@ -1,5 +1,5 @@
 import { GetParentPuzzleResponse } from "@/models/api";
-import { createFakeCatCoin, createFakeXchCoin, getTestAccount } from "../utility";
+import { createFakeCatCoin, createFakeXchCoin, getTestAccount, logBundle } from "../utility";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
 import { getOfferSummary, OfferEntity, OfferPlan } from "@/services/offer/summary";
 import { combineOfferSpendBundle, generateOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
@@ -10,7 +10,8 @@ import { AccountEntity, PersistentCustomCat, TokenInfo } from "@/models/account"
 import { prefix0x } from "@/services/coin/condition";
 import { NetworkContext } from "@/services/coin/coinUtility";
 import { assertSpendbundle } from "@/services/spendbundle/validator";
-import { signSpendBundle } from "@/services/spendbundle";
+import { combineSpendBundle, signSpendBundle } from "@/services/spendbundle";
+import { constructPureFeeSpendBundle } from "@/services/coin/nft";
 
 function xchPrefix() { return "xch"; }
 function xchSymbol() { return "XCH"; }
@@ -225,17 +226,30 @@ test('Take Offer CAT For Xch', async () => {
   expect(combined).toMatchSnapshot("bundle");
 });
 
-test('Take Offer with multiple XCH', async () => {
+test.each([
+  0n, 5n
+])('Take Offer with multiple XCH with fee %p included', async (fee: bigint) => {
   const offerText = "offer1qqzh3wcuu2rykcmqvpsxvgqq8e55mct6w4chdkauhaetm8svr28uavw0j9cn8v9udxaljqe8clsk62mqatswm4x3mflmfasl4h75w6ll68d8ld8klul4pdflhpc97c97aaeu9w7kgm3k6uer5vnwg85fv4wp7cp7wakkphxwczhd6ddjtf24qedh55nzsh8fnh4h2jwdwpdad95a4uhj04ma9lkm4hx3drfp82mjhp0szkj4pj4pvpv395yp5ndgxdpxg94gymzq3at64k8hql2kh24j44a58ncepxldyn8f6nawvet3sle65qyafd7qwzg4nxj77c3clk4f4lh4m4wm5al7jq2leraf7luyjjp7lf094qhqe77lejl9pqggw5sph0uxcj9znxd3tlctw7es0a9dra6rkld2hnallwud0e6gupwa2uh0cf3nytc0nfjwm8q7lnrfhm7kj50vvpm0maktqhmsa8zgu3n8yw4jwk6kdspnv5mk89hhwsrd4vxw0atcvzpnwt8u76nurz737lq0ep02qkmr7rjd9wwzexqnah70lw4v0wavhgnrp5gke5a607lxk45cesejz600565jkdxqtgdjpz06l7p9mrcuj00w7r0talw9xewz8e3ejc80q7yhjwcllly2c04h4r4w0l87etlk6rqh006rgxyqrfk0utcgma6l3e95l04pht58eaep97lthtmggwhnsm0c5ckzjlf0gn87l9kr2q92ktlm7cyaa5wdx4zrg8ls8p5t8lnrzla6lnwx9k7plxtnh4lamav8e880wkl3zwy5rzp0hljyhhv07sttwt6ut6xl5ye0ha3u8j4a9h9ydtj77ulavmegkrc0370dlxk423vj3mrsa98ma8fs702tq9mkwexvh968wfata88wlpu37v9kc57u5h5vknvfaj4ls2rhnhdfm0jh87e89vjfc9hv83c6vh8f780yj8ulpw962tuhn4ajdm707t3zjra8fvd9ljej4pl6hzs5mwm079asd40jt5a7xdqm9cwrwyp5a726llem57n07jtxaku7dr7h77ahl77ujcqlf4a2qahva0zym2e9l77k2nmgzz0p2a055z23q9clmwtekwk34j477ht4ttxlh65800fkdncmkhth50hh97twqju2khd9fa862d9maluwrx89kx9rfvle4tr6jjawswtt0ze79eag5l0mwt66wlj98pvw9nnmxmmt3u0syqrl0e9cqenx3l4";
-  await testOffer(offerText, 0n);
+  await testOffer(offerText, fee);
+});
+
+test.each([
+  0n,
+  // 5n // TODO: the fee should be calculated when adversary already included the fee
+])('Take Offer with fee in original offer with fee %p included', async (fee: bigint) => {
+  const offerText = "offer1qqzh3wcuu2rykcmqvpsx2gqqwc7hynr6hum6e0mnf72sn7uvvkpt68eyumkhelprk0adeg42nlelk2mpagr90qq0a37v8lc9m26elwxmwmwhq0drrjdhm3hdsl7dg6cn22lwvv8c6mmvt4rv7aaq5rytqhn7c7pr03mxsxmlv3mk47yjtj7fk40ahnk5tedm0k2s2k5tp603g7ctdmjg9trsvd2hdtrulpyx9p5uhauv0hzdk0jcg4l6lad0na2n0r2yaml2rlnxtjjd40vkdwxu9485j72ljemd0la9krwz8k6a84law4atr6uh9va8uqljglkq94nys5sudk0cmdk0gmdk0gldk0gldktgl0k07s94elqgt7cz7d7e7y77k5mp5mumrvvn2g0hfqkw87sq7wukkqlrwcr8dmdwj8264q32twn8ruxskylaklvrfvfv886c8nj83d04cphrkc9knskjnv8efxe6vv954fq2acyx7verhvxpr0aw8947hk2n7h7ddmr7ul6xqet2ygkjq7l82a4a8m7kxewe82rjugfnhxfw7fnnh74k70half04zqhr4fcdsypdezqqvjymanlsyskd8dczhp9sx2gfjdhlz7wptmdu5lhtm668lj5snctje2g48h48pyhpyk8479uthpdh9pm5ec2k5q40hlctynje7up9rav3tts5vnurvcuzcr43w7a87389ft3k0ucwx7ys6vze79zgdtltls8d73zetj5uzdthadzv39y94kg60mx4rfkh556hlj7k97ex0hhwlhhye88tr0lzlkq6anu40c83nfwwv6fm8udtetetlku9vg8raszzwaawkde6whr6tf0qnv5tgq37hlczgtxjezzacjv9gamhmvge2vhd9gqcakuwtdmzaclh8re5svvwelqrum8nk2wp0daxe6qfspq2s3h5ctxp4cmgv0eemv0wtknaw084vutl8cuawg95d0lc22gk823d5rcgnyzxmxu0ucxzyusxy39e3lr8scjwt2nntu0pwt8u5edu0epk28s788vlcan3vtet6hvm2wff8pt7c6wkvag99dhah7qx6jhc6vy30vk4h9ljlt4a0e9xd3vfmwrh203u8ylwnck290wxv4ch0ur0hl5f4z9w5aue240ttdmwmjuj809nums0yym6qhd98duexlzgvv2a9uf3nr29dtrjyvrx8s6zv3u7vr72tjnuuhewar82qdgs593hzcyzm86lhfntdzs9ua3t6xtqrlxla2uc94dr757fcpq9agrlkwwu3th4jyhdnmc9ncnd0xhkhhc7suc63kvcrz5ea94dxjm8wt0r40nd5w88khw25n8f26e0wvja6r7a63akh50a7ldm6tk656vxa8l9tvm0xunh2dl88u7vzaxqc8g8ule4vt50w3v3zmv4w86gvu27une32a5e4el37nch04mkva4n983m6gajwhahvty7kk3lrdarmdpsqnlg4lmqr83nud";
+  await testOffer(offerText, fee);
+});
+
+test('Take offer with fee included', async () => {
+  const offerText = "offer1qqz83wcsltt6wcmqvpsxygqq0c4y6w67u8n8stlljf3dfcsfl5hulnrqd87pgl7xu9s7mzhjrjh76w3swhczdkrgc5m94vvd2ek2x9wmdrznvk43l506pzsd22uz7vxl7uu7zhtt50cmdwv32yfh9r7yx2hq7vylhvmrqmn8vrt7uxje45423v3up8gh0330nhfl885c9lg6u4v7c096zdjp5hsuncg2l9mau3n46tvap2szt2mcmns4svc5sekp88k73ucwfg8jm432k0welw8dxj4uft3ln2lvezkd550ca98nrc4qqe4mqhrzd40mt7elspffhx9fu7mu783dhhgv5g08llprg098m8zy0pm604yzsu5ss2crtxvdl7r4h0gphjd0hkfstknk4j9xn6wu7l2e9w66ym4c2e2fcta8nvuvpzvszm48kpyatgf52kr0xj3nkrq3hx508fwwmv6vtrm0xkwjl2f7hzau33az0xc7kregkus42xwpt6tn2p8ktxjx6vx3xf6ha70mxd47asxlspwkmgqyn5llzlk84eyc73lx7krlu70z5ylkr89sg7elfrxdh70cgan0tw2925l70a6hlehkvmzm6qq9vj3s42d4jfklqv4ttlal5r6rnku8ns7lyrez26740whhha8hlkl77lvs7d8h47w0ve8x4tlk76kac8smfazsnmz2nx5vnde45rmfdwr5llcskf68k5lm93yext0d0k9uxvjrrqlajw90lz6unluu3t0c9x9ata075vvlnpj8hje49cj0rs9e9mv66rzvfualejl7n6uzp2mav63unmwncukjvxcu8dmw45z2h645vm2pmjxp6dcp9ek9w4ggdva4m";
   await testOffer(offerText, 5n);
 });
 
-test('Take Offer with fee in original offer', async () => {
-  const offerText = "offer1qqzh3wcuu2rykcmqvpsx2gqqwc7hynr6hum6e0mnf72sn7uvvkpt68eyumkhelprk0adeg42nlelk2mpagr90qq0a37v8lc9m26elwxmwmwhq0drrjdhm3hdsl7dg6cn22lwvv8c6mmvt4rv7aaq5rytqhn7c7pr03mxsxmlv3mk47yjtj7fk40ahnk5tedm0k2s2k5tp603g7ctdmjg9trsvd2hdtrulpyx9p5uhauv0hzdk0jcg4l6lad0na2n0r2yaml2rlnxtjjd40vkdwxu9485j72ljemd0la9krwz8k6a84law4atr6uh9va8uqljglkq94nys5sudk0cmdk0gmdk0gldk0gldktgl0k07s94elqgt7cz7d7e7y77k5mp5mumrvvn2g0hfqkw87sq7wukkqlrwcr8dmdwj8264q32twn8ruxskylaklvrfvfv886c8nj83d04cphrkc9knskjnv8efxe6vv954fq2acyx7verhvxpr0aw8947hk2n7h7ddmr7ul6xqet2ygkjq7l82a4a8m7kxewe82rjugfnhxfw7fnnh74k70half04zqhr4fcdsypdezqqvjymanlsyskd8dczhp9sx2gfjdhlz7wptmdu5lhtm668lj5snctje2g48h48pyhpyk8479uthpdh9pm5ec2k5q40hlctynje7up9rav3tts5vnurvcuzcr43w7a87389ft3k0ucwx7ys6vze79zgdtltls8d73zetj5uzdthadzv39y94kg60mx4rfkh556hlj7k97ex0hhwlhhye88tr0lzlkq6anu40c83nfwwv6fm8udtetetlku9vg8raszzwaawkde6whr6tf0qnv5tgq37hlczgtxjezzacjv9gamhmvge2vhd9gqcakuwtdmzaclh8re5svvwelqrum8nk2wp0daxe6qfspq2s3h5ctxp4cmgv0eemv0wtknaw084vutl8cuawg95d0lc22gk823d5rcgnyzxmxu0ucxzyusxy39e3lr8scjwt2nntu0pwt8u5edu0epk28s788vlcan3vtet6hvm2wff8pt7c6wkvag99dhah7qx6jhc6vy30vk4h9ljlt4a0e9xd3vfmwrh203u8ylwnck290wxv4ch0ur0hl5f4z9w5aue240ttdmwmjuj809nums0yym6qhd98duexlzgvv2a9uf3nr29dtrjyvrx8s6zv3u7vr72tjnuuhewar82qdgs593hzcyzm86lhfntdzs9ua3t6xtqrlxla2uc94dr757fcpq9agrlkwwu3th4jyhdnmc9ncnd0xhkhhc7suc63kvcrz5ea94dxjm8wt0r40nd5w88khw25n8f26e0wvja6r7a63akh50a7ldm6tk656vxa8l9tvm0xunh2dl88u7vzaxqc8g8ule4vt50w3v3zmv4w86gvu27une32a5e4el37nch04mkva4n983m6gajwhahvty7kk3lrdarmdpsqnlg4lmqr83nud";
-  await testOffer(offerText, 0n);
-  await testOffer(offerText, 5n);
-});
+// test.each([
+//   0n, 5n
+// ])('Take offer by CAT-CAT with fee %p included', async (fee: bigint) => {
+// });
 
 async function testOffer(offerText: string, fee = 0n): Promise<void> {
 
@@ -267,13 +281,19 @@ async function testOffer(offerText: string, fee = 0n): Promise<void> {
   expect(cats).toMatchSnapshot("cats dict");
   const revSummary = getReversePlan(summary, change_hex, cats);
   expect(revSummary).toMatchSnapshot("reverse summary");
-  const offplan = await generateOfferPlan(revSummary.offered, change_hex, availcoins, fee, xchSymbol());
+  const offplan = await generateOfferPlan(revSummary.offered, change_hex, availcoins, 0n, xchSymbol());
   expect(offplan).toMatchSnapshot("offer plan");
-  const utakerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, net, nonce, "cat_v2");
+
+  const feeBundle = fee > 0n
+    ? await constructPureFeeSpendBundle(change_hex, fee, availcoins, tokenPuzzles, net, false)
+    : undefined;
+
+  const utakerOfferBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, net, nonce, "cat_v2");
+  const utakerBundle = combineSpendBundle(utakerOfferBundle, feeBundle);
   const takerBundle = await signSpendBundle(utakerBundle, tokenPuzzles, net.chainId);
   expect(takerBundle).toMatchSnapshot("taker bundle");
   const combined = await combineOfferSpendBundle([makerBundle, takerBundle]);
-  await assertSpendbundle(combined, net.chainId);
+  await assertSpendbundle(combined, net.chainId, fee);
   expect(combined).toMatchSnapshot("bundle");
 }
 

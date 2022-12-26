@@ -732,18 +732,19 @@ async function constructDidSpendBundle(
   return new UnsignedSpendBundle([didCoinSpend]);
 }
 
-async function constructPureFeeSpendBundle(
+export async function constructPureFeeSpendBundle(
   change_hex: Hex0x,
   fee: bigint,
   availcoins: SymbolCoins,
   requests: TokenPuzzleObserver[],
   net: NetworkContext,
+  includeZeroCoin = true,
 ): Promise<UnsignedSpendBundle> {
-  const feeTgts: TransferTarget[] = [{
+  const feeTgts: TransferTarget[] = includeZeroCoin ? [{
     address: "0x0000000000000000000000000000000000000000000000000000000000000000",
     amount: 0n,
     symbol: net.symbol,
-  }];
+  }] : [];
   const feeSpendPlan = transfer.generateSpendPlan(availcoins, feeTgts, change_hex, fee, net.symbol);
   const bundle = await transfer.generateSpendBundleWithoutCat(feeSpendPlan, requests, [], net);
   return bundle;

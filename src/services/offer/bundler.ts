@@ -186,9 +186,9 @@ export async function generateOfferPlan(
 
     const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, fee, tokenSymbol);
     const keys = Object.keys(plan);
-    // if (keys.length != 1) {
-    //   throw new Error("spend plan must be 1");
-    // }
+    if (keys.length > 1) {
+      throw new Error(`spend plan must be less than 1, currently are ${keys.length}: ${keys.join(", ")}`);
+    }
 
     const offplan = { id: off.id, plan: plan[keys[0]] };
     plans.push(offplan);

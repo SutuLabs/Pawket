@@ -136,12 +136,10 @@
       </template>
       <template v-if="step == 'Confirmation'">
         <b-field v-if="bundle">
-          <template #label>
-            {{ $t("offer.take.ui.label.bundle") }}
-            <key-box icon="checkbox-multiple-blank-outline" :value="JSON.stringify(bundle)" tooltip="Copy"></key-box>
-            <b-button tag="a" class="mr-2" icon-left="qrcode" size="is-small" @click="showQrCode()"> </b-button>
-            <a href="javascript:void(0)" v-if="debugMode" @click="debugBundle()">🐞</a>
-          </template>
+          {{ $t("offer.take.ui.label.bundle") }}
+          <key-box icon="checkbox-multiple-blank-outline" :value="JSON.stringify(bundle)" tooltip="Copy"></key-box>
+          <b-button tag="a" class="mr-2" icon-left="qrcode" size="is-small" @click="showQrCode()"> </b-button>
+          <a href="javascript:void(0)" v-if="debugMode" @click="debugBundle()">🐞</a>
           <b-input type="textarea" disabled :value="bundleJson"></b-input>
         </b-field>
       </template>
@@ -197,7 +195,7 @@
 <script lang="ts">
 import { Component, Vue, Prop, Emit, Watch } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
+import { combineSpendBundle, signSpendBundle, SpendBundle } from "@/services/spendbundle";
 import { getCatIdDict, getCatNameDict, getTokenInfo } from "@/services/view/cat";
 import { AccountEntity, CustomCat, OneTokenInfo, TokenInfo } from "@/models/account";
 import { demojo } from "@/filters/unitConversion";
@@ -225,6 +223,7 @@ import bigDecimal from "js-big-decimal";
 import { shorten } from "@/filters/addressConversion";
 import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
 import TopBar from "../Common/TopBar.vue";
+import { constructPureFeeSpendBundle } from "@/services/coin/nft";
 
 @Component({
   components: {
@@ -508,21 +507,17 @@ export default class TakeOffer extends Vue {
       const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
 
       if (!this.isNftOffer) {
-        const isReceivingCat = !this.summary.requested[0].id;
-
         const revSummary = getReversePlan(this.summary, change_hex, this.cats);
-        if (!isReceivingCat) {
-          const reqamt = revSummary.requested[0].amount;
-          const fee = BigInt(this.fee);
-          if (reqamt < fee) {
-            throw new Error(`Not enough ${xchSymbol} for fee`);
-          }
-          revSummary.requested[0].amount -= fee;
-        }
-        const fee = isReceivingCat ? BigInt(this.fee) : 0n;
-        const offplan = await generateOfferPlan(revSummary.offered, change_hex, this.availcoins, fee, xchSymbol());
+        const fee = BigInt(this.fee);
+        const offplan = await generateOfferPlan(revSummary.offered, change_hex, this.availcoins, 0n, xchSymbol());
         const observers = await getAssetsRequestObserver(this.account);
-        const utakerBundle = await generateOffer(offplan, revSummary.requested, observers, networkContext());
+        const feeBundle =
+          fee > 0n
+            ? await constructPureFeeSpendBundle(change_hex, fee, this.availcoins, observers, networkContext(), false)
+            : undefined;
+
+        const utakerOfferBundle = await generateOffer(offplan, revSummary.requested, observers, networkContext());
+        const utakerBundle = combineSpendBundle(utakerOfferBundle, feeBundle);
         const takerBundle = await signSpendBundle(utakerBundle, this.tokenPuzzles, networkContext());
         const combined = await combineOfferSpendBundle([this.makerBundle, takerBundle]);
         // for creating unit test

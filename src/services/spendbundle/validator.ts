@@ -55,6 +55,8 @@ interface SpendBundleCheckResult {
 
   createdCoins: { [key: string]: CoinIndexInfo };
   sigVerified: SignatureVerificationResult;
+
+  fee: bigint;
 }
 
 export async function checkSpendBundle(bundle: SpendBundle | undefined, chainId: string): Promise<SpendBundleCheckResult | undefined> {
@@ -177,6 +179,10 @@ export async function checkSpendBundle(bundle: SpendBundle | undefined, chainId:
     console.warn("failed to verify signature", error);
   }
 
+  const totalRemoval = bundle.coin_spends.reduce((pv, cv) => pv + BigInt(cv.coin.amount), 0n);
+  const totalCreated = newCoins.reduce((pv, cv) => pv + cv.amount, 0n);
+  const fee = totalRemoval - totalCreated;
+
   return {
     puzzleAnnoCreates,
     puzzleAnnoAsserted,
@@ -187,6 +193,7 @@ export async function checkSpendBundle(bundle: SpendBundle | undefined, chainId:
     aggSigMessages,
     createdCoins,
     sigVerified,
+    fee,
   }
 }
 
@@ -218,9 +225,10 @@ export function getUint8ArrayFromHexString(hex: string): Uint8Array {
   return Bytes.from(unprefix0x(hex), "hex").raw();
 }
 
-export async function assertSpendbundle(bundle: SpendBundle, chainId: string): Promise<void> {
+export async function assertSpendbundle(bundle: SpendBundle, chainId: string, fee: bigint | undefined = undefined): Promise<void> {
   const result = await checkSpendBundle(bundle, chainId);
   if (!result) throw new Error("Failed to check bundle");
+  if (fee && result.fee != fee) throw new Error(`Fee expected ${fee}, but actual is ${result.fee}`);
   assertSpendbundleCheckResult(result);
 }
 
