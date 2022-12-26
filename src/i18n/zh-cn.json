@@ -1427,6 +1427,11 @@
       "button": {
         "encrypt": "加密"
       }
+    },
+    "message": {
+      "error": {
+        "INACTIVE_ADDRESS": "接收地址未激活"
+      }
     }
   },
   "decryptMessage": {
