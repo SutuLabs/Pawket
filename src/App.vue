@@ -105,11 +105,6 @@ html {
   padding: 0;
 }
 
-#app {
-  width: 100%;
-  height: 100%;
-}
-
 :root.dark-theme {
   @import "@/styles/cyborg/bulmaswatch.scss";
 
