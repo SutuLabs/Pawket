@@ -11,17 +11,17 @@
             size="is-small"
             type="is-primary"
           ></b-icon>
-          <figure class="image is-32x32" style="margin: auto">
+          <figure class="image is-32x32 prevent-select" style="margin: auto">
             <img v-if="account.profilePic" class="is-rounded cover" :src="account.profilePic" />
             <img v-else class="is-rounded" src="@/assets/account-circle.svg" />
           </figure>
-          <div class="column is-flex my-0 py-0">
+          <div class="column is-flex my-0 py-0 prevent-select">
             <div class="py-1">
               <p class="is-size-6">{{ account.name }}</p>
               <p class="is-size-7 has-text-grey">{{ account.key.fingerprint }}</p>
             </div>
           </div>
-          <div class="column has-text-centered">
+          <div class="column has-text-centered prevent-select">
             <b-tag v-if="idx == 0" rounded class="has-background-grey-lighter">{{
               $t("accountManagement.ui.label.default")
             }}</b-tag>
@@ -126,8 +126,8 @@ import { sortable } from "@/directives/sortable";
 export default class AccountManagement extends Vue {
   sortableOptions = {
     chosenClass: "box",
+    delay: 500,
     draggable: ".list-item",
-    disabled: true,
   };
 
   newOrder: AccountEntity[] = this.accounts;
@@ -175,7 +175,33 @@ export default class AccountManagement extends Vue {
   updateOrder(detail: { oldIndex: number; newIndex: number }): void {
     const oldIndex = detail.oldIndex;
     const newIndex = detail.newIndex;
-    const data: AccountEntity[] = JSON.parse(JSON.stringify(this.newOrder));
+    const data: AccountEntity[] = this.newOrder.map((_) =>
+      Object.create({
+        key: {
+          compatibleMnemonic: _.key.compatibleMnemonic,
+          fingerprint: _.key.fingerprint,
+          privateKey: _.key.privateKey,
+          publicKey: _.key.publicKey,
+        },
+        name: _.name,
+        profilePic: _.profilePic,
+        type: _.type,
+        serial: _.serial,
+        puzzleHash: _.puzzleHash,
+        addressRetrievalCount: _.addressRetrievalCount,
+        cats: _.cats,
+        allCats: _.allCats,
+        firstAddress: _.firstAddress,
+        activities: _.activities,
+        tokens: _.tokens,
+        nfts: _.nfts,
+        extraInfo: _.extraInfo,
+        dids: _.dids,
+        addressPuzzles: _.addressPuzzles,
+        observePuzzles: _.observePuzzles,
+        addressGenerated: _.addressGenerated,
+      })
+    );
     const item = data[oldIndex];
 
     if (newIndex > oldIndex) {
@@ -243,6 +269,8 @@ export default class AccountManagement extends Vue {
         return this.rename(idx);
       }
     }
+    const newOrderIdx = this.newOrder.findIndex((d) => d.name == this.accounts[idx].name);
+    this.newOrder[newOrderIdx].name = name;
     store.dispatch("renameAccount", { idx, name });
     notifyPrimary(this.$tc("accountManagement.message.notification.saved"));
   }
@@ -341,5 +369,11 @@ export default class AccountManagement extends Vue {
   height: 100%;
   width: 100%;
   object-fit: cover;
+}
+
+.prevent-select {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
 }
 </style>
