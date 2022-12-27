@@ -126,6 +126,7 @@ import { sortable } from "@/directives/sortable";
 export default class AccountManagement extends Vue {
   sortableOptions = {
     chosenClass: "box",
+    delay: 500,
     draggable: ".list-item",
   };
 
@@ -242,6 +243,8 @@ export default class AccountManagement extends Vue {
         return this.rename(idx);
       }
     }
+    const newSelectedIdx = this.newOrder.findIndex((d) => d.name == this.accounts[this.selectedAccount].name);
+    this.newOrder[newSelectedIdx].name = name;
     store.dispatch("renameAccount", { idx, name });
     notifyPrimary(this.$tc("accountManagement.message.notification.saved"));
   }
