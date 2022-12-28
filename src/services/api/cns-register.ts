@@ -4,6 +4,8 @@ export interface PriceResponse {
     name: string;
     price?: number;
     royaltyPercentage?: number;
+    annualFee?: number;
+    registrationFee?: number;
     success: boolean;
     reason?: string,
     code?: string,
@@ -12,6 +14,9 @@ export interface PriceResponse {
 export interface Price {
     price: number;
     royaltyPercentage: number;
+    annualFee: number;
+    registrationFee: number;
+    reason?: string
 }
 
 export interface RegisterResponse {
@@ -35,11 +40,11 @@ export async function getPrice(name: string): Promise<Price> {
             },
         });
         const qresp = (await resp.json()) as PriceResponse;
-        if (qresp.success) return { price: qresp.price ?? -1, royaltyPercentage: qresp.royaltyPercentage ?? -1 };
-        return { price: -1, royaltyPercentage: -1 };
+        if (qresp.success) return { price: qresp.price ?? -1, annualFee: qresp.annualFee ?? -1, registrationFee: qresp.registrationFee ?? -1, royaltyPercentage: qresp.royaltyPercentage ?? -1 };
+        return { price: -1, annualFee: -1, registrationFee: -1, royaltyPercentage: -1, reason: qresp.reason };
     } catch (error) {
         console.warn(error);
-        return { price: -1, royaltyPercentage: -1 };
+        return { price: -1, annualFee: -1, registrationFee: -1, royaltyPercentage: -1 };
     }
 }
 
