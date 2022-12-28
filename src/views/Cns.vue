@@ -113,8 +113,12 @@
                   <span class="is-size-6 has-text-grey">Registration Period</span><span class="is-pulled-right"> 1 Year </span>
                 </p>
                 <p>
-                  <span class="is-size-6 has-text-grey">Registration Price</span
-                  ><span class="is-pulled-right">{{ price.price / 1000000000000 }} XCH</span>
+                  <span class="is-size-6 has-text-grey">Registration Fee</span
+                  ><span class="is-pulled-right">{{ price.registrationFee / 1000000000000 }} XCH</span>
+                </p>
+                <p>
+                  <span class="is-size-6 has-text-grey">Annual Fee</span
+                  ><span class="is-pulled-right">{{ price.annualFee / 1000000000000 }} XCH</span>
                 </p>
                 <p>
                   <span class="is-size-6 has-text-grey">Royalty Percentage</span
@@ -252,7 +256,7 @@ export default class Cns extends Vue {
   public showModal = false;
   public address = "";
   public period = 1;
-  public price: Price = { price: -1, royaltyPercentage: -1 };
+  public price: Price = { price: -1, annualFee: -1, royaltyPercentage: -1, registrationFee: -1 };
   public registerErrMsg = "";
   public offer = "";
   public registering = false;
@@ -430,7 +434,7 @@ export default class Cns extends Vue {
   reset(): void {
     this.resolveAns = null;
     this.showDetail = false;
-    this.price = { price: -1, royaltyPercentage: -1 };
+    this.price = { price: -1, annualFee: -1, royaltyPercentage: -1, registrationFee: -1 };
     this.errorMsg = "";
     this.address = "";
   }
