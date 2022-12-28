@@ -1,7 +1,7 @@
 import { Hex0x, prefix0x } from "./condition";
 import { Bytes, bigint_to_bytes } from "clvm";
 import { GetPuzzleApiCallback } from "../transfer/transfer";
-import { CoinItem } from "@/models/wallet";
+import { CoinItem, CoinRecord } from "@/models/wallet";
 import { CoinSpend, OriginCoin } from "../spendbundle";
 import { AccountEntity } from "@/models/account";
 
@@ -52,14 +52,31 @@ export async function lockCoins(account: AccountEntity, coinSpends: CoinSpend[],
   localStorage.setItem("LOCKED_COINS", JSON.stringify(lc));
 }
 
-export async function unlockCoins(coins: OriginCoin[]): Promise<void> {
-  let lc: LockedCoin[] = getLockedCoinsFromLocalStorage();
+export function unlockCoins(coins: OriginCoin[]): OriginCoin[] {
+  const lc: LockedCoin[] = getLockedCoinsFromLocalStorage();
+  const uc: OriginCoin[] = [];
   for (const coin of coins) {
     if (!coin) continue
     const cname = getCoinName(coin);
-    lc = lc.filter(c => c.coinName !== cname);
+    const idx = lc.findIndex(c => c.coinName == cname);
+    if (idx > -1) {
+      uc.push(coin)
+      lc.splice(idx, 1);
+    }
   }
   localStorage.setItem("LOCKED_COINS", JSON.stringify(lc));
+  return uc
+}
+
+export function getCompletedTransactions(coins: OriginCoin[], activities: CoinRecord[]): number[] {
+  const txs: number[] = [];
+  for (const sAct of activities) {
+    if (sAct.spent && sAct.coin) {
+      const idx = coins.findIndex(c => c.puzzle_hash == sAct.coin?.puzzleHash && c.parent_coin_info == sAct.coin.parentCoinInfo);
+      if (idx > -1) txs.push(sAct.spentBlockIndex);
+    }
+  }
+  return txs
 }
 
 export function coinFilter(account: AccountEntity, coins: OriginCoin[], network: string): OriginCoin[] {

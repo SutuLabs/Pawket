@@ -44,7 +44,11 @@
     "message": {
       "notification": {
         "copySuccess": "已复制",
-        "copyFailed": "复制失败"
+        "copyFailed": "复制失败",
+        "transactionComplete": {
+          "title": "交易已完成！",
+          "body": "你在区块 {block} 的交易已经完成。"
+        }
       }
     }
   },
