@@ -9,7 +9,7 @@ export interface Markets {
 
 export interface MarketItem {
   id: string;
-  code: string;
+  code?: string;
   name: string;
   is_nft: number;
   icon: string;
