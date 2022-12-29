@@ -44,7 +44,11 @@
     "message": {
       "notification": {
         "copySuccess": "Copied.",
-        "copyFailed": "Copy failed."
+        "copyFailed": "Copy failed.",
+        "transactionComplete": {
+          "title": "Transaction Complete!",
+          "body": "Your transaction at block {block} has been completed."
+        }
       }
     }
   },

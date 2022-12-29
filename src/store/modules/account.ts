@@ -9,9 +9,11 @@ import {
   getAccountAddressDetails as getAccountAddressDetailsExternal,
   getAccountPuzzleObservers,
 } from "@/services/util/account";
-import { convertToOriginCoin, unlockCoins } from "@/services/coin/coinUtility";
+import { convertToOriginCoin, getCompletedTransactions, unlockCoins } from "@/services/coin/coinUtility";
 import { OriginCoin } from "@/services/spendbundle";
 import { prefix0x } from "@/services/coin/condition";
+import { desktopNotify } from "@/services/notification/notification";
+import { tc } from "@/i18n/i18n";
 
 export function getAccountCats(account: AccountEntity): CustomCat[] {
   return account.allCats?.filter((c) => convertToChainId(c.network) == chainId()) ?? [];
@@ -185,7 +187,13 @@ store.registerModule<IAccountState>("account", {
           const coins = activities.map(act => {
             if (act.spent && act.coin) return convertToOriginCoin(act.coin)
           })
-          unlockCoins(coins as OriginCoin[]);
+          const uc = unlockCoins(coins as OriginCoin[]);
+          const txns = getCompletedTransactions(uc, activities);
+          txns.forEach(txn => {
+            const title = tc('app.message.notification.transactionComplete.title');
+            const body = tc('app.message.notification.transactionComplete.body', undefined, { block: txn });
+            desktopNotify(title, body);
+          })
           Vue.set(account, "activities", activities);
           Vue.set(account, "tokens", tokenBalances);
         } catch (error) {
