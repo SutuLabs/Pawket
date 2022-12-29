@@ -368,12 +368,15 @@
           "information": "信息"
         },
         "label": {
-          "bundle": "数据包",
           "royaltyToCreator": "创作者",
           "totalRequested": "请求的总金额",
           "nftPrice": "NFT 价格",
           "royalty": "版权费",
-          "total": "总计"
+          "total": "总计",
+          "receive": "获得",
+          "offer": "支付",
+          "fee": "Fee",
+          "totalPayment": "总计支付"
         },
         "button": {
           "cancel": "取消",
@@ -394,7 +397,8 @@
         "requested": "付出",
         "offered": "获得",
         "addCat": "点击添加至 CATs 列表。",
-        "unsupportOfferNftOffer": "这种类型的 NFT Offer 尚不支持"
+        "unsupportOfferNftOffer": "这种类型的 NFT Offer 尚不支持",
+        "acceptOffer": "确定要接受该 Offer 吗？<br>请务必再次检查你的交易内容。"
       },
       "messages": {
         "failedToSign": "接受 Offer 失败",

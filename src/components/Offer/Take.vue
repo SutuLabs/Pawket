@@ -135,13 +135,66 @@
         <fee-selector v-if="(debugMode || isNftOffer) && summary" v-model="fee"></fee-selector>
       </template>
       <template v-if="step == 'Confirmation'">
-        <b-field v-if="bundle">
-          {{ $t("offer.take.ui.label.bundle") }}
-          <key-box icon="checkbox-multiple-blank-outline" :value="JSON.stringify(bundle)" tooltip="Copy"></key-box>
-          <b-button tag="a" class="mr-2" icon-left="qrcode" size="is-small" @click="showQrCode()"> </b-button>
-          <a href="javascript:void(0)" v-if="debugMode" @click="debugBundle()">🐞</a>
-          <b-input type="textarea" disabled :value="bundleJson"></b-input>
-        </b-field>
+        <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
+          <span v-html="$sanitize($tc('offer.take.information.acceptOffer'))"></span>
+        </b-notification>
+        <div v-if="summary">
+          <div class="label">
+            <span class="is-size-6">{{ $t("offer.take.ui.label.offer") }}</span>
+            <span class="is-size-6 is-pulled-right">
+              <ul v-for="(ent, idx) in summary.requested" :key="idx">
+                <li v-if="ent.id && ent.nft_target">
+                  <p class="has-text-right">{{ shorten(getNftName(ent.id)) }}</p>
+                  <img :src="ent.nft_uri" class="summary-nft is-pulled-right" />
+                </li>
+                <li v-else-if="ent.id">
+                  <span v-if="ent.id && cats[ent.id]" type="is-info" :title="cats[ent.id] + ' (' + ent.id + ')'">{{
+                    demojo(ent.amount, tokenInfo[cats[ent.id]])
+                  }}</span>
+                  <span v-else-if="ent.id">{{ demojo(ent.amount, null, 12, ent.id.slice(0, 4)) }}</span>
+                </li>
+                <li v-else>
+                  {{ demojo(ent.amount, tokenInfo[cats[ent.id]]) }}
+                </li>
+              </ul>
+            </span>
+          </div>
+          <div class="label">
+            <span class="is-size-6">{{ $t("offer.take.ui.label.receive") }}</span>
+            <span class="is-size-6 is-pulled-right">
+              <ul v-for="(ent, idx) in summary.offered" :key="idx">
+                <li v-if="ent.id && ent.nft_target">
+                  <p class="has-text-right">{{ shorten(getNftName(ent.id)) }}</p>
+                  <img :src="ent.nft_uri" class="summary-nft is-pulled-right" />
+                </li>
+                <li v-else-if="ent.id">
+                  <span v-if="ent.id && cats[ent.id]" type="is-info" :title="cats[ent.id] + ' (' + ent.id + ')'">{{
+                    demojo(ent.amount, tokenInfo[cats[ent.id]])
+                  }}</span>
+                  <span v-else-if="ent.id">{{ demojo(ent.amount, null, 12, ent.id.slice(0, 4)) }} </span>
+                </li>
+                <li v-else>
+                  {{ demojo(ent.amount, tokenInfo[cats[ent.id]]) }}
+                </li>
+              </ul>
+            </span>
+          </div>
+          <div class="label">
+            <span class="is-size-6 has-text-grey">{{ $t("offer.take.ui.label.fee") }}</span>
+            <span class="is-size-6 is-pulled-right has-text-grey">
+              {{ demojo(fee) }}
+            </span>
+          </div>
+          <div class="label">
+            <span class="is-size-5">{{ $t("offer.take.ui.label.totalPayment") }}</span>
+            <span class="is-size-5 is-pulled-right has-text-primary">
+              {{ totalPayment }}
+            </span>
+          </div>
+        </div>
+        <div class="mt-4">
+          <bundle-summary :account="account" :bundle="bundle" :ignoreError="true"></bundle-summary>
+        </div>
       </template>
     </section>
     <footer class="modal-card-foot is-block">
@@ -224,12 +277,14 @@ import { shorten } from "@/filters/addressConversion";
 import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
 import TopBar from "../Common/TopBar.vue";
 import { constructPureFeeSpendBundle } from "@/services/coin/nft";
+import BundleSummary from "../Bundle/BundleSummary.vue";
 
 @Component({
   components: {
     KeyBox,
     FeeSelector,
     TopBar,
+    BundleSummary,
   },
 })
 export default class TakeOffer extends Vue {
@@ -327,6 +382,28 @@ export default class TakeOffer extends Vue {
     return getTokenInfo(this.account);
   }
 
+  get totalPayment(): string {
+    let xchAmount = BigInt(this.fee);
+    let nftAmount = 0;
+    let catAmount: string[] = [];
+    if (!this.summary) return demojo(this.fee);
+    for (let req of this.summary.requested) {
+      if (req.id && req.nft_target) {
+        nftAmount++;
+      } else if (req.id) {
+        if (this.cats[req.id]) catAmount.push(demojo(req.amount, this.tokenInfo[this.cats[req.id]]));
+        else catAmount.push(demojo(req.amount, null, 12, req.id.slice(0, 4)));
+      } else {
+        xchAmount += req.amount;
+      }
+    }
+    let res: string[] = [];
+    if (xchAmount > 0) res.push(demojo(xchAmount));
+    if (catAmount.length > 0) res.push(catAmount.join("+"));
+    if (nftAmount > 0) res.push(`${nftAmount} NFT(s)`);
+    return res.join("+");
+  }
+
   get nftPrice(): bigint {
     const s = this.summary;
     if (!s) return -1n;
@@ -381,8 +458,8 @@ export default class TakeOffer extends Vue {
     await this.loadCoins();
   }
 
-  demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null, digits = -1): string {
-    return demojo(mojo, token, digits);
+  demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null, digits = -1, symbol: string | null = null): string {
+    return demojo(mojo, token, digits, symbol);
   }
 
   BigInt(n: string | number | bigint | boolean): bigint {
@@ -658,6 +735,13 @@ img.nft-image {
   object-fit: cover;
   border: 1px solid;
 }
+
+.summary-nft {
+  width: 30%;
+  object-fit: cover;
+  border: 1px solid;
+}
+
 .break-string {
   word-break: break-word;
 }

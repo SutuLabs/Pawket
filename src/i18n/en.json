@@ -368,12 +368,15 @@
           "information": "Information"
         },
         "label": {
-          "bundle": "Bundle",
           "royaltyToCreator": "Creator",
           "totalRequested": "Total Amount Requested",
           "nftPrice": "NFT Price",
           "royalty": "Royalty",
-          "total": "Total"
+          "total": "Total",
+          "receive": "Receive",
+          "offer": "Offer",
+          "fee": "Fee",
+          "totalPayment": "Total Payment"
         },
         "button": {
           "cancel": "Cancel",
@@ -394,7 +397,8 @@
         "requested": "In exchange for",
         "offered": "You will receive",
         "addCat": "Add to CATs List.",
-        "unsupportOfferNftOffer": "This type of offer is not supported yet."
+        "unsupportOfferNftOffer": "This type of offer is not supported yet.",
+        "acceptOffer": "Are you sure to accept the offer?<br>Please review your transaction."
       },
       "messages": {
         "failedToSign": "Failed to take offer.",
