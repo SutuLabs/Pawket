@@ -932,7 +932,7 @@
         "showMnemonic": "Reveal Mnemonic Words",
         "hideMnemonic": "Hide Mnemonic Words",
         "password": "Change Password",
-        "export": "Export Private Information",
+        "backup": "Back up Wallet Information",
         "reset": "Reset Wallet"
       }
     },
@@ -1086,7 +1086,8 @@
     "title": "Create Wallet",
     "button": {
       "create": "Create",
-      "import": "Import"
+      "import": "Import",
+      "backup": "Import Wallet Backup"
     }
   },
   "newWallet": {
@@ -1489,6 +1490,47 @@
       "hint": {
         "scan": "Scan Address, PublicKey"
       }
+    }
+  },
+  "backup": {
+    "ui": {
+      "title": {
+        "verifyPassword": "Verify Password",
+        "backup": "Backup Information"
+      },
+      "tip": "PROCEED WITH CAUTION!<br>This operation will export the wallet backup information (including Mnemonic Words and Public Key), which can be used to restore the wallet on other devices.",
+      "label": {
+        "password": "Enter Password to Continue",
+        "selectBackupInfo": "Select Backup Information"
+      },
+      "items": {
+        "masterAccount": "Master Account Information",
+        "loginPassword": "Login Password",
+        "settings": "Settings",
+        "customNetwork": "Custom Network",
+        "accountList": "Account List",
+        "addressBook": "Address Book",
+        "didNames": "DID Names"
+      },
+      "button": {
+        "continue": "Continue",
+        "export": "Export",
+        "downloadBak": "Download Backup File",
+        "complete": "Complete"
+      }
+    },
+    "message": {
+      "error": {
+        "passwordRequired": "Password is required.",
+        "passwordNotCorrect": "Incorrect password."
+      }
+    }
+  },
+  "importBackup": {
+    "title": "Upload Backup",
+    "password": {
+      "tip": "Please enter your login password",
+      "label": "Password"
     }
   }
 }

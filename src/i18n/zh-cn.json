@@ -932,7 +932,7 @@
         "showMnemonic": "显示助记词 ",
         "hideMnemonic": "隐藏助记词",
         "password": "修改密码",
-        "export": "导出账户信息",
+        "backup": "备份钱包信息",
         "reset": "重置钱包"
       }
     },
@@ -1086,7 +1086,8 @@
     "title": "创建钱包",
     "button": {
       "create": "创建",
-      "import": "导入"
+      "import": "导入",
+      "backup": "导入钱包备份信息"
     }
   },
   "newWallet": {
@@ -1489,6 +1490,47 @@
       "hint": {
         "scan": "扫描地址，公钥"
       }
+    }
+  },
+  "backup": {
+    "ui": {
+      "title": {
+        "verifyPassword": "验证密码",
+        "backup": "备份信息"
+      },
+      "tip": "请谨慎操作！<br>此操作将会导出包含钱包助记词、私钥在内的钱包备份信息。备份信息可用于在其他设备或浏览器恢复你的钱包。",
+      "label": {
+        "password": "输入密码以继续",
+        "selectBackupInfo": "选择导出信息"
+      },
+      "items": {
+        "masterAccount": "主账户信息",
+        "loginPassword": "登入密码",
+        "settings": "设置",
+        "customNetwork": "自定义网络",
+        "accountList": "账户列表",
+        "addressBook": "地址簿",
+        "didNames": "DID 名称"
+      },
+      "button": {
+        "continue": "继续",
+        "export": "导出",
+        "downloadBak": "下载备份文件",
+        "complete": "完成"
+      }
+    },
+    "message": {
+      "error": {
+        "passwordRequired": "密码不能为空",
+        "passwordNotCorrect": "密码不正确"
+      }
+    }
+  },
+  "importBackup": {
+    "title": "上传备份信息",
+    "password": {
+      "tip": "请输入你的登入密码",
+      "label": "密码"
     }
   }
 }

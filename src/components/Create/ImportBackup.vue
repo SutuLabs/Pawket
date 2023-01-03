@@ -1,0 +1,121 @@
+<template>
+  <div>
+    <div v-if="step == 'upload'">
+      <top-bar :title="$t('importBackup.title')" :showBack="true" @close="back()"></top-bar>
+      <section class="modal-card-body">
+        <b-field>
+          <b-tag v-if="file" icon="paperclip" size="is-small" closable aria-close-label="Close tag" @close="deleteFile">
+            {{ file.name }}
+          </b-tag>
+        </b-field>
+        <b-upload v-model="file" drag-drop expanded>
+          <section class="section">
+            <div class="content has-text-centered">
+              <p>
+                <b-icon icon="upload" size="is-large"> </b-icon>
+              </p>
+              <p>{{ $t("batchSend.ui.field.csv.drag") }}</p>
+            </div>
+          </section>
+        </b-upload>
+      </section>
+      <div class="has-text-centered">
+        <b-button icon-right="chevron-right" type="is-primary" @click="step = 'decode'" class="px-6" :disabled="!file">{{
+          $t("createSeed.ui.button.ready")
+        }}</b-button>
+      </div>
+    </div>
+    <div v-if="step == 'decode'">
+      <top-bar :title="$t('backup.ui.title.verifyPassword')" :showBack="true" @close="back()"></top-bar>
+      <section class="modal-card-body">
+        <b-field>{{ $t("importBackup.password.tip") }}</b-field>
+        <b-field :label="$t('importBackup.password.label')">
+          <b-input
+            v-model="password"
+            type="password"
+            ref="password"
+            required
+            :validation-message="$t('backup.message.error.passwordRequired')"
+            @keyup.native.enter="confirm()"
+          ></b-input>
+        </b-field>
+      </section>
+      <div class="has-text-centered">
+        <b-button icon-right="chevron-right" type="is-primary" @click="confirm()" class="px-6">{{
+          $t("createSeed.ui.button.ready")
+        }}</b-button>
+      </div>
+    </div>
+  </div>
+</template>
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import TopBar from "@/components/Common/TopBar.vue";
+import encryption from "@/services/crypto/encryption";
+import { NotificationProgrammatic as Notification } from "buefy";
+import { BackupInfo } from "../Settings/Backup.vue";
+import store from "@/store";
+import { tc } from "@/i18n/i18n";
+
+@Component({
+  components: {
+    TopBar,
+  },
+})
+export default class ImportBackup extends Vue {
+  file: File | null = null;
+  step: "upload" | "decode" = "upload";
+  password = "";
+
+  back(): void {
+    this.$router.push("/create/create-wallet");
+  }
+
+  deleteFile(): void {
+    this.file = null;
+  }
+
+  async confirm(): Promise<void> {
+    if (!(this.$refs.password as Vue & { checkHtml5Validity: () => boolean }).checkHtml5Validity() || !this.file) return;
+    const backupText = await this.file.text();
+    let backupJson = "";
+    try {
+      backupJson = await encryption.decrypt(backupText, this.password);
+    } catch (error) {
+      Notification.open({
+        message: tc("backup.message.error.passwordNotCorrect"),
+        type: "is-danger",
+        duration: 5000,
+      });
+    }
+    if (backupJson) {
+      const backup = JSON.parse(backupJson) as BackupInfo;
+
+      localStorage.setItem("user-theme", backup.settings.theme);
+      localStorage.setItem("AUTO_LOCK_TIME", backup.settings.autoLockTime.toString());
+      localStorage.setItem("DISPLAY_DAPP", backup.settings.displayDapp.toString());
+      localStorage.setItem("DEBUG_MODE", backup.settings.debugMode.toString());
+      localStorage.setItem("Locale", backup.settings.language);
+      this.$i18n.locale = backup.settings.language;
+      localStorage.setItem("CONTACTS", JSON.stringify(backup.contacts));
+      localStorage.setItem("DID_NAMES", JSON.stringify(backup.didNames));
+      backup.customNetwork.forEach((cn) => store.dispatch("addOrUpdateNetwork", cn));
+
+      await store.dispatch("ensureSalt", this.password);
+      await store.dispatch("initWalletAddress");
+      Vue.set(store.state.vault, "experiment", backup.settings.experiment);
+      Vue.set(store.state.vault, "currency", backup.settings.currency);
+      Vue.set(store.state.account, "accounts", backup.accountList);
+      Vue.set(store.state.vault, "seedMnemonic", backup.seedMnemonic);
+      Vue.set(store.state.vault, "passwordHash", backup.passwordHash);
+      Vue.set(store.state.vault, "unlocked", true);
+
+      await store.dispatch("persistent");
+
+      this.$router.push("/home");
+    }
+  }
+}
+</script>
+
+<style scoped lang="scss"></style>

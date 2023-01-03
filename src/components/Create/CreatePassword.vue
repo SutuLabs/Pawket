@@ -57,7 +57,7 @@ export default class CreatePassword extends Vue {
   public showStrength = false;
 
   back(): void {
-    this.$router.push("/create/disclaimer");
+    this.$router.push("/create/create-wallet");
   }
 
   clearErrorMsg(): void {
@@ -71,7 +71,9 @@ export default class CreatePassword extends Vue {
     if (this.repassword != this.password) return;
     store.dispatch("setPassword", this.password);
     store.dispatch("setCurrency", CurrencyType.USDT);
-    this.$router.push("/create/create-wallet");
+    const method = localStorage.getItem("method") ?? "add";
+    if (method == "import") this.$router.push("/create/import");
+    else this.$router.push("/create/add");
   }
 
   checkStrength(): void {
