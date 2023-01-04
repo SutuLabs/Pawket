@@ -912,7 +912,8 @@
         "language": "Language",
         "network": "Network",
         "currency": "Currency Conversion",
-        "offlineMode": "Offline Mode"
+        "offlineMode": "Offline Mode",
+        "darkMode": "Dark Mode"
       }
     },
     "security": {

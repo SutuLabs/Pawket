@@ -26,6 +26,11 @@
           >{{ $t("settings.general.label.offlineMode") }}<b-switch class="is-pulled-right" v-model="offlineMode"></b-switch>
         </template>
       </b-field>
+      <b-field>
+        <template #label
+          >{{ $t("settings.general.label.darkMode") }}<b-switch class="is-pulled-right" v-model="darkMode"></b-switch>
+        </template>
+      </b-field>
     </section>
   </div>
 </template>
@@ -80,6 +85,20 @@ export default class General extends Vue {
     } else {
       Vue.set(store.state.vault, "offline", false);
       localStorage.setItem("OFFLINE_MODE", "off");
+    }
+  }
+
+  get darkMode(): boolean {
+    return localStorage.getItem("user-theme") == "dark-theme";
+  }
+
+  set darkMode(value: boolean) {
+    if (value) {
+      localStorage.setItem("user-theme", "dark-theme");
+      document.documentElement.className = "dark-theme";
+    } else {
+      localStorage.setItem("user-theme", "light-theme");
+      document.documentElement.className = "light-theme";
     }
   }
 

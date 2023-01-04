@@ -128,6 +128,7 @@ export default class AccountManagement extends Vue {
     chosenClass: "box",
     delay: 500,
     draggable: ".list-item",
+    disabled: !this.debugMode,
   };
 
   newOrder: AccountEntity[] = this.accounts;

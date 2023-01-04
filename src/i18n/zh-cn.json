@@ -912,7 +912,8 @@
         "language": "选择语言",
         "network": "切换网络",
         "currency": "货币转换",
-        "offlineMode": "离线模式"
+        "offlineMode": "离线模式",
+        "darkMode": "夜间模式"
       }
     },
     "security": {
