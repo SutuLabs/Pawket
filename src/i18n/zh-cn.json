@@ -142,6 +142,7 @@
     "ui": {
       "button": {
         "receive": "接收",
+        "buy": "购买",
         "send": "发送",
         "scan": "扫描",
         "confirm": "确认",
@@ -1542,6 +1543,19 @@
     "error": {
       "LARGE_FILE": "文件过大",
       "UNSUPPORTED_FILE": "不支持的文件"
+    }
+  },
+  "buyUsds": {
+    "ui": {
+      "title": "购买 USDS",
+      "button": {
+        "continue": "继续购买",
+        "stably": "打开 Stably 购买"
+      },
+      "tip": "目前仅支持通过 ACH 银行转账购买 Chia 区块链上的 USDS。",
+      "stablyPrefix": "本服务由",
+      "stably": "Stably ",
+      "stablySuffix": "提供，完全独立于Pawket。"
     }
   }
 }
