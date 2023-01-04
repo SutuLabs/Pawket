@@ -30,7 +30,7 @@
               ><span class="has-text-grey">{{ account.key.fingerprint }}</span></b-button
             >
             <network-selector class="is-pulled-left"></network-selector>
-            <b-button @click="toggleTheme()" rounded class="is-pulled-left border-less"
+            <b-button @click="toggleTheme()" rounded class="is-pulled-left border-less is-hidden-mobile"
               ><b-icon icon="brightness-6" class="has-text-grey"> </b-icon
             ></b-button>
             <b-tooltip :label="$t('accountDetail.ui.tooltip.errorLog')" class="is-pulled-right">
