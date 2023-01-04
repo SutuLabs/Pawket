@@ -132,7 +132,7 @@
             $t("offer.take.information.unsupportOfferNftOffer")
           }}</b-notification>
         </template>
-        <fee-selector v-if="isNftOffer && summary" v-model="fee"></fee-selector>
+        <fee-selector v-if="summary" v-model="fee"></fee-selector>
       </template>
       <template v-if="step == 'Confirmation'">
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
