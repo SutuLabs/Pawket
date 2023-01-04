@@ -55,7 +55,7 @@
             :tooltip="$t('common.tooltip.copy')"
             :value="account.key.compatibleMnemonic"
           ></key-box>
-          <qrcode-vue v-if="debugMode" :value="account.key.compatibleMnemonic" size="300"></qrcode-vue>
+          <qrcode-vue v-if="debugMode" :value="account.key.compatibleMnemonic" size="300" class="qrcode" style="width: 320px"></qrcode-vue>
         </span>
       </div>
       <div class="border-bottom py-2">
@@ -73,7 +73,6 @@
           <li>
             {{ $t("accountInfo.ui.label.masterPublicKey") }}:
             <key-box :value="masterpubkey || account.key.publicKey" :showValue="true"></key-box>
-            <qrcode-vue :value="masterpubkey || account.key.publicKey" size="150"></qrcode-vue>
           </li>
           <li>
             {{ $t("accountInfo.ui.label.farmerPublicKey") }}:

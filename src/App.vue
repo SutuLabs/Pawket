@@ -105,6 +105,10 @@ html {
   padding: 0;
 }
 
+.qrcode {
+  margin: auto;
+}
+
 :root.dark-theme {
   @import "@/styles/cyborg/bulmaswatch.scss";
 
@@ -198,6 +202,12 @@ html {
 
   .box {
     box-shadow: 0 0.5em 2em 0 rgb(255 255 255 / 10%), 0 0px 0 1px rgb(255 255 255 / 5%);
+  }
+
+  .qrcode {
+    background-color: white;
+    padding: 10px;
+    margin: auto;
   }
 }
 </style>

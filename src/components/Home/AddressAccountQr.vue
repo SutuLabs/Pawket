@@ -3,7 +3,7 @@
     <top-bar :title="$t('explorerLink.ui.title.link')" @close="close()" :showClose="true"></top-bar>
     <section class="modal-card-body">
       <div class="has-text-centered">
-        <qrcode-vue :value="externalExplorerPrefix + address" size="200"></qrcode-vue>
+        <qrcode-vue :value="externalExplorerPrefix + address" size="200" class="qrcode" style="width: 220px"></qrcode-vue>
         <key-box icon="checkbox-multiple-blank-outline" :value="address" :showValue="true"></key-box>
         <b-tooltip :label="$t('explorerLink.ui.tooltip.blockchainExplorer')">
           <a target="_blank" :href="externalExplorerPrefix + address">

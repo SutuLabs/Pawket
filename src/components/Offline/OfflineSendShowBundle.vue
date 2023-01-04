@@ -3,7 +3,7 @@
     <section class="modal-card-body">
       <center v-if="qrcode">
         <div v-if="qrcode.length * 8 < MAX_LENGTH">
-          <qrcode-vue :value="qrcode" size="300"></qrcode-vue>
+          <qrcode-vue :value="qrcode" size="300" class="qrcode" style="width: 320px"></qrcode-vue>
           {{ $t("offline.client.show.hint") }}
         </div>
         <div v-else>

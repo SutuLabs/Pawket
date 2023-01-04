@@ -14,7 +14,7 @@
       <b-tabs position="is-centered" v-model="addressType" expanded @input="changeAddressType">
         <b-tab-item :label="$t('explorerLink.ui.label.observer')" icon="eye-check" value="Observed">
           <div class="has-text-centered">
-            <qrcode-vue :value="externalExplorerPrefix + address" size="200"></qrcode-vue>
+            <qrcode-vue :value="externalExplorerPrefix + address" size="200" class="qrcode" style="width: 220px"></qrcode-vue>
             <key-box icon="checkbox-multiple-blank-outline" :value="address" :showValue="true"></key-box>
             <b-tooltip :label="$t('explorerLink.ui.tooltip.blockchainExplorer')">
               <a target="_blank" :href="externalExplorerPrefix + address">
@@ -25,7 +25,7 @@
         </b-tab-item>
         <b-tab-item :label="$t('explorerLink.ui.label.nonObserver')" icon="security" value="Hardened" v-if="account.type != 'PublicKey'">
           <div class="has-text-centered">
-            <qrcode-vue :value="externalExplorerPrefix + address" size="200"></qrcode-vue>
+            <qrcode-vue :value="externalExplorerPrefix + address" size="200" class="qrcode" style="width: 220px"></qrcode-vue>
             <key-box icon="checkbox-multiple-blank-outline" :value="address" :showValue="true"></key-box>
             <b-tooltip :label="$t('explorerLink.ui.tooltip.blockchainExplorer')">
               <a target="_blank" :href="externalExplorerPrefix + address">
