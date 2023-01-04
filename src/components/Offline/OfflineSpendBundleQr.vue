@@ -23,7 +23,7 @@
           </b-field>
 
           <center>
-            <qrcode-vue :value="qrcodes[qrcodes.length > 1 ? selectedQr : 0]" size="250"></qrcode-vue>
+            <qrcode-vue :value="qrcodes[qrcodes.length > 1 ? selectedQr : 0]" size="250" class="qrcode" style="width: 270px"></qrcode-vue>
             <div class="is-hidden-tablet" v-if="mode === 'ONLINE_CLIENT'">{{ $t("offline.client.scan.scrollDown") }}</div>
           </center>
         </div>
