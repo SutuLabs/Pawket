@@ -26,8 +26,8 @@ export interface IVaultState {
   disconnected: boolean;
 }
 
-const PasswordHashIteration = 6000;
-const EncryptKeyHashIteration = 3000;
+export const PasswordHashIteration = 6000;
+export const EncryptKeyHashIteration = 3000;
 
 store.registerModule<IVaultState>("vault", {
   state() {

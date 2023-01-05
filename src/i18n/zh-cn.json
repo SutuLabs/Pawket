@@ -926,7 +926,9 @@
       "message": {
         "clear": "重置钱包将会把所有钱包数据（含助记词、密码）从你的设备中永久删除。请确保你已经备份助记词，重置后可以通过助记词恢复钱包。确认重置吗？",
         "inputPassword": "请输入密码",
-        "passwordNotCorrect": "密码不正确"
+        "passwordNotCorrect": "密码不正确",
+        "backupConfirmTitle": "请谨慎操作",
+        "backupConfirm": "此操作将会导出包含钱包助记词、私钥在内的钱包备份信息。备份信息可用于在其他设备或浏览器恢复你的钱包。"
       },
       "button": {
         "showMnemonic": "显示助记词 ",
@@ -1498,14 +1500,19 @@
         "verifyPassword": "验证密码",
         "backup": "备份信息"
       },
-      "tip": "请谨慎操作！<br>此操作将会导出包含钱包助记词、私钥在内的钱包备份信息。备份信息可用于在其他设备或浏览器恢复你的钱包。",
+      "tip": {
+        "setPassword": "该密码将用于，把备份数据导入新设备，恢复钱包时的登录密码。"
+      },
       "label": {
-        "password": "输入密码以继续",
-        "selectBackupInfo": "选择导出信息"
+        "passwordType": {
+          "current": "使用当前登录密码",
+          "new": "使用新密码"
+        },
+        "selectBackupInfo": "选择导出信息",
+        "setYourLoginPassword": "设置你的登录密码"
       },
       "items": {
         "masterAccount": "主账户信息",
-        "loginPassword": "登入密码",
         "settings": "设置",
         "customNetwork": "自定义网络",
         "accountList": "账户列表",
@@ -1513,10 +1520,9 @@
         "didNames": "DID 名称"
       },
       "button": {
-        "continue": "继续",
-        "export": "导出",
         "downloadBak": "下载备份文件",
-        "complete": "完成"
+        "complete": "完成",
+        "next": "下一步"
       }
     },
     "message": {

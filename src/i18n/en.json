@@ -926,7 +926,9 @@
       "message": {
         "clear": "Resetting wallet will permanently remove all data (including Mnemonic Words and passwords) from your device, make sure that wallet Mnemonic Words have been backed up. Are you sure to reset?",
         "inputPassword": "Enter Password to Continue",
-        "passwordNotCorrect": "Incorrect password."
+        "passwordNotCorrect": "Incorrect password.",
+        "backupConfirmTitle": "PROCEED WITH CAUTION",
+        "backupConfirm": "This operation will export the wallet backup information (including Mnemonic Words and Public Key), which can be used to restore the wallet on other devices."
       },
       "button": {
         "showMnemonic": "Reveal Mnemonic Words",
@@ -1498,14 +1500,19 @@
         "verifyPassword": "Verify Password",
         "backup": "Backup Information"
       },
-      "tip": "PROCEED WITH CAUTION!<br>This operation will export the wallet backup information (including Mnemonic Words and Public Key), which can be used to restore the wallet on other devices.",
+      "tip": {
+        "setPassword": "This password will be used as the login password when importing the backup to a new device to restore your wallet."
+      },
       "label": {
-        "password": "Enter Password to Continue",
-        "selectBackupInfo": "Select Backup Information"
+        "passwordType": {
+          "current": "Use current login password",
+          "new": "Use a new password"
+        },
+        "selectBackupInfo": "Select Backup Information",
+        "setYourLoginPassword": "Set your Login Password"
       },
       "items": {
         "masterAccount": "Master Account Information",
-        "loginPassword": "Login Password",
         "settings": "Settings",
         "customNetwork": "Custom Network",
         "accountList": "Account List",
@@ -1513,10 +1520,9 @@
         "didNames": "DID Names"
       },
       "button": {
-        "continue": "Continue",
-        "export": "Export",
         "downloadBak": "Download Backup File",
-        "complete": "Complete"
+        "complete": "Complete",
+        "next": "Next"
       }
     },
     "message": {
