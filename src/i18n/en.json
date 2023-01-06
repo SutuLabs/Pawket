@@ -927,13 +927,15 @@
       "message": {
         "clear": "Resetting wallet will permanently remove all data (including Mnemonic Words and passwords) from your device, make sure that wallet Mnemonic Words have been backed up. Are you sure to reset?",
         "inputPassword": "Enter Password to Continue",
-        "passwordNotCorrect": "Incorrect password."
+        "passwordNotCorrect": "Incorrect password.",
+        "backupConfirmTitle": "PROCEED WITH CAUTION",
+        "backupConfirm": "This operation will export the wallet backup information (including Mnemonic Words and Public Key), which can be used to restore the wallet on other devices."
       },
       "button": {
         "showMnemonic": "Reveal Mnemonic Words",
         "hideMnemonic": "Hide Mnemonic Words",
         "password": "Change Password",
-        "export": "Export Private Information",
+        "backup": "Back up Wallet Information",
         "reset": "Reset Wallet"
       }
     },
@@ -1087,7 +1089,8 @@
     "title": "Create Wallet",
     "button": {
       "create": "Create",
-      "import": "Import"
+      "import": "Import",
+      "backup": "Import Wallet Backup"
     }
   },
   "newWallet": {
@@ -1490,6 +1493,55 @@
       "hint": {
         "scan": "Scan Address, PublicKey"
       }
+    }
+  },
+  "backup": {
+    "ui": {
+      "title": {
+        "verifyPassword": "Verify Password",
+        "backup": "Backup Information"
+      },
+      "tip": {
+        "setPassword": "This password will be used as the login password when importing the backup to a new device to restore your wallet."
+      },
+      "label": {
+        "passwordType": {
+          "current": "Use current login password",
+          "new": "Use a new password"
+        },
+        "selectBackupInfo": "Select Backup Information",
+        "setYourLoginPassword": "Set your Login Password"
+      },
+      "items": {
+        "masterAccount": "Master Account Information",
+        "settings": "Settings",
+        "customNetwork": "Custom Network",
+        "accountList": "Account List",
+        "addressBook": "Address Book",
+        "didNames": "DID Names"
+      },
+      "button": {
+        "downloadBak": "Download Backup File",
+        "complete": "Complete",
+        "next": "Next"
+      }
+    },
+    "message": {
+      "error": {
+        "passwordRequired": "Password is required.",
+        "passwordNotCorrect": "Incorrect password."
+      }
+    }
+  },
+  "importBackup": {
+    "title": "Upload Backup",
+    "password": {
+      "tip": "Please enter your login password",
+      "label": "Password"
+    },
+    "error": {
+      "LARGE_FILE": "The file is too large",
+      "UNSUPPORTED_FILE": "Unsupported File"
     }
   }
 }

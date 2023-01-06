@@ -92,7 +92,7 @@ export default class Add extends Vue {
   }
 
   back(): void {
-    this.$router.push("/create/create-wallet");
+    this.$router.push("/create/create-password");
   }
 }
 </script>

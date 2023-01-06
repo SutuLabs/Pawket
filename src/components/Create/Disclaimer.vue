@@ -36,7 +36,7 @@ import TopBar from "@/components/Common/TopBar.vue";
 export default class Disclaimer extends Vue {
   isAccept = false;
   next(): void {
-    this.$router.push("/create/create-password");
+    this.$router.push("/create/create-wallet");
   }
 
   back(): void {

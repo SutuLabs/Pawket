@@ -134,6 +134,10 @@ const routes: Array<RouteConfig> = [
         component: () => import(/* webpackChunkName: "create" */ "../components/Create/Import.vue"),
       },
       {
+        path: "import-backup",
+        component: () => import(/* webpackChunkName: "create" */ "../components/Create/ImportBackup.vue"),
+      },
+      {
         path: "add",
         component: () => import(/* webpackChunkName: "create" */ "../components/Create/Add.vue"),
       },

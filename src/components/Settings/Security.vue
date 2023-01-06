@@ -21,7 +21,9 @@
         >
       </b-field>
       <b-field :label="$t('settings.security.label.export')">
-        <b-button icon-left="export" outlined expanded disabled> {{ $t("settings.security.button.export") }}</b-button>
+        <b-button type="is-primary" icon-left="export" outlined expanded @click="backup()">
+          {{ $t("settings.security.button.backup") }}</b-button
+        >
       </b-field>
       <b-field :label="$t('settings.security.label.reset')">
         <b-button type="is-danger" expanded outlined @click="reset()">{{ $t("settings.security.button.reset") }}</b-button>
@@ -39,6 +41,7 @@ import ChangePassword from "@/components/Settings/ChangePassword.vue";
 import TopBar from "@/components/Common/TopBar.vue";
 import { isPasswordCorrect } from "@/store/modules/vault";
 import { isMobile } from "@/services/view/responsive";
+import Backup from "./Backup.vue";
 
 @Component({
   components: {
@@ -67,6 +70,29 @@ export default class Security extends Vue {
       canCancel: [""],
       fullScreen: isMobile(),
       props: { mnemonic: store.state.vault.seedMnemonic },
+    });
+  }
+
+  backup(): void {
+    this.$buefy.dialog.confirm({
+      title: this.$tc("settings.security.message.backupConfirmTitle"),
+      message: this.$tc("settings.security.message.backupConfirm"),
+      confirmText: this.$tc("common.button.confirm"),
+      cancelText: this.$tc("common.button.cancel"),
+      trapFocus: true,
+      type: "is-info",
+      hasIcon: true,
+      onConfirm: () => {
+        this.$buefy.modal.open({
+          parent: this,
+          component: Backup,
+          hasModalCard: true,
+          trapFocus: true,
+          canCancel: [""],
+          fullScreen: isMobile(),
+          props: { mnemonic: store.state.vault.seedMnemonic },
+        });
+      },
     });
   }
 
