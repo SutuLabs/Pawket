@@ -289,7 +289,7 @@ export default class Backup extends Vue {
       customNetwork: customNetwork,
     };
     const bak = await encryption.encrypt(JSON.stringify(backupInfo), encryptKey);
-    this.bakUrl = encodeURI(`data:text/txt;charset=utf-8,${salt}${bak}`);
+    this.bakUrl = encodeURI(`data:text/txt;charset=utf-8,PAW1${salt}${bak}`);
   }
 }
 </script>

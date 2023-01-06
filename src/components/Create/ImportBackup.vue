@@ -4,7 +4,7 @@
       <top-bar :title="$t('importBackup.title')" :showBack="true" @close="back()"></top-bar>
       <section class="modal-card-body">
         <b-field>
-          <b-tag v-if="file" icon="paperclip" size="is-small" closable aria-close-label="Close tag" @close="deleteFile">
+          <b-tag v-if="file" icon="paperclip" size="is-small" closable aria-close-label="Close tag" @close="reset()">
             {{ file.name }}
           </b-tag>
         </b-field>
@@ -21,7 +21,14 @@
       </section>
     </div>
     <div v-if="step == 'decode'">
-      <top-bar :title="$t('backup.ui.title.verifyPassword')" :showBack="true" @close="back()"></top-bar>
+      <top-bar
+        :title="$t('backup.ui.title.verifyPassword')"
+        :showBack="true"
+        @close="
+          step = 'upload';
+          reset();
+        "
+      ></top-bar>
       <section class="modal-card-body">
         <b-field>{{ $t("importBackup.password.tip") }}</b-field>
         <b-field :label="$t('importBackup.password.label')">
@@ -61,6 +68,7 @@ import { EncryptKeyHashIteration } from "@/store/modules/vault";
 })
 export default class ImportBackup extends Vue {
   file: File | null = null;
+  backupText = "";
   step: "upload" | "decode" = "upload";
   password = "";
 
@@ -68,18 +76,31 @@ export default class ImportBackup extends Vue {
     this.$router.push("/create/create-wallet");
   }
 
-  deleteFile(): void {
+  reset(): void {
     this.file = null;
+    this.backupText = "";
   }
 
-  afterUpload(): void {
-    if (!this.file?.name.endsWith(".bak")) {
+  async afterUpload(): Promise<void> {
+    if(this.file?.size && this.file?.size > 1000000) {
       Notification.open({
-        message: this.$tc("batchSend.ui.messages.wrongFileType"),
+        message: this.$tc("importBackup.error.LARGE_FILE"),
         type: "is-danger",
         autoClose: false,
       });
       this.file = null;
+      this.backupText = "";
+      return;
+    }
+    this.backupText = (await this.file?.text()) ?? "";
+    if (!this.backupText.startsWith("PAW1")) {
+      Notification.open({
+        message: this.$tc("importBackup.error.UNSUPPORTED_FILE"),
+        type: "is-danger",
+        autoClose: false,
+      });
+      this.file = null;
+      this.backupText = "";
       return;
     }
     this.step = "decode";
@@ -87,9 +108,8 @@ export default class ImportBackup extends Vue {
 
   async confirm(): Promise<void> {
     if (!(this.$refs.password as Vue & { checkHtml5Validity: () => boolean }).checkHtml5Validity() || !this.file) return;
-    const backupText = await this.file.text();
-    const salt = backupText.slice(0, 32);
-    const data = backupText.slice(32);
+    const salt = this.backupText.slice(4, 36);
+    const data = this.backupText.slice(36);
     let backupJson = "";
     const encryptKey = await utility.strongHash(this.password, salt, EncryptKeyHashIteration);
     try {

@@ -1537,6 +1537,10 @@
     "password": {
       "tip": "请输入你的登入密码",
       "label": "密码"
+    },
+    "error": {
+      "LARGE_FILE": "文件过大",
+      "UNSUPPORTED_FILE": "不支持的文件"
     }
   }
 }

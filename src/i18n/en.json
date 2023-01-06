@@ -1537,6 +1537,10 @@
     "password": {
       "tip": "Please enter your login password",
       "label": "Password"
+    },
+    "error": {
+      "LARGE_FILE": "The file is too large",
+      "UNSUPPORTED_FILE": "Unsupported File"
     }
   }
 }
