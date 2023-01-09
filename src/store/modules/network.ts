@@ -146,12 +146,13 @@ store.registerModule<INetworkState>("network", {
       else CustomNetworks[idx] = network;
       localStorage.setItem(CUSTOM_NETWORKS, JSON.stringify(CustomNetworks));
     },
-    deleteNetwork({ state }, name: string) {
+    async deleteNetwork({ state, dispatch }, name: string) {
       if (!state.networks[name]) return;
       Vue.delete(state.networks, name);
       const CustomNetworks: NetworkDetail[] = JSON.parse(localStorage.getItem(CUSTOM_NETWORKS) ?? "[]");
       const idx = CustomNetworks.findIndex(cn => cn.name == name);
       if (idx > -1) CustomNetworks.splice(idx, 1);
+      if (state.networkId == name) await dispatch("switchNetwork", state.defaultNetworkId);
       localStorage.setItem(CUSTOM_NETWORKS, JSON.stringify(CustomNetworks));
     },
   }
