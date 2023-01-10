@@ -1,7 +1,7 @@
 import { GetExchangeRateResponse } from "@/models/api";
 import { rpcUrl } from "@/store/modules/network";
 
-export async function getExchangeRate(from: string, to: string): Promise<number> {
+export async function getExchangeRate(from: string, to: string): Promise<GetExchangeRateResponse | null> {
   try {
     const resp = await fetch(rpcUrl() + "misc/prices", {
       method: "GET",
@@ -13,11 +13,11 @@ export async function getExchangeRate(from: string, to: string): Promise<number>
     const rates = (await resp.json()) as GetExchangeRateResponse[];
     for (const r of rates) {
       if (r.from === from && r.to === to) {
-        return r.price;
+        return r;
       }
     }
   } catch (error) {
     console.warn(error);
   }
-  return -1;
+  return null;
 }
