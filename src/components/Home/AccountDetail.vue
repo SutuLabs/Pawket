@@ -156,6 +156,7 @@ import AddressAccountQr from "./AddressAccountQr.vue";
 import { getAllCats } from "@/store/modules/account";
 import NetworkSelector from "./NetworkSelector.vue";
 import Scan from "../Scan/Scan.vue";
+import { GetExchangeRateResponse } from "@/models/api";
 
 @Component({
   components: {
@@ -166,7 +167,7 @@ import Scan from "../Scan/Scan.vue";
   },
 })
 export default class AccountDetail extends Vue {
-  public exchangeRate = -1;
+  public exchangeRate: GetExchangeRateResponse | null = null;
   public showOfflineNotification = true;
   public timeoutId?: ReturnType<typeof setTimeout>;
   public activeTab = 0;
@@ -292,7 +293,8 @@ export default class AccountDetail extends Vue {
   }
 
   get rate(): number {
-    return this.exchangeRate;
+    if (!this.exchangeRate) return -1;
+    return this.exchangeRate.price;
   }
 
   get xchSymbol(): string {

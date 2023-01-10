@@ -20,7 +20,7 @@
             <span v-else>{{ demojo(account.tokens[cat.name].amount, tokenInfo[cat.name]) }}</span>
           </p>
           <p>
-            <span class="mr-2 is-size-7 has-text-grey" v-if="cat.name === xchSymbol">{{
+            <span class="mr-2 is-size-7 has-text-grey" v-if="exchangeRate && cat.name === exchangeRate.from">{{
               xchToCurrency(account.tokens[cat.name].amount, rate, currency)
             }}</span>
           </p>
@@ -38,19 +38,20 @@
 import { demojo } from "@/filters/unitConversion";
 import { xchToCurrency } from "@/filters/usdtConversion";
 import { AccountEntity, AccountToken, CustomCat, OneTokenInfo, TokenInfo } from "@/models/account";
+import { GetExchangeRateResponse } from "@/models/api";
 import { CurrencyType } from "@/services/exchange/currencyType";
 import { getExchangeRate } from "@/services/exchange/rates";
 import { getTokenInfo } from "@/services/view/cat";
 import store from "@/store";
 import { getAllCats } from "@/store/modules/account";
 import { xchSymbol } from "@/store/modules/network";
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 
 @Component({
   components: {},
 })
 export default class CatPanel extends Vue {
-  public exchangeRate = -1;
+  public exchangeRate: GetExchangeRateResponse | null = null;
 
   get selectedAccount(): number {
     return store.state.account.selectedAccount;
@@ -77,7 +78,8 @@ export default class CatPanel extends Vue {
   }
 
   get rate(): number {
-    return this.exchangeRate;
+    if (!this.exchangeRate) return -1;
+    return this.exchangeRate.price;
   }
 
   get xchSymbol(): string {
@@ -94,6 +96,11 @@ export default class CatPanel extends Vue {
 
   get tokenInfo(): TokenInfo {
     return getTokenInfo(this.account);
+  }
+
+  @Watch("xchSymbol")
+  async updateRate(): Promise<void> {
+    this.exchangeRate = await getExchangeRate(xchSymbol(), this.currencyName);
   }
 
   async mounted(): Promise<void> {
