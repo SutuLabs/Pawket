@@ -1,37 +1,47 @@
 <template>
   <section>
     <div>
-      <b-dropdown aria-role="list" :mobile-modal="false">
-        <template #trigger="{ active }">
-          <b-button :label="shorten(getProfileName(profile))" :icon-right="active ? 'menu-up' : 'menu-down'" />
-        </template>
-        <b-dropdown-item aria-role="listitem" @click="profile = 'All'">{{ $t("nftDetail.ui.profile.all") }}</b-dropdown-item>
-        <b-dropdown-item aria-role="listitem" @click="profile = 'Unassigned'">{{
-          $t("nftDetail.ui.profile.unassigned")
-        }}</b-dropdown-item>
-        <b-dropdown-item
-          aria-role="listitem"
-          v-for="did of dids"
-          @click="
-            profile = 'Single';
-            selectedDid = did.name;
-          "
-          :key="did.did"
-          >{{ shorten(did.name) }}</b-dropdown-item
-        >
-      </b-dropdown>
-      <b-dropdown aria-role="list" class="mr-2" :mobile-modal="false">
-        <template #trigger="{ active }">
-          <b-button :label="shorten(selectedCol)" :icon-right="active ? 'menu-up' : 'menu-down'" />
-        </template>
-        <b-dropdown-item aria-role="listitem" @click="selectedCol = 'All'">{{ $t("nftDetail.ui.profile.all") }}</b-dropdown-item>
-        <b-dropdown-item aria-role="listitem" v-for="(col, key) in collection" @click="selectedCol = col.name" :key="key">{{
-          shorten(col.name)
-        }}</b-dropdown-item>
-      </b-dropdown>
-      <b-button @click="refresh()" :loading="refreshing">
-        <b-icon icon="refresh"></b-icon>
-      </b-button>
+      <b-field grouped>
+        <b-field :label="$t('nftDetail.ui.label.did')">
+          <b-dropdown aria-role="list" :mobile-modal="false">
+            <template #trigger="{ active }">
+              <b-button :label="shorten(getProfileName(profile))" :icon-right="active ? 'menu-up' : 'menu-down'" />
+            </template>
+            <b-dropdown-item aria-role="listitem" @click="profile = 'All'">{{ $t("nftDetail.ui.profile.all") }}</b-dropdown-item>
+            <b-dropdown-item aria-role="listitem" @click="profile = 'Unassigned'">{{
+              $t("nftDetail.ui.profile.unassigned")
+            }}</b-dropdown-item>
+            <b-dropdown-item
+              aria-role="listitem"
+              v-for="did of dids"
+              @click="
+                profile = 'Single';
+                selectedDid = did.name;
+              "
+              :key="did.did"
+              >{{ shorten(did.name) }}</b-dropdown-item
+            >
+          </b-dropdown>
+        </b-field>
+        <b-field :label="$t('nftDetail.ui.label.collection')">
+          <b-dropdown aria-role="list" class="mr-2" :mobile-modal="false">
+            <template #trigger="{ active }">
+              <b-button :label="shorten(selectedCol)" :icon-right="active ? 'menu-up' : 'menu-down'" />
+            </template>
+            <b-dropdown-item aria-role="listitem" @click="selectedCol = 'All'">{{
+              $t("nftDetail.ui.profile.all")
+            }}</b-dropdown-item>
+            <b-dropdown-item aria-role="listitem" v-for="(col, key) in collection" @click="selectedCol = col.name" :key="key">{{
+              shorten(col.name)
+            }}</b-dropdown-item>
+          </b-dropdown>
+        </b-field>
+        <b-field :label="$t('accountDetail.ui.tooltip.refresh')">
+          <b-button @click="refresh()" :loading="refreshing">
+            <b-icon icon="refresh"></b-icon>
+          </b-button>
+        </b-field>
+      </b-field>
       <ul class="is-flex columns is-multiline is-mobile my-2" v-if="filteredNfts">
         <li
           class="column is-4-tablet is-6-mobile"
