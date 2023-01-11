@@ -12,13 +12,17 @@
           }}</b-button>
         </b-field>
         <b-field>
-          <a href="https://ramp.stably.io/" target="_blank">
+          <a href="https://ramp.stably.io/?network=chia&asset=USDS&filter=true&integrationId=pawket-6bfee5b4" target="_blank">
             <b-button type="is-link" expanded icon-right="open-in-new">{{ $t("buyUsds.ui.button.stably") }}</b-button>
           </a>
         </b-field>
       </div>
       <div v-if="showFrame">
-        <iframe src="https://ramp.stably.io/?network=chia&asset=USDS&filter=true" title="Buy USDS" class="stably"></iframe>
+        <iframe
+          src="https://ramp.stably.io/?network=chia&asset=USDS&filter=true&integrationId=pawket-6bfee5b4"
+          title="Buy USDS"
+          class="stably"
+        ></iframe>
       </div>
       <p class="mt-6 pt-6 has-text-grey is-size-7">
         {{ $t("buyUsds.ui.stablyPrefix") }}
