@@ -64,7 +64,7 @@
             <div class="pt-3">
               <div class="b-tooltip">
                 <a @click="$router.push('/home/receive')" href="javascript:void(0)" class="has-text-primary">
-                  <div class="mx-5">
+                  <div class="mx-3">
                     <span class="icon has-background-primary is-medium is-circle"
                       ><i class="mdi mdi-download mdi-24px has-text-white"></i
                     ></span>
@@ -73,8 +73,18 @@
                 </a>
               </div>
               <div class="b-tooltip">
+                <a @click="$router.push('/home/buy')" href="javascript:void(0)" class="has-text-primary">
+                  <div class="mx-3">
+                    <span class="icon has-background-primary is-medium is-circle"
+                      ><i class="mdi mdi-credit-card-outline mdi-24px has-text-white"></i
+                    ></span>
+                    <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.buy") }}</p>
+                  </div>
+                </a>
+              </div>
+              <div class="b-tooltip">
                 <a @click="$router.push('/home/send')" href="javascript:void(0)" class="has-text-primary">
-                  <div class="mr-5">
+                  <div class="mr-3">
                     <span class="icon has-background-primary is-medium is-circle"
                       ><i class="mdi mdi-arrow-right mdi-24px has-text-white"></i
                     ></span>
@@ -84,7 +94,7 @@
               </div>
               <div class="b-tooltip">
                 <a @click="$router.push('/home/scan')" href="javascript:void(0)" class="has-text-primary">
-                  <div class="mr-5">
+                  <div class="mr-3">
                     <span class="icon has-background-primary is-medium is-circle"
                       ><i class="mdi mdi-crop-free mdi-24px has-text-white"></i
                     ></span>
@@ -157,6 +167,7 @@ import { getAllCats } from "@/store/modules/account";
 import NetworkSelector from "./NetworkSelector.vue";
 import Scan from "../Scan/Scan.vue";
 import { GetExchangeRateResponse } from "@/models/api";
+import BuyUSDS from "./BuyUSDS.vue";
 
 @Component({
   components: {
@@ -245,6 +256,9 @@ export default class AccountDetail extends Vue {
         break;
       case "/home/receive":
         this.openLink();
+        break;
+      case "/home/buy":
+        this.buy();
         break;
       case "/home/errorLog":
         this.openErrorLog();
@@ -428,6 +442,20 @@ export default class AccountDetail extends Vue {
     this.$buefy.modal.open({
       parent: this,
       component: component,
+      trapFocus: true,
+      width: 700,
+      canCancel: ["outside", "escape"],
+      onCancel: this.handleModalClose,
+      fullScreen: isMobile(),
+      props: { account: this.account },
+      events: { close: this.handleModalClose },
+    });
+  }
+
+  buy():void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: BuyUSDS,
       trapFocus: true,
       width: 700,
       canCancel: ["outside", "escape"],

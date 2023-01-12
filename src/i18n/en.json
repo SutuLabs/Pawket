@@ -142,6 +142,7 @@
     "ui": {
       "button": {
         "receive": "Receive",
+        "buy": "Buy",
         "send": "Send",
         "scan": "Scan",
         "confirm": "Confirm",
@@ -1543,6 +1544,19 @@
     "error": {
       "LARGE_FILE": "The file is too large",
       "UNSUPPORTED_FILE": "Unsupported File"
+    }
+  },
+  "buyUsds": {
+    "ui": {
+      "title": "Buy USDS",
+      "button": {
+        "continue": "Continue to Buy",
+        "stably": "Open Stably to Buy"
+      },
+      "tip": "Currently only supports buying USDS on the Chia blockchain via ACH bank transfer.",
+      "stablyPrefix": "This Service is provided by",
+      "stably": " Stably ",
+      "stablySuffix": "and is entirely independent from Pawket."
     }
   }
 }
