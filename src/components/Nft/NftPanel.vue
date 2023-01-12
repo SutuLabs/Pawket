@@ -1,87 +1,105 @@
 <template>
   <section>
     <div>
-      <b-dropdown aria-role="list" class="mr-3" :mobile-modal="false">
-        <template #trigger="{ active }">
-          <b-button :label="shorten(getProfileName(profile))" :icon-right="active ? 'menu-up' : 'menu-down'" />
-        </template>
-        <b-dropdown-item aria-role="listitem" @click="profile = 'All'">{{ $t("nftDetail.ui.profile.all") }}</b-dropdown-item>
-        <b-dropdown-item aria-role="listitem" @click="profile = 'Unassigned'">{{
-          $t("nftDetail.ui.profile.unassigned")
-        }}</b-dropdown-item>
-        <b-dropdown-item
-          aria-role="listitem"
-          v-for="did of dids"
-          @click="
-            profile = 'Single';
-            selectedDid = did.name;
-          "
-          :key="did.did"
-          >{{ shorten(did.name) }}</b-dropdown-item
+      <b-field grouped>
+        <b-field :label="$t('nftDetail.ui.label.did')">
+          <b-dropdown aria-role="list" :mobile-modal="false">
+            <template #trigger="{ active }">
+              <b-button :label="shorten(getProfileName(profile))" :icon-right="active ? 'menu-up' : 'menu-down'" />
+            </template>
+            <b-dropdown-item aria-role="listitem" @click="profile = 'All'">{{ $t("nftDetail.ui.profile.all") }}</b-dropdown-item>
+            <b-dropdown-item aria-role="listitem" @click="profile = 'Unassigned'">{{
+              $t("nftDetail.ui.profile.unassigned")
+            }}</b-dropdown-item>
+            <b-dropdown-item
+              aria-role="listitem"
+              v-for="did of dids"
+              @click="
+                profile = 'Single';
+                selectedDid = did.name;
+              "
+              :key="did.did"
+              >{{ shorten(did.name) }}</b-dropdown-item
+            >
+          </b-dropdown>
+        </b-field>
+        <b-field :label="$t('nftDetail.ui.label.collection')">
+          <b-dropdown aria-role="list" class="mr-2" :mobile-modal="false">
+            <template #trigger="{ active }">
+              <b-button :label="shorten(selectedCol)" :icon-right="active ? 'menu-up' : 'menu-down'" />
+            </template>
+            <b-dropdown-item aria-role="listitem" @click="selectedCol = 'All'">{{
+              $t("nftDetail.ui.profile.all")
+            }}</b-dropdown-item>
+            <b-dropdown-item aria-role="listitem" v-for="(col, key) in collection" @click="selectedCol = col.name" :key="key">{{
+              shorten(col.name)
+            }}</b-dropdown-item>
+          </b-dropdown>
+        </b-field>
+        <b-field :label="$t('accountDetail.ui.tooltip.refresh')">
+          <b-button @click="refresh()" :loading="refreshing">
+            <b-icon icon="refresh"></b-icon>
+          </b-button>
+        </b-field>
+      </b-field>
+      <ul class="is-flex columns is-multiline is-mobile my-2" v-if="filteredNfts">
+        <li
+          class="column is-4-tablet is-6-mobile"
+          v-for="(nft, i) of filteredNfts.slice((currentPage - 1) * pageSize, (currentPage - 1) * pageSize + pageSize)"
+          :key="i"
         >
-      </b-dropdown>
-      <b-button @click="refresh()" :loading="refreshing">
-        <b-icon icon="refresh"></b-icon>
-      </b-button>
-      <b-collapse animation="slide" v-for="(col, key) of collection" :key="key" :open="false">
-        <template #trigger="props">
-          <p class="is-size-5 mb-1" @click="lazyLoading()">
-            <span><b-icon class="is-pulled-left pt-1" :icon="props.open ? 'chevron-down' : 'chevron-right'"></b-icon></span>
-            <span>{{ col.name }}</span>
-          </p>
-        </template>
-        <div>
-          <ul class="is-flex columns is-multiline is-mobile my-2" v-if="col.nfts">
-            <li class="column is-4-tablet is-6-mobile" v-for="(nft, i) of col.nfts" :key="i">
-              <div class="nft-image-container">
-                <img
-                  class="nft-image is-clickable cover"
-                  v-if="nft.metadata.uri"
-                  :data-src="nft.metadata.uri"
-                  @click="showDetail(nft)"
-                  src="@/assets/loading.svg"
-                  loading="lazy"
-                />
-                <img class="nft-image is-clickable cover" v-else src="@/assets/nft-no-image.png" @click="showDetail(nft)" />
-                <p class="nft-name has-background-white-ter pt-2 pl-3 is-hidden-mobile">
-                  <span class="is-inline-block truncate">{{ nft.metadata.name }}</span>
-                  <span class="is-pulled-right">
-                    <b-dropdown aria-role="list" class="is-pulled-right" :mobile-modal="false" position="is-bottom-left">
-                      <template #trigger>
-                        <b-icon icon="dots-vertical" class="is-clickable"></b-icon>
-                      </template>
-                      <a class="has-text-dark" :href="spaceScanUrl + nft.address" target="_blank">
-                        <b-dropdown-item aria-role="listitem"
-                          ><b-icon class="media-left" icon="open-in-new" size="is-small"></b-icon
-                          >{{ $t("nftDetail.ui.dropdown.spaceScan") }}
-                        </b-dropdown-item>
-                      </a>
-                      <a class="has-text-dark" :href="mintGardenUrl + nft.address" target="_blank">
-                        <b-dropdown-item aria-role="listitem"
-                          ><b-icon class="media-left" icon="open-in-new" size="is-small"></b-icon
-                          >{{ $t("nftDetail.ui.dropdown.mintGarden") }}
-                        </b-dropdown-item>
-                      </a>
-                      <a class="has-text-dark" @click="setAsProfilePic(nft.metadata.uri)">
-                        <b-dropdown-item aria-role="listitem">
-                          <b-icon class="media-left" icon="account-box" size="is-small"></b-icon
-                          >{{ $t("nftDetail.ui.dropdown.setAsProfilePic") }}
-                        </b-dropdown-item>
-                      </a>
-                      <a class="has-text-dark" @click="nftBurn(nft)">
-                        <b-dropdown-item aria-role="listitem">
-                          <b-icon class="media-left" icon="trash-can-outline" size="is-small"></b-icon
-                          >{{ $t("nftDetail.ui.dropdown.nftBurn") }}
-                        </b-dropdown-item>
-                      </a>
-                    </b-dropdown>
-                  </span>
-                </p>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </b-collapse>
+          <div class="nft-image-container">
+            <img class="nft-image is-clickable cover" v-if="nft.metadata.uri" @click="showDetail(nft)" :src="nft.metadata.uri" />
+            <img class="nft-image is-clickable cover" v-else src="@/assets/nft-no-image.png" @click="showDetail(nft)" />
+            <p class="nft-name has-background-white-ter pt-2 pl-3 is-hidden-mobile">
+              <span class="is-inline-block truncate">{{ nft.metadata.name }}</span>
+              <span class="is-pulled-right">
+                <b-dropdown aria-role="list" class="is-pulled-right" :mobile-modal="false" position="is-bottom-left">
+                  <template #trigger>
+                    <b-icon icon="dots-vertical" class="is-clickable"></b-icon>
+                  </template>
+                  <a class="has-text-dark" :href="spaceScanUrl + nft.address" target="_blank">
+                    <b-dropdown-item aria-role="listitem"
+                      ><b-icon class="media-left" icon="open-in-new" size="is-small"></b-icon
+                      >{{ $t("nftDetail.ui.dropdown.spaceScan") }}
+                    </b-dropdown-item>
+                  </a>
+                  <a class="has-text-dark" :href="mintGardenUrl + nft.address" target="_blank">
+                    <b-dropdown-item aria-role="listitem"
+                      ><b-icon class="media-left" icon="open-in-new" size="is-small"></b-icon
+                      >{{ $t("nftDetail.ui.dropdown.mintGarden") }}
+                    </b-dropdown-item>
+                  </a>
+                  <a class="has-text-dark" @click="setAsProfilePic(nft.metadata.uri)">
+                    <b-dropdown-item aria-role="listitem">
+                      <b-icon class="media-left" icon="account-box" size="is-small"></b-icon
+                      >{{ $t("nftDetail.ui.dropdown.setAsProfilePic") }}
+                    </b-dropdown-item>
+                  </a>
+                  <a class="has-text-dark" @click="nftBurn(nft)">
+                    <b-dropdown-item aria-role="listitem">
+                      <b-icon class="media-left" icon="trash-can-outline" size="is-small"></b-icon
+                      >{{ $t("nftDetail.ui.dropdown.nftBurn") }}
+                    </b-dropdown-item>
+                  </a>
+                </b-dropdown>
+              </span>
+            </p>
+          </div>
+        </li>
+      </ul>
+      <b-pagination
+        :total="total"
+        v-model="currentPage"
+        :per-page="pageSize"
+        icon-prev="chevron-left"
+        icon-next="chevron-right"
+        aria-next-label="Next page"
+        aria-previous-label="Previous page"
+        aria-page-label="Page"
+        aria-current-label="Current page"
+      >
+      </b-pagination>
     </div>
   </section>
 </template>
@@ -115,7 +133,11 @@ export default class NftPanel extends Vue {
   public isOpen: number | string = 0;
   public refreshing = false;
   profile: Profile = "All";
+  selectedCol = "All";
   selectedDid = "";
+  currentPage = 1;
+  total = 0;
+  pageSize = 12;
   public mintGardenUrl = "https://mintgarden.io/nfts/";
 
   get selectedAccount(): number {
@@ -145,17 +167,22 @@ export default class NftPanel extends Vue {
   }
 
   get nfts(): NftDetail[] {
-    if (!this.account.nfts) {
-      return [];
+    return this.account.nfts ?? [];
+  }
+
+  get filteredNfts(): NftDetail[] {
+    let nfts = this.nfts;
+    if (this.selectedCol != "All") {
+      nfts = this.collection[this.selectedCol].nfts;
     }
-    if (this.profile == "All") return this.account.nfts;
-    if (this.profile == "Unassigned")
-      return this.account.nfts.filter((nft) => !nft.analysis.didOwner || nft.analysis.didOwner.length < 10);
-    const did = this.dids.find((d) => d.name == this.selectedDid);
-    if (did) {
-      return this.account.nfts.filter((nft) => puzzle.getAddressFromPuzzleHash(nft.analysis.didOwner, "did:chia:") == did.did);
+    if (this.profile == "Unassigned") {
+      nfts = nfts.filter((nft) => !nft.analysis.didOwner || nft.analysis.didOwner.length < 10);
+    } else if (this.profile == "Single") {
+      const did = this.dids.find((d) => d.name == this.selectedDid);
+      if (did) nfts = nfts.filter((nft) => puzzle.getAddressFromPuzzleHash(nft.analysis.didOwner, "did:chia:") == did.did);
     }
-    return this.account.nfts;
+    this.total = nfts.length;
+    return nfts;
   }
 
   get dids(): DidDetail[] {
@@ -274,30 +301,6 @@ export default class NftPanel extends Vue {
       fullScreen: isMobile(),
       canCancel: ["outside", "escape"],
       props: { nft: nft, metadata: this.extraInfo[nft.address].metadata, account: this.account, dids: this.dids },
-    });
-  }
-
-  preloadImage(img: Element): void {
-    const src = img.getAttribute("data-src");
-    if (!src) return;
-    img.setAttribute("src", src);
-    img.setAttribute("data-src", "");
-  }
-
-  lazyLoading(): void {
-    const images = document.querySelectorAll("[data-src]");
-    const imageOberserver = new IntersectionObserver((entries, imageOberserver) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) {
-          return;
-        } else {
-          this.preloadImage(entry.target);
-          imageOberserver.unobserve(entry.target);
-        }
-      });
-    }, {});
-    images.forEach((image) => {
-      imageOberserver.observe(image);
     });
   }
 

@@ -1135,6 +1135,7 @@
       "label": {
         "nftId": "NFT ID:",
         "collection": "Collection",
+        "did": "DID",
         "description": "Description",
         "expirationDate": "Expiration Date"
       },

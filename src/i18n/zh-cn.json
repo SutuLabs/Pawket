@@ -1135,6 +1135,7 @@
       "label": {
         "nftId": "NFT ID:",
         "collection": "收藏集",
+        "did": "DID",
         "description": "描述",
         "expirationDate": "过期时间"
       },
