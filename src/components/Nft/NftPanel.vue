@@ -26,14 +26,26 @@
         <b-field :label="$t('nftDetail.ui.label.collection')">
           <b-dropdown aria-role="list" class="mr-2" :mobile-modal="false">
             <template #trigger="{ active }">
-              <b-button :label="shorten(selectedCol)" :icon-right="active ? 'menu-up' : 'menu-down'" />
+              <b-button :label="shorten(selectedColName)" :icon-right="active ? 'menu-up' : 'menu-down'" />
             </template>
-            <b-dropdown-item aria-role="listitem" @click="selectedCol = 'All'">{{
-              $t("nftDetail.ui.profile.all")
-            }}</b-dropdown-item>
-            <b-dropdown-item aria-role="listitem" v-for="(col, key) in collection" @click="selectedCol = col.name" :key="key">{{
-              shorten(col.name)
-            }}</b-dropdown-item>
+            <b-dropdown-item
+              aria-role="listitem"
+              @click="
+                selectedCol = 'All';
+                selectedColName = 'All';
+              "
+              >{{ $t("nftDetail.ui.profile.all") }}</b-dropdown-item
+            >
+            <b-dropdown-item
+              aria-role="listitem"
+              v-for="(col, key) in collection"
+              @click="
+                selectedCol = col.id;
+                selectedColName = col.name;
+              "
+              :key="key"
+              >{{ shorten(col.name) }}</b-dropdown-item
+            >
           </b-dropdown>
         </b-field>
         <b-field :label="$t('accountDetail.ui.tooltip.refresh')">
@@ -49,8 +61,14 @@
           :key="i"
         >
           <div class="nft-image-container">
-            <img class="nft-image is-clickable cover" v-if="nft.metadata.uri" @click="showDetail(nft)" :src="nft.metadata.uri" />
-            <img class="nft-image is-clickable cover" v-else src="@/assets/nft-no-image.png" @click="showDetail(nft)" />
+            <img
+              class="nft-image is-clickable cover"
+              @click="showDetail(nft)"
+              v-if="getImageUrls(nft).length"
+              :data-fallback="0"
+              @error="fallBack($event, nft)"
+              :src="getImageUrls(nft)[0]"
+            />
             <p class="nft-name has-background-white-ter pt-2 pl-3 is-hidden-mobile">
               <span class="is-inline-block truncate">{{ nft.metadata.name }}</span>
               <span class="is-pulled-right">
@@ -119,14 +137,17 @@ import puzzle from "@/services/crypto/puzzle";
 import { tc } from "@/i18n/i18n";
 import { shorten } from "@/filters/addressConversion";
 import NftTransfer from "./NftTransfer.vue";
+import { bech32m } from "@scure/base";
+import { createHash } from "crypto";
 
 interface CollectionNfts {
   name: string;
   id: string;
+  nftCollection: string;
   nfts: NftDetail[];
 }
 
-type CollectionDict = { [name: string]: CollectionNfts };
+type CollectionDict = { [id: string]: CollectionNfts };
 type Profile = "All" | "Unassigned" | "Single";
 @Component({})
 export default class NftPanel extends Vue {
@@ -134,11 +155,13 @@ export default class NftPanel extends Vue {
   public refreshing = false;
   profile: Profile = "All";
   selectedCol = "All";
+  selectedColName = "All";
   selectedDid = "";
   currentPage = 1;
   total = 0;
   pageSize = 12;
   public mintGardenUrl = "https://mintgarden.io/nfts/";
+  fallBackList = ["https://assets.spacescan.io/xch/img/nft/full/", "https://nft.dexie.space/preview/medium/"];
 
   get selectedAccount(): number {
     return store.state.account.selectedAccount;
@@ -157,10 +180,14 @@ export default class NftPanel extends Vue {
       nft.metadata.name = ext?.metadata?.name;
       const colname = ext?.metadata?.collection?.name ?? other;
       const colid = ext?.metadata?.collection?.id ?? other;
-      if (!col[colname]) {
-        col[colname] = { name: colname, id: colid, nfts: [nft] };
+      const hash = createHash("sha256")
+        .update(nft.analysis.launcherId + colid)
+        .digest();
+      const nftCollection = bech32m.encode("col", bech32m.toWords(hash));
+      if (!col[colid]) {
+        col[colid] = { name: colname, id: colid, nftCollection: nftCollection, nfts: [nft] };
       } else {
-        col[colname].nfts.push(nft);
+        col[colid].nfts.push(nft);
       }
     }
     return col;
@@ -203,6 +230,30 @@ export default class NftPanel extends Vue {
 
   get accountId(): number {
     return store.state.account.selectedAccount;
+  }
+
+  getImageUrls(nft: NftDetail): string[] {
+    if (!nft.analysis.metadata.imageUri) return [];
+    if (typeof nft.analysis.metadata.imageUri == "string") return [nft.analysis.metadata.imageUri];
+    return nft.analysis.metadata.imageUri;
+  }
+
+  fallBack(event: Event, nft: NftDetail): void {
+    const img = event.target as HTMLImageElement;
+    let fallBackIndex = Number(img.getAttribute("data-fallback"));
+    const imageUrls = this.getImageUrls(nft);
+    let totalFallback = this.fallBackList.length + imageUrls.length;
+    fallBackIndex++;
+    img.dataset.fallback = fallBackIndex.toString();
+    if (fallBackIndex > totalFallback) {
+      img.src = "@/assets/nft-no-image.png";
+    } else {
+      if (fallBackIndex < imageUrls.length) img.src = imageUrls[fallBackIndex];
+      else {
+        if (img.src.endsWith(".gif")) img.src = this.fallBackList[fallBackIndex - imageUrls.length] + nft.address + ".gif";
+        else img.src = this.fallBackList[fallBackIndex - imageUrls.length] + nft.address + ".webp";
+      }
+    }
   }
 
   shorten(name: string): string {
