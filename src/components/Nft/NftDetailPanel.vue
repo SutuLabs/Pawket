@@ -1,18 +1,24 @@
 <template>
   <div :class="{ 'modal-card': true, 'min-width-table': !isMobile }">
-    <top-bar :title="metadata ? metadata.name : ''" :showClose="true" @close="close()"></top-bar>
+    <top-bar :title="metadata == null ? 'Unnamed' : metadata.name" :showClose="true" @close="close()"></top-bar>
     <section class="modal-card-body">
       <div class="columns is-mobile is-multiline">
         <div class="column is-6-tablet is-12-mobile">
           <span @click="preview(nft.metadata.uri)"
-            ><b-image v-if="nft.metadata.uri" :src="nft.metadata.uri" alt="NFT image" ratio="1by1"></b-image
-            ><b-image v-else :src="require('@/assets/nft-no-image.png')" alt="NFT image" ratio="1by1"></b-image
+            ><b-image
+              v-if="getImageUrls(nft).length"
+              :data-fallback="0"
+              @error="fallBack($event, nft)"
+              :src="getImageUrls(nft)[0]"
+              alt="NFT image"
+              ratio="1by1"
+            ></b-image
           ></span>
         </div>
         <div class="column is-6-tablet is-12-mobile">
           <b-field>
             <template #label>
-              {{ metadata ? metadata.name : "" }}
+              {{ metadata == null ? "Unnamed" : metadata.name }}
               <b-dropdown aria-role="list" class="is-pulled-right" :mobile-modal="false" position="is-bottom-left">
                 <template #trigger>
                   <b-icon icon="dots-vertical" class="is-clickable"></b-icon>
@@ -35,7 +41,7 @@
                     >{{ $t("nftDetail.ui.dropdown.setAsProfilePic") }}
                   </b-dropdown-item>
                 </a>
-                <a class="has-text-dark" @click="nftBurn(nft)">
+                <a class="has-text-dark" @click="nftBurn()">
                   <b-dropdown-item aria-role="listitem">
                     <b-icon class="media-left" icon="trash-can-outline" size="is-small"></b-icon
                     >{{ $t("nftDetail.ui.dropdown.nftBurn") }}
@@ -391,10 +397,11 @@ import { modshash } from "@/services/coin/mods";
 export default class NftDetailPanel extends Vue {
   @Prop() public account!: AccountEntity;
   @Prop() public nft!: NftDetail;
-  @Prop() public metadata!: NftOffChainMetadata;
+  @Prop() public metadata!: NftOffChainMetadata | null;
   @Prop() public dids!: DidDetail[];
   public showMore = false;
   public mintGardenUrl = "https://mintgarden.io/nfts/";
+  fallBackList = ["https://assets.spacescan.io/xch/img/nft/full/", "https://nft.dexie.space/preview/medium/"];
 
   @Emit("close")
   close(): void {
@@ -424,6 +431,32 @@ export default class NftDetailPanel extends Vue {
   setAsProfilePic(url: string): void {
     store.dispatch("setProfilePic", { idx: this.accountId, profilePic: url });
     notifyPrimary(this.$tc("common.message.saved"));
+  }
+
+  getImageUrls(nft: NftDetail): string[] {
+    if (!nft.analysis.metadata.imageUri) return [];
+    if (typeof nft.analysis.metadata.imageUri == "string") return [nft.analysis.metadata.imageUri];
+    return nft.analysis.metadata.imageUri;
+  }
+
+  fallBack(event: Event, nft: NftDetail): void {
+    const img = event.target as HTMLImageElement;
+    if (img.src == "@/assets/nft-no-image.png") return;
+    let fallBackIndex = Number(img.getAttribute("data-fallback"));
+    const imageUrls = this.getImageUrls(nft);
+    let totalFallback = this.fallBackList.length + imageUrls.length;
+    fallBackIndex++;
+    img.dataset.fallback = fallBackIndex.toString();
+    if (fallBackIndex > totalFallback) {
+      img.src = "@/assets/nft-no-image.png";
+    } else {
+      if (fallBackIndex < imageUrls.length) img.src = imageUrls[fallBackIndex];
+      else {
+        if (img.src.endsWith(".gif")) img.src = this.fallBackList[fallBackIndex - imageUrls.length] + nft.address + ".gif";
+        else img.src = this.fallBackList[fallBackIndex - imageUrls.length] + nft.address + ".webp";
+      }
+    }
+    nft.metadata.uri = img.src;
   }
 
   nftBurn(): void {

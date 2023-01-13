@@ -55,11 +55,7 @@
         </b-field>
       </b-field>
       <ul class="is-flex columns is-multiline is-mobile my-2" v-if="filteredNfts">
-        <li
-          class="column is-4-tablet is-6-mobile"
-          v-for="(nft, i) of filteredNfts.slice((currentPage - 1) * pageSize, (currentPage - 1) * pageSize + pageSize)"
-          :key="i"
-        >
+        <li class="column is-4-tablet is-6-mobile" v-for="(nft, i) of filteredNfts" :key="i">
           <div class="nft-image-container">
             <img
               class="nft-image is-clickable cover"
@@ -70,7 +66,10 @@
               :src="getImageUrls(nft)[0]"
             />
             <p class="nft-name has-background-white-ter pt-2 pl-3 is-hidden-mobile">
-              <span class="is-inline-block truncate">{{ nft.metadata.name }}</span>
+              <span class="is-inline-block truncate" v-if="extraInfo[nft.address].metadata == null">{{ "Unnamed" }}</span>
+              <span class="is-inline-block truncate" v-else>{{
+                extraInfo[nft.address].metadata ? extraInfo[nft.address].metadata.name : ""
+              }}</span>
               <span class="is-pulled-right">
                 <b-dropdown aria-role="list" class="is-pulled-right" :mobile-modal="false" position="is-bottom-left">
                   <template #trigger>
@@ -209,6 +208,7 @@ export default class NftPanel extends Vue {
       if (did) nfts = nfts.filter((nft) => puzzle.getAddressFromPuzzleHash(nft.analysis.didOwner, "did:chia:") == did.did);
     }
     this.total = nfts.length;
+    nfts = nfts.slice((this.currentPage - 1) * this.pageSize, (this.currentPage - 1) * this.pageSize + this.pageSize);
     return nfts;
   }
 
@@ -245,7 +245,8 @@ export default class NftPanel extends Vue {
     let totalFallback = this.fallBackList.length + imageUrls.length;
     fallBackIndex++;
     img.dataset.fallback = fallBackIndex.toString();
-    if (fallBackIndex > totalFallback) {
+    if (fallBackIndex > totalFallback) return;
+    if (fallBackIndex == totalFallback) {
       img.src = "@/assets/nft-no-image.png";
     } else {
       if (fallBackIndex < imageUrls.length) img.src = imageUrls[fallBackIndex];
@@ -276,10 +277,10 @@ export default class NftPanel extends Vue {
     this.refresh();
   }
 
-  @Watch("nfts")
+  @Watch("filteredNfts")
   async downloadRelated(): Promise<void> {
-    for (let i = 0; i < this.nfts.length; i++) {
-      const nft = this.nfts[i];
+    for (let i = 0; i < this.filteredNfts.length; i++) {
+      const nft = this.filteredNfts[i];
       const ext = this.extraInfo[nft.address];
       if (!ext) {
         // this.extraInfo[nft.address] = { status: !nft.analysis.metadata.metadataUri ? "NoMetadata" : "Ready" };
@@ -295,19 +296,25 @@ export default class NftPanel extends Vue {
 
   async downloadNftMetadata(nft: NftDetail): Promise<void> {
     const uri = getScalarString(nft.analysis.metadata.metadataUri);
-    if (!uri) return;
+    if (!uri) {
+      this.extraInfo[nft.address].metadata = null;
+      return;
+    }
     // console.log("start download nft", nft.analysis.metadata.metadataUri);
-    const resp = await fetch(uri);
-    const body = await resp.blob();
-    const bodyhex = utility.toHexString(await utility.purehash(await body.arrayBuffer()));
+    let bodyhex = "";
     try {
+      let controller = new AbortController();
+      setTimeout(() => controller.abort(), 2000);
+      const resp = await fetch(uri, { signal: controller.signal });
+      const body = await resp.blob();
+      bodyhex = utility.toHexString(await utility.purehash(await body.arrayBuffer()));
       const md = JSON.parse(await body.text()) as NftOffChainMetadata;
       this.extraInfo[nft.address].metadata = md;
     } catch (error) {
       if (process.env.NODE_ENV !== "production") {
         console.warn("cannot parse metadata", error);
       }
-      this.extraInfo[nft.address].metadata = undefined;
+      this.extraInfo[nft.address].metadata = null;
     }
     // console.log("downloaded", bodyhex, nft.analysis.metadata.metadataHash, md);
     this.extraInfo[nft.address].status = "Processed";
