@@ -1,21 +1,23 @@
 <template>
   <div>
-    <div class="columns panel-block is-mobile has-background-white-ter" v-for="(col, index) of ad" :key="index">
-      <div class="column">
-        <div class="is-flex">
-          <div class="mr-4 py-1"><b-tag type="is-info">AD</b-tag></div>
-          <div class="mr-4">
-            <span class="image is-32x32">
-              <img :src="col.icon" />
-            </span>
-          </div>
-          <div class="py-1 has-text-grey-dark is-size-6">
-            {{ col.name }}
+    <div>
+      <div class="columns panel-block is-mobile has-background-white-ter" v-for="(col, index) of ad" :key="index">
+        <div class="column">
+          <div class="is-flex">
+            <div class="mr-4 py-1"><b-tag type="is-info">AD</b-tag></div>
+            <div class="mr-4">
+              <span class="image is-32x32">
+                <img :src="col.icon" />
+              </span>
+            </div>
+            <div class="py-1 has-text-grey-dark is-size-6">
+              {{ col.name }}
+            </div>
           </div>
         </div>
-      </div>
-      <div class="column buttons has-text-right">
-        <b-button :size="isMobile ? 'is-small' : 'is-normal'" @click="buy(col)">{{ $t("explore.button.buy") }}</b-button>
+        <div class="column buttons has-text-right">
+          <b-button :size="isMobile ? 'is-small' : 'is-normal'" @click="buy(col)">{{ $t("explore.button.buy") }}</b-button>
+        </div>
       </div>
     </div>
     <div v-if="!nftMarket.length" class="has-text-centered">{{ $t("common.message.noResult") }}</div>
@@ -49,19 +51,16 @@ import Dexie from "@/services/api/dexie";
 import { MarketItem, Markets } from "@/models/market";
 import { chainId, mainnetChainId } from "@/store/modules/network";
 
+interface Ad {
+  nft: { id: string }[];
+}
+
 @Component({})
 export default class NftMarket extends Vue {
   nftMarkets: Markets = { xch: [] };
   loading = false;
   activeTab = 0;
-  ad: MarketItem[] = [
-    {
-      icon: "https://nft.dexie.space/preview/tiny/col14v8xqlfkkjqdxudecr2p9y6363dec0hzl0lucnufv92u26cm38yqrlf2wy.webp",
-      id: "ab0e607d36b480d371b9c0d4129351d45b9c3ee2fbffcc4f896155c56b1b89c8",
-      is_nft: 1,
-      name: "PassPaw 2022",
-    },
-  ];
+  ad: MarketItem[] = [];
 
   get isMobile(): boolean {
     return isMobile();
@@ -88,6 +87,12 @@ export default class NftMarket extends Vue {
     this.nftMarkets = await Dexie.getNftMarket();
     this.loading = false;
     localStorage.setItem("NFT_MARKET", JSON.stringify(this.nftMarkets));
+    const resp = await fetch("https://ad.pawket.app/ad.json");
+    const res = (await resp.json()) as Ad;
+    for (let ad of res.nft) {
+      const item = this.nftMarkets.xch.find((item) => item.id == ad.id);
+      if (item) this.ad.push(item);
+    }
   }
 
   mounted(): void {
