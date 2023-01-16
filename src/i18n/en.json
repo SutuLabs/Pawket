@@ -1558,5 +1558,10 @@
       "stably": " Stably ",
       "stablySuffix": "and is entirely independent from Pawket."
     }
+  },
+  "nftBurn": {
+    "title": "NFT burn",
+    "description": "You will burn this NFT by removing it from circulation by sending it to a verifiably unspendable address.",
+    "confirmation": "Are you sure to burn this NFT? If you burn this NFT, nobody (including you) will ever be able to access it again.<br>Please review your transaction."
   }
 }

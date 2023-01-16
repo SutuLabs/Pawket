@@ -1177,7 +1177,7 @@
         "spaceScan": "在 Spacescan.io 查看",
         "mintGarden": "在 Mintgarden.io 查看",
         "setAsProfilePic": "设置为账户头像",
-        "nftBurn": "烧毁NFT"
+        "nftBurn": "销毁 NFT"
       },
       "profile": {
         "all": "全部 NFT",
@@ -1558,5 +1558,10 @@
       "stably": "Stably ",
       "stablySuffix": "提供，完全独立于Pawket。"
     }
+  },
+  "nftBurn": {
+    "title": "销毁 NFT",
+    "description": "您将会把该 NFT 发送到一个可验证的不可花费的地址，将其从流通中移除，从而将其销毁。",
+    "confirmation": "你确定要销毁这个 NFT 吗？一经销毁，任何人（包括你）都将无法再次访问它。<br>请务必再次检查你的交易内容。"
   }
 }

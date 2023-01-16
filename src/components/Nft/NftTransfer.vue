@@ -1,7 +1,7 @@
 <template>
   <confirmation
     :value="bundle"
-    :title="$t('nftTransfer.ui.title')"
+    :title="title ? title : $t('nftTransfer.ui.title')"
     @close="close()"
     @back="cancel()"
     @sign="sign()"
@@ -16,7 +16,7 @@
     <template #sign>
       <div>
         <div class="has-text-centered">
-          <p class="has-text-grey pb-3">{{ $t("nftTransfer.ui.description") }}</p>
+          <p class="has-text-grey pb-3">{{ descriptionText ? descriptionText : $t("nftTransfer.ui.description") }}</p>
           <img v-if="uri" :src="uri" class="image is-128x128" />
           <img v-else src="@/assets/nft-no-image.png" class="image is-128x128" />
           <p>{{ nft.name }}</p>
@@ -34,7 +34,7 @@
     </template>
     <template #confirm>
       <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-        <span v-html="$sanitize($tc('nftTransfer.ui.summary.confirmation'))"></span>
+        <span v-html="$sanitize(confirmationText ? confirmationText : $tc('nftTransfer.ui.summary.confirmation'))"></span>
       </b-notification>
       <send-summary
         :nftUri="uri"
@@ -91,6 +91,9 @@ export default class NftTransfer extends Vue {
   @Prop() public nft!: NftDetail;
   @Prop() public inputAvailableCoins!: SymbolCoins;
   @Prop() public inputAddress!: string;
+  @Prop() public title!: string;
+  @Prop() public descriptionText!: string;
+  @Prop() public confirmationText!: string;
   @Prop({ default: true }) public addressEditable!: boolean;
   @Prop() public inputRequests!: TokenPuzzleDetail[];
 
