@@ -12,17 +12,13 @@
           }}</b-button>
         </b-field>
         <b-field>
-          <a href="https://ramp.stably.io/?network=chia&asset=USDS&filter=true&integrationId=pawket-6bfee5b4" target="_blank">
+          <a :href="url" target="_blank">
             <b-button type="is-link" expanded icon-right="open-in-new">{{ $t("buyUsds.ui.button.stably") }}</b-button>
           </a>
         </b-field>
       </div>
       <div v-if="showFrame">
-        <iframe
-          src="https://ramp.stably.io/?network=chia&asset=USDS&filter=true&integrationId=pawket-6bfee5b4"
-          title="Buy USDS"
-          class="stably"
-        ></iframe>
+        <iframe :src="url" title="Buy USDS" class="stably"></iframe>
       </div>
       <p class="mt-6 pt-6 has-text-grey is-size-7">
         {{ $t("buyUsds.ui.stablyPrefix") }}
@@ -37,6 +33,7 @@
 <script lang="ts">
 import { Component, Vue, Emit, Watch } from "vue-property-decorator";
 import TopBar from "@/components/Common/TopBar.vue";
+import store from "@/store";
 
 @Component({
   components: {
@@ -45,6 +42,18 @@ import TopBar from "@/components/Common/TopBar.vue";
 })
 export default class BuyUSDS extends Vue {
   showFrame = false;
+
+  get path(): string {
+    return this.$route.path;
+  }
+
+  get address(): string {
+    return store.state.account.accounts[store.state.account.selectedAccount].firstAddress ?? "xch";
+  }
+
+  get url(): string {
+    return `https://ramp.stably.io/?address=${this.address}&network=chia&asset=USDS&filter=true&integrationId=pawket-6bfee5b4`;
+  }
 
   @Watch("path")
   onPathChange(): void {
@@ -64,7 +73,7 @@ export default class BuyUSDS extends Vue {
 </script>
 <style scoped lang="scss">
 .stably {
-  min-width: 400px;
+  width: 100%;
   min-height: 680px;
   margin: auto;
 }
