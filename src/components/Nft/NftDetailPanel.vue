@@ -41,8 +41,8 @@
                     >{{ $t("nftDetail.ui.dropdown.setAsProfilePic") }}
                   </b-dropdown-item>
                 </a>
-                <a class="has-text-dark" @click="nftBurn()">
-                  <b-dropdown-item aria-role="listitem">
+                <a class="has-text-danger" @click="nftBurn()">
+                  <b-dropdown-item aria-role="listitem" class="has-text-danger">
                     <b-icon class="media-left" icon="trash-can-outline" size="is-small"></b-icon
                     >{{ $t("nftDetail.ui.dropdown.nftBurn") }}
                   </b-dropdown-item>
@@ -387,6 +387,7 @@ import { xchPrefix } from "@/store/modules/network";
 import { shorten } from "@/filters/addressConversion";
 import EditCnsBindings from "../Cns/EditCnsBindings.vue";
 import { modshash } from "@/services/coin/mods";
+import { tc } from "@/i18n/i18n";
 
 @Component({
   components: {
@@ -468,6 +469,9 @@ export default class NftDetailPanel extends Vue {
       fullScreen: isMobile(),
       canCancel: [""],
       props: {
+        title: tc("nftBurn.title"),
+        descriptionText: tc("nftBurn.description"),
+        confirmationText: tc("nftBurn.confirmation"),
         nft: this.nft,
         account: this.account,
         inputAddress: "xch1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqm6ks6e8mvy",

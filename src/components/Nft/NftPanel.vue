@@ -93,8 +93,8 @@
                       >{{ $t("nftDetail.ui.dropdown.setAsProfilePic") }}
                     </b-dropdown-item>
                   </a>
-                  <a class="has-text-dark" @click="nftBurn(nft)">
-                    <b-dropdown-item aria-role="listitem">
+                  <a class="has-text-danger" @click="nftBurn(nft)">
+                    <b-dropdown-item aria-role="listitem" class="has-text-danger">
                       <b-icon class="media-left" icon="trash-can-outline" size="is-small"></b-icon
                       >{{ $t("nftDetail.ui.dropdown.nftBurn") }}
                     </b-dropdown-item>
@@ -303,9 +303,7 @@ export default class NftPanel extends Vue {
     // console.log("start download nft", nft.analysis.metadata.metadataUri);
     let bodyhex = "";
     try {
-      let controller = new AbortController();
-      setTimeout(() => controller.abort(), 2000);
-      const resp = await fetch(uri, { signal: controller.signal });
+      const resp = await fetch(uri);
       const body = await resp.blob();
       bodyhex = utility.toHexString(await utility.purehash(await body.arrayBuffer()));
       const md = JSON.parse(await body.text()) as NftOffChainMetadata;
@@ -341,6 +339,9 @@ export default class NftPanel extends Vue {
       fullScreen: isMobile(),
       canCancel: [""],
       props: {
+        title: tc("nftBurn.title"),
+        descriptionText: tc("nftBurn.description"),
+        confirmationText: tc("nftBurn.confirmation"),
         nft: nft,
         account: this.account,
         inputAddress: "xch1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqm6ks6e8mvy",
