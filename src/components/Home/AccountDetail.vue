@@ -452,7 +452,7 @@ export default class AccountDetail extends Vue {
     });
   }
 
-  buy():void {
+  buy(): void {
     this.$buefy.modal.open({
       parent: this,
       component: BuyUSDS,
