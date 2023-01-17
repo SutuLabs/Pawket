@@ -20,7 +20,7 @@
         <div class="has-text-info">Make sure you trust the site you connect</div>
         <footer class="is-fixed-bottom py-4 px-4 has-background-white-ter">
           <button class="button is-pulled-left" @click="close">Cancel</button>
-          <button class="button is-pulled-right is-primary" @click="confirm">Next</button>
+          <b-button class="button is-pulled-right is-primary" @click="confirm" :loading="loading" :disabled="!app">Next</b-button>
         </footer>
       </div>
       <div v-if="stage == 'Account'">
@@ -97,6 +97,7 @@ export default class Connect extends Vue {
   public loading = false;
 
   async confirm(): Promise<void> {
+    this.loading = true;
     if (!(await isPasswordCorrect(this.password))) {
       this.isCorrect = false;
       return;
@@ -104,12 +105,13 @@ export default class Connect extends Vue {
     this.isCorrect = true;
     this.accounts = await this.getAccounts();
     this.accounts = this.accounts.filter((acc) => acc.key.privateKey);
+    for (let i = 0; i < this.accounts.length; i++) {
+      await this.setFirstAddress(this.accounts[i]);
+      await this.getXchBalance(this.accounts[i]);
+    }
+    this.loading = false;
     if (this.accounts.length > 1) {
       this.stage = "Account";
-      for (let i = 0; i < this.accounts.length; i++) {
-        await this.setFirstAddress(this.accounts[i]);
-        await this.getXchBalance(this.accounts[i]);
-      }
     } else {
       this.openApp();
     }
@@ -236,6 +238,19 @@ export default class Connect extends Vue {
       case "sign-with-did":
         this.signWithDid();
         break;
+      case "get-address":
+        this.getAddress();
+        break;
+      case "get-did":
+        this.getDid();
+        break;
+      default:
+        Notification.open({
+          message: "Invalid Call" + this.app,
+          type: "is-danger",
+          position: "is-top-right",
+          duration: 5000,
+        });
     }
   }
 
@@ -315,7 +330,29 @@ export default class Connect extends Vue {
     this.success();
   }
 
+  async getDid(): Promise<void> {
+    this.loading = true;
+    await store.dispatch("refreshDids", { idx: this.selectedAcc });
+    this.source?.postMessage(
+      this.dids.map((did) => did.did),
+      { targetOrigin: this.origin }
+    );
+    this.loading = false;
+    this.success();
+  }
+
+  getAddress(): void {
+    this.source?.postMessage(this.account.firstAddress, { targetOrigin: this.origin });
+    this.success();
+  }
+
   success(): void {
+    Notification.open({
+      message: "Success!",
+      type: "is-primary",
+      position: "is-top-right",
+      duration: 5000,
+    });
     setTimeout(() => this.close(), 5000);
   }
 
