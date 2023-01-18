@@ -1114,11 +1114,13 @@
         "poolPublicKey": "Pool public key (m/12381/8444/1/0)",
         "firstWalletAddress": "First wallet address",
         "mnemonicSeed": "Mnemonic Words (24-word)",
+        "connectionManagement": "Connection Management",
         "details": "Details"
       },
       "tooltip": {
         "fingerprintTip": "Compatible with Chia official wallet",
-        "mnemonicTip": "Compatible with Chia official wallet"
+        "mnemonicTip": "Compatible with Chia official wallet",
+        "disconnect": "Disconnect"
       },
       "button": {
         "reveal": "Reveal",
@@ -1128,7 +1130,8 @@
     },
     "message": {
       "inputPassword": "Enter Password to Continue",
-      "passwordNotCorrect": "Incorrect password."
+      "passwordNotCorrect": "Incorrect password.",
+      "disconnect": "Are you sure to disconnect [{acc}] from this site?"
     }
   },
   "nftDetail": {
