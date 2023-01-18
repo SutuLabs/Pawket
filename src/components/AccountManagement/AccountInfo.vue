@@ -55,8 +55,36 @@
             :tooltip="$t('common.tooltip.copy')"
             :value="account.key.compatibleMnemonic"
           ></key-box>
-          <qrcode-vue v-if="debugMode" :value="account.key.compatibleMnemonic" size="300" class="qrcode" style="width: 320px"></qrcode-vue>
+          <qrcode-vue
+            v-if="debugMode"
+            :value="account.key.compatibleMnemonic"
+            size="300"
+            class="qrcode"
+            style="width: 320px"
+          ></qrcode-vue>
         </span>
+      </div>
+      <div class="border-bottom py-2" v-if="connections.length">
+        <a
+          href="javascript:void(0)"
+          class="is-size-6 has-text-weight-bold has-text-dark is-clickable"
+          @click="showConnection = !showConnection"
+        >
+          <div>
+            {{ $t("accountInfo.ui.label.connectionManagement") }}
+            <span class="is-pulled-right"><b-icon :icon="showConnection ? 'menu-up' : 'menu-down'"></b-icon></span>
+          </div>
+        </a>
+        <div v-if="showConnection" class="is-block mt-3">
+          <ul>
+            <li class="panel-block is-justify-content-space-between is-flex" v-for="(conn, index) in connections" :key="index">
+              <div class="is-flex is-align-items-baseline">
+                <img :src="`${conn.url}/favicon.ico`" class="image is-16x16 mx-2" />{{ conn.url }}
+              </div>
+              <div class="is-clickable" @click="disconnect(conn)"><b-tooltip :label="$t('accountInfo.ui.tooltip.disconnect')"><b-icon icon="cancel"></b-icon></b-tooltip></div>
+            </li>
+          </ul>
+        </div>
       </div>
       <div class="border-bottom py-2">
         <a
@@ -130,6 +158,12 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import TopBar from "@/components/Common/TopBar.vue";
 import encryption from "@/services/crypto/encryption";
 import QrcodeVue from "qrcode.vue";
+import { tc } from "@/i18n/i18n";
+
+export interface connectionItem {
+  accountFirstAddress: string;
+  url: string;
+}
 
 @Component({
   components: { TopBar, KeyBox, QrcodeVue },
@@ -146,6 +180,8 @@ export default class AccountDetail extends Vue {
   public showPdt = false;
   public pdtInfo = "";
   public showDetail = false;
+  public showConnection = false;
+  public connections: connectionItem[] = [];
 
   mounted(): void {
     window.history.pushState(null, "", "#/home/accounts/detail");
@@ -162,10 +198,18 @@ export default class AccountDetail extends Vue {
       this.walletprikey = utility.toHexString(derive([12381, 8444, 2, 0]).serialize());
       this.walletpubkey = utility.toHexString(derive([12381, 8444, 2, 0]).get_g1().serialize());
     });
+    this.connections = this.getConnections();
   }
 
   get account(): AccountEntity {
     return store.state.account.accounts[this.idx] ?? {};
+  }
+
+  getConnections(): connectionItem[] {
+    const connStr = localStorage.getItem("CONNECTIONS");
+    if (!connStr) return [];
+    const conn = JSON.parse(connStr) as connectionItem[];
+    return conn.filter((con) => con.accountFirstAddress == this.account.firstAddress);
   }
 
   get observeMode(): boolean {
@@ -247,6 +291,24 @@ export default class AccountDetail extends Vue {
         close();
         this.showPdt = true;
       },
+    });
+  }
+
+  disconnect(site: connectionItem): void {
+    const action = () => {
+      const newConns = this.connections.filter(
+        (conn) => conn.accountFirstAddress !== site.accountFirstAddress || conn.url !== site.url
+      );
+      this.connections = newConns;
+      const conn = JSON.stringify(newConns);
+      localStorage.setItem("CONNECTIONS", conn);
+    };
+    this.$buefy.dialog.confirm({
+      message: tc("accountInfo.message.disconnect", undefined, { acc: this.account.name }),
+      confirmText: tc("common.button.confirm"),
+      cancelText: tc("common.button.cancel"),
+      type: "is-danger",
+      onConfirm: action,
     });
   }
 }

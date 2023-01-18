@@ -1114,11 +1114,13 @@
         "poolPublicKey": "矿池公钥 (m/12381/8444/1/0)",
         "firstWalletAddress": "钱包首地址",
         "mnemonicSeed": "助记词种子(24词)",
+        "connectionManagement": "连接管理",
         "details": "显示详情"
       },
       "tooltip": {
         "fingerprintTip": "与 Chia 客户端兼容",
-        "mnemonicTip": "与 Chia 客户端兼容"
+        "mnemonicTip": "与 Chia 客户端兼容",
+        "disconnect": "取消连接"
       },
       "button": {
         "reveal": "显示助记词",
@@ -1128,7 +1130,8 @@
     },
     "message": {
       "inputPassword": "请输入密码",
-      "passwordNotCorrect": "密码不正确"
+      "passwordNotCorrect": "密码不正确",
+      "disconnect": "确定断开 [{acc}] 与该站点的连接吗？"
     }
   },
   "nftDetail": {
