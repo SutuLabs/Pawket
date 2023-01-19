@@ -371,7 +371,7 @@
 <script lang="ts">
 import { isMobile } from "@/services/view/responsive";
 import { AccountEntity } from "@/models/account";
-import { Component, Emit, Prop, Vue } from "vue-property-decorator";
+import { Component, Emit, Prop, Vue, Watch } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import TopBar from "@/components/Common/TopBar.vue";
 import NftOffer from "@/components/Nft/NftOffer.vue";
@@ -411,6 +411,15 @@ export default class NftDetailPanel extends Vue {
 
   get isMobile(): boolean {
     return isMobile();
+  }
+
+  get path(): string {
+    return this.$route.path;
+  }
+
+  @Watch("path")
+  onPathChange(): void {
+    this.close();
   }
 
   get updatable(): boolean {

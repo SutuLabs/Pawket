@@ -232,6 +232,10 @@ export default class NftPanel extends Vue {
     return store.state.account.selectedAccount;
   }
 
+  get path(): string {
+    return this.$route.path;
+  }
+
   getImageUrls(nft: NftDetail): string[] {
     if (!nft.analysis.metadata.imageUri) return [];
     if (typeof nft.analysis.metadata.imageUri == "string") return [nft.analysis.metadata.imageUri];
@@ -351,15 +355,24 @@ export default class NftPanel extends Vue {
   }
 
   showDetail(nft: NftDetail): void {
+    this.$router.push(`/home/nft/${nft.address}`);
     this.$buefy.modal.open({
       parent: this,
       component: NftDetailPanel,
       hasModalCard: true,
       trapFocus: true,
       width: 1000,
+      onCancel: () => {
+        if (this.path != "/home/nft") this.$router.back();
+      },
       fullScreen: isMobile(),
       canCancel: ["outside", "escape"],
       props: { nft: nft, metadata: this.extraInfo[nft.address].metadata, account: this.account, dids: this.dids },
+      events: {
+        close: () => {
+          if (this.path != "/home/nft") this.$router.back();
+        },
+      },
     });
   }
 
