@@ -328,8 +328,8 @@ export default class AccountDetail extends Vue {
     return store.state.vault.offline;
   }
 
-  handleModalClose(): void {
-    if (this.path != "/home") this.$router.push("/home").catch(() => undefined);
+  handleModalClose(path: string): void {
+    if (this.path == path) this.$router.back();
   }
 
   mounted(): void {
@@ -373,12 +373,12 @@ export default class AccountDetail extends Vue {
     this.$buefy.modal.open({
       parent: this,
       component: ErrorLog,
-      onCancel: this.handleModalClose,
+      onCancel: () => this.handleModalClose("/home/errorLog"),
       hasModalCard: true,
       trapFocus: true,
       fullScreen: isMobile(),
       canCancel: ["outside"],
-      events: { close: this.handleModalClose },
+      events: { close: () => this.handleModalClose("/home/errorLog") },
     });
   }
 
@@ -392,7 +392,7 @@ export default class AccountDetail extends Vue {
       fullScreen: isMobile(),
       canCancel: [""],
       props: { account: this.account },
-      events: { refresh: this.refresh, close: this.handleModalClose },
+      events: { refresh: this.refresh, close: () => this.handleModalClose("/home/cats") },
     });
   }
 
@@ -401,12 +401,12 @@ export default class AccountDetail extends Vue {
       parent: this,
       component: AccountManagement,
       trapFocus: true,
-      onCancel: this.handleModalClose,
+      onCancel: () => this.handleModalClose("/home/accounts"),
       width: 700,
       canCancel: ["outside", "escape"],
       fullScreen: isMobile(),
       props: {},
-      events: { close: this.handleModalClose },
+      events: { close: () => this.handleModalClose("/home/accounts") },
     });
   }
 
@@ -420,7 +420,7 @@ export default class AccountDetail extends Vue {
       fullScreen: isMobile(),
       canCancel: [""],
       props: { account: this.account, rate: this.rate, currency: this.currency },
-      events: { close: this.handleModalClose },
+      events: { close: () => this.handleModalClose("/home/send") },
     });
   }
 
@@ -433,7 +433,7 @@ export default class AccountDetail extends Vue {
       fullScreen: isMobile(),
       canCancel: [""],
       props: { account: this.account },
-      events: { close: this.handleModalClose },
+      events: { close: () => this.handleModalClose("/home/scan") },
     });
   }
 
@@ -445,10 +445,10 @@ export default class AccountDetail extends Vue {
       trapFocus: true,
       width: 700,
       canCancel: ["outside", "escape"],
-      onCancel: this.handleModalClose,
+      onCancel: () => this.handleModalClose("/home/receive"),
       fullScreen: isMobile(),
       props: { account: this.account },
-      events: { close: this.handleModalClose },
+      events: { close: () => this.handleModalClose("/home/receive") },
     });
   }
 
@@ -459,10 +459,10 @@ export default class AccountDetail extends Vue {
       trapFocus: true,
       width: 700,
       canCancel: ["outside", "escape"],
-      onCancel: this.handleModalClose,
+      onCancel: () => this.handleModalClose("/home/buy"),
       fullScreen: isMobile(),
       props: { account: this.account },
-      events: { close: this.handleModalClose },
+      events: { close: () => this.handleModalClose("home/buy") },
     });
   }
 
