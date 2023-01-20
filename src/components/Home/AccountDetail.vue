@@ -92,7 +92,7 @@
                   </div>
                 </a>
               </div>
-              <div class="b-tooltip">
+              <div class="b-tooltip" v-if="!observeMode">
                 <a @click="$router.push('/home/scan')" href="javascript:void(0)" class="has-text-primary">
                   <div class="mr-3">
                     <span class="icon has-background-primary is-medium is-circle"
@@ -462,7 +462,7 @@ export default class AccountDetail extends Vue {
       onCancel: () => this.handleModalClose("/home/buy"),
       fullScreen: isMobile(),
       props: { account: this.account },
-      events: { close: () => this.handleModalClose("home/buy") },
+      events: { close: () => this.handleModalClose("/home/buy") },
     });
   }
 
