@@ -129,6 +129,7 @@
                     outlined
                     :disabled="status == 'Scanning' && isLoading"
                     :loading="isLoading"
+                    v-if="!publicKeyAcc"
                     @click="openSignMessage(did.analysis)"
                     >{{ $t("scanAssets.ui.button.sign") }}</b-button
                   >
@@ -244,6 +245,10 @@ export default class ScanAssets extends Vue {
 
   get path(): string {
     return this.$route.path;
+  }
+
+  get publicKeyAcc(): boolean {
+    return this.account.type == "PublicKey";
   }
 
   @Watch("path")

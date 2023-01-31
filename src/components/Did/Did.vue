@@ -4,7 +4,7 @@
       <b-icon icon="refresh"></b-icon>
     </b-button>
     <div class="mb-3">
-      <b-button type="is-primary" expanded @click="addDid()">
+      <b-button type="is-primary" expanded @click="addDid()" v-if="!observeMode">
         <b-icon icon="plus" size="is-small" class="mr-1"></b-icon>
         {{ $t("did.ui.button.addDid") }}
       </b-button>
@@ -45,6 +45,10 @@ export default class Did extends Vue {
 
   get selectedAccount(): number {
     return store.state.account.selectedAccount;
+  }
+
+  get observeMode(): boolean {
+    return this.account.type == "Address";
   }
 
   get account(): AccountEntity {
