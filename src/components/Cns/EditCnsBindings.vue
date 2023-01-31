@@ -212,10 +212,15 @@ export default class EditCnsBindings extends Vue {
         this.signing = false;
         return;
       }
-      
+
       const md = Object.assign({}, this.metadata.bindings) as CnsBindingValues;
-      const address_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.address));
-      md.address = address_hex;
+      if (this.address) {
+        const address_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.address));
+        md.address = address_hex;
+      } else {
+        md.address = "";
+      }
+
       md.did = this.did;
       md.publicKey = this.publicKey;
       md.text = this.text;
