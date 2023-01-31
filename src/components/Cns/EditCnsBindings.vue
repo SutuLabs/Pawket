@@ -18,9 +18,7 @@
       <b-field>
         <template #label>
           <span>{{ $t("bindingInformation.ui.label.publicKey") }}</span>
-          <span v-if="isCurrentPk" class="tag is-primary is-light">{{
-            $t("bindingInformation.ui.tag.currentPk")
-          }}</span>
+          <span v-if="isCurrentPk" class="tag is-primary is-light">{{ $t("bindingInformation.ui.tag.currentPk") }}</span>
           <span v-else class="is-size-7 is-underlined mx-2 has-text-link is-clickable" @click="fillPubKey()">{{
             $t("bindingInformation.ui.tag.fillPk")
           }}</span>
@@ -219,16 +217,13 @@ export default class EditCnsBindings extends Vue {
       if (this.address) {
         const address_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.address));
         md.address = address_hex;
+      } else {
+        md.address = "";
       }
-      if (this.did) {
-        md.did = this.did;
-      }
-      if (this.publicKey) {
-        md.publicKey = this.publicKey;
-      }
-      if (this.text) {
-        md.text = this.text;
-      }
+
+      md.did = this.did;
+      md.publicKey = this.publicKey;
+      md.text = this.text;
 
       const observers = await getAssetsRequestObserver(this.account);
       const ubundle = await generateUpdatedNftBundle(
