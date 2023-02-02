@@ -10,6 +10,7 @@
     "build-ext": "cross-env VUE_CLI_SERVICE_CONFIG_PATH=vue.config.ext.js vue-cli-service build",
     "build:mixch": "cross-env VUE_CLI_SERVICE_CONFIG_PATH=vue.config.mixch.js vue-cli-service build",
     "build:server": "ncc build server/server.ts -o dist/server && cp node_modules/clvm/browser/blsjs.wasm dist/server",
+    "build:server:docker": "yarn build:server && docker build -f server/Dockerfile -t wizicer/coin-processor:latest .",
     "lint": "vue-cli-service lint",
     "serve-ext": "cross-env VUE_CLI_SERVICE_CONFIG_PATH=vue.config.ext.js vue-cli-service --env.NODE_ENV=development build-watch --mode development",
     "serve:mixch": "cross-env VUE_CLI_SERVICE_CONFIG_PATH=vue.config.mixch.js vue-cli-service serve --port 8088",
