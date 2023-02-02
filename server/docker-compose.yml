@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  coin_processor:
+    image: wizicer/coin-processor:latest
+    ports:
+      - "3030:3030"
+    restart: always
+    environment:
+      - SHOW_LOG=true
+      - PORT=3030
+      - MAX_THREAD=0
