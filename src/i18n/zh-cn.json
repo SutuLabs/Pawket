@@ -465,6 +465,8 @@
     },
     "client": {
       "text": {
+        "qrcodesStatus": "{index} / {total}",
+        "unsafeMode": "精简模式",
         "status": "已扫描: {fragment} / {total} fragment(s)."
       },
       "scan": {

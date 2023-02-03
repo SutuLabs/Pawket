@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@mdi/font": "^6.5.95",
+    "@msgpack/msgpack": "^2.8.0",
     "@noble/bls12-381": "^1.4.0",
     "@scure/base": "^1.0.0",
     "@types/elliptic": "^6.4.14",

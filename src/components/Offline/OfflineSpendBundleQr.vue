@@ -22,8 +22,19 @@
             </b-slider>
           </b-field>
 
+          <b-field v-if="unsafeQrcodes.length > 0">
+            <b-switch v-model="isUnsafe" type="is-danger">
+              {{ $t("offline.client.text.unsafeMode") }}
+            </b-switch>
+          </b-field>
+
           <center>
-            <qrcode-vue :value="qrcodes[qrcodes.length > 1 ? selectedQr : 0]" size="250" class="qrcode" style="width: 270px"></qrcode-vue>
+            <qrcode-vue
+              :value="qrcodes[qrcodes.length > 1 ? selectedQr : 0]"
+              size="250"
+              class="qrcode"
+              style="width: 270px"
+            ></qrcode-vue>
             <div class="is-hidden-tablet" v-if="mode === 'ONLINE_CLIENT'">{{ $t("offline.client.scan.scrollDown") }}</div>
           </center>
         </div>
@@ -36,7 +47,11 @@
       <div>
         <b-button :label="$t('offline.ui.button.cancel')" @click="close()"></b-button>
       </div>
-      <div v-if="mode == 'ONLINE_CLIENT'" class="is-pulled-right"></div>
+      <div v-if="mode == 'ONLINE_CLIENT'" class="is-pulled-left">
+        <span class="tag" v-if="qrcodes.length > 1">
+          {{ $t("offline.client.text.qrcodesStatus", { index: selectedQr + 1, total: qrcodes.length }) }}
+        </span>
+      </div>
       <div v-if="mode == 'OFFLINE_CLIENT'" class="is-pulled-right">
         <span class="tag" v-if="receiveTotal > -1">
           {{ $t("offline.client.text.status", { fragment: received, total: receiveTotal }) }}
@@ -52,12 +67,28 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import QrcodeVue from "qrcode.vue";
 import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from "vue-qrcode-reader";
 import { initCameraHandleError } from "@/services/view/camera";
-import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
+import { combineSpendBundleSignature, MessagesToSign, signMessages, signSpendBundle, SpendBundle } from "@/services/spendbundle";
 import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
 import { networkContext, xchPrefix } from "@/store/modules/network";
 import { AccountEntity } from "@/models/account";
 import { getAssetsRequestDetail } from "@/services/view/coinAction";
 import TopBar from "../Common/TopBar.vue";
+import { encode, decode } from "@msgpack/msgpack";
+import utility from "@/services/crypto/utility";
+import { prefix0x } from "@/services/coin/condition";
+
+export interface CompactMessagesToSign {
+  messages: CompactMessageToSign[];
+  chainId: Uint8Array;
+}
+
+export interface CompactMessageToSign {
+  message: Uint8Array;
+  coinname: Uint8Array;
+  publicKey: Uint8Array;
+}
+
+const MTSPrefix = "MTS";
 
 @Component({
   components: {
@@ -72,6 +103,7 @@ import TopBar from "../Common/TopBar.vue";
 export default class OfflineSpendBundleQr extends Vue {
   @Prop({ default: xchPrefix() }) public prefix!: string;
   @Prop() public bundle!: SpendBundle | undefined;
+  @Prop() public messagesToSign!: MessagesToSign | undefined;
   @Prop({ default: "OFFLINE_CLIENT" }) public mode!: "OFFLINE_CLIENT" | "ONLINE_CLIENT";
   @Prop() public account!: AccountEntity;
 
@@ -86,6 +118,9 @@ export default class OfflineSpendBundleQr extends Vue {
   received = 0;
   receives: { [idx: number]: string } = {};
   receiveBundle: SpendBundle | undefined;
+  isUnsafe = false;
+  safeQrcodes: string[] = [];
+  unsafeQrcodes: string[] = [];
 
   get path(): string {
     return this.$route.path;
@@ -93,9 +128,19 @@ export default class OfflineSpendBundleQr extends Vue {
 
   @Watch("bundle")
   async onBundleChange(): Promise<void> {
-    if (this.bundle) {
-      const ss = await this.splitBundle(this.bundle);
-      this.qrcodes = ss;
+    this.safeQrcodes = this.bundle ? await this.splitBundle(this.bundle) : [];
+    this.unsafeQrcodes = this.messagesToSign ? await this.splitMessagesToSign(this.messagesToSign) : [];
+
+    this.isUnsafe = this.unsafeQrcodes.length > 0 && this.safeQrcodes.length > 5;
+    this.onIsUnsafeChange();
+  }
+
+  @Watch("isUnsafe")
+  async onIsUnsafeChange(): Promise<void> {
+    if (this.isUnsafe) {
+      this.qrcodes = this.unsafeQrcodes;
+    } else {
+      this.qrcodes = this.safeQrcodes;
     }
   }
 
@@ -106,7 +151,10 @@ export default class OfflineSpendBundleQr extends Vue {
 
   async splitBundle(bundle: SpendBundle): Promise<string[]> {
     const bstr = await encodeOffer(bundle, 4, "bundle");
-    const maxLength = 200;
+    return this.splitString(bstr);
+  }
+
+  splitString(bstr: string, maxLength = 200): string[] {
     const total = Math.ceil(bstr.length / maxLength);
     const partLength = Math.ceil(bstr.length / total);
     const list: string[] = [];
@@ -118,6 +166,20 @@ export default class OfflineSpendBundleQr extends Vue {
       list.push(pstr + part);
     }
     return list;
+  }
+
+  async splitMessagesToSign(mts: MessagesToSign): Promise<string[]> {
+    const compact: CompactMessagesToSign = {
+      chainId: utility.fromHexString(mts.chainId),
+      messages: mts.messages.map((_) => ({
+        message: utility.fromHexString(_.message),
+        publicKey: utility.fromHexString(_.publicKey),
+        coinname: utility.fromHexString(_.coinname),
+      })),
+    };
+    const encoded = encode(compact);
+    const bstr = MTSPrefix + Buffer.from(encoded).toString("base64");
+    return this.splitString(bstr);
   }
 
   mounted(): void {
@@ -158,7 +220,12 @@ export default class OfflineSpendBundleQr extends Vue {
     try {
       if (this.mode == "ONLINE_CLIENT") {
         if (result.startsWith("0x")) {
-          this.$emit("signature", result);
+          if (this.isUnsafe && this.bundle) {
+            const bundle = await combineSpendBundleSignature(this.bundle, prefix0x(result));
+            this.$emit("signature", bundle.aggregated_signature);
+          } else {
+            this.$emit("signature", result);
+          }
           this.close();
         }
       } else if (this.mode == "OFFLINE_CLIENT") {
@@ -186,14 +253,33 @@ export default class OfflineSpendBundleQr extends Vue {
             b += r;
           }
 
-          this.receiveBundle = await decodeOffer(b);
-          const requests = await getAssetsRequestDetail(this.account);
-          const bundle = await signSpendBundle(this.receiveBundle, requests, networkContext());
-          this.qrcodes = [bundle.aggregated_signature];
+          await this.processCombinedMessageFromOnlineClient(b);
         }
       }
     } catch (err) {
       console.warn("error when decoding", err);
+    }
+  }
+
+  async processCombinedMessageFromOnlineClient(b: string): Promise<void> {
+    const requests = await getAssetsRequestDetail(this.account);
+    if (b.startsWith(MTSPrefix)) {
+      const arr = new Uint8Array(Buffer.from(b.slice(MTSPrefix.length), "base64"));
+      const decoded = decode(arr) as CompactMessagesToSign;
+      const msgs: MessagesToSign = {
+        chainId: utility.toHexString(decoded.chainId),
+        messages: decoded.messages.map((_) => ({
+          message: utility.toHexString(_.message),
+          coinname: utility.toHexString(_.coinname),
+          publicKey: utility.toHexString(_.publicKey),
+        })),
+      };
+      const sig = await signMessages(msgs, requests);
+      this.qrcodes = [sig];
+    } else {
+      this.receiveBundle = await decodeOffer(b);
+      const bundle = await signSpendBundle(this.receiveBundle, requests, networkContext());
+      this.qrcodes = [bundle.aggregated_signature];
     }
   }
 

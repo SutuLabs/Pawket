@@ -2,7 +2,7 @@ import { PrivateKey, G2Element, ModuleInstance } from "@chiamine/bls-signatures"
 import { Bytes } from "clvm";
 import { CoinSpend, PartialSpendBundle, SpendBundle, UnsignedSpendBundle } from "../spendbundle";
 import { DEFAULT_HIDDEN_PUZZLE_HASH } from "../coin/consts";
-import { Hex, prefix0x, unprefix0x } from "../coin/condition";
+import { Hex, Hex0x, prefix0x, unprefix0x } from "../coin/condition";
 import puzzle, { ConditionEntity, PuzzleObserver, PuzzlePrivateKey } from "../crypto/puzzle";
 import { TokenPuzzleObserver, TokenPuzzlePrivateKey } from "../crypto/receive";
 import { ConditionOpcode } from "../coin/opcode";
@@ -111,14 +111,14 @@ async function signSolution(
 
 export async function combineSpendBundleSignature(
   ubundle: SpendBundle | UnsignedSpendBundle | CoinSpend[],
-  signature: G2Element,
+  signature: Hex0x,
 ): Promise<SpendBundle> {
   const BLS = Instance.BLS;
   if (!BLS) throw new Error("BLS not initialized");
 
   const bundle: UnsignedSpendBundle | SpendBundle = Array.isArray(ubundle) ? new UnsignedSpendBundle(ubundle) : ubundle;
 
-  let agg_sig = signature;
+  let agg_sig = BLS.G2Element.from_bytes(utility.fromHexString(signature));
   if ("aggregated_signature" in bundle && (bundle as SpendBundle).aggregated_signature)
     agg_sig = BLS.AugSchemeMPL.aggregate([
       agg_sig,
@@ -134,7 +134,7 @@ export async function combineSpendBundleSignature(
 export async function signMessages(
   { messages, chainId }: MessagesToSign,
   puzzles: TokenPuzzlePrivateKey[],
-): Promise<G2Element> {
+): Promise<Hex0x> {
   const BLS = Instance.BLS;
   if (!BLS) throw new Error("BLS not initialized");
   const puzzleDict: { [key: string]: PuzzlePrivateKey } = Object.assign({}, ...puzzles.flatMap(_ => _.puzzles).map((x) => ({ [unprefix0x(x.synPubKey)]: x })));
@@ -165,13 +165,14 @@ export async function signMessages(
   }
 
   const agg_sig = BLS.AugSchemeMPL.aggregate(sigs);
-  return agg_sig;
+  return prefix0x(utility.toHexString(agg_sig.serialize()));
 }
 
 export interface MessagesToSign {
   messages: MessageToSign[],
   chainId: Hex,
 }
+
 export interface MessageToSign {
   message: Hex,
   coinname: Hex,

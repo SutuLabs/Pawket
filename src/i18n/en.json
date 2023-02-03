@@ -465,6 +465,8 @@
     },
     "client": {
       "text": {
+        "qrcodesStatus": "{index} / {total}",
+        "unsafeMode": "Unsafe Mode",
         "status": "Scanned: {fragment} / {total} fragment(s)."
       },
       "scan": {
