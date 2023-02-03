@@ -7,7 +7,7 @@
         </b-tooltip>
         <div class="column is-1">
           <span class="image is-32x32">
-            <img v-if="asset.img" class="is-rounded" :src="asset.img" />
+            <img v-if="asset.img" class="is-rounded" :src="asset.img" @error="fallBack($event)" />
             <img v-else class="is-rounded" src="@/assets/custom-cat.svg" />
           </span>
         </div>
@@ -59,6 +59,12 @@ export default class TokenItem extends Vue {
 
   shorten(name: string): string {
     return shorten(name);
+  }
+
+  fallBack(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    if (img.src == require("@/assets/custom-cat.svg")) return;
+    img.src = require("@/assets/custom-cat.svg");
   }
 }
 </script>
