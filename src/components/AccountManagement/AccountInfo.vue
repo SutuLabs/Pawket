@@ -81,7 +81,9 @@
               <div class="is-flex is-align-items-baseline">
                 <img :src="`${conn.url}/favicon.ico`" class="image is-16x16 mx-2" />{{ conn.url }}
               </div>
-              <div class="is-clickable" @click="disconnect(conn)"><b-tooltip :label="$t('accountInfo.ui.tooltip.disconnect')"><b-icon icon="cancel"></b-icon></b-tooltip></div>
+              <div class="is-clickable" @click="disconnect(conn)">
+                <b-tooltip :label="$t('accountInfo.ui.tooltip.disconnect')"><b-icon icon="cancel"></b-icon></b-tooltip>
+              </div>
             </li>
           </ul>
         </div>
@@ -226,6 +228,7 @@ export default class AccountDetail extends Vue {
 
   @Emit("close")
   close(): void {
+    window.history.back();
     return;
   }
 
