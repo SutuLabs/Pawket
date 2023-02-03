@@ -9,7 +9,7 @@
       <div class="column is-flex is-7" v-if="account.tokens && account.tokens.hasOwnProperty(cat.name)">
         <div class="mr-4">
           <span class="image is-32x32">
-            <img v-if="cat.img" class="is-rounded" :src="cat.img" />
+            <img v-if="cat.img" class="is-rounded" :src="cat.img" @error="fallBack($event)" />
             <img v-else-if="cat.name === xchSymbol" class="is-rounded" src="@/assets/chia-logo.svg" />
             <img v-else class="is-rounded" src="@/assets/custom-cat.svg" />
           </span>
@@ -105,6 +105,12 @@ export default class CatPanel extends Vue {
 
   async mounted(): Promise<void> {
     this.exchangeRate = await getExchangeRate(xchSymbol(), this.currencyName);
+  }
+
+  fallBack(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    if (img.src == require("@/assets/custom-cat.svg")) return;
+    img.src = require("@/assets/custom-cat.svg");
   }
 }
 </script>
