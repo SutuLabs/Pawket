@@ -8,7 +8,7 @@ import { Hex0x, prefix0x } from '../src/services/coin/condition';
 import { encodeOffer } from "../src/services/offer/encoding";
 import { generateMintCnsOffer } from "../src/services/offer/cns";
 import { OriginCoin, signSpendBundle } from '../src/services/spendbundle';
-import transfer, { SymbolCoins, TransferTarget } from '../src/services/transfer/transfer';
+import transfer, { SymbolCoins, TransferTarget, TransferTargetOrigin } from '../src/services/transfer/transfer';
 import receive, { TokenPuzzleDetail } from '../src/services/crypto/receive';
 import utility from '../src/services/crypto/utility';
 import { NetworkContext } from '../src/services/coin/coinUtility';
@@ -16,12 +16,13 @@ import { getLineageProofPuzzle } from "../src/services/transfer/call";
 import { CnsMetadataValues } from '../src/models/nft';
 import { CustomCat } from '../src/models/account';
 import { CoinItem } from '../src/models/wallet';
+import fetch from 'cross-fetch';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (BigInt.prototype as any).toJSON = function () {
   return this.toString();
 };
-
+global.fetch = fetch
 const app: express.Express = express()
 app.use(express.json({ limit: '3mb' }))
 app.use(express.urlencoded({ extended: true }))
@@ -66,9 +67,7 @@ interface CnsOfferRequest {
 interface BatchSendRequest {
   senderAddress: string;
   privateKey: string;
-  puzzleHash: string;
-  puzzleText: string;
-  transferTarget: TransferTarget[];
+  transferTarget: TransferTargetOrigin[];
   fee: number;
   chainId: string;
   symbol: string;
@@ -155,7 +154,7 @@ Instance.init().then(() => {
     }
   });
 
-  app.post('batch_send', async (req: express.Request, res: express.Response) => {
+  app.post('/batch_send', async (req: express.Request, res: express.Response) => {
     let r: BatchSendRequest | null = null;
     try {
       r = req.body as BatchSendRequest;
@@ -175,15 +174,24 @@ Instance.init().then(() => {
       const tokenPuzzles: TokenPuzzleDetail[] = [];
       const catList: CustomCat[] = [];
       const tokenNames: string[] = [];
-      for (const tgt of r.transferTarget) {
+      const puz = await puzzle.getPuzzle(synPubKey);
+      const hash = await puzzle.getPuzzleHashFromPuzzle(puz);
+      const tgts = r.transferTarget.map(_ => <TransferTarget>{
+        symbol: _.symbol,
+        address: prefix0x(puzzle.getPuzzleHashFromAddress(_.address)),
+        amount: _.amount,
+        memos: _.memos
+      })
+
+      for (const tgt of tgts) {
         tokenPuzzles.push({
           symbol: tgt.symbol,
           puzzles: [
             {
               privateKey: sk,
               synPubKey,
-              puzzle: r.puzzleText,
-              hash: r.puzzleHash,
+              puzzle: puz,
+              hash: hash,
               address: "",
             }
           ]
@@ -206,8 +214,8 @@ Instance.init().then(() => {
         })
         .reduce((a, c) => ({ ...a, [c.symbol]: c.coins }), {});
 
-      const observers = await receive.getAssetsRequestDetail(r.privateKey, 0, 12, catList, {}, r.prefix, r.symbol, "cat_v2")
-      const plan = transfer.generateSpendPlan(availcoins, r.transferTarget, change_hex, BigInt(r.fee), r.symbol);
+      const observers = await receive.getAssetsRequestDetail(r.privateKey, 0, 12, catList, {}, r.prefix, r.symbol, "cat_v2");
+      const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, BigInt(r.fee), r.symbol);
       const net: NetworkContext = {
         chainId: r.chainId,
         prefix: r.prefix,

@@ -30,7 +30,7 @@ class Transfer {
 
       const incomingTotal = incomingCoins.reduce((acc, cur) => acc + cur.amount, 0n);
 
-      const change = incomingTotal - outgoingTotal;
+      const change = BigInt(incomingTotal - outgoingTotal);
       if (change < 0n)
         throw new Error(`not enough balance to transfer ${symbol}, lacking ${outgoingTotal - incomingTotal}`);
 
@@ -171,6 +171,13 @@ export interface TokenSpendPlan {
 export interface TransferTarget {
   symbol: string;
   address: Hex0x;
+  amount: bigint;
+  memos?: string[];
+}
+
+export interface TransferTargetOrigin {
+  symbol: string;
+  address: string;
   amount: bigint;
   memos?: string[];
 }
