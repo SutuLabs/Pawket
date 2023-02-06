@@ -171,7 +171,6 @@ Instance.init().then(() => {
       const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(r.senderAddress));
       const pubkey = utility.toHexString(sk.get_g1().serialize());
       const synPubKey = prefix0x(await puzzle.getSyntheticKey(pubkey));
-      const tokenPuzzles: TokenPuzzleDetail[] = [];
       const catList: CustomCat[] = [];
       const tokenNames: string[] = [];
       const puz = await puzzle.getPuzzle(synPubKey);
@@ -179,27 +178,17 @@ Instance.init().then(() => {
       const tgts = r.transferTarget.map(_ => <TransferTarget>{
         symbol: _.symbol,
         address: prefix0x(puzzle.getPuzzleHashFromAddress(_.address)),
-        amount: _.amount,
+        amount: BigInt(_.amount),
         memos: _.memos
       })
 
       for (const tgt of tgts) {
-        tokenPuzzles.push({
-          symbol: tgt.symbol,
-          puzzles: [
-            {
-              privateKey: sk,
-              synPubKey,
-              puzzle: puz,
-              hash: hash,
-              address: "",
-            }
-          ]
-        })
         catList.push({ name: tgt.symbol, id: tgt.symbol });
         tokenNames.push(tgt.symbol)
       }
-      const coins = (await receive.getActivities(tokenPuzzles, false, "https://walletapi.chiabee.net/"))
+      const observers = await receive.getAssetsRequestDetail(r.privateKey, 0, 12, catList, {}, r.prefix, r.symbol, "cat_v2");
+      console.log(JSON.stringify(observers))
+      const coins = (await receive.getActivities(observers, false, "https://walletapi.chiabee.net/"))
         .filter((_) => _.coin)
         .map((_) => _.coin as CoinItem)
         .map((_) => ({
@@ -209,12 +198,10 @@ Instance.init().then(() => {
         }));
       const availcoins = tokenNames
         .map((symbol) => {
-          const tgtpuzs = tokenPuzzles.filter((_) => _.symbol == symbol)[0].puzzles.map((_) => prefix0x(_.hash));
+          const tgtpuzs = observers.filter((_) => _.symbol == symbol)[0].puzzles.map((_) => prefix0x(_.hash));
           return { symbol, coins: coins.filter((_) => tgtpuzs.findIndex((p) => p == _.puzzle_hash) > -1) };
         })
         .reduce((a, c) => ({ ...a, [c.symbol]: c.coins }), {});
-
-      const observers = await receive.getAssetsRequestDetail(r.privateKey, 0, 12, catList, {}, r.prefix, r.symbol, "cat_v2");
       const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, BigInt(r.fee), r.symbol);
       const net: NetworkContext = {
         chainId: r.chainId,
@@ -223,6 +210,18 @@ Instance.init().then(() => {
         api: (_) => getLineageProofPuzzle(_, "https://walletapi.chiabee.net/"),
       };
       const ubundle = await transfer.generateSpendBundleIncludingCat(plan, observers, [], net);
+      const tokenPuzzles: TokenPuzzleDetail[] = [{
+        symbol: r.symbol,
+        puzzles: [
+          {
+            privateKey: sk,
+            synPubKey,
+            puzzle: hash,
+            hash: puz,
+            address: "",
+          }
+        ]
+      }]
       const bundle = await signSpendBundle(ubundle, tokenPuzzles, net);
 
       res.send(JSON.stringify({
