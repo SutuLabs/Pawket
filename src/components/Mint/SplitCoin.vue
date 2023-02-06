@@ -67,7 +67,15 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { TokenPuzzleDetail } from "@/services/crypto/receive";
 import store from "@/store";
-import { OriginCoin, signSpendBundle, SpendBundle } from "@/services/spendbundle";
+import {
+  getMessagesToSign,
+  MessagesToSign,
+  OriginCoin,
+  PartialSpendBundle,
+  signSpendBundle,
+  SpendBundle,
+  UnsignedSpendBundle,
+} from "@/services/spendbundle";
 import bigDecimal from "js-big-decimal";
 import { SymbolCoins } from "@/services/transfer/transfer";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
@@ -346,7 +354,8 @@ export default class SplitCoin extends Vue {
 
       this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());
       if (this.account.type == "PublicKey") {
-        await this.offlineSignBundle();
+        const msgs = await getMessagesToSign(ubundle, observers, networkContext().chainId);
+        await this.offlineSignBundle(ubundle, msgs);
       }
     } catch (error) {
       Notification.open({
@@ -384,14 +393,17 @@ export default class SplitCoin extends Vue {
     this.copied = true;
   }
 
-  async offlineSignBundle(): Promise<void> {
+  async offlineSignBundle(
+    bundle: SpendBundle | PartialSpendBundle | UnsignedSpendBundle,
+    messagesToSign: MessagesToSign
+  ): Promise<void> {
     this.$buefy.modal.open({
       parent: this,
       component: (await import("@/components/Offline/OfflineSpendBundleQr.vue")).default,
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
-      props: { bundle: this.bundle, mode: "ONLINE_CLIENT" },
+      props: { bundle, messagesToSign, mode: "ONLINE_CLIENT" },
       events: {
         signature: (sig: Hex): void => {
           if (this.bundle) this.bundle.aggregated_signature = prefix0x(sig);
