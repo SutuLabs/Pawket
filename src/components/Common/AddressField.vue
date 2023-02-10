@@ -13,7 +13,7 @@
     </template>
     <template #message>
       <span>
-        <span v-if="!resolveAnswer || resolveAnswer.name != address"></span>
+        <span v-if="!resolveAnswer || resolveAnswer.name != address.toLowerCase()"></span>
         <span v-else-if="resolveAnswer.status == 'Failure'">
           <b-icon type="is-warning" icon="alert-decagram-outline" size="is-small"></b-icon>
           {{ $t("addressField.ui.resolve.fail") }}
@@ -328,6 +328,7 @@ export async function resolveName(
   resType: resolveType = "address"
 ): Promise<StandardResolveAnswer | ResolveFailureAnswer> {
   try {
+    const query = resType == "address" ? name.toLowerCase() : name;
     const resp = await fetch(rpcUrl() + "Name/resolve", {
       method: "POST",
       headers: {
@@ -335,7 +336,7 @@ export async function resolveName(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        queries: [{ name, type: resType }],
+        queries: [{ name: query, type: resType }],
       }),
     });
     const qresp = (await resp.json()) as StandardResolveQueryResponse;
