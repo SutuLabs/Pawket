@@ -42,7 +42,7 @@
               <b-tooltip :label="$t('addressField.ui.tooltip.wrong')" v-else-if="onChainConfirmationStatus == 'Wrong'">
                 <b-icon type="is-danger" icon="alert-decagram" size="is-small"></b-icon>
               </b-tooltip>
-              <b-tag type="is-info is-light">{{ address }}</b-tag>
+              <b-tag type="is-info is-light">{{ address.toLowerCase() }}</b-tag>
             </p>
             <p class="mb-2">
               {{ $t("addressField.ui.label.bindingAddress") }}
@@ -56,7 +56,7 @@
         </span>
       </span>
     </template>
-    <b-input v-model="address" expanded :disabled="!addressEditable" :custom-class="validAddress ? '' : 'is-danger'"></b-input>
+    <b-input v-model="address" expanded :disabled="!addressEditable" :custom-class="validAddress ? '' : 'is-danger'" :loading="isResolving"></b-input>
     <p class="control">
       <b-tooltip :label="$t('addressField.ui.tooltip.addressBook')">
         <b-button @click="openAddressBook()" :disabled="!addressEditable">
@@ -101,6 +101,7 @@ export default class AddressField extends Vue {
   public proofCoin: CoinSpend | null = null;
   public onChainConfirmationStatus: "None" | "Confirming" | "Confirmed" | "Wrong" = "None";
   public inputing = false;
+  public isResolving = false
 
   mounted(): void {
     if (this.inputAddress) {
@@ -217,7 +218,9 @@ export default class AddressField extends Vue {
       (this.resolveAnswer?.status == "Found" && this.resolveAnswer?.name) != this.address
     ) {
       this.onChainConfirmationStatus = "None";
+      this.isResolving = true;
       this.resolveAnswer = await resolveName(this.address);
+      this.isResolving = false;
       if (this.resolveAnswer?.status == "Found" && this.resolveAnswer?.proof_coin_name) {
         this.onChainConfirmationStatus = "Confirming";
         this.proofCoin = await debug.getCoinSolution(this.resolveAnswer?.proof_coin_name, rpcUrl());
@@ -230,7 +233,7 @@ export default class AddressField extends Vue {
         if (
           nftAnalysis != null &&
           "cnsName" in nftAnalysis &&
-          nftAnalysis.cnsName == this.address &&
+          nftAnalysis.cnsName == this.address.toLowerCase() &&
           this.resolveAnswer?.data == nftAnalysis.cnsAddress
         ) {
           this.cnsUrl = getScalarString(nftAnalysis.metadata.imageUri) ?? "";
