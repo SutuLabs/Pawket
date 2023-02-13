@@ -1,3 +1,5 @@
+import { rpcUrl } from "@/store/modules/network";
+
 export interface StandardResolveQueryResponse {
     answers?: StandardResolveAnswer[];
 }
@@ -16,11 +18,10 @@ export interface ResolveFailureAnswer {
     status: "NotFound" | "Failure";
 }
 
-const baseUrl = "https://dev.api.pawket.app/"
-
 export async function resolveName(name: string): Promise<StandardResolveAnswer | ResolveFailureAnswer> {
     try {
-        const resp = await fetch(baseUrl + "Name/resolve", {
+        name = name.toLowerCase()
+        const resp = await fetch(rpcUrl() + "Name/resolve", {
             method: "POST",
             headers: {
                 Accept: "application/json",
