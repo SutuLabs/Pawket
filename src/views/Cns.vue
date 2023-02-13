@@ -4,7 +4,6 @@
       <div class="mt-10">
         <img src="@/assets/cns.jpg" class="image is-96x96" style="margin: auto" />
         <p class="has-text-centered is-size-3 pb-4 has-text-color-cns has-text-weight-bold">Chia Name Service</p>
-        <p class="has-text-centered mb-5 pb-4">(Test Only)</p>
       </div>
       <div class="is-flex is-justify-content-center">
         <div class="control has-icons-left search-bar">
@@ -61,7 +60,10 @@
                   <span class="is-size-5 has-text-weight-bold">{{ name.toLocaleLowerCase() }}.xch </span
                   ><span class="has-text-info"><i class="mdi mdi-arrow-right-bold-circle mdi-18px"></i>Registered</span>
                 </p>
-                This name has been registered. Go to viwe Profile Homepage.
+                This name has been registered. Go to view
+                <a class="has-text-link" :href="`https://${name.toLocaleLowerCase()}.xch.cool`" target="_blank"
+                  >Profile Homepage<i class="mdi mdi-open-in-new"></i></a
+                >.
               </div>
             </div>
           </div>
@@ -97,7 +99,20 @@
                   >
                 </p>
               </div>
-              <div class="has-text-right"><button class="button is-primary" @click="showModal = true">Register</button></div>
+              <div class="has-text-right"><button class="button is-cns" @click="showModal = true">Register</button></div>
+            </div>
+          </div>
+          <div class="card mt-4" v-else-if="resolveAns.status == 'Failure'">
+            <header class="card-header">
+              <p class="card-header-title break-all">{{ name.toLocaleLowerCase() }}.xch</p>
+            </header>
+            <div class="card-content">
+              <div class="content">
+                <p>
+                  <span class="is-size-5 has-text-weight-bold break-all">{{ name.toLocaleLowerCase() }}.xch </span
+                  ><span class="has-text-danger"><i class="mdi mdi-alert-circle mdi-18px"></i>Network issue</span>
+                </p>
+              </div>
             </div>
           </div>
           <div class="card mt-4" v-else>
@@ -110,7 +125,11 @@
                   <span class="is-size-5 has-text-weight-bold break-all">{{ name.toLocaleLowerCase() }}.xch </span
                   ><span class="has-text-danger"><i class="mdi mdi-close-circle mdi-18px"></i>Unavailable</span>
                 </p>
-                <span class="has-text-danger"> {{ price.reason }} </span>
+                <span class="has-text-danger" v-if="price.code && price.code == 'NameUnavailable'"
+                  >This name is reserved. If you can prove that you are the owner of the name/trademark/brand, please contact us
+                  via Twitter/Discord.</span
+                >
+                <span class="has-text-danger" v-else>{{ price.reason }}</span>
               </div>
             </div>
           </div>
