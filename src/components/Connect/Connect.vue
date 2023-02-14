@@ -129,6 +129,7 @@ export default class Connect extends Vue {
   public initialNetworkId = "";
   public event: MessageEvent | null = null;
   public loading = false;
+  public origin = "";
 
   async confirm(): Promise<void> {
     this.loading = true;
@@ -161,10 +162,6 @@ export default class Connect extends Vue {
     if (!connStr) return [];
     const conn = JSON.parse(connStr) as connectionItem[];
     return conn.filter((con) => con.accountFirstAddress == this.account.firstAddress);
-  }
-
-  get origin(): string {
-    return this.event?.origin ?? "";
   }
 
   get authorized(): boolean {
@@ -271,6 +268,7 @@ export default class Connect extends Vue {
       Object.freeze(event);
       this.event = event;
       if (this.event.origin == window.location.origin) return;
+      this.origin = this.event.origin;
       const data = JSON.parse(this.event.data);
       this.app = data.app;
       this.initialNetworkId = store.state.network.networkId;
