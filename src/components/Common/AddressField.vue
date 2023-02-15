@@ -56,7 +56,7 @@
         </span>
       </span>
     </template>
-    <b-input v-model="address" expanded :disabled="!addressEditable" :custom-class="validAddress ? '' : 'is-danger'" :loading="isResolving"></b-input>
+    <b-input v-model="address" expanded :disabled="!addressEditable" :custom-class="validAddress ? '' : 'is-danger'" :loading="isResolving" :title="address"></b-input>
     <p class="control">
       <b-tooltip :label="$t('addressField.ui.tooltip.addressBook')">
         <b-button @click="openAddressBook()" :disabled="!addressEditable">
