@@ -96,12 +96,23 @@
                         </span>
                       </a>
                     </div>
-                    <div v-if="ent.nft_uri" class="column">
+                    <div v-if="ent.nft_uri" class="column is-flex">
                       <a :href="ent.nft_uri" target="_blank">
                         <b-tooltip :label="ent.nft_uri" multilined class="break-string" position="is-top">
                           <img :src="ent.nft_uri" class="nft-image" />
                         </b-tooltip>
                       </a>
+                      <div class="ml-3" v-if="ent.nft_detail && 'cnsName' in ent.nft_detail.analysis">
+                        <p class="is-size-6 has-text-weight-bold">
+                          {{ ent.nft_detail.analysis.cnsName }}
+                          <b-tooltip :label="$t('offer.take.ui.tooltip.verifiedCns')" v-if="verifiedCns == true">
+                            <i class="mdi mdi-check-decagram has-text-success"></i>
+                          </b-tooltip>
+                          <b-tooltip :label="$t('offer.take.ui.tooltip.unverifiedCns')" v-if="verifiedCns == false">
+                            <i class="mdi mdi-alert-decagram has-text-danger"></i>
+                          </b-tooltip>
+                        </p>
+                      </div>
                     </div>
                   </li>
                 </ol>
@@ -278,6 +289,8 @@ import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } f
 import TopBar from "../Common/TopBar.vue";
 import { constructPureFeeSpendBundle } from "@/services/coin/nft";
 import BundleSummary from "../Bundle/BundleSummary.vue";
+import { resolveName } from "@/services/api/resolveName";
+import { CnsCoinAnalysisResult } from "@/models/nft";
 
 @Component({
   components: {
@@ -313,6 +326,7 @@ export default class TakeOffer extends Vue {
   public parseError = "";
   public isUpdating = false;
   public showTest = false;
+  public verifiedCns: boolean | null = null;
   public testCases = [
     {
       name: "1",
@@ -368,6 +382,22 @@ export default class TakeOffer extends Vue {
   @Watch("path")
   onPathChange(): void {
     this.close();
+  }
+
+  async verifyCns(cnsName: string, coinName: Hex0x): Promise<void> {
+    this.verifiedCns = null;
+    const res = await resolveName(cnsName);
+    if (res.status == "Found") {
+      this.verifiedCns = true;
+      if (res.proof_coin_name == coinName) this.verifiedCns = true;
+      else this.verifiedCns = false;
+    } else {
+      const idx = this.makerBundle?.coin_spends.findIndex(
+        (csp) => csp.coin.puzzle_hash == "0x13538ceef5c3308f88cf8838fc0bfde0d677bfa845c47d61fba7322a862f6b3f"
+      );
+      if (idx != undefined && idx > -1) this.verifiedCns = true;
+      else this.verifiedCns = false;
+    }
   }
 
   get cats(): { [id: string]: string } {
@@ -528,6 +558,12 @@ export default class TakeOffer extends Vue {
       this.makerBundle = await decodeOffer(this.offerText);
       this.summary = null;
       this.summary = await getOfferSummary(this.makerBundle);
+
+      if (this.summary.offered[0].nft_detail && "cnsName" in this.summary.offered[0].nft_detail.analysis)
+        await this.verifyCns(
+          (this.summary.offered[0].nft_detail?.analysis as CnsCoinAnalysisResult).cnsName,
+          this.summary.offered[0].nft_detail.analysis.coin.parent_coin_info
+        );
     } catch (err) {
       this.parseError = "error";
       this.makerBundle = null;

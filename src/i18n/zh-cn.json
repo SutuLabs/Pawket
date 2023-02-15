@@ -388,7 +388,9 @@
           "offer": "Offer 信息"
         },
         "tooltip": {
-          "spaceScan": "在 Spacescan.io 查看"
+          "spaceScan": "在 Spacescan.io 查看",
+          "verifiedCns": "已验证的 CNS",
+          "unverifiedCns": "这是一个假的 CNS，谨防诈骗"
         },
         "notification": {
           "observation": "目前处于观察模式。无法交易。"
