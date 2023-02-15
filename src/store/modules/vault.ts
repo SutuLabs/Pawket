@@ -94,7 +94,14 @@ store.registerModule<IVaultState>("vault", {
       if (seedLen != 12 && seedLen != 24) throw new Error("Only accept mnemonic with 12/24 words.");
       state.seedMnemonic = mnemonic;
       await dispatch("persistent");
-      await dispatch("createAccountBySerial", tc("default.accountName"));
+      if (seedLen == 24) {
+        await dispatch("createAccountByLegacyMnemonic", {
+            name: tc("default.accountName"),
+            legacyMnemonic: mnemonic,
+        });
+      } else {
+        await dispatch("createAccountBySerial", tc("default.accountName"));
+      }
       await dispatch("refreshBalance");
     },
     async setPassword({ state, dispatch }, password: string) {
@@ -183,7 +190,7 @@ store.registerModule<IVaultState>("vault", {
     },
     async persistent({ state, rootState, dispatch }) {
       if (!state.unlocked) return;
-      if (!state.encryptKey || !state.seedMnemonic) console.warn("abnormal situration, encrypt key or seed mnemonic is empty!!!");
+      if (!state.encryptKey || !state.seedMnemonic) console.warn("abnormal situation, encrypt key or seed mnemonic is empty!!!");
       const encryptedSeed = await encryption.encrypt(state.seedMnemonic, state.encryptKey);
       const encryptedAccounts = await encryption.encrypt(
         JSON.stringify(

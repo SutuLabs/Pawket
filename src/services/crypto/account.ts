@@ -18,7 +18,7 @@ export interface AccountKey {
 class AccountHelper {
 
   generateSeed() {
-    const array = new Uint8Array(16);
+    const array = new Uint8Array(32); // const array = new Uint8Array(16);
     self.crypto.getRandomValues(array);
     return entropyToMnemonic(new Buffer(array));
   }

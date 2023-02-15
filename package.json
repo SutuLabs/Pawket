@@ -1,12 +1,12 @@
 {
-  "name": "pawket",
-  "version": "0.2.0",
+  "name": "Frodo",
+  "version": "1.0.0",
   "license": "GPL-3.0",
-  "author": "SutuLabs",
+  "author": "Alphabean, Inc.",
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "NODE_OPTIONS=--openssl-legacy-provider vue-cli-service serve",
     "build:all": "yarn check-i18n --ci && yarn jest --ci && yarn build:pawket && yarn build:mixch",
-    "build:pawket": "vue-cli-service build",
+    "build:pawket": "NODE_OPTIONS=--openssl-legacy-provider vue-cli-service build",
     "build-ext": "cross-env VUE_CLI_SERVICE_CONFIG_PATH=vue.config.ext.js vue-cli-service build",
     "build:mixch": "cross-env VUE_CLI_SERVICE_CONFIG_PATH=vue.config.mixch.js vue-cli-service build",
     "build:server": "ncc build server/server.ts -o dist/server && cp node_modules/clvm/browser/blsjs.wasm dist/server",

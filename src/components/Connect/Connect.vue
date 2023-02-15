@@ -4,8 +4,8 @@
       <div class="box mx-6 is-flex is-justify-content-center">
         <img v-if="origin" :src="`${origin}/favicon.ico`" class="image is-24x24 mx-3" />{{ origin }}
       </div>
+      <div class="is-size-3 has-text-weighted-bold mb-6">Connect With Pawket</div>
       <div v-if="stage == 'Verify'">
-        <div class="is-size-3 has-text-weighted-bold mb-6">Connect With Pawket</div>
         <div>Enter your password to connect to the site</div>
         <div class="field mx-5 my-3">
           <input
@@ -20,11 +20,10 @@
         <div class="has-text-info">Make sure you trust the site you connect</div>
         <footer class="is-fixed-bottom py-4 px-4 has-background-white-ter">
           <button class="button is-pulled-left" @click="close">Cancel</button>
-          <b-button class="button is-pulled-right is-primary" @click="confirm" :loading="loading" :disabled="!app">Next</b-button>
+          <button class="button is-pulled-right is-primary" @click="confirm">Next</button>
         </footer>
       </div>
       <div v-if="stage == 'Account'">
-        <div class="is-size-3 has-text-weighted-bold mb-6">Connect With Pawket</div>
         <div>Select an account to use on this site</div>
         <div class="pb-10">
           <div class="box m-3">
@@ -52,41 +51,9 @@
           </div>
         </div>
         <footer class="is-fixed-bottom py-4 px-4 has-background-white-ter">
-          <button v-if="accounts.length > 1" class="button is-pulled-left" @click="stage = 'Account'">Back</button>
-          <button v-if="accounts.length == 1" class="button is-pulled-left" @click="close()">Cancel</button>
-          <b-button v-if="!authorized" class="button is-pulled-right is-primary" @click="stage = 'Authorize'" :loading="loading"
-            >Next</b-button
-          >
-          <b-button v-if="authorized" class="button is-pulled-right is-primary" @click="openApp()" :loading="loading"
-            >Connect</b-button
-          >
-        </footer>
-      </div>
-      <div v-if="stage == 'Authorize'">
-        <div class="is-size-3 has-text-weighted-bold">{{ `Connect to [${accounts[selectedAcc].name}]` }}</div>
-        <div class="has-text-center">Allow this site to:</div>
-        <div class="box m-3 p-3 has-text-left">
-          <p class="is-flex mt-2">
-            <b-icon icon="checkbox-marked-circle-outline"></b-icon>
-            <span class="pl-2">View your account addresses, balance, DIDs and activities.</span>
-          </p>
-          <p class="is-flex my-2">
-            <b-icon icon="checkbox-marked-circle-outline"></b-icon>
-            <span class="pl-2">Request approval for transactions.</span>
-          </p>
-        </div>
-        <footer class="is-fixed-bottom py-4 px-4 has-background-white-ter">
           <button class="button is-pulled-left" @click="close()">Cancel</button>
-          <b-button class="button is-pulled-right is-primary" @click="authorize()" :loading="loading">Connect</b-button>
+          <b-button class="button is-pulled-right is-primary" @click="openApp()" :loading="loading">Connect</b-button>
         </footer>
-      </div>
-      <div v-if="stage == 'App'">
-        <section class="hero is-medium" v-if="loading">
-          <div class="hero-body has-text-centered">
-            <h1 class="title">Getting Data from Pawket...</h1>
-          </div>
-        </section>
-        <b-loading v-model="loading"></b-loading>
       </div>
     </div>
     <div v-else>
@@ -113,8 +80,7 @@ import { Component, Vue } from "vue-property-decorator";
 import TakeOffer from "../Offer/Take.vue";
 import Send from "../Send/Send.vue";
 import SignMessage from "../Cryptography/SignMessage.vue";
-import { connectionItem } from "../AccountManagement/AccountInfo.vue";
-type Stage = "Verify" | "Account" | "Authorize" | "App";
+type Stage = "Verify" | "Account" | "App";
 type SignWithDidData = { did: string; message: string };
 type MessageEventSource = Window | MessagePort | ServiceWorker;
 @Component
@@ -131,7 +97,6 @@ export default class Connect extends Vue {
   public loading = false;
 
   async confirm(): Promise<void> {
-    this.loading = true;
     if (!(await isPasswordCorrect(this.password))) {
       this.isCorrect = false;
       return;
@@ -139,16 +104,14 @@ export default class Connect extends Vue {
     this.isCorrect = true;
     this.accounts = await this.getAccounts();
     this.accounts = this.accounts.filter((acc) => acc.key.privateKey);
-    for (let i = 0; i < this.accounts.length; i++) {
-      await this.setFirstAddress(this.accounts[i]);
-      await this.getXchBalance(this.accounts[i]);
-    }
-    this.loading = false;
     if (this.accounts.length > 1) {
       this.stage = "Account";
+      for (let i = 0; i < this.accounts.length; i++) {
+        await this.setFirstAddress(this.accounts[i]);
+        await this.getXchBalance(this.accounts[i]);
+      }
     } else {
-      if (this.authorized) this.openApp();
-      else this.stage = "Authorize";
+      this.openApp();
     }
   }
 
@@ -156,23 +119,8 @@ export default class Connect extends Vue {
     return this.accounts[this.selectedAcc];
   }
 
-  get connections(): connectionItem[] {
-    const connStr = localStorage.getItem("CONNECTIONS");
-    if (!connStr) return [];
-    const conn = JSON.parse(connStr) as connectionItem[];
-    return conn.filter((con) => con.accountFirstAddress == this.account.firstAddress);
-  }
-
   get origin(): string {
     return this.event?.origin ?? "";
-  }
-
-  get authorized(): boolean {
-    const idx = this.connections.findIndex(
-      (conn) => conn.accountFirstAddress == this.accounts[0].firstAddress && conn.url == this.origin
-    );
-    if (idx > -1) return true;
-    return false;
   }
 
   get source(): MessageEventSource | null {
@@ -209,16 +157,6 @@ export default class Connect extends Vue {
 
   clearErrorMsg(): void {
     this.isCorrect = true;
-  }
-
-  authorize(): void {
-    const firstAddress = this.accounts[this.selectedAcc].firstAddress;
-    if (firstAddress) {
-      this.connections.push({ accountFirstAddress: firstAddress, url: this.origin });
-      const conn = JSON.stringify(this.connections);
-      localStorage.setItem("CONNECTIONS", conn);
-      this.openApp();
-    }
   }
 
   demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null, digits = -1, symbol: string | null = null): string {
@@ -298,21 +236,6 @@ export default class Connect extends Vue {
       case "sign-with-did":
         this.signWithDid();
         break;
-      case "get-address":
-        this.stage = "App";
-        this.getAddress();
-        break;
-      case "get-did":
-        this.stage = "App";
-        this.getDid();
-        break;
-      default:
-        Notification.open({
-          message: "Invalid Call" + this.app,
-          type: "is-danger",
-          position: "is-top-right",
-          duration: 5000,
-        });
     }
   }
 
@@ -392,29 +315,7 @@ export default class Connect extends Vue {
     this.success();
   }
 
-  async getDid(): Promise<void> {
-    this.loading = true;
-    await store.dispatch("refreshDids", { idx: this.selectedAcc });
-    this.source?.postMessage(
-      this.dids.map((did) => did.did),
-      { targetOrigin: this.origin }
-    );
-    this.loading = false;
-    this.success();
-  }
-
-  getAddress(): void {
-    this.source?.postMessage(this.account.firstAddress, { targetOrigin: this.origin });
-    this.success();
-  }
-
   success(): void {
-    Notification.open({
-      message: "Success!",
-      type: "is-primary",
-      position: "is-top-right",
-      duration: 5000,
-    });
     setTimeout(() => this.close(), 5000);
   }
 

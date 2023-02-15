@@ -19,33 +19,23 @@
                 selectedDid = did.name;
               "
               :key="did.did"
-              >{{ shorten(did.name) }}</b-dropdown-item
-            >
+              >{{ shorten(did.name) }}</b-dropdown-item>
           </b-dropdown>
+        </b-field>
+        <b-field label="-">
+          <a :href="'https://frodo.coinhabit.net/wallets/faucet-nfts?address=' + address" target="_blank"><b-button class="is-success">Get a free NFT</b-button></a>
         </b-field>
         <b-field :label="$t('nftDetail.ui.label.collection')">
           <b-dropdown aria-role="list" class="mr-2" :mobile-modal="false">
             <template #trigger="{ active }">
-              <b-button :label="shorten(selectedColName)" :icon-right="active ? 'menu-up' : 'menu-down'" />
+              <b-button :label="shorten(selectedCol)" :icon-right="active ? 'menu-up' : 'menu-down'" />
             </template>
-            <b-dropdown-item
-              aria-role="listitem"
-              @click="
-                selectedCol = 'All';
-                selectedColName = 'All';
-              "
-              >{{ $t("nftDetail.ui.profile.all") }}</b-dropdown-item
-            >
-            <b-dropdown-item
-              aria-role="listitem"
-              v-for="(col, key) in collection"
-              @click="
-                selectedCol = col.id;
-                selectedColName = col.name;
-              "
-              :key="key"
-              >{{ shorten(col.name) }}</b-dropdown-item
-            >
+            <b-dropdown-item aria-role="listitem" @click="selectedCol = 'All'">{{
+              $t("nftDetail.ui.profile.all")
+            }}</b-dropdown-item>
+            <b-dropdown-item aria-role="listitem" v-for="(col, key) in collection" @click="selectedCol = col.name" :key="key">{{
+              shorten(col.name)
+            }}</b-dropdown-item>
           </b-dropdown>
         </b-field>
         <b-field :label="$t('accountDetail.ui.tooltip.refresh')">
@@ -55,21 +45,16 @@
         </b-field>
       </b-field>
       <ul class="is-flex columns is-multiline is-mobile my-2" v-if="filteredNfts">
-        <li class="column is-4-tablet is-6-mobile" v-for="(nft, i) of filteredNfts" :key="i">
+        <li
+          class="column is-4-tablet is-6-mobile"
+          v-for="(nft, i) of filteredNfts.slice((currentPage - 1) * pageSize, (currentPage - 1) * pageSize + pageSize)"
+          :key="i"
+        >
           <div class="nft-image-container">
-            <img
-              class="nft-image is-clickable cover"
-              @click="showDetail(nft)"
-              v-if="getImageUrls(nft).length"
-              :data-fallback="0"
-              @error="fallBack($event, nft)"
-              :src="getImageUrls(nft)[0]"
-            />
+            <img class="nft-image is-clickable cover" v-if="nft.metadata.uri" @click="showDetail(nft)" :src="nft.metadata.uri" />
+            <img class="nft-image is-clickable cover" v-else src="@/assets/nft-no-image.png" @click="showDetail(nft)" />
             <p class="nft-name has-background-white-ter pt-2 pl-3 is-hidden-mobile">
-              <span class="is-inline-block truncate" v-if="extraInfo[nft.address].metadata == null">{{ "Unnamed" }}</span>
-              <span class="is-inline-block truncate" v-else>{{
-                extraInfo[nft.address].metadata ? extraInfo[nft.address].metadata.name : ""
-              }}</span>
+              <span class="is-inline-block truncate">{{ nft.metadata.name }}</span>
               <span class="is-pulled-right">
                 <b-dropdown aria-role="list" class="is-pulled-right" :mobile-modal="false" position="is-bottom-left">
                   <template #trigger>
@@ -93,8 +78,8 @@
                       >{{ $t("nftDetail.ui.dropdown.setAsProfilePic") }}
                     </b-dropdown-item>
                   </a>
-                  <a class="has-text-danger" @click="nftBurn(nft)">
-                    <b-dropdown-item aria-role="listitem" class="has-text-danger">
+                  <a class="has-text-dark" @click="nftBurn(nft)">
+                    <b-dropdown-item aria-role="listitem">
                       <b-icon class="media-left" icon="trash-can-outline" size="is-small"></b-icon
                       >{{ $t("nftDetail.ui.dropdown.nftBurn") }}
                     </b-dropdown-item>
@@ -136,17 +121,15 @@ import puzzle from "@/services/crypto/puzzle";
 import { tc } from "@/i18n/i18n";
 import { shorten } from "@/filters/addressConversion";
 import NftTransfer from "./NftTransfer.vue";
-import { bech32m } from "@scure/base";
-import { createHash } from "crypto";
+import { xchSymbol } from "@/store/modules/network";
 
 interface CollectionNfts {
   name: string;
   id: string;
-  nftCollection: string;
   nfts: NftDetail[];
 }
 
-type CollectionDict = { [id: string]: CollectionNfts };
+type CollectionDict = { [name: string]: CollectionNfts };
 type Profile = "All" | "Unassigned" | "Single";
 @Component({})
 export default class NftPanel extends Vue {
@@ -154,13 +137,15 @@ export default class NftPanel extends Vue {
   public refreshing = false;
   profile: Profile = "All";
   selectedCol = "All";
-  selectedColName = "All";
   selectedDid = "";
   currentPage = 1;
   total = 0;
   pageSize = 12;
   public mintGardenUrl = "https://mintgarden.io/nfts/";
-  fallBackList = ["https://assets.spacescan.io/xch/img/nft/full/", "https://nft.dexie.space/preview/medium/"];
+
+  get address(): string {
+    return this.account.tokens[xchSymbol()].addresses[1].address;
+  }
 
   get selectedAccount(): number {
     return store.state.account.selectedAccount;
@@ -179,14 +164,10 @@ export default class NftPanel extends Vue {
       nft.metadata.name = ext?.metadata?.name;
       const colname = ext?.metadata?.collection?.name ?? other;
       const colid = ext?.metadata?.collection?.id ?? other;
-      const hash = createHash("sha256")
-        .update(nft.analysis.launcherId + colid)
-        .digest();
-      const nftCollection = bech32m.encode("col", bech32m.toWords(hash));
-      if (!col[colid]) {
-        col[colid] = { name: colname, id: colid, nftCollection: nftCollection, nfts: [nft] };
+      if (!col[colname]) {
+        col[colname] = { name: colname, id: colid, nfts: [nft] };
       } else {
-        col[colid].nfts.push(nft);
+        col[colname].nfts.push(nft);
       }
     }
     return col;
@@ -208,7 +189,6 @@ export default class NftPanel extends Vue {
       if (did) nfts = nfts.filter((nft) => puzzle.getAddressFromPuzzleHash(nft.analysis.didOwner, "did:chia:") == did.did);
     }
     this.total = nfts.length;
-    nfts = nfts.slice((this.currentPage - 1) * this.pageSize, (this.currentPage - 1) * this.pageSize + this.pageSize);
     return nfts;
   }
 
@@ -232,35 +212,6 @@ export default class NftPanel extends Vue {
     return store.state.account.selectedAccount;
   }
 
-  get path(): string {
-    return this.$route.path;
-  }
-
-  getImageUrls(nft: NftDetail): string[] {
-    if (!nft.analysis.metadata.imageUri) return [];
-    if (typeof nft.analysis.metadata.imageUri == "string") return [nft.analysis.metadata.imageUri];
-    return nft.analysis.metadata.imageUri;
-  }
-
-  fallBack(event: Event, nft: NftDetail): void {
-    const img = event.target as HTMLImageElement;
-    let fallBackIndex = Number(img.getAttribute("data-fallback"));
-    const imageUrls = this.getImageUrls(nft);
-    let totalFallback = this.fallBackList.length + imageUrls.length;
-    fallBackIndex++;
-    img.dataset.fallback = fallBackIndex.toString();
-    if (fallBackIndex > totalFallback) return;
-    if (fallBackIndex == totalFallback) {
-      img.src = "@/assets/nft-no-image.png";
-    } else {
-      if (fallBackIndex < imageUrls.length) img.src = imageUrls[fallBackIndex];
-      else {
-        if (img.src.endsWith(".gif")) img.src = this.fallBackList[fallBackIndex - imageUrls.length] + nft.address + ".gif";
-        else img.src = this.fallBackList[fallBackIndex - imageUrls.length] + nft.address + ".webp";
-      }
-    }
-  }
-
   shorten(name: string): string {
     return shorten(name);
   }
@@ -281,10 +232,10 @@ export default class NftPanel extends Vue {
     this.refresh();
   }
 
-  @Watch("filteredNfts")
+  @Watch("nfts")
   async downloadRelated(): Promise<void> {
-    for (let i = 0; i < this.filteredNfts.length; i++) {
-      const nft = this.filteredNfts[i];
+    for (let i = 0; i < this.nfts.length; i++) {
+      const nft = this.nfts[i];
       const ext = this.extraInfo[nft.address];
       if (!ext) {
         // this.extraInfo[nft.address] = { status: !nft.analysis.metadata.metadataUri ? "NoMetadata" : "Ready" };
@@ -300,23 +251,19 @@ export default class NftPanel extends Vue {
 
   async downloadNftMetadata(nft: NftDetail): Promise<void> {
     const uri = getScalarString(nft.analysis.metadata.metadataUri);
-    if (!uri) {
-      this.extraInfo[nft.address].metadata = null;
-      return;
-    }
+    if (!uri) return;
     // console.log("start download nft", nft.analysis.metadata.metadataUri);
-    let bodyhex = "";
+    const resp = await fetch(uri);
+    const body = await resp.blob();
+    const bodyhex = utility.toHexString(await utility.purehash(await body.arrayBuffer()));
     try {
-      const resp = await fetch(uri);
-      const body = await resp.blob();
-      bodyhex = utility.toHexString(await utility.purehash(await body.arrayBuffer()));
       const md = JSON.parse(await body.text()) as NftOffChainMetadata;
       this.extraInfo[nft.address].metadata = md;
     } catch (error) {
       if (process.env.NODE_ENV !== "production") {
         console.warn("cannot parse metadata", error);
       }
-      this.extraInfo[nft.address].metadata = null;
+      this.extraInfo[nft.address].metadata = undefined;
     }
     // console.log("downloaded", bodyhex, nft.analysis.metadata.metadataHash, md);
     this.extraInfo[nft.address].status = "Processed";
@@ -343,9 +290,6 @@ export default class NftPanel extends Vue {
       fullScreen: isMobile(),
       canCancel: [""],
       props: {
-        title: tc("nftBurn.title"),
-        descriptionText: tc("nftBurn.description"),
-        confirmationText: tc("nftBurn.confirmation"),
         nft: nft,
         account: this.account,
         inputAddress: "xch1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqm6ks6e8mvy",
@@ -355,24 +299,15 @@ export default class NftPanel extends Vue {
   }
 
   showDetail(nft: NftDetail): void {
-    this.$router.push(`/home/nft/${nft.address}`);
     this.$buefy.modal.open({
       parent: this,
       component: NftDetailPanel,
       hasModalCard: true,
       trapFocus: true,
       width: 1000,
-      onCancel: () => {
-        if (this.path != "/home/nft") this.$router.back();
-      },
       fullScreen: isMobile(),
       canCancel: ["outside", "escape"],
       props: { nft: nft, metadata: this.extraInfo[nft.address].metadata, account: this.account, dids: this.dids },
-      events: {
-        close: () => {
-          if (this.path != "/home/nft") this.$router.back();
-        },
-      },
     });
   }
 

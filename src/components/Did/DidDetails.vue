@@ -12,7 +12,7 @@
         ></span>
       </b-field>
 
-      <b-field :label="$t('did.ui.label.tool')" v-if="experimentMode && !observeMode && !publicKeyAcc">
+      <b-field :label="$t('did.ui.label.tool')" v-if="experimentMode && account.type != 'PublicKey'">
         <b-tooltip :label="'Sign'" position="is-right">
           <a href="javascript:void(0)" @click="openSignMessage()" class="has-text-link">
             <div class="has-text-centered">
@@ -47,14 +47,6 @@ export default class DidDetails extends Vue {
 
   get debugMode(): boolean {
     return store.state.app.debug;
-  }
-
-  get observeMode(): boolean {
-    return this.account.type == "Address";
-  }
-
-  get publicKeyAcc(): boolean {
-    return this.account.type == "PublicKey";
   }
 
   get experimentMode(): boolean {

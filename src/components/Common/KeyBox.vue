@@ -5,9 +5,14 @@
     </template>
     <a @click="copy(value)">
       <div class="control">
-        <div class="tags has-addons">
-          <span class="tag is-info is-light m-0">
-            <span class="mx-1" v-if="effectiveDisplayValue">{{ effectiveDisplayValue }} </span>
+        <!--<div class="tags has-addons">-->
+        <div class="has-addons">
+          <!--<span class="tag is-info is-light m-0">-->
+          <span class="is-info is-light m-0 is-size-7">
+            <span class="mx-1" v-if="effectiveDisplayValue && !breakDisplay">{{ effectiveDisplayValue }}</span>
+            <span class="mx-1" v-if="effectiveDisplayValue && breakDisplay">{{ effectiveDisplayValue.substr(0, Math.ceil(effectiveDisplayValue.length/2) + 2)}}</span>
+            <br v-if="effectiveDisplayValue && breakDisplay">
+            <span class="mx-1" v-if="effectiveDisplayValue && breakDisplay">{{ effectiveDisplayValue.substr(Math.floor(effectiveDisplayValue.length/2) + 2)}}</span>
             <b-icon v-if="icon" :icon="icon" size="is-small"> </b-icon>
           </span>
         </div>
@@ -38,12 +43,18 @@ export default class KeyBox extends Vue {
   get effectiveMultilined(): boolean {
     return this.multilined === undefined ? this.effectiveTooltip?.length > 30 : this.multilined;
   }
+
   get effectiveTooltip(): string {
     return this.tooltip ? this.tooltip : this.value;
   }
 
+  get breakDisplay(): boolean {
+    return this.effectiveDisplayValue.length > 30;
+  }
+
   get effectiveDisplayValue(): string {
-    return this.showValue ? shorten(this.value, "...", 0, this.headLength, this.tailLength) : this.display;
+    return this.showValue ? this.value : this.display;
+    //return this.showValue ? shorten(this.value, "...", 0, this.headLength, this.tailLength) : this.display;
   }
 
   copy(text: string): void {

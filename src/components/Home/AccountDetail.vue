@@ -10,6 +10,7 @@
       <div class="container">
         <div class="py-5 has-text-centered" v-if="account && account.key">
           <section>
+            <div class="is-size-4 is-pulled-left">Frodo</div>
             <b-tooltip :label="$t('accountDetail.ui.tooltip.lock')" class="is-pulled-right is-hidden-mobile">
               <b-button @click="lock()" rounded class="border-less"
                 ><b-icon icon="lock" class="has-text-grey"> </b-icon
@@ -24,7 +25,7 @@
                 'border-less': true,
                 'pr-1': true,
               }"
-              icon-left="paw"
+              
               @click="$router.push('/home/accounts')"
               rounded
               ><span class="has-text-grey">{{ account.key.fingerprint }}</span></b-button
@@ -40,12 +41,12 @@
             </b-tooltip>
             <br />
             <div class="mt-6">
-              <figure class="image is-96x96 is-clickable" style="margin: auto" @click="$router.push('/home/accounts')">
+              <!--<figure class="image is-96x96 is-clickable" style="margin: auto" @click="$router.push('/home/accounts')">
                 <img v-if="account.profilePic" class="is-rounded cover" :src="account.profilePic" />
                 <img v-else class="is-rounded cover" src="@/assets/account-circle.svg" />
-              </figure>
+              </figure>-->
               <p class="pt-2">
-                <span class="pl-5 is-size-4">{{ nameOmit(account.name) }}</span
+                <span class="pl-5 is-size-5">{{ nameOmit(account.name) }}</span
                 ><b-tooltip :label="$t('accountDetail.ui.tooltip.refresh')">
                   <a class="is-size-6" href="javascript:void(0)" @click="refresh()" :disabled="refreshing">
                     <b-icon
@@ -57,11 +58,19 @@
                   </a>
                 </b-tooltip>
               </p>
-              <p v-if="account.tokens && account.tokens.hasOwnProperty('XCH')" class="is-size-6 pt-2 has-text-grey">
-                {{ xchToCurrency(account.tokens["XCH"].amount, rate, currency) }}
-              </p>
+              <key-box icon="checkbox-multiple-blank-outline" :value="address" :showValue="true"></key-box>
             </div>
             <div class="pt-3">
+              <div class="b-tooltip">
+                <a @click="$router.push('/home/send')" href="javascript:void(0)" class="has-text-primary">
+                  <div class="mr-3">
+                    <span class="icon has-background-primary is-medium is-circle"
+                      ><i class="mdi mdi-arrow-right mdi-24px has-text-white"></i
+                    ></span>
+                    <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.send") }}</p>
+                  </div>
+                </a>
+              </div>
               <div class="b-tooltip">
                 <a @click="$router.push('/home/receive')" href="javascript:void(0)" class="has-text-primary">
                   <div class="mx-3">
@@ -83,16 +92,6 @@
                 </a>
               </div>
               <div class="b-tooltip">
-                <a @click="$router.push('/home/send')" href="javascript:void(0)" class="has-text-primary">
-                  <div class="mr-3">
-                    <span class="icon has-background-primary is-medium is-circle"
-                      ><i class="mdi mdi-arrow-right mdi-24px has-text-white"></i
-                    ></span>
-                    <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.send") }}</p>
-                  </div>
-                </a>
-              </div>
-              <div class="b-tooltip" v-if="!observeMode">
                 <a @click="$router.push('/home/scan')" href="javascript:void(0)" class="has-text-primary">
                   <div class="mr-3">
                     <span class="icon has-background-primary is-medium is-circle"
@@ -168,6 +167,7 @@ import NetworkSelector from "./NetworkSelector.vue";
 import Scan from "../Scan/Scan.vue";
 import { GetExchangeRateResponse } from "@/models/api";
 import BuyUSDS from "./BuyUSDS.vue";
+import { AddressType } from "@/services/crypto/puzzle";
 
 @Component({
   components: {
@@ -182,6 +182,14 @@ export default class AccountDetail extends Vue {
   public showOfflineNotification = true;
   public timeoutId?: ReturnType<typeof setTimeout>;
   public activeTab = 0;
+  //@Prop() public account!: AccountEntity;
+  //public account2!: AccountEntity;
+  //public address = ""; //"xch1uw04fu624yng2hajucpew4z4s9ryhdu527v6q78w2mn4qsp7pumsq0gzn5";
+  public addressType: AddressType = "Observed";
+
+  get address(): string | null {
+    return this.account.tokens ? this.account.tokens[xchSymbol()].addresses[1].address : null;
+  }
 
   get refreshing(): boolean {
     return store.state.account.refreshing;
@@ -206,6 +214,14 @@ export default class AccountDetail extends Vue {
   get token(): AccountToken | null {
     return this.account.tokens ? this.account.tokens[xchSymbol()] : null;
   }
+/*
+  get token2(): AccountToken {
+    return this.account2.tokens[xchSymbol()];
+  }
+
+  get addresses(): AccountTokenAddress[] {
+    return this.token2.addresses.filter((a) => a.type == this.addressType);
+  }*/
 
   get activities(): CoinRecord[] {
     return this.account.activities ?? [];
@@ -328,12 +344,14 @@ export default class AccountDetail extends Vue {
     return store.state.vault.offline;
   }
 
-  handleModalClose(path: string): void {
-    if (this.path == path) this.$router.back();
+  handleModalClose(): void {
+    if (this.path != "/home") this.$router.push("/home").catch(() => undefined);
   }
 
   mounted(): void {
     this.autoRefresh(60);
+    //Vue.set(this, "address", this.addresses[0].address); // new
+    //Vue.set(this, "address", this.addresses[0].address); // new
   }
 
   unmounted(): void {
@@ -373,12 +391,12 @@ export default class AccountDetail extends Vue {
     this.$buefy.modal.open({
       parent: this,
       component: ErrorLog,
-      onCancel: () => this.handleModalClose("/home/errorLog"),
+      onCancel: this.handleModalClose,
       hasModalCard: true,
       trapFocus: true,
       fullScreen: isMobile(),
       canCancel: ["outside"],
-      events: { close: () => this.handleModalClose("/home/errorLog") },
+      events: { close: this.handleModalClose },
     });
   }
 
@@ -392,7 +410,7 @@ export default class AccountDetail extends Vue {
       fullScreen: isMobile(),
       canCancel: [""],
       props: { account: this.account },
-      events: { refresh: this.refresh, close: () => this.handleModalClose("/home/cats") },
+      events: { refresh: this.refresh, close: this.handleModalClose },
     });
   }
 
@@ -401,12 +419,12 @@ export default class AccountDetail extends Vue {
       parent: this,
       component: AccountManagement,
       trapFocus: true,
-      onCancel: () => this.handleModalClose("/home/accounts"),
+      onCancel: this.handleModalClose,
       width: 700,
       canCancel: ["outside", "escape"],
       fullScreen: isMobile(),
       props: {},
-      events: { close: () => this.handleModalClose("/home/accounts") },
+      events: { close: this.handleModalClose },
     });
   }
 
@@ -420,7 +438,7 @@ export default class AccountDetail extends Vue {
       fullScreen: isMobile(),
       canCancel: [""],
       props: { account: this.account, rate: this.rate, currency: this.currency },
-      events: { close: () => this.handleModalClose("/home/send") },
+      events: { close: this.handleModalClose },
     });
   }
 
@@ -433,7 +451,7 @@ export default class AccountDetail extends Vue {
       fullScreen: isMobile(),
       canCancel: [""],
       props: { account: this.account },
-      events: { close: () => this.handleModalClose("/home/scan") },
+      events: { close: this.handleModalClose },
     });
   }
 
@@ -445,24 +463,24 @@ export default class AccountDetail extends Vue {
       trapFocus: true,
       width: 700,
       canCancel: ["outside", "escape"],
-      onCancel: () => this.handleModalClose("/home/receive"),
+      onCancel: this.handleModalClose,
       fullScreen: isMobile(),
       props: { account: this.account },
-      events: { close: () => this.handleModalClose("/home/receive") },
+      events: { close: this.handleModalClose },
     });
   }
 
-  buy(): void {
+  buy():void {
     this.$buefy.modal.open({
       parent: this,
       component: BuyUSDS,
       trapFocus: true,
       width: 700,
       canCancel: ["outside", "escape"],
-      onCancel: () => this.handleModalClose("/home/buy"),
+      onCancel: this.handleModalClose,
       fullScreen: isMobile(),
       props: { account: this.account },
-      events: { close: () => this.handleModalClose("/home/buy") },
+      events: { close: this.handleModalClose },
     });
   }
 

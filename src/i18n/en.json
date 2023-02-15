@@ -4,7 +4,7 @@
   },
   "html": {
     "document": {
-      "title": "Pawket"
+      "title": "Frodo"
     }
   },
   "common": {
@@ -36,8 +36,8 @@
       },
       "navigation": {
         "wallet": "Wallet",
-        "cns": "CNS",
-        "explore": "Explore",
+        "cns": "Names",
+        "explore": "NFT & Token Markets",
         "settings": "Settings"
       }
     },
@@ -55,9 +55,9 @@
   "footer": {
     "ui": {
       "productInfo": {
-        "name": "Pawket",
-        "author": "SutuLabs",
-        "authorLink": "https://github.com/SutuLabs"
+        "name": "Frodo",
+        "author": "Frodo",
+        "authorLink": "http://www.frodowallet.com/"
       },
       "button": {
         "home": "Home",
@@ -85,7 +85,7 @@
         "verifyPassword": "Verify Password"
       },
       "alt": {
-        "logoAlt": "Pawket Logo"
+        "logoAlt": "Frodo"
       }
     },
     "message": {
@@ -114,8 +114,8 @@
         "ready": "Next",
         "12word": "12 Words",
         "24word": "24 Words",
-        "import12": "Import Pawket Mnemonic Words",
-        "import24": "Import Chia Official Mnemonic Words"
+        "import12": "Import 12-word (Pawket) Mnemonic Words",
+        "import24": "Import 24-word Mnemonic Words"
       },
       "text": {
         "create": {
@@ -123,12 +123,12 @@
           "tip2": "WARNING: NEVER DISCLOSE YOUR MNEMONIC WORDS. ANYONE WITH THIS MNEMONIC CAN TAKE YOUR XCH FOREVER!"
         },
         "import12": {
-          "title": "Import Pawket Mnemonic Words",
-          "tip": "Please enter your Pawket Mnemonic Words in order, using spaces between mnemonics."
+          "title": "Import 12-word (Pawket) Mnemonic Words",
+          "tip": "Please enter your 12-word Mnemonic Words in order, using spaces between mnemonics."
         },
         "import24": {
-          "title": "Import Chia Official Mnemonic Words",
-          "tip": "Please enter your Chia official Mnemonic Words in order, using spaces between mnemonics."
+          "title": "Import 24-word Mnemonic Words",
+          "tip": "Please enter your 24-word Mnemonic Words in order, using spaces between mnemonics."
         }
       }
     },
@@ -142,18 +142,18 @@
     "ui": {
       "button": {
         "receive": "Receive",
-        "buy": "Buy",
+        "buy": "USDS",
         "send": "Send",
         "scan": "Scan",
         "confirm": "Confirm",
         "cancel": "Cancel",
-        "manageCats": "Manage CATs"
+        "manageCats": "Manage Token List"
       },
       "tab": {
-        "asset": "Asset",
-        "utxos": "UTXOs",
-        "nft": "NFT",
-        "did": "DID"
+        "asset": "Assets",
+        "utxos": "Activity",
+        "nft": "NFTs",
+        "did": "Profiles/DIDs"
       },
       "tooltip": {
         "lock": "Lock Wallet",
@@ -169,8 +169,8 @@
           "takeOffer": "Take Offer",
           "makeOffer": "Make Offer",
           "batchSend": "Batch Send",
-          "mintCat": "Issue CAT",
-          "mintNft": "Mint NFT",
+          "mintCat": "Create Token",
+          "mintNft": "Create NFT",
           "batchMintNft": "Batch Mint",
           "verify": "Verify Message",
           "encryptMessage": "Encrypt Message",
@@ -183,8 +183,8 @@
           "takeOffer": "Take Offer",
           "makeOffer": "Make Offer",
           "batchSend": "Batch Send",
-          "mintCat": "Issue CAT",
-          "mintNft": "Mint NFT",
+          "mintCat": "Create Token",
+          "mintNft": "Create NFT",
           "batchMintNft": "Batch Mint",
           "verify": "Verify Message",
           "encryptMessage": "Encrypt Message",
@@ -203,7 +203,7 @@
         "turnOffPrefix": "Click",
         "turnOff": "here",
         "turnOffSuffix": "to turn off.",
-        "test": "Note: kitten.pawket.app is a test site where you can experience some unreleased new features."
+        "test": "note about test site tbd"
       }
     }
   },
@@ -241,8 +241,8 @@
       "label": {
         "maxAddress": "Max number of addresses",
         "address": "Address",
-        "coin": "Coin",
-        "link": "Explorer",
+        "coin": "# of Coins",
+        "link": "View At Spacescan",
         "observer": "Observer",
         "nonObserver": "Non-Observer"
       },
@@ -260,7 +260,7 @@
       "label": {
         "amount": "Amount",
         "memo": "Memo",
-        "fee": "Fee"
+        "fee": "Network Priority Fee"
       },
       "button": {
         "submit": "Submit",
@@ -273,22 +273,22 @@
         "custom": "Custom"
       },
       "messages": {
-        "getFailedResponse": "Get error response: ",
+        "getFailedResponse": "Received error response: ",
         "failedToSubmit": "Failed to submit to memory pool: ",
         "failedToSign": "Failed to sign: ",
-        "submitted": "Submitted to memory pool.",
-        "invalidAmount": "Invalid amount.",
-        "insufficientFunds": "Insufficient funds."
+        "submitted": "Submitted to the blockchain. Check the Activity tab for status.",
+        "invalidAmount": "Sorry, invalid amount.",
+        "insufficientFunds": "Sorry, insufficient funds."
       },
       "span": {
         "loading": "Loading",
         "maxLeadingText": "Max:"
       },
       "text": {
-        "offlineOnlySupportXch": "Offline send only support XCH now."
+        "offlineOnlySupportXch": "Offline send only supports XCH right now."
       },
       "summary": {
-        "notification": "Are you sure to send?<br/>Please review your transaction."
+        "notification": "Are you sure you want to send?<br/>Please review your transaction."
       }
     },
     "messages": {
@@ -306,7 +306,7 @@
         "INVALID_FEE_TOO_CLOSE_TO_ZERO": "Invalid Fee, too Close to Zero",
         "COIN_AMOUNT_NEGATIVE": "Coin Amount is Negative",
         "INVALID_ADDRESS": "Invalid Address",
-        "ADDRESS_NOT_MATCH_NETWORK": "The filled address does not match the current network. Please fill in a valid address.",
+        "ADDRESS_NOT_MATCH_NETWORK": "The address does not match the current network. Please fill in a valid address.",
         "PENDING": "Transaction already in pending status, please wait for complete."
       }
     }
@@ -410,10 +410,10 @@
   "ManageCats": {
     "ui": {
       "title": {
-        "ManageCats": "Manage Cats"
+        "ManageCats": "Manage Tokens"
       },
       "label": {
-        "listingCats": "CATs List",
+        "listingCats": "Token List",
         "name": "Name",
         "assetID": "Asset ID",
         "search": "Search",
@@ -423,7 +423,7 @@
         "add": "Add"
       },
       "tooltip": {
-        "removeToken": "Remove CAT",
+        "removeToken": "Remove Token",
         "drag": "Drag to sort",
         "copy": "Copy asset ID"
       },
@@ -434,16 +434,16 @@
     },
     "message": {
       "notification": {
-        "wrongAssetId": "Wrong asset ID. Failed to add a new CAT!"
+        "wrongAssetId": "Wrong asset ID. Failed to add new Token"
       },
       "confirmation": {
-        "removeToken": "Are you sure to remove the CAT?",
+        "removeToken": "Are you sure to remove the Token?",
         "closeWithContent": "You have unsaved changes on this page which will be lost if you navigate away. Are you sure to close?",
         "confirm": "Confirm",
         "cancel": "Cancel"
       },
       "alert": {
-        "isExisted": "Asset ID/Name already exists in CATs List!"
+        "isExisted": "Asset ID/Name already exists in Token List"
       }
     }
   },
@@ -452,7 +452,8 @@
       "scan": {
         "title": "Sign",
         "numberField": "Unsigned Messages",
-        "numberMessage": "Scan these following QR codes with Offline Sign. ( Note: Please switch to the wallet corresponding to the public key account first. )"
+        "numberMessage": "Scan these following QR codes with Offline Sign. ( Note: Please switch to the wallet corresponding to the public key account first. )",
+        "titleTooltip": "This is a gateway for your transaction send from an offline device, please start with an offline Frodo."
       },
       "confirmBundle": {
         "title": "Confirm",
@@ -605,7 +606,7 @@
         "send": "Batch Send"
       },
       "tooltip": {
-        "help": "Supports sending multiple transactions in one operation. Download the sample CSV file, fill it out and upload it.",
+        "help": "You can send multiple transactions in one operation. Download the sample CSV file, fill it out and upload it.",
         "upload": "Upload a file in \".csv\" format."
       },
       "field": {
@@ -618,7 +619,7 @@
         }
       },
       "summary": {
-        "notification": "Are you sure to send?<br/>Please review your transaction."
+        "notification": "Are you ready to send?<br/>Please review your transaction."
       },
       "button": {
         "upload": "Upload CSV"
@@ -631,15 +632,15 @@
     },
     "messages": {
       "error": {
-        "ADDRESS_NOT_MATCH_NETWORK": "The filled address [{address}] does not match the current network. Please fill in a valid address.",
-        "COIN_NOT_EXIST": "The {symbol} coin does not exist!"
+        "ADDRESS_NOT_MATCH_NETWORK": "The address [{address}] does not match the current network. Please fill in a valid address.",
+        "COIN_NOT_EXIST": "The {symbol} coin does not exist"
       }
     },
     "sample": {
       "address": "Address",
       "coin": "Coin",
-      "amount": "Amount(mojo)",
-      "memo": "Memo(If the coin you are sending is XCH you cannot fill in the memo)"
+      "amount": "Amount (mojo)",
+      "memo": "Memo"
     }
   },
   "utxo": {
@@ -651,7 +652,7 @@
         "confirmed": "Confirmed"
       },
       "text": {
-        "empty": "You have no transactions."
+        "empty": "You have no transactions yet."
       }
     }
   },
@@ -707,21 +708,21 @@
   },
   "mintCat": {
     "ui": {
-      "title": "Issue CAT",
+      "title": "Frodo: Create Token",
       "label": {
         "amount": "Amount",
         "memo": "Memo",
-        "symbolName": "CAT Name(Modifiable)"
+        "symbolName": "Token Name (Modifiable)"
       },
       "summary": {
-        "notification": "Are you sure to issue the CAT?<br/>Please review your transaction.",
+        "notification": "Are you sure you want to create the token?<br/>Please review your transaction",
         "label": {
-          "leadingText": "Issuing CAT"
+          "leadingText": "Creating token"
         }
       },
       "messages": {
         "failedToSign": "Failed to sign: ",
-        "tokenNameUnavailable": "CAT name is not available."
+        "tokenNameUnavailable": "Sorry, the token name is not available."
       }
     }
   },
@@ -748,10 +749,10 @@
         "saved": "Saved."
       },
       "alert": {
-        "addressExists": "The address already exists in Address Book."
+        "addressExists": "This address already exists in the Address Book."
       },
       "confirmation": {
-        "removeConfirm": "Are you sure to remove this address from your Address Book?"
+        "removeConfirm": "Are you sure you want to remove this address from your Address Book?"
       }
     }
   },
@@ -791,11 +792,12 @@
   },
   "mintNft": {
     "ui": {
-      "title": "Mint NFT",
+      "title": "Frodo: Create NFT",
       "label": {
         "memo": "Memo",
-        "uri": "URI",
-        "hash": "Hash"
+        "uri": "URL",
+        "hash": "Hash",
+        "metaHash": "Metadata Hash"
       },
       "summary": {
         "notification": "Are you sure to mint the NFT?<br/>Please review your transaction.",
@@ -804,10 +806,11 @@
         }
       },
       "tooltip": {
-        "upload": "Select a file to generate a hash for your NFT."
+        "upload": "Select a file to generate a hash for your NFT",
+        "uploadMetadata": "Select a file to generate a hash for your Metadata file"
       },
       "button": {
-        "upload": "Get Image Hash"
+        "upload": "Get File Hash"
       },
       "messages": {
         "failedToSign": "Failed to sign: "
@@ -817,8 +820,8 @@
   "addressField": {
     "ui": {
       "label": {
-        "address": "Address",
-        "bindingAddress": "Binding Address:",
+        "address": "Address or Namesdao .xch Name",
+        "bindingAddress": "Address:",
         "lastChanged": "Last changed:",
         "hoursAgo": "hours ago"
       },
@@ -833,7 +836,7 @@
         "newAddress": "New Address Found, Click to Add to Address Book."
       },
       "resolve": {
-        "fail": "Fail to resolve the name",
+        "fail": "The name is not registered yet",
         "notFound": "Not Found"
       }
     }
@@ -858,7 +861,7 @@
   },
   "searchCat": {
     "ui": {
-      "placeholder": "CAT name",
+      "placeholder": "Token (CAT) name",
       "tag": {
         "imported": "Imported"
       },
@@ -902,7 +905,7 @@
         },
         "about": {
           "title": "About",
-          "description": "Privacy Policy, Pawket Version, Contact Us"
+          "description": "Privacy Policy, Frodo Version, Contact Us"
         },
         "lock": "Lock Wallet"
       }
@@ -960,21 +963,24 @@
         "title": "Links",
         "label": {
           "privacyPolicy": "Privacy Policy",
-          "pawketWebsite": "Pawket Website",
+          "pawketWebsite": "Frodo Website",
           "github": "Github",
           "twitter": "Twitter",
           "discord": "Discord",
           "donate": "Donate to Developers"
         },
         "url": {
-          "privacyPolicy": "https://info.pawket.app/privacy-policy",
-          "pawketWebsite": "https://info.pawket.app",
-          "github": "https://github.com/SutuLabs",
-          "twitter": "https://twitter.com/pawket_app",
-          "discord": "https://discord.com/invite/ndQgpHwe4V"
+          "privacyPolicy": "http://www.frodowallet.com/privacypolicy.html",
+          "pawketWebsite": "http://www.frodowallet.com/",
+          "github": "https://github.com/frodowallet",
+          "twitter": "https://twitter.com/frodowallet",
+          "discord": "http://www.frodowallet.com/"
         }
       }
     }
+  },
+  "cns": {
+    "title": "Namesdao"
   },
   "explore": {
     "title": "Explore",
@@ -984,9 +990,10 @@
       "title": "NFT Market"
     },
     "cat": {
-      "title": "CAT Market"
+      "title": "Token Market"
     },
     "button": {
+      "view": "View",
       "buy": "Buy",
       "sell": "Sell",
       "takeOffer": "Take Offer"
@@ -1015,22 +1022,22 @@
       "button": {
         "addBySerial": "Add by Serial",
         "addByPassword": "Add Shadow Wallet",
-        "addByLegacy": "Import Chia Official Wallet（24-word）",
-        "addByMnemonic": "Import Nucle/Goby Wallet（12-word）",
+        "addByLegacy": "Import 24-word Wallet",
+        "addByMnemonic": "Import 12-word Wallet (Goby/Nucle)",
         "addByAddress": "Add by Address(Observation Mode)",
         "addByPublicKey": "Add by PublicKey"
       },
       "tooltip": {
-        "addBySerial": "Derived serial accounts are created in order.",
-        "addByPassword": "Account protected by MNEMONIC and PASSPHRASE. Enter the same PASSPHRASE to access the same account.",
-        "addByLegacy": "Import Chia official wallet.",
-        "addByMnemonic": "Import Nucle/Goby wallet.",
-        "addByAddress": "Read-only is supported in this mode.",
-        "addByPublicKey": "Add the public key of the offline wallet to help to initiate and complete transactions."
+        "addBySerial": "Derived serial accounts are created in order",
+        "addByPassword": "Account protected by MNEMONIC and PASSPHRASE. Enter the same PASSPHRASE to access the same account",
+        "addByLegacy": "Import 24-word wallet",
+        "addByMnemonic": "Import 12-word wallet (Goby/Nucle)",
+        "addByAddress": "Read-only is supported in this mode",
+        "addByPublicKey": "Add the public key of the offline wallet to help to initiate and complete transactions"
       },
       "modal": {
-        "addByLegacy": "Import Chia Official Wallet",
-        "addByMnemonic": "Import Nucle/Goby Wallet"
+        "addByLegacy": "Import 24-word Wallet",
+        "addByMnemonic": "Import 12-word Wallet"
       },
       "value": {
         "defaultName": "Account{n}"
@@ -1054,8 +1061,8 @@
   },
   "welcome": {
     "ui": {
-      "description": "Manage Your XCH/CATs in Pawket!",
-      "slogan": "Pawket is and will continue to be your good companion in the Chia world.",
+      "description": "Manage Your Chia & Tokens with Frodo!",
+      "slogan": "Frodo is your friendly companion in the Chia world.",
       "button": {
         "start": "START"
       }
@@ -1068,8 +1075,8 @@
       "privary": "We may change the Privacy Policy from time to time. We encourage you to periodically review it for the latest information on our Privacy Policy. If we make any changes to the Privacy Policy, we will change its Last Updated date.",
       "agreementPrefix": "I accept the ",
       "agreement": "Privacy Policy",
-      "link": "https://info.pawket.app/privacy-policy/",
-      "agreementSuffix": "and want to access Pawket.",
+      "link": "http://www.frodowallet.com/privacypolicy.html",
+      "agreementSuffix": "and want to access Frodo.",
       "button": {
         "continue": "CONTINUE"
       }
@@ -1114,13 +1121,11 @@
         "poolPublicKey": "Pool public key (m/12381/8444/1/0)",
         "firstWalletAddress": "First wallet address",
         "mnemonicSeed": "Mnemonic Words (24-word)",
-        "connectionManagement": "Connection Management",
         "details": "Details"
       },
       "tooltip": {
         "fingerprintTip": "Compatible with Chia official wallet",
-        "mnemonicTip": "Compatible with Chia official wallet",
-        "disconnect": "Disconnect"
+        "mnemonicTip": "Compatible with Chia official wallet"
       },
       "button": {
         "reveal": "Reveal",
@@ -1130,8 +1135,7 @@
     },
     "message": {
       "inputPassword": "Enter Password to Continue",
-      "passwordNotCorrect": "Incorrect password.",
-      "disconnect": "Are you sure to disconnect [{acc}] from this site?"
+      "passwordNotCorrect": "Incorrect password."
     }
   },
   "nftDetail": {
@@ -1194,7 +1198,7 @@
         "detail": "Details"
       },
       "button": {
-        "addDid": "Add DID",
+        "addDid": "Create a DID (Decentralized Identity)",
         "sign": "Sign"
       },
       "label": {
@@ -1207,7 +1211,7 @@
       }
     },
     "addDid": {
-      "title": "Add DID",
+      "title": "Create a DID (Decentralized Identity)",
       "tip": "You will use 1 mojo to create a DID.",
       "balance": "Balance",
       "confirmation": "Are you sure to create a DID?<br>Please review your transaction.",
@@ -1219,7 +1223,7 @@
       "title": "Transfer",
       "description": "You will transfer this NFT to a new owner.",
       "summary": {
-        "confirmation": "Are you sure to transfer the NFT?<br>Please review your transaction."
+        "confirmation": "Are you sure you want to transfer the NFT?<br>Please review your transaction."
       }
     }
   },
@@ -1236,7 +1240,7 @@
       },
       "messages": {
         "confirmation": {
-          "delete": "Are you sure to remove the Collection?"
+          "delete": "Are you sure you want to remove the Collection?"
         },
         "information": {
           "NO_COLLECTION": "No Collection"
@@ -1554,17 +1558,12 @@
       "title": "Buy USDS",
       "button": {
         "continue": "Continue to Buy",
-        "stably": "Open Stably to Buy"
+        "stably": "Visit Stably to Buy"
       },
-      "tip": "Currently only supports buying USDS on the Chia blockchain via ACH bank transfer.",
+      "tip": "You can buy USDS tokens via ACH bank transfer. USDS is Stably's U.S.D.-backed stablecoin token on the Chia blockchain. Once you have bought and received USDS, you can use it to buy XCH or tokens or NFTs.",
       "stablyPrefix": "This Service is provided by",
       "stably": " Stably ",
-      "stablySuffix": "and is entirely independent from Pawket."
+      "stablySuffix": "and is entirely independent from Frodo. We provide no guarantees regarding this service, nor of USDS."
     }
-  },
-  "nftBurn": {
-    "title": "NFT burn",
-    "description": "You will burn this NFT by removing it from circulation by sending it to a verifiably unspendable address.",
-    "confirmation": "Are you sure to burn this NFT? If you burn this NFT, nobody (including you) will ever be able to access it again.<br>Please review your transaction."
   }
 }

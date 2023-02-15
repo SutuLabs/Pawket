@@ -7,13 +7,18 @@
     @sign="sign()"
     @cancel="cancel()"
     @confirm="submit()"
-    :signBtn="account.type == 'PublicKey' ? $t('common.button.generate') : $t('common.button.sign')"
+    :signBtn="account.type == 'PublicKey' ? $t('common.button.generate') : 'Create Token'"
     :showClose="true"
     :loading="submitting"
     :disabled="!validity || submitting"
     :submitting="submitting"
   >
     <template #sign>
+      <p class="pb-2">
+        <a :href="`https://frodo.coinhabit.net/tutorial/tokens${experimentMode?'':'?b=1'}`" target="_blank">
+          <b-tag icon="help-circle" size="is-small">Help</b-tag>
+        </a>
+      </p>
       <address-field
         :inputAddress="address"
         :addressEditable="addressEditable"
@@ -27,6 +32,7 @@
         :token-names="tokenNames"
         :fee="fee"
         :label="$t('mintCat.ui.label.amount')"
+        :amount="amount"
         :max-amount="maxAmount"
         :total-amount="totalAmount"
         @input="updateTokenAmount"
@@ -35,9 +41,10 @@
         @set-max="setMax()"
       >
       </token-amount-field>
-      <b-field :label="$t('mintCat.ui.label.memo')">
+      <!--<b-field :label="$t('mintCat.ui.label.memo')">
         <b-input maxlength="100" v-model="memo" type="text" @input="reset()"></b-input>
-      </b-field>
+      </b-field>-->
+        {{ numTokens }} tokens to be created
       <b-field :label="$t('mintCat.ui.label.symbolName')">
         <b-input maxlength="12" v-model="symbol" type="text" @input="reset()" required></b-input>
       </b-field>
@@ -114,12 +121,17 @@ export default class MintCat extends Vue {
   public totalAmount = "-1";
   public maxStatus: "Loading" | "Loaded" = "Loading";
   public selectMax = false;
-  public amount = "";
+  public amount = "0.000000000001";
   public symbol = "NEWTOKEN";
   public selectedToken = xchSymbol();
   public validity = false;
   public assetId = "";
   public requests: TokenPuzzleDetail[] = [];
+  public numTokens = "0";
+
+  get experimentMode(): boolean {
+    return store.state.vault.experiment;
+  }
 
   mounted(): void {
     this.loadCoins();
@@ -220,11 +232,13 @@ export default class MintCat extends Vue {
       ? this.maxAmount
       : bigDecimal.subtract(this.maxAmount, bigDecimal.divide(this.fee, Math.pow(10, this.decimal), this.decimal));
     this.amount = newAmount;
+    this.numTokens = bigDecimal.getPrettyValue(BigInt(bigDecimal.multiply(this.numericAmount, 1000)), 3, ",");
     this.selectMax = true;
   }
 
   updateTokenAmount(value: string): void {
     this.amount = value;
+    this.numTokens = bigDecimal.getPrettyValue(BigInt(bigDecimal.multiply(this.numericAmount, 1000)), 3, ",");
     this.reset();
     this.selectMax = false;
   }

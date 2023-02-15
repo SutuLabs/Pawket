@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a
+    <div
       v-for="cat of tokenList"
       :key="cat.id"
       class="panel-block is-justify-content-space-between py-4 has-text-grey-dark"
@@ -17,16 +17,37 @@
         <div class="py-1">
           <p class="has-text-grey-dark is-size-6" v-if="tokenInfo[cat.name]">
             <span v-if="account.tokens[cat.name].amount < 0">- {{ cat.name }}</span>
-            <span v-else>{{ demojo(account.tokens[cat.name].amount, tokenInfo[cat.name]) }}</span>
+            <span v-else style="white-space:nowrap">{{ demojo(account.tokens[cat.name].amount, tokenInfo[cat.name]) }}</span>
           </p>
           <p>
-            <span class="mr-2 is-size-7 has-text-grey" v-if="exchangeRate && cat.name === exchangeRate.from">{{
+            <!--<span class="mr-2 is-size-7 has-text-grey" v-if="exchangeRate && cat.name === exchangeRate.from">{{
               xchToCurrency(account.tokens[cat.name].amount, rate, currency)
-            }}</span>
+            }}</span>-->
           </p>
         </div>
       </div>
-    </a>
+      <div v-if="cat.name === xchSymbol" class="column is-flex">
+        <div class="py-1" style="width:100%">
+          <p class="has-text-grey-dark is-size-6" style="text-align:right">
+            <a :href="`https://frodo.coinhabit.net/wallets/faucet-xch?address=${address}${experimentMode?'':'&b=1'}`" target="_blank">Get free XCH</a>
+          </p>
+          <p>
+            <span class="mr-2 is-size-7 has-text-grey" v-if="exchangeRate && cat.name === exchangeRate.from">&nbsp;</span>
+          </p>
+        </div>
+      </div>
+      <!-- TODO: This assumes second token is never XCH -->
+      <div v-if="account.tokens && cat.name === Object.keys(account.tokens)[1]" class="column is-flex">
+        <div class="py-1" style="width:100%">
+          <p class="has-text-grey-dark is-size-6" style="text-align:right">
+            <a :href="`https://frodo.coinhabit.net/wallets/faucet-tokens?address=${address}${experimentMode?'':'&b=1'}`" target="_blank">Get free tokens</a>
+          </p>
+          <p>
+            <span class="mr-2 is-size-7 has-text-grey" v-if="exchangeRate && cat.name === exchangeRate.from">&nbsp;</span>
+          </p>
+        </div>
+      </div>
+    </div>
     <div class="column is-full has-text-centered pt-5 mt-2">
       <a @click="$router.push('/home/cats')"
         ><span class="has-color-link">{{ $t("accountDetail.ui.button.manageCats") }}</span></a
@@ -52,6 +73,14 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 })
 export default class CatPanel extends Vue {
   public exchangeRate: GetExchangeRateResponse | null = null;
+
+  get experimentMode(): boolean {
+    return store.state.vault.experiment;
+  }
+
+  get address(): string | null {
+    return this.account.tokens ? this.account.tokens[xchSymbol()].addresses[1].address : null;
+  }
 
   get selectedAccount(): number {
     return store.state.account.selectedAccount;

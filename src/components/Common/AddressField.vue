@@ -24,12 +24,12 @@
         </span>
         <span v-else-if="resolveAnswer.status == 'Found'" class="is-flex">
           <div>
-            <a class="has-text-dark" :href="spaceScanUrl + nftAddress" target="_blank">
+            <!--<a class="has-text-dark" :href="spaceScanUrl + nftAddress" target="_blank">
               <img v-if="cnsUrl" :src="cnsUrl" class="image is-128x128" />
               <div v-else class="image is-128x128">
                 <b-loading active :is-full-page="false"></b-loading>
               </div>
-            </a>
+            </a>-->
           </div>
           <div class="ml-4">
             <p class="mb-2">
@@ -48,15 +48,22 @@
               {{ $t("addressField.ui.label.bindingAddress") }}
               <key-box icon="checkbox-multiple-blank-outline" :value="resolvedAddress" :showValue="true"></key-box>
             </p>
-            <p v-if="hoursAgo > 0">
+            <!--<p v-if="hoursAgo > 0">
               {{ $t("addressField.ui.label.lastChanged") }}
               <span>{{ hoursAgo.toFixed(0) }} {{ $t("addressField.ui.label.hoursAgo") }}</span>
-            </p>
+            </p>-->
           </div>
         </span>
       </span>
     </template>
-    <b-input v-model="address" expanded :disabled="!addressEditable" :custom-class="validAddress ? '' : 'is-danger'"></b-input>
+    <b-input
+      v-model="address"
+      @keydown.native.space.prevent
+      @input="acceptAddress"
+      expanded
+      :disabled="!addressEditable"
+      :custom-class="validAddress ? '' : 'is-danger'"
+    ></b-input>
     <p class="control">
       <b-tooltip :label="$t('addressField.ui.tooltip.addressBook')">
         <b-button @click="openAddressBook()" :disabled="!addressEditable">
@@ -192,7 +199,8 @@ export default class AddressField extends Vue {
 
   get resolvedAddress(): string | null {
     if (this.resolveAnswer?.status != "Found" || !this.resolveAnswer?.data) return null;
-    return puzzle.getAddressFromPuzzleHash(this.resolveAnswer?.data, xchPrefix());
+    //return puzzle.getAddressFromPuzzleHash(this.resolveAnswer?.data, xchPrefix());
+    return this.resolveAnswer?.address || null;
   }
 
   get nftAddress(): string | null {
@@ -213,31 +221,31 @@ export default class AddressField extends Vue {
   async reset(): Promise<void> {
     this.validAddress = true;
     if (
-      this.address.match(/[a-zA-Z0-9-]{4,}\.xch$/) &&
+      this.address.match(/[a-zA-Z0-9_]{4,}\.[xX][cC][hH]$/) &&  // decides if to attempt to resolve .xch name
       (this.resolveAnswer?.status == "Found" && this.resolveAnswer?.name) != this.address
     ) {
       this.onChainConfirmationStatus = "None";
       this.resolveAnswer = await resolveName(this.address);
-      if (this.resolveAnswer?.status == "Found" && this.resolveAnswer?.proof_coin_name) {
-        this.onChainConfirmationStatus = "Confirming";
-        this.proofCoin = await debug.getCoinSolution(this.resolveAnswer?.proof_coin_name, rpcUrl());
+      if (this.resolveAnswer?.status == "Found") { // && this.resolveAnswer?.proof_coin_name) {
+        this.onChainConfirmationStatus = "Confirmed"; //ing";
+        /*this.proofCoin = await debug.getCoinSolution(this.resolveAnswer?.proof_coin_name, rpcUrl());
         const nftAnalysis = await analyzeNftCoin(
           this.proofCoin.puzzle_reveal,
           undefined,
           this.proofCoin.coin,
           this.proofCoin.solution
-        );
-        if (
+        );*/
+        /*if (
           nftAnalysis != null &&
           "cnsName" in nftAnalysis &&
-          nftAnalysis.cnsName == this.address &&
+          nftAnalysis.cnsName == this.address && // TODO look at this code more?
           this.resolveAnswer?.data == nftAnalysis.cnsAddress
         ) {
-          this.cnsUrl = getScalarString(nftAnalysis.metadata.imageUri) ?? "";
-          this.onChainConfirmationStatus = "Confirmed";
+          //this.cnsUrl = getScalarString(nftAnalysis.metadata.imageUri) ?? "";
+          //this.onChainConfirmationStatus = "Confirmed";
         } else {
           this.onChainConfirmationStatus = "Wrong";
-        }
+        }*/
       }
     } else {
       this.resolveAnswer = null;
@@ -294,6 +302,30 @@ export default class AddressField extends Vue {
   get debugMode(): boolean {
     return store.state.app.debug;
   }
+
+  // TODO , these 2 functions still don't work for preventing whitespace from autocorrect in cell phones or paste in webapp
+  removeEventSpaces(e: ClipboardEvent): void {
+    //e.preventDefault();
+    if (e.target) {
+      const el = e.target as HTMLInputElement;
+      if (e.clipboardData && el.selectionStart && el.selectionEnd) {
+        const left    = el.value.substring(0, el.selectionStart);
+        const pasted  = e.clipboardData.getData('text').replace(/ /g, '');
+        const right   = el.value.substring(el.selectionEnd, el.value.length);
+        el.value = left + pasted + right;
+      }
+    }
+  }
+
+  acceptAddress(e: ClipboardEvent): void {
+    //e.preventDefault();
+    if (e.target) {
+      const el = e.target as HTMLInputElement;
+      var x = el.value.replace(/ /g, '');
+      el.value = x;
+    }
+    this.reset();
+  }
 }
 
 export interface StandardResolveQueryRequest {
@@ -314,6 +346,7 @@ export interface StandardResolveAnswer {
   proof_coin_name?: string;
   proof_coin_spent_index?: number;
   nft_coin_name?: string;
+  address?: string;
   status: "Found";
 }
 export interface ResolveFailureAnswer {
@@ -328,17 +361,21 @@ export async function resolveName(
   resType: resolveType = "address"
 ): Promise<StandardResolveAnswer | ResolveFailureAnswer> {
   try {
-    const resp = await fetch(rpcUrl() + "Name/resolve", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        queries: [{ name, type: resType }],
-      }),
-    });
-    const qresp = (await resp.json()) as StandardResolveQueryResponse;
+    // strip off .xch/.Xch; note that this strips off any final extension to the name currently
+    var xchName = name.substring(0, name.lastIndexOf('.')) || name;
+    // make it lowercase
+    xchName = xchName.toLowerCase();
+
+    // todo filter any chars that shouldn't be passed to fetch if applicable TODO
+    console.log(xchName);
+    const resp = await fetch("https://namesdaolookup.xchstorage.com/" + xchName + ".json");
+    console.log(resp);
+    // convert response to current format of standardresolveanswer
+    const rawResp = (await resp.json());
+    const processedResponse = { answers: [ { "name": xchName, "type": "address", "time_to_live": 600, "data": rawResp["nft_coin_id"], 
+      "proof_coin_name": rawResp["nft_coin_id"], "proof_coin_spent_index": rawResp["nft_coin_id"], "nft_coin_name": rawResp["nft_coin_id"],
+      "address": rawResp["address"], "status": "Found"}] };
+    const qresp = (processedResponse) as StandardResolveQueryResponse;
     const answer = qresp.answers?.at(0);
     if (answer) answer.status = "Found";
     return answer || { status: "NotFound", name: name };

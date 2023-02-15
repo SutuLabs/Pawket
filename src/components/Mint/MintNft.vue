@@ -7,14 +7,29 @@
     @sign="sign()"
     @cancel="cancel()"
     @confirm="submit()"
-    :signBtn="account.type == 'PublicKey' ? $t('common.button.generate') : $t('common.button.sign')"
+    :signBtn="account.type == 'PublicKey' ? $t('common.button.generate') : 'Create NFT'"
     :showClose="true"
     :loading="submitting"
-    :disabled="!validity || submitting"
+    :disabled="!did || !validity || submitting"
     :submitting="submitting"
   >
     <template #sign>
-      <address-field
+      <p v-if="did" class="pb-2">
+        <a :href="`https://frodo.coinhabit.net/tutorial/nft${experimentMode?'':'?b=1'}`" target="_blank">
+          <b-tag icon="help-circle" size="is-small">Tutorial</b-tag>
+        </a>
+      </p>
+      <div v-if="!did" class="mb-3">
+        <p class="help is-size-6 pb-2">
+          Please Create a Profile/DID first:
+        </p>
+        <b-button type="is-primary" expanded @click="addDid()">
+          <b-icon icon="plus" size="is-small" class="mr-1"></b-icon>
+          {{ $t("did.ui.button.addDid") }}
+        </b-button>
+      </div>
+      <div v-if="did"><address-field
+        v-if="experimentMode"
         :inputAddress="address"
         :addressEditable="addressEditable"
         @updateAddress="updateAddress"
@@ -23,7 +38,13 @@
       <b-field v-if="false" :label="$t('mintNft.ui.label.memo')">
         <b-input maxlength="100" v-model="memo" type="text" @input="reset()" disabled></b-input>
       </b-field>
-      <b-field :label="$t('mintNft.ui.label.uri')">
+      <span class="label">
+        Content Location (URI)
+        <a :href="`https://frodo.coinhabit.net/tutorial/nft${experimentMode?'':'?b=1'}#section-file`" target="_blank">
+          <b-tag icon="help-circle" size="is-small">Help / How to upload</b-tag>
+        </a>
+      </span>
+      <b-field>
         <template #message>
           <a v-if="uri" :href="uri" target="_blank">
             <img :src="uri" class="image-preview" />
@@ -42,31 +63,45 @@
       <b-field>
         <b-input maxlength="64" v-model="hash" type="text" @input="reset()" required></b-input>
       </b-field>
-      <b-field :label="'Metadata Uri'">
+      <span class="label">
+        Metadata File Location (URI)
+        <a :href="`https://frodo.coinhabit.net/create-metadata${experimentMode?'':'?b=1'}`" target="_blank">
+          <b-tag icon="help-circle" size="is-small">Help / Create</b-tag>
+        </a>
+      </span>
+      <b-field>
         <b-input v-model="metadataUri" type="text" @input="reset()" required></b-input>
       </b-field>
-      <b-field :label="'Metadata Hash'">
+      <span class="label">
+        Metadata File Hash
+        <b-tooltip :label="$t('mintNft.ui.tooltip.uploadMetadata')" position="is-bottom" multilined>
+          <b-upload v-model="imageFile" class="file-label" @input="afterUploadMetadata">
+            <b-tag icon="tray-arrow-up" size="is-small">{{ $t("mintNft.ui.button.upload") }}</b-tag>
+          </b-upload>
+        </b-tooltip>
+      </span>
+      <b-field>
         <b-input maxlength="64" v-model="metadataHash" type="text" @input="reset()" required></b-input>
       </b-field>
-      <b-field :label="'License Uri'">
+      <b-field v-if="experimentMode" :label="'License URL'">
         <b-input v-model="licenseUri" type="text" @input="reset()" required></b-input>
       </b-field>
-      <b-field :label="'License Hash'">
+      <b-field v-if="experimentMode" :label="'License Hash'">
         <b-input maxlength="64" v-model="licenseHash" type="text" @input="reset()" required></b-input>
       </b-field>
-      <b-field :label="'Royalty Address'">
+      <b-field v-if="experimentMode" :label="'Royalty Address'">
         <b-input v-model="royaltyAddress" type="text" @input="reset()" required></b-input>
       </b-field>
-      <b-field :label="'Royalty Percentage'">
+      <b-field v-if="experimentMode" :label="'Royalty Percentage'">
         <b-input max="100" min="0" v-model="royaltyPercentage" type="number" @input="reset()" required></b-input>
       </b-field>
-      <b-field :label="'Serial Number'">
+      <b-field v-if="experimentMode" :label="'Series Number'">
         <b-numberinput min="0" v-model="serialNumber" @input="reset()" required></b-numberinput>
       </b-field>
-      <b-field :label="'Serial Total'">
+      <b-field v-if="experimentMode" :label="'Series Total'">
         <b-numberinput min="0" v-model="serialTotal" @input="reset()" required></b-numberinput>
       </b-field>
-      <fee-selector v-model="fee" @input="changeFee()"></fee-selector>
+      <fee-selector v-if="experimentMode" v-model="fee" @input="changeFee()"></fee-selector></div>
     </template>
     <template #confirm>
       <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
@@ -118,6 +153,7 @@ import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import SendSummary from "@/components/Send/SendSummary.vue";
 import { ensureAddress, networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getTokenInfo } from "@/services/view/cat";
+import { DidDetail } from "@/services/crypto/receive";
 import AddressField from "@/components/Common/AddressField.vue";
 import { Bytes } from "clvm";
 import { bech32m } from "@scure/base";
@@ -128,6 +164,8 @@ import puzzle from "@/services/crypto/puzzle";
 import Confirmation from "../Common/Confirmation.vue";
 import { Hex, prefix0x } from "@/services/coin/condition";
 import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
+import { isMobile } from "@/services/view/responsive";
+import MintDid from "@/components/Mint/MintDid.vue";
 
 interface NftFormInfo {
   uri: string;
@@ -177,9 +215,9 @@ export default class MintNft extends Vue {
   public licenseUri = "";
   public licenseHash = "";
   public royaltyAddress = "";
-  public royaltyPercentage = 0;
-  public serialNumber = 0;
-  public serialTotal = 0;
+  public royaltyPercentage = 3;
+  public serialNumber = 1;
+  public serialTotal = 1;
 
   public requests: TokenPuzzleDetail[] = [];
 
@@ -206,8 +244,16 @@ export default class MintNft extends Vue {
   mounted(): void {
     this.loadCoins();
     this.address = ensureAddress(this.account.firstAddress);
-
+    this.royaltyAddress = ensureAddress(this.account.firstAddress);
     store.dispatch("refreshDids");
+  }
+
+  get did(): DidDetail | undefined {
+    return this.account.dids ? this.account.dids[0] : undefined;
+  }
+
+  get experimentMode(): boolean {
+    return store.state.vault.experiment;
   }
 
   get path(): string {
@@ -254,6 +300,11 @@ export default class MintNft extends Vue {
     this.hash = hash;
   }
 
+  async afterUploadMetadata(f: File): Promise<void> {
+    const hash = await utility.getFileHash(f);
+    this.metadataHash = hash;
+  }
+  
   reset(): void {
     this.bundle = null;
   }
@@ -306,6 +357,18 @@ export default class MintNft extends Vue {
     this.serialTotal = info.serialTotal;
   }
 
+  addDid(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: MintDid,
+      hasModalCard: true,
+      trapFocus: true,
+      fullScreen: isMobile(),
+      canCancel: [""],
+      props: { account: this.account },
+    });
+  }
+  
   async loadCoins(): Promise<void> {
     this.bundle = null;
     this.maxAmount = "-1";

@@ -50,7 +50,7 @@
             @click="address = addr.address"
             :class="{ 'hover-primary': true, 'is-clickable': true, 'is-selected': address == addr.address }"
           >
-            <td>{{ shorten(addr.address) }}</td>
+            <td class="mx-1">{{ addr.address }}</td>
             <td>{{ addr.coins.filter((_) => _.coin && !_.spent).length }}</td>
             <td>
               <a target="_blank" :href="externalExplorerPrefix + addr.address">

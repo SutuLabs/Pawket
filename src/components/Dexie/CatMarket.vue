@@ -1,11 +1,11 @@
 <template>
   <div>
     <div class="panel-body">
-      <div v-if="!catMarket.length" class="has-text-centered">{{ $t("common.message.noResult") }}</div>
+      <div v-if="!catMarket.length" class="has-text-centered"><!--{{ $t("common.message.noResult") }}--></div>
       <div v-else class="columns panel-block is-mobile" v-for="(cat, index) of catMarket" :key="index">
         <div class="column">
           <div class="is-flex">
-            <div class="mr-4 py-1">#{{ index + 1 }}</div>
+            <div class="mr-4 py-1"><!--#{{ index + 1 }}--></div>
             <div class="mr-4">
               <span class="image is-32x32">
                 <img class="is-rounded" :src="iconUrlPrefix + cat.id + '.jpg'" />

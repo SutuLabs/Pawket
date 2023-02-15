@@ -397,7 +397,6 @@ export default class TakeOffer extends Vue {
         xchAmount += req.amount;
       }
     }
-    if (this.royaltyAmount > 0) xchAmount += this.royaltyAmount;
     let res: string[] = [];
     if (xchAmount > 0) res.push(demojo(xchAmount));
     if (catAmount.length > 0) res.push(catAmount.join("+"));

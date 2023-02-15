@@ -4,7 +4,7 @@
   },
   "html": {
     "document": {
-      "title": "Pawket"
+      "title": "Frodo"
     }
   },
   "common": {
@@ -55,9 +55,9 @@
   "footer": {
     "ui": {
       "productInfo": {
-        "name": "薄荷钱包",
-        "author": "SutuLabs",
-        "authorLink": "https://github.com/SutuLabs"
+        "name": "Frodo Wallet",
+        "author": "Alphabean Inc.",
+        "authorLink": "http://www.frodowallet.com/"
       },
       "button": {
         "home": "主页",
@@ -85,7 +85,7 @@
         "verifyPassword": "验证密码"
       },
       "alt": {
-        "logoAlt": "Pawket图标"
+        "logoAlt": "Frodo图标"
       }
     },
     "message": {
@@ -114,7 +114,7 @@
         "ready": "下一步",
         "12word": "12 词",
         "24word": "24 词",
-        "import12": "通过 Pawket 助记词导入",
+        "import12": "通过 Frodo 助记词导入",
         "import24": "通过 Chia 客户端助记词导入"
       },
       "text": {
@@ -123,8 +123,8 @@
           "tip2": "切勿向他人透露你的助记词，任何人一旦持有该助记词，即可控制你账户内的资产！"
         },
         "import12": {
-          "title": "导入 Pawket 助记词",
-          "tip": "请按顺序输入 Pawket 助记词，并使用空格作为间隔。"
+          "title": "导入 Frodo 助记词",
+          "tip": "请按顺序输入 Frodo 助记词，并使用空格作为间隔。"
         },
         "import24": {
           "title": "导入 Chia 助记词",
@@ -203,7 +203,7 @@
         "turnOffPrefix": "点击",
         "turnOff": "此处",
         "turnOffSuffix": "关闭。",
-        "test": "注意：kitten.pawket.app 是一个测试站点，你可以在此体验一些未发布的新功能。"
+        "test": "注意："
       }
     }
   },
@@ -707,7 +707,7 @@
   },
   "mintCat": {
     "ui": {
-      "title": "发行 CAT",
+      "title": "Frodo: 发行 CAT",
       "label": {
         "amount": "金额",
         "memo": "备注",
@@ -791,11 +791,12 @@
   },
   "mintNft": {
     "ui": {
-      "title": "发行 NFT",
+      "title": "Frodo: 发行 NFT",
       "label": {
         "memo": "备注",
         "uri": "媒体文件地址",
-        "hash": "哈希值"
+        "hash": "哈希值",
+        "metaHash": "Metadata Hash"
       },
       "summary": {
         "notification": "确定要发行 NFT 吗？<br/>请务必再次检查你的交易内容。",
@@ -804,7 +805,8 @@
         }
       },
       "tooltip": {
-        "upload": "选择一个文件生成该 NFT 的哈希值。"
+        "upload": "选择一个文件生成该 NFT 的哈希值。",
+        "uploadMetadata": "Select a file to generate a hash for your Metadata file"
       },
       "button": {
         "upload": "获取图片哈希"
@@ -817,7 +819,7 @@
   "addressField": {
     "ui": {
       "label": {
-        "address": "地址",
+        "address": "地址 or Namesdao .xch Name",
         "bindingAddress": "绑定地址:",
         "lastChanged": "最后更改:",
         "hoursAgo": "小时以前"
@@ -967,11 +969,11 @@
           "donate": "支持开发者"
         },
         "url": {
-          "privacyPolicy": "https://info.pawket.app/zh/privacy-policy",
-          "pawketWebsite": "https://info.pawket.app/zh",
-          "github": "https://github.com/SutuLabs",
-          "twitter": "https://twitter.com/pawket_app",
-          "discord": "https://discord.com/invite/ndQgpHwe4V"
+          "privacyPolicy": "http://www.frodowallet.com/privacypolicy.html",
+          "pawketWebsite": "http://www.frodowallet.com/",
+          "github": "https://github.com/frodowallet",
+          "twitter": "https://twitter.com/frodowallet",
+          "discord": "http://www.frodowallet.com/"
         }
       }
     }
@@ -987,6 +989,7 @@
       "title": "CAT 市场"
     },
     "button": {
+      "view": "View",
       "buy": "购买",
       "sell": "出售",
       "takeOffer": "接受 Offer"
@@ -1068,7 +1071,7 @@
       "privary": "我们可能会不时更改隐私条款。我们鼓励您定期查看有关我们隐私条款的最新信息。如果我们对隐私条款进行任何更改，我们将更改其最后更新日期。",
       "agreementPrefix": "我接受",
       "agreement": "隐私条款",
-      "link": "https://info.pawket.app/zh/privacy-policy/",
+      "link": "http://www.frodowallet.com/privacypolicy.html",
       "agreementSuffix": "并希望访问薄荷钱包。",
       "button": {
         "continue": "继续"
@@ -1114,13 +1117,11 @@
         "poolPublicKey": "矿池公钥 (m/12381/8444/1/0)",
         "firstWalletAddress": "钱包首地址",
         "mnemonicSeed": "助记词种子(24词)",
-        "connectionManagement": "连接管理",
         "details": "显示详情"
       },
       "tooltip": {
         "fingerprintTip": "与 Chia 客户端兼容",
-        "mnemonicTip": "与 Chia 客户端兼容",
-        "disconnect": "取消连接"
+        "mnemonicTip": "与 Chia 客户端兼容"
       },
       "button": {
         "reveal": "显示助记词",
@@ -1130,8 +1131,7 @@
     },
     "message": {
       "inputPassword": "请输入密码",
-      "passwordNotCorrect": "密码不正确",
-      "disconnect": "确定断开 [{acc}] 与该站点的连接吗？"
+      "passwordNotCorrect": "密码不正确"
     }
   },
   "nftDetail": {
@@ -1180,7 +1180,7 @@
         "spaceScan": "在 Spacescan.io 查看",
         "mintGarden": "在 Mintgarden.io 查看",
         "setAsProfilePic": "设置为账户头像",
-        "nftBurn": "销毁 NFT"
+        "nftBurn": "烧毁NFT"
       },
       "profile": {
         "all": "全部 NFT",
@@ -1559,12 +1559,7 @@
       "tip": "目前仅支持通过 ACH 银行转账购买 Chia 区块链上的 USDS。",
       "stablyPrefix": "本服务由",
       "stably": "Stably ",
-      "stablySuffix": "提供，完全独立于Pawket。"
+      "stablySuffix": "提供，完全独立于Frodo。"
     }
-  },
-  "nftBurn": {
-    "title": "销毁 NFT",
-    "description": "您将会把该 NFT 发送到一个可验证的不可花费的地址，将其从流通中移除，从而将其销毁。",
-    "confirmation": "你确定要销毁这个 NFT 吗？一经销毁，任何人（包括你）都将无法再次访问它。<br>请务必再次检查你的交易内容。"
   }
 }

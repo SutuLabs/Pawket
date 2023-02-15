@@ -177,12 +177,6 @@ html {
     display: inline-flex;
   }
 
-  .cover {
-    height: 100% !important;
-    width: 100% !important;
-    object-fit: cover !important;
-  }
-
   .dropdown.is-bottom-left .dropdown-menu {
     right: 0;
     left: auto;

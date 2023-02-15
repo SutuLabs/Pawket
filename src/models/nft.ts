@@ -20,7 +20,7 @@ export interface NftCollection {
 }
 
 interface DownloadedNftInfo {
-  metadata?: NftOffChainMetadata | null;
+  metadata?: NftOffChainMetadata;
   matchHash?: boolean;
   status: "Ready" | "NoMetadata" | "Downloading" | "Processed";
 }

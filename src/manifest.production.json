@@ -1,8 +1,8 @@
 {
     "manifest_version": 2,
-    "name": "Pawket",
-    "description": "Chia Wallet: Manage your CATs in Pawket!",
-    "version": "0.0.1",
+    "name": "Frodo",
+    "description": "Chia Wallet: Manage your tokens in Frodo!",
+    "version": "0.9.0",
     "background": {
         "service_worker": "/js/background.js"
     },
@@ -13,7 +13,7 @@
             "48": "icons/logo-48x48.png",
             "128": "icons/logo-128x128.png"
         },
-        "default_title": "Pawket"
+        "default_title": "Frodo"
     },
     "content_scripts": [
         {
@@ -39,11 +39,11 @@
         "activeTab",
         "notifications",
         "http://localhost:8080/",
-        "http://walletapi.chiabee.net/*",
-        "http://api.pawket.app/*"
+        "http://walletapi.frodowallet.com/*",
+        "http://api.frodowallet.com/*"
     ],
     "minimum_chrome_version": "66",
-    "author": "https://pawket.app/",
+    "author": "https://www.frodowallet.com/",
     "web_accessible_resources": ["/js/inpage.js"],
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }

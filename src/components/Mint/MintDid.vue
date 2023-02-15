@@ -18,7 +18,7 @@
       <b-notification type="is-primary" has-icon icon="exclamation" :closable="false">
         <p>{{ $t("did.addDid.tip") }}</p>
         <p class="is-size-7" v-if="account.tokens && account.tokens.hasOwnProperty(xchSymbol)">
-          {{ $t("did.addDid.balance") }}:{{ demojo(account.tokens[xchSymbol].amount) }}
+          {{ $t("did.addDid.balance") }}: {{ demojo(account.tokens[xchSymbol].amount) }}
         </p>
       </b-notification>
       <fee-selector v-model="fee" @input="changeFee()"></fee-selector>

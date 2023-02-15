@@ -27,10 +27,6 @@ const routes: Array<RouteConfig> = [
         component: () => import(/* webpackChunkName: "home" */ "@/components/Nft/NftPanel.vue"),
       },
       {
-        path: "nft/:address",
-        component: () => import(/* webpackChunkName: "home" */ "@/components/Nft/NftPanel.vue"),
-      },
-      {
         path: "did",
         component: () => import(/* webpackChunkName: "home" */ "@/components/Did/Did.vue"),
       },

@@ -56,7 +56,7 @@ export default class VerifyPassword extends Vue {
     setTimeout(() => {
       const pswElm = this.$refs.password as HTMLInputElement | undefined;
       if (pswElm) pswElm.focus();
-    }, 300);
+    }, 300000); // i think this is the timeout, yes, was 300
   }
 
   get unlocked(): boolean {

@@ -30,7 +30,7 @@
         <span class="is-size-6">{{ $t("sendSummary.ui.label.assetId") }}</span>
         <span class="is-size-6 is-pulled-right">
           <b-tooltip :label="assetId" multilined class="break-string" position="is-left">
-            {{ shorten(assetId) }}
+            {{ assetId }}
           </b-tooltip>
         </span>
       </template>
@@ -41,7 +41,7 @@
         <span class="is-size-6 is-pulled-right">
           <span v-if="contactName" class="tag is-primary is-light">{{ contactName }}</span>
           <b-tooltip :label="address" multilined class="break-string" position="is-left">
-            {{ shorten(address) }}
+            {{ address }}
           </b-tooltip>
         </span>
       </template>
