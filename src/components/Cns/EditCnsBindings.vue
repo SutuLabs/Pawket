@@ -59,17 +59,17 @@
           <span>{{ $t("bindingInformation.ui.label.publicKey") }}</span>
           <span v-if="isCurrentPk" class="tag is-primary is-light"> Current account PK </span>
         </template>
-        <b-input v-model="publicKey" type="text" disabled></b-input>
+        <b-input v-model="publicKey" type="text" disabled :title="publicKey"></b-input>
       </b-field>
       <b-field>
         <template #label>
           <span>{{ $t("bindingInformation.ui.label.did") }}</span>
           <span v-if="didName" class="tag is-primary is-light"> {{ didName }}</span>
         </template>
-        <b-input v-model="did" type="text" disabled></b-input>
+        <b-input v-model="did" type="text" disabled :title="did"></b-input>
       </b-field>
       <b-field :label="$t('bindingInformation.ui.label.text')">
-        <b-input v-model="text" type="text" disabled></b-input>
+        <b-input v-model="text" type="text" disabled :title="text"></b-input>
       </b-field>
       <b-field>
         <template #label>
