@@ -63,7 +63,7 @@ export async function generateOffer(
         amount: 0n,
       };
 
-      const puzzle_reveal_text = modsprog["settlement_payments"];
+      const puzzle_reveal_text = modsprog[settlementModName];
 
       // put special target into puzzle reverse dict
       puzzleCopy.filter(_ => _.symbol == net.symbol)[0].puzzles.push({
@@ -88,7 +88,7 @@ export async function generateOffer(
 
       const assetId = req.id;
       const catClvmTreehash = prefix0x(modshash[catModName]);
-      const cat_mod = await curryMod(modsprog[catModName], catClvmTreehash, prefix0x(assetId), modsprog["settlement_payments"]);
+      const cat_mod = await curryMod(modsprog[catModName], catClvmTreehash, prefix0x(assetId), modsprog[settlementModName]);
       if (!cat_mod) throw new Error("cannot curry cat");
       const cat_settlement_tgt = prefix0x(await puzzle.getPuzzleHashFromPuzzle(cat_mod));
 
@@ -110,7 +110,7 @@ export async function generateOffer(
       })
 
       const solution_text = `((${prefix0x(nonce)} (${req.target} ${req.amount} (${req.target}))))`;
-      const msg = await getPuzAnnoMsg(modsprog["settlement_payments"], solution_text);
+      const msg = await getPuzAnnoMsg(modsprog[settlementModName], solution_text);
       puz_anno_ids.push(getPuzzleAnnoId(coin.puzzle_hash, msg));
 
       const puzzle_reveal = prefix0x(await puzzle.encodePuzzle(puzzle_reveal_text));
@@ -345,7 +345,7 @@ export async function generateNftOffer(
     .filter((_) => _.symbol == net.symbol)[0]
     .puzzles.push({
       synPubKey: "()", // this syn pub key will not really calculated due to no AGG_SIG_ME exist in this spend
-      puzzle: modsprog["settlement_payments"],
+      puzzle: modsprog[settlementModName],
       hash: settlement_tgt,
       address: "",
     });
@@ -362,7 +362,7 @@ export async function generateNftOffer(
         amount: 0n,
       };
 
-      const puzzle_reveal_text = modsprog["settlement_payments"];
+      const puzzle_reveal_text = modsprog[settlementModName];
 
       const solution_text = `((${prefix0x(nonce)} (${req.target} ${req.amount} (${req.target}))))`;
       const msg = await getPuzAnnoMsg(puzzle_reveal_text, solution_text);
@@ -373,7 +373,7 @@ export async function generateNftOffer(
 
       spends.push({ coin, solution, puzzle_reveal });
     } else {
-      const nftPuzzle = await getTransferNftPuzzle(nft, modsprog["settlement_payments"]);
+      const nftPuzzle = await getTransferNftPuzzle(nft, modsprog[settlementModName]);
       const nftPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(nftPuzzle));
 
       const coin: OriginCoin = {
@@ -461,7 +461,7 @@ export async function generateNftOffer(
           amount,
           puzzle_hash: settlement_tgt,
         },
-        puzzle_reveal: modshex0x["settlement_payments"],
+        puzzle_reveal: modshex0x[settlementModName],
         solution,
       };
       spends.push(roysp);

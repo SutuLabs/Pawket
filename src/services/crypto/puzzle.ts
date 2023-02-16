@@ -294,7 +294,13 @@ class PuzzleMaker {
     let output: string[] = [];
     clvm_tools.setPrintFunction((...args) => output = args)
 
-    clvm_tools.go("brun", puzzle_reveal, solution, "--experiment-backend", "rust", ...args);
+    try {
+      clvm_tools.go("brun", puzzle_reveal, solution, "--experiment-backend", "rust", ...args);
+    }
+    catch (err) {
+      const modname = modsdict[puzzle_reveal];
+      throw new Error(`Error when executing brun [${modname ? `M'${modname}` : puzzle_reveal.slice(0, 200)}] from solution [${solution.slice(0, 200)}]`);
+    }
     const result = output[0];
 
     if (result.startsWith("FAIL")) {

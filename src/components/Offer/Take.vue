@@ -565,7 +565,7 @@ export default class TakeOffer extends Vue {
           type: "is-warning",
           autoClose: true,
         });
-        
+
       if (this.summary.offered[0].nft_detail && "cnsName" in this.summary.offered[0].nft_detail.analysis)
         await this.verifyCns(
           (this.summary.offered[0].nft_detail?.analysis as CnsCoinAnalysisResult).cnsName,
@@ -645,13 +645,7 @@ export default class TakeOffer extends Vue {
             ? await constructPureFeeSpendBundle(change_hex, fee, this.availcoins, observers, networkContext(), false)
             : undefined;
 
-        const utakerOfferBundle = await generateOffer(
-          offplan,
-          revSummary.requested,
-          observers,
-          networkContext(),
-          this.summary.settlementModName
-        );
+        const utakerOfferBundle = await generateOffer(offplan, revSummary.requested, observers, networkContext());
         const utakerBundle = combineSpendBundle(utakerOfferBundle, feeBundle);
         const takerBundle = await signSpendBundle(utakerBundle, this.tokenPuzzles, networkContext());
         const combined = await combineOfferSpendBundle([this.makerBundle, takerBundle], this.summary.settlementModName);
@@ -687,8 +681,7 @@ export default class TakeOffer extends Vue {
           undefined,
           revSummary.requested,
           observers,
-          networkContext(),
-          this.summary.settlementModName
+          networkContext()
         );
         const takerBundle = await signSpendBundle(utakerBundle, this.tokenPuzzles, networkContext());
         const combined = await combineOfferSpendBundle([this.makerBundle, takerBundle], this.summary.settlementModName);

@@ -34,7 +34,9 @@ export async function getOfferSummary(bundle: UnsignedSpendBundle | SpendBundle)
     const puz = await simplifyPuzzle(assemble(puzzle_reveal), puzzle_reveal);
     const modpath = getModsPath(puz);
     if (modpath == "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),p2_delegated_puzzle_or_hidden_puzzle())))"
-      || modpath == "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),settlement_payments())))") {
+      || modpath == "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),settlement_payments())))"
+      || modpath == "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),settlement_payments_v1())))"
+    ) {
       const ss = ((puz as SimplePuzzle)?.args[0] as CannotParsePuzzle).raw;
       const roy = (((((puz as SimplePuzzle)//singleton_top_layer_v1_1
         ?.args[1] as SimplePuzzle)//nft_state_layer
@@ -71,6 +73,9 @@ export async function getOfferSummary(bundle: UnsignedSpendBundle | SpendBundle)
     if (type == "request") {
       if (modsdict[puzzle_reveal] == "settlement_payments") {
         result = await puzzle.calcPuzzleResult(modsprog["settlement_payments"], solution);
+      }
+      else if (modsdict[puzzle_reveal] == "settlement_payments_v1") {
+        result = await puzzle.calcPuzzleResult(modsprog["settlement_payments_v1"], solution);
       }
       else {
         assetId = await tryGetAssetId(puzzle_reveal);
