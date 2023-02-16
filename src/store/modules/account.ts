@@ -16,7 +16,16 @@ import { desktopNotify } from "@/services/notification/notification";
 import { tc } from "@/i18n/i18n";
 
 export function getAccountCats(account: AccountEntity): CustomCat[] {
-  return account.allCats?.filter((c) => convertToChainId(c.network) == chainId()) ?? [];
+  const cats = account.allCats?.filter((c) => convertToChainId(c.network) == chainId()) ?? [];
+  for (const c of cats) {
+    if (c.img == "https://images.taildatabase.com/tails/86b8ebab-7d76-4321-972a-a57b23dbf5b4.jpeg") {
+      c.img = "https://storage.pawket.app/ipfs/QmaDrAPVgYxp2TJoqaudjjRy9TqFDmyrTvy3MUEdW6YXt1?filename=USDS.png"
+    }
+    if (c.img == "https://images.taildatabase.com/tails/cd864a92-facb-48a5-a02e-6344425538c8.png") {
+      c.img = "https://storage.pawket.app/ipfs/QmRU7jq8TKWgNW4Yc9FkHdzyofNfV8PbjJhw5B9xhd1DVK?filename=BSH.png"
+    }
+  }
+  return cats
 }
 
 export function getDefaultCats(): CustomCat[] {
