@@ -246,6 +246,12 @@ test('Take offer with fee included', async () => {
   await testOffer(offerText, 5n);
 });
 
+test('Test offer in version 6', async () => {
+  const offerText = "offer1qqr83wcuu2rykcmqvpsxygqq4ma8euu7rulf8u0hm28eh8d8xf2hrl0uwj78f6m58x24wuatqw7lxh7r6nqah2drkhlk3mflttacl4h75w6l768dlal6q6nlwrsmasrumlncgaad3hrdhejxgexus0gjewurasruamdvpwyas9wmk6mykk42pjhjy3zd7xdlw38v77mzheztk4nepchc0ksyjkrz0petun0hjx74f9n582u26ytq2ywa0arg3nyz5kwg0gklkempfdke9kul9k0w40yaa5un2tzxa3pl8yem8uk8uyu6hnsqj46zctm048wv4kpqremham5taxrn8fvnlp0hnutltpc847ewu8v6l7x9lumnx8qwypppmjxxtxvalc6l9dz9tt2mh82mgcl2w4a7zwr47c82t862q96lagwvfkk4vathkuw4z2wn4cfwpw8dhpj7wvn73uec798rlqxwesek9l9hjuttagx8qyuxk9kszj3tvcu2l4qrrw72z0mwa8d4h70n6hk8dm87vajxqff2yf77qkm86l4ax06kj6kh86qjx2fjh7twxtmmh7hx6whl79f9xzhq5pmtdkqzfallp08wl0lhxmrx05fat0h27z3mfaak7ta3x2whm6wec28gkuu7mll6x78el8lkvcygqf2ahlzlwpj87nvzs0swdwf7plw688f5fgkc7n3u99lvwl2f34kelhau00zultcz2hvl7hmq50h0zsuc3hc6dvl9h6kf4zhnd3mfw9kx9r79rx8k5rgtvvv4khm37wyg6e7v6l0c0lfuce6hnj79v0r57wae970pdv2m8w02ut8ltegw9hkarzl676lx9yqhhugmrj8y4esthhshx8tre9n8kg94jcn0t77dlwdqlhhvrnr574jf2xmujllmu7hs0yxh8hy3twn4s9gkafhtpvq3epwnj4600qfsqnuzdh9srmg08j";
+  await testOffer(offerText, 0n);
+  await testOffer(offerText, 5n);
+});
+
 // test.each([
 //   0n, 5n
 // ])('Take offer by CAT-CAT with fee %p included', async (fee: bigint) => {
@@ -257,6 +263,7 @@ async function testOffer(offerText: string, fee = 0n): Promise<void> {
 
   const makerBundle = await decodeOffer(offerText);
   const summary = await getOfferSummary(makerBundle);
+  if (summary.settlementModName === undefined) throw Error("Unable to find right settlement.");
   expect(summary).toMatchSnapshot("summary");
   const change_hex = "0xb379a659194799dfa9171f7770f6935b1644fe48fd6fb596d5df0ac2abff2bda";
   const nonce = "c616dec58b3c9a898b167f4ea26adb27b464c7e28d2656eeb845a525b9f5786c";
@@ -281,7 +288,7 @@ async function testOffer(offerText: string, fee = 0n): Promise<void> {
   expect(cats).toMatchSnapshot("cats dict");
   const revSummary = getReversePlan(summary, change_hex, cats);
   expect(revSummary).toMatchSnapshot("reverse summary");
-  const offplan = await generateOfferPlan(revSummary.offered, change_hex, availcoins, 0n, xchSymbol());
+  const offplan = await generateOfferPlan(revSummary.offered, change_hex, availcoins, 0n, xchSymbol(), undefined, summary.settlementModName);
   expect(offplan).toMatchSnapshot("offer plan");
 
   const feeBundle = fee > 0n
@@ -292,7 +299,7 @@ async function testOffer(offerText: string, fee = 0n): Promise<void> {
   const utakerBundle = combineSpendBundle(utakerOfferBundle, feeBundle);
   const takerBundle = await signSpendBundle(utakerBundle, tokenPuzzles, net.chainId);
   expect(takerBundle).toMatchSnapshot("taker bundle");
-  const combined = await combineOfferSpendBundle([makerBundle, takerBundle]);
+  const combined = await combineOfferSpendBundle([makerBundle, takerBundle], summary.settlementModName);
   await assertSpendbundle(combined, net.chainId, fee);
   expect(combined).toMatchSnapshot("bundle");
 }

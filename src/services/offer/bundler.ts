@@ -24,10 +24,11 @@ export async function generateOffer(
   net: NetworkContext,
   nonceHex: string | null = null,
   catModName: "cat_v1" | "cat_v2" = "cat_v2",
+  settlementModName: "settlement_payments" | "settlement_payments_v1" = "settlement_payments",
 ): Promise<UnsignedSpendBundle> {
   if (offered.length != 1 || requested.length != 1) throw new Error("currently, only support single offer/request");
 
-  const settlement_tgt = "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79";
+  const settlement_tgt = prefix0x(modshash[settlementModName]);
   const spends: CoinSpend[] = [];
   const puz_anno_ids: string[] = [];
   const getNonce = () => {
@@ -153,8 +154,6 @@ export function sha256(...args: (Hex0x | string | Uint8Array | undefined | Condi
   return prefix0x(result.hex());
 }
 
-export const settlement_tgt = "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79";
-
 export async function generateOfferPlan(
   offered: OfferEntity[],
   change_hex: Hex0x,
@@ -162,12 +161,14 @@ export async function generateOfferPlan(
   fee: bigint,
   tokenSymbol: string,
   royaltyFee: bigint | undefined = undefined,
+  settlementModName: "settlement_payments" | "settlement_payments_v1" = "settlement_payments",
 ): Promise<OfferPlan[]> {
   const plans: OfferPlan[] = [];
 
   for (let i = 0; i < offered.length; i++) {
     const off = offered[i];
 
+    const settlement_tgt = prefix0x(modshash[settlementModName]);
     const tgt: TransferTarget = {
       address: settlement_tgt,
       amount: off.amount,
@@ -205,12 +206,17 @@ export function getReversePlan(
   return {
     offered: summary.requested.map(_ => Object.assign({}, _, { symbol: cats[_.id] })),
     requested: summary.offered.map(_ => Object.assign({}, _, { target: change_hex, symbol: cats[_.id] })),
+    settlementModName: summary.settlementModName,
   };
 }
 
-export async function combineOfferSpendBundle(spendbundles: SpendBundle[]): Promise<SpendBundle> {
+export async function combineOfferSpendBundle(
+  spendbundles: SpendBundle[],
+  settlementModName: "settlement_payments" | "settlement_payments_v1" = "settlement_payments",
+): Promise<SpendBundle> {
   if (spendbundles.length != 2) throw new Error("unexpected length of spendbundle");
 
+  const settlement_tgt = prefix0x(modshash[settlementModName]);
   const BLS = Instance.BLS;
   if (!BLS) throw new Error("BLS not initialized");
   const sigs = spendbundles.map((_) => BLS.G2Element.from_bytes(Bytes.from(_.aggregated_signature, "hex").raw()));
@@ -306,9 +312,10 @@ export async function generateNftOffer(
   requested: OfferEntity[],
   puzzles: TokenPuzzleObserver[],
   net: NetworkContext,
-  nonceHex: string | null = null
+  nonceHex: string | null = null,
+  settlementModName: "settlement_payments" | "settlement_payments_v1" = "settlement_payments",
 ): Promise<UnsignedSpendBundle> {
-  const settlement_tgt = "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79";
+  const settlement_tgt = prefix0x(modshash[settlementModName]);
   const spends: CoinSpend[] = [];
   const puz_anno_ids: string[] = [];
   const getNonce = () => {

@@ -269,6 +269,7 @@ Object {
       "target": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
     },
   ],
+  "settlementModName": "settlement_payments",
 }
 `;
 
@@ -373,6 +374,7 @@ Object {
       "target": "0x5662b49a357db4f05c2c141452b72fb91e7ec286e9b47d6c287210c63ae5cd3e",
     },
   ],
+  "settlementModName": "settlement_payments",
 }
 `;
 
@@ -680,6 +682,7 @@ Object {
       "target": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
     },
   ],
+  "settlementModName": "settlement_payments",
 }
 `;
 
@@ -784,6 +787,7 @@ Object {
       "target": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
     },
   ],
+  "settlementModName": "settlement_payments",
 }
 `;
 

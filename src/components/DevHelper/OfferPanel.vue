@@ -5,7 +5,7 @@
     </b-field>
     <b-field v-if="summary" label="Information">
       <template #message>
-        <ul v-for="(arr, sumkey) in summary" :key="sumkey" :class="sumkey">
+        <ul v-for="(arr, sumkey) in { requested: summary.requested, offered: summary.offered }" :key="sumkey" :class="sumkey">
           <li>{{ sumkey }}</li>
           <li class="pt-1" v-for="(ent, idx) in arr" :key="idx">
             <b-taglist attached>
