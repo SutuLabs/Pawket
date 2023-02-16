@@ -2,29 +2,12 @@ import { chainId, mainnetChainId } from "@/store/modules/network";
 import UniStorage from "../storage";
 
 interface Tail {
-  hash: string;
   name: string;
   code: string;
   description: string;
-  chialisp: string;
-  clvm: string;
-  logo_url: string;
-  supply: string;
-  hashgreen: HashGreen;
-  website_url: string;
-  twitter_url: string;
-  discord_url: string;
   category: string;
-}
-
-interface HashGreen {
-  price: string | null;
-  marketcap: string | null;
-}
-
-interface TailDbResponse {
-  nextCursor: number | null;
-  tails: Tail[];
+  id: string;
+  uri: string;
 }
 
 export interface TailInfo {
@@ -34,7 +17,7 @@ export interface TailInfo {
 }
 
 class TailDb {
-  private tailDbUrl = "https://api.taildatabase.com/enterprise/tails";
+  private tailDbUrl = "https://dev.api.pawket.app/misc/taildb"
   private storageKey = "TAILDB_CAT_LIST";
   private lastUpdateKey = "TAILDB_LAST_UPDATE";
   private ustore = UniStorage.create();
@@ -51,13 +34,13 @@ class TailDb {
     if (resp.status !== 200) {
       throw new Error(await resp.text());
     }
-    const p = (await resp.json()) as TailDbResponse;
-    const tails: TailInfo[] = p.tails
-      .filter((t) => t.hash && t.code && t.logo_url)
+    const p = (await resp.json()) as Tail[];
+    const tails: TailInfo[] = p
+      .filter((t) => t.id && t.code && t.uri)
       .map((tail) => ({
-        hash: tail.hash,
+        hash: tail.id,
         code: tail.code,
-        logo_url: tail.logo_url,
+        logo_url: tail.uri,
       }));
     tails.sort((a, b) => a.code.localeCompare(b.code));
     this.ustore.setItem(this.storageKey, JSON.stringify(tails));
