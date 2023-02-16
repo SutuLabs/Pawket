@@ -388,7 +388,9 @@
           "offer": "Offer"
         },
         "tooltip": {
-          "spaceScan": "View on Spacescan.io"
+          "spaceScan": "View on Spacescan.io",
+          "verifiedCns": "Verified CNS",
+          "unverifiedCns": "This is a fake CNS. Please beware of scams"
         },
         "notification": {
           "observation": "Currently in Observation Mode. Unable to trade."
