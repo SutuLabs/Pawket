@@ -216,8 +216,19 @@ export async function combineOfferSpendBundle(spendbundles: SpendBundle[]): Prom
   const sigs = spendbundles.map((_) => BLS.G2Element.from_bytes(Bytes.from(_.aggregated_signature, "hex").raw()));
   const agg_sig = BLS.AugSchemeMPL.aggregate(sigs);
   const sig = Bytes.from(agg_sig.serialize()).hex();
-
-  const summaries = await Promise.all(spendbundles.map((_) => getOfferSummary(_)));
+  const spendbundlesCopy = spendbundles.map(sp => <SpendBundle>{
+    aggregated_signature: sp.aggregated_signature,
+    coin_spends: sp.coin_spends.map(csp => <CoinSpend>{
+      coin: <OriginCoin>{
+        amount: csp.coin.amount,
+        parent_coin_info: csp.coin.parent_coin_info,
+        puzzle_hash: csp.coin.puzzle_hash
+      },
+      puzzle_reveal: csp.puzzle_reveal,
+      solution: csp.solution
+    })
+  })
+  const summaries = await Promise.all(spendbundlesCopy.map((_) => getOfferSummary(_)));
   for (let i = 0; i < summaries.length; i++) {
     const summary = summaries[i];
 
@@ -281,7 +292,7 @@ export async function combineOfferSpendBundle(spendbundles: SpendBundle[]): Prom
     }
   }
 
-  const spends = spendbundles.flatMap((_) => _.coin_spends);
+  const spends = spendbundlesCopy.flatMap((_) => _.coin_spends);
   return {
     aggregated_signature: prefix0x(sig),
     coin_spends: spends,
