@@ -1,4 +1,4 @@
-import { chainId, mainnetChainId } from "@/store/modules/network";
+import { chainId, mainnetChainId, rpcUrl } from "@/store/modules/network";
 import UniStorage from "../storage";
 
 interface Tail {
@@ -17,14 +17,13 @@ export interface TailInfo {
 }
 
 class TailDb {
-  private tailDbUrl = "https://dev.api.pawket.app/misc/taildb"
   private storageKey = "TAILDB_CAT_LIST";
   private lastUpdateKey = "TAILDB_LAST_UPDATE";
   private ustore = UniStorage.create();
   private validityPeriod: number = 24 * 60 * 60; // unit: second
 
   private async getCatFromTailDb(): Promise<void> {
-    const resp = await fetch(this.tailDbUrl, {
+    const resp = await fetch(rpcUrl() + 'misc/taildb', {
       method: "GET",
       headers: {
         Accept: "application/json",
