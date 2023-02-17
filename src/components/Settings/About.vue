@@ -11,6 +11,7 @@
         <a :href="$t('settings.about.links.url.privacyPolicy')" target="_blank"
           ><p class="pt-4">{{ $t("settings.about.links.label.privacyPolicy") }}</p></a
         >
+        <a href="https://github.com/SutuLabs/Pawket/blob/master/LICENSE" target="_blank"><p>GPL-3.0 license</p></a>
         <hr class="p-0 my-2" />
 
         <a :href="$t('settings.about.links.url.pawketWebsite')" target="_blank"
