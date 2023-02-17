@@ -178,7 +178,6 @@ html {
   }
 
   .cover {
-    height: 100% !important;
     width: 100% !important;
     object-fit: cover !important;
   }
