@@ -10,12 +10,12 @@
             "request": "launch",
             "runtimeArgs": [
               "--inspect-brk",
-              "${workspaceRoot}/server/node_modules/jest/bin/jest.js",
+              "${workspaceRoot}/node_modules/jest/bin/jest.js",
               "--runInBand"
             ],
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen",
-            "cwd": "${workspaceFolder}/server",
+            "cwd": "${workspaceFolder}/cli",
             "port": 9229
           },
         {
