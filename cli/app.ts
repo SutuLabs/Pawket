@@ -26,6 +26,7 @@ global.fetch = fetch
 const app: express.Express = express()
 app.use(express.json({ limit: '3mb' }))
 app.use(express.urlencoded({ extended: true }))
+const rpcUrl = "https://walletapi.chiabee.net/";
 
 interface ParseBlockRequest {
   ref_list?: string[],
@@ -65,20 +66,20 @@ interface CnsOfferRequest {
 }
 
 interface TransferTargetOrigin {
-  symbol: string;
+  assetId: string;
   address: string;
   amount: bigint;
   memos?: string[];
 }
 
 interface BatchSendRequest {
-  senderAddress: string;
   privateKey: string;
   transferTarget: TransferTargetOrigin[];
-  fee: number;
-  chainId: string;
-  symbol: string;
-  prefix: string;
+  changeAddress?: string;
+  fee?: number;
+  chainId?: string;
+  symbol?: string;
+  prefix?: string;
   availcoins?: SymbolCoins;
 }
 
@@ -176,24 +177,32 @@ Instance.init().then(() => {
         return;
       }
 
-      const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(r.senderAddress));
       const catList: CustomCat[] = [];
       const tokenNames: string[] = [];
       const tgts = r.transferTarget.map(_ => <TransferTarget>{
-        symbol: _.symbol,
+        symbol: _.assetId,
         address: prefix0x(puzzle.getPuzzleHashFromAddress(_.address)),
         amount: BigInt(_.amount),
         memos: _.memos
-      })
+      });
 
       for (const tgt of tgts) {
         catList.push({ name: tgt.symbol, id: tgt.symbol });
         tokenNames.push(tgt.symbol)
       }
       const observers = await receive.getAssetsRequestDetail(r.privateKey, 0, 12, catList, {}, r.prefix, r.symbol, "cat_v2");
+      const change_hex = prefix0x(r.changeAddress
+        ? puzzle.getPuzzleHashFromAddress(r.changeAddress)
+        : observers[0].puzzles[1].hash);
+
+      if (change_hex.length != 66) {
+        res.status(400).send(JSON.stringify({ success: false, error: "change address cannot be parsed or found." }))
+        return;
+      }
+
       let availcoins = r.availcoins
       if (!availcoins) {
-        const coins = (await receive.getActivities(observers, false, "https://walletapi.chiabee.net/"))
+        const coins = (await receive.getActivities(observers, false, rpcUrl))
           .filter((_) => _.coin)
           .map((_) => _.coin as CoinItem)
           .map((_) => ({
@@ -209,12 +218,12 @@ Instance.init().then(() => {
           .reduce((a, c) => ({ ...a, [c.symbol]: c.coins }), {});
       }
 
-      const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, BigInt(r.fee), r.symbol);
+      const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, BigInt(r.fee || 0), r.symbol);
       const net: NetworkContext = {
         chainId: r.chainId,
         prefix: r.prefix,
         symbol: r.symbol,
-        api: (_) => getLineageProofPuzzle(_, "https://walletapi.chiabee.net/"),
+        api: (_) => getLineageProofPuzzle(_, rpcUrl),
       };
       const ubundle = await transfer.generateSpendBundleIncludingCat(plan, observers, [], net);
       const bundle = await signSpendBundle(ubundle, observers, net);
