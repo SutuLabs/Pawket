@@ -174,4 +174,5 @@ export interface TransferTarget {
   amount: bigint;
   memos?: string[];
 }
+
 export default new Transfer();
