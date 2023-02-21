@@ -29,16 +29,16 @@ yarn install
 ```sh
 yarn serve # for Pawket
 yarn serve:mixch # for Mixch
-yarn serve-ext # for Extension
-cd server && yarn serve # for Wallet CLI
+yarn serve:ext # for Extension
+yarn serve:server # for Wallet CLI RPC API
 ```
 
 ### Compiles and minifies for production
 ```sh
 yarn build:pawket # for Pawket
 yarn build:mixch # for Mixch
-yarn build-ext # for Extension
-yarn build:server # for Wallet CLI
+yarn build:ext # for Extension
+yarn build:cli # for Wallet CLI
 ```
 
 ### Tests

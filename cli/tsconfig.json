@@ -101,7 +101,7 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
     "include": [
-        "server/**/*.ts",
+        "cli/**/*.ts",
         "../src/**/*.ts",
     ],
     "exclude": [

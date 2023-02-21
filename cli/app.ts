@@ -8,21 +8,25 @@ import { Hex0x, prefix0x } from '../src/services/coin/condition';
 import { encodeOffer } from "../src/services/offer/encoding";
 import { generateMintCnsOffer } from "../src/services/offer/cns";
 import { OriginCoin, signSpendBundle } from '../src/services/spendbundle';
-import { SymbolCoins } from '../src/services/transfer/transfer';
-import { TokenPuzzleDetail } from '../src/services/crypto/receive';
+import transfer, { SymbolCoins, TransferTarget } from '../src/services/transfer/transfer';
+import receive, { TokenPuzzleDetail } from '../src/services/crypto/receive';
 import utility from '../src/services/crypto/utility';
 import { NetworkContext } from '../src/services/coin/coinUtility';
 import { getLineageProofPuzzle } from "../src/services/transfer/call";
 import { CnsMetadataValues } from '../src/models/nft';
+import { CustomCat } from '../src/models/account';
+import { CoinItem } from '../src/models/wallet';
+import fetch from 'cross-fetch';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (BigInt.prototype as any).toJSON = function () {
   return this.toString();
 };
-
+global.fetch = fetch
 const app: express.Express = express()
 app.use(express.json({ limit: '3mb' }))
 app.use(express.urlencoded({ extended: true }))
+const rpcUrl = "https://walletapi.chiabee.net/";
 
 interface ParseBlockRequest {
   ref_list?: string[],
@@ -59,6 +63,24 @@ interface CnsOfferRequest {
   prefix: string;
   nonce?: string;//test only
   intermediateKey?: string;//test only
+}
+
+interface TransferTargetOrigin {
+  assetId: string;
+  address: string;
+  amount: bigint;
+  memos?: string[];
+}
+
+interface BatchSendRequest {
+  privateKey: string;
+  transferTarget: TransferTargetOrigin[];
+  changeAddress?: string;
+  fee?: number;
+  chainId?: string;
+  symbol?: string;
+  prefix?: string;
+  availcoins?: SymbolCoins;
 }
 
 interface PuzzleRequest {
@@ -140,6 +162,83 @@ Instance.init().then(() => {
       res.status(500).send(JSON.stringify({ success: false, error: (<any>err).message }))
     }
   });
+
+  app.post('/batch_send', async (req: express.Request, res: express.Response) => {
+    let r: BatchSendRequest | null = null;
+    try {
+      r = req.body as BatchSendRequest;
+      r.chainId = r.chainId || "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb";
+      r.prefix = r.prefix || "xch";
+      r.symbol = r.symbol || "XCH";
+
+      const sk = Instance.BLS?.PrivateKey.from_bytes(utility.fromHexString(r.privateKey), false);
+      if (!sk) {
+        res.status(400).send(JSON.stringify({ success: false, error: "private key cannot be parsed" }))
+        return;
+      }
+
+      const catList: CustomCat[] = [];
+      const tokenNames: string[] = [];
+      const tgts = r.transferTarget.map(_ => <TransferTarget>{
+        symbol: _.assetId,
+        address: prefix0x(puzzle.getPuzzleHashFromAddress(_.address)),
+        amount: BigInt(_.amount),
+        memos: _.memos
+      });
+
+      for (const tgt of tgts) {
+        catList.push({ name: tgt.symbol, id: tgt.symbol });
+        tokenNames.push(tgt.symbol)
+      }
+      const observers = await receive.getAssetsRequestDetail(r.privateKey, 0, 12, catList, {}, r.prefix, r.symbol, "cat_v2");
+      const change_hex = prefix0x(r.changeAddress
+        ? puzzle.getPuzzleHashFromAddress(r.changeAddress)
+        : observers[0].puzzles[1].hash);
+
+      if (change_hex.length != 66) {
+        res.status(400).send(JSON.stringify({ success: false, error: "change address cannot be parsed or found." }))
+        return;
+      }
+
+      let availcoins = r.availcoins
+      if (!availcoins) {
+        const coins = (await receive.getActivities(observers, false, rpcUrl))
+          .filter((_) => _.coin)
+          .map((_) => _.coin as CoinItem)
+          .map((_) => ({
+            amount: BigInt(_.amount),
+            parent_coin_info: _.parentCoinInfo,
+            puzzle_hash: _.puzzleHash,
+          }));
+        availcoins = tokenNames
+          .map((symbol) => {
+            const tgtpuzs = observers.filter((_) => _.symbol == symbol)[0].puzzles.map((_) => prefix0x(_.hash));
+            return { symbol, coins: coins.filter((_) => tgtpuzs.findIndex((p) => p == _.puzzle_hash) > -1) };
+          })
+          .reduce((a, c) => ({ ...a, [c.symbol]: c.coins }), {});
+      }
+
+      const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, BigInt(r.fee || 0), r.symbol);
+      const net: NetworkContext = {
+        chainId: r.chainId,
+        prefix: r.prefix,
+        symbol: r.symbol,
+        api: (_) => getLineageProofPuzzle(_, rpcUrl),
+      };
+      const ubundle = await transfer.generateSpendBundleIncludingCat(plan, observers, [], net);
+      const bundle = await signSpendBundle(ubundle, observers, net);
+
+      res.send(JSON.stringify({
+        bundle,
+      }))
+    }
+    catch (err) {
+      console.warn(err);
+      if (r) console.log(`${JSON.stringify(r)},`);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      res.status(500).send(JSON.stringify({ success: false, error: (<any>err).message }))
+    }
+  })
 
   app.post('/cns_offer', async (req: express.Request, res: express.Response) => {
     let r: CnsOfferRequest | null = null;
