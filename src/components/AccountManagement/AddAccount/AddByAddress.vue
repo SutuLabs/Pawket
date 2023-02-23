@@ -13,20 +13,12 @@
           :validation-message="$t('addByAddress.ui.message.nameRequired')"
         ></b-input>
       </b-field>
-      <b-field :type="addresserror ? 'is-danger' : ''" :message="addresserror">
-        <template #label>
-          {{ $t("addByAddress.ui.label.address") }}
-        </template>
-        <b-input
-          ref="address"
-          v-model="address"
-          type="text"
-          required
-          :custom-class="isLegalAddress ? '' : 'is-danger'"
-          :validation-message="$t('addByAddress.ui.message.addressRequired')"
-          @input.native.enter="clearErrorMsg()"
-        ></b-input>
-      </b-field>
+      <address-field
+        :inputAddress="address"
+        :validAddress="isLegalAddress"
+        @updateAddress="updateAddress"
+        :showAddressBook="false"
+      ></address-field>
     </section>
     <footer class="modal-card-foot is-justify-content-space-between">
       <b-button :label="$t('addByAddress.ui.button.back')" @click="close()"></b-button>
@@ -42,8 +34,14 @@ import puzzle from "@/services/crypto/puzzle";
 import { Bytes } from "clvm";
 import { bech32m } from "@scure/base";
 import TopBar from "@/components/Common/TopBar.vue";
+import AddressField from "@/components/Common/AddressField.vue";
 
-@Component({ components: { TopBar } })
+@Component({
+  components: {
+    TopBar,
+    AddressField,
+  },
+})
 export default class AddByAddress extends Vue {
   @Prop({ default: 24 }) public mnemonicLen!: number;
   @Prop() public title!: string;
@@ -58,6 +56,10 @@ export default class AddByAddress extends Vue {
     this.$emit("close");
   }
 
+  updateAddress(value: string): void {
+    this.address = value;
+  }
+
   clearErrorMsg(): void {
     this.addresserror = "";
     this.isLegalAddress = true;
@@ -65,7 +67,6 @@ export default class AddByAddress extends Vue {
 
   validate(): void {
     (this.$refs.name as Vue & { checkHtml5Validity: () => boolean }).checkHtml5Validity();
-    (this.$refs.address as Vue & { checkHtml5Validity: () => boolean }).checkHtml5Validity();
   }
 
   async addAccount(): Promise<void> {

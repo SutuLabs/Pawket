@@ -208,7 +208,7 @@
 
 <script lang="ts">
 import { getPrice, Price, register } from "@/services/api/cns-register";
-import { ResolveFailureAnswer, resolveName, StandardResolveAnswer } from "@/services/api/resolveName";
+import { resolveName, StandardResolveAnswer } from "@/services/api/resolveName";
 import { bech32m } from "@scure/base";
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { NotificationProgrammatic as Notification } from "buefy";
@@ -234,7 +234,7 @@ import TopBar from "@/components/Common/TopBar.vue";
 })
 export default class Cns extends Vue {
   public name = "";
-  public resolveAns: StandardResolveAnswer | ResolveFailureAnswer | null = null;
+  public resolveAns: StandardResolveAnswer | null = null;
   public isResolving = false;
   public showDetail = false;
   public ownerAddress = "";

@@ -13,6 +13,7 @@
     </template>
     <template #message>
       <span>
+        <b-tag v-if="cnsResolve && cnsResolve.status == 'Found'" type="is-info is-light">{{ cnsResolve.cns }}</b-tag>
         <span v-if="!resolveAnswer || resolveAnswer.name != address.toLowerCase()"></span>
         <span v-else-if="resolveAnswer.status == 'Failure'">
           <b-icon type="is-warning" icon="alert-decagram-outline" size="is-small"></b-icon>
@@ -56,9 +57,16 @@
         </span>
       </span>
     </template>
-    <b-input v-model="address" expanded :disabled="!addressEditable" :custom-class="validAddress ? '' : 'is-danger'" :loading="isResolving" :title="address"></b-input>
+    <b-input
+      v-model="address"
+      expanded
+      :disabled="!addressEditable"
+      :custom-class="validAddress ? '' : 'is-danger'"
+      :loading="isResolving"
+      :title="address"
+    ></b-input>
     <p class="control">
-      <b-tooltip :label="$t('addressField.ui.tooltip.addressBook')">
+      <b-tooltip :label="$t('addressField.ui.tooltip.addressBook')" v-if="showAddressBook">
         <b-button @click="openAddressBook()" :disabled="!addressEditable">
           <b-icon icon="account"></b-icon>
         </b-button>
@@ -82,6 +90,8 @@ import debug from "@/services/api/debug";
 import { CoinSpend } from "@/services/spendbundle";
 import { analyzeNftCoin, getScalarString } from "@/services/coin/nft";
 import { decodeAddress } from "@/services/view/camera";
+import { resolveName, StandardResolveAnswer } from "@/services/api/resolveName";
+import { getCnsName, reverseResolveAnswer } from "@/services/api/reverseResolve";
 
 @Component({
   components: {
@@ -92,16 +102,18 @@ export default class AddressField extends Vue {
   @Prop() public inputAddress!: string;
   @Prop({ default: true }) public validAddress!: boolean;
   @Prop({ default: true }) public addressEditable!: boolean;
+  @Prop({ default: true }) public showAddressBook!: boolean;
   @Prop() public label!: string;
 
   public address = "";
   public cnsUrl = "";
   public contacts: Contact[] = [];
-  public resolveAnswer: StandardResolveAnswer | ResolveFailureAnswer | null = null;
+  public resolveAnswer: StandardResolveAnswer | null = null;
+  public cnsResolve: reverseResolveAnswer | null = null;
   public proofCoin: CoinSpend | null = null;
   public onChainConfirmationStatus: "None" | "Confirming" | "Confirmed" | "Wrong" = "None";
   public inputing = false;
-  public isResolving = false
+  public isResolving = false;
 
   mounted(): void {
     if (this.inputAddress) {
@@ -177,6 +189,8 @@ export default class AddressField extends Vue {
       if (ia.address === this.address) return ia.name;
     }
 
+    if (this.cnsResolve && this.cnsResolve.cns) return this.cnsResolve.cns;
+    
     return "";
   }
 
@@ -243,6 +257,13 @@ export default class AddressField extends Vue {
         }
       }
     } else {
+      this.cnsResolve = null;
+      if (this.address.startsWith(xchPrefix())) {
+        this.isResolving = true;
+        var res = await getCnsName([puzzle.getPuzzleHashFromAddress(this.address)]);
+        if (res.length) this.cnsResolve = res[0];
+        this.isResolving = false;
+      }
       this.resolveAnswer = null;
       this.cnsUrl = "";
     }
@@ -296,59 +317,6 @@ export default class AddressField extends Vue {
 
   get debugMode(): boolean {
     return store.state.app.debug;
-  }
-}
-
-export interface StandardResolveQueryRequest {
-  queries?: StandardResolveQuery[];
-}
-export interface StandardResolveQueryResponse {
-  answers?: StandardResolveAnswer[];
-}
-export interface StandardResolveQuery {
-  name: string;
-  type: string;
-}
-export interface StandardResolveAnswer {
-  name?: string;
-  type?: string;
-  time_to_live?: number;
-  data?: string;
-  proof_coin_name?: string;
-  proof_coin_spent_index?: number;
-  nft_coin_name?: string;
-  status: "Found";
-}
-export interface ResolveFailureAnswer {
-  name: string;
-  status: "NotFound" | "Failure";
-}
-
-export type resolveType = "address" | "did" | "publicKey" | "text";
-
-export async function resolveName(
-  name: string,
-  resType: resolveType = "address"
-): Promise<StandardResolveAnswer | ResolveFailureAnswer> {
-  try {
-    const query = resType == "address" ? name.toLowerCase() : name;
-    const resp = await fetch(rpcUrl() + "Name/resolve", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        queries: [{ name: query, type: resType }],
-      }),
-    });
-    const qresp = (await resp.json()) as StandardResolveQueryResponse;
-    const answer = qresp.answers?.at(0);
-    if (answer) answer.status = "Found";
-    return answer || { status: "NotFound", name: name };
-  } catch (error) {
-    console.warn(error);
-    return { status: "Failure", name: name };
   }
 }
 </script>

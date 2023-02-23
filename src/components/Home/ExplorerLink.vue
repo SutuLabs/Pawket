@@ -23,7 +23,12 @@
             </b-tooltip>
           </div>
         </b-tab-item>
-        <b-tab-item :label="$t('explorerLink.ui.label.nonObserver')" icon="security" value="Hardened" v-if="account.type != 'PublicKey'">
+        <b-tab-item
+          :label="$t('explorerLink.ui.label.nonObserver')"
+          icon="security"
+          value="Hardened"
+          v-if="account.type != 'PublicKey'"
+        >
           <div class="has-text-centered">
             <qrcode-vue :value="externalExplorerPrefix + address" size="200" class="qrcode" style="width: 220px"></qrcode-vue>
             <key-box icon="checkbox-multiple-blank-outline" :value="address" :showValue="true"></key-box>
@@ -50,7 +55,7 @@
             @click="address = addr.address"
             :class="{ 'hover-primary': true, 'is-clickable': true, 'is-selected': address == addr.address }"
           >
-            <td>{{ shorten(addr.address) }}</td>
+            <td>{{ convertAddress(addr.address) }}</td>
             <td>{{ addr.coins.filter((_) => _.coin && !_.spent).length }}</td>
             <td>
               <a target="_blank" :href="externalExplorerPrefix + addr.address">
@@ -72,9 +77,10 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import QrcodeVue from "qrcode.vue";
 import { shorten } from "@/filters/addressConversion";
 import TopBar from "@/components/Common/TopBar.vue";
-import { AddressType } from "@/services/crypto/puzzle";
+import puzzle, { AddressType } from "@/services/crypto/puzzle";
 import { notifyPrimary } from "@/services/notification/notification";
 import { xchSymbol } from "@/store/modules/network";
+import { getCnsName, reverseResolveAnswer } from "@/services/api/reverseResolve";
 
 @Component({
   components: {
@@ -87,6 +93,7 @@ export default class ExplorerLink extends Vue {
   @Prop() public account!: AccountEntity;
   public address = "";
   public addressType: AddressType = "Observed";
+  public cnsNames: reverseResolveAnswer[] = [];
 
   get externalExplorerPrefix(): string {
     return store.state.network.network.explorerUrl;
@@ -122,16 +129,29 @@ export default class ExplorerLink extends Vue {
     this.close();
   }
 
+  @Watch("addresses")
+  async addressToCns(): Promise<void> {
+    const queries = this.addresses.map((addr) => puzzle.getPuzzleHashFromAddress(addr.address));
+    this.cnsNames = await getCnsName(queries);
+  }
+
   changeAddressType(): void {
     this.address = this.addresses[0].address;
+  }
+
+  convertAddress(address: string): string {
+    const res = this.cnsNames.find((cns) => cns.address == puzzle.getPuzzleHashFromAddress(address) && cns.cns);
+    if (res && res.cns) return res.cns;
+    return shorten(address);
   }
 
   shorten(name: string): string {
     return shorten(name);
   }
 
-  mounted(): void {
+  async mounted(): Promise<void> {
     Vue.set(this, "address", this.addresses[0].address);
+    await this.addressToCns();
   }
 
   @Emit("close")

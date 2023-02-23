@@ -520,12 +520,10 @@
       "title": "添加地址钱包",
       "label": {
         "name": "账户名",
-        "address": "地址",
         "publicKey": "公钥"
       },
       "message": {
         "nameRequired": "账户名不能为空",
-        "addressRequired": "地址不能为空",
         "illegalAddress": "地址不正确",
         "duplicateAddress": "地址重复",
         "duplicateName": "账户名重复",

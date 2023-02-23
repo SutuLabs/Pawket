@@ -520,12 +520,10 @@
       "title": "Add By Address",
       "label": {
         "name": "Account Name",
-        "address": "Address",
         "publicKey": "PublicKey"
       },
       "message": {
         "nameRequired": "Account name is required.",
-        "addressRequired": "Address is required.",
         "illegalAddress": "Incorrect address.",
         "duplicateAddress": "Duplicate Address",
         "duplicateName": "Duplicate Name",
