@@ -9,7 +9,11 @@
         <b-tab-item :label="$t('encryptMessage.ui.tab.singleMessage')">
           <template v-if="!result">
             <b-field :label="$t('encryptMessage.ui.label.encryptWithAddress')">
+              <div v-if="cnsResolve && cnsResolve.cns" class="has-text-info is-size-4 mb-3" @click="showAddress = !showAddress">
+                {{ cnsResolve.cns }}
+              </div>
               <key-box
+                v-if="!cnsResolve || showAddress"
                 icon="checkbox-multiple-blank-outline"
                 :value="account.firstAddress"
                 :tooltip="account.firstAddress"
@@ -40,15 +44,19 @@
         <b-tab-item :label="$t('encryptMessage.ui.tab.multipleMessage')">
           <template v-if="!result">
             <b-field :label="$t('encryptMessage.ui.label.encryptWithAddress')">
+              <div v-if="cnsResolve && cnsResolve.cns" class="has-text-info is-size-4 mb-3" @click="showAddress = !showAddress">
+                {{ cnsResolve.cns }}
+              </div>
               <key-box
+                v-if="!cnsResolve || showAddress"
                 icon="checkbox-multiple-blank-outline"
                 :value="account.firstAddress"
                 :tooltip="account.firstAddress"
                 :showValue="true"
                 :headLength="80"
                 :tailLength="10"
-              ></key-box
-            ></b-field>
+              ></key-box>
+            </b-field>
             <b-field v-if="!isActivated && !refreshing">
               <p class="has-text-danger">
                 {{ $t("encryptMessage.ui.label.activatePrefix")
@@ -139,10 +147,12 @@ import { rpcUrl } from "@/store/modules/network";
 import store from "@/store";
 import { prefix0x } from "@/services/coin/condition";
 import { EcdhHelper } from "@/services/crypto/ecdh";
-import AddressField, { resolveName } from "@/components/Common/AddressField.vue";
+import AddressField from "@/components/Common/AddressField.vue";
 import Send from "../Send/Send.vue";
 import { isMobile } from "@/services/view/responsive";
 import { bech32m } from "@scure/base";
+import { resolveName } from "@/services/api/resolveName";
+import { getCnsName, reverseResolveAnswer } from "@/services/api/reverseResolve";
 
 @Component({
   components: {
@@ -160,6 +170,7 @@ export default class EncryptMessage extends Vue {
   public dragfile: File[] = [];
   public isDragging = false;
   public transitioning = false;
+  public showAddress = false;
   public result = "";
   public message = "";
 
@@ -169,6 +180,7 @@ export default class EncryptMessage extends Vue {
   public validAddress = true;
   public address = "";
   public signAddress = "";
+  public cnsResolve: reverseResolveAnswer | null = null;
 
   get dids(): DidDetail[] {
     return this.account.dids || [];
@@ -183,9 +195,13 @@ export default class EncryptMessage extends Vue {
     return store.state.account.refreshing;
   }
 
-  mounted(): void {
+  async mounted(): Promise<void> {
     if (!this.account.dids) {
       store.dispatch("refreshDids");
+    }
+    if (this.account.firstAddress) {
+      const res = await getCnsName([puzzle.getPuzzleHashFromAddress(this.account.firstAddress)]);
+      if (res.length) this.cnsResolve = res[0];
     }
   }
 
