@@ -645,7 +645,15 @@ export default class TakeOffer extends Vue {
             ? await constructPureFeeSpendBundle(change_hex, fee, this.availcoins, observers, networkContext(), false)
             : undefined;
 
-        const utakerOfferBundle = await generateOffer(offplan, revSummary.requested, observers, networkContext());
+        const utakerOfferBundle = await generateOffer(
+          offplan,
+          revSummary.requested,
+          observers,
+          networkContext(),
+          null,
+          "cat_v2",
+          this.summary.settlementModName
+        );
         const utakerBundle = combineSpendBundle(utakerOfferBundle, feeBundle);
         const takerBundle = await signSpendBundle(utakerBundle, this.tokenPuzzles, networkContext());
         const combined = await combineOfferSpendBundle([this.makerBundle, takerBundle], this.summary.settlementModName);
@@ -681,7 +689,9 @@ export default class TakeOffer extends Vue {
           undefined,
           revSummary.requested,
           observers,
-          networkContext()
+          networkContext(),
+          null,
+          this.summary.settlementModName
         );
         const takerBundle = await signSpendBundle(utakerBundle, this.tokenPuzzles, networkContext());
         const combined = await combineOfferSpendBundle([this.makerBundle, takerBundle], this.summary.settlementModName);
