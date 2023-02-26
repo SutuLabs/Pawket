@@ -156,7 +156,7 @@ class Receive {
       }),
     });
     if (resp.status != 200) {
-      throw new Error('NETWORK_ERROR: ' + resp.status.toString())
+      throw new Error('NETWORK_ERROR: ' + resp.status.toString() + '\nERROR: ' + await resp.text())
     }
     const json = (await resp.json()) as GetRecordsResponse;
     return json;

@@ -187,8 +187,10 @@ Instance.init().then(() => {
       });
 
       for (const tgt of tgts) {
-        catList.push({ name: tgt.symbol, id: tgt.symbol });
-        tokenNames.push(tgt.symbol)
+        if (!catList.find(_ => _.id == tgt.symbol)) {
+          catList.push({ name: tgt.symbol, id: tgt.symbol });
+          tokenNames.push(tgt.symbol)
+        }
       }
       const observers = await receive.getAssetsRequestDetail(r.privateKey, 0, 12, catList, {}, r.prefix, r.symbol, "cat_v2");
       const change_hex = prefix0x(r.changeAddress
@@ -229,7 +231,7 @@ Instance.init().then(() => {
       const bundle = await signSpendBundle(ubundle, observers, net);
 
       res.send(JSON.stringify({
-        bundle,
+        spend_bundle: bundle,
       }))
     }
     catch (err) {
