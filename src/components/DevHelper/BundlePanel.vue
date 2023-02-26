@@ -561,11 +561,15 @@ export default class BundlePanel extends Vue {
           ? "XCH"
           : coin.mods == "settlement_payments()"
           ? "XCH-O"
+          : coin.mods == "settlement_payments_v1()"
+          ? "XCH-O"
           : coin.mods == "cat_v2()"
           ? "CAT"
           : coin.mods == "cat_v2(p2_delegated_puzzle_or_hidden_puzzle())"
           ? "CAT"
           : coin.mods == "cat_v2(settlement_payments())"
+          ? "CAT-O"
+          : coin.mods == "cat_v2(settlement_payments_v1())"
           ? "CAT-O"
           : coin.mods == "singleton_top_layer_v1_1(did_innerpuz(p2_delegated_puzzle_or_hidden_puzzle()))"
           ? "DID"
@@ -574,6 +578,9 @@ export default class BundlePanel extends Vue {
           ? "NFT"
           : coin.mods ==
             "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),settlement_payments())))"
+          ? "NFT-O"
+          : coin.mods ==
+            "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),settlement_payments_v1())))"
           ? "NFT-O"
           : "";
       if (coin.mods && !mods) console.warn("mods", coin.mods);
