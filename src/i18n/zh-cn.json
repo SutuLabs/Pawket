@@ -1579,23 +1579,23 @@
     },
     "label": {
       "notOpenYet": "尚未开放",
-      "registered": "Registered",
+      "registered": "已被注册",
       "result": "结果",
       "available": "可注册",
-      "unavailable": "Unavailable",
-      "registrationPeriod": "Registration Period",
-      "registrationFee": "Registration Fee",
-      "annualFee": "Annual Fee",
-      "royaltyPercentage": "Royalty Percentage",
-      "total": "Total",
-      "networkIssue": "Network issue",
-      "myNames": "My names",
-      "name": "Name"
+      "unavailable": "不可注册",
+      "registrationPeriod": "注册期限",
+      "registrationFee": "注册费",
+      "annualFee": "年费",
+      "royaltyPercentage": "版权费百分比",
+      "total": "总计",
+      "networkIssue": "网络问题",
+      "myNames": "我的域名",
+      "name": "域名"
     },
     "message": {
-      "notOpen": " During the trial operation period of CNS, only names with 6 or more characters can be registered for the time being. In the future, the registration of all names will be gradually opened. Stay tuned!",
-      "registered": "This name has been registered. Go to view",
-      "unavailable": "This name is reserved. If you can prove that you are the owner of the name/trademark/brand, please contact us via Twitter/Discord.",
+      "notOpen": "CNS目前在试运营期间，暂时只开放6位及以上字符的名字注册。未来会逐步开放所有名字的注册。敬请期待！",
+      "registered": "该域名已被注册，查看其",
+      "unavailable": "该名字已被预留，若你可以证明你是该名字/商标/品牌的拥有者，请通过 Twitter/Discord 联系我们。",
       "noName": "No Chia Domain Name Here. Search to Get One."
     }
   }
