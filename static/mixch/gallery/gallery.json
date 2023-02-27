@@ -8,10 +8,17 @@
       "code": ""
     },
     {
-      "name": "XCH -> NFT Offer acceptance",
-      "description": "Issue CatV2 with multiple issuance",
-      "image": "gallery/xch-nft-offer.svg",
-      "bundle": "gallery/xch-nft-offer.json",
+      "name": "XCH -> NFT Offer Acceptance",
+      "description": "Take Offer for XCH -> NFT",
+      "image": "gallery/xch-nft-offer-take.svg",
+      "bundle": "gallery/xch-nft-offer-take.json",
+      "code": ""
+    },
+    {
+      "name": "XCH -> NFT Offer Make",
+      "description": "Make Offer for XCH -> NFT",
+      "image": "gallery/xch-nft-offer-make.svg",
+      "bundle": "gallery/xch-nft-offer-make.json",
       "code": ""
     },
     {

@@ -29,6 +29,10 @@ export class CoinConditions {
   public static ASSERT_PUZZLE_ANNOUNCEMENT(announcementId: string): ConditionType {
     return [ConditionOpcode.ASSERT_PUZZLE_ANNOUNCEMENT.toString(), announcementId];
   }
+  // `-10` is the change owner magic condition
+  public static NFT_CHANGE_OWNER(didLauncherId?: Hex0x, didInnerPuzzleHash?: Hex0x): ConditionType {
+    return ["-10", didLauncherId ?? "", "", didInnerPuzzleHash ?? ""];
+  }
 }
 
 export type Hex = string;
@@ -86,6 +90,14 @@ export function getArgMsg(arg: ConditionArgs): string {
     return `(${arg.map((_) => getArgMsg(_)).join(" ")})`;
   }
   return prefix0x(Bytes.from(arg).hex());
+}
+
+export function conditionsToTextList(conditions: ConditionType[]): string {
+  return conditions
+    .map(_ => "(" + _
+      .map(_ => (typeof _ === "object" ? ("(" + _.join(" ") + ")") : (_ ? _ : "()")))
+      .join(" ") + ")")
+    .join(" ");
 }
 
 export const conditionInfos: ConditionInfo[] = [

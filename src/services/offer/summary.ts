@@ -1,9 +1,9 @@
 import { CoinSpend, SpendBundle, UnsignedSpendBundle } from "../spendbundle";
 import { Bytes, SExp, Tuple } from "clvm";
-import { getNumber, Hex0x, prefix0x } from '../coin/condition';
+import { getNumber, Hex0x, prefix0x, unprefix0x } from '../coin/condition';
 import { assemble, disassemble } from 'clvm_tools/clvm_tools/binutils';
 import puzzle from "../crypto/puzzle";
-import { modsdict, modsprog } from '../coin/mods';
+import { modsdict, modshash, modshashdict, modsprog } from '../coin/mods';
 import { uncurry } from 'clvm_tools/clvm_tools/curry';
 import { ConditionOpcode } from "../coin/opcode";
 import { TokenSpendPlan } from "../transfer/transfer";
@@ -34,7 +34,9 @@ export async function getOfferSummary(bundle: UnsignedSpendBundle | SpendBundle)
     const puz = await simplifyPuzzle(assemble(puzzle_reveal), puzzle_reveal);
     const modpath = getModsPath(puz);
     if (modpath == "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),p2_delegated_puzzle_or_hidden_puzzle())))"
-      || modpath == "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),settlement_payments())))") {
+      || modpath == "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),settlement_payments())))"
+      || modpath == "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),settlement_payments_v1())))"
+    ) {
       const ss = ((puz as SimplePuzzle)?.args[0] as CannotParsePuzzle).raw;
       const roy = (((((puz as SimplePuzzle)//singleton_top_layer_v1_1
         ?.args[1] as SimplePuzzle)//nft_state_layer
@@ -72,10 +74,14 @@ export async function getOfferSummary(bundle: UnsignedSpendBundle | SpendBundle)
       if (modsdict[puzzle_reveal] == "settlement_payments") {
         result = await puzzle.calcPuzzleResult(modsprog["settlement_payments"], solution);
       }
+      else if (modsdict[puzzle_reveal] == "settlement_payments_v1") {
+        result = await puzzle.calcPuzzleResult(modsprog["settlement_payments_v1"], solution);
+      }
       else {
         assetId = await tryGetAssetId(puzzle_reveal);
         if (!assetId) [nftId, royalty, imageUri] = await tryGetNftIdAndRoyaltyAndImage(puzzle_reveal);
-        result = await puzzle.calcPuzzleResult(modsprog["settlement_payments"], solution);
+        // the result executed by settlement_payments_v1 or settlement_payments is same
+        result = await puzzle.calcPuzzleResult(modsprog["settlement_payments_v1"], solution);
       }
     } else if (type == "offer") {
       result = await puzzle.calcPuzzleResult(puzzle_reveal, solution);
@@ -124,7 +130,8 @@ export async function getOfferSummary(bundle: UnsignedSpendBundle | SpendBundle)
 
   for (let i = 0; i < ocs.length; i++) {
     const coin = ocs[i];
-    offered.push(...(await getCoinEntities(coin, "offer")).filter(_ => _.target == "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79"));
+    offered.push(...(await getCoinEntities(coin, "offer"))
+      .filter(_ => _.target == modshash["settlement_payments"] || _.target == modshash["settlement_payments_v1"]));
   }
 
   for (let i = 0; i < rcs.length; i++) {
@@ -132,7 +139,13 @@ export async function getOfferSummary(bundle: UnsignedSpendBundle | SpendBundle)
     requested.push(...await getCoinEntities(coin, "request"));
   }
 
-  return { requested, offered };
+  const mods = modshashdict[unprefix0x(offered[0].target)];
+  const settlementModName
+    = offered.length == 0 ? undefined
+      : mods == "settlement_payments" ? "settlement_payments"
+        : mods == "settlement_payments_v1" ? "settlement_payments_v1"
+          : undefined;
+  return { requested, offered, settlementModName };
 }
 
 export async function internalUncurry(puz: string): Promise<UncurriedPuzzle> {
@@ -192,6 +205,7 @@ export interface OfferPlan {
 export interface OfferSummary {
   requested: OfferEntity[];
   offered: OfferEntity[];
+  settlementModName: undefined | "settlement_payments" | "settlement_payments_v1";
 }
 
 export interface OfferTokenAmount {

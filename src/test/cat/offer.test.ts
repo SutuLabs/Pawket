@@ -246,6 +246,18 @@ test('Take offer with fee included', async () => {
   await testOffer(offerText, 5n);
 });
 
+test('Test offer in version 6', async () => {
+  const offerText = "offer1qqr83wcuu2rykcmqvpsxygqq4ma8euu7rulf8u0hm28eh8d8xf2hrl0uwj78f6m58x24wuatqw7lxh7r6nqah2drkhlk3mflttacl4h75w6l768dlal6q6nlwrsmasrumlncgaad3hrdhejxgexus0gjewurasruamdvpwyas9wmk6mykk42pjhjy3zd7xdlw38v77mzheztk4nepchc0ksyjkrz0petun0hjx74f9n582u26ytq2ywa0arg3nyz5kwg0gklkempfdke9kul9k0w40yaa5un2tzxa3pl8yem8uk8uyu6hnsqj46zctm048wv4kpqremham5taxrn8fvnlp0hnutltpc847ewu8v6l7x9lumnx8qwypppmjxxtxvalc6l9dz9tt2mh82mgcl2w4a7zwr47c82t862q96lagwvfkk4vathkuw4z2wn4cfwpw8dhpj7wvn73uec798rlqxwesek9l9hjuttagx8qyuxk9kszj3tvcu2l4qrrw72z0mwa8d4h70n6hk8dm87vajxqff2yf77qkm86l4ax06kj6kh86qjx2fjh7twxtmmh7hx6whl79f9xzhq5pmtdkqzfallp08wl0lhxmrx05fat0h27z3mfaak7ta3x2whm6wec28gkuu7mll6x78el8lkvcygqf2ahlzlwpj87nvzs0swdwf7plw688f5fgkc7n3u99lvwl2f34kelhau00zultcz2hvl7hmq50h0zsuc3hc6dvl9h6kf4zhnd3mfw9kx9r79rx8k5rgtvvv4khm37wyg6e7v6l0c0lfuce6hnj79v0r57wae970pdv2m8w02ut8ltegw9hkarzl676lx9yqhhugmrj8y4esthhshx8tre9n8kg94jcn0t77dlwdqlhhvrnr574jf2xmujllmu7hs0yxh8hy3twn4s9gkafhtpvq3epwnj4600qfsqnuzdh9srmg08j";
+  await testOffer(offerText, 0n);
+  await testOffer(offerText, 5n);
+});
+
+test('Test offer XCH->CAT in version 6', async () => {
+  const offerText = "offer1qqr83wcuu2rykcmqvpsxygqqemhmlaekcenaz02ma6hs5w600dhjlvfjn477nkwz369h88kll73h37fefnwk3qqnz8s0lle0vz0hhuxh2mnkwxcz2cvk6kas9ew4va27ufskjvtpempkywlwdkwwa3gp2j3tqdj96wnn2m579at7m6jyh0xa0teumnm63v97cc48t642kdx0k2kwswdm7gptnm0fr5v2pda6a778av8j83a06tac4fukt37z47alsnlsf66xjchnt8ln8fh2kzma2hc94wecwa04nmgu34nen6lnwu9e50yez4lll80frkh38cygvdk9kqyth0gedkmgedkmfefkmfepkmde5xn605vkr0745mhqcf7cr7d7euy77ksm3kmumrvvn2g8kfykw97cp7wukkqhzwcrhdmd0jr224qetvdgmwlthnkd0lehap82ljkrj4njnkdlvdqu0m2hc7nws25gd67kjlwdp2szhxpphnst7rqqvm7c89nam5det9dqwf49frdtr4q70k66qg8t0wzm3x4raj0d797dum8t90cj0chua88a00kmc5cmnm5hwuwusyxaaqsvdzqtf4h79usdfuqrkapqs2crnyynfr0hlvppt3me7e4rkep0rrrp3vvaeeaeja9skp0lpvx3uatmw8jwl45l40uex9lqy59fehlstkt8yemrtejvh3f9hylaywtxz36flhu5d0drjalm7k9ahf3zt0a7wvc9p90aluznjeex9pxefxk0mtsldvlxcuqmacmhw6cvclmtz9j0tgnvrl8amqrq9ayv9lalyzqxxtamnfhmwe53awyknsdj68fpmlj0tay73n840mxtwnlvs67em7hlq46h0dca2y5a8tsjuzuwmwr9uue8aren3u2w87qvanpnvt7t09ckh65vllxaerujrtlzlk8rlln3476v4wq058fev6mhat5405e48dng65fd0tf7e54h7ld709kz45pjggxm9lctpq6unq8p6zm2pqfg5dlde2fh00jtph0dmjqj6xcvqvmwstfn3cm636xg0s70hmxw9wnj7w80sqdq2z58rmhw26lala9usaexxx7ry0gkrjl67cz7a326kvcduys7hh4wx6v68uh5hte64qx4zdn3g30apflhvnh2k0vtmy9m82fnu9f9mf88tw2hu7lnja2m7m04x0k82w4t0xrl8e0ls4evee00fkupx4ewjdlvpvhpddu8dsqqp9x9yfrq5frm3q";
+  await testOffer(offerText, 0n);
+  await testOffer(offerText, 5n);
+});
+
 // test.each([
 //   0n, 5n
 // ])('Take offer by CAT-CAT with fee %p included', async (fee: bigint) => {
@@ -257,6 +269,7 @@ async function testOffer(offerText: string, fee = 0n): Promise<void> {
 
   const makerBundle = await decodeOffer(offerText);
   const summary = await getOfferSummary(makerBundle);
+  if (summary.settlementModName === undefined) throw Error("Unable to find right settlement.");
   expect(summary).toMatchSnapshot("summary");
   const change_hex = "0xb379a659194799dfa9171f7770f6935b1644fe48fd6fb596d5df0ac2abff2bda";
   const nonce = "c616dec58b3c9a898b167f4ea26adb27b464c7e28d2656eeb845a525b9f5786c";
@@ -281,18 +294,18 @@ async function testOffer(offerText: string, fee = 0n): Promise<void> {
   expect(cats).toMatchSnapshot("cats dict");
   const revSummary = getReversePlan(summary, change_hex, cats);
   expect(revSummary).toMatchSnapshot("reverse summary");
-  const offplan = await generateOfferPlan(revSummary.offered, change_hex, availcoins, 0n, xchSymbol());
+  const offplan = await generateOfferPlan(revSummary.offered, change_hex, availcoins, 0n, xchSymbol(), undefined, summary.settlementModName);
   expect(offplan).toMatchSnapshot("offer plan");
 
   const feeBundle = fee > 0n
     ? await constructPureFeeSpendBundle(change_hex, fee, availcoins, tokenPuzzles, net, false)
     : undefined;
 
-  const utakerOfferBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, net, nonce, "cat_v2");
+  const utakerOfferBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, net, nonce, "cat_v2", summary.settlementModName);
   const utakerBundle = combineSpendBundle(utakerOfferBundle, feeBundle);
   const takerBundle = await signSpendBundle(utakerBundle, tokenPuzzles, net.chainId);
   expect(takerBundle).toMatchSnapshot("taker bundle");
-  const combined = await combineOfferSpendBundle([makerBundle, takerBundle]);
+  const combined = await combineOfferSpendBundle([makerBundle, takerBundle], summary.settlementModName);
   await assertSpendbundle(combined, net.chainId, fee);
   expect(combined).toMatchSnapshot("bundle");
 }

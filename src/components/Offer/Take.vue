@@ -43,7 +43,7 @@
         <b-loading :is-full-page="false" v-model="isUpdating"></b-loading>
         <b-field v-if="summary" :label="$t('offer.take.ui.panel.information')">
           <template #message>
-            <ul v-for="(arr, sumkey) in summary" :key="sumkey" :class="sumkey">
+            <ul v-for="(arr, sumkey) in { requested: summary.requested, offered: summary.offered }" :key="sumkey" :class="sumkey">
               <li v-if="sumkey == 'requested'">{{ $t("offer.take.information.requested") }}</li>
               <li v-if="sumkey == 'offered'">{{ $t("offer.take.information.offered") }}</li>
               <li>
@@ -559,6 +559,13 @@ export default class TakeOffer extends Vue {
       this.summary = null;
       this.summary = await getOfferSummary(this.makerBundle);
 
+      if (this.summary.settlementModName === undefined)
+        Notification.open({
+          message: this.$tc("offer.take.messages.unsupportOfferNftOffer"),
+          type: "is-warning",
+          autoClose: true,
+        });
+
       if (this.summary.offered[0].nft_detail && "cnsName" in this.summary.offered[0].nft_detail.analysis)
         await this.verifyCns(
           (this.summary.offered[0].nft_detail?.analysis as CnsCoinAnalysisResult).cnsName,
@@ -623,17 +630,33 @@ export default class TakeOffer extends Vue {
       if (!this.isNftOffer) {
         const revSummary = getReversePlan(this.summary, change_hex, this.cats);
         const fee = BigInt(this.fee);
-        const offplan = await generateOfferPlan(revSummary.offered, change_hex, this.availcoins, 0n, xchSymbol());
+        const offplan = await generateOfferPlan(
+          revSummary.offered,
+          change_hex,
+          this.availcoins,
+          0n,
+          xchSymbol(),
+          0n,
+          this.summary.settlementModName
+        );
         const observers = await getAssetsRequestObserver(this.account);
         const feeBundle =
           fee > 0n
             ? await constructPureFeeSpendBundle(change_hex, fee, this.availcoins, observers, networkContext(), false)
             : undefined;
 
-        const utakerOfferBundle = await generateOffer(offplan, revSummary.requested, observers, networkContext());
+        const utakerOfferBundle = await generateOffer(
+          offplan,
+          revSummary.requested,
+          observers,
+          networkContext(),
+          null,
+          "cat_v2",
+          this.summary.settlementModName
+        );
         const utakerBundle = combineSpendBundle(utakerOfferBundle, feeBundle);
         const takerBundle = await signSpendBundle(utakerBundle, this.tokenPuzzles, networkContext());
-        const combined = await combineOfferSpendBundle([this.makerBundle, takerBundle]);
+        const combined = await combineOfferSpendBundle([this.makerBundle, takerBundle], this.summary.settlementModName);
         // for creating unit test
         // console.log("const change_hex=", change_hex, ";");
         // console.log("const bundle=", JSON.stringify(combined, null, 2), ";");
@@ -656,7 +679,8 @@ export default class TakeOffer extends Vue {
           this.availcoins,
           fee,
           xchSymbol(),
-          royalty_amount
+          royalty_amount,
+          this.summary.settlementModName
         );
         const observers = await getAssetsRequestObserver(this.account);
         const utakerBundle = await generateNftOffer(
@@ -665,10 +689,12 @@ export default class TakeOffer extends Vue {
           undefined,
           revSummary.requested,
           observers,
-          networkContext()
+          networkContext(),
+          null,
+          this.summary.settlementModName
         );
         const takerBundle = await signSpendBundle(utakerBundle, this.tokenPuzzles, networkContext());
-        const combined = await combineOfferSpendBundle([this.makerBundle, takerBundle]);
+        const combined = await combineOfferSpendBundle([this.makerBundle, takerBundle], this.summary.settlementModName);
         // for creating unit test
         // console.log("const change_hex=", change_hex, ";");
         // console.log("const bundle=", JSON.stringify(combined, null, 2), ";");
