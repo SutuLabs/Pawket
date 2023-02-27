@@ -433,6 +433,8 @@ export async function generateNftOffer(
           {},
           puzzles,
           net,
+          undefined,
+          conds,
         );
         puzzleCopy
           .filter((_) => _.symbol == net.symbol)[0]

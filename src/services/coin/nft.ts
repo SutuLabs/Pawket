@@ -242,6 +242,7 @@ export async function generateTransferNftBundle(
   requests: TokenPuzzleObserver[],
   net: NetworkContext,
   didAnalysis: DidCoinAnalysisResult | undefined = undefined,
+  nftTransferAdditionalConditions: ConditionType[] = [],
 ): Promise<UnsignedSpendBundle> {
   const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(changeAddress));
@@ -250,7 +251,7 @@ export async function generateTransferNftBundle(
 
   const nftInnerSolution = didAnalysis
     ? await getTransferNftByDidInnerSolution(tgt_hex, prefix0x(didAnalysis.launcherId), prefix0x(didAnalysis.didInnerPuzzleHash))
-    : await getTransferNftInnerSolution(tgt_hex)
+    : await getTransferNftInnerSolution(tgt_hex, nftTransferAdditionalConditions);
   const nftSolution = await getTransferNftSolution(proof, nftInnerSolution);
   const nftPuzzle = await getTransferNftPuzzle(analysis, inner_p2_puzzle.puzzle);
 
