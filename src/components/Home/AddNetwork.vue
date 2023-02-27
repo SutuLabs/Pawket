@@ -4,6 +4,7 @@
       <top-bar
         :title="mode == 'Add' ? $t('addNetwork.ui.title.add') : $t('addNetwork.ui.title.edit')"
         @close="cancel()"
+        :showClose="true"
       ></top-bar>
     </header>
     <section class="modal-card-body">
@@ -24,7 +25,7 @@
         <b-input
           v-model="networkName"
           required
-          :disabled="mode != 'Add'"
+          :disabled="mode == 'View'"
           maxlength="36"
           ref="networkName"
           oninvalid="setCustomValidity(' ')"
@@ -102,6 +103,7 @@ export default class AddNetwork extends Vue {
   addressPrefix = "";
   decimalPlace = 12;
   blockExplorer = "";
+  originalName = "";
 
   validate(): boolean {
     const total = 5;
@@ -121,6 +123,7 @@ export default class AddNetwork extends Vue {
 
   @Watch("rpcUrl")
   async onPathChange(): Promise<void> {
+    if (this.mode != "Add") return;
     const net = await getNetworkInfo(this.rpcUrl);
     this.networkName = net.name || this.networkName;
     this.chainId = net.chainId || this.chainId;
@@ -130,7 +133,7 @@ export default class AddNetwork extends Vue {
     this.blockExplorer = net.explorerUrl || this.blockExplorer;
   }
 
-  save(): void {
+  async save(): Promise<void> {
     if (!this.validate()) return;
     if (this.mode == "Add" && store.state.network.networks[this.networkName]) {
       Notification.open({
@@ -159,11 +162,13 @@ export default class AddNetwork extends Vue {
     store.dispatch("addOrUpdateNetwork", network);
     if (this.mode == "Add") notifyPrimary(this.$tc("common.message.added"));
     if (this.mode == "Edit") notifyPrimary(this.$tc("common.message.saved"));
+    if (this.mode == "Edit" && this.originalName != network.name) await store.dispatch("deleteNetwork", this.originalName);
     this.cancel();
   }
 
   mounted(): void {
     if (this.inputNetwork) {
+      this.originalName = this.inputNetwork.name;
       this.networkName = this.inputNetwork.name;
       this.rpcUrl = this.inputNetwork.rpcUrl;
       this.chainId = this.inputNetwork.chainId;
