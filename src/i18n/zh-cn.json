@@ -1570,7 +1570,8 @@
     "confirmation": "你确定要销毁这个 NFT 吗？一经销毁，任何人（包括你）都将无法再次访问它。<br>请务必再次检查你的交易内容。"
   },
   "cns": {
-    "title": "Chia Name Service",
+    "title": "Chia 域名服务",
+    "placeholder": "搜索Chia域名",
     "button": {
       "search": "搜索",
       "loading": "加载中",
@@ -1590,13 +1591,17 @@
       "total": "总计",
       "networkIssue": "网络问题",
       "myNames": "我的域名",
-      "name": "域名"
+      "name": "域名",
+      "oneYear": "一年",
+      "register": "注册 {cnsName}.xch",
+      "address": "地址(选填)"
     },
     "message": {
       "notOpen": "CNS目前在试运营期间，暂时只开放6位及以上字符的名字注册。未来会逐步开放所有名字的注册。敬请期待！",
       "registered": "该域名已被注册，查看其",
+      "profileHomepage": "个人主页",
       "unavailable": "该名字已被预留，若你可以证明你是该名字/商标/品牌的拥有者，请通过 Twitter/Discord 联系我们。",
-      "noName": "你还没有 Chia 域名，搜索获取。"
+      "noName": "你还没有 Chia 域名，搜索去获取。"
     }
   }
 }

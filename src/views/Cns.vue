@@ -9,7 +9,7 @@
         <div class="control has-icons-left search-bar">
           <input
             class="input"
-            placeholder="Search for a Chia Domain Name"
+            :placeholder="$t('cns.placeholder')"
             v-model="name"
             type="search"
             :maxlength="63"
@@ -65,7 +65,7 @@
                 </p>
                 {{ $t("cns.message.registered") }}
                 <a class="has-text-link" :href="`https://${name.toLocaleLowerCase()}.xch.cool`" target="_blank"
-                  >Profile Homepage<i class="mdi mdi-open-in-new"></i></a
+                  >{{ $t("cns.message.profileHomepage") }}<i class="mdi mdi-open-in-new"></i></a
                 >.
               </div>
             </div>
@@ -84,7 +84,7 @@
                 </p>
                 <p>
                   <span class="is-size-6 has-text-grey">{{ $t("cns.label.registrationPeriod") }}</span
-                  ><span class="is-pulled-right"> 1 Year </span>
+                  ><span class="is-pulled-right">{{ $t("cns.label.oneYear") }}</span>
                 </p>
                 <p>
                   <span class="is-size-6 has-text-grey">{{ $t("cns.label.registrationFee") }}</span
@@ -147,7 +147,7 @@
         </div>
       </div>
       <div class="mt-5">
-        <p class="is-size-5 py-4" @click="showCns()">
+        <p class="is-size-5 py-4 is-clickable" @click="showCns()">
           {{ $t("cns.label.myNames") }} <b-button loading size="is-small" rounded v-if="isLoading" type="is-text"></b-button>
           <b-icon class="is-pulled-right pt-1" :icon="showMyCns ? 'chevron-down' : 'chevron-right'"></b-icon>
         </p>
@@ -183,7 +183,7 @@
               </div>
             </li>
           </ul>
-          <div v-if="!isLoading && !cnses.length" style="min-height: 200px" class="is-hidden-mobile has-text-grey pt-4 is-size-5">
+          <div v-if="!isLoading && !cnses.length" style="min-height: 200px" class="has-text-grey pt-4 is-size-5">
             {{ $t("cns.message.noName") }}
           </div>
         </div>
@@ -192,7 +192,11 @@
     <div :class="{ modal: true, 'is-active': showModal }">
       <div class="modal-background"></div>
       <div class="modal-card">
-        <top-bar :title="`Register ${name.toLowerCase()}.xch`" @close="showModal = false" :showClose="true"></top-bar>
+        <top-bar
+          :title="$t('cns.label.register', { cnsName: name.toLowerCase() })"
+          @close="showModal = false"
+          :showClose="true"
+        ></top-bar>
         <section class="modal-card-body">
           <div class="field">
             <label class="label">{{ $t("cns.label.name") }}</label>
@@ -200,7 +204,7 @@
               <input class="input" type="text" disabled :value="name.toLowerCase() + '.xch'" />
             </div>
           </div>
-          <address-field :inputAddress="address" @updateAddress="updateAddress" label="Address(Optional)"></address-field>
+          <address-field :inputAddress="address" @updateAddress="updateAddress" :label="$t('cns.label.address')"></address-field>
         </section>
         <footer class="modal-card-foot is-block">
           <button class="button" @click="showModal = false">{{ $t("cns.button.cancel") }}</button>
