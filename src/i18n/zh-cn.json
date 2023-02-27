@@ -1570,18 +1570,18 @@
     "confirmation": "你确定要销毁这个 NFT 吗？一经销毁，任何人（包括你）都将无法再次访问它。<br>请务必再次检查你的交易内容。"
   },
   "cns": {
-    "title": "Chia Name Service",
+    "title": "Chia 域名服务",
     "button": {
-      "search": "Search",
-      "loading": "Loading",
-      "register": "Register",
-      "cancel": "Cancel"
+      "search": "搜索",
+      "loading": "加载中",
+      "register": "注册",
+      "cancel": "取消"
     },
     "label": {
-      "notOpenYet": "Not Open Yet",
+      "notOpenYet": "尚未开放",
       "registered": "Registered",
-      "result": "Result",
-      "available": "Available",
+      "result": "结果",
+      "available": "可注册",
       "unavailable": "Unavailable",
       "registrationPeriod": "Registration Period",
       "registrationFee": "Registration Fee",
