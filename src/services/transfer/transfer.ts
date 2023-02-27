@@ -88,6 +88,7 @@ class Transfer {
   }
 
   public getDelegatedPuzzle(conditions: ConditionType[]): string {
+    if (conditions.length == 0) return `(q)`;
     return `(q ${conditionsToTextList(conditions)})`;
   }
 
