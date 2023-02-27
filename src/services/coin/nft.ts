@@ -3,7 +3,7 @@ import puzzle, { PlaintextPuzzle } from "../crypto/puzzle";
 import receive, { TokenPuzzleObserver } from "../crypto/receive";
 import { curryMod } from "../offer/bundler";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
-import { formatAmount, Hex0x, prefix0x, skipFirstByte0x, unprefix0x } from "./condition";
+import { CoinConditions, conditionsToTextList, ConditionType, formatAmount, Hex0x, prefix0x, skipFirstByte0x, unprefix0x } from "./condition";
 import { modshash, modshex, modsprog } from "./mods";
 import utility, { bytesToHex0x } from "../crypto/utility";
 import catBundle, { LineageProof } from "../transfer/catBundle";
@@ -121,7 +121,7 @@ export async function generateMintNftBundle(
 
     const tgt_hex = targetAddresses ? prefix0x(puzzle.getPuzzleHashFromAddress(targetAddresses[i])) : intermediate_hex;
     const nftInnerSolution = didAnalysis
-      ? await getTransferNftByDidInnerSolution(tgt_hex, didAnalysis.launcherId, prefix0x(didAnalysis.didInnerPuzzleHash))
+      ? await getTransferNftByDidInnerSolution(tgt_hex, prefix0x(didAnalysis.launcherId), prefix0x(didAnalysis.didInnerPuzzleHash))
       : await getTransferNftInnerSolution(tgt_hex);
     const nftSolution = `((${bootstrapCoinId} ${amount}) ${amount} (((${nftInnerSolution}))))`;
 
@@ -249,7 +249,7 @@ export async function generateTransferNftBundle(
   const proof = await catBundle.getLineageProof(nftCoin.parent_coin_info, net.api, 2);
 
   const nftInnerSolution = didAnalysis
-    ? await getTransferNftByDidInnerSolution(tgt_hex, didAnalysis.launcherId, didAnalysis.didInnerPuzzleHash)
+    ? await getTransferNftByDidInnerSolution(tgt_hex, prefix0x(didAnalysis.launcherId), prefix0x(didAnalysis.didInnerPuzzleHash))
     : await getTransferNftInnerSolution(tgt_hex)
   const nftSolution = await getTransferNftSolution(proof, nftInnerSolution);
   const nftPuzzle = await getTransferNftPuzzle(analysis, inner_p2_puzzle.puzzle);
@@ -498,21 +498,28 @@ export async function getTransferNftSolution(proof: LineageProof, p2_inner_solut
   return nftSolution;
 }
 
-export async function getTransferNftInnerSolution(tgt_hex: string): Promise<string> {
+export async function getTransferNftInnerSolution(tgt_hex: Hex0x, additionalConditions: ConditionType[] = []): Promise<string> {
   const amount = 1n;
   tgt_hex = prefix0x(tgt_hex);
 
-  // `-10` is the change owner magic condition
-  const nftSolution = `() (q (-10 () () ()) (51 ${tgt_hex} ${amount} (${tgt_hex}))) ()`;
+  const conditions: ConditionType[] = [
+    CoinConditions.NFT_CHANGE_OWNER(),
+    CoinConditions.CREATE_COIN_Extend(tgt_hex, amount, [tgt_hex]),
+    ...additionalConditions,
+  ];
+  const nftSolution = `() (q ${conditionsToTextList(conditions)}) ()`
   return nftSolution;
 }
 
-export async function getTransferNftByDidInnerSolution(tgt_hex: string, didLauncherId: string, didInnerPuzzleHash: string): Promise<string> {
+export async function getTransferNftByDidInnerSolution(tgt_hex: Hex0x, didLauncherId: Hex0x, didInnerPuzzleHash: Hex0x): Promise<string> {
   const amount = 1n;
   tgt_hex = prefix0x(tgt_hex);
 
-  // `-10` is the change owner magic condition
-  const nftSolution = `() (q (-10 ${prefix0x(didLauncherId)} () ${prefix0x(didInnerPuzzleHash)}) (51 ${tgt_hex} ${amount} (${tgt_hex} ${tgt_hex}))) ()`;
+  const conditions: ConditionType[] = [
+    CoinConditions.NFT_CHANGE_OWNER(didLauncherId, didInnerPuzzleHash),
+    CoinConditions.CREATE_COIN_Extend(tgt_hex, amount, [tgt_hex, tgt_hex]),
+  ];
+  const nftSolution = `() (q ${conditionsToTextList(conditions)}) ()`
   return nftSolution;
 }
 

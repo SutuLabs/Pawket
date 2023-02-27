@@ -1,6 +1,6 @@
 import { CoinSpend, OriginCoin, UnsignedSpendBundle } from "../spendbundle";
 import { GetParentPuzzleResponse } from "@/models/api";
-import { CoinConditions, ConditionType, Hex0x } from "../coin/condition";
+import { CoinConditions, conditionsToTextList, ConditionType, Hex0x } from "../coin/condition";
 import { TokenPuzzleObserver } from "../crypto/receive";
 import stdBundle from "./stdBundle";
 import catBundle from "./catBundle";
@@ -87,12 +87,8 @@ class Transfer {
     return new UnsignedSpendBundle(coin_spends);
   }
 
-  public getDelegatedPuzzle(conditions: (string | string[])[][]): string {
-    return "(q " + conditions
-      .map(_ => "(" + _
-        .map(_ => (typeof _ === "object" ? ("(" + _.join(" ") + ")") : _))
-        .join(" ") + ")")
-      .join(" ") + ")";
+  public getDelegatedPuzzle(conditions: ConditionType[]): string {
+    return `(q ${conditionsToTextList(conditions)})`;
   }
 
   private findCoins(coins: OriginCoin[], num: bigint): OriginCoin[] {
