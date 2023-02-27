@@ -103,6 +103,14 @@
           <li>
             {{ $t("accountInfo.ui.label.masterPublicKey") }}:
             <key-box :value="masterpubkey || account.key.publicKey" :showValue="true"></key-box>
+            <div class="my-3">
+              <qrcode-vue
+                :value="masterpubkey || account.key.publicKey"
+                size="100"
+                class="qrcode"
+                style="width: 120px"
+              ></qrcode-vue>
+            </div>
           </li>
           <li>
             {{ $t("accountInfo.ui.label.farmerPublicKey") }}:

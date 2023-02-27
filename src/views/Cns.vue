@@ -3,9 +3,9 @@
     <div :class="{ box: !isMobile }">
       <div class="mt-10">
         <img src="@/assets/cns.jpg" class="image is-96x96" style="margin: auto" />
-        <p class="has-text-centered is-size-3 pb-4 has-text-color-cns has-text-weight-bold">Chia Name Service</p>
+        <p class="has-text-centered is-size-3 pb-4 has-text-color-cns has-text-weight-bold">{{ $t("cns.title") }}</p>
       </div>
-      <div class="is-flex is-justify-content-center">
+      <div class="is-flex is-justify-content-center px-3">
         <div class="control has-icons-left search-bar">
           <input
             class="input"
@@ -21,13 +21,13 @@
           </span>
         </div>
         <p class="control">
-          <a class="button is-primary is-loading" v-if="isResolving">Loading</a>
-          <a class="button is-primary" v-else @click="search()">Search</a>
+          <a class="button is-primary is-loading" v-if="isResolving">{{ $t("cns.button.loading") }}</a>
+          <a class="button is-primary" v-else @click="search()">{{ $t("cns.button.search") }}</a>
         </p>
       </div>
       <div v-if="showDetail && !isResolving" class="is-flex is-justify-content-center mt-4 mx-4">
         <div class="column is-11" v-if="resolveAns">
-          <span class="is-size-5 has-text-white mb-4">Result</span>
+          <span class="is-size-5 has-text-white mb-4">{{ $t("cns.label.result") }}</span>
           <div class="card mt-4" v-if="name.length < 6">
             <header class="card-header">
               <p class="card-header-title break-all">{{ name.toLocaleLowerCase() }}.xch</p>
@@ -36,10 +36,11 @@
               <div class="content">
                 <p>
                   <span class="is-size-5 has-text-weight-bold">{{ name.toLocaleLowerCase() }}.xch </span
-                  ><span class="has-text-warning"><i class="mdi mdi-dots-horizontal-circle mdi-18px"></i>Not Open Yet</span>
+                  ><span class="has-text-warning"
+                    ><i class="mdi mdi-dots-horizontal-circle mdi-18px"></i>{{ $t("cns.label.notOpenYet") }}</span
+                  >
                 </p>
-                During the trial operation period of CNS, only names with 6 or more characters can be registered for the time
-                being. In the future, the registration of all names will be gradually opened. Stay tuned!
+                {{ $t("cns.message.notOpen") }}
               </div>
             </div>
           </div>
@@ -58,9 +59,11 @@
               <div class="content">
                 <p>
                   <span class="is-size-5 has-text-weight-bold">{{ name.toLocaleLowerCase() }}.xch </span
-                  ><span class="has-text-info"><i class="mdi mdi-arrow-right-bold-circle mdi-18px"></i>Registered</span>
+                  ><span class="has-text-info"
+                    ><i class="mdi mdi-arrow-right-bold-circle mdi-18px"></i>{{ $t("cns.label.registered") }}</span
+                  >
                 </p>
-                This name has been registered. Go to view
+                {{ $t("cns.message.registered") }}
                 <a class="has-text-link" :href="`https://${name.toLocaleLowerCase()}.xch.cool`" target="_blank"
                   >Profile Homepage<i class="mdi mdi-open-in-new"></i></a
                 >.
@@ -75,31 +78,36 @@
               <div class="content">
                 <p>
                   <span class="is-size-5 has-text-weight-bold break-all">{{ name.toLocaleLowerCase() }}.xch </span
-                  ><span class="has-text-success"><i class="mdi mdi-check-circle mdi-18px"></i>Available</span>
+                  ><span class="has-text-success"
+                    ><i class="mdi mdi-check-circle mdi-18px"></i>{{ $t("cns.label.available") }}</span
+                  >
                 </p>
                 <p>
-                  <span class="is-size-6 has-text-grey">Registration Period</span><span class="is-pulled-right"> 1 Year </span>
+                  <span class="is-size-6 has-text-grey">{{ $t("cns.label.registrationPeriod") }}</span
+                  ><span class="is-pulled-right"> 1 Year </span>
                 </p>
                 <p>
-                  <span class="is-size-6 has-text-grey">Registration Fee</span
+                  <span class="is-size-6 has-text-grey">{{ $t("cns.label.registrationFee") }}</span
                   ><span class="is-pulled-right">{{ price.registrationFee / 1000000000000 }} XCH</span>
                 </p>
                 <p>
-                  <span class="is-size-6 has-text-grey">Annual Fee</span
+                  <span class="is-size-6 has-text-grey">{{ $t("cns.label.annualFee") }}</span
                   ><span class="is-pulled-right">{{ price.annualFee / 1000000000000 }} XCH</span>
                 </p>
                 <p>
-                  <span class="is-size-6 has-text-grey">Royalty Percentage</span
+                  <span class="is-size-6 has-text-grey">{{ $t("cns.label.royaltyPercentage") }}</span
                   ><span class="is-pulled-right">{{ price.royaltyPercentage / 100 }} %</span>
                 </p>
                 <p>
-                  <span class="is-size-6 has-text-grey">Total</span
+                  <span class="is-size-6 has-text-grey">{{ $t("cns.label.total") }}</span
                   ><span class="is-pulled-right"
                     >{{ (price.price * (10000 + price.royaltyPercentage)) / 10000000000000000 }} XCH</span
                   >
                 </p>
               </div>
-              <div class="has-text-right"><button class="button is-cns" @click="showModal = true">Register</button></div>
+              <div class="has-text-right">
+                <button class="button is-cns" @click="showModal = true">{{ $t("cns.button.register") }}</button>
+              </div>
             </div>
           </div>
           <div class="card mt-4" v-else-if="resolveAns.status == 'Failure'">
@@ -110,7 +118,9 @@
               <div class="content">
                 <p>
                   <span class="is-size-5 has-text-weight-bold break-all">{{ name.toLocaleLowerCase() }}.xch </span
-                  ><span class="has-text-danger"><i class="mdi mdi-alert-circle mdi-18px"></i>Network issue</span>
+                  ><span class="has-text-danger"
+                    ><i class="mdi mdi-alert-circle mdi-18px"></i>{{ $t("cns.label.networkIssue") }}</span
+                  >
                 </p>
               </div>
             </div>
@@ -123,12 +133,13 @@
               <div class="content">
                 <p>
                   <span class="is-size-5 has-text-weight-bold break-all">{{ name.toLocaleLowerCase() }}.xch </span
-                  ><span class="has-text-danger"><i class="mdi mdi-close-circle mdi-18px"></i>Unavailable</span>
+                  ><span class="has-text-danger"
+                    ><i class="mdi mdi-close-circle mdi-18px"></i>{{ $t("cns.label.unavailable") }}</span
+                  >
                 </p>
-                <span class="has-text-danger" v-if="price.code && price.code == 'NameUnavailable'"
-                  >This name is reserved. If you can prove that you are the owner of the name/trademark/brand, please contact us
-                  via Twitter/Discord.</span
-                >
+                <span class="has-text-danger" v-if="price.code && price.code == 'NameUnavailable'">{{
+                  $t("cns.message.unavailable")
+                }}</span>
                 <span class="has-text-danger" v-else>{{ price.reason }}</span>
               </div>
             </div>
@@ -137,7 +148,7 @@
       </div>
       <div class="mt-5">
         <p class="is-size-5 py-4" @click="showCns()">
-          Your CNS <b-button loading size="is-small" rounded v-if="isLoading" type="is-text"></b-button>
+          {{ $t("cns.label.myNames") }} <b-button loading size="is-small" rounded v-if="isLoading" type="is-text"></b-button>
           <b-icon class="is-pulled-right pt-1" :icon="showMyCns ? 'chevron-down' : 'chevron-right'"></b-icon>
         </p>
         <div v-if="showMyCns">
@@ -173,7 +184,7 @@
             </li>
           </ul>
           <div v-if="!isLoading && !cnses.length" style="min-height: 200px" class="is-hidden-mobile has-text-grey pt-4 is-size-5">
-            No Chia Domain Name Here. Search to Get One.
+            {{ $t("cns.message.noName") }}
           </div>
         </div>
       </div>
@@ -184,7 +195,7 @@
         <top-bar :title="`Register ${name.toLowerCase()}.xch`" @close="showModal = false" :showClose="true"></top-bar>
         <section class="modal-card-body">
           <div class="field">
-            <label class="label">Name</label>
+            <label class="label">{{ $t("cns.label.name") }}</label>
             <div class="control">
               <input class="input" type="text" disabled :value="name.toLowerCase() + '.xch'" />
             </div>
@@ -192,13 +203,13 @@
           <address-field :inputAddress="address" @updateAddress="updateAddress" label="Address(Optional)"></address-field>
         </section>
         <footer class="modal-card-foot is-block">
-          <button class="button" @click="showModal = false">Cancel</button>
+          <button class="button" @click="showModal = false">{{ $t("cns.button.cancel") }}</button>
           <button
             :class="{ button: true, 'is-primary': true, 'is-pulled-right': true, 'is-loading': registering }"
             @keyup.enter="register()"
             @click="register()"
           >
-            Register
+            {{ $t("cns.button.register") }}
           </button>
         </footer>
       </div>
