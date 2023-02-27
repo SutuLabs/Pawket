@@ -5,9 +5,10 @@ import { sha256 } from "../offer/bundler";
 import { Instance } from "../util/instance";
 import { uncurryPuzzle, sexpAssemble, convertUncurriedPuzzle, getModsPath } from "../coin/analyzer";
 import { getCoinName0x } from "../coin/coinUtility";
-import { getFirstLevelArg, getFirstLevelArgMsg, getNumber, unprefix0x } from "../coin/condition";
+import { getFirstLevelArg, getFirstLevelArgMsg, getNumber, Hex, unprefix0x } from "../coin/condition";
 import { modshex } from "../coin/mods";
 import { ConditionOpcode } from "../coin/opcode";
+import { sha256tree } from "clvm_tools";
 
 export interface AnnouncementCoin {
   coinIndex: number;
@@ -41,6 +42,13 @@ interface CoinModsInfo {
   mods: string;
 }
 
+export interface CoinPuzzleInfo {
+  coinName: string;
+  coinIndex: number;
+  puzzleHash: Hex;
+  puzzleRevealHash: Hex;
+}
+
 type SignatureVerificationResult = "None" | "Verified" | "Failed" | "Empty";
 
 interface SpendBundleCheckResult {
@@ -55,6 +63,8 @@ interface SpendBundleCheckResult {
 
   createdCoins: { [key: string]: CoinIndexInfo };
   sigVerified: SignatureVerificationResult;
+
+  coinPuzzles: CoinPuzzleInfo[];
 
   fee: bigint;
 }
@@ -71,6 +81,7 @@ export async function checkSpendBundle(bundle: SpendBundle | undefined, chainId:
   const aggSigMessages: AggSigMessage[] = [];
   const coinMods: CoinModsInfo[] = [];
   const createdCoins: { [key: string]: CoinIndexInfo } = {};
+  const coinPuzzles: CoinPuzzleInfo[] = [];
 
   try {
     for (let i = 0; i < bundle.coin_spends.length; i++) {
@@ -136,6 +147,13 @@ export async function checkSpendBundle(bundle: SpendBundle | undefined, chainId:
       const decPuzzle = convertUncurriedPuzzle(uncPuzzle);
       const mods = getModsPath(decPuzzle);
       coinMods.push({ mods, coinIndex: i });
+
+      coinPuzzles.push({
+        coinIndex: i,
+        coinName: ca.coinName,
+        puzzleHash: unprefix0x(cs.coin.puzzle_hash),
+        puzzleRevealHash: sha256tree(sexpAssemble(cs.puzzle_reveal)).hex(),
+      });
     }
 
     newCoins.forEach((c) => {
@@ -193,6 +211,7 @@ export async function checkSpendBundle(bundle: SpendBundle | undefined, chainId:
     aggSigMessages,
     createdCoins,
     sigVerified,
+    coinPuzzles,
     fee,
   }
 }
@@ -240,6 +259,7 @@ export function assertSpendbundleCheckResult(result: SpendBundleCheckResult): vo
   if (result.coinAvailability.some(_ => _.availability == "Unexecutable")) throw new Error("Unexecutable coin found");
   checkAnnouncement(result.coinAnnoAsserted, result.coinAnnoCreates, "coin");
   checkAnnouncement(result.puzzleAnnoAsserted, result.puzzleAnnoCreates, "puzzle");
+  checkCoinPuzzles(result.coinPuzzles);
 }
 
 function checkAnnouncement(asserted: AnnouncementCoin[], creates: AnnouncementCoin[], type: string): void {
@@ -248,4 +268,11 @@ function checkAnnouncement(asserted: AnnouncementCoin[], creates: AnnouncementCo
     throw new Error(`Some ${type} asserts are not fulfilled: ${misAsserted.map(_ => `${_.coinIndex}`).join(",")}
   Asserted: ${asserted.map(_ => `[${_.coinIndex}]${_.message}`).join(",")}
   Creates: ${creates.map(_ => `[${_.coinIndex}]${_.message}`).join(",")}`);
+}
+
+function checkCoinPuzzles(coinPuzzles: CoinPuzzleInfo[]) {
+  const abnormals = coinPuzzles.filter(_ => _.puzzleHash != _.puzzleRevealHash);
+  if (abnormals.length > 0)
+    throw new Error(`Some coin puzzles are not fulfilled:
+  ${abnormals.map(_ => `${_.coinIndex}: ${_.puzzleHash}!=${_.puzzleRevealHash}`).join("\n  ")}`);
 }

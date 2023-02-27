@@ -80,7 +80,8 @@ export async function getOfferSummary(bundle: UnsignedSpendBundle | SpendBundle)
       else {
         assetId = await tryGetAssetId(puzzle_reveal);
         if (!assetId) [nftId, royalty, imageUri] = await tryGetNftIdAndRoyaltyAndImage(puzzle_reveal);
-        result = await puzzle.calcPuzzleResult(modsprog["settlement_payments"], solution);
+        // the result executed by settlement_payments_v1 or settlement_payments is same
+        result = await puzzle.calcPuzzleResult(modsprog["settlement_payments_v1"], solution);
       }
     } else if (type == "offer") {
       result = await puzzle.calcPuzzleResult(puzzle_reveal, solution);

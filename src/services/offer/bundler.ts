@@ -98,7 +98,7 @@ export async function generateOffer(
         amount: 0n,
       };
 
-      const puzzle_reveal_text = puzzle.getCatSettlementPuzzle(req.id, catModName);
+      const puzzle_reveal_text = cat_mod;
 
       // put special target into puzzle reverse dict
       puzzleCopy.filter(_ => _.symbol == req.symbol)[0].puzzles.push({

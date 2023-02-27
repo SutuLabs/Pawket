@@ -199,6 +199,22 @@
             </ul>
           </template>
 
+          <template v-if="coinPuzzles.length > 0">
+            <h3>
+              Coin Puzzle
+              <b-tag type="is-danger is-light">Abnormal</b-tag>
+            </h3>
+            <ul class="args_list">
+              <li v-for="(ca, i) in coinPuzzles" :key="i">
+                <b-button tag="a" size="is-small" @click="changeCoin(ca.coinIndex)">
+                  {{ ca.coinIndex }}
+                </b-button>
+                <key-box :value="ca.puzzleHash" :showValue="true" tooltip="Committed Puzzle Hash"></key-box>
+                <key-box :value="ca.puzzleRevealHash" :showValue="true" tooltip="Puzzle Reveal Hash"></key-box>
+              </li>
+            </ul>
+          </template>
+
           <template v-if="mgraphGenerated">
             <h3>
               Dependency Graph
@@ -254,6 +270,7 @@ import {
   checkSpendBundle,
   CoinAvailability,
   CoinIndexInfo,
+  CoinPuzzleInfo,
   CoinSpend,
   OriginCoin,
   SpendBundle,
@@ -290,6 +307,7 @@ export default class BundlePanel extends Vue {
   public coinMods: { coinIndex: number; mods: string }[] = [];
   public aggSigMessages: AggSigMessage[] = [];
   public createdCoins: { [key: string]: CoinIndexInfo } = {};
+  public coinPuzzles: CoinPuzzleInfo[] = [];
   public fee = 0n;
   public sigVerified: "None" | "Verified" | "Failed" = "None";
   public mgraphGenerated = false;
@@ -509,6 +527,11 @@ export default class BundlePanel extends Vue {
     Vue.set(this, "coinMods", result.coinMods);
     Vue.set(this, "sigVerified", result.sigVerified);
     Vue.set(this, "createdCoins", result.createdCoins);
+    Vue.set(
+      this,
+      "coinPuzzles",
+      result.coinPuzzles.filter((_) => _.puzzleHash != _.puzzleRevealHash)
+    );
     Vue.set(this, "fee", result.fee);
 
     for (let i = 0; i < this.coinAvailability.length; i++) {
