@@ -21,13 +21,13 @@ export class CoinConditions {
     return [...this.CREATE_COIN(puzzlehash, amount), ...((memos && memos.length > 0) ? [memos] : [])];
   }
   public static CREATE_COIN_ANNOUNCEMENT(message: string): ConditionType {
-    return [ConditionOpcode.CREATE_COIN_ANNOUNCEMENT.toString(), message];
+    return [ConditionOpcode.CREATE_COIN_ANNOUNCEMENT.toString(), prefix0x(message)];
   }
   public static ASSERT_COIN_ANNOUNCEMENT(announcementId: string): ConditionType {
-    return [ConditionOpcode.ASSERT_COIN_ANNOUNCEMENT.toString(), announcementId];
+    return [ConditionOpcode.ASSERT_COIN_ANNOUNCEMENT.toString(), prefix0x(announcementId)];
   }
   public static ASSERT_PUZZLE_ANNOUNCEMENT(announcementId: string): ConditionType {
-    return [ConditionOpcode.ASSERT_PUZZLE_ANNOUNCEMENT.toString(), announcementId];
+    return [ConditionOpcode.ASSERT_PUZZLE_ANNOUNCEMENT.toString(), prefix0x(announcementId)];
   }
   // `-10` is the change owner magic condition
   public static NFT_CHANGE_OWNER(didLauncherId?: Hex0x, didInnerPuzzleHash?: Hex0x): ConditionType {

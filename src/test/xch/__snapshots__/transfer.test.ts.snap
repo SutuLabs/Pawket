@@ -1,5 +1,147 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Multiple Xch Transfer: bundle 1`] = `
+Object {
+  "aggregated_signature": "0xb1594e4e7ed8d540bc7faaa01aa7af037ac4f88767cf1f3705dc5250dc45f16a5462f6de136ee818e4ca6e805ee12b3019644b81babf5413d6510bccc2a617b5a4fab9ef61a6199b228b21b967e54c4ce658a4ff0eb92dddc64a05e1b55f15ad",
+  "coin_spends": Array [
+    Object {
+      "coin": Object {
+        "amount": 1000n,
+        "parent_coin_info": "0xba70b644f3cd240ac0c500782d53e633d8c1de21bd554c2ee1e190b24d3c8bb2",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff3cffa011f050234c9a7b16f47a4db115badf291cce0a04a4472b5e68925c33bd15fb9c80ffff3dffa0a6c4ec36bbbad86ab2b0615bacb4b68b7b8e470dd6315ec81076a35be5c1d77e8080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 2000n,
+        "parent_coin_info": "0xba70b644f3cd240ac0c500782d53e633d8c1de21bd554c2ee1e190b24d3c8bb2",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff3cffa0c56613193e9abc5bfc93f79abef0f4b8be5616572b958ffc0faa64bf294ea76680ffff3dffa042e85f311a759a6096d639e7561157a67ded0c6095d69c76e80e439323df9cdc8080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 3000n,
+        "parent_coin_info": "0xba70b644f3cd240ac0c500782d53e633d8c1de21bd554c2ee1e190b24d3c8bb2",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff33ffa087908e3f85bf4b55c7e7709915c2ce97a1e6ec1d227e54a04dbfee6862d546a5ff82176f80ffff33ffa04f45877796d7a64e192bcc9f899afeedae391f71af3afd7e15a0792c049d23d3ff0180ffff3cffa0af2689c5dcca6dba8761f9b2c4040e24e4917f74a8c08c8284fc5d83be5caea880ffff3dffa0921f68d60b2a96694307a1566e8921470670121d2c05fdd2570cb1f52339da608080ff8080",
+    },
+  ],
+}
+`;
+
+exports[`Multiple Xch Transfer: bundle 2`] = `
+Object {
+  "aggregated_signature": "0xb92d5075dc7f429a3a82e123c0829219cd58459963d54be963de77e60e2875fb461fd10f70dc628157abc26e900bc194077976e23c876bd7fa05f2a6a8b287cd809e6b08839c9e276d48c39a5733fa3b82a65e39208d08c5f66ba3a79b084072",
+  "coin_spends": Array [
+    Object {
+      "coin": Object {
+        "amount": 1000n,
+        "parent_coin_info": "0xba70b644f3cd240ac0c500782d53e633d8c1de21bd554c2ee1e190b24d3c8bb2",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff3cffa011f050234c9a7b16f47a4db115badf291cce0a04a4472b5e68925c33bd15fb9c80ffff3dffa0a6c4ec36bbbad86ab2b0615bacb4b68b7b8e470dd6315ec81076a35be5c1d77e8080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 2000n,
+        "parent_coin_info": "0xba70b644f3cd240ac0c500782d53e633d8c1de21bd554c2ee1e190b24d3c8bb2",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff3cffa0c56613193e9abc5bfc93f79abef0f4b8be5616572b958ffc0faa64bf294ea76680ffff3dffa042e85f311a759a6096d639e7561157a67ded0c6095d69c76e80e439323df9cdc8080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 3000n,
+        "parent_coin_info": "0xba70b644f3cd240ac0c500782d53e633d8c1de21bd554c2ee1e190b24d3c8bb2",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff33ffa087908e3f85bf4b55c7e7709915c2ce97a1e6ec1d227e54a04dbfee6862d546a5ff82176a80ffff33ffa04f45877796d7a64e192bcc9f899afeedae391f71af3afd7e15a0792c049d23d3ff0180ffff3cffa0af2689c5dcca6dba8761f9b2c4040e24e4917f74a8c08c8284fc5d83be5caea880ffff3dffa0921f68d60b2a96694307a1566e8921470670121d2c05fdd2570cb1f52339da608080ff8080",
+    },
+  ],
+}
+`;
+
+exports[`Multiple Xch Transfer: plan 1`] = `
+Object {
+  "XCH": Object {
+    "coins": Array [
+      Object {
+        "amount": 1000n,
+        "parent_coin_info": "0xba70b644f3cd240ac0c500782d53e633d8c1de21bd554c2ee1e190b24d3c8bb2",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      Object {
+        "amount": 2000n,
+        "parent_coin_info": "0xba70b644f3cd240ac0c500782d53e633d8c1de21bd554c2ee1e190b24d3c8bb2",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      Object {
+        "amount": 3000n,
+        "parent_coin_info": "0xba70b644f3cd240ac0c500782d53e633d8c1de21bd554c2ee1e190b24d3c8bb2",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+    ],
+    "targets": Array [
+      Object {
+        "address": "0x87908e3f85bf4b55c7e7709915c2ce97a1e6ec1d227e54a04dbfee6862d546a5",
+        "amount": 5999n,
+        "symbol": "XCH",
+      },
+      Object {
+        "address": "0x4f45877796d7a64e192bcc9f899afeedae391f71af3afd7e15a0792c049d23d3",
+        "amount": 1n,
+        "symbol": "XCH",
+      },
+    ],
+  },
+}
+`;
+
+exports[`Multiple Xch Transfer: plan 2`] = `
+Object {
+  "XCH": Object {
+    "coins": Array [
+      Object {
+        "amount": 1000n,
+        "parent_coin_info": "0xba70b644f3cd240ac0c500782d53e633d8c1de21bd554c2ee1e190b24d3c8bb2",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      Object {
+        "amount": 2000n,
+        "parent_coin_info": "0xba70b644f3cd240ac0c500782d53e633d8c1de21bd554c2ee1e190b24d3c8bb2",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      Object {
+        "amount": 3000n,
+        "parent_coin_info": "0xba70b644f3cd240ac0c500782d53e633d8c1de21bd554c2ee1e190b24d3c8bb2",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+    ],
+    "targets": Array [
+      Object {
+        "address": "0x87908e3f85bf4b55c7e7709915c2ce97a1e6ec1d227e54a04dbfee6862d546a5",
+        "amount": 5994n,
+        "symbol": "XCH",
+      },
+      Object {
+        "address": "0x4f45877796d7a64e192bcc9f899afeedae391f71af3afd7e15a0792c049d23d3",
+        "amount": 1n,
+        "symbol": "XCH",
+      },
+    ],
+  },
+}
+`;
+
 exports[`Standard Transfer: bundle 1`] = `
 Object {
   "aggregated_signature": "0x81198e68402824e0585fac43d79edf3efe19e4651747f4e9b8d28f6a8a5c319dac67d4a0c03ad957cbb7d7c3c955605d03d6c5750e0aa44baf73ddaa5fcfbe74e3cb922034b72656f0df410ff6ef8e81b56b1a6a0c9bddd9331b7a9c90f897ce",

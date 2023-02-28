@@ -4,8 +4,10 @@ import { prefix0x } from "@/services/coin/condition";
 import { assertSpendbundle } from "@/services/spendbundle/validator";
 import puzzle from "@/services/crypto/puzzle";
 import utility from "@/services/crypto/utility";
-import transfer from "@/services/transfer/transfer";
+import transfer, { TransferTarget } from "@/services/transfer/transfer";
 import { Instance } from "@/services/util/instance";
+import { createFakeXchCoin, getTestAccount, logBundle } from "../utility";
+import { getAccountAddressDetails } from "@/services/util/account";
 
 const net: NetworkContextWithOptionalApi = {
   prefix: "xch",
@@ -51,3 +53,35 @@ test('Standard Transfer', async () => {
   await assertSpendbundle(bundle, net.chainId);
   expect(bundle).toMatchSnapshot("bundle");
 });
+
+test('Multiple Xch Transfer', async () => {
+  await testTransfer(0n);
+  await testTransfer(5n);
+});
+
+async function testTransfer(fee = 0n): Promise<void> {
+  const account = getTestAccount("55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f");
+  const tokenPuzzles = await getAccountAddressDetails(account, [], {}, net.prefix, net.symbol, undefined, "cat_v2");
+  const p2Puzzle = tokenPuzzles.at(0)?.puzzles.at(0)?.puzzle;
+  if (!p2Puzzle) fail();
+  const coins = [
+    await createFakeXchCoin(p2Puzzle, 1000n),
+    await createFakeXchCoin(p2Puzzle, 2000n),
+    await createFakeXchCoin(p2Puzzle, 3000n),
+  ];
+  const total = 1000n + 2000n + 3000n - fee - 1n;
+
+  const tgt_hex = "0x87908e3f85bf4b55c7e7709915c2ce97a1e6ec1d227e54a04dbfee6862d546a5";
+  const change_hex = "0x4f45877796d7a64e192bcc9f899afeedae391f71af3afd7e15a0792c049d23d3";
+
+  const targets: TransferTarget[] = [{ symbol: net.symbol, address: tgt_hex, amount: total, }];
+  const plan = await transfer.generateSpendPlan({ [net.symbol]: coins }, targets, change_hex, fee, net.symbol);
+  expect(plan).toMatchSnapshot("plan");
+
+  const ubundle = await transfer.generateSpendBundleWithoutCat(plan, tokenPuzzles, [], net);
+  const msgs = await getMessagesToSign(ubundle, tokenPuzzles, net.chainId)
+  const sig = await signMessages(msgs, tokenPuzzles);
+  const bundle = await combineSpendBundleSignature(ubundle, sig);
+  await assertSpendbundle(bundle, net.chainId);
+  expect(bundle).toMatchSnapshot("bundle");
+}
