@@ -1571,7 +1571,7 @@
   },
   "cns": {
     "title": "Chia Name Service",
-    "placeholder": "搜索Chia域名",
+    "placeholder": "搜索 Chia 域名",
     "button": {
       "search": "搜索",
       "loading": "加载中",
@@ -1597,11 +1597,11 @@
       "address": "绑定地址(选填)"
     },
     "message": {
-      "notOpen": "CNS目前在试运营期间，暂时只开放6位及以上字符的名字注册。未来会逐步开放所有名字的注册。敬请期待！",
+      "notOpen": "CNS 目前在试运营期间，暂时只开放 6 位及以上字符的名字注册。未来会逐步开放所有名字的注册。敬请期待！",
       "registered": "该域名已被注册，查看其",
       "profileHomepage": "个人主页",
       "unavailable": "该名字已被预留，若你可以证明你是该名字/商标/品牌的拥有者，请通过 Twitter/Discord 联系我们。",
-      "noName": "你还没有 Chia 域名，搜索去获取。"
+      "noName": "你还没有 Chia 域名，请搜索去获取。"
     }
   }
 }
