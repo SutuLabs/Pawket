@@ -1571,32 +1571,37 @@
   },
   "cns": {
     "title": "Chia Name Service",
+    "placeholder": "搜索 Chia 域名",
     "button": {
-      "search": "Search",
-      "loading": "Loading",
-      "register": "Register",
-      "cancel": "Cancel"
+      "search": "搜索",
+      "loading": "加载中",
+      "register": "注册",
+      "cancel": "取消"
     },
     "label": {
-      "notOpenYet": "Not Open Yet",
-      "registered": "Registered",
-      "result": "Result",
-      "available": "Available",
-      "unavailable": "Unavailable",
-      "registrationPeriod": "Registration Period",
-      "registrationFee": "Registration Fee",
-      "annualFee": "Annual Fee",
-      "royaltyPercentage": "Royalty Percentage",
-      "total": "Total",
-      "networkIssue": "Network issue",
-      "myNames": "My names",
-      "name": "Name"
+      "notOpenYet": "尚未开放",
+      "registered": "已被注册",
+      "result": "搜索结果",
+      "available": "可注册",
+      "unavailable": "不可注册",
+      "registrationPeriod": "注册期限",
+      "registrationFee": "注册费",
+      "annualFee": "年费",
+      "royaltyPercentage": "版权费百分比",
+      "total": "总计",
+      "networkIssue": "网络问题",
+      "myNames": "我的域名",
+      "name": "域名",
+      "oneYear": "1 年",
+      "register": "注册 {cnsName}.xch",
+      "address": "绑定地址(选填)"
     },
     "message": {
-      "notOpen": " During the trial operation period of CNS, only names with 6 or more characters can be registered for the time being. In the future, the registration of all names will be gradually opened. Stay tuned!",
-      "registered": "This name has been registered. Go to view",
-      "unavailable": "This name is reserved. If you can prove that you are the owner of the name/trademark/brand, please contact us via Twitter/Discord.",
-      "noName": "No Chia Domain Name Here. Search to Get One."
+      "notOpen": "CNS 目前在试运营期间，暂时只开放 6 位及以上字符的名字注册。未来会逐步开放所有名字的注册。敬请期待！",
+      "registered": "该域名已被注册，查看其",
+      "profileHomepage": "个人主页",
+      "unavailable": "该名字已被预留，若你可以证明你是该名字/商标/品牌的拥有者，请通过 Twitter/Discord 联系我们。",
+      "noName": "你还没有 Chia 域名，请搜索去获取。"
     }
   }
 }

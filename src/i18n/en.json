@@ -1571,6 +1571,7 @@
   },
   "cns": {
     "title": "Chia Name Service",
+    "placeholder": "Search for a Chia Domain Name",
     "button": {
       "search": "Search",
       "loading": "Loading",
@@ -1589,12 +1590,16 @@
       "royaltyPercentage": "Royalty Percentage",
       "total": "Total",
       "networkIssue": "Network issue",
-      "myNames": "My names",
-      "name": "Name"
+      "myNames": "My Names",
+      "register": "Register {cnsName}.xch",
+      "name": "Name",
+      "oneYear": "1 Year",
+      "address": "Address(Optional)"
     },
     "message": {
       "notOpen": " During the trial operation period of CNS, only names with 6 or more characters can be registered for the time being. In the future, the registration of all names will be gradually opened. Stay tuned!",
       "registered": "This name has been registered. Go to view",
+      "profileHomepage": "Profile Homepage",
       "unavailable": "This name is reserved. If you can prove that you are the owner of the name/trademark/brand, please contact us via Twitter/Discord.",
       "noName": "No Chia Domain Name Here. Search to Get One."
     }
