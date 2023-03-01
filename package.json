@@ -4,7 +4,7 @@
   "license": "GPL-3.0",
   "author": "SutuLabs",
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "NODE_OPTIONS=--openssl-legacy-provider vue-cli-service serve",
     "build:all": "yarn check-i18n --ci && yarn jest --ci && yarn build:pawket && yarn build:mixch",
     "build:pawket": "vue-cli-service build",
     "build-ext": "cross-env VUE_CLI_SERVICE_CONFIG_PATH=vue.config.ext.js vue-cli-service build",
