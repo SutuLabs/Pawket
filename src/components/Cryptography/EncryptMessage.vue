@@ -13,7 +13,7 @@
                 {{ cnsResolve.cns }}
               </div>
               <key-box
-                v-if="!cnsResolve || showAddress"
+                v-if="!cnsResolve || !cnsResolve.cns || showAddress"
                 icon="checkbox-multiple-blank-outline"
                 :value="account.firstAddress"
                 :tooltip="account.firstAddress"
@@ -48,7 +48,7 @@
                 {{ cnsResolve.cns }}
               </div>
               <key-box
-                v-if="!cnsResolve || showAddress"
+                v-if="!cnsResolve || !cnsResolve.cns || showAddress"
                 icon="checkbox-multiple-blank-outline"
                 :value="account.firstAddress"
                 :tooltip="account.firstAddress"
