@@ -41,6 +41,12 @@
                     >{{ $t("nftDetail.ui.dropdown.setAsProfilePic") }}
                   </b-dropdown-item>
                 </a>
+                <a class="has-text-dark" @click="openSignMessage()">
+                  <b-dropdown-item aria-role="listitem">
+                    <b-icon class="media-left" icon="lead-pencil" size="is-small"></b-icon
+                    >{{ $t("nftDetail.ui.dropdown.signWithNft") }}
+                  </b-dropdown-item>
+                </a>
                 <a class="has-text-danger" @click="nftBurn()">
                   <b-dropdown-item aria-role="listitem" class="has-text-danger">
                     <b-icon class="media-left" icon="trash-can-outline" size="is-small"></b-icon
@@ -388,6 +394,7 @@ import { shorten } from "@/filters/addressConversion";
 import EditCnsBindings from "../Cns/EditCnsBindings.vue";
 import { modshash } from "@/services/coin/mods";
 import { tc } from "@/i18n/i18n";
+import SignMessage from "../Cryptography/SignMessage.vue";
 
 @Component({
   components: {
@@ -467,6 +474,21 @@ export default class NftDetailPanel extends Vue {
       }
     }
     nft.metadata.uri = img.src;
+  }
+
+  openSignMessage(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: SignMessage,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      fullScreen: isMobile(),
+      props: {
+        account: this.account,
+        nft: this.nft.analysis,
+      },
+    });
   }
 
   nftBurn(): void {

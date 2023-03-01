@@ -242,6 +242,7 @@
         "maxAddress": "Max number of addresses",
         "address": "Address",
         "coin": "Coin",
+        "sign": "Sign",
         "link": "Explorer",
         "observer": "Observer",
         "nonObserver": "Non-Observer"
@@ -1182,6 +1183,7 @@
         "spaceScan": "View on Spacescan.io",
         "mintGarden": "View on Mintgarden.io",
         "setAsProfilePic": "Set as Account Avatar",
+        "signWithNft": "Sign",
         "nftBurn": "Burn NFT"
       },
       "profile": {
@@ -1344,6 +1346,8 @@
       "prompt": "Make sure the message comes from trusty source. If you don't understand or agree to the message, don't sign!",
       "label": {
         "signWdid": "Sign with DID:",
+        "signWithNft": "Sign with NFT:",
+        "signWithAddress": "Sign with Address:",
         "message": "Message",
         "result": "Result"
       }
