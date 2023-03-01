@@ -18,14 +18,14 @@ export async function getCnsName(addresses: string[]): Promise<reverseResolveAns
     const res: reverseResolveAnswer[] = [];
     const unresolved: string[] = [];
     for (const address of addresses) {
-        const idx = cnsCache.findIndex(cache => cache.address == address && cache.expiration && cache.expiration > Date.now());
+        const idx = cnsCache.findIndex(cache => cache.address == address && cache.cns?.endsWith('.xch') && cache.expiration && cache.expiration > Date.now());
         if (idx > -1) res.push(cnsCache[idx])
         else unresolved.push(address)
     }
     if (unresolved.length) {
         const answers = await reverseResolve(unresolved)
         for (const ans of answers) {
-            if (ans.name && ans.data) {
+            if (ans.name && ans.name.endsWith('.xch') && ans.data) {
                 const idx = unresolved.findIndex(u => u == ans.data)
                 if (idx > -1) unresolved.splice(idx, 1);
                 res.push({ address: ans.data, cns: ans.name, status: "Found" })
