@@ -10,6 +10,7 @@
     :confirmBtn="$t('common.button.copy')"
     :loading="submitting"
     :submitting="submitting"
+    :showClose="true"
   >
     <template #sign>
       <b-notification type="is-warning is-light" has-icon icon="head-question-outline" :closable="false">
@@ -20,6 +21,29 @@
         <template #label>
           <span v-if="did">
             {{ $t("signMessage.ui.label.signWdid") }}
+            <key-box
+              icon="checkbox-multiple-blank-outline"
+              :value="signName"
+              :tooltip="signName"
+              :showValue="true"
+              :headLength="30"
+              :tailLength="10"
+            ></key-box>
+          </span>
+          <span v-if="nft">
+            {{ $t("signMessage.ui.label.signWithNft") }}
+            <key-box
+              icon="checkbox-multiple-blank-outline"
+              :value="signName"
+              :tooltip="signName"
+              :showValue="true"
+              :headLength="30"
+              :tailLength="10"
+            ></key-box>
+            <img v-if="nft.metadata.imageUri" :src="nft.metadata.imageUri" class="mt-3 image is-128x128" />
+          </span>
+          <span v-if="xch">
+            {{ $t("signMessage.ui.label.signWithAddress") }}
             <key-box
               icon="checkbox-multiple-blank-outline"
               :value="signName"
@@ -65,7 +89,7 @@ import puzzle, { PuzzleDetail } from "@/services/crypto/puzzle";
 import { prefix0x, unprefix0x } from "@/services/coin/condition";
 import utility from "@/services/crypto/utility";
 import { getSignMessage, signMessage, verifySignature } from "@/services/crypto/sign";
-import { xchPrefix, xchSymbol } from "@/store/modules/network";
+import { xchSymbol } from "@/store/modules/network";
 import { getCoinName0x } from "@/services/coin/coinUtility";
 import Confirmation from "../Common/Confirmation.vue";
 
@@ -156,7 +180,7 @@ export default class SignMessage extends Vue {
         : this.nft
         ? `NFT: ${puzzle.getAddressFromPuzzleHash(this.nft.launcherId, "nft")}`
         : this.xch
-        ? `XCH: ${puzzle.getAddressFromPuzzleHash(this.xch, xchPrefix())}`
+        ? `XCH: ${this.xch}`
         : undefined;
       const phHint = this.did ? getCoinName0x(this.did.coin) : this.nft ? getCoinName0x(this.nft.coin) : undefined;
       if (!puzzleHash || !phResult) {

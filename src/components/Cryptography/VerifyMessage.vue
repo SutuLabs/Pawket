@@ -228,13 +228,12 @@ export default class VerifyMessage extends Vue {
           : nft && hint
           ? await this.getCoin(hint, nft, async (cs, launcherId) => {
               const d = await analyzeNftCoin(cs.puzzle_reveal, undefined, cs.coin, cs.solution);
-              if (d?.launcherId != launcherId) throw new Error("different launcher id encountered");
+              if (unprefix0x(d?.launcherId) != unprefix0x(launcherId)) throw new Error("different launcher id encountered");
               return d?.p2Owner ?? "";
             })
           : xch
-          ? xch
+          ? puzzle.getPuzzleHashFromAddress(xch)
           : undefined;
-
       if (!expect) {
         Notification.open({
           message: "no verify target specified.",
@@ -245,8 +244,7 @@ export default class VerifyMessage extends Vue {
         this.coinValidation = "Fail";
         return;
       }
-
-      this.coinValidation = p2owner == expect ? "Pass" : "Fail";
+      this.coinValidation = unprefix0x(p2owner) == unprefix0x(expect) ? "Pass" : "Fail";
     } catch (error) {
       Notification.open({
         message: this.$tc("batchSend.ui.messages.failedToSign") + error,

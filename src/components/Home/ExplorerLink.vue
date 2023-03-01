@@ -45,6 +45,7 @@
           <tr>
             <th>{{ $t("explorerLink.ui.label.address") }}</th>
             <th>{{ $t("explorerLink.ui.label.coin") }}</th>
+            <th>{{ $t("explorerLink.ui.label.sign") }}</th>
             <th>{{ $t("explorerLink.ui.label.link") }}</th>
           </tr>
         </thead>
@@ -57,6 +58,11 @@
           >
             <td>{{ convertAddress(addr.address) }}</td>
             <td>{{ addr.coins.filter((_) => _.coin && !_.spent).length }}</td>
+            <td>
+              <b-button size="is-small" @click="openSignMessage(addr.address)">{{
+                $t("explorerLink.ui.label.sign")
+              }}</b-button>
+            </td>
             <td>
               <a target="_blank" :href="externalExplorerPrefix + addr.address">
                 <b-icon icon="open-in-new" size="is-small"></b-icon>
@@ -81,6 +87,8 @@ import puzzle, { AddressType } from "@/services/crypto/puzzle";
 import { notifyPrimary } from "@/services/notification/notification";
 import { xchSymbol } from "@/store/modules/network";
 import { getCnsName, reverseResolveAnswer } from "@/services/api/reverseResolve";
+import SignMessage from "../Cryptography/SignMessage.vue";
+import { isMobile } from "@/services/view/responsive";
 
 @Component({
   components: {
@@ -143,6 +151,21 @@ export default class ExplorerLink extends Vue {
     const res = this.cnsNames.find((cns) => cns.address == puzzle.getPuzzleHashFromAddress(address) && cns.cns);
     if (res && res.cns) return res.cns;
     return shorten(address);
+  }
+
+  openSignMessage(xch: string): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: SignMessage,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      fullScreen: isMobile(),
+      props: {
+        account: this.account,
+        xch: xch,
+      },
+    });
   }
 
   shorten(name: string): string {

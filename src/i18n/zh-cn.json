@@ -242,6 +242,7 @@
         "maxAddress": "最大地址数量",
         "address": "地址",
         "coin": "硬币",
+        "sign": "签名",
         "link": "区块链浏览器",
         "observer": "观察钱包",
         "nonObserver": "私房钱包"
@@ -1182,6 +1183,7 @@
         "spaceScan": "在 Spacescan.io 查看",
         "mintGarden": "在 Mintgarden.io 查看",
         "setAsProfilePic": "设置为账户头像",
+        "signWithNft": "签名",
         "nftBurn": "销毁 NFT"
       },
       "profile": {
@@ -1343,7 +1345,9 @@
       "title": "签名信息",
       "prompt": "请确保该信息来自可信任的来源。如果你不理解或不同意该信息，请勿签名！",
       "label": {
-        "signWdid": "签名 DID：",
+        "signWdid": "签名DID：",
+        "signWithNft": "签名NFT:",
+        "signWithAddress": "签名地址:",
         "message": "信息",
         "result": "结果"
       }
