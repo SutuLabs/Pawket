@@ -77,7 +77,11 @@
         </a>
         <div v-if="showConnection" class="is-block mt-3">
           <ul>
-            <li class="panel-block is-justify-content-space-between is-flex" v-for="(conn, index) in connections" :key="index">
+            <li
+              class="panel-block is-justify-content-space-between is-flex"
+              v-for="(conn, index) in connections.filter((con) => con.accountFirstAddress == account.firstAddress)"
+              :key="index"
+            >
               <div class="is-flex is-align-items-baseline">
                 <img :src="`${conn.url}/favicon.ico`" class="image is-16x16 mx-2" />{{ conn.url }}
               </div>
@@ -219,7 +223,7 @@ export default class AccountDetail extends Vue {
     const connStr = localStorage.getItem("CONNECTIONS");
     if (!connStr) return [];
     const conn = JSON.parse(connStr) as connectionItem[];
-    return conn.filter((con) => con.accountFirstAddress == this.account.firstAddress);
+    return conn;
   }
 
   get observeMode(): boolean {

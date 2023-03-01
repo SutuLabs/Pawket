@@ -157,17 +157,19 @@ export default class Connect extends Vue {
     return this.accounts[this.selectedAcc];
   }
 
-  get connections(): connectionItem[] {
+  get allConnections(): connectionItem[] {
     const connStr = localStorage.getItem("CONNECTIONS");
     if (!connStr) return [];
     const conn = JSON.parse(connStr) as connectionItem[];
-    return conn.filter((con) => con.accountFirstAddress == this.account.firstAddress);
+    return conn;
+  }
+
+  get connections(): connectionItem[] {
+    return this.allConnections.filter((con) => con.accountFirstAddress == this.account.firstAddress);
   }
 
   get authorized(): boolean {
-    const idx = this.connections.findIndex(
-      (conn) => conn.accountFirstAddress == this.accounts[0].firstAddress && conn.url == this.origin
-    );
+    const idx = this.connections.findIndex((conn) => conn.url == this.origin);
     if (idx > -1) return true;
     return false;
   }
@@ -211,8 +213,8 @@ export default class Connect extends Vue {
   authorize(): void {
     const firstAddress = this.accounts[this.selectedAcc].firstAddress;
     if (firstAddress) {
-      this.connections.push({ accountFirstAddress: firstAddress, url: this.origin });
-      const conn = JSON.stringify(this.connections);
+      this.allConnections.push({ accountFirstAddress: firstAddress, url: this.origin });
+      const conn = JSON.stringify(this.allConnections);
       localStorage.setItem("CONNECTIONS", conn);
       this.openApp();
     }
