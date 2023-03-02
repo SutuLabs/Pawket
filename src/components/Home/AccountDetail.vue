@@ -433,7 +433,13 @@ export default class AccountDetail extends Vue {
       fullScreen: isMobile(),
       canCancel: [""],
       props: { account: this.account },
-      events: { close: () => this.handleModalClose("/home/scan") },
+      events: {
+        added: () => {
+          this.$router.push("/home");
+          this.$router.push("/home/accounts");
+        },
+        close: () => this.handleModalClose("/home/scan"),
+      },
     });
   }
 
