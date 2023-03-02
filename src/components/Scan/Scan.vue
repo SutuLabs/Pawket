@@ -11,7 +11,12 @@
         </b-tab-item>
         <b-tab-item :label="$t('scan.ui.label.publicKeyQr')" class="has-text-centered">
           <div class="my-3">
-            <qrcode-vue :value="masterpubkey || account.key.publicKey" size="200" class="qrcode" style="width: 220px"></qrcode-vue>
+            <qrcode-vue
+              :value="masterpubkey || account.key.publicKey"
+              size="200"
+              class="qrcode"
+              style="width: 220px"
+            ></qrcode-vue>
           </div>
           <key-box :value="masterpubkey || account.key.publicKey" :showValue="true"></key-box>
         </b-tab-item>
@@ -115,6 +120,10 @@ export default class Scan extends Vue {
       trapFocus: true,
       props: {
         inputPubKey: pubKey,
+      },
+      events: {
+        added: () => this.$emit("added"),
+        close: () => this.close(),
       },
       canCancel: [""],
     });

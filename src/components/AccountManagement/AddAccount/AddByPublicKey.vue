@@ -137,6 +137,7 @@ export default class AddByPublicKey extends Vue {
     this.submitting = true;
 
     await store.dispatch("createAccountByPublicKey", { name: this.name, publicKey: prefix0x(publicKey) });
+    this.$emit('added')
     this.close();
   }
 
