@@ -135,6 +135,7 @@ export default class Connect extends Vue {
     this.loading = true;
     if (!(await isPasswordCorrect(this.password))) {
       this.isCorrect = false;
+      this.loading = false;
       return;
     }
     this.isCorrect = true;
