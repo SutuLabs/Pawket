@@ -132,7 +132,9 @@
             </router-link>
           </ul>
         </div>
-        <router-view></router-view>
+        <KeepAlive>
+          <router-view></router-view>
+        </KeepAlive>
       </div>
       <div class="p-4 border-top-1">
         <dapp :account="account" :tokenList="tokenList" class="pb-6"></dapp>
