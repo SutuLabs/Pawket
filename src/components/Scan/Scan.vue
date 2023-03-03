@@ -90,6 +90,7 @@ export default class Scan extends Vue {
     } else {
       this.addByPublicKey(result);
     }
+    this.cameraStatus = "off";
   }
 
   get tokenList(): CustomCat[] {
@@ -108,6 +109,7 @@ export default class Scan extends Vue {
         account: this.account,
         inputAddress: address,
       },
+      events: { close: () => (this.cameraStatus = "auto") },
     });
   }
 
@@ -123,7 +125,7 @@ export default class Scan extends Vue {
       },
       events: {
         added: () => this.$emit("added"),
-        close: () => this.close(),
+        close: () => (this.cameraStatus = "auto"),
       },
       canCancel: [""],
     });
