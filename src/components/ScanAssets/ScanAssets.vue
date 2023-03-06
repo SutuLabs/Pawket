@@ -194,6 +194,7 @@ import KeyBox from "../Common/KeyBox.vue";
 import SignMessage from "../Cryptography/SignMessage.vue";
 import { convertToOriginCoin } from "@/services/coin/coinUtility";
 import TopBar from "../Common/TopBar.vue";
+import { SymbolCoins } from "@/services/transfer/transfer";
 
 type Option = "Token" | "NftV1" | "CatV2" | "DidV1";
 type Mode = "option" | "result";
@@ -218,6 +219,7 @@ export default class ScanAssets extends Vue {
   allRequests: TokenPuzzleObserver[] = [];
   puzCache: { [symbol: string]: PuzzleObserver[] } = {};
   allRecords: CoinRecord[] = [];
+  availableCoins: SymbolCoins | null = null;
   isLoading = false;
 
   async mounted(): Promise<void> {
@@ -336,6 +338,7 @@ export default class ScanAssets extends Vue {
     this.tokenBalance = {};
     this.allRecords = [];
     this.allRequests = [];
+    this.availableCoins = null;
     this.current = 0;
     this.status = "Configuring";
   }
@@ -453,7 +456,10 @@ export default class ScanAssets extends Vue {
         this.scan();
       }, 5000);
     } else {
-      if (this.current >= this.addressNumber) this.status = "Finished";
+      if (this.current >= this.addressNumber) {
+        this.availableCoins = (await coin.getAvailableCoins(this.account, this.allRequests, [this.token]))[0];
+        this.status = "Finished";
+      }
     }
   }
 
@@ -556,7 +562,8 @@ export default class ScanAssets extends Vue {
   }
 
   async transfer(nft: NftDetail): Promise<void> {
-    const availableCoins = (await coin.getAvailableCoins(this.account, this.allRequests, [this.token]))[0];
+    if (!this.availableCoins)
+      this.availableCoins = (await coin.getAvailableCoins(this.account, this.allRequests, [this.token]))[0];
     this.$buefy.modal.open({
       parent: this,
       component: NftTransfer,
@@ -564,7 +571,7 @@ export default class ScanAssets extends Vue {
       trapFocus: true,
       fullScreen: isMobile(),
       canCancel: [""],
-      props: { nft: nft, account: this.account, inputAvailableCoins: availableCoins, inputRequests: this.allRequests },
+      props: { nft: nft, account: this.account, inputAvailableCoins: this.availableCoins, inputRequests: this.allRequests },
     });
   }
 
