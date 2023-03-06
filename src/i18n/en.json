@@ -796,6 +796,7 @@
     "ui": {
       "title": "Mint NFT",
       "label": {
+        "did": "DID",
         "memo": "Memo",
         "uri": "URI",
         "hash": "Hash"

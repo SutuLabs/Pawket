@@ -3,6 +3,13 @@
     <top-bar :title="$t('batchMintNft.ui.title')" @close="close()" :showClose="true"></top-bar>
     <section class="modal-card-body">
       <template v-if="!bundle">
+        <b-field :label="$t('mintNft.ui.label.did')" v-if="dids">
+          <b-select v-model="did" expanded>
+            <option v-for="did in dids" :key="did.did" :value="did">
+              {{ did.did }}
+            </option>
+          </b-select>
+        </b-field>
         <span class="label">
           <b-tooltip :label="$t('batchSend.ui.tooltip.upload')" position="is-right">
             <b-upload v-model="file" accept=".csv" class="file-label" @input="afterUploadCsv">
@@ -63,6 +70,17 @@
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
           <span v-html="$sanitize($tc('batchSend.ui.summary.notification'))"></span>
         </b-notification>
+        <b-field v-if="did">
+          <template #label>
+            <span class="is-size-6">{{ $t("mintNft.ui.label.did") }}</span>
+            <span class="is-size-6 is-pulled-right">
+              <span class="tag is-primary is-light">{{ did.name }}</span>
+              <b-tooltip :label="did.did" multilined class="break-string" position="is-left">
+                {{ shorten(did.did) }}
+              </b-tooltip>
+            </span>
+          </template>
+        </b-field>
         <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
       </template>
     </section>
@@ -99,7 +117,7 @@ import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
 import { AccountEntity } from "@/models/account";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { TokenPuzzleDetail } from "@/services/crypto/receive";
+import { DidDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
 import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
 import puzzle from "@/services/crypto/puzzle";
 import { SymbolCoins } from "@/services/transfer/transfer";
@@ -115,6 +133,7 @@ import store from "@/store";
 import { Hex, prefix0x } from "@/services/coin/condition";
 import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
 import TopBar from "../Common/TopBar.vue";
+import { shorten } from "@/filters/addressConversion";
 
 @Component({
   components: {
@@ -139,14 +158,18 @@ export default class BatchMintNft extends Vue {
   public transitioning = false;
   public royaltyAddress = "";
   public royaltyPercentage = 0;
+  public did: DidDetail | undefined = undefined;
 
   public requests: TokenPuzzleDetail[] = [];
 
-  mounted(): void {
+  async mounted(): Promise<void> {
     this.loadCoins();
-    if (!this.account.dids) {
-      store.dispatch("refreshDids");
-    }
+    await store.dispatch("refreshDids");
+    if (this.account.dids) this.did = this.account.dids[0];
+  }
+
+  get dids(): DidDetail[] {
+    return this.account.dids ?? [];
   }
 
   get path(): string {
@@ -162,6 +185,10 @@ export default class BatchMintNft extends Vue {
   close(): void {
     if (this.path.endsWith("batch-mint-nft")) this.$router.back();
     return;
+  }
+
+  shorten(name: string): string {
+    return shorten(name);
   }
 
   reset(): void {
@@ -205,7 +232,7 @@ export default class BatchMintNft extends Vue {
         return;
       }
 
-      const did = this.account.dids ? this.account.dids[0] : undefined;
+      const did = this.did;
       if (!did) {
         Notification.open({
           message: "At least one DID is needed.",
@@ -385,7 +412,7 @@ http://localhost:8080/img/logo.d9691df6.svg,B1EA9E8E58A58B5934ED53A780DF5104248D
 </script>
 
 <style scoped lang="scss">
-.field ::v-deep textarea {
-  font-size: 0.9em;
+.break-string {
+  word-break: break-word;
 }
 </style>
