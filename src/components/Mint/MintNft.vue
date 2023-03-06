@@ -14,6 +14,13 @@
     :submitting="submitting"
   >
     <template #sign>
+      <b-field :label="$t('mintNft.ui.label.did')" v-if="dids">
+        <b-select v-model="did" expanded>
+          <option v-for="did in dids" :key="did.did" :value="did">
+            {{ did.did }}
+          </option>
+        </b-select>
+      </b-field>
       <address-field
         :inputAddress="address"
         :addressEditable="addressEditable"
@@ -72,6 +79,17 @@
       <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
         <span v-html="$sanitize($tc('mintNft.ui.summary.notification'))"></span>
       </b-notification>
+      <b-field v-if="did">
+        <template #label>
+          <span class="is-size-6">{{ $t("mintNft.ui.label.did") }}</span>
+          <span class="is-size-6 is-pulled-right">
+            <span class="tag is-primary is-light">{{ did.name }}</span>
+            <b-tooltip :label="did.did" multilined class="break-string" position="is-left">
+              {{ shorten(did.did) }}
+            </b-tooltip>
+          </span>
+        </template>
+      </b-field>
       <send-summary
         :nftUri="uri"
         :nftHash="hash"
@@ -106,7 +124,7 @@ import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
 import { AccountEntity, TokenInfo } from "@/models/account";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { TokenPuzzleDetail } from "@/services/crypto/receive";
+import { DidDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
 import store from "@/store";
 import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
 import bigDecimal from "js-big-decimal";
@@ -128,6 +146,7 @@ import puzzle from "@/services/crypto/puzzle";
 import Confirmation from "../Common/Confirmation.vue";
 import { Hex, prefix0x } from "@/services/coin/condition";
 import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
+import { shorten } from "@/filters/addressConversion";
 
 interface NftFormInfo {
   uri: string;
@@ -180,6 +199,7 @@ export default class MintNft extends Vue {
   public royaltyPercentage = 0;
   public serialNumber = 0;
   public serialTotal = 0;
+  public did: DidDetail | undefined = undefined;
 
   public requests: TokenPuzzleDetail[] = [];
 
@@ -203,11 +223,12 @@ export default class MintNft extends Vue {
     },
   ];
 
-  mounted(): void {
+  async mounted(): Promise<void> {
     this.loadCoins();
     this.address = ensureAddress(this.account.firstAddress);
 
-    store.dispatch("refreshDids");
+    await store.dispatch("refreshDids");
+    if (this.account.dids) this.did = this.account.dids[0];
   }
 
   get path(): string {
@@ -223,6 +244,10 @@ export default class MintNft extends Vue {
   close(): void {
     if (this.path.endsWith("mint-nft")) this.$router.back();
     return;
+  }
+
+  get dids(): DidDetail[] {
+    return this.account.dids ?? [];
   }
 
   get decimal(): number {
@@ -256,6 +281,10 @@ export default class MintNft extends Vue {
 
   reset(): void {
     this.bundle = null;
+  }
+
+  shorten(name: string): string {
+    return shorten(name);
   }
 
   updateAddress(value: string): void {
@@ -383,7 +412,7 @@ export default class MintNft extends Vue {
         return;
       }
 
-      const did = this.account.dids ? this.account.dids[0] : undefined;
+      const did = this.did;
       if (!did) {
         Notification.open({
           message: "At least one DID is needed.",
@@ -489,5 +518,8 @@ img.image-preview {
   outline: none;
   min-width: 80px;
   min-height: 35px;
+}
+.break-string {
+  word-break: break-word;
 }
 </style>
