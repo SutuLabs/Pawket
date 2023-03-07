@@ -19,6 +19,9 @@
         @updateAddress="updateAddress"
         :showAddressBook="false"
       ></address-field>
+      <p v-if="addresserror" class="has-text-danger">
+        {{ addresserror }}
+      </p>
     </section>
     <footer class="modal-card-foot is-justify-content-space-between">
       <b-button :label="$t('addByAddress.ui.button.back')" @click="close()"></b-button>
@@ -58,6 +61,7 @@ export default class AddByAddress extends Vue {
 
   updateAddress(value: string): void {
     this.address = value;
+    this.clearErrorMsg();
   }
 
   clearErrorMsg(): void {
@@ -84,7 +88,7 @@ export default class AddByAddress extends Vue {
     for (const acc of store.state.account.accounts) {
       if (acc.type === "Address" && acc.firstAddress === this.address) {
         this.isLegalAddress = false;
-        this.addresserror = this.$tc("addByAddress.ui.message.duplicateAddress");
+        this.addresserror = this.$tc("addByAddress.ui.message.duplicateAddress", undefined, { accName: acc.name });
         return;
       }
       if (acc.name === this.name) {

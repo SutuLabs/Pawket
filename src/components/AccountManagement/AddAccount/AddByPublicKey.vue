@@ -126,7 +126,7 @@ export default class AddByPublicKey extends Vue {
     for (const acc of store.state.account.accounts) {
       if (acc.type === "PublicKey" && acc.key.publicKey === prefix0x(publicKey)) {
         this.isLegalAddress = false;
-        this.errorMessage = this.$tc("addByAddress.ui.message.duplicatePublicKey");
+        this.errorMessage = this.$tc("addByAddress.ui.message.duplicatePublicKey", undefined, { accName: acc.name });
         return;
       }
       if (acc.name === this.name) {
@@ -137,7 +137,7 @@ export default class AddByPublicKey extends Vue {
     this.submitting = true;
 
     await store.dispatch("createAccountByPublicKey", { name: this.name, publicKey: prefix0x(publicKey) });
-    this.$emit('added')
+    this.$emit("added");
     this.close();
   }
 

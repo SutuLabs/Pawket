@@ -526,9 +526,9 @@
       "message": {
         "nameRequired": "Account name is required.",
         "illegalAddress": "Incorrect address.",
-        "duplicateAddress": "Duplicate Address",
+        "duplicateAddress": "Duplicate Address: [{accName}] has the same address.",
         "duplicateName": "Duplicate Name",
-        "duplicatePublicKey": "Duplicate PublicKey"
+        "duplicatePublicKey": "Duplicate PublicKey: [{accName}] has the same publicKey."
       },
       "button": {
         "back": "Back",
@@ -556,7 +556,7 @@
     },
     "message": {
       "error": {
-        "accountPasswordExists": "An account with the same passphrase already exists."
+        "accountPasswordExists": "[{accName}] has the same passphrase."
       }
     }
   },

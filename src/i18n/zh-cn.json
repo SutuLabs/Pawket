@@ -526,9 +526,9 @@
       "message": {
         "nameRequired": "账户名不能为空",
         "illegalAddress": "地址不正确",
-        "duplicateAddress": "地址重复",
+        "duplicateAddress": "地址重复: [{accName}]有相同地址。",
         "duplicateName": "账户名重复",
-        "duplicatePublicKey": "公钥重复"
+        "duplicatePublicKey": "公钥重复： [{accName}]有相同公钥。"
       },
       "button": {
         "back": "返回",
@@ -556,7 +556,7 @@
     },
     "message": {
       "error": {
-        "accountPasswordExists": "该影子钱包已存在于账户列表中。"
+        "accountPasswordExists": "[{accName}] 有相同密码。"
       }
     }
   },

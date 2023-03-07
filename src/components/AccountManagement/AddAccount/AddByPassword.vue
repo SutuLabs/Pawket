@@ -79,8 +79,11 @@ export default class AddByPassword extends Vue {
       return;
     }
     const acc = await account.getAccount(store.state.vault.seedMnemonic, this.password);
-    if (store.state.account.accounts.find((a) => a.key.fingerprint === acc.fingerprint)) {
-      this.$buefy.dialog.alert(this.$tc("addByPassword.message.error.accountPasswordExists"));
+    const dulplicate = store.state.account.accounts.find((a) => a.key.fingerprint === acc.fingerprint);
+    if (dulplicate) {
+      this.$buefy.dialog.alert(
+        this.$tc("addByPassword.message.error.accountPasswordExists", undefined, { accName: dulplicate.name })
+      );
       return;
     }
     this.submitting = true;
