@@ -49,9 +49,9 @@
               {{ $t("addressField.ui.label.bindingAddress") }}
               <key-box icon="checkbox-multiple-blank-outline" :value="resolvedAddress" :showValue="true"></key-box>
             </p>
-            <p v-if="hoursAgo > 0">
+            <p v-if="lastUpdate">
               {{ $t("addressField.ui.label.lastChanged") }}
-              <span>{{ hoursAgo.toFixed(0) }} {{ $t("addressField.ui.label.hoursAgo") }}</span>
+              <span>{{ lastUpdate }}</span>
             </p>
           </div>
         </span>
@@ -92,6 +92,7 @@ import { analyzeNftCoin, getScalarString } from "@/services/coin/nft";
 import { decodeAddress } from "@/services/view/camera";
 import { resolveName, StandardResolveAnswer } from "@/services/api/resolveName";
 import { getCnsName, reverseResolveAnswer } from "@/services/api/reverseResolve";
+import { tc } from "@/i18n/i18n";
 
 @Component({
   components: {
@@ -190,7 +191,7 @@ export default class AddressField extends Vue {
     }
 
     if (this.cnsResolve && this.cnsResolve.cns) return this.cnsResolve.cns;
-    
+
     return "";
   }
 
@@ -219,10 +220,19 @@ export default class AddressField extends Vue {
     return store.state.network.network.spaceScanUrl;
   }
 
-  get hoursAgo(): number {
-    if (this.resolveAnswer?.status != "Found" || !this.resolveAnswer?.proof_coin_spent_index) return -1;
-    if (!store.state.network.peekHeight) return -1;
-    return (store.state.network.peekHeight - this.resolveAnswer.proof_coin_spent_index) / (6 * 32);
+  get lastUpdate(): string {
+    if (this.resolveAnswer?.status != "Found" || !this.resolveAnswer?.proof_coin_spent_index) return "";
+    if (!store.state.network.peekHeight) return "";
+    const hoursAgo = (store.state.network.peekHeight - this.resolveAnswer.proof_coin_spent_index) / (6 * 32);
+    if (hoursAgo < 24) return tc("addressField.ui.label.hour", undefined, { value: hoursAgo.toFixed(0) });
+    const daysAgo = hoursAgo / 24;
+    if (daysAgo < 7) return tc("addressField.ui.label.day", undefined, { value: daysAgo.toFixed(0) });
+    const weeksAgo = daysAgo / 7;
+    if (weeksAgo < 4) return tc("addressField.ui.label.week", undefined, { value: weeksAgo.toFixed(0) });
+    const monthsAgo = weeksAgo / 4;
+    if (monthsAgo < 12) return tc("addressField.ui.label.month", undefined, { value: monthsAgo.toFixed(0) });
+    const yearsAgo = monthsAgo / 12;
+    return tc("addressField.ui.label.year", undefined, { value: yearsAgo.toFixed(0) });
   }
 
   async reset(): Promise<void> {
