@@ -824,7 +824,11 @@
         "address": "地址",
         "bindingAddress": "绑定地址:",
         "lastChanged": "最后更改:",
-        "hoursAgo": "小时以前"
+        "hour": "{value}小时前",
+        "day": "{value}日前",
+        "week": "{value}周前",
+        "month": "{value}月前",
+        "year": "{value}年前"
       },
       "tooltip": {
         "qr": "扫描二维码",

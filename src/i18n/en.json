@@ -824,7 +824,11 @@
         "address": "Address",
         "bindingAddress": "Binding Address:",
         "lastChanged": "Last changed:",
-        "hoursAgo": "hours ago"
+        "hour": "{value}h ago",
+        "day": "{value}d ago",
+        "week": "{value}w ago",
+        "month": "{value}mo ago",
+        "year": "{value}y ago"
       },
       "tooltip": {
         "qr": "Scan QR",
