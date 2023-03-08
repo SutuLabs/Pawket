@@ -1612,5 +1612,38 @@
       "unavailable": "该名字已被预留，若你可以证明你是该名字/商标/品牌的拥有者，请通过 Twitter/Discord 联系我们。",
       "noName": "你还没有 Chia 域名，请搜索去获取。"
     }
+  },
+  "connect": {
+    "ui": {
+      "label": {
+        "connectWithPawket": "连接钱包",
+        "enterPassword": "输入密码来连接站点",
+        "trust": "确保你信任该连接站点",
+        "selectAccount": "选择一个账户",
+        "loadingBalance": "加载金额",
+        "allowSiteTo": "允许此站点：",
+        "viewInfo": "访问你的账户地址、金额、DID和交易记录",
+        "requestTranx": "请求允许交易",
+        "gettingData": "从Pawket获取信息",
+        "noWallet": "无Pawket钱包",
+        "noWalletInfo": "你没有在Pawket上创建钱包"
+      },
+      "button": {
+        "next": "下一步",
+        "connect": "连接",
+        "setUp": "创建钱包"
+      }
+    },
+    "messages": {
+      "success": "成功!",
+      "invalidCall": "无效调用:",
+      "noAppName": "请指定一个APP名称!",
+      "offerAccepted": "Offer已被接收!",
+      "invalidData": "签名失败: 无效输入信息",
+      "unknownDid": "签名失败: 未找到指定DID",
+      "unknownNetwork": "未找到指定网络",
+      "sendCompleted": "交易已完成!",
+      "incorrectPassword": "密码不正确."
+    }
   }
 }

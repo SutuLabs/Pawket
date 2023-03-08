@@ -1612,5 +1612,38 @@
       "unavailable": "This name is reserved. If you can prove that you are the owner of the name/trademark/brand, please contact us via Twitter/Discord.",
       "noName": "No Chia Domain Name Here. Search to Get One."
     }
+  },
+  "connect": {
+    "ui": {
+      "label": {
+        "connectWithPawket": "Connect With Pawket",
+        "enterPassword": "Enter your password to connect to the site",
+        "trust": "Make sure you trust the site you connect",
+        "selectAccount": "Select an account to use on this site",
+        "loadingBalance": "Loading Balance..",
+        "allowSiteTo": "Allow this site to:",
+        "viewInfo": "View your account addresses, balance, DIDs and activities.",
+        "requestTranx": "Request approval for transactions.",
+        "gettingData": "Getting Data from Pawket...",
+        "noWallet": "No Pawket Wallet",
+        "noWalletInfo": "You do not have a wallet set up in Pawket."
+      },
+      "button": {
+        "next": "Next",
+        "connect": "Connect",
+        "setUp": "Set up Wallet"
+      }
+    },
+    "messages": {
+      "success": "Success!",
+      "invalidCall": "Invalid Call:",
+      "noAppName": "Please specify an app name!",
+      "offerAccepted": "The Offer has been accepted!",
+      "invalidData": "Failed To Sign: Invalid Input Data",
+      "unknownDid": "Failed To Sign: The Specified DID Does Not Exist in Current Account",
+      "unknownNetwork": "the specified network does not exist",
+      "sendCompleted": "Transaction is completed!",
+      "incorrectPassword": "Incorrect password."
+    }
   }
 }
