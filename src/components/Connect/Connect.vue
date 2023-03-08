@@ -268,9 +268,9 @@ export default class Connect extends Vue {
 
   mounted(): void {
     window.addEventListener("message", (event: MessageEvent) => {
+      if (event.origin == window.location.origin) return;
       Object.freeze(event);
       this.event = event;
-      if (this.event.origin == window.location.origin) return;
       this.origin = this.event.origin;
       const data = JSON.parse(this.event.data);
       this.app = data.app;
