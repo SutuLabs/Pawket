@@ -1,7 +1,7 @@
 import store from "@/store";
 import account, { AccountKey } from "@/services/crypto/account";
 import Vue from "vue";
-import receive, { CoinClassType, DidDetail, TokenPuzzleAddress } from "@/services/crypto/receive";
+import receive, { CoinClassType, DidDetail, NftDetail, TokenPuzzleAddress } from "@/services/crypto/receive";
 import { convertToChainId, chainId, rpcUrl, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { AccountEntity, AccountTokens, AccountType, CustomCat, TokenInfo } from "@/models/account";
 import {
@@ -14,6 +14,8 @@ import { OriginCoin } from "@/services/spendbundle";
 import { prefix0x } from "@/services/coin/condition";
 import { desktopNotify } from "@/services/notification/notification";
 import { tc } from "@/i18n/i18n";
+import puzzle from "@/services/crypto/puzzle";
+import { getScalarString } from "@/services/coin/nft";
 
 export function getAccountCats(account: AccountEntity): CustomCat[] {
   const cats = account.allCats?.filter((c) => convertToChainId(c.network) == chainId()) ?? [];
@@ -232,23 +234,54 @@ store.registerModule<IAccountState>("account", {
 
       const requests = await getAccountAddressDetails(account, parameters.maxId);
       const assetRecords = await receive.getCoinRecords(requests, false, rpcUrl(), false, parameters.coinType);
+
+      // replace hintPuzzle of analysis
+      assetRecords.coins.forEach(coin => coin.records.forEach(rec => {
+        if (rec.analysis) rec.analysis.hintPuzzle = prefix0x(coin.puzzleHash)
+      }))
+
       if (parameters.coinType == "DidV1") {
-        const assets = await receive.getAssets(assetRecords, rpcUrl(), (_) => {
-          if (_.did) {
+        const didRecords = assetRecords.coins.flatMap(coin => coin.records);
+        for (const record of didRecords) {
+          if (record.analysis && record.coin && "didInnerPuzzleHash" in record.analysis) {
+            const did: DidDetail = {
+              name: puzzle.getAddressFromPuzzleHash(record.analysis.launcherId, "did:chia:"),
+              did: puzzle.getAddressFromPuzzleHash(record.analysis.launcherId, "did:chia:"),
+              hintPuzzle: record.analysis.hintPuzzle,
+              coin: convertToOriginCoin(record.coin),
+              analysis: record.analysis,
+            };
             if (!account.dids) Vue.set(account, "dids", []);
-            if (account.dids && account.dids.findIndex((d) => d.did == _.did?.did) == -1) account.dids.push(_.did);
+            if (account.dids && account.dids.findIndex((d) => d.did == did?.did) == -1) {
+              account.dids.push(did);
+            }
           }
-        });
-        setDidName(assets.dids);
-        Vue.set(account, "dids", assets.dids);
+        }
+        if (account.dids) setDidName(account.dids);
+        Vue.set(account, "dids", account.dids);
       } else {
-        const assets = await receive.getAssets(assetRecords, rpcUrl(), (_) => {
-          if (_.nft) {
-            if (!account.nfts) Vue.set(account, "nfts", []);
-            if (account.nfts && account.nfts.findIndex((d) => d.address == _.nft?.address) == -1) account.nfts.push(_.nft);
+        const nftRecords = assetRecords.coins.flatMap(coin => coin.records);
+        if (nftRecords.length && nftRecords[0].analysis) {
+          for (const record of nftRecords) {
+            if (record.analysis && record.coin && "didOwner" in record.analysis) {
+              const nft: NftDetail = {
+                metadata: {
+                  uri: getScalarString(record.analysis.metadata.imageUri) ?? "",
+                  hash: getScalarString(record.analysis.metadata.imageHash) ?? "",
+                },
+                hintPuzzle: record.analysis.hintPuzzle,
+                address: puzzle.getAddressFromPuzzleHash(record.analysis.launcherId, "nft"),
+                coin: convertToOriginCoin(record.coin),
+                analysis: record.analysis,
+              };
+              if (!account.nfts) Vue.set(account, "nfts", []);
+              if (account.nfts && account.nfts.findIndex((d) => d.address == nft?.address) == -1) {
+                account.nfts.push(nft);
+              }
+            }
           }
-        });
-        Vue.set(account, "nfts", assets.nfts);
+          Vue.set(account, "nfts", account.nfts);
+        }
       }
     },
     async refreshAddress({ state }, parameters: { idx: number; maxId: number }) {

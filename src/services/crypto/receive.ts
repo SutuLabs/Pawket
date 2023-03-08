@@ -138,7 +138,8 @@ class Receive {
     includeSpentCoins: boolean,
     rpcUrl: string,
     hint = false,
-    coinType: CoinClassType | undefined = undefined
+    coinType: CoinClassType | undefined = undefined,
+    includeAnalysis = true,
   ): Promise<GetRecordsResponse> {
     const hashes = tokens.reduce((acc, token) => acc.concat(token.puzzles.map((_) => _.hash)), [] as string[]);
 
@@ -153,6 +154,7 @@ class Receive {
         includeSpentCoins,
         hint,
         coinType,
+        includeAnalysis
       }),
     });
     if (resp.status != 200) {

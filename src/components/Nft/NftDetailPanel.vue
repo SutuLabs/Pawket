@@ -81,7 +81,7 @@
             </div>
           </b-field>
           <div v-if="nft.analysis.hasOwnProperty('cnsName')" class="mb-2">
-            <b-field :label="$t('nftDetail.ui.label.expirationDate')">{{ metadata.attributes[0].value }}</b-field>
+            <b-field :label="$t('nftDetail.ui.label.expirationDate')">{{ metadata ? metadata.attributes[0].value : "" }}</b-field>
           </div>
           <div class="buttons is-hidden-mobile">
             <b-button
@@ -395,6 +395,7 @@ import EditCnsBindings from "../Cns/EditCnsBindings.vue";
 import { modshash } from "@/services/coin/mods";
 import { tc } from "@/i18n/i18n";
 import SignMessage from "../Cryptography/SignMessage.vue";
+import { getScalarString } from "@/services/coin/nft";
 
 @Component({
   components: {
@@ -405,9 +406,10 @@ import SignMessage from "../Cryptography/SignMessage.vue";
 export default class NftDetailPanel extends Vue {
   @Prop() public account!: AccountEntity;
   @Prop() public nft!: NftDetail;
-  @Prop() public metadata!: NftOffChainMetadata | null;
+  @Prop() public inputMetadata!: NftOffChainMetadata | null;
   @Prop() public dids!: DidDetail[];
   public showMore = false;
+  public metadata: NftOffChainMetadata | null = null;
   public mintGardenUrl = "https://mintgarden.io/nfts/";
   fallBackList = ["https://assets.spacescan.io/xch/img/nft/full/", "https://nft.dexie.space/preview/medium/"];
 
@@ -621,6 +623,30 @@ export default class NftDetailPanel extends Vue {
 
   copy(text: string): void {
     store.dispatch("copy", text);
+  }
+
+  async downloadNftMetadata(nft: NftDetail): Promise<void> {
+    const uri = getScalarString(nft.analysis.metadata.metadataUri);
+    if (!uri) {
+      this.metadata = null;
+      return;
+    }
+    try {
+      const resp = await fetch(uri);
+      const body = await resp.blob();
+      const md = JSON.parse(await body.text()) as NftOffChainMetadata;
+      this.metadata = md;
+    } catch (error) {
+      if (process.env.NODE_ENV !== "production") {
+        console.warn("cannot parse metadata", error);
+      }
+      this.metadata = null;
+    }
+  }
+
+  mounted(): void {
+    if (!this.inputMetadata) this.downloadNftMetadata(this.nft);
+    else this.metadata = this.inputMetadata;
   }
 }
 </script>
