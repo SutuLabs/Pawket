@@ -51,6 +51,7 @@ import { Component, Vue, Watch } from "vue-property-decorator";
   components: {},
 })
 export default class CatPanel extends Vue {
+  private readonly custom_cat = require("@/assets/custom-cat.svg");
   public exchangeRate: GetExchangeRateResponse | null = null;
 
   get selectedAccount(): number {
@@ -109,8 +110,8 @@ export default class CatPanel extends Vue {
 
   fallBack(event: Event): void {
     const img = event.target as HTMLImageElement;
-    if (img.src == require("@/assets/custom-cat.svg")) return;
-    img.src = require("@/assets/custom-cat.svg");
+    if (img.src.endsWith(this.custom_cat)) return;
+    img.src = this.custom_cat;
   }
 }
 </script>
