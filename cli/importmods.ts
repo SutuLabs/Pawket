@@ -51,9 +51,9 @@ export const ${camelName}sHex: { [name in ${typename}Name]: string } = ${JSON.st
 
 export const ${camelName}sHash: { [name in ${typename}Name]: string } = ${JSON.stringify(sha256data, null, 2)};
 `;
-    writeFileSync(`../src/services/coin/${camelName}s.ts`, content);
+    writeFileSync(`src/services/coin/${camelName}s.ts`, content);
   };
 
-  await writeTypeFile("../../ref/chia-blockchain/chia/wallet/puzzles/", "ImportMod");
-  await writeTypeFile("clvm/", "OtherMod");
+  await writeTypeFile("../ref/chia-blockchain/chia/wallet/puzzles/", "ImportMod");
+  await writeTypeFile("cli/clvm/", "OtherMod");
 });

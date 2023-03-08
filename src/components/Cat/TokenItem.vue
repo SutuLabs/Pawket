@@ -43,6 +43,7 @@ import KeyBox from "@/components/Common/KeyBox.vue";
   },
 })
 export default class TokenItem extends Vue {
+  private readonly custom_cat = require("@/assets/custom-cat.svg");
   @Prop() public catList!: CustomCat[];
 
   remove(id: string): void {
@@ -63,8 +64,8 @@ export default class TokenItem extends Vue {
 
   fallBack(event: Event): void {
     const img = event.target as HTMLImageElement;
-    if (img.src == require("@/assets/custom-cat.svg")) return;
-    img.src = require("@/assets/custom-cat.svg");
+    if (img.src.endsWith(this.custom_cat)) return;
+    img.src = this.custom_cat;
   }
 }
 </script>

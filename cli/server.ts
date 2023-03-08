@@ -9,7 +9,7 @@ let maxThreads = Number(process.env.MAX_THREAD ?? Number.MAX_SAFE_INTEGER);
 maxThreads = maxThreads == 0 ? Number.MAX_SAFE_INTEGER : maxThreads;
 const numCPUs = Math.min(os.cpus().length, maxThreads);
 
-const port = Number(process.env.PORT ?? 3030);
+const port = Number(process.env.SERVER_PORT ?? 3030);
 
 // For Master process
 if (cluster.isPrimary && numCPUs > 1) {
