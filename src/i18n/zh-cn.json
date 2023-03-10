@@ -1643,6 +1643,7 @@
       "unknownDid": "签名失败: 未找到指定DID",
       "unknownNetwork": "未找到指定网络",
       "sendCompleted": "交易已完成!",
+      "catAdded": "CAT已添加!",
       "incorrectPassword": "密码不正确."
     }
   }

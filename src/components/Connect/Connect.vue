@@ -127,8 +127,10 @@ import Send from "../Send/Send.vue";
 import SignMessage from "../Cryptography/SignMessage.vue";
 import { connectionItem } from "../AccountManagement/AccountInfo.vue";
 import { tc } from "@/i18n/i18n";
+import ManageCats from "../Cat/ManageCats.vue";
 type Stage = "Verify" | "Account" | "Authorize" | "App";
 type SignWithDidData = { did: string; message: string };
+type AddCatData = { id: string; name?: string };
 type MessageEventSource = Window | MessagePort | ServiceWorker;
 @Component
 export default class Connect extends Vue {
@@ -263,6 +265,9 @@ export default class Connect extends Vue {
   async getAccounts(): Promise<AccountEntity[]> {
     const salt = store.state.vault.salt;
     const encryptKey = salt ? await getEncryptKey(this.password) : this.password;
+    store.state.vault.encryptKey = encryptKey;
+    store.state.vault.seedMnemonic = await encryption.decrypt(store.state.vault.encryptedSeed, encryptKey);
+    store.state.vault.unlocked = true;
     const accounts = JSON.parse((await encryption.decrypt(store.state.vault.encryptedAccounts, encryptKey)) || "[]");
     store.state.account.accounts = accounts;
     return accounts;
@@ -325,6 +330,10 @@ export default class Connect extends Vue {
         this.stage = "App";
         this.getDid();
         break;
+      case "add-cat":
+        this.stage = "App";
+        this.addCat();
+        break;
       default:
         Notification.open({
           message: tc("connect.messages.invalidCall") + this.app,
@@ -337,7 +346,7 @@ export default class Connect extends Vue {
   }
 
   checkApp(app: string): boolean {
-    const appList = ["take-offer", "send", "sign-with-did", "get-address", "get-did", ""];
+    const appList = ["take-offer", "send", "sign-with-did", "get-address", "get-did", "add-cat"];
     if (!app) {
       Notification.open({
         message: tc("connect.messages.noAppName"),
@@ -373,8 +382,7 @@ export default class Connect extends Vue {
         inputOfferText: this.data,
       },
       events: {
-        // tc("connect.messages.offerAccepted")
-        success: () => this.success(tc("connect.messages.offerAccepted")),
+        success: () => this.success(this.$t("connect.messages.offerAccepted")),
       },
     });
   }
@@ -389,9 +397,33 @@ export default class Connect extends Vue {
       canCancel: [""],
       props: { account: this.account, inputAddress: this.data, addressEditable: false },
       events: {
-        // tc("connect.messages.sendCompleted")
-        success: () => this.success(tc("connect.messages.sendCompleted")),
+        success: () => this.success(this.$t("connect.messages.sendCompleted")),
       },
+    });
+  }
+
+  addCat(): void {
+    let data: AddCatData | null = null;
+    try {
+      data = JSON.parse(this.data) as AddCatData;
+    } catch (error) {
+      Notification.open({
+        message: tc("connect.messages.invalidData"),
+        type: "is-danger",
+        position: "is-top",
+        duration: 5000,
+      });
+      this.failed(tc("connect.messages.invalidData"));
+    }
+    this.$buefy.modal.open({
+      parent: this,
+      component: ManageCats,
+      hasModalCard: true,
+      trapFocus: true,
+      fullScreen: true,
+      canCancel: [""],
+      props: { account: this.account, defaultAssetId: data?.id, defaultName: data?.name, defaultTab: 1 },
+      //events: { success: () => this.success(this.$t("connect.messages.catAdded")) },
     });
   }
 
@@ -445,10 +477,6 @@ export default class Connect extends Vue {
   async getDid(): Promise<void> {
     this.loading = true;
     await store.dispatch("refreshDids", { idx: this.selectedAcc });
-    this.source?.postMessage(
-      this.dids.map((did) => did.did),
-      { targetOrigin: this.origin }
-    );
     this.loading = false;
     this.success(this.dids.map((did) => did.did));
   }

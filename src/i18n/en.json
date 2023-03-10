@@ -1643,6 +1643,7 @@
       "unknownDid": "Failed To Sign: The Specified DID Does Not Exist in Current Account",
       "unknownNetwork": "the specified network does not exist",
       "sendCompleted": "Transaction is completed!",
+      "catAdded": "CAT is added!",
       "incorrectPassword": "Incorrect password."
     }
   }
