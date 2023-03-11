@@ -71,6 +71,9 @@
                           <b-tag v-if="ent.id && cats[ent.id]" type="is-info" :title="cats[ent.id] + ' (' + ent.id + ')'">{{
                             cats[ent.id]
                           }}</b-tag>
+                          <a v-else-if="tailDict[unprefix0x(ent.id)]" @click="ManageCats(ent.id)">
+                            <b-tag type="is-info" :title="unprefix0x(ent.id)"> {{ tailDict[unprefix0x(ent.id)].code }}</b-tag>
+                          </a>
                           <a v-else-if="ent.id" @click="ManageCats(ent.id)">
                             <b-tag type="is-info" :title="ent.id">
                               {{ $t("offer.symbol.Cat") }} {{ ent.id.slice(0, 7) + "..." }}</b-tag
@@ -291,6 +294,8 @@ import { constructPureFeeSpendBundle } from "@/services/coin/nft";
 import BundleSummary from "../Bundle/BundleSummary.vue";
 import { resolveName } from "@/services/api/resolveName";
 import { CnsCoinAnalysisResult } from "@/models/nft";
+import { unprefix0x } from "@/services/coin/condition";
+import TailDb, { TailInfo } from "@/services/api/tailDb";
 
 @Component({
   components: {
@@ -327,6 +332,7 @@ export default class TakeOffer extends Vue {
   public isUpdating = false;
   public showTest = false;
   public verifiedCns: boolean | null = null;
+  public tailDict: { [id: string]: TailInfo } = {};
   public testCases = [
     {
       name: "1",
@@ -481,12 +487,17 @@ export default class TakeOffer extends Vue {
     return shorten(name);
   }
 
+  unprefix0x(value: string | undefined): string {
+    return unprefix0x(value);
+  }
+
   async mounted(): Promise<void> {
     if (this.inputOfferText) {
       this.offerText = this.inputOfferText;
       this.updateOffer();
     }
     await this.loadCoins();
+    this.tailDict = await TailDb.getTailsDict();
   }
 
   demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null, digits = -1, symbol: string | null = null): string {
@@ -751,7 +762,7 @@ export default class TakeOffer extends Vue {
       hasModalCard: true,
       trapFocus: true,
       canCancel: [""],
-      props: { account: this.account, defaultAssetId: id, defaultTab: 1 },
+      props: { account: this.account, defaultAssetId: unprefix0x(id), defaultTab: 1 },
       events: { refresh: this.refresh },
     });
   }

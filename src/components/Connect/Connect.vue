@@ -423,7 +423,7 @@ export default class Connect extends Vue {
       fullScreen: true,
       canCancel: [""],
       props: { account: this.account, defaultAssetId: data?.id, defaultName: data?.name, defaultTab: 1 },
-      //events: { success: () => this.success(this.$t("connect.messages.catAdded")) },
+      events: { success: () => this.success(this.$t("connect.messages.catAdded")) },
     });
   }
 

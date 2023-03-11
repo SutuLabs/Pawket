@@ -158,6 +158,7 @@ export default class ManageCats extends Vue {
     if (idx > -1) {
       this.name = this.tails[idx].code;
       this.img_url = this.tails[idx].logo_url;
+      (this.$refs.name as Vue & { focus: () => void }).focus();
     }
   }
 
