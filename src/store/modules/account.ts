@@ -46,26 +46,36 @@ export function getAllCats(account: AccountEntity): CustomCat[] {
 }
 
 function setDidName(dids: DidDetail[]): void {
-  let names: DidName[] = [];
+  let currentNames: DidName[] = [];
+  let names: DidName[] = []
   try {
     names = JSON.parse(localStorage.getItem("DID_NAMES") ?? "[]") as DidName[];
-    names = names.filter(n => dids.findIndex(d => d.did == n.did) > -1);
+    currentNames = names.filter(n => dids.findIndex(d => d.did == n.did) > -1);
   } catch (error) {
-    names = [];
+    currentNames = [];
   }
   for (let i = 0; i < dids.length; i++) {
-    const idx = names.findIndex((n) => n.did == dids[i].did);
+    const idx = currentNames.findIndex((n) => n.did == dids[i].did);
     if (idx > -1) {
-      dids[i].name = names[idx].name;
+      dids[i].name = currentNames[idx].name;
     } else {
       let idx = 1;
-      while (names.findIndex(n => n.name == `DID${idx}`) > -1) {
+      while (currentNames.findIndex(n => n.name == `DID${idx}`) > -1) {
         idx++
       }
       dids[i].name = `DID${idx}`;
-      names.push({ name: `DID${idx}`, did: dids[i].did });
+      currentNames.push({ name: `DID${idx}`, did: dids[i].did });
     }
   }
+  // merge current names with all names
+  for (const name of names) {
+    const idx = currentNames.findIndex((n) => n.did == name.did);
+    if (idx > -1) {
+      name.name = currentNames[idx].name;
+      currentNames.splice(idx, 1);
+    }
+  }
+  names.push(...currentNames)
   localStorage.setItem("DID_NAMES", JSON.stringify(names));
 }
 
