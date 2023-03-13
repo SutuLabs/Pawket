@@ -20,7 +20,7 @@
         <div class="has-text-info">{{ $t("connect.ui.label.trust") }}</div>
         <footer class="is-fixed-bottom py-4 px-4 has-background-white-ter">
           <button class="button is-pulled-left" @click="close">{{ $t("common.button.cancel") }}</button>
-          <b-button class="button is-pulled-right is-primary" @click="confirm" :loading="loading" :disabled="!app">{{
+          <b-button class="button is-pulled-right is-primary" @click="confirm" :loading="loading" :disabled="!cmd">{{
             $t("connect.ui.button.next")
           }}</b-button>
         </footer>
@@ -67,7 +67,7 @@
             :loading="loading"
             >{{ $t("connect.ui.button.next") }}</b-button
           >
-          <b-button v-if="authorized" class="button is-pulled-right is-primary" @click="openApp()" :loading="loading">{{
+          <b-button v-if="authorized" class="button is-pulled-right is-primary" @click="openCmd()" :loading="loading">{{
             $t("connect.ui.button.connect")
           }}</b-button>
         </footer>
@@ -92,7 +92,7 @@
           }}</b-button>
         </footer>
       </div>
-      <div v-if="stage == 'App'">
+      <div v-if="stage == 'Cmd'">
         <section class="hero is-medium" v-if="loading">
           <div class="hero-body has-text-centered">
             <h1 class="title">{{ $t("connect.ui.label.gettingData") }}</h1>
@@ -128,7 +128,7 @@ import SignMessage from "../Cryptography/SignMessage.vue";
 import { connectionItem } from "../AccountManagement/AccountInfo.vue";
 import { tc } from "@/i18n/i18n";
 import ManageCats from "../Cat/ManageCats.vue";
-type Stage = "Verify" | "Account" | "Authorize" | "App";
+type Stage = "Verify" | "Account" | "Authorize" | "Cmd";
 type SignWithDidData = { did: string; message: string };
 type AddCatData = { id: string; name?: string };
 type MessageEventSource = Window | MessagePort | ServiceWorker;
@@ -139,7 +139,7 @@ export default class Connect extends Vue {
   public stage: Stage = "Verify";
   public selectedAcc = 0;
   public accounts: AccountEntity[] = [];
-  public app = "";
+  public cmd = "";
   public data = "";
   public initialNetworkId = "";
   public event: MessageEvent | null = null;
@@ -165,7 +165,7 @@ export default class Connect extends Vue {
     if (this.accounts.length > 1) {
       this.stage = "Account";
     } else {
-      if (this.authorized) this.openApp();
+      if (this.authorized) this.openCmd();
       else this.stage = "Authorize";
     }
   }
@@ -233,7 +233,7 @@ export default class Connect extends Vue {
       this.allConnections.push({ accountFirstAddress: firstAddress, url: this.origin });
       const conn = JSON.stringify(this.allConnections);
       localStorage.setItem("CONNECTIONS", conn);
-      this.openApp();
+      this.openCmd();
     }
   }
 
@@ -292,7 +292,7 @@ export default class Connect extends Vue {
       this.event = event;
       this.origin = this.event.origin;
       const data = JSON.parse(this.event.data);
-      if (this.checkApp(data.app)) this.app = data.app;
+      if (this.checkCmd(data.cmd)) this.cmd = data.cmd;
       else return;
       this.initialNetworkId = store.state.network.networkId;
       if (!this.setNetwork(data.network)) {
@@ -311,8 +311,8 @@ export default class Connect extends Vue {
     };
   }
 
-  openApp(): void {
-    switch (this.app) {
+  openCmd(): void {
+    switch (this.cmd) {
       case "take-offer":
         this.openTakeOffer();
         break;
@@ -323,31 +323,31 @@ export default class Connect extends Vue {
         this.signWithDid();
         break;
       case "get-address":
-        this.stage = "App";
+        this.stage = "Cmd";
         this.getAddress();
         break;
       case "get-did":
-        this.stage = "App";
+        this.stage = "Cmd";
         this.getDid();
         break;
       case "add-cat":
-        this.stage = "App";
+        this.stage = "Cmd";
         this.addCat();
         break;
       default:
         Notification.open({
-          message: tc("connect.messages.invalidCall") + this.app,
+          message: tc("connect.messages.invalidCall") + this.cmd,
           type: "is-danger",
           position: "is-top-right",
           duration: 5000,
         });
-        this.failed(tc("connect.messages.invalidCall") + this.app);
+        this.failed(tc("connect.messages.invalidCall") + this.cmd);
     }
   }
 
-  checkApp(app: string): boolean {
-    const appList = ["take-offer", "send", "sign-with-did", "get-address", "get-did", "add-cat"];
-    if (!app) {
+  checkCmd(cmd: string): boolean {
+    const cmdList = ["take-offer", "send", "sign-with-did", "get-address", "get-did", "add-cat"];
+    if (!cmd) {
       Notification.open({
         message: tc("connect.messages.noAppName"),
         type: "is-danger",
@@ -357,14 +357,14 @@ export default class Connect extends Vue {
       this.failed(tc("connect.messages.noAppName"));
       return false;
     }
-    if (appList.findIndex((item) => item == app) > -1) return true;
+    if (cmdList.findIndex((item) => item == cmd) > -1) return true;
     Notification.open({
-      message: tc("connect.messages.invalidCall") + this.app,
+      message: tc("connect.messages.invalidCall") + this.cmd,
       type: "is-danger",
       position: "is-top-right",
       duration: 5000,
     });
-    this.failed(tc("connect.messages.invalidCall") + this.app);
+    this.failed(tc("connect.messages.invalidCall") + this.cmd);
     return false;
   }
 
@@ -486,7 +486,7 @@ export default class Connect extends Vue {
   }
 
   failed(msg: string): void {
-    this.source?.postMessage({ status: "failed", msg: msg }, { targetOrigin: this.origin });
+    this.source?.postMessage({ status: "failed", cmd: this.cmd, msg: msg }, { targetOrigin: this.origin });
     setTimeout(() => this.close(), 5000);
   }
 
@@ -498,7 +498,7 @@ export default class Connect extends Vue {
       position: "is-top-right",
       duration: 5000,
     });
-    this.source?.postMessage({ status: "success", msg: msg }, { targetOrigin: this.origin });
+    this.source?.postMessage({ status: "success", cmd: this.cmd, msg: msg }, { targetOrigin: this.origin });
     setTimeout(() => this.close(), 5000);
   }
 
