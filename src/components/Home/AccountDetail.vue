@@ -545,6 +545,14 @@ export default class AccountDetail extends Vue {
   object-fit: cover;
 }
 
+:root.dark-theme {
+  .cover {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+}
+
 .is-circle {
   border-radius: 50%;
 }

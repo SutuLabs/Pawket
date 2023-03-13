@@ -415,4 +415,12 @@ export default class NftPanel extends Vue {
   aspect-ratio: 1 / 1;
   width: 100%;
 }
+
+:root.dark-theme {
+  .cover {
+    object-fit: cover;
+    aspect-ratio: 1 / 1;
+    width: 100%;
+  }
+}
 </style>
