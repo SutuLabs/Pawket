@@ -372,6 +372,14 @@ export default class AccountManagement extends Vue {
   object-fit: cover;
 }
 
+:root.dark-theme {
+  .cover {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+}
+
 .prevent-select {
   -webkit-user-select: none; /* Safari */
   -ms-user-select: none; /* IE 10 and IE 11 */
