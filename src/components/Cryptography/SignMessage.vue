@@ -158,16 +158,6 @@ export default class SignMessage extends Vue {
   async sign(): Promise<void> {
     this.submitting = true;
     try {
-      if (this.message.indexOf('"') > -1) {
-        Notification.open({
-          message: `Double quotes(") is not supported in message.`,
-          type: "is-danger",
-          duration: 5000,
-        });
-        this.submitting = false;
-        return;
-      }
-
       const puzzleHash = this.did
         ? this.did.hintPuzzle
         : this.nft
