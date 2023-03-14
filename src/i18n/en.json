@@ -1638,12 +1638,13 @@
       "success": "Success!",
       "invalidCall": "Invalid Call:",
       "noAppName": "Please specify an app name!",
-      "offerAccepted": "The Offer has been accepted!",
+      "offerAccepted": "Offer has been accepted!",
       "invalidData": "Failed To Sign: Invalid Input Data",
       "unknownDid": "Failed To Sign: The Specified DID Does Not Exist in Current Account",
-      "unknownNetwork": "the specified network does not exist",
-      "sendCompleted": "Transaction is completed!",
+      "unknownNetwork": "The specified network does not exist",
+      "sendCompleted": "Transaction is submitted!",
       "catAdded": "CAT is added!",
+      "cancelled": "Cancelled",
       "incorrectPassword": "Incorrect password."
     }
   }

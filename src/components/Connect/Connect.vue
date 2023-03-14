@@ -307,7 +307,7 @@ export default class Connect extends Vue {
       this.data = data.data;
     });
     window.onbeforeunload = () => {
-      if (!this.succeed) this.cancelled("cancelled");;
+      if (!this.succeed) this.cancelled();
     };
   }
 
@@ -490,7 +490,7 @@ export default class Connect extends Vue {
     setTimeout(() => this.close(), 5000);
   }
 
-  cancelled(msg: string): void {
+  cancelled(msg = tc("connect.messages.cancelled")): void {
     this.source?.postMessage({ status: "cancelld", cmd: this.cmd, msg: msg }, { targetOrigin: this.origin });
   }
 
@@ -508,7 +508,7 @@ export default class Connect extends Vue {
 
   close(): void {
     store.dispatch("switchNetwork", this.initialNetworkId);
-    if (!this.succeed) this.cancelled("cancelled");
+    if (!this.succeed) this.cancelled();
     window.close();
   }
 }
