@@ -12,7 +12,7 @@
         ></span>
       </b-field>
 
-      <b-field :label="$t('did.ui.label.tool')" v-if="experimentMode && !observeMode && !publicKeyAcc">
+      <b-field :label="$t('did.ui.label.tool')" v-if="!observeMode && !publicKeyAcc">
         <b-tooltip :label="'Sign'" position="is-right">
           <a href="javascript:void(0)" @click="openSignMessage()" class="has-text-link">
             <div class="has-text-centered">

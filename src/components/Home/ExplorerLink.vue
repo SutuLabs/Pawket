@@ -45,7 +45,7 @@
           <tr>
             <th>{{ $t("explorerLink.ui.label.address") }}</th>
             <th>{{ $t("explorerLink.ui.label.coin") }}</th>
-            <th>{{ $t("explorerLink.ui.label.sign") }}</th>
+            <th v-if="experimentMode && !observeMode && !publicKeyAcc">{{ $t("explorerLink.ui.label.sign") }}</th>
             <th>{{ $t("explorerLink.ui.label.link") }}</th>
           </tr>
         </thead>
@@ -58,10 +58,8 @@
           >
             <td>{{ convertAddress(addr.address) }}</td>
             <td>{{ addr.coins.filter((_) => _.coin && !_.spent).length }}</td>
-            <td>
-              <b-button size="is-small" @click="openSignMessage(addr.address)">{{
-                $t("explorerLink.ui.label.sign")
-              }}</b-button>
+            <td v-if="experimentMode && !observeMode && !publicKeyAcc">
+              <b-button size="is-small" @click="openSignMessage(addr.address)">{{ $t("explorerLink.ui.label.sign") }}</b-button>
             </td>
             <td>
               <a target="_blank" :href="externalExplorerPrefix + addr.address">
@@ -126,6 +124,18 @@ export default class ExplorerLink extends Vue {
       store.dispatch("refreshAddress");
       notifyPrimary(this.$tc("common.message.saved"));
     }
+  }
+
+  get observeMode(): boolean {
+    return this.account.type == "Address";
+  }
+
+  get publicKeyAcc(): boolean {
+    return this.account.type == "PublicKey";
+  }
+
+  get experimentMode(): boolean {
+    return store.state.vault.experiment;
   }
 
   get path(): string {

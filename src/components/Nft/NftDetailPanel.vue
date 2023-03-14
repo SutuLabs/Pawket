@@ -41,7 +41,7 @@
                     >{{ $t("nftDetail.ui.dropdown.setAsProfilePic") }}
                   </b-dropdown-item>
                 </a>
-                <a class="has-text-dark" @click="openSignMessage()">
+                <a class="has-text-dark" @click="openSignMessage()" v-if="experimentMode && !observeMode && !publicKeyAcc">
                   <b-dropdown-item aria-role="listitem">
                     <b-icon class="media-left" icon="lead-pencil" size="is-small"></b-icon
                     >{{ $t("nftDetail.ui.dropdown.signWithNft") }}
@@ -418,6 +418,14 @@ export default class NftDetailPanel extends Vue {
 
   get isMobile(): boolean {
     return isMobile();
+  }
+
+  get experimentMode(): boolean {
+    return store.state.vault.experiment;
+  }
+
+  get publicKeyAcc(): boolean {
+    return this.account.type == "PublicKey";
   }
 
   get path(): string {
