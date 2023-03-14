@@ -9,6 +9,16 @@
             <search-cat :allCats="allCats" @addCats="addCats"></search-cat>
           </b-tab-item>
           <b-tab-item :label="$t('ManageCats.ui.label.custom')">
+            <b-field :label="$t('ManageCats.ui.label.assetID')">
+              <b-input
+                v-model="assetId"
+                type="text"
+                required
+                ref="assetId"
+                title=""
+                :validation-message="$t('ManageCats.ui.message.assetIdRequired')"
+              ></b-input>
+            </b-field>
             <b-field :label="$t('ManageCats.ui.label.name')">
               <b-input
                 v-model="name"
@@ -18,16 +28,6 @@
                 :validation-message="$t('ManageCats.ui.message.nameRequired')"
                 ref="name"
                 title=""
-              ></b-input>
-            </b-field>
-            <b-field :label="$t('ManageCats.ui.label.assetID')">
-              <b-input
-                v-model="assetId"
-                type="text"
-                required
-                ref="assetId"
-                title=""
-                :validation-message="$t('ManageCats.ui.message.assetIdRequired')"
               ></b-input>
             </b-field>
             <div class="mt-5 pt-3 has-text-centered">
@@ -62,10 +62,10 @@ import { getAccountCats, getAllCats } from "@/store/modules/account";
 import TokenItem from "@/components/Cat/TokenItem.vue";
 import { Bytes } from "clvm";
 import SearchCat from "@/components/Cat/SearchCat.vue";
-import { TailInfo } from "@/services/api/tailDb";
 import { unprefix0x } from "@/services/coin/condition";
 import { chainId, convertToChainId } from "@/store/modules/network";
 import TopBar from "../Common/TopBar.vue";
+import TailDb, { TailInfo } from "@/services/api/tailDb";
 
 @Component({
   directives: {
@@ -82,11 +82,14 @@ export default class ManageCats extends Vue {
   @Prop({ default: "" }) defaultName!: string;
   @Prop({ default: "" }) defaultAssetId!: string;
   @Prop({ default: 0 }) defaultTab!: number;
+  @Prop() public network!: AccountEntity;
 
   public name = "";
   public assetId = "";
+  public img_url = "";
   public assetIds: CustomCat[] = [];
   public defaultCats: CustomCat[] = [];
+  public tails: TailInfo[] = [];
   public activeTab = 0;
   submitting = false;
 
@@ -96,16 +99,18 @@ export default class ManageCats extends Vue {
     handle: ".drag-handle",
   };
 
-  mounted(): void {
+  async mounted(): Promise<void> {
     if (!this.account) {
       console.error("account is empty, cannot get settings");
       return;
     }
     this.assetIds = getAccountCats(this.account);
 
-    this.name = this.defaultName;
     this.assetId = this.defaultAssetId;
+    this.name = this.defaultName;
     this.activeTab = this.defaultTab;
+    this.tails = await TailDb.getTails();
+    this.searchCatName();
   }
 
   get allCats(): CustomCat[] {
@@ -146,9 +151,22 @@ export default class ManageCats extends Vue {
     }
   }
 
-  validate(): void {
-    (this.$refs.name as Vue & { checkHtml5Validity: () => boolean }).checkHtml5Validity();
-    (this.$refs.assetId as Vue & { checkHtml5Validity: () => boolean }).checkHtml5Validity();
+  @Watch("assetId")
+  searchCatName(): void {
+    if (this.defaultName) return;
+    const idx = this.tails.findIndex((tail) => tail.hash == this.assetId);
+    if (idx > -1) {
+      this.name = this.tails[idx].code;
+      this.img_url = this.tails[idx].logo_url;
+      (this.$refs.name as Vue & { focus: () => void }).focus();
+    }
+  }
+
+  validate(): boolean {
+    return (
+      (this.$refs.assetId as Vue & { checkHtml5Validity: () => boolean }).checkHtml5Validity() &&
+      (this.$refs.name as Vue & { checkHtml5Validity: () => boolean }).checkHtml5Validity()
+    );
   }
 
   isExisted(name: string, id: string): boolean {
@@ -161,10 +179,7 @@ export default class ManageCats extends Vue {
   }
 
   async add(): Promise<void> {
-    this.validate();
-    if (this.name.length == 0 || this.assetId.length == 0) {
-      return;
-    }
+    if (!this.validate()) return;
     this.assetId = unprefix0x(this.assetId);
     if (!this.isAssetId(this.assetId)) {
       Notification.open({
@@ -180,12 +195,14 @@ export default class ManageCats extends Vue {
       });
       return;
     }
-    this.assetIds.push({ name: this.name.toUpperCase(), id: this.assetId });
+    this.assetIds.push({ name: this.name.toUpperCase(), id: this.assetId, img: this.img_url ?? undefined });
     this.submit();
     this.reset();
+    store.dispatch("persistent");
+    this.$emit("success");
   }
 
-  async addCats(tails: TailInfo[]): Promise<void> {
+  addCats(tails: TailInfo[]): void {
     tails.map((_) => {
       if (this.isExisted(_.code, _.hash)) {
         Notification.open({
@@ -198,6 +215,7 @@ export default class ManageCats extends Vue {
       }
     });
     this.submit();
+    store.dispatch("persistent");
   }
 
   remove(id: string): void {
@@ -211,6 +229,7 @@ export default class ManageCats extends Vue {
         this.submit();
       },
     });
+    store.dispatch("persistent");
   }
 
   isAssetId(assetId: string): boolean {

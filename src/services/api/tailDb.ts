@@ -69,6 +69,12 @@ class TailDb {
     tails = JSON.parse(t) as TailInfo[];
     return tails;
   }
+
+  public async getTailsDict(): Promise<{ [id: string]: TailInfo }> {
+    const tails = await this.getTails();
+    const tailsDict = Object.assign({}, ...tails.map((tail) => ({ [tail.hash]: tail })))
+    return tailsDict;
+  }
 }
 
 export default new TailDb();

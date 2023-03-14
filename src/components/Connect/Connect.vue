@@ -5,8 +5,8 @@
         <img v-if="origin" :src="`${origin}/favicon.ico`" class="image is-24x24 mx-3" />{{ origin }}
       </div>
       <div v-if="stage == 'Verify'">
-        <div class="is-size-3 has-text-weighted-bold mb-6">Connect With Pawket</div>
-        <div>Enter your password to connect to the site</div>
+        <div class="is-size-3 has-text-weighted-bold mb-6">{{ $t("connect.ui.label.connectWithPawket") }}</div>
+        <div>{{ $t("connect.ui.label.enterPassword") }}</div>
         <div class="field mx-5 my-3">
           <input
             class="input is-medium"
@@ -16,16 +16,18 @@
             @input.enter="clearErrorMsg()"
           />
         </div>
-        <p class="help is-danger is-size-6" v-if="!isCorrect">{{ $t("verifyPassword.message.error.incorrectPassword") }}</p>
-        <div class="has-text-info">Make sure you trust the site you connect</div>
+        <p class="help is-danger is-size-6" v-if="!isCorrect">{{ $t("connect.messages.incorrectPassword") }}</p>
+        <div class="has-text-info">{{ $t("connect.ui.label.trust") }}</div>
         <footer class="is-fixed-bottom py-4 px-4 has-background-white-ter">
-          <button class="button is-pulled-left" @click="close">Cancel</button>
-          <b-button class="button is-pulled-right is-primary" @click="confirm" :loading="loading" :disabled="!app">Next</b-button>
+          <button class="button is-pulled-left" @click="close">{{ $t("common.button.cancel") }}</button>
+          <b-button class="button is-pulled-right is-primary" @click="confirm" :loading="loading" :disabled="!cmd">{{
+            $t("connect.ui.button.next")
+          }}</b-button>
         </footer>
       </div>
       <div v-if="stage == 'Account'">
-        <div class="is-size-3 has-text-weighted-bold mb-6">Connect With Pawket</div>
-        <div>Select an account to use on this site</div>
+        <div class="is-size-3 has-text-weighted-bold mb-6">{{ $t("connect.ui.label.connectWithPawket") }}</div>
+        <div>{{ $t("connect.ui.label.selectAccount") }}</div>
         <div class="pb-10">
           <div class="box m-3">
             <a
@@ -45,54 +47,64 @@
                   <p class="is-size-7 has-text-grey has-text-left" v-if="account.tokens && account.tokens.hasOwnProperty(symbol)">
                     {{ demojo(account.tokens[symbol].amount) }}
                   </p>
-                  <p class="is-size-7 has-text-grey has-text-left" v-else>Loading Balance..</p>
+                  <p class="is-size-7 has-text-grey has-text-left" v-else>{{ $t("connect.ui.label.loadingBalance") }}</p>
                 </div>
               </div>
             </a>
           </div>
         </div>
         <footer class="is-fixed-bottom py-4 px-4 has-background-white-ter">
-          <button v-if="accounts.length > 1" class="button is-pulled-left" @click="stage = 'Account'">Back</button>
-          <button v-if="accounts.length == 1" class="button is-pulled-left" @click="close()">Cancel</button>
-          <b-button v-if="!authorized" class="button is-pulled-right is-primary" @click="stage = 'Authorize'" :loading="loading"
-            >Next</b-button
+          <button v-if="accounts.length > 1" class="button is-pulled-left" @click="stage = 'Account'">
+            {{ $t("common.button.back") }}
+          </button>
+          <button v-if="accounts.length == 1" class="button is-pulled-left" @click="close()">
+            {{ $t("common.button.cancel") }}
+          </button>
+          <b-button
+            v-if="!authorized"
+            class="button is-pulled-right is-primary"
+            @click="stage = 'Authorize'"
+            :loading="loading"
+            >{{ $t("connect.ui.button.next") }}</b-button
           >
-          <b-button v-if="authorized" class="button is-pulled-right is-primary" @click="openApp()" :loading="loading"
-            >Connect</b-button
-          >
+          <b-button v-if="authorized" class="button is-pulled-right is-primary" @click="openCmd()" :loading="loading">{{
+            $t("connect.ui.button.connect")
+          }}</b-button>
         </footer>
       </div>
       <div v-if="stage == 'Authorize'">
         <div class="is-size-3 has-text-weighted-bold">{{ `Connect to [${accounts[selectedAcc].name}]` }}</div>
-        <div class="has-text-center">Allow this site to:</div>
+        <div class="has-text-center">{{ $t("connect.ui.label.allowSiteTo") }}</div>
         <div class="box m-3 p-3 has-text-left">
           <p class="is-flex mt-2">
             <b-icon icon="checkbox-marked-circle-outline"></b-icon>
-            <span class="pl-2">View your account addresses, balance, DIDs and activities.</span>
+            <span class="pl-2">{{ $t("connect.ui.label.viewInfo") }}</span>
           </p>
           <p class="is-flex my-2">
             <b-icon icon="checkbox-marked-circle-outline"></b-icon>
-            <span class="pl-2">Request approval for transactions.</span>
+            <span class="pl-2">{{ $t("connect.ui.label.requestTranx") }}</span>
           </p>
         </div>
         <footer class="is-fixed-bottom py-4 px-4 has-background-white-ter">
-          <button class="button is-pulled-left" @click="close()">Cancel</button>
-          <b-button class="button is-pulled-right is-primary" @click="authorize()" :loading="loading">Connect</b-button>
+          <button class="button is-pulled-left" @click="close()">{{ $t("common.button.cancel") }}</button>
+          <b-button class="button is-pulled-right is-primary" @click="authorize()" :loading="loading">{{
+            $t("connect.ui.button.connect")
+          }}</b-button>
         </footer>
       </div>
-      <div v-if="stage == 'App'">
+      <div v-if="stage == 'Cmd'">
         <section class="hero is-medium" v-if="loading">
           <div class="hero-body has-text-centered">
-            <h1 class="title">Getting Data from Pawket...</h1>
+            <h1 class="title">{{ $t("connect.ui.label.gettingData") }}</h1>
           </div>
         </section>
         <b-loading v-model="loading"></b-loading>
       </div>
     </div>
     <div v-else>
-      <div class="is-size-3 has-text-weighted-bold">No Pawket Wallet</div>
-      <div class="my-6">You do not have a wallet set up in Pawket.</div>
-      <button class="button is-primary" @click="setUp()">Set up Wallet</button>
+      <div class="is-size-3 has-text-weighted-bold">{{ $t("connect.ui.label.noWallet") }}</div>
+      <div class="my-6">{{ $t("connect.ui.label.noWalletInfo") }}</div>
+      <button class="button is-primary" @click="setUp()">{{ $t("connect.ui.button.setUp") }}</button>
     </div>
   </div>
 </template>
@@ -114,8 +126,11 @@ import TakeOffer from "../Offer/Take.vue";
 import Send from "../Send/Send.vue";
 import SignMessage from "../Cryptography/SignMessage.vue";
 import { connectionItem } from "../AccountManagement/AccountInfo.vue";
-type Stage = "Verify" | "Account" | "Authorize" | "App";
+import { tc } from "@/i18n/i18n";
+import ManageCats from "../Cat/ManageCats.vue";
+type Stage = "Verify" | "Account" | "Authorize" | "Cmd";
 type SignWithDidData = { did: string; message: string };
+type AddCatData = { id: string; name?: string };
 type MessageEventSource = Window | MessagePort | ServiceWorker;
 @Component
 export default class Connect extends Vue {
@@ -124,12 +139,13 @@ export default class Connect extends Vue {
   public stage: Stage = "Verify";
   public selectedAcc = 0;
   public accounts: AccountEntity[] = [];
-  public app = "";
+  public cmd = "";
   public data = "";
   public initialNetworkId = "";
   public event: MessageEvent | null = null;
   public loading = false;
   public origin = "";
+  public succeed = false;
 
   async confirm(): Promise<void> {
     this.loading = true;
@@ -149,7 +165,7 @@ export default class Connect extends Vue {
     if (this.accounts.length > 1) {
       this.stage = "Account";
     } else {
-      if (this.authorized) this.openApp();
+      if (this.authorized) this.openCmd();
       else this.stage = "Authorize";
     }
   }
@@ -217,7 +233,7 @@ export default class Connect extends Vue {
       this.allConnections.push({ accountFirstAddress: firstAddress, url: this.origin });
       const conn = JSON.stringify(this.allConnections);
       localStorage.setItem("CONNECTIONS", conn);
-      this.openApp();
+      this.openCmd();
     }
   }
 
@@ -249,6 +265,9 @@ export default class Connect extends Vue {
   async getAccounts(): Promise<AccountEntity[]> {
     const salt = store.state.vault.salt;
     const encryptKey = salt ? await getEncryptKey(this.password) : this.password;
+    store.state.vault.encryptKey = encryptKey;
+    store.state.vault.seedMnemonic = await encryption.decrypt(store.state.vault.encryptedSeed, encryptKey);
+    store.state.vault.unlocked = true;
     const accounts = JSON.parse((await encryption.decrypt(store.state.vault.encryptedAccounts, encryptKey)) || "[]");
     store.state.account.accounts = accounts;
     return accounts;
@@ -273,23 +292,27 @@ export default class Connect extends Vue {
       this.event = event;
       this.origin = this.event.origin;
       const data = JSON.parse(this.event.data);
-      this.app = data.app;
+      if (this.checkCmd(data.cmd)) this.cmd = data.cmd;
+      else return;
       this.initialNetworkId = store.state.network.networkId;
       if (!this.setNetwork(data.network)) {
         Notification.open({
-          message: "the specified network does not exist",
+          message: tc("connect.messages.unknownNetwork"),
           type: "is-danger",
           position: "is-top",
           duration: 5000,
         });
-        setTimeout(() => this.close(), 5000);
+        this.failed(tc("connect.messages.unknownNetwork"));
       }
       this.data = data.data;
     });
+    window.onbeforeunload = () => {
+      if (!this.succeed) this.cancelled();
+    };
   }
 
-  openApp(): void {
-    switch (this.app) {
+  openCmd(): void {
+    switch (this.cmd) {
       case "take-offer":
         this.openTakeOffer();
         break;
@@ -300,21 +323,49 @@ export default class Connect extends Vue {
         this.signWithDid();
         break;
       case "get-address":
-        this.stage = "App";
+        this.stage = "Cmd";
         this.getAddress();
         break;
       case "get-did":
-        this.stage = "App";
+        this.stage = "Cmd";
         this.getDid();
+        break;
+      case "add-cat":
+        this.stage = "Cmd";
+        this.addCat();
         break;
       default:
         Notification.open({
-          message: "Invalid Call" + this.app,
+          message: tc("connect.messages.invalidCall") + this.cmd,
           type: "is-danger",
           position: "is-top-right",
           duration: 5000,
         });
+        this.failed(tc("connect.messages.invalidCall") + this.cmd);
     }
+  }
+
+  checkCmd(cmd: string): boolean {
+    const cmdList = ["take-offer", "send", "sign-with-did", "get-address", "get-did", "add-cat"];
+    if (!cmd) {
+      Notification.open({
+        message: tc("connect.messages.noAppName"),
+        type: "is-danger",
+        position: "is-top-right",
+        duration: 5000,
+      });
+      this.failed(tc("connect.messages.noAppName"));
+      return false;
+    }
+    if (cmdList.findIndex((item) => item == cmd) > -1) return true;
+    Notification.open({
+      message: tc("connect.messages.invalidCall") + this.cmd,
+      type: "is-danger",
+      position: "is-top-right",
+      duration: 5000,
+    });
+    this.failed(tc("connect.messages.invalidCall") + this.cmd);
+    return false;
   }
 
   openTakeOffer(): void {
@@ -330,7 +381,9 @@ export default class Connect extends Vue {
         tokenList: this.tokenList,
         inputOfferText: this.data,
       },
-      events: { success: this.success },
+      events: {
+        success: () => this.success(this.$t("connect.messages.offerAccepted")),
+      },
     });
   }
 
@@ -343,7 +396,34 @@ export default class Connect extends Vue {
       fullScreen: true,
       canCancel: [""],
       props: { account: this.account, inputAddress: this.data, addressEditable: false },
-      events: { success: this.success },
+      events: {
+        success: () => this.success(this.$t("connect.messages.sendCompleted")),
+      },
+    });
+  }
+
+  addCat(): void {
+    let data: AddCatData | null = null;
+    try {
+      data = JSON.parse(this.data) as AddCatData;
+    } catch (error) {
+      Notification.open({
+        message: tc("connect.messages.invalidData"),
+        type: "is-danger",
+        position: "is-top",
+        duration: 5000,
+      });
+      this.failed(tc("connect.messages.invalidData"));
+    }
+    this.$buefy.modal.open({
+      parent: this,
+      component: ManageCats,
+      hasModalCard: true,
+      trapFocus: true,
+      fullScreen: true,
+      canCancel: [""],
+      props: { account: this.account, defaultAssetId: data?.id, defaultName: data?.name, defaultTab: 1 },
+      events: { success: () => this.success(this.$t("connect.messages.catAdded")) },
     });
   }
 
@@ -356,20 +436,22 @@ export default class Connect extends Vue {
       data = JSON.parse(this.data) as SignWithDidData;
     } catch (error) {
       Notification.open({
-        message: "Failed To Sign: Invalid Input Data",
+        message: tc("connect.messages.invalidData"),
         type: "is-danger",
         position: "is-top",
         duration: 5000,
       });
+      this.failed(tc("connect.messages.invalidData"));
     }
     const idx = this.dids.findIndex((did) => did.did == data?.did);
     if (idx == -1) {
       Notification.open({
-        message: "Failed To Sign: The Specified DID Does Not Exist in Current Account",
+        message: tc("connect.messages.unknownDid"),
         type: "is-danger",
         position: "is-top",
         duration: 5000,
       });
+      this.failed(tc("connect.messages.unknownDid"));
       return;
     }
     this.$buefy.modal.open({
@@ -389,38 +471,44 @@ export default class Connect extends Vue {
   }
 
   sendSignResult(res: string): void {
-    this.source?.postMessage(res, { targetOrigin: this.origin });
-    this.success();
+    this.success(res);
   }
 
   async getDid(): Promise<void> {
     this.loading = true;
     await store.dispatch("refreshDids", { idx: this.selectedAcc });
-    this.source?.postMessage(
-      this.dids.map((did) => did.did),
-      { targetOrigin: this.origin }
-    );
     this.loading = false;
-    this.success();
+    this.success(this.dids.map((did) => did.did));
   }
 
   getAddress(): void {
-    this.source?.postMessage(this.account.firstAddress, { targetOrigin: this.origin });
-    this.success();
+    this.success(this.account.firstAddress ?? "");
   }
 
-  success(): void {
+  failed(msg: string): void {
+    this.source?.postMessage({ status: "failed", cmd: this.cmd, msg: msg }, { targetOrigin: this.origin });
+    setTimeout(() => this.close(), 5000);
+  }
+
+  cancelled(msg = tc("connect.messages.cancelled")): void {
+    this.source?.postMessage({ status: "cancelld", cmd: this.cmd, msg: msg }, { targetOrigin: this.origin });
+  }
+
+  success(msg: unknown): void {
+    this.succeed = true;
     Notification.open({
-      message: "Success!",
+      message: tc("connect.messages.success"),
       type: "is-primary",
       position: "is-top-right",
       duration: 5000,
     });
+    this.source?.postMessage({ status: "success", cmd: this.cmd, msg: msg }, { targetOrigin: this.origin });
     setTimeout(() => this.close(), 5000);
   }
 
   close(): void {
     store.dispatch("switchNetwork", this.initialNetworkId);
+    if (!this.succeed) this.cancelled();
     window.close();
   }
 }
