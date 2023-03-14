@@ -94,6 +94,17 @@ test('Sign Message By XCH', async () => {
   await signMessageTest(sk, "747769", puzzleHash);
 });
 
+test('Sign Message By XCH With Double Quote In Message', async () => {
+  const puzzleHash = "0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10";
+
+  const privkey = utility.fromHexString("55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f");
+  const requests = await puzzle.getPuzzleDetails(privkey, "xch", 0, 10);
+  const sk = requests.find(_ => prefix0x(_.hash) == puzzleHash)?.privateKey;
+  if (!sk) fail("cannot find sk");
+
+  await signMessageTest(sk, '{ "hello": "world" }', puzzleHash);
+});
+
 test('Sign Message By DID', async () => {
   const analysis = await analyzeDidCoin(didcoin2.puzzle_reveal, "", convertToOriginCoin(didcoin2.coin), didcoin2.solution);
   if (!analysis) fail("cannot parse did coin");
