@@ -4,7 +4,7 @@ import { SymbolCoins } from "../transfer/transfer";
 import coinHandler from "@/services/transfer/coin";
 import store from "@/store";
 
-export async function getAvailableCoins(account: AccountEntity): Promise<[SymbolCoins, SymbolCoins]> {
+export async function getAvailableCoins(account: AccountEntity): Promise<SymbolCoins> {
   return await coinHandler.getAvailableCoins(
     account,
     await coinHandler.getAssetsRequestObserver(account, store.state.account.tokenInfo),
@@ -12,7 +12,7 @@ export async function getAvailableCoins(account: AccountEntity): Promise<[Symbol
   );
 }
 
-export async function getAvailableCoinsWithRequests(account: AccountEntity, requests: TokenPuzzleAddress[]): Promise<[SymbolCoins, SymbolCoins]> {
+export async function getAvailableCoinsWithRequests(account: AccountEntity, requests: TokenPuzzleAddress[]): Promise<SymbolCoins> {
   return await coinHandler.getAvailableCoins(
     account,
     requests,

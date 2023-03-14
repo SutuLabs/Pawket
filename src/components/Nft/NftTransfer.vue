@@ -214,8 +214,7 @@ export default class NftTransfer extends Vue {
     }
 
     if (!this.availcoins) {
-      const coins = await getAvailableCoinsWithRequests(this.account, this.requests);
-      this.availcoins = coins[0];
+      this.availcoins = await getAvailableCoinsWithRequests(this.account, this.requests);
     }
 
     if (!this.availcoins || !this.availcoins[this.selectedToken]) {

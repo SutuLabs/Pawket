@@ -248,8 +248,7 @@ export default class SplitCoin extends Vue {
     }
 
     if (!this.availcoins) {
-      const coins = await getAvailableCoins(this.account);
-      this.availcoins = coins[0];
+      this.availcoins = await getAvailableCoins(this.account);
     }
 
     if (!this.availcoins || !this.availcoins[this.selectedToken]) {
