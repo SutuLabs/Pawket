@@ -2,9 +2,9 @@ import { PrivateKey, G1Element, ModuleInstance } from "@chiamine/bls-signatures"
 import { Instance } from "../util/instance";
 import utility from "./utility";
 import { DEFAULT_HIDDEN_PUZZLE_HASH, GROUP_ORDER } from "../coin/consts";
-import puzzle from "./puzzle";
 import { prefix0x } from "../coin/condition";
-import { Bytes, bigint_from_bytes, bigint_to_bytes } from "clvm";
+import { SExp, Bytes, bigint_from_bytes, bigint_to_bytes } from "clvm";
+import { sha256tree } from "clvm_tools";
 
 export function signMessage(privateKey: PrivateKey, message: string | Uint8Array): { signature: string, syntheticPublicKey: string } {
   const BLS = Instance.BLS;
@@ -30,9 +30,10 @@ export function verifySignature(pubKey: string | G1Element, message: string | Ui
 }
 
 export async function getSignMessage(message: string): Promise<Uint8Array> {
-  const puz = `("Chia Signed Message" . "${message}")`;
-  const hash = await puzzle.getPuzzleHashFromPuzzle(puz);
-  return utility.fromHexString(hash);
+  const left = SExp.to("Chia Signed Message");
+  const program = left.cons(message);
+  const hash = sha256tree(program).raw();
+  return hash;
 }
 
 export function calculate_synthetic_secret_key(BLS: ModuleInstance, secret_key: PrivateKey, hidden_puzzle_hash: Uint8Array): PrivateKey {

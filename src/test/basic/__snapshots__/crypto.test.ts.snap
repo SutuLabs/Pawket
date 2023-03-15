@@ -69,6 +69,12 @@ exports[`Sign Message By NFT: signature 1`] = `"0x8310a5ce30132bd240595fa9da662b
 
 exports[`Sign Message By NFT: syntheticPublicKey 1`] = `"0xa0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338"`;
 
+exports[`Sign Message By XCH With Double Quote In Message: msg 1`] = `"fcb527aec477a179db84da00ca1b9e0ba55a2a38117bcca9a0e3656ce5b87124"`;
+
+exports[`Sign Message By XCH With Double Quote In Message: signature 1`] = `"0x8e5feb29753cae76b2504c8c24595c0d533f057b53476642859020e8d02604c9d7584d2cfc819585f5b43a8129083ea210c6dc1189c44140a7defb539f43502b42dda93a00c11abe5e339ce0c74f5ff16df6615380e3358935b6753badc59167"`;
+
+exports[`Sign Message By XCH With Double Quote In Message: syntheticPublicKey 1`] = `"0x92c7027d455e843b1226b757c1dd5e124e0e6ddab3549036a4684b410182fdfd1eee459eb76a4d6d73e94f90fbe6eb1d"`;
+
 exports[`Sign Message By XCH: msg 1`] = `"eac753f6f07152ef558a6fd1d1b989cc99f0528bb34f5b927294f031117b3d70"`;
 
 exports[`Sign Message By XCH: signature 1`] = `"0xa673160a951c23683f4d8aa551eca97767befbf025d75f4539e7db4aa639efe950f389134e5c2552f5e2bd87c3ce97600d523cb434cdf75afe6a490b4dba4cb2bba5e7c49b44c55743bffbe08b372955d74fd0384178ebf40ee73a1b46d27f8f"`;
