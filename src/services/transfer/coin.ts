@@ -31,7 +31,7 @@ class CoinHandler {
     );
   }
 
-  public async getAvailableCoins(account: AccountEntity, requests: TokenPuzzleAddress[], tokenNames: string[]): Promise<[SymbolCoins, SymbolCoins]> {
+  public async getAvailableCoins(account: AccountEntity, requests: TokenPuzzleAddress[], tokenNames: string[]): Promise<SymbolCoins> {
     let coins = (await receive.getActivities(requests, false, rpcUrl()))
       .filter((_) => _.coin)
       .map((_) => _.coin as CoinItem)
@@ -41,13 +41,6 @@ class CoinHandler {
         puzzle_hash: _.puzzleHash,
       }));
 
-    const allcoins = tokenNames
-      .map((symbol) => {
-        const tgtpuzs = requests.filter((_) => _.symbol == symbol)[0].puzzles.map((_) => prefix0x(_.hash));
-        return { symbol, coins: coins.filter((_) => tgtpuzs.findIndex((p) => p == _.puzzle_hash) > -1) };
-      })
-      .reduce((a, c) => ({ ...a, [c.symbol]: c.coins }), {});
-
     coins = coinFilter(account, coins, chainId())
 
     const availcoins = tokenNames
@@ -56,10 +49,10 @@ class CoinHandler {
         return { symbol, coins: coins.filter((_) => tgtpuzs.findIndex((p) => p == _.puzzle_hash) > -1) };
       })
       .reduce((a, c) => ({ ...a, [c.symbol]: c.coins }), {});
-    return [availcoins, allcoins];
+    return availcoins;
   }
 
-  public getAvailableCoinFromRecords(account: AccountEntity, requests: TokenPuzzleAddress[], records: CoinRecord[], tokenNames: string[]): [SymbolCoins, SymbolCoins] {
+  public getAvailableCoinFromRecords(account: AccountEntity, requests: TokenPuzzleAddress[], records: CoinRecord[], tokenNames: string[]): SymbolCoins {
     let coins = records
       .filter((_) => _.coin)
       .map((_) => _.coin as CoinItem)
@@ -68,12 +61,6 @@ class CoinHandler {
         parent_coin_info: _.parentCoinInfo,
         puzzle_hash: _.puzzleHash,
       }));
-    const allcoins = tokenNames
-      .map((symbol) => {
-        const tgtpuzs = requests.filter((_) => _.symbol == symbol)[0].puzzles.map((_) => prefix0x(_.hash));
-        return { symbol, coins: coins.filter((_) => tgtpuzs.findIndex((p) => p == _.puzzle_hash) > -1) };
-      })
-      .reduce((a, c) => ({ ...a, [c.symbol]: c.coins }), {});
 
     coins = coinFilter(account, coins, chainId())
 
@@ -83,7 +70,7 @@ class CoinHandler {
         return { symbol, coins: coins.filter((_) => tgtpuzs.findIndex((p) => p == _.puzzle_hash) > -1) };
       })
       .reduce((a, c) => ({ ...a, [c.symbol]: c.coins }), {});
-    return [availcoins, allcoins];
+    return availcoins;
   }
 
   getTokenNames(account: AccountEntity, tokenInfo: TokenInfo): string[] {

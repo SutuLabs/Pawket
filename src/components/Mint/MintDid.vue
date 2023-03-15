@@ -150,8 +150,7 @@ export default class MintDid extends Vue {
 
     if (!this.availcoins) {
       try {
-        const coins = await getAvailableCoins(this.account);
-        this.availcoins = coins[0];
+        this.availcoins = await getAvailableCoins(this.account);
       } catch (err) {
         this.offline = true;
       }

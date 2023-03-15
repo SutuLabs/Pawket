@@ -457,7 +457,7 @@ export default class ScanAssets extends Vue {
       }, 5000);
     } else {
       if (this.current >= this.addressNumber) {
-        this.availableCoins = (await coin.getAvailableCoins(this.account, this.allRequests, [this.token]))[0];
+        this.availableCoins = await coin.getAvailableCoins(this.account, this.allRequests, [this.token]);
         this.status = "Finished";
       }
     }
@@ -541,9 +541,7 @@ export default class ScanAssets extends Vue {
   }
 
   send(): void {
-    const coins = coin.getAvailableCoinFromRecords(this.account, this.allRequests, this.allRecords, [this.token]);
-    const availableCoins = coins[0];
-    const allCoins = coins[1];
+    const availableCoins = coin.getAvailableCoinFromRecords(this.account, this.allRequests, this.allRecords, [this.token]);
     this.$buefy.modal.open({
       parent: this,
       component: Send,
@@ -554,7 +552,7 @@ export default class ScanAssets extends Vue {
         account: this.account,
         inputAddress: ensureAddress(this.account.firstAddress),
         inputAvailableCoins: availableCoins,
-        inputAllCoins: allCoins,
+        inputTokenBalance: this.tokenBalance,
         inputRequests: this.allRequests,
         inputSelectedToken: this.token,
       },
@@ -562,8 +560,7 @@ export default class ScanAssets extends Vue {
   }
 
   async transfer(nft: NftDetail): Promise<void> {
-    if (!this.availableCoins)
-      this.availableCoins = (await coin.getAvailableCoins(this.account, this.allRequests, [this.token]))[0];
+    if (!this.availableCoins) this.availableCoins = await coin.getAvailableCoins(this.account, this.allRequests, [this.token]);
     this.$buefy.modal.open({
       parent: this,
       component: NftTransfer,

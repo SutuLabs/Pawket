@@ -192,8 +192,7 @@ export default class NftUpdate extends Vue {
     }
 
     if (!this.availcoins) {
-      const coins = await getAvailableCoins(this.account);
-      this.availcoins = coins[0];
+      this.availcoins = await getAvailableCoins(this.account);
     }
   }
 

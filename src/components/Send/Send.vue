@@ -73,7 +73,7 @@
 
 <script lang="ts">
 import { Component, Emit, Prop, Vue, Watch } from "vue-property-decorator";
-import { AccountEntity, TokenInfo } from "@/models/account";
+import { AccountEntity, AccountTokens, TokenInfo } from "@/models/account";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { TokenPuzzleDetail } from "@/services/crypto/receive";
@@ -122,7 +122,7 @@ export default class Send extends Vue {
   @Prop() public inputAddress!: string;
   @Prop() public inputAmount!: string;
   @Prop() public inputAvailableCoins!: SymbolCoins;
-  @Prop() public inputAllCoins!: SymbolCoins;
+  @Prop() public inputTokenBalance!: AccountTokens;
   @Prop() public inputRequests!: TokenPuzzleDetail[];
   @Prop() public inputSelectedToken!: string;
   @Prop({ default: true }) public addressEditable!: boolean;
@@ -143,9 +143,7 @@ export default class Send extends Vue {
   public memo = "";
   public bundle: SpendBundle | null = null;
   public availcoins: SymbolCoins | null = null;
-  public allcoins: SymbolCoins | null = null;
   public maxAmount = "-1";
-  public totalAmount = "-1";
   public INVALID_AMOUNT_MESSAGE = "Invalid amount";
   public maxStatus: "Loading" | "Loaded" = "Loading";
   public selectMax = false;
@@ -161,9 +159,8 @@ export default class Send extends Vue {
     if (this.inputAddress) this.address = this.inputAddress;
     if (this.inputAmount) this.amount = this.inputAmount;
     if (this.inputSelectedToken) this.selectedToken = this.inputSelectedToken;
-    if (this.inputAvailableCoins && this.inputRequests && this.inputAllCoins) {
+    if (this.inputAvailableCoins && this.inputRequests) {
       this.availcoins = this.inputAvailableCoins;
-      this.allcoins = this.inputAllCoins;
       this.requests = this.inputRequests;
     }
     this.loadCoins();
@@ -186,6 +183,17 @@ export default class Send extends Vue {
 
   get decimal(): number {
     return this.selectedToken == xchSymbol() ? 12 : 3;
+  }
+
+  get totalAmount(): string {
+    let totalMojo = -1n;
+    if (this.inputTokenBalance && this.inputTokenBalance[this.selectedToken]) {
+      totalMojo = this.inputTokenBalance[this.selectedToken].amount;
+    } else {
+      totalMojo = this.account.tokens[this.selectedToken].amount;
+    }
+
+    return bigDecimal.divide(totalMojo, Math.pow(10, this.decimal), this.decimal);
   }
 
   updateContacts(): void {
@@ -288,7 +296,6 @@ export default class Send extends Vue {
   async loadCoins(): Promise<void> {
     this.bundle = null;
     this.maxAmount = "-1";
-    this.totalAmount = "-1";
     this.amount = "0";
     this.selectMax = false;
     this.maxStatus = "Loading";
@@ -297,14 +304,12 @@ export default class Send extends Vue {
       this.requests = this.account.type == "PublicKey" ? [] : await getAssetsRequestDetail(this.account);
     }
 
-    if (!this.availcoins || !this.allcoins) {
+    if (!this.availcoins) {
       try {
-        const coins =
+        this.availcoins =
           this.account.type == "PublicKey"
             ? await getAvailableCoins(this.account)
             : await getAvailableCoinsWithRequests(this.account, this.requests);
-        this.availcoins = coins[0];
-        this.allcoins = coins[1];
       } catch (err) {
         this.offline = true;
       }
@@ -321,16 +326,6 @@ export default class Send extends Vue {
       Math.pow(10, this.decimal),
       this.decimal
     );
-
-    if (this.allcoins && this.allcoins[this.selectedToken]) {
-      const allcoins = this.allcoins[this.selectedToken].map((_) => _.amount);
-
-      this.totalAmount = bigDecimal.divide(
-        allcoins.reduce((a, b) => a + b, 0n),
-        Math.pow(10, this.decimal),
-        this.decimal
-      );
-    }
 
     this.maxStatus = "Loaded";
   }
