@@ -105,8 +105,10 @@ store.registerModule<IVaultState>("vault", {
       state.currency = currency;
       dispatch("persistent");
     },
-    selectAccount({ state, dispatch }, account: number) {
+    selectAccount({ state, rootState, dispatch }, account: number) {
       state.selectedAccount = account;
+      rootState.account.refreshing = false; // ignore ongoing refresh
+      dispatch("refreshBalance");
       dispatch("persistent");
     },
     async changePassword({ dispatch }, { oldPassword, newPassword }: { oldPassword: string; newPassword: string }) {
