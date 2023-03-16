@@ -284,7 +284,7 @@ export default class NftPanel extends Vue {
   }
 
   @Watch("filteredNfts")
-  async downloadRelated(): Promise<void> {
+  downloadRelated(): void {
     for (let i = 0; i < this.filteredNfts.length; i++) {
       const nft = this.filteredNfts[i];
       const ext = this.extraInfo[nft.address];
@@ -294,10 +294,9 @@ export default class NftPanel extends Vue {
           status: !nft.analysis.metadata.metadataUri ? "NoMetadata" : "Ready",
           metadata: {},
         });
-        await this.downloadNftMetadata(nft); // don't need wait, just fire and change ui after some information got
+        this.downloadNftMetadata(nft); // don't need wait, just fire and change ui after some information got
       }
     }
-    Vue.set(this.account, "extraInfo", this.extraInfo);
   }
 
   async downloadNftMetadata(nft: NftDetail): Promise<void> {
@@ -323,6 +322,7 @@ export default class NftPanel extends Vue {
     // console.log("downloaded", bodyhex, nft.analysis.metadata.metadataHash, md);
     this.extraInfo[nft.address].status = "Processed";
     this.extraInfo[nft.address].matchHash = bodyhex.toLowerCase() == unprefix0x(nft.analysis.metadata.metadataHash).toLowerCase();
+    Vue.set(this.account, "extraInfo", this.extraInfo);
   }
 
   async refresh(): Promise<void> {
