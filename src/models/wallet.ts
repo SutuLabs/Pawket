@@ -1,4 +1,6 @@
+import { DidCoinAnalysisResult } from "@/services/coin/did";
 import { Hex0x } from "../services/coin/condition";
+import { CnsCoinAnalysisResult, NftCoinAnalysisResult } from "./nft";
 
 export interface GetRecordsRequest {
     puzzleHashes: string[];
@@ -26,6 +28,7 @@ export interface CoinRecord {
     spentBlockIndex: number;
     timestamp: number;
     symbol?: string;
+    analysis?: NftCoinAnalysisResult | CnsCoinAnalysisResult | DidCoinAnalysisResult;
 }
 
 export interface CoinItem {

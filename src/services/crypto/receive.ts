@@ -138,7 +138,8 @@ class Receive {
     includeSpentCoins: boolean,
     rpcUrl: string,
     hint = false,
-    coinType: CoinClassType | undefined = undefined
+    coinType: CoinClassType | undefined = undefined,
+    includeAnalysis = false,
   ): Promise<GetRecordsResponse> {
     const hashes = tokens.reduce((acc, token) => acc.concat(token.puzzles.map((_) => _.hash)), [] as string[]);
 
@@ -148,12 +149,14 @@ class Receive {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
+      body: JSON.stringify(Object.assign({
         puzzleHashes: hashes,
         includeSpentCoins,
         hint,
         coinType,
-      }),
+      },
+        includeAnalysis ? { includeAnalysis } : {}
+      )),
     });
     if (resp.status != 200) {
       throw new Error('NETWORK_ERROR: ' + resp.status.toString() + '\nERROR: ' + await resp.text())

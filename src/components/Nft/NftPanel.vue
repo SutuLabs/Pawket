@@ -66,9 +66,11 @@
               :src="getImageUrls(nft)[0]"
             />
             <p class="nft-name has-background-white-ter pt-2 pl-3 is-hidden-mobile">
-              <span class="is-inline-block truncate" v-if="extraInfo[nft.address].metadata == null">{{ "Unnamed" }}</span>
+              <span class="is-inline-block truncate" v-if="extraInfo[nft.address] && extraInfo[nft.address].metadata == null">{{
+                "Unnamed"
+              }}</span>
               <span class="is-inline-block truncate" v-else>{{
-                extraInfo[nft.address].metadata ? extraInfo[nft.address].metadata.name : ""
+                extraInfo[nft.address] && extraInfo[nft.address].metadata ? extraInfo[nft.address].metadata.name : ""
               }}</span>
               <span class="is-pulled-right">
                 <b-dropdown aria-role="list" class="is-pulled-right" :mobile-modal="false" position="is-bottom-left">
@@ -282,7 +284,7 @@ export default class NftPanel extends Vue {
   }
 
   @Watch("filteredNfts")
-  async downloadRelated(): Promise<void> {
+  downloadRelated(): void {
     for (let i = 0; i < this.filteredNfts.length; i++) {
       const nft = this.filteredNfts[i];
       const ext = this.extraInfo[nft.address];
@@ -292,10 +294,9 @@ export default class NftPanel extends Vue {
           status: !nft.analysis.metadata.metadataUri ? "NoMetadata" : "Ready",
           metadata: {},
         });
-        await this.downloadNftMetadata(nft); // don't need wait, just fire and change ui after some information got
+        this.downloadNftMetadata(nft); // don't need wait, just fire and change ui after some information got
       }
     }
-    Vue.set(this.account, "extraInfo", this.extraInfo);
   }
 
   async downloadNftMetadata(nft: NftDetail): Promise<void> {
@@ -321,6 +322,7 @@ export default class NftPanel extends Vue {
     // console.log("downloaded", bodyhex, nft.analysis.metadata.metadataHash, md);
     this.extraInfo[nft.address].status = "Processed";
     this.extraInfo[nft.address].matchHash = bodyhex.toLowerCase() == unprefix0x(nft.analysis.metadata.metadataHash).toLowerCase();
+    Vue.set(this.account, "extraInfo", this.extraInfo);
   }
 
   async refresh(): Promise<void> {
@@ -355,6 +357,8 @@ export default class NftPanel extends Vue {
   }
 
   showDetail(nft: NftDetail): void {
+    const metadata =
+      this.extraInfo[nft.address] && this.extraInfo[nft.address].metadata ? this.extraInfo[nft.address].metadata : null;
     this.$router.push(`/home/nft/${nft.address}`);
     this.$buefy.modal.open({
       parent: this,
@@ -367,7 +371,7 @@ export default class NftPanel extends Vue {
       },
       fullScreen: isMobile(),
       canCancel: ["outside", "escape"],
-      props: { nft: nft, metadata: this.extraInfo[nft.address].metadata, account: this.account, dids: this.dids },
+      props: { nft: nft, inputMetadata: metadata, account: this.account, dids: this.dids },
       events: {
         close: () => {
           if (this.path != "/home/nft") this.$router.back();

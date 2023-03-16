@@ -320,7 +320,7 @@ export default class Cns extends Vue {
       width: 1000,
       fullScreen: isMobile(),
       canCancel: ["outside", "escape"],
-      props: { nft: nft, metadata: this.extraInfo[nft.address].metadata, account: this.account, dids: this.dids },
+      props: { nft: nft, inputMetadata: this.extraInfo[nft.address].metadata, account: this.account, dids: this.dids },
     });
   }
 
