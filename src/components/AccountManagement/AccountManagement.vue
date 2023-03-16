@@ -233,7 +233,6 @@ export default class AccountManagement extends Vue {
 
   select(idx: number): void {
     store.state.account.selectedAccount = idx;
-    store.dispatch("refreshBalance");
     store.dispatch("selectAccount", idx);
     this.close();
   }
