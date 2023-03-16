@@ -233,7 +233,7 @@ store.registerModule<IAccountState>("account", {
       if (!account) return;
 
       const requests = await getAccountAddressDetails(account, parameters.maxId);
-      const assetRecords = await receive.getCoinRecords(requests, false, rpcUrl(), false, parameters.coinType);
+      const assetRecords = await receive.getCoinRecords(requests, false, rpcUrl(), false, parameters.coinType, true);
 
       // replace hintPuzzle of analysis
       assetRecords.coins.forEach(coin => coin.records.forEach(rec => {
