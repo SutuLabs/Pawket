@@ -157,16 +157,16 @@ export default class Connect extends Vue {
     this.isCorrect = true;
     this.accounts = await this.getAccounts();
     this.accounts = this.accounts.filter((acc) => acc.key.privateKey);
-    for (let i = 0; i < this.accounts.length; i++) {
-      await this.setFirstAddress(this.accounts[i]);
-      await this.getXchBalance(this.accounts[i]);
-    }
     this.loading = false;
     if (this.accounts.length > 1) {
       this.stage = "Account";
     } else {
       if (this.authorized) this.openCmd();
       else this.stage = "Authorize";
+    }
+    for (let i = 0; i < this.accounts.length; i++) {
+      this.setFirstAddress(this.accounts[i]);
+      this.getXchBalance(this.accounts[i]);
     }
   }
 
