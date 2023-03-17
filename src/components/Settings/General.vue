@@ -43,6 +43,7 @@ import { NotificationProgrammatic as Notification } from "buefy";
 import { NetworkInfo } from "@/store/modules/network";
 import TopBar from "@/components/Common/TopBar.vue";
 import { AccountEntity } from "@/models/account";
+import { languageList } from "@/i18n/i18n";
 
 @Component({
   components: { TopBar },
@@ -53,10 +54,9 @@ export default class General extends Vue {
     ["CNY", CurrencyType.CNY],
   ]);
 
-  languageList: Map<string, string> = new Map<string, string>([
-    ["en", "English"],
-    ["zhcn", "简体中文"],
-  ]);
+  get languageList(): Map<string, string> {
+    return languageList;
+  }
 
   get currency(): CurrencyType {
     return store.state.vault.currency ? store.state.vault.currency : CurrencyType.USDT;

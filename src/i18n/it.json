@@ -1,0 +1,1651 @@
+{
+    "default": {
+        "accountName": "Conto1"
+    },
+    "html": {
+        "document": {
+            "title": "Pawket"
+        }
+    },
+    "common": {
+        "button": {
+            "confirm": "Confermare",
+            "cancel": "Annulla",
+            "back": "Indietro",
+            "save": "Salva",
+            "submit": "Invia",
+            "delete": "Eliminare",
+            "sign": "Cartello",
+            "generate": "creare",
+            "copy": "copia"
+        },
+        "tooltip": {
+            "copy": "copia"
+        },
+        "message": {
+            "saved": "Salvato.",
+            "added": "Aggiunto.",
+            "noResult": "Nessun risultato.",
+            "uploadSuccess": "Caricato."
+        }
+    },
+    "app": {
+        "ui": {
+            "button": {
+                "lang": "Italiano"
+            },
+            "navigation": {
+                "wallet": "Portafoglio",
+                "cns": "SNC",
+                "explore": "Esplorare",
+                "settings": "Impostazioni"
+            }
+        },
+        "message": {
+            "notification": {
+                "copySuccess": "Copiato.",
+                "copyFailed": "Copia fallita.",
+                "transactionComplete": {
+                    "title": "Transazione completata!",
+                    "body": "La tua transazione al blocco {block} è stata completata."
+                }
+            }
+        }
+    },
+    "footer": {
+        "ui": {
+            "productInfo": {
+                "name": "Pacchetto",
+                "author": "Sutu Labs",
+                "authorLink": "https://github.com/SutuLabs"
+            },
+            "button": {
+                "home": "Casa",
+                "developer": "Sviluppatore"
+            },
+            "error": {
+                "READ_VERSION_FAILED": "Impossibile leggere la versione."
+            }
+        }
+    },
+    "self-test": {
+        "message": {
+            "checking": "Controllo",
+            "passed": "Passato",
+            "failed": "Impossibile controllare: "
+        }
+    },
+    "verifyPassword": {
+        "ui": {
+            "button": {
+                "confirm": "Confermare",
+                "clear": "Ripristina portafoglio"
+            },
+            "title": {
+                "verifyPassword": "Verifica la password"
+            },
+            "alt": {
+                "logoAlt": "Logo Pawket"
+            }
+        },
+        "message": {
+            "confirmation": {
+                "clear": "Il ripristino del portafoglio rimuoverà definitivamente tutti i dati (inclusi mnemonici e password) dal tuo dispositivo, assicurati che sia stato eseguito il backup degli mnemonici del portafoglio. ",
+                "confirmText": "Confermare",
+                "cancelText": "Annulla"
+            },
+            "error": {
+                "passwordNotMatch": "La password non corrisponde.",
+                "incorrectPassword": "Password errata.",
+                "passwordEmpty": "La password non può essere vuota."
+            },
+            "tip": {
+                "weakPassword": "Debole",
+                "mediumPassword": "medio",
+                "strongPassword": "Forte"
+            }
+        }
+    },
+    "createSeed": {
+        "ui": {
+            "button": {
+                "confirm": "Confermare",
+                "later": "Dopo",
+                "ready": "Prossimo",
+                "12word": "12 parole",
+                "24word": "24 parole",
+                "import12": "Importa parole mnemoniche Pawket",
+                "import24": "Importa le parole mnemoniche ufficiali di Chia"
+            },
+            "text": {
+                "create": {
+                    "tip1": "Benvenuto! ",
+                    "tip2": "ATTENZIONE: NON RIVELARE MAI LE TUE PAROLE MNEMONICHE. "
+                },
+                "import12": {
+                    "title": "Importa parole mnemoniche Pawket",
+                    "tip": "Inserisci le tue parole mnemoniche Pawket in ordine, utilizzando gli spazi tra i mnemonici."
+                },
+                "import24": {
+                    "title": "Importa le parole mnemoniche ufficiali di Chia",
+                    "tip": "Inserisci le tue parole mnemoniche ufficiali Chia in ordine, utilizzando gli spazi tra i mnemonici."
+                }
+            }
+        },
+        "message": {
+            "error": {
+                "wrongSeed": "Importazione fallita, controlla le tue parole mnemoniche."
+            }
+        }
+    },
+    "accountDetail": {
+        "ui": {
+            "button": {
+                "receive": "Ricevere",
+                "buy": "Acquistare",
+                "send": "Inviare",
+                "scan": "Scansione",
+                "confirm": "Confermare",
+                "cancel": "Annulla",
+                "manageCats": "Gestisci i CAT"
+            },
+            "tab": {
+                "asset": "Risorsa",
+                "utxos": "UTXO",
+                "nft": "NFT",
+                "did": "FATTO"
+            },
+            "tooltip": {
+                "lock": "Blocca il portafoglio",
+                "errorLog": "Registro degli errori",
+                "refresh": "ricaricare"
+            },
+            "dApps": {
+                "title": "dApps",
+                "tooltip": {
+                    "donate": "Dona per sostenere lo sviluppo",
+                    "scanAssets": "Scansiona le risorse",
+                    "proxy": "Segno offline",
+                    "takeOffer": "Accetta l'offerta",
+                    "makeOffer": "Fare un'offerta",
+                    "batchSend": "Invio in blocco",
+                    "mintCat": "Emissione CAT",
+                    "mintNft": "Menta NFT",
+                    "batchMintNft": "Lotto di zecca",
+                    "verify": "Verifica messaggio",
+                    "encryptMessage": "Cripta messaggio",
+                    "decryptMessage": "Decrittografare il messaggio"
+                },
+                "button": {
+                    "donate": "Donare",
+                    "scanAssets": "Scansiona le risorse",
+                    "proxy": "Segno offline",
+                    "takeOffer": "Accetta l'offerta",
+                    "makeOffer": "Fare un'offerta",
+                    "batchSend": "Invio in blocco",
+                    "mintCat": "Emissione CAT",
+                    "mintNft": "Menta NFT",
+                    "batchMintNft": "Lotto di zecca",
+                    "verify": "Verifica messaggio",
+                    "encryptMessage": "Cripta messaggio",
+                    "decryptMessage": "Decrittografare il messaggio"
+                }
+            }
+        },
+        "message": {
+            "confirmation": {
+                "lock": "Bloccare il portafoglio?"
+            },
+            "notification": {
+                "donate": "Stai donando agli sviluppatori.",
+                "observeMode": "Funzione di interazione disabilitata in modalità Osserva",
+                "offline": "Attualmente in modalità offline.",
+                "turnOffPrefix": "Clic",
+                "turnOff": "Qui",
+                "turnOffSuffix": "per disattivare.",
+                "test": "Nota: kitten.pawket.app è un sito di prova in cui puoi sperimentare alcune nuove funzionalità inedite."
+            }
+        }
+    },
+    "changePassword": {
+        "ui": {
+            "title": {
+                "changePassword": "Cambiare la password"
+            },
+            "label": {
+                "oldPassword": "vecchia password",
+                "newPassword": "nuova password",
+                "rePassword": "Reinserire la password"
+            },
+            "button": {
+                "back": "Indietro",
+                "submitChange": "Invia"
+            }
+        },
+        "message": {
+            "error": {
+                "passwordRequired": "E 'richiesta la password.",
+                "passwordNotCorrect": "Password errata.",
+                "passwordNotMatch": "La password non corrisponde."
+            },
+            "alert": {
+                "passwordChanged": "La password è stata cambiata. "
+            }
+        }
+    },
+    "explorerLink": {
+        "ui": {
+            "title": {
+                "link": "Ricevi indirizzi"
+            },
+            "label": {
+                "maxAddress": "Numero massimo di indirizzi",
+                "address": "Indirizzo",
+                "coin": "Moneta",
+                "sign": "Cartello",
+                "link": "Esploratore",
+                "observer": "Osservatore",
+                "nonObserver": "Non Osservatore"
+            },
+            "tooltip": {
+                "blockchainExplorer": "Visualizza su Block Explorer",
+                "receiveAddress": "Puoi controllare il saldo su più indirizzi se aumenti il ​​valore, ma il portafoglio funzionerà più lentamente."
+            }
+        }
+    },
+    "send": {
+        "ui": {
+            "title": {
+                "send": "Inviare"
+            },
+            "label": {
+                "amount": "Quantità",
+                "memo": "Promemoria",
+                "fee": "Tassa"
+            },
+            "button": {
+                "submit": "Invia",
+                "showSend": "Spettacolo"
+            },
+            "slider": {
+                "low": "Basso",
+                "medium": "medio",
+                "high": "Alto",
+                "custom": "Costume"
+            },
+            "messages": {
+                "getFailedResponse": "Ottieni la risposta all'errore: ",
+                "failedToSubmit": "Impossibile inviare al pool di memoria: ",
+                "failedToSign": "Impossibile firmare: ",
+                "submitted": "Inviato al pool di memoria.",
+                "invalidAmount": "Importo non valido.",
+                "insufficientFunds": "Fondi insufficienti."
+            },
+            "span": {
+                "loading": "Caricamento",
+                "maxLeadingText": "Massimo:"
+            },
+            "text": {
+                "offlineOnlySupportXch": "L'invio offline supporta solo XCH ora."
+            },
+            "summary": {
+                "notification": "Sei sicuro di inviare?<br/>Controlla la tua transazione."
+            }
+        },
+        "messages": {
+            "error": {
+                "DOUBLE_SPEND": "Doppia spesa",
+                "UNKNOWN_UNSPENT": "È stato utilizzato un UTXO sconosciuto, forse la transazione precedente non è stata confermata sulla blockchain.",
+                "BAD_AGGREGATE_SIGNATURE": "Firma aggregata errata",
+                "INVALID_CONDITION": "Condizione non valida",
+                "COIN_AMOUNT_EXCEEDS_MAXIMUM": "L'importo della moneta supera il massimo",
+                "INVALID_FEE_LOW_FEE": "Commissione non valida/Commissione bassa",
+                "MEMPOOL_NOT_INITIALIZED": "Mempool non inizializzato",
+                "ALREADY_INCLUDING_TRANSACTION": "Transazione già inclusa",
+                "INCOMPATIBLE_NETWORK_ID": "ID di rete incompatibile",
+                "NO_TRANSACTIONS_WHILE_SYNCING": "Nessuna transazione durante la sincronizzazione",
+                "INVALID_FEE_TOO_CLOSE_TO_ZERO": "Tariffa non valida, troppo vicina allo zero",
+                "COIN_AMOUNT_NEGATIVE": "L'importo della moneta è negativo",
+                "INVALID_ADDRESS": "Indirizzo non valido",
+                "ADDRESS_NOT_MATCH_NETWORK": "L'indirizzo inserito non corrisponde alla rete corrente. ",
+                "PENDING": "Transazione già in sospeso, attendere il completamento."
+            }
+        }
+    },
+    "scanQrCode": {
+        "message": {
+            "error": {
+                "NotAllowedError": "ERRORE: devi concedere l'autorizzazione di accesso alla videocamera.",
+                "NotFoundError": "ERRORE: nessuna fotocamera su questo dispositivo.",
+                "NotSupportedError": "ERRORE: contesto protetto richiesto (HTTPS, localhost).",
+                "NotReadableError": "ERRORE: la fotocamera è già in uso?",
+                "OverconstrainedError": "ERRORE: la videocamera installata non è adatta.",
+                "StreamApiNotSupportedError": "ERRORE: l'API Stream non è supportata in questo browser.",
+                "InsecureContextError": "ERRORE: l'accesso alla telecamera è consentito solo in un contesto protetto. "
+            }
+        }
+    },
+    "offer": {
+        "make": {
+            "ui": {
+                "title": "Fare un'offerta",
+                "panel": {
+                    "information": "Informazione",
+                    "hint": {
+                        "thisIsYourOffer": "Questo è il testo della tua offerta.",
+                        "unsignedOffer": "Firma non riuscita, offerta non valida"
+                    }
+                },
+                "label": {
+                    "yourOfferTitle": "La tua offerta",
+                    "bundle": "Fascio"
+                },
+                "button": {
+                    "done": "Fatto",
+                    "uploadToDexie": "Carica su Dexie"
+                },
+                "field": {
+                    "offer": "Offerta",
+                    "request": "Richiesta"
+                }
+            },
+            "messages": {
+                "failedToSign": "Impossibile fare un'offerta."
+            }
+        },
+        "symbol": {
+            "Cat": "GATTO",
+            "hint": {
+                "XCH": "Gettone originale"
+            }
+        },
+        "take": {
+            "ui": {
+                "title": "Accetta l'offerta",
+                "hint": {
+                    "pasteOffer": "Incolla qui i dati dell'offerta o carica il file dell'offerta.",
+                    "error": "La stringa dell'offerta non è corretta."
+                },
+                "panel": {
+                    "information": "Informazione"
+                },
+                "label": {
+                    "royaltyToCreator": "Creatore",
+                    "totalRequested": "Importo totale richiesto",
+                    "nftPrice": "Prezzo NFT",
+                    "royalty": "Royalty",
+                    "total": "Totale",
+                    "receive": "Ricevere",
+                    "offer": "Offerta",
+                    "fee": "Tassa",
+                    "totalPayment": "Pagamento totale"
+                },
+                "button": {
+                    "cancel": "Annulla",
+                    "submit": "Invia",
+                    "upload": "Carica il file dell'offerta"
+                },
+                "field": {
+                    "offer": "Offerta"
+                },
+                "tooltip": {
+                    "spaceScan": "Visualizza su Spacescan.io",
+                    "verifiedCns": "SNC verificato",
+                    "unverifiedCns": "Questo è un falso CNS. "
+                },
+                "notification": {
+                    "observation": "Attualmente in modalità di osservazione. "
+                }
+            },
+            "information": {
+                "requested": "In cambio di",
+                "offered": "Riceverai",
+                "addCat": "Aggiungi all'elenco CAT.",
+                "unsupportOfferNftOffer": "Questo tipo di offerta non è ancora supportato.",
+                "acceptOffer": "Sei sicuro di accettare l'offerta?<br>Controlla la tua transazione."
+            },
+            "messages": {
+                "failedToSign": "Impossibile accettare l'offerta.",
+                "unsupportOfferNftOffer": "Questo tipo di offerta non è ancora supportato."
+            }
+        }
+    },
+    "ManageCats": {
+        "ui": {
+            "title": {
+                "ManageCats": "Gestisci i gatti"
+            },
+            "label": {
+                "listingCats": "Elenco CAT",
+                "name": "Nome",
+                "assetID": "ID risorsa",
+                "search": "Ricerca",
+                "custom": "Costume"
+            },
+            "button": {
+                "add": "Aggiungere"
+            },
+            "tooltip": {
+                "removeToken": "Rimuovi CAT",
+                "drag": "Trascina per ordinare",
+                "copy": "Copia ID risorsa"
+            },
+            "message": {
+                "nameRequired": "Il nome è obbligatorio.",
+                "assetIdRequired": "L'ID risorsa è obbligatorio."
+            }
+        },
+        "message": {
+            "notification": {
+                "wrongAssetId": "ID risorsa errato. "
+            },
+            "confirmation": {
+                "removeToken": "Sei sicuro di rimuovere il CAT?",
+                "closeWithContent": "Hai modifiche non salvate in questa pagina che andranno perse se esci. ",
+                "confirm": "Confermare",
+                "cancel": "Annulla"
+            },
+            "alert": {
+                "isExisted": "L'ID risorsa/il nome esiste già nell'elenco CAT!"
+            }
+        }
+    },
+    "offline": {
+        "proxy": {
+            "scan": {
+                "title": "Cartello",
+                "numberField": "Messaggi non firmati",
+                "numberMessage": "Scansiona questi seguenti codici QR con Offline Sign. "
+            },
+            "confirmBundle": {
+                "title": "Confermare",
+                "button": {
+                    "cancel": "Annulla",
+                    "submit": "Invia"
+                },
+                "notification": "Sei sicuro di inviare?<br/>Controlla la tua transazione."
+            }
+        },
+        "client": {
+            "text": {
+                "qrcodesStatus": "{indice} / {totale}",
+                "unsafeMode": "Modalità non sicura",
+                "status": "Scansionato: {frammento} / {totale} frammento/i."
+            },
+            "scan": {
+                "title": "Segno offline",
+                "numberField": "Messaggio firmato",
+                "numberMessage": "Scansiona questo codice QR con il dispositivo online che ha appena avviato la transazione.",
+                "scrollDown": "Scorri la pagina verso il basso e scansiona il codice QR sul dispositivo offline per ottenere il messaggio firmato."
+            },
+            "show": {
+                "hint": "Usa Proxy per scansionare QR per inviare la tua transazione.",
+                "overflow": "I dati superano la lunghezza massima, non è possibile generare il codice QR",
+                "bundle": "Fascio",
+                "copy": "copia"
+            }
+        },
+        "ui": {
+            "button": {
+                "cancel": "Annulla"
+            }
+        }
+    },
+    "addByMnemonic": {
+        "ui": {
+            "label": {
+                "name": "Nome utente",
+                "mnemonic": "{len} Parole mnemoniche"
+            },
+            "message": {
+                "nameRequired": "Il nome dell'account è obbligatorio.",
+                "mnemonicRequired": "Il mnemonico è obbligatorio.",
+                "invalidMnemonic": "Importazione fallita. "
+            },
+            "button": {
+                "back": "Indietro",
+                "submit": "Invia"
+            },
+            "tooltip": {
+                "mnemonic": "Inserisci le tue parole mnemoniche in ordine, utilizzando gli spazi tra i mnemonici."
+            }
+        },
+        "message": {
+            "error": {
+                "accountMnemonicExists": "Esiste già un account con le stesse parole mnemoniche."
+            }
+        }
+    },
+    "addByAddress": {
+        "ui": {
+            "title": "Aggiungi per indirizzo",
+            "label": {
+                "name": "Nome utente",
+                "publicKey": "Chiave pubblica"
+            },
+            "message": {
+                "nameRequired": "Il nome dell'account è obbligatorio.",
+                "illegalAddress": "Indirizzo errato.",
+                "duplicateAddress": "Indirizzo duplicato: [{accName}] ha lo stesso indirizzo.",
+                "duplicateName": "Nome duplicato",
+                "duplicatePublicKey": "Chiave pubblica duplicata: [{accName}] ha la stessa chiave pubblica."
+            },
+            "button": {
+                "back": "Indietro",
+                "submit": "Invia"
+            }
+        }
+    },
+    "addByPassword": {
+        "ui": {
+            "title": "Aggiungi Shadow Wallet",
+            "label": {
+                "name": "Nome utente",
+                "password": "Frase d'accesso",
+                "rePassword": "Reinserire la passphrase"
+            },
+            "message": {
+                "nameRequired": "Il nome dell'account è obbligatorio.",
+                "passwordRequired": "La frase segreta è obbligatoria.",
+                "invalidPassword": "La passphrase non corrisponde."
+            },
+            "button": {
+                "back": "Indietro",
+                "submit": "Invia"
+            }
+        },
+        "message": {
+            "error": {
+                "accountPasswordExists": "[{accName}] ha la stessa passphrase."
+            }
+        }
+    },
+    "addBySerial": {
+        "ui": {
+            "title": "Aggiungi account per numero di serie",
+            "label": {
+                "name": "Nome utente"
+            },
+            "message": {
+                "nameRequired": "Il nome dell'account è obbligatorio."
+            },
+            "button": {
+                "back": "Indietro",
+                "submit": "Invia"
+            }
+        }
+    },
+    "bundleSummary": {
+        "ui": {
+            "fee": {
+                "title": "Tassa",
+                "mojos": "{fee} mojo(i)"
+            },
+            "inputs": {
+                "title": "Importo totale"
+            },
+            "label": {
+                "details": "Dettagli"
+            },
+            "detail": {
+                "title": "Dettagli",
+                "itemTo": "indirizzare}",
+                "span": {
+                    "hint": "Suggerimento (indirizzo corrispondente)",
+                    "memo": "Promemoria"
+                }
+            }
+        },
+        "notification": {
+            "error": {
+                "unknownMod": "Bundle sconosciuto, impossibile analizzare correttamente."
+            }
+        }
+    },
+    "batchSend": {
+        "ui": {
+            "title": {
+                "send": "Invio in blocco"
+            },
+            "tooltip": {
+                "help": "Supporta l'invio di più transazioni in un'unica operazione. ",
+                "upload": "Carica un file in formato \".csv\"."
+            },
+            "field": {
+                "csv": {
+                    "fillSample": "Campione di riempimento",
+                    "or": " O ",
+                    "downloadSample": "Scarica un file CSV di esempio",
+                    "drag": "Trascina e rilascia in quest'area per caricare direttamente.",
+                    "sampleName": "Campione"
+                }
+            },
+            "summary": {
+                "notification": "Sei sicuro di inviare?<br/>Controlla la tua transazione."
+            },
+            "button": {
+                "upload": "Carica CSV"
+            },
+            "messages": {
+                "failedToSign": "Impossibile firmare: ",
+                "wrongFileType": "Carica il file in formato .csv.",
+                "onlyOneFile": "È supportato un solo caricamento di file."
+            }
+        },
+        "messages": {
+            "error": {
+                "ADDRESS_NOT_MATCH_NETWORK": "L'indirizzo inserito [{address}] non corrisponde alla rete corrente. ",
+                "COIN_NOT_EXIST": "La moneta {simbolo} non esiste!"
+            }
+        },
+        "sample": {
+            "address": "Indirizzo",
+            "coin": "Moneta",
+            "amount": "Importo(mojo)",
+            "memo": "Memo (Se la moneta che stai inviando è XCH non puoi compilare il memo)"
+        }
+    },
+    "utxo": {
+        "ui": {
+            "label": {
+                "cost": "Inviare",
+                "receive": "Ricevere",
+                "queue": "Coda",
+                "confirmed": "Confermato"
+            },
+            "text": {
+                "empty": "Non hai transazioni."
+            }
+        }
+    },
+    "utxoDetail": {
+        "ui": {
+            "title": {
+                "cost": "Inviare",
+                "receive": "Ricevere"
+            },
+            "label": {
+                "amount": "Quantità",
+                "time": "Tempo",
+                "spentHeight": "Altezza Spesa",
+                "confirmedHeight": "Altezza confermata",
+                "parentCoinInfo": "ParentCoinInfo",
+                "puzzleHash": "Indirizzo",
+                "coinName": "Nome della moneta",
+                "coins": "Monete",
+                "pending": "In attesa di"
+            },
+            "button": {
+                "unlockCoins": "Sblocca monete"
+            },
+            "tooltip": {
+                "copy": "copia"
+            }
+        },
+        "message": {
+            "unlockCoins": "Lo sblocco della moneta non annullerà la transazione. "
+        }
+    },
+    "sendSummary": {
+        "ui": {
+            "label": {
+                "sending": "Invio",
+                "to": "A",
+                "fee": "Tassa",
+                "total": "Totale",
+                "assetId": "ID risorsa",
+                "NftUri": "NFT"
+            }
+        }
+    },
+    "bundleText": {
+        "ui": {
+            "title": "Fascio",
+            "copy": "copia",
+            "button": {
+                "show": "Spettacolo",
+                "hide": "Nascondere"
+            }
+        }
+    },
+    "mintCat": {
+        "ui": {
+            "title": "Emissione CAT",
+            "label": {
+                "amount": "Quantità",
+                "memo": "Promemoria",
+                "symbolName": "Nome CAT (modificabile)"
+            },
+            "summary": {
+                "notification": "Sei sicuro di rilasciare il CAT?<br/>Controlla la tua transazione.",
+                "label": {
+                    "leadingText": "Rilascio CAT"
+                }
+            },
+            "messages": {
+                "failedToSign": "Impossibile firmare: ",
+                "tokenNameUnavailable": "Il nome CAT non è disponibile."
+            }
+        }
+    },
+    "addressBook": {
+        "ui": {
+            "title": {
+                "list": "Rubrica",
+                "add": "Aggiungere"
+            },
+            "button": {
+                "cancel": "Annulla",
+                "confirm": "Confermare",
+                "addContact": "Aggiungi indirizzo",
+                "showInnerAcc": "I miei account"
+            },
+            "tooltip": {
+                "remove": "Rimuovere"
+            }
+        },
+        "messages": {
+            "notification": {
+                "contactAdded": "Aggiunto.",
+                "contactRemoved": "RIMOSSO.",
+                "saved": "Salvato."
+            },
+            "alert": {
+                "addressExists": "L'indirizzo esiste già nella Rubrica."
+            },
+            "confirmation": {
+                "removeConfirm": "Sei sicuro di rimuovere questo indirizzo dalla tua rubrica?"
+            }
+        }
+    },
+    "addressDetail": {
+        "ui": {
+            "title": {
+                "detail": "Dettagli",
+                "edit": "Modificare"
+            },
+            "label": {
+                "name": "Nome",
+                "address": "Indirizzo"
+            },
+            "tooltip": {
+                "copy": "copia"
+            },
+            "button": {
+                "edit": "Modificare"
+            }
+        }
+    },
+    "addressBookField": {
+        "ui": {
+            "label": {
+                "name": "Nome",
+                "address": "*Indirizzo"
+            },
+            "messages": {
+                "emptyAddress": "Inserisci l'indirizzo.",
+                "illegalAddress": "Indirizzo errato."
+            },
+            "button": {
+                "cancel": "Annulla",
+                "save": "Salva"
+            }
+        }
+    },
+    "mintNft": {
+        "ui": {
+            "title": "Menta NFT",
+            "label": {
+                "did": "FATTO",
+                "memo": "Promemoria",
+                "uri": "URI",
+                "hash": "Hash"
+            },
+            "summary": {
+                "notification": "Sei sicuro di coniare l'NFT?<br/>Controlla la tua transazione.",
+                "label": {
+                    "leadingText": "Coniare NFT"
+                }
+            },
+            "tooltip": {
+                "upload": "Seleziona un file per generare un hash per il tuo NFT."
+            },
+            "button": {
+                "upload": "Ottieni l'hash dell'immagine"
+            },
+            "messages": {
+                "failedToSign": "Impossibile firmare: "
+            }
+        }
+    },
+    "addressField": {
+        "ui": {
+            "label": {
+                "address": "Indirizzo",
+                "bindingAddress": "Indirizzo vincolante:",
+                "lastChanged": "Ultima modifica:",
+                "hour": "{value} ore fa",
+                "day": "{value}d fa",
+                "week": "{value}w fa",
+                "month": "{value}mese fa",
+                "year": "{value}y fa"
+            },
+            "tooltip": {
+                "qr": "Scansiona QR",
+                "addressBook": "Apri Rubrica",
+                "confirmed": "Confermato",
+                "confirming": "Confermando",
+                "wrong": "Sbagliato"
+            },
+            "span": {
+                "newAddress": "Nuovo indirizzo trovato, fare clic per aggiungere alla rubrica."
+            },
+            "resolve": {
+                "fail": "Impossibile risolvere il nome",
+                "notFound": "Non trovato"
+            }
+        }
+    },
+    "errorLog": {
+        "ui": {
+            "title": "Registro degli errori",
+            "label": {
+                "message": "Messaggio",
+                "stack": "Pila"
+            },
+            "field": {
+                "msg": "Messaggio",
+                "info": "Informazioni",
+                "url": "Url",
+                "empty": "Nessuna registrazione"
+            },
+            "button": {
+                "clearAll": "Cancella tutto"
+            }
+        }
+    },
+    "searchCat": {
+        "ui": {
+            "placeholder": "Nome GATTO",
+            "tag": {
+                "imported": "Importato"
+            },
+            "text": {
+                "emptyList": "Risultato vuoto",
+                "ascription": "Alimentato da TailDatabase"
+            }
+        }
+    },
+    "settings": {
+        "menu": {
+            "title": "Impostazioni",
+            "items": {
+                "general": {
+                    "title": "Generale",
+                    "description": "Lingua, rete e conversione di valuta"
+                },
+                "security": {
+                    "title": "Sicurezza",
+                    "description": "Esportazione di password, mnemonici e informazioni private"
+                },
+                "addressBook": {
+                    "title": "Rubrica",
+                    "description": "Aggiungi, modifica, rimuovi e gestisci i tuoi indirizzi di contatto"
+                },
+                "network": {
+                    "title": "Rete",
+                    "description": "Aggiungi, modifica, rimuovi e gestisci la tua rete"
+                },
+                "collection": {
+                    "title": "Collezione",
+                    "description": "Crea, modifica, rimuovi e gestisci la tua raccolta"
+                },
+                "advanced": {
+                    "title": "Avanzate",
+                    "description": "Sperimentale"
+                },
+                "devhelper": {
+                    "title": "Sviluppatore",
+                    "description": "Bech32m, CLVM, Pacchetto, Offerta, Moneta"
+                },
+                "about": {
+                    "title": "Di",
+                    "description": "Informativa sulla privacy, Versione Pawket, Contattaci"
+                },
+                "lock": "Blocca il portafoglio"
+            }
+        },
+        "general": {
+            "title": "Generale",
+            "label": {
+                "language": "Lingua",
+                "network": "Rete",
+                "currency": "Conversione di valuta",
+                "offlineMode": "Modalità offline",
+                "darkMode": "Modalità scura"
+            }
+        },
+        "security": {
+            "title": "Sicurezza",
+            "label": {
+                "mnemonic": "Parole mnemoniche",
+                "password": "Password per il login",
+                "export": "Esporta informazioni private",
+                "reset": "Ripristina portafoglio"
+            },
+            "message": {
+                "clear": "Il ripristino del portafoglio rimuoverà definitivamente tutti i dati (incluse le parole mnemoniche e le password) dal tuo dispositivo, assicurati che sia stato eseguito il backup delle parole mnemoniche del portafoglio. ",
+                "inputPassword": "Inserisci la password per continuare",
+                "passwordNotCorrect": "Password errata.",
+                "backupConfirmTitle": "PROCEDI CON CAUTELA",
+                "backupConfirm": "Questa operazione esporterà le informazioni di backup del portafoglio (incluse le parole mnemoniche e la chiave pubblica), che possono essere utilizzate per ripristinare il portafoglio su altri dispositivi."
+            },
+            "button": {
+                "showMnemonic": "Rivela parole mnemoniche",
+                "hideMnemonic": "Nascondi parole mnemoniche",
+                "password": "Cambiare la password",
+                "backup": "Eseguire il backup delle informazioni sul portafoglio",
+                "reset": "Ripristina portafoglio"
+            }
+        },
+        "devhelper": {
+            "title": "Sviluppatore"
+        },
+        "advanced": {
+            "title": "Avanzate",
+            "label": {
+                "experimental": "Sperimentale"
+            },
+            "confirmation": {
+                "experimental": "Le funzionalità sperimentali non sono stabili e non sono ancora state completamente testate, puoi provare e darci il tuo feedback."
+            },
+            "description": "Dopo aver abilitato questa modalità, puoi utilizzare funzioni sperimentali, come \"Fai offerta\", \"Prendi offerta\", \"Invio batch\", \"Issue CAT\", \"Shadow Wallet\", ecc.",
+            "warning": "Le funzionalità sperimentali non sono stabili e non sono ancora state completamente testate, puoi provare e darci il tuo feedback. "
+        },
+        "about": {
+            "title": "Di",
+            "links": {
+                "title": "Collegamenti",
+                "label": {
+                    "privacyPolicy": "politica sulla riservatezza",
+                    "pawketWebsite": "Sito web Pawket",
+                    "github": "Github",
+                    "twitter": "Cinguettio",
+                    "discord": "Discordia",
+                    "donate": "Dona agli sviluppatori"
+                },
+                "url": {
+                    "privacyPolicy": "https://info.pawket.app/privacy-policy",
+                    "pawketWebsite": "https://info.pawket.app",
+                    "github": "https://github.com/SutuLabs",
+                    "twitter": "https://twitter.com/pawket_app",
+                    "discord": "https://discord.com/invite/ndQgpHwe4V"
+                }
+            }
+        }
+    },
+    "explore": {
+        "title": "Esplorare",
+        "loading": "Caricamento",
+        "ascription": "Alimentato da Dexie",
+        "nft": {
+            "title": "Mercato NFT"
+        },
+        "cat": {
+            "title": "Mercato del GATTO"
+        },
+        "button": {
+            "buy": "Acquistare",
+            "sell": "Vendere",
+            "takeOffer": "Accetta l'offerta"
+        },
+        "table": {
+            "header": {
+                "offer": "Offerta",
+                "receive": "Ricevere",
+                "price": "Prezzo",
+                "operation": "Azione"
+            }
+        }
+    },
+    "accountManagement": {
+        "ui": {
+            "title": "Gestione contabile",
+            "label": {
+                "default": "Predefinito",
+                "serial": "Seriale",
+                "address": "Indirizzo",
+                "imported": "Importato",
+                "passPhrase": "Frase d'accesso",
+                "publicKey": "Chiave pubblica",
+                "unknown": "Sconosciuto"
+            },
+            "button": {
+                "addBySerial": "Aggiungi per numero di serie",
+                "addByPassword": "Aggiungi Shadow Wallet",
+                "addByLegacy": "Portafoglio ufficiale Import Chia (24 parole)",
+                "addByMnemonic": "Portafoglio Import Nucle/Goby (12 parole)",
+                "addByAddress": "Aggiungi per indirizzo (modalità di osservazione)",
+                "addByPublicKey": "Aggiungi per PublicKey"
+            },
+            "tooltip": {
+                "addBySerial": "I conti seriali derivati ​​vengono creati in ordine.",
+                "addByPassword": "Account protetto da MNEMONIC e PASSPHRASE. ",
+                "addByLegacy": "Portafoglio ufficiale Import Chia.",
+                "addByMnemonic": "Portafoglio Import Nucle/Goby.",
+                "addByAddress": "La sola lettura è supportata in questa modalità.",
+                "addByPublicKey": "Aggiungi la chiave pubblica del portafoglio offline per avviare e completare le transazioni."
+            },
+            "modal": {
+                "addByLegacy": "Importa portafoglio ufficiale Chia",
+                "addByMnemonic": "Portafoglio Import Nucle/Goby"
+            },
+            "value": {
+                "defaultName": "Conto{n}"
+            }
+        },
+        "message": {
+            "confirmation": {
+                "removeAccount": "Rimuovere [{accountName}]? ",
+                "cancelText": "Annulla",
+                "confirmText": "OK"
+            },
+            "prompt": {
+                "setAccountName": "Inserisci Nuovo nome",
+                "cancelText": "Annulla",
+                "confirmText": "OK"
+            },
+            "notification": {
+                "saved": "Salvato"
+            }
+        }
+    },
+    "welcome": {
+        "ui": {
+            "description": "Gestisci i tuoi XCH/CAT in Pawket!",
+            "slogan": "Pawket è e continuerà ad essere il tuo buon compagno nel mondo Chia.",
+            "button": {
+                "start": "INIZIO"
+            }
+        }
+    },
+    "disclaimer": {
+        "ui": {
+            "title": "Disclaimer",
+            "tip": "Assicurati di eseguire sempre il backup delle parole mnemoniche e delle chiavi private. ",
+            "privary": "Di tanto in tanto potremmo modificare l'Informativa sulla privacy. ",
+            "agreementPrefix": "accetto il ",
+            "agreement": "politica sulla riservatezza",
+            "link": "https://info.pawket.app/privacy-policy/",
+            "agreementSuffix": "e vuoi accedere a Pawket.",
+            "button": {
+                "continue": "CONTINUA"
+            }
+        }
+    },
+    "createPassword": {
+        "title": "Crea password",
+        "tip": "Prima di iniziare, imposta una password di accesso. ",
+        "label": {
+            "password": "Parola d'ordine",
+            "confirm": "Conferma password"
+        },
+        "button": {
+            "continue": "CONTINUA"
+        }
+    },
+    "createWallet": {
+        "title": "Crea Portafoglio",
+        "button": {
+            "create": "Creare",
+            "import": "Importare",
+            "backup": "Importa il backup del portafoglio"
+        }
+    },
+    "newWallet": {
+        "title": "Nuovo portafoglio"
+    },
+    "importWallet": {
+        "title": "Importa portafoglio"
+    },
+    "accountInfo": {
+        "ui": {
+            "title": {
+                "export": "Informazioni account"
+            },
+            "label": {
+                "name": "Nome",
+                "type": "Tipo",
+                "fingerprint": "impronta digitale",
+                "masterPublicKey": "Chiave pubblica principale (m)",
+                "farmerPublicKey": "Chiave pubblica dell'agricoltore (m/12381/8444/0/0)",
+                "poolPublicKey": "Chiave pubblica del pool (m/12381/8444/1/0)",
+                "firstWalletAddress": "Primo indirizzo del portafoglio",
+                "mnemonicSeed": "Parole mnemoniche (24 parole)",
+                "connectionManagement": "Gestione della connessione",
+                "details": "Dettagli"
+            },
+            "tooltip": {
+                "fingerprintTip": "Compatibile con il portafoglio ufficiale Chia",
+                "mnemonicTip": "Compatibile con il portafoglio ufficiale Chia",
+                "disconnect": "Disconnetti"
+            },
+            "button": {
+                "reveal": "Svelare",
+                "hide": "Nascondere",
+                "delete": "Eliminare"
+            }
+        },
+        "message": {
+            "inputPassword": "Inserisci la password per continuare",
+            "passwordNotCorrect": "Password errata.",
+            "disconnect": "Sei sicuro di disconnettere [{acc}] da questo sito?"
+        }
+    },
+    "nftDetail": {
+        "ui": {
+            "label": {
+                "nftId": "ID NFT:",
+                "collection": "Collezione",
+                "did": "FATTO",
+                "description": "Descrizione",
+                "expirationDate": "Data di scadenza"
+            },
+            "button": {
+                "transfer": "Trasferimento",
+                "makeOffer": "Vendere",
+                "move": "Mossa",
+                "showMore": "Mostra di più",
+                "showLess": "Mostra meno"
+            },
+            "title": {
+                "properties": "Proprietà",
+                "bindingInformation": "Informazioni vincolanti",
+                "details": "Dettagli"
+            },
+            "bindingInformation": {
+                "address": "Indirizzo",
+                "publicKey": "Chiave pubblica",
+                "did": "FATTO",
+                "text": "Testo",
+                "edit": "Modificare"
+            },
+            "details": {
+                "nftId": "ID NFT:",
+                "launcherId": "ID di avvio",
+                "ownerDid": "Il proprietario ha fatto",
+                "ownerAddress": "Indirizzo del proprietario",
+                "royaltyPercentage": "Percentuale di diritti d'autore",
+                "dataUrl": "URL dati {indice}",
+                "dataHash": "Hash dei dati",
+                "metadataUrl": "URL dei metadati {indice}",
+                "metadataHash": "Hash dei metadati",
+                "licenseUrl": "URL della licenza",
+                "licenseHash": "Licenza Hash",
+                "series": "Serie"
+            },
+            "dropdown": {
+                "spaceScan": "Visualizza su Spacescan.io",
+                "mintGarden": "Visualizza su Mintgarden.io",
+                "setAsProfilePic": "Imposta come avatar dell'account",
+                "signWithNft": "Cartello",
+                "nftBurn": "Masterizza NFT"
+            },
+            "profile": {
+                "all": "Tutti gli NFT",
+                "unassigned": "NFT non assegnati"
+            }
+        }
+    },
+    "did": {
+        "ui": {
+            "title": {
+                "detail": "Dettagli"
+            },
+            "button": {
+                "addDid": "Aggiungi DID",
+                "sign": "Cartello"
+            },
+            "label": {
+                "name": "Nome",
+                "did": "FATTO",
+                "tool": "Attrezzo"
+            },
+            "prompt": {
+                "newName": "Inserisci Nuovo nome"
+            }
+        },
+        "addDid": {
+            "title": "Aggiungi DID",
+            "tip": "Utilizzerai 1 mojo per creare un DID.",
+            "balance": "Bilancia",
+            "confirmation": "Sei sicuro di creare un DID?<br>Controlla la tua transazione.",
+            "spend": "Trascorrere"
+        }
+    },
+    "nftTransfer": {
+        "ui": {
+            "title": "Trasferimento",
+            "description": "Trasferirai questo NFT a un nuovo proprietario.",
+            "summary": {
+                "confirmation": "Sei sicuro di trasferire l'NFT?<br>Controlla la tua transazione."
+            }
+        }
+    },
+    "collection": {
+        "myCollection": {
+            "title": "La mia collezione",
+            "specialNote": "Nota speciale: le informazioni sulla raccolta non verranno caricate sulla blockchain e i dati verranno archiviati nel tuo dispositivo locale. ",
+            "button": {
+                "newCollection": "Nuova collezione"
+            },
+            "tooltip": {
+                "edit": "Modificare",
+                "remove": "Rimuovere"
+            },
+            "messages": {
+                "confirmation": {
+                    "delete": "Sei sicuro di rimuovere la raccolta?"
+                },
+                "information": {
+                    "NO_COLLECTION": "Nessuna raccolta"
+                }
+            }
+        },
+        "createCollection": {
+            "title": "Crea raccolta",
+            "label": {
+                "id": "*ID",
+                "name": "*Nome",
+                "description": "Descrizione",
+                "icon": "*Icona",
+                "uploadImage": "Carica immagine:",
+                "url": "URL:",
+                "hash": "Hash:",
+                "fillUrl": "Inserisci l'URL dell'immagine",
+                "iconUrl": "URL dell'icona",
+                "iconHash": "icona hash",
+                "properties": "*Proprietà",
+                "creator": "Creatore",
+                "address": "*Indirizzo",
+                "royaltyPercentage": "*Percentuale di royalty",
+                "royaltyAddress": "*Indirizzo reale",
+                "licenseUrl": "*URL della licenza"
+            },
+            "button": {
+                "upload": "Caricamento"
+            },
+            "messages": {
+                "error": {
+                    "INVALID_PROPERTY": "Proprietà non valida",
+                    "INVALID_ADDRESS": "Indirizzo non valido"
+                }
+            }
+        }
+    },
+    "scanAssets": {
+        "ui": {
+            "title": "Scansiona le risorse",
+            "prompt": {
+                "selectAssetType": "Scansionando più indirizzi, puoi scoprire asset non mostrati nell'elenco (inclusi XCH, CAT, NFT ecc.) e trasferirli a un indirizzo di uso comune.",
+                "scanning": "Scansione...",
+                "wait": "Si prega di pazientare per qualche minuto.",
+                "paused": "In pausa...",
+                "canceled": "Annullato.",
+                "finished": "Finito!",
+                "scanned": "Scansionato"
+            },
+            "label": {
+                "scan": "Scansione",
+                "token": "Gettone",
+                "nft": "NFT",
+                "did": "FATTO",
+                "myCats": "I miei gatti",
+                "maxAddress": "Numero massimo di indirizzi di scansione",
+                "scanning": "Scansione",
+                "result": "Risultato",
+                "name": "Nome",
+                "id": "ID",
+                "balance": "Bilancia",
+                "action": "Azione",
+                "imported": "Importato"
+            },
+            "button": {
+                "start": "Inizia scansione",
+                "pause": "Pausa",
+                "cancel": "Annulla",
+                "continue": "Continua",
+                "reScan": "Nuova scansione",
+                "add": "Aggiungere",
+                "send": "Inviare",
+                "sign": "Cartello"
+            }
+        },
+        "message": {
+            "confirmation": {
+                "close": "La scansione non è stata completata. ",
+                "cancel": "La scansione non è stata completata. "
+            },
+            "error": {
+                "ABORT_OOM": "La scansione è stata interrotta. ",
+                "NETWORK_ERROR": "Errore di rete. ",
+                "UNKNOWN": "Errore sconosciuto. "
+            }
+        }
+    },
+    "moveNft": {
+        "ui": {
+            "title": "Sposta NFT",
+            "label": {
+                "moveToProfile": "Passa al profilo",
+                "selectDid": "Seleziona un DID",
+                "move": "Sposta NFT",
+                "to": "A"
+            },
+            "confirmation": "Sei sicuro di spostare l'NFT? <br>Controlla la tua transazione."
+        }
+    },
+    "signMessage": {
+        "ui": {
+            "title": "Firma il messaggio",
+            "prompt": "Assicurati che il messaggio provenga da una fonte attendibile. ",
+            "label": {
+                "signWdid": "Firma con DID:",
+                "signWithNft": "Firma con NFT:",
+                "signWithAddress": "Firma con indirizzo:",
+                "message": "Messaggio",
+                "result": "Risultato"
+            }
+        }
+    },
+    "verifyMessage": {
+        "ui": {
+            "title": "Verifica messaggio",
+            "label": {
+                "message": "Messaggio",
+                "result": "Risultato"
+            },
+            "button": {
+                "verify": "Verificare"
+            },
+            "sigResult": {
+                "pass": "Controllo della firma superato",
+                "fail": "Controllo della firma non riuscito",
+                "none": "Firma non verificata"
+            },
+            "coinResult": {
+                "pass": "Controllo delle monete superato",
+                "fail": "Il controllo delle monete non è riuscito",
+                "none": "Moneta non controllata"
+            }
+        }
+    },
+    "batchMintNft": {
+        "ui": {
+            "title": "Batch Mint NFT",
+            "label": {
+                "royaltyAddress": "Indirizzo della regalità",
+                "royaltyPercentage": "Percentuale di diritti d'autore"
+            }
+        }
+    },
+    "addNetwork": {
+        "ui": {
+            "title": {
+                "add": "Aggiungi rete",
+                "edit": "Modifica rete"
+            },
+            "warning": "Un provider di rete dannoso può mentire sullo stato della blockchain e registrare la tua attività di rete. ",
+            "label": {
+                "networkName": "Nome della rete",
+                "rpcUrl": "URL dell'RPC",
+                "chainId": "ID catena",
+                "currencySymbol": "Simbolo di valuta",
+                "addressPrefix": "Prefisso indirizzo",
+                "decimalPlace": "Cifre decimali della valuta",
+                "blockExplorer": "URL di Block Explorer (facoltativo)"
+            },
+            "button": {
+                "addNetwork": "Aggiungi rete"
+            }
+        },
+        "message": {
+            "notification": {
+                "networkExists": "Questo nome di rete esiste già!"
+            },
+            "confirmation": {
+                "delete": "Sei sicuro di rimuovere questa rete?"
+            }
+        }
+    },
+    "updateCns": {
+        "ui": {
+            "title": "Aggiorna indirizzo CNS",
+            "confirmation": "Aggiornerai le informazioni vincolanti per il tuo nome di dominio.<br/>Controlla la tua transazione.",
+            "label": {
+                "updateTo": "Aggiorna a",
+                "cns": "SNC",
+                "targetAddress": "Indirizzo di destinazione",
+                "currentBindingAddress": "Indirizzo di rilegatura corrente"
+            }
+        }
+    },
+    "addByPublicKey": {
+        "ui": {
+            "title": "Aggiungi account tramite chiave pubblica",
+            "message": {
+                "publicKeyRequired": "La chiave pubblica è obbligatoria."
+            }
+        }
+    },
+    "encryptMessage": {
+        "ui": {
+            "title": "Cripta messaggio",
+            "tab": {
+                "singleMessage": "Messaggio singolo",
+                "multipleMessage": "Più messaggi"
+            },
+            "label": {
+                "encryptWithAddress": "Crittografa con indirizzo",
+                "activatePrefix": "L'indirizzo non è stato attivato, clicca qui per effettuare qualsiasi trasferimento a ",
+                "activate": "attivare",
+                "message": "Messaggio",
+                "receiverAddress": "Indirizzo del destinatario"
+            },
+            "button": {
+                "encrypt": "Crittografare"
+            }
+        },
+        "message": {
+            "error": {
+                "INACTIVE_ADDRESS": "L'indirizzo del destinatario non è stato attivato."
+            }
+        }
+    },
+    "decryptMessage": {
+        "ui": {
+            "title": "Decrittografare il messaggio",
+            "label": {
+                "message": "Messaggio",
+                "result": "Risultato"
+            },
+            "button": {
+                "decrypt": "Decifrare"
+            }
+        },
+        "message": {
+            "error": {
+                "CANNOT_FIND_ADDRESS": "L'indirizzo di decrittazione non corrisponde all'indirizzo del destinatario.",
+                "INVALID_MESSAGE": "Messaggio non valido.",
+                "INVALID_ADDRESS": "Indirizzo mittente/destinatario non valido."
+            }
+        }
+    },
+    "bindingInformation": {
+        "ui": {
+            "title": "Informazioni vincolanti",
+            "label": {
+                "publicKey": "Chiave pubblica",
+                "did": "FATTO",
+                "text": "Testo"
+            },
+            "notification": "Aggiornerai le informazioni vincolanti per il tuo nome di dominio.<br>Controlla la tua transazione.",
+            "tag": {
+                "currentPk": "Conto corrente PK",
+                "fillPk": "Compila la chiave pubblica del conto corrente"
+            },
+            "button": {
+                "update": "Aggiornamento"
+            }
+        }
+    },
+    "scan": {
+        "ui": {
+            "title": "Scansione",
+            "label": {
+                "scanQr": "Scansiona il codice QR",
+                "publicKeyQr": "Codice QR a chiave pubblica"
+            },
+            "hint": {
+                "scan": "Scansiona indirizzo, chiave pubblica"
+            }
+        }
+    },
+    "backup": {
+        "ui": {
+            "title": {
+                "verifyPassword": "Verifica la password",
+                "backup": "Informazioni di backup"
+            },
+            "tip": {
+                "setPassword": "Questa password verrà utilizzata come password di accesso durante l'importazione del backup su un nuovo dispositivo per ripristinare il portafoglio."
+            },
+            "label": {
+                "passwordType": {
+                    "current": "Usa la password di accesso corrente",
+                    "new": "Usa una nuova password"
+                },
+                "selectBackupInfo": "Seleziona Informazioni di backup",
+                "setYourLoginPassword": "Imposta la tua password di accesso"
+            },
+            "items": {
+                "masterAccount": "Informazioni sull'account principale",
+                "settings": "Impostazioni",
+                "customNetwork": "Rete personalizzata",
+                "accountList": "Elenco dei conti",
+                "addressBook": "Rubrica",
+                "didNames": "Nomi DID"
+            },
+            "button": {
+                "downloadBak": "Scarica file di backup",
+                "complete": "Completare",
+                "next": "Prossimo"
+            }
+        },
+        "message": {
+            "error": {
+                "passwordRequired": "E 'richiesta la password.",
+                "passwordNotCorrect": "Password errata."
+            }
+        }
+    },
+    "importBackup": {
+        "title": "Carica backup",
+        "password": {
+            "tip": "Inserisci la tua password di accesso",
+            "label": "Parola d'ordine"
+        },
+        "error": {
+            "LARGE_FILE": "Il file è troppo grande",
+            "UNSUPPORTED_FILE": "File non supportato"
+        }
+    },
+    "buyUsds": {
+        "ui": {
+            "title": "Acquista USD",
+            "button": {
+                "continue": "Continua ad acquistare",
+                "stably": "Apri stabilmente per acquistare"
+            },
+            "tip": "Attualmente supporta solo l'acquisto di USDS sulla blockchain Chia tramite bonifico bancario ACH.",
+            "stablyPrefix": "Questo Servizio è fornito da",
+            "stably": " Stabilmente ",
+            "stablySuffix": "ed è completamente indipendente da Pawket."
+        }
+    },
+    "nftBurn": {
+        "title": "Masterizzazione NFT",
+        "description": "Brucerai questo NFT rimuovendolo dalla circolazione inviandolo a un indirizzo verificabilmente non spendibile.",
+        "confirmation": "Sei sicuro di masterizzare questo NFT? <br>Controlla la tua transazione."
+    },
+    "cns": {
+        "title": "Servizio nomi Chia",
+        "placeholder": "Cerca un nome di dominio Chia",
+        "button": {
+            "search": "Ricerca",
+            "loading": "Caricamento",
+            "register": "Registrati",
+            "cancel": "Annulla"
+        },
+        "label": {
+            "notOpenYet": "Non ancora aperto",
+            "registered": "Registrato",
+            "result": "Risultato",
+            "available": "Disponibile",
+            "unavailable": "Non disponibile",
+            "registrationPeriod": "Periodo di registrazione",
+            "registrationFee": "Tassa di registrazione",
+            "annualFee": "Tassa annuale",
+            "royaltyPercentage": "Percentuale di diritti d'autore",
+            "total": "Totale",
+            "networkIssue": "Problema di rete",
+            "myNames": "Il mio nome è",
+            "register": "Registra {cnsName}.xch",
+            "name": "Nome",
+            "oneYear": "1 anno",
+            "address": "Indirizzo (facoltativo)"
+        },
+        "message": {
+            "notOpen": " Durante il periodo di funzionamento di prova di CNS, per il momento è possibile registrare solo nomi con 6 o più caratteri. ",
+            "registered": "Questo nome è stato registrato. ",
+            "profileHomepage": "Pagina iniziale del profilo",
+            "unavailable": "Questo nome è riservato. ",
+            "noName": "Nessun nome di dominio Chia qui. "
+        }
+    },
+    "connect": {
+        "ui": {
+            "label": {
+                "connectWithPawket": "Connettiti con Pawket",
+                "enterPassword": "Inserisci la tua password per connetterti al sito",
+                "trust": "Assicurati di fidarti del sito a cui ti connetti",
+                "selectAccount": "Seleziona un account da utilizzare su questo sito",
+                "loadingBalance": "Caricamento saldo..",
+                "allowSiteTo": "Consenti a questo sito di:",
+                "viewInfo": "Visualizza gli indirizzi del tuo account, il saldo, i DID e le attività.",
+                "requestTranx": "Richiedi l'approvazione per le transazioni.",
+                "gettingData": "Ottenere dati da Pawket...",
+                "noWallet": "Nessun portafoglio Pawket",
+                "noWalletInfo": "Non hai un portafoglio configurato in Pawket."
+            },
+            "button": {
+                "next": "Prossimo",
+                "connect": "Collegare",
+                "setUp": "Configura Portafoglio"
+            }
+        },
+        "messages": {
+            "success": "Successo!",
+            "invalidCall": "Chiamata non valida:",
+            "noAppName": "Si prega di specificare un nome per l'app!",
+            "offerAccepted": "L'offerta è stata accettata!",
+            "invalidData": "Impossibile firmare: dati di input non validi",
+            "unknownDid": "Impossibile firmare: il DID specificato non esiste nel conto corrente",
+            "unknownNetwork": "La rete specificata non esiste",
+            "sendCompleted": "Transazione inviata!",
+            "catAdded": "GATTO è aggiunto!",
+            "cancelled": "Annullato",
+            "incorrectPassword": "Password errata."
+        }
+    }
+}

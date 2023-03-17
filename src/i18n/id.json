@@ -1,0 +1,1651 @@
+{
+    "default": {
+      "accountName": "Akun1"
+    },
+    "html": {
+      "document": {
+        "title": "Pawket"
+      }
+    },
+    "common": {
+      "button": {
+        "confirm": "Mengonfirmasi",
+        "cancel": "Membatalkan",
+        "back": "Kembali",
+        "save": "Menyimpan",
+        "submit": "Kirim",
+        "delete": "Menghapus",
+        "sign": "Tanda",
+        "generate": "Menghasilkan",
+        "copy": "Menyalin"
+      },
+      "tooltip": {
+        "copy": "Menyalin"
+      },
+      "message": {
+        "saved": "Diselamatkan.",
+        "added": "Ditambahkan.",
+        "noResult": "Tidak ada hasil.",
+        "uploadSuccess": "Diunggah."
+      }
+    },
+    "app": {
+      "ui": {
+        "button": {
+          "lang": "Bahasa Indonesia"
+        },
+        "navigation": {
+          "wallet": "Dompet",
+          "cns": "SSP",
+          "explore": "Mengeksplorasi",
+          "settings": "Pengaturan"
+        }
+      },
+      "message": {
+        "notification": {
+          "copySuccess": "Disalin.",
+          "copyFailed": "Salinan gagal.",
+          "transactionComplete": {
+            "title": "Transaksi Selesai!",
+            "body": "Transaksi Anda di blok {block} telah selesai."
+          }
+        }
+      }
+    },
+    "footer": {
+      "ui": {
+        "productInfo": {
+          "name": "Paket",
+          "author": "SutuLab",
+          "authorLink": "https://github.com/SutuLabs"
+        },
+        "button": {
+          "home": "Rumah",
+          "developer": "Pengembang"
+        },
+        "error": {
+          "READ_VERSION_FAILED": "Gagal membaca versi."
+        }
+      }
+    },
+    "self-test": {
+      "message": {
+        "checking": "Memeriksa",
+        "passed": "Lulus",
+        "failed": "Gagal memeriksa: "
+      }
+    },
+    "verifyPassword": {
+      "ui": {
+        "button": {
+          "confirm": "Mengonfirmasi",
+          "clear": "Atur Ulang Dompet"
+        },
+        "title": {
+          "verifyPassword": "Verifikasi Kata Sandi"
+        },
+        "alt": {
+          "logoAlt": "Logo Paket"
+        }
+      },
+      "message": {
+        "confirmation": {
+          "clear": "Menyetel ulang dompet akan secara permanen menghapus semua data (termasuk mnemonik dan kata sandi) dari perangkat Anda, pastikan mnemonik dompet telah dicadangkan. ",
+          "confirmText": "Mengonfirmasi",
+          "cancelText": "Membatalkan"
+        },
+        "error": {
+          "passwordNotMatch": "Kata sandi tidak cocok.",
+          "incorrectPassword": "Kata kunci Salah.",
+          "passwordEmpty": "Kata sandi tidak boleh kosong."
+        },
+        "tip": {
+          "weakPassword": "Lemah",
+          "mediumPassword": "Sedang",
+          "strongPassword": "Kuat"
+        }
+      }
+    },
+    "createSeed": {
+      "ui": {
+        "button": {
+          "confirm": "Mengonfirmasi",
+          "later": "Nanti",
+          "ready": "Berikutnya",
+          "12word": "12 Kata",
+          "24word": "24 Kata",
+          "import12": "Impor Kata Mnemonik Pawket",
+          "import24": "Impor Kata Mnemonik Resmi Chia"
+        },
+        "text": {
+          "create": {
+            "tip1": "Selamat datang! ",
+            "tip2": "PERINGATAN: JANGAN PERNAH MENGUNGKAPKAN KATA MNEMONIK ANDA. "
+          },
+          "import12": {
+            "title": "Impor Kata Mnemonik Pawket",
+            "tip": "Harap masukkan Kata Mnemonik Pawket Anda secara berurutan, menggunakan spasi di antara mnemonik."
+          },
+          "import24": {
+            "title": "Impor Kata Mnemonik Resmi Chia",
+            "tip": "Harap masukkan Kata Mnemonik resmi Chia Anda secara berurutan, menggunakan spasi di antara mnemonik."
+          }
+        }
+      },
+      "message": {
+        "error": {
+          "wrongSeed": "Impor gagal, harap periksa Kata Mnemonik Anda."
+        }
+      }
+    },
+    "accountDetail": {
+      "ui": {
+        "button": {
+          "receive": "Menerima",
+          "buy": "Membeli",
+          "send": "Mengirim",
+          "scan": "Pindai",
+          "confirm": "Mengonfirmasi",
+          "cancel": "Membatalkan",
+          "manageCats": "Kelola CAT"
+        },
+        "tab": {
+          "asset": "Aset",
+          "utxos": "UTXO",
+          "nft": "NFT",
+          "did": "TELAH MELAKUKAN"
+        },
+        "tooltip": {
+          "lock": "Kunci Dompet",
+          "errorLog": "Catatan eror",
+          "refresh": "Menyegarkan"
+        },
+        "dApps": {
+          "title": "dApps",
+          "tooltip": {
+            "donate": "Donasi untuk Mendukung Pembangunan",
+            "scanAssets": "Pindai Aset",
+            "proxy": "Tanda Luring",
+            "takeOffer": "Ambil Penawaran",
+            "makeOffer": "Membuat penawaran",
+            "batchSend": "Kirim Batch",
+            "mintCat": "Masalah CAT",
+            "mintNft": "Mint NFT",
+            "batchMintNft": "Batch Mint",
+            "verify": "Verifikasi Pesan",
+            "encryptMessage": "Enkripsi Pesan",
+            "decryptMessage": "Dekripsi Pesan"
+          },
+          "button": {
+            "donate": "Menyumbangkan",
+            "scanAssets": "Pindai Aset",
+            "proxy": "Tanda Luring",
+            "takeOffer": "Ambil Penawaran",
+            "makeOffer": "Membuat penawaran",
+            "batchSend": "Kirim Batch",
+            "mintCat": "Masalah CAT",
+            "mintNft": "Mint NFT",
+            "batchMintNft": "Batch Mint",
+            "verify": "Verifikasi Pesan",
+            "encryptMessage": "Enkripsi Pesan",
+            "decryptMessage": "Dekripsi Pesan"
+          }
+        }
+      },
+      "message": {
+        "confirmation": {
+          "lock": "Kunci dompet?"
+        },
+        "notification": {
+          "donate": "Anda menyumbang ke pengembang.",
+          "observeMode": "Fungsi interaksi dinonaktifkan dalam Mode Pengamatan",
+          "offline": "Saat ini dalam mode offline.",
+          "turnOffPrefix": "Klik",
+          "turnOff": "Di Sini",
+          "turnOffSuffix": "mematikan.",
+          "test": "Catatan: kitten.pawket.app adalah situs uji coba tempat Anda dapat mencoba beberapa fitur baru yang belum dirilis."
+        }
+      }
+    },
+    "changePassword": {
+      "ui": {
+        "title": {
+          "changePassword": "Ganti kata sandi"
+        },
+        "label": {
+          "oldPassword": "password lama",
+          "newPassword": "kata sandi baru",
+          "rePassword": "Masukkan Kembali password"
+        },
+        "button": {
+          "back": "Kembali",
+          "submitChange": "Kirim"
+        }
+      },
+      "message": {
+        "error": {
+          "passwordRequired": "Katakunci dibutuhkan.",
+          "passwordNotCorrect": "Kata kunci Salah.",
+          "passwordNotMatch": "Kata sandi tidak cocok."
+        },
+        "alert": {
+          "passwordChanged": "Kata sandi telah diubah. "
+        }
+      }
+    },
+    "explorerLink": {
+      "ui": {
+        "title": {
+          "link": "Menerima Alamat"
+        },
+        "label": {
+          "maxAddress": "Jumlah maksimum alamat",
+          "address": "Alamat",
+          "coin": "Koin",
+          "sign": "Tanda",
+          "link": "Penjelajah",
+          "observer": "Pengamat",
+          "nonObserver": "Non-Pengamat"
+        },
+        "tooltip": {
+          "blockchainExplorer": "Lihat di Blok Explorer",
+          "receiveAddress": "Anda dapat memeriksa saldo di lebih banyak alamat jika Anda menambah nilainya, tetapi dompet akan bekerja lebih lambat."
+        }
+      }
+    },
+    "send": {
+      "ui": {
+        "title": {
+          "send": "Mengirim"
+        },
+        "label": {
+          "amount": "Jumlah",
+          "memo": "Memo",
+          "fee": "Biaya"
+        },
+        "button": {
+          "submit": "Kirim",
+          "showSend": "Menunjukkan"
+        },
+        "slider": {
+          "low": "Rendah",
+          "medium": "Sedang",
+          "high": "Tinggi",
+          "custom": "Kebiasaan"
+        },
+        "messages": {
+          "getFailedResponse": "Dapatkan respons kesalahan: ",
+          "failedToSubmit": "Gagal mengirim ke kumpulan memori: ",
+          "failedToSign": "Gagal menandatangani: ",
+          "submitted": "Dikirim ke kumpulan memori.",
+          "invalidAmount": "Jumlah tidak valid.",
+          "insufficientFunds": "Dana tidak mencukupi."
+        },
+        "span": {
+          "loading": "Memuat",
+          "maxLeadingText": "Maks:"
+        },
+        "text": {
+          "offlineOnlySupportXch": "Pengiriman offline hanya mendukung XCH sekarang."
+        },
+        "summary": {
+          "notification": "Apakah Anda yakin untuk mengirim?<br/>Harap tinjau transaksi Anda."
+        }
+      },
+      "messages": {
+        "error": {
+          "DOUBLE_SPEND": "Pembelanjaan Ganda",
+          "UNKNOWN_UNSPENT": "UTXO yang tidak diketahui telah digunakan, mungkin transaksi sebelumnya belum dikonfirmasi di blockchain.",
+          "BAD_AGGREGATE_SIGNATURE": "Tanda Tangan Agregat Buruk",
+          "INVALID_CONDITION": "Kondisi Tidak Valid",
+          "COIN_AMOUNT_EXCEEDS_MAXIMUM": "Jumlah Koin Melebihi Maksimum",
+          "INVALID_FEE_LOW_FEE": "Biaya Tidak Valid/Biaya Rendah",
+          "MEMPOOL_NOT_INITIALIZED": "Mempool tidak diinisialisasi",
+          "ALREADY_INCLUDING_TRANSACTION": "Sudah Termasuk Transaksi",
+          "INCOMPATIBLE_NETWORK_ID": "ID Jaringan tidak kompatibel",
+          "NO_TRANSACTIONS_WHILE_SYNCING": "Tidak Ada Transaksi Saat Sinkronisasi",
+          "INVALID_FEE_TOO_CLOSE_TO_ZERO": "Biaya Tidak Valid, Terlalu Mendekati Nol",
+          "COIN_AMOUNT_NEGATIVE": "Jumlah Koin Negatif",
+          "INVALID_ADDRESS": "Alamat tidak valid",
+          "ADDRESS_NOT_MATCH_NETWORK": "Alamat yang diisi tidak cocok dengan jaringan saat ini. ",
+          "PENDING": "Transaksi sudah dalam status pending, harap tunggu sampai selesai."
+        }
+      }
+    },
+    "scanQrCode": {
+      "message": {
+        "error": {
+          "NotAllowedError": "KESALAHAN: Anda harus memberikan izin akses kamera.",
+          "NotFoundError": "KESALAHAN: Tidak ada kamera di perangkat ini.",
+          "NotSupportedError": "KESALAHAN: Diperlukan konteks aman (HTTPS, localhost).",
+          "NotReadableError": "KESALAHAN: Apakah kamera sudah digunakan?",
+          "OverconstrainedError": "KESALAHAN: Kamera yang terpasang tidak sesuai.",
+          "StreamApiNotSupportedError": "KESALAHAN: Stream API tidak didukung di browser ini.",
+          "InsecureContextError": "KESALAHAN: Akses kamera hanya diizinkan dalam konteks aman. "
+        }
+      }
+    },
+    "offer": {
+      "make": {
+        "ui": {
+          "title": "Membuat penawaran",
+          "panel": {
+            "information": "Informasi",
+            "hint": {
+              "thisIsYourOffer": "Ini adalah teks penawaran Anda.",
+              "unsignedOffer": "Tanda tangan gagal, Penawaran tidak valid"
+            }
+          },
+          "label": {
+            "yourOfferTitle": "Penawaran Anda",
+            "bundle": "Bundel"
+          },
+          "button": {
+            "done": "Selesai",
+            "uploadToDexie": "Unggah ke Dexie"
+          },
+          "field": {
+            "offer": "Menawarkan",
+            "request": "Meminta"
+          }
+        },
+        "messages": {
+          "failedToSign": "Gagal membuat penawaran."
+        }
+      },
+      "symbol": {
+        "Cat": "KUCING",
+        "hint": {
+          "XCH": "Token Asli"
+        }
+      },
+      "take": {
+        "ui": {
+          "title": "Ambil Penawaran",
+          "hint": {
+            "pasteOffer": "Tempel data penawaran Anda di sini, atau upload file penawaran Anda.",
+            "error": "String penawaran Anda salah."
+          },
+          "panel": {
+            "information": "Informasi"
+          },
+          "label": {
+            "royaltyToCreator": "Pencipta",
+            "totalRequested": "Jumlah Total yang Diminta",
+            "nftPrice": "Harga NFT",
+            "royalty": "Royalti",
+            "total": "Total",
+            "receive": "Menerima",
+            "offer": "Menawarkan",
+            "fee": "Biaya",
+            "totalPayment": "Total pembayaran"
+          },
+          "button": {
+            "cancel": "Membatalkan",
+            "submit": "Kirim",
+            "upload": "Unggah File Penawaran"
+          },
+          "field": {
+            "offer": "Menawarkan"
+          },
+          "tooltip": {
+            "spaceScan": "Lihat di Spacescan.io",
+            "verifiedCns": "SSP terverifikasi",
+            "unverifiedCns": "Ini adalah SSP palsu. "
+          },
+          "notification": {
+            "observation": "Saat ini dalam Mode Pengamatan. "
+          }
+        },
+        "information": {
+          "requested": "Sebagai gantinya",
+          "offered": "Anda akan menerima",
+          "addCat": "Tambahkan ke Daftar CAT.",
+          "unsupportOfferNftOffer": "Jenis penawaran ini belum didukung.",
+          "acceptOffer": "Apakah Anda yakin akan menerima tawaran itu?<br>Harap tinjau transaksi Anda."
+        },
+        "messages": {
+          "failedToSign": "Gagal menerima tawaran.",
+          "unsupportOfferNftOffer": "Jenis penawaran ini belum didukung."
+        }
+      }
+    },
+    "ManageCats": {
+      "ui": {
+        "title": {
+          "ManageCats": "Kelola Kucing"
+        },
+        "label": {
+          "listingCats": "Daftar CAT",
+          "name": "Nama",
+          "assetID": "ID aset",
+          "search": "Mencari",
+          "custom": "Kebiasaan"
+        },
+        "button": {
+          "add": "Menambahkan"
+        },
+        "tooltip": {
+          "removeToken": "Hapus KUCING",
+          "drag": "Seret untuk mengurutkan",
+          "copy": "Salin ID aset"
+        },
+        "message": {
+          "nameRequired": "Nama wajib diisi.",
+          "assetIdRequired": "ID aset wajib diisi."
+        }
+      },
+      "message": {
+        "notification": {
+          "wrongAssetId": "ID aset salah. "
+        },
+        "confirmation": {
+          "removeToken": "Apakah Anda yakin untuk menghapus CAT?",
+          "closeWithContent": "Anda memiliki perubahan yang belum disimpan pada halaman ini yang akan hilang jika Anda keluar. ",
+          "confirm": "Mengonfirmasi",
+          "cancel": "Membatalkan"
+        },
+        "alert": {
+          "isExisted": "ID/Nama Aset sudah ada di Daftar CAT!"
+        }
+      }
+    },
+    "offline": {
+      "proxy": {
+        "scan": {
+          "title": "Tanda",
+          "numberField": "Pesan yang tidak ditandatangani",
+          "numberMessage": "Pindai kode QR berikut ini dengan Tanda Offline. "
+        },
+        "confirmBundle": {
+          "title": "Mengonfirmasi",
+          "button": {
+            "cancel": "Membatalkan",
+            "submit": "Kirim"
+          },
+          "notification": "Apakah Anda yakin untuk mengirim?<br/>Harap tinjau transaksi Anda."
+        }
+      },
+      "client": {
+        "text": {
+          "qrcodesStatus": "{indeks} / {total}",
+          "unsafeMode": "Mode Tidak Aman",
+          "status": "Dipindai: {fragmen} / {total} fragmen."
+        },
+        "scan": {
+          "title": "Tanda Luring",
+          "numberField": "Pesan yang Ditandatangani",
+          "numberMessage": "Harap pindai kode QR ini dengan perangkat online yang baru saja memulai transaksi.",
+          "scrollDown": "Gulir ke bawah halaman, dan pindai kode QR di perangkat offline untuk mendapatkan pesan yang ditandatangani."
+        },
+        "show": {
+          "hint": "Gunakan Proxy untuk memindai QR untuk mengirim transaksi Anda.",
+          "overflow": "Data melebihi panjang maksimum, tidak dapat menghasilkan kode QR",
+          "bundle": "Bundel",
+          "copy": "Menyalin"
+        }
+      },
+      "ui": {
+        "button": {
+          "cancel": "Membatalkan"
+        }
+      }
+    },
+    "addByMnemonic": {
+      "ui": {
+        "label": {
+          "name": "Nama akun",
+          "mnemonic": "{len} Kata-kata Mnemonik"
+        },
+        "message": {
+          "nameRequired": "Nama akun wajib diisi.",
+          "mnemonicRequired": "Diperlukan mnemonik.",
+          "invalidMnemonic": "Impor gagal. "
+        },
+        "button": {
+          "back": "Kembali",
+          "submit": "Kirim"
+        },
+        "tooltip": {
+          "mnemonic": "Harap masukkan Kata Mnemonik Anda secara berurutan, menggunakan spasi di antara mnemonik."
+        }
+      },
+      "message": {
+        "error": {
+          "accountMnemonicExists": "Akun dengan Kata Mnemonik yang sama sudah ada."
+        }
+      }
+    },
+    "addByAddress": {
+      "ui": {
+        "title": "Tambahkan Menurut Alamat",
+        "label": {
+          "name": "Nama akun",
+          "publicKey": "PublicKey"
+        },
+        "message": {
+          "nameRequired": "Nama akun wajib diisi.",
+          "illegalAddress": "Alamat salah.",
+          "duplicateAddress": "Alamat Duplikat: [{accName}] memiliki alamat yang sama.",
+          "duplicateName": "Nama Duplikat",
+          "duplicatePublicKey": "Duplikat PublicKey: [{accName}] memiliki publicKey yang sama."
+        },
+        "button": {
+          "back": "Kembali",
+          "submit": "Kirim"
+        }
+      }
+    },
+    "addByPassword": {
+      "ui": {
+        "title": "Tambahkan Dompet Bayangan",
+        "label": {
+          "name": "Nama akun",
+          "password": "Frasa sandi",
+          "rePassword": "Masukkan Ulang Kata Sandi"
+        },
+        "message": {
+          "nameRequired": "Nama akun wajib diisi.",
+          "passwordRequired": "Frasa sandi diperlukan.",
+          "invalidPassword": "Frasa sandi tidak cocok."
+        },
+        "button": {
+          "back": "Kembali",
+          "submit": "Kirim"
+        }
+      },
+      "message": {
+        "error": {
+          "accountPasswordExists": "[{accName}] memiliki frasa sandi yang sama."
+        }
+      }
+    },
+    "addBySerial": {
+      "ui": {
+        "title": "Tambahkan Akun dengan Serial",
+        "label": {
+          "name": "Nama akun"
+        },
+        "message": {
+          "nameRequired": "Nama akun wajib diisi."
+        },
+        "button": {
+          "back": "Kembali",
+          "submit": "Kirim"
+        }
+      }
+    },
+    "bundleSummary": {
+      "ui": {
+        "fee": {
+          "title": "Biaya",
+          "mojos": "{biaya} mojo"
+        },
+        "inputs": {
+          "title": "Jumlah total"
+        },
+        "label": {
+          "details": "Detail"
+        },
+        "detail": {
+          "title": "Detail",
+          "itemTo": "ke {alamat}",
+          "span": {
+            "hint": "Petunjuk (Alamat yang Sesuai)",
+            "memo": "Memo"
+          }
+        }
+      },
+      "notification": {
+        "error": {
+          "unknownMod": "Bundel tidak dikenal, tidak dapat mengurai dengan benar."
+        }
+      }
+    },
+    "batchSend": {
+      "ui": {
+        "title": {
+          "send": "Kirim Batch"
+        },
+        "tooltip": {
+          "help": "Mendukung pengiriman banyak transaksi dalam satu operasi. ",
+          "upload": "Unggah file dalam format \".csv\"."
+        },
+        "field": {
+          "csv": {
+            "fillSample": "Isi Sampel",
+            "or": " atau ",
+            "downloadSample": "Unduh file CSV sampel",
+            "drag": "Seret dan lepas ke area ini untuk mengunggah secara langsung.",
+            "sampleName": "Sampel"
+          }
+        },
+        "summary": {
+          "notification": "Apakah Anda yakin untuk mengirim?<br/>Harap tinjau transaksi Anda."
+        },
+        "button": {
+          "upload": "Unggah CSV"
+        },
+        "messages": {
+          "failedToSign": "Gagal menandatangani: ",
+          "wrongFileType": "Unggah file dalam format .csv.",
+          "onlyOneFile": "Hanya satu unggahan file yang didukung."
+        }
+      },
+      "messages": {
+        "error": {
+          "ADDRESS_NOT_MATCH_NETWORK": "Alamat yang diisi [{address}] tidak cocok dengan jaringan saat ini. ",
+          "COIN_NOT_EXIST": "Koin {simbol} tidak ada!"
+        }
+      },
+      "sample": {
+        "address": "Alamat",
+        "coin": "Koin",
+        "amount": "Jumlah(mojo)",
+        "memo": "Memo (Jika koin yang Anda kirim adalah XCH, Anda tidak dapat mengisi memo)"
+      }
+    },
+    "utxo": {
+      "ui": {
+        "label": {
+          "cost": "Mengirim",
+          "receive": "Menerima",
+          "queue": "Antre",
+          "confirmed": "Dikonfirmasi"
+        },
+        "text": {
+          "empty": "Anda tidak memiliki transaksi."
+        }
+      }
+    },
+    "utxoDetail": {
+      "ui": {
+        "title": {
+          "cost": "Mengirim",
+          "receive": "Menerima"
+        },
+        "label": {
+          "amount": "Jumlah",
+          "time": "Waktu",
+          "spentHeight": "Menghabiskan Tinggi",
+          "confirmedHeight": "Tinggi yang Dikonfirmasi",
+          "parentCoinInfo": "Info ParentCoin",
+          "puzzleHash": "Alamat",
+          "coinName": "Nama Koin",
+          "coins": "Koin",
+          "pending": "Tertunda"
+        },
+        "button": {
+          "unlockCoins": "Buka Koin"
+        },
+        "tooltip": {
+          "copy": "Menyalin"
+        }
+      },
+      "message": {
+        "unlockCoins": "Membuka koin tidak akan membatalkan transaksi. "
+      }
+    },
+    "sendSummary": {
+      "ui": {
+        "label": {
+          "sending": "Mengirim",
+          "to": "Ke",
+          "fee": "Biaya",
+          "total": "Total",
+          "assetId": "ID aset",
+          "NftUri": "NFT"
+        }
+      }
+    },
+    "bundleText": {
+      "ui": {
+        "title": "Bundel",
+        "copy": "Menyalin",
+        "button": {
+          "show": "Menunjukkan",
+          "hide": "Bersembunyi"
+        }
+      }
+    },
+    "mintCat": {
+      "ui": {
+        "title": "Masalah CAT",
+        "label": {
+          "amount": "Jumlah",
+          "memo": "Memo",
+          "symbolName": "Nama CAT (Dapat Dimodifikasi)"
+        },
+        "summary": {
+          "notification": "Apakah Anda yakin akan mengeluarkan CAT?<br/>Harap tinjau transaksi Anda.",
+          "label": {
+            "leadingText": "Mengeluarkan CAT"
+          }
+        },
+        "messages": {
+          "failedToSign": "Gagal menandatangani: ",
+          "tokenNameUnavailable": "Nama CAT tidak tersedia."
+        }
+      }
+    },
+    "addressBook": {
+      "ui": {
+        "title": {
+          "list": "Buku alamat",
+          "add": "Menambahkan"
+        },
+        "button": {
+          "cancel": "Membatalkan",
+          "confirm": "Mengonfirmasi",
+          "addContact": "Tambahkan alamat",
+          "showInnerAcc": "Akun Saya"
+        },
+        "tooltip": {
+          "remove": "Menghapus"
+        }
+      },
+      "messages": {
+        "notification": {
+          "contactAdded": "Ditambahkan.",
+          "contactRemoved": "DIHAPUS.",
+          "saved": "Diselamatkan."
+        },
+        "alert": {
+          "addressExists": "Alamat sudah ada di Address Book."
+        },
+        "confirmation": {
+          "removeConfirm": "Yakin ingin menghapus alamat ini dari Buku Alamat Anda?"
+        }
+      }
+    },
+    "addressDetail": {
+      "ui": {
+        "title": {
+          "detail": "Detail",
+          "edit": "Sunting"
+        },
+        "label": {
+          "name": "Nama",
+          "address": "Alamat"
+        },
+        "tooltip": {
+          "copy": "Menyalin"
+        },
+        "button": {
+          "edit": "Sunting"
+        }
+      }
+    },
+    "addressBookField": {
+      "ui": {
+        "label": {
+          "name": "Nama",
+          "address": "*Alamat"
+        },
+        "messages": {
+          "emptyAddress": "Masukkan alamat.",
+          "illegalAddress": "Alamat salah."
+        },
+        "button": {
+          "cancel": "Membatalkan",
+          "save": "Menyimpan"
+        }
+      }
+    },
+    "mintNft": {
+      "ui": {
+        "title": "Mint NFT",
+        "label": {
+          "did": "TELAH MELAKUKAN",
+          "memo": "Memo",
+          "uri": "URI",
+          "hash": "Hash"
+        },
+        "summary": {
+          "notification": "Apakah Anda yakin akan membuat NFT?<br/>Harap tinjau transaksi Anda.",
+          "label": {
+            "leadingText": "Mencetak NFT"
+          }
+        },
+        "tooltip": {
+          "upload": "Pilih file untuk menghasilkan hash untuk NFT Anda."
+        },
+        "button": {
+          "upload": "Dapatkan Hash Gambar"
+        },
+        "messages": {
+          "failedToSign": "Gagal menandatangani: "
+        }
+      }
+    },
+    "addressField": {
+      "ui": {
+        "label": {
+          "address": "Alamat",
+          "bindingAddress": "Alamat pengikatan:",
+          "lastChanged": "Terakhir diubah:",
+          "hour": "{value}jam yang lalu",
+          "day": "{value}d lalu",
+          "week": "{value}w yang lalu",
+          "month": "{value}bln lalu",
+          "year": "{value}y yang lalu"
+        },
+        "tooltip": {
+          "qr": "Pindai QR",
+          "addressBook": "Buka Buku Alamat",
+          "confirmed": "Dikonfirmasi",
+          "confirming": "Mengkonfirmasi",
+          "wrong": "Salah"
+        },
+        "span": {
+          "newAddress": "Alamat Baru Ditemukan, Klik untuk Menambahkan ke Buku Alamat."
+        },
+        "resolve": {
+          "fail": "Gagal menyelesaikan nama",
+          "notFound": "Tidak ditemukan"
+        }
+      }
+    },
+    "errorLog": {
+      "ui": {
+        "title": "Catatan eror",
+        "label": {
+          "message": "Pesan",
+          "stack": "Tumpukan"
+        },
+        "field": {
+          "msg": "Pesan",
+          "info": "Info",
+          "url": "Url",
+          "empty": "Tidak Ada Catatan"
+        },
+        "button": {
+          "clearAll": "Bersihkan semua"
+        }
+      }
+    },
+    "searchCat": {
+      "ui": {
+        "placeholder": "Nama kucing",
+        "tag": {
+          "imported": "Impor"
+        },
+        "text": {
+          "emptyList": "Hasil Kosong",
+          "ascription": "Didukung oleh TailDatabase"
+        }
+      }
+    },
+    "settings": {
+      "menu": {
+        "title": "Pengaturan",
+        "items": {
+          "general": {
+            "title": "Umum",
+            "description": "Konversi bahasa, jaringan, dan mata uang"
+          },
+          "security": {
+            "title": "Keamanan",
+            "description": "Kata sandi, mnemonik, dan ekspor informasi pribadi"
+          },
+          "addressBook": {
+            "title": "Buku alamat",
+            "description": "Tambah, edit, hapus, dan kelola alamat kontak Anda"
+          },
+          "network": {
+            "title": "Jaringan",
+            "description": "Tambah, edit, hapus, dan kelola jaringan Anda"
+          },
+          "collection": {
+            "title": "Koleksi",
+            "description": "Buat, edit, hapus, dan kelola koleksi Anda"
+          },
+          "advanced": {
+            "title": "Canggih",
+            "description": "Eksperimental"
+          },
+          "devhelper": {
+            "title": "Pengembang",
+            "description": "Bech32m, CLVM, Bundel, Penawaran, Koin"
+          },
+          "about": {
+            "title": "Tentang",
+            "description": "Kebijakan Privasi, Versi Pawket, Hubungi Kami"
+          },
+          "lock": "Kunci Dompet"
+        }
+      },
+      "general": {
+        "title": "Umum",
+        "label": {
+          "language": "Bahasa",
+          "network": "Jaringan",
+          "currency": "konversi mata uang",
+          "offlineMode": "Modus Luring",
+          "darkMode": "Mode Gelap"
+        }
+      },
+      "security": {
+        "title": "Keamanan",
+        "label": {
+          "mnemonic": "Kata Mnemonik",
+          "password": "Kata sandi masuk",
+          "export": "Ekspor Informasi Pribadi",
+          "reset": "Atur Ulang Dompet"
+        },
+        "message": {
+          "clear": "Menyetel ulang dompet akan secara permanen menghapus semua data (termasuk Kata Mnemonic dan kata sandi) dari perangkat Anda, pastikan kata Mnemonic dompet telah dicadangkan. ",
+          "inputPassword": "Masukkan Kata Sandi untuk Melanjutkan",
+          "passwordNotCorrect": "Kata kunci Salah.",
+          "backupConfirmTitle": "LANJUTKAN DENGAN HATI HATI",
+          "backupConfirm": "Operasi ini akan mengekspor informasi cadangan dompet (termasuk Kata Mnemonik dan Kunci Publik), yang dapat digunakan untuk memulihkan dompet di perangkat lain."
+        },
+        "button": {
+          "showMnemonic": "Mengungkapkan Kata Mnemonik",
+          "hideMnemonic": "Sembunyikan Kata Mnemonik",
+          "password": "Ganti kata sandi",
+          "backup": "Cadangkan Informasi Dompet",
+          "reset": "Atur Ulang Dompet"
+        }
+      },
+      "devhelper": {
+        "title": "Pengembang"
+      },
+      "advanced": {
+        "title": "Canggih",
+        "label": {
+          "experimental": "Eksperimental"
+        },
+        "confirmation": {
+          "experimental": "Fitur eksperimental belum stabil dan belum teruji sepenuhnya, Anda dapat mencoba dan memberikan masukan kepada kami."
+        },
+        "description": "Setelah mengaktifkan mode ini, Anda dapat menggunakan fungsi eksperimental, seperti \"Make Offer\", \"Take Offer\", \"Batch Send\", \"Issue CAT\", \"Shadow Wallet\", dll.",
+        "warning": "Fitur eksperimental belum stabil dan belum teruji sepenuhnya, Anda dapat mencoba dan memberikan masukan kepada kami. "
+      },
+      "about": {
+        "title": "Tentang",
+        "links": {
+          "title": "Tautan",
+          "label": {
+            "privacyPolicy": "Kebijakan pribadi",
+            "pawketWebsite": "Situs web Paket",
+            "github": "Github",
+            "twitter": "Twitter",
+            "discord": "Perselisihan",
+            "donate": "Donasi untuk Pengembang"
+          },
+          "url": {
+            "privacyPolicy": "https://info.pawket.app/privacy-policy",
+            "pawketWebsite": "https://info.pawket.app",
+            "github": "https://github.com/SutuLabs",
+            "twitter": "https://twitter.com/pawket_app",
+            "discord": "https://discord.com/invite/ndQgpHwe4V"
+          }
+        }
+      }
+    },
+    "explore": {
+      "title": "Mengeksplorasi",
+      "loading": "Memuat",
+      "ascription": "Didukung oleh Dexie",
+      "nft": {
+        "title": "Pasar NFT"
+      },
+      "cat": {
+        "title": "Pasar KUCING"
+      },
+      "button": {
+        "buy": "Membeli",
+        "sell": "Menjual",
+        "takeOffer": "Ambil Penawaran"
+      },
+      "table": {
+        "header": {
+          "offer": "Menawarkan",
+          "receive": "Menerima",
+          "price": "Harga",
+          "operation": "Tindakan"
+        }
+      }
+    },
+    "accountManagement": {
+      "ui": {
+        "title": "Manajemen akun",
+        "label": {
+          "default": "Bawaan",
+          "serial": "Serial",
+          "address": "Alamat",
+          "imported": "Impor",
+          "passPhrase": "Frasa sandi",
+          "publicKey": "PublicKey",
+          "unknown": "Tidak dikenal"
+        },
+        "button": {
+          "addBySerial": "Tambahkan oleh Seri",
+          "addByPassword": "Tambahkan Dompet Bayangan",
+          "addByLegacy": "Impor Dompet Resmi Chia（24 kata）",
+          "addByMnemonic": "Impor Dompet Nucle/Goby（12 kata）",
+          "addByAddress": "Tambahkan berdasarkan Alamat (Mode Pengamatan)",
+          "addByPublicKey": "Tambahkan dengan PublicKey"
+        },
+        "tooltip": {
+          "addBySerial": "Akun serial turunan dibuat secara berurutan.",
+          "addByPassword": "Akun dilindungi oleh MNEMONIC dan PASSPHRASE. ",
+          "addByLegacy": "Impor dompet resmi Chia.",
+          "addByMnemonic": "Impor dompet Nucle/Goby.",
+          "addByAddress": "Baca-saja didukung dalam mode ini.",
+          "addByPublicKey": "Tambahkan kunci publik dompet luring untuk membantu memulai dan menyelesaikan transaksi."
+        },
+        "modal": {
+          "addByLegacy": "Impor Dompet Resmi Chia",
+          "addByMnemonic": "Impor Dompet Nucle/Goby"
+        },
+        "value": {
+          "defaultName": "Akun{n}"
+        }
+      },
+      "message": {
+        "confirmation": {
+          "removeAccount": "Hapus [{accountName}]? ",
+          "cancelText": "Membatalkan",
+          "confirmText": "OKE"
+        },
+        "prompt": {
+          "setAccountName": "Masukkan Nama Baru",
+          "cancelText": "Membatalkan",
+          "confirmText": "OKE"
+        },
+        "notification": {
+          "saved": "Diselamatkan"
+        }
+      }
+    },
+    "welcome": {
+      "ui": {
+        "description": "Kelola XCH/CAT Anda di Pawket!",
+        "slogan": "Pawket adalah dan akan terus menjadi teman baik Anda di dunia Chia.",
+        "button": {
+          "start": "AWAL"
+        }
+      }
+    },
+    "disclaimer": {
+      "ui": {
+        "title": "Penafian",
+        "tip": "Pastikan untuk selalu mencadangkan Kata Mnemonik dan kunci pribadi Anda. ",
+        "privary": "Kami dapat mengubah Kebijakan Privasi dari waktu ke waktu. ",
+        "agreementPrefix": "saya menerima ",
+        "agreement": "Kebijakan pribadi",
+        "link": "https://info.pawket.app/privacy-policy/",
+        "agreementSuffix": "dan ingin mengakses Pawket.",
+        "button": {
+          "continue": "MELANJUTKAN"
+        }
+      }
+    },
+    "createPassword": {
+      "title": "Buat Kata Sandi",
+      "tip": "Sebelum memulai, silakan atur kata sandi login. ",
+      "label": {
+        "password": "Kata sandi",
+        "confirm": "konfirmasi sandi"
+      },
+      "button": {
+        "continue": "MELANJUTKAN"
+      }
+    },
+    "createWallet": {
+      "title": "Buat Dompet",
+      "button": {
+        "create": "Membuat",
+        "import": "Impor",
+        "backup": "Impor Cadangan Dompet"
+      }
+    },
+    "newWallet": {
+      "title": "Dompet Baru"
+    },
+    "importWallet": {
+      "title": "Impor Dompet"
+    },
+    "accountInfo": {
+      "ui": {
+        "title": {
+          "export": "Informasi Akun"
+        },
+        "label": {
+          "name": "Nama",
+          "type": "Jenis",
+          "fingerprint": "Sidik jari",
+          "masterPublicKey": "Kunci publik utama (m)",
+          "farmerPublicKey": "Kunci publik petani (m/12381/8444/0/0)",
+          "poolPublicKey": "Kumpulan kunci publik (m/12381/8444/1/0)",
+          "firstWalletAddress": "Alamat dompet pertama",
+          "mnemonicSeed": "Kata Mnemonik (24 kata)",
+          "connectionManagement": "Manajemen Koneksi",
+          "details": "Detail"
+        },
+        "tooltip": {
+          "fingerprintTip": "Kompatibel dengan dompet resmi Chia",
+          "mnemonicTip": "Kompatibel dengan dompet resmi Chia",
+          "disconnect": "Memutuskan"
+        },
+        "button": {
+          "reveal": "Mengungkap",
+          "hide": "Bersembunyi",
+          "delete": "Menghapus"
+        }
+      },
+      "message": {
+        "inputPassword": "Masukkan Kata Sandi untuk Melanjutkan",
+        "passwordNotCorrect": "Kata kunci Salah.",
+        "disconnect": "Apakah Anda yakin untuk memutuskan [{acc}] dari situs ini?"
+      }
+    },
+    "nftDetail": {
+      "ui": {
+        "label": {
+          "nftId": "ID NFT:",
+          "collection": "Koleksi",
+          "did": "TELAH MELAKUKAN",
+          "description": "Keterangan",
+          "expirationDate": "Tanggal habis tempo"
+        },
+        "button": {
+          "transfer": "Transfer",
+          "makeOffer": "Menjual",
+          "move": "Bergerak",
+          "showMore": "Menampilkan lebih banyak",
+          "showLess": "Tampilkan Lebih Sedikit"
+        },
+        "title": {
+          "properties": "Properti",
+          "bindingInformation": "Informasi yang Mengikat",
+          "details": "Detail"
+        },
+        "bindingInformation": {
+          "address": "Alamat",
+          "publicKey": "Kunci Publik",
+          "did": "TELAH MELAKUKAN",
+          "text": "Teks",
+          "edit": "Sunting"
+        },
+        "details": {
+          "nftId": "ID NFT:",
+          "launcherId": "ID peluncur",
+          "ownerDid": "Pemilik DID",
+          "ownerAddress": "Alamat Pemilik",
+          "royaltyPercentage": "Persentase Royalti",
+          "dataUrl": "URL data {indeks}",
+          "dataHash": "Hash Data",
+          "metadataUrl": "URL metadata {indeks}",
+          "metadataHash": "Hash Metadata",
+          "licenseUrl": "URL lisensi",
+          "licenseHash": "Lisensi Hash",
+          "series": "Seri"
+        },
+        "dropdown": {
+          "spaceScan": "Lihat di Spacescan.io",
+          "mintGarden": "Lihat di Mintgarden.io",
+          "setAsProfilePic": "Tetapkan sebagai Akun Avatar",
+          "signWithNft": "Tanda",
+          "nftBurn": "Bakar NFT"
+        },
+        "profile": {
+          "all": "Semua NFT",
+          "unassigned": "NFT yang belum ditetapkan"
+        }
+      }
+    },
+    "did": {
+      "ui": {
+        "title": {
+          "detail": "Detail"
+        },
+        "button": {
+          "addDid": "Tambahkan DID",
+          "sign": "Tanda"
+        },
+        "label": {
+          "name": "Nama",
+          "did": "TELAH MELAKUKAN",
+          "tool": "Alat"
+        },
+        "prompt": {
+          "newName": "Masukkan Nama Baru"
+        }
+      },
+      "addDid": {
+        "title": "Tambahkan DID",
+        "tip": "Anda akan menggunakan 1 mojo untuk membuat DID.",
+        "balance": "Keseimbangan",
+        "confirmation": "Apakah Anda yakin akan membuat DID?<br>Harap tinjau transaksi Anda.",
+        "spend": "Membelanjakan"
+      }
+    },
+    "nftTransfer": {
+      "ui": {
+        "title": "Transfer",
+        "description": "Anda akan mentransfer NFT ini ke pemilik baru.",
+        "summary": {
+          "confirmation": "Apakah Anda yakin untuk mentransfer NFT?<br>Harap tinjau transaksi Anda."
+        }
+      }
+    },
+    "collection": {
+      "myCollection": {
+        "title": "Koleksi saya",
+        "specialNote": "Catatan Khusus: Informasi pengumpulan tidak akan diunggah ke blockchain, dan data akan disimpan di perangkat lokal Anda. ",
+        "button": {
+          "newCollection": "Koleksi baru"
+        },
+        "tooltip": {
+          "edit": "Sunting",
+          "remove": "Menghapus"
+        },
+        "messages": {
+          "confirmation": {
+            "delete": "Apakah Anda yakin akan menghapus Koleksi?"
+          },
+          "information": {
+            "NO_COLLECTION": "Tidak ada Koleksi"
+          }
+        }
+      },
+      "createCollection": {
+        "title": "Buat Koleksi",
+        "label": {
+          "id": "*PENGENAL",
+          "name": "*Nama",
+          "description": "Keterangan",
+          "icon": "* Ikon",
+          "uploadImage": "Unggah Gambar:",
+          "url": "URL:",
+          "hash": "Hash:",
+          "fillUrl": "Isi URL Gambar",
+          "iconUrl": "URL ikon",
+          "iconHash": "Ikon Hash",
+          "properties": "* Properti",
+          "creator": "Pencipta",
+          "address": "*Alamat",
+          "royaltyPercentage": "* Persentase Royalti",
+          "royaltyAddress": "*Alamat Royalti",
+          "licenseUrl": "* URL lisensi"
+        },
+        "button": {
+          "upload": "Mengunggah"
+        },
+        "messages": {
+          "error": {
+            "INVALID_PROPERTY": "Properti Tidak Valid",
+            "INVALID_ADDRESS": "Alamat tidak valid"
+          }
+        }
+      }
+    },
+    "scanAssets": {
+      "ui": {
+        "title": "Pindai Aset",
+        "prompt": {
+          "selectAssetType": "Dengan memindai lebih banyak alamat, Anda dapat menemukan aset yang tidak ditampilkan dalam daftar (termasuk XCH, CAT, NFT, dll.) dan mentransfernya ke alamat yang biasa digunakan.",
+          "scanning": "Memindai...",
+          "wait": "Harap bersabar selama beberapa menit.",
+          "paused": "Dijeda...",
+          "canceled": "Dibatalkan.",
+          "finished": "Selesai!",
+          "scanned": "Dipindai"
+        },
+        "label": {
+          "scan": "Pindai",
+          "token": "Token",
+          "nft": "NFT",
+          "did": "TELAH MELAKUKAN",
+          "myCats": "CAT saya",
+          "maxAddress": "Jumlah maksimum alamat pemindaian",
+          "scanning": "Memindai",
+          "result": "Hasil",
+          "name": "Nama",
+          "id": "PENGENAL",
+          "balance": "Keseimbangan",
+          "action": "Tindakan",
+          "imported": "Impor"
+        },
+        "button": {
+          "start": "Mulai Pindai",
+          "pause": "Berhenti sebentar",
+          "cancel": "Membatalkan",
+          "continue": "Melanjutkan",
+          "reScan": "Pindai ulang",
+          "add": "Menambahkan",
+          "send": "Mengirim",
+          "sign": "Tanda"
+        }
+      },
+      "message": {
+        "confirmation": {
+          "close": "Pemindaian belum selesai. ",
+          "cancel": "Pemindaian belum selesai. "
+        },
+        "error": {
+          "ABORT_OOM": "Pemindaian dibatalkan. ",
+          "NETWORK_ERROR": "Kesalahan Jaringan. ",
+          "UNKNOWN": "Kesalahan yang tidak diketahui. "
+        }
+      }
+    },
+    "moveNft": {
+      "ui": {
+        "title": "Pindahkan NFT",
+        "label": {
+          "moveToProfile": "Pindah ke Profil",
+          "selectDid": "Pilih DID",
+          "move": "Pindahkan NFT",
+          "to": "Ke"
+        },
+        "confirmation": "Apakah Anda yakin untuk memindahkan NFT? <br>Harap tinjau transaksi Anda."
+      }
+    },
+    "signMessage": {
+      "ui": {
+        "title": "Pesan Tanda Tangan",
+        "prompt": "Pastikan pesan berasal dari sumber terpercaya. ",
+        "label": {
+          "signWdid": "Masuk dengan DID:",
+          "signWithNft": "Masuk dengan NFT:",
+          "signWithAddress": "Masuk dengan Alamat:",
+          "message": "Pesan",
+          "result": "Hasil"
+        }
+      }
+    },
+    "verifyMessage": {
+      "ui": {
+        "title": "Verifikasi Pesan",
+        "label": {
+          "message": "Pesan",
+          "result": "Hasil"
+        },
+        "button": {
+          "verify": "Memeriksa"
+        },
+        "sigResult": {
+          "pass": "Lulus cek tanda tangan",
+          "fail": "Pemeriksaan tanda tangan gagal",
+          "none": "Tanda tangan tidak dicentang"
+        },
+        "coinResult": {
+          "pass": "Cek koin berlalu",
+          "fail": "Pemeriksaan koin gagal",
+          "none": "Koin tidak diperiksa"
+        }
+      }
+    },
+    "batchMintNft": {
+      "ui": {
+        "title": "Batch Mint NFT",
+        "label": {
+          "royaltyAddress": "Alamat royalti",
+          "royaltyPercentage": "Persentase Royalti"
+        }
+      }
+    },
+    "addNetwork": {
+      "ui": {
+        "title": {
+          "add": "Tambahkan Jaringan",
+          "edit": "Sunting Jaringan"
+        },
+        "warning": "Penyedia jaringan jahat dapat berbohong tentang keadaan blockchain dan merekam aktivitas jaringan Anda. ",
+        "label": {
+          "networkName": "Nama jaringan",
+          "rpcUrl": "URL RPC",
+          "chainId": "ID rantai",
+          "currencySymbol": "Simbol Mata Uang",
+          "addressPrefix": "Awalan Alamat",
+          "decimalPlace": "Tempat Desimal Mata Uang",
+          "blockExplorer": "Blokir URL Penjelajah (Opsional)"
+        },
+        "button": {
+          "addNetwork": "Tambahkan Jaringan"
+        }
+      },
+      "message": {
+        "notification": {
+          "networkExists": "Nama jaringan ini sudah ada!"
+        },
+        "confirmation": {
+          "delete": "Apakah Anda yakin akan menghapus jaringan ini?"
+        }
+      }
+    },
+    "updateCns": {
+      "ui": {
+        "title": "Perbarui Alamat CNS",
+        "confirmation": "Anda akan memperbarui informasi pengikatan untuk nama domain Anda.<br/>Harap tinjau transaksi Anda.",
+        "label": {
+          "updateTo": "Perbarui ke",
+          "cns": "SSP",
+          "targetAddress": "Alamat Tujuan",
+          "currentBindingAddress": "Alamat pengikatan saat ini"
+        }
+      }
+    },
+    "addByPublicKey": {
+      "ui": {
+        "title": "Tambahkan Akun dengan PublicKey",
+        "message": {
+          "publicKeyRequired": "PublicKey diperlukan."
+        }
+      }
+    },
+    "encryptMessage": {
+      "ui": {
+        "title": "Enkripsi Pesan",
+        "tab": {
+          "singleMessage": "Pesan Tunggal",
+          "multipleMessage": "Banyak Pesan"
+        },
+        "label": {
+          "encryptWithAddress": "Enkripsi dengan Alamat",
+          "activatePrefix": "Alamat belum diaktifkan, klik di sini untuk melakukan transfer ke ",
+          "activate": "mengaktifkan",
+          "message": "Pesan",
+          "receiverAddress": "Alamat Penerima"
+        },
+        "button": {
+          "encrypt": "Enkripsi"
+        }
+      },
+      "message": {
+        "error": {
+          "INACTIVE_ADDRESS": "Alamat penerima belum diaktifkan."
+        }
+      }
+    },
+    "decryptMessage": {
+      "ui": {
+        "title": "Dekripsi Pesan",
+        "label": {
+          "message": "Pesan",
+          "result": "Hasil"
+        },
+        "button": {
+          "decrypt": "Dekripsi"
+        }
+      },
+      "message": {
+        "error": {
+          "CANNOT_FIND_ADDRESS": "Alamat dekripsi tidak cocok dengan Alamat Penerima.",
+          "INVALID_MESSAGE": "Pesan tidak valid.",
+          "INVALID_ADDRESS": "Alamat Pengirim/Penerima Tidak Valid."
+        }
+      }
+    },
+    "bindingInformation": {
+      "ui": {
+        "title": "Informasi yang Mengikat",
+        "label": {
+          "publicKey": "Kunci Publik",
+          "did": "TELAH MELAKUKAN",
+          "text": "Teks"
+        },
+        "notification": "Anda akan memperbarui informasi pengikatan untuk nama domain Anda.<br>Harap tinjau transaksi Anda.",
+        "tag": {
+          "currentPk": "Akun saat ini PK",
+          "fillPk": "Isi kunci publik dari akun saat ini"
+        },
+        "button": {
+          "update": "Memperbarui"
+        }
+      }
+    },
+    "scan": {
+      "ui": {
+        "title": "Pindai",
+        "label": {
+          "scanQr": "Pindai kode QR",
+          "publicKeyQr": "Kode QR Kunci Publik"
+        },
+        "hint": {
+          "scan": "Pindai Alamat, PublicKey"
+        }
+      }
+    },
+    "backup": {
+      "ui": {
+        "title": {
+          "verifyPassword": "Verifikasi Kata Sandi",
+          "backup": "Informasi Cadangan"
+        },
+        "tip": {
+          "setPassword": "Kata sandi ini akan digunakan sebagai kata sandi masuk saat mengimpor cadangan ke perangkat baru untuk memulihkan dompet Anda."
+        },
+        "label": {
+          "passwordType": {
+            "current": "Gunakan kata sandi masuk saat ini",
+            "new": "Gunakan kata sandi baru"
+          },
+          "selectBackupInfo": "Pilih Informasi Cadangan",
+          "setYourLoginPassword": "Tetapkan Kata Sandi Masuk Anda"
+        },
+        "items": {
+          "masterAccount": "Informasi Akun Utama",
+          "settings": "Pengaturan",
+          "customNetwork": "Jaringan Kustom",
+          "accountList": "Daftar Akun",
+          "addressBook": "Buku alamat",
+          "didNames": "DID Nama"
+        },
+        "button": {
+          "downloadBak": "Unduh File Cadangan",
+          "complete": "Menyelesaikan",
+          "next": "Berikutnya"
+        }
+      },
+      "message": {
+        "error": {
+          "passwordRequired": "Katakunci dibutuhkan.",
+          "passwordNotCorrect": "Kata kunci Salah."
+        }
+      }
+    },
+    "importBackup": {
+      "title": "Unggah Cadangan",
+      "password": {
+        "tip": "Silakan masukkan kata sandi login Anda",
+        "label": "Kata sandi"
+      },
+      "error": {
+        "LARGE_FILE": "File terlalu besar",
+        "UNSUPPORTED_FILE": "Berkas Tidak Didukung"
+      }
+    },
+    "buyUsds": {
+      "ui": {
+        "title": "Beli USD",
+        "button": {
+          "continue": "Lanjutkan untuk Membeli",
+          "stably": "Buka Stabil untuk Membeli"
+        },
+        "tip": "Saat ini hanya mendukung pembelian USDS di blockchain Chia melalui transfer bank ACH.",
+        "stablyPrefix": "Layanan ini disediakan oleh",
+        "stably": " Stabil ",
+        "stablySuffix": "dan sepenuhnya independen dari Pawket."
+      }
+    },
+    "nftBurn": {
+      "title": "NFT terbakar",
+      "description": "Anda akan membakar NFT ini dengan menghapusnya dari peredaran dengan mengirimkannya ke alamat yang benar-benar tidak dapat digunakan.",
+      "confirmation": "Apakah Anda yakin untuk membakar NFT ini? <br>Harap tinjau transaksi Anda."
+    },
+    "cns": {
+      "title": "Layanan Nama Chia",
+      "placeholder": "Cari Nama Domain Chia",
+      "button": {
+        "search": "Mencari",
+        "loading": "Memuat",
+        "register": "Daftar",
+        "cancel": "Membatalkan"
+      },
+      "label": {
+        "notOpenYet": "Belum Buka",
+        "registered": "Terdaftar",
+        "result": "Hasil",
+        "available": "Tersedia",
+        "unavailable": "Tidak tersedia",
+        "registrationPeriod": "Periode Pendaftaran",
+        "registrationFee": "Biaya pendaftaran",
+        "annualFee": "Biaya tahunan",
+        "royaltyPercentage": "Persentase Royalti",
+        "total": "Total",
+        "networkIssue": "Masalah jaringan",
+        "myNames": "Nama saya",
+        "register": "Daftarkan {cnsName}.xch",
+        "name": "Nama",
+        "oneYear": "1 tahun",
+        "address": "Alamat (Opsional)"
+      },
+      "message": {
+        "notOpen": " Selama masa percobaan pengoperasian CNS, untuk saat ini hanya nama dengan 6 karakter atau lebih yang dapat didaftarkan. ",
+        "registered": "Nama ini telah terdaftar. ",
+        "profileHomepage": "Beranda Profil",
+        "unavailable": "Nama ini sudah dipesan. ",
+        "noName": "Tidak Ada Nama Domain Chia Di Sini. "
+      }
+    },
+    "connect": {
+      "ui": {
+        "label": {
+          "connectWithPawket": "Terhubung Dengan Pawket",
+          "enterPassword": "Masukkan kata sandi Anda untuk terhubung ke situs",
+          "trust": "Pastikan Anda memercayai situs yang Anda sambungkan",
+          "selectAccount": "Pilih akun yang akan digunakan di situs ini",
+          "loadingBalance": "Memuat Saldo..",
+          "allowSiteTo": "Izinkan situs ini untuk:",
+          "viewInfo": "Lihat alamat akun, saldo, DID, dan aktivitas Anda.",
+          "requestTranx": "Meminta persetujuan untuk transaksi.",
+          "gettingData": "Mendapatkan Data dari Pawket...",
+          "noWallet": "Tanpa Dompet Pawket",
+          "noWalletInfo": "Anda belum menyiapkan dompet di Pawket."
+        },
+        "button": {
+          "next": "Berikutnya",
+          "connect": "Menghubung",
+          "setUp": "Siapkan Dompet"
+        }
+      },
+      "messages": {
+        "success": "Kesuksesan!",
+        "invalidCall": "Panggilan Tidak Valid:",
+        "noAppName": "Silakan tentukan nama aplikasi!",
+        "offerAccepted": "Penawaran telah diterima!",
+        "invalidData": "Gagal Menandatangani: Data Input Tidak Valid",
+        "unknownDid": "Gagal Menandatangani: DID yang Ditentukan Tidak Ada di Rekening Giro",
+        "unknownNetwork": "Jaringan yang ditentukan tidak ada",
+        "sendCompleted": "Transaksi diajukan!",
+        "catAdded": "KUCING ditambahkan!",
+        "cancelled": "Dibatalkan",
+        "incorrectPassword": "Kata kunci Salah."
+      }
+    }
+  }
