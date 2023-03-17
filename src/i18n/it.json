@@ -36,7 +36,7 @@
             },
             "navigation": {
                 "wallet": "Portafoglio",
-                "cns": "SNC",
+                "cns": "CNS",
                 "explore": "Esplorare",
                 "settings": "Impostazioni"
             }
@@ -55,8 +55,8 @@
     "footer": {
         "ui": {
             "productInfo": {
-                "name": "Pacchetto",
-                "author": "Sutu Labs",
+                "name": "Pawket",
+                "author": "SutuLabs",
                 "authorLink": "https://github.com/SutuLabs"
             },
             "button": {
@@ -153,7 +153,7 @@
                 "asset": "Risorsa",
                 "utxos": "UTXO",
                 "nft": "NFT",
-                "did": "FATTO"
+                "did": "DID"
             },
             "tooltip": {
                 "lock": "Blocca il portafoglio",
@@ -468,9 +468,9 @@
         },
         "client": {
             "text": {
-                "qrcodesStatus": "{indice} / {totale}",
+                "qrcodesStatus": "{index} / {total}",
                 "unsafeMode": "Modalità non sicura",
-                "status": "Scansionato: {frammento} / {totale} frammento/i."
+                "status": "Scansionato:  {fragment} / {total} frammento/i."
             },
             "scan": {
                 "title": "Segno offline",
@@ -796,7 +796,7 @@
         "ui": {
             "title": "Menta NFT",
             "label": {
-                "did": "FATTO",
+                "did": "DID",
                 "memo": "Promemoria",
                 "uri": "URI",
                 "hash": "Hash"
@@ -970,8 +970,8 @@
                     "privacyPolicy": "politica sulla riservatezza",
                     "pawketWebsite": "Sito web Pawket",
                     "github": "Github",
-                    "twitter": "Cinguettio",
-                    "discord": "Discordia",
+                    "twitter": "Twitter",
+                    "discord": "Discord",
                     "donate": "Dona agli sviluppatori"
                 },
                 "url": {
@@ -1147,7 +1147,7 @@
             "label": {
                 "nftId": "ID NFT:",
                 "collection": "Collezione",
-                "did": "FATTO",
+                "did": "DID",
                 "description": "Descrizione",
                 "expirationDate": "Data di scadenza"
             },
@@ -1166,23 +1166,23 @@
             "bindingInformation": {
                 "address": "Indirizzo",
                 "publicKey": "Chiave pubblica",
-                "did": "FATTO",
+                "did": "DID",
                 "text": "Testo",
                 "edit": "Modificare"
             },
             "details": {
-                "nftId": "ID NFT:",
-                "launcherId": "ID di avvio",
-                "ownerDid": "Il proprietario ha fatto",
-                "ownerAddress": "Indirizzo del proprietario",
-                "royaltyPercentage": "Percentuale di diritti d'autore",
-                "dataUrl": "URL dati {indice}",
-                "dataHash": "Hash dei dati",
-                "metadataUrl": "URL dei metadati {indice}",
-                "metadataHash": "Hash dei metadati",
-                "licenseUrl": "URL della licenza",
-                "licenseHash": "Licenza Hash",
-                "series": "Serie"
+                "nftId": "NFT ID:",
+                "launcherId": "Launcher ID",
+                "ownerDid": "Owner DID",
+                "ownerAddress": "Owner Address",
+                "royaltyPercentage": "Royalty Percentage",
+                "dataUrl": "Data URL {index}",
+                "dataHash": "Data Hash",
+                "metadataUrl": "Metadata URL {index}",
+                "metadataHash": "Metadata Hash",
+                "licenseUrl": "License URL",
+                "licenseHash": "License Hash",
+                "series": "Series"
             },
             "dropdown": {
                 "spaceScan": "Visualizza su Spacescan.io",
@@ -1208,7 +1208,7 @@
             },
             "label": {
                 "name": "Nome",
-                "did": "FATTO",
+                "did": "DID",
                 "tool": "Attrezzo"
             },
             "prompt": {
@@ -1299,7 +1299,7 @@
                 "scan": "Scansione",
                 "token": "Gettone",
                 "nft": "NFT",
-                "did": "FATTO",
+                "did": "DID",
                 "myCats": "I miei gatti",
                 "maxAddress": "Numero massimo di indirizzi di scansione",
                 "scanning": "Scansione",
@@ -1424,7 +1424,7 @@
             "confirmation": "Aggiornerai le informazioni vincolanti per il tuo nome di dominio.<br/>Controlla la tua transazione.",
             "label": {
                 "updateTo": "Aggiorna a",
-                "cns": "SNC",
+                "cns": "CNS",
                 "targetAddress": "Indirizzo di destinazione",
                 "currentBindingAddress": "Indirizzo di rilegatura corrente"
             }
@@ -1486,7 +1486,7 @@
             "title": "Informazioni vincolanti",
             "label": {
                 "publicKey": "Chiave pubblica",
-                "did": "FATTO",
+                "did": "DID",
                 "text": "Testo"
             },
             "notification": "Aggiornerai le informazioni vincolanti per il tuo nome di dominio.<br>Controlla la tua transazione.",
@@ -1569,7 +1569,7 @@
             },
             "tip": "Attualmente supporta solo l'acquisto di USDS sulla blockchain Chia tramite bonifico bancario ACH.",
             "stablyPrefix": "Questo Servizio è fornito da",
-            "stably": " Stabilmente ",
+            "stably": " Stably ",
             "stablySuffix": "ed è completamente indipendente da Pawket."
         }
     },
