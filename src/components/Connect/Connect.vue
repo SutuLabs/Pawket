@@ -491,7 +491,7 @@ export default class Connect extends Vue {
   }
 
   cancelled(msg = tc("connect.messages.cancelled")): void {
-    this.source?.postMessage({ status: "cancelld", cmd: this.cmd, msg: msg }, { targetOrigin: this.origin });
+    this.source?.postMessage({ status: "cancelled", cmd: this.cmd, msg: msg }, { targetOrigin: this.origin });
   }
 
   success(msg: unknown): void {
