@@ -1,0 +1,1651 @@
+{
+  "default": {
+    "accountName": "アカウント1"
+  },
+  "html": {
+    "document": {
+      "title": "Pawket"
+    }
+  },
+  "common": {
+    "button": {
+      "confirm": "確認",
+      "cancel": "キャンセル",
+      "back": "戻る",
+      "save": "保存",
+      "submit": "送信",
+      "delete": "消去",
+      "sign": "サイン",
+      "generate": "生成",
+      "copy": "コピー"
+    },
+    "tooltip": {
+      "copy": "コピー"
+    },
+    "message": {
+      "saved": "保存しました。",
+      "added": "追加した。",
+      "noResult": "検索結果はありません。",
+      "uploadSuccess": "アップロードしました。"
+    }
+  },
+  "app": {
+    "ui": {
+      "button": {
+        "lang": "日本語"
+      },
+      "navigation": {
+        "wallet": "財布",
+        "cns": "CNS",
+        "explore": "探検",
+        "settings": "設定"
+      }
+    },
+    "message": {
+      "notification": {
+        "copySuccess": "コピーしました。",
+        "copyFailed": "コピーに失敗しました。",
+        "transactionComplete": {
+          "title": "取引完了！",
+          "body": "ブロック {block} での取引が完了しました。"
+        }
+      }
+    }
+  },
+  "footer": {
+    "ui": {
+      "productInfo": {
+        "name": "Pawket",
+        "author": "SutuLabs",
+        "authorLink": "https://github.com/SutuLabs"
+      },
+      "button": {
+        "home": "家",
+        "developer": "デベロッパー"
+      },
+      "error": {
+        "READ_VERSION_FAILED": "バージョンの読み取りに失敗しました。"
+      }
+    }
+  },
+  "self-test": {
+    "message": {
+      "checking": "チェック中",
+      "passed": "合格した",
+      "failed": "チェックに失敗しました: "
+    }
+  },
+  "verifyPassword": {
+    "ui": {
+      "button": {
+        "confirm": "確認",
+        "clear": "ウォレットのリセット"
+      },
+      "title": {
+        "verifyPassword": "パスワードを照合します"
+      },
+      "alt": {
+        "logoAlt": "ポーケット ロゴ"
+      }
+    },
+    "message": {
+      "confirmation": {
+        "clear": "ウォレットをリセットすると、デバイスからすべてのデータ (ニーモニックとパスワードを含む) が完全に削除されます。ウォレットのニーモニックがバックアップされていることを確認してください。",
+        "confirmText": "確認",
+        "cancelText": "キャンセル"
+      },
+      "error": {
+        "passwordNotMatch": "パスワードが一致しません。",
+        "incorrectPassword": "パスワードが正しくありません。",
+        "passwordEmpty": "パスワードを空にすることはできません。"
+      },
+      "tip": {
+        "weakPassword": "弱い",
+        "mediumPassword": "中くらい",
+        "strongPassword": "強い"
+      }
+    }
+  },
+  "createSeed": {
+    "ui": {
+      "button": {
+        "confirm": "確認",
+        "later": "後で",
+        "ready": "次",
+        "12word": "12ワード",
+        "24word": "24ワード",
+        "import12": "Pawket ニーモニック ワードのインポート",
+        "import24": "チア公式ニーモニック単語のインポート"
+      },
+      "text": {
+        "create": {
+          "tip1": "いらっしゃいませ！",
+          "tip2": "警告: ニーモニック ワードは絶対に公開しないでください。"
+        },
+        "import12": {
+          "title": "Pawket ニーモニック ワードのインポート",
+          "tip": "ニーモニック間のスペースを使用して、ポーケットのニーモニック ワードを順番に入力してください。"
+        },
+        "import24": {
+          "title": "チア公式ニーモニック単語のインポート",
+          "tip": "チア公式の呼び名をスペースを空けて順番に入力してください。"
+        }
+      }
+    },
+    "message": {
+      "error": {
+        "wrongSeed": "インポートに失敗しました。ニーモニック ワードを確認してください。"
+      }
+    }
+  },
+  "accountDetail": {
+    "ui": {
+      "button": {
+        "receive": "受け取る",
+        "buy": "買う",
+        "send": "送信",
+        "scan": "スキャン",
+        "confirm": "確認",
+        "cancel": "キャンセル",
+        "manageCats": "CAT の管理"
+      },
+      "tab": {
+        "asset": "資産",
+        "utxos": "UTXO",
+        "nft": "NFT",
+        "did": "DID"
+      },
+      "tooltip": {
+        "lock": "ウォレットをロック",
+        "errorLog": "エラーログ",
+        "refresh": "リフレッシュ"
+      },
+      "dApps": {
+        "title": "dApp",
+        "tooltip": {
+          "donate": "開発を支援するために寄付する",
+          "scanAssets": "アセットのスキャン",
+          "proxy": "オフラインサイン",
+          "takeOffer": "オファーを受ける",
+          "makeOffer": "申し出をする",
+          "batchSend": "一括送信",
+          "mintCat": "発行CAT",
+          "mintNft": "ミントNFT",
+          "batchMintNft": "バッチミント",
+          "verify": "メッセージの確認",
+          "encryptMessage": "メッセージの暗号化",
+          "decryptMessage": "メッセージの復号化"
+        },
+        "button": {
+          "donate": "寄付",
+          "scanAssets": "アセットのスキャン",
+          "proxy": "オフラインサイン",
+          "takeOffer": "オファーを受ける",
+          "makeOffer": "申し出をする",
+          "batchSend": "一括送信",
+          "mintCat": "発行CAT",
+          "mintNft": "ミントNFT",
+          "batchMintNft": "バッチミント",
+          "verify": "メッセージの確認",
+          "encryptMessage": "メッセージの暗号化",
+          "decryptMessage": "メッセージの復号化"
+        }
+      }
+    },
+    "message": {
+      "confirmation": {
+        "lock": "財布をロックしますか？"
+      },
+      "notification": {
+        "donate": "あなたは開発者に寄付しています。",
+        "observeMode": "監視モードではインタラクション機能が無効になっています",
+        "offline": "現在オフラインモードです。",
+        "turnOffPrefix": "クリック",
+        "turnOff": "ここ",
+        "turnOffSuffix": "電源を切るために。",
+        "test": "注:kitten.pawket.app は、未リリースの新機能を体験できるテスト サイトです。"
+      }
+    }
+  },
+  "changePassword": {
+    "ui": {
+      "title": {
+        "changePassword": "パスワードを変更する"
+      },
+      "label": {
+        "oldPassword": "以前のパスワード",
+        "newPassword": "新しいパスワード",
+        "rePassword": "パスワード再入力"
+      },
+      "button": {
+        "back": "戻る",
+        "submitChange": "送信"
+      }
+    },
+    "message": {
+      "error": {
+        "passwordRequired": "パスワードが必要。",
+        "passwordNotCorrect": "パスワードが正しくありません。",
+        "passwordNotMatch": "パスワードが一致しません。"
+      },
+      "alert": {
+        "passwordChanged": "パスワードが変更されました。"
+      }
+    }
+  },
+  "explorerLink": {
+    "ui": {
+      "title": {
+        "link": "受信アドレス"
+      },
+      "label": {
+        "maxAddress": "アドレスの最大数",
+        "address": "住所",
+        "coin": "コイン",
+        "sign": "サイン",
+        "link": "冒険者",
+        "observer": "観察者",
+        "nonObserver": "非オブザーバー"
+      },
+      "tooltip": {
+        "blockchainExplorer": "ブロック エクスプローラーで表示",
+        "receiveAddress": "値を増やすと、より多くのアドレスの残高を確認できますが、ウォレットの実行は遅くなります。"
+      }
+    }
+  },
+  "send": {
+    "ui": {
+      "title": {
+        "send": "送信"
+      },
+      "label": {
+        "amount": "額",
+        "memo": "メモ",
+        "fee": "手数料"
+      },
+      "button": {
+        "submit": "送信",
+        "showSend": "見せる"
+      },
+      "slider": {
+        "low": "低い",
+        "medium": "中くらい",
+        "high": "高い",
+        "custom": "カスタム"
+      },
+      "messages": {
+        "getFailedResponse": "エラー応答を取得: ",
+        "failedToSubmit": "メモリ プールへの送信に失敗しました: ",
+        "failedToSign": "署名に失敗しました: ",
+        "submitted": "メモリ プールに送信されます。",
+        "invalidAmount": "金額が無効です。",
+        "insufficientFunds": "残高不足。"
+      },
+      "span": {
+        "loading": "読み込み中",
+        "maxLeadingText": "最大:"
+      },
+      "text": {
+        "offlineOnlySupportXch": "オフライン送信は現在 XCH のみをサポートしています。"
+      },
+      "summary": {
+        "notification": "送信してもよろしいですか？<br/>お取引内容をご確認ください。"
+      }
+    },
+    "messages": {
+      "error": {
+        "DOUBLE_SPEND": "二重支出",
+        "UNKNOWN_UNSPENT": "不明な UTXO が使用されています。以前のトランザクションがブロックチェーン上で確認されていない可能性があります。",
+        "BAD_AGGREGATE_SIGNATURE": "不正な集約署名",
+        "INVALID_CONDITION": "無効な条件",
+        "COIN_AMOUNT_EXCEEDS_MAXIMUM": "コインの量が上限を超えています",
+        "INVALID_FEE_LOW_FEE": "無効な手数料/低い手数料",
+        "MEMPOOL_NOT_INITIALIZED": "Mempool が初期化されていません",
+        "ALREADY_INCLUDING_TRANSACTION": "すでにトランザクションを含む",
+        "INCOMPATIBLE_NETWORK_ID": "互換性のないネットワーク ID",
+        "NO_TRANSACTIONS_WHILE_SYNCING": "同期中にトランザクションがありません",
+        "INVALID_FEE_TOO_CLOSE_TO_ZERO": "無効な手数料、ゼロに近すぎる",
+        "COIN_AMOUNT_NEGATIVE": "コイン量がマイナスです",
+        "INVALID_ADDRESS": "無効なアドレス",
+        "ADDRESS_NOT_MATCH_NETWORK": "入力されたアドレスは現在のネットワークと一致しません。",
+        "PENDING": "取引はすでに保留中の状態です。完了するまでお待ちください。"
+      }
+    }
+  },
+  "scanQrCode": {
+    "message": {
+      "error": {
+        "NotAllowedError": "エラー: カメラへのアクセス許可を与える必要があります。",
+        "NotFoundError": "エラー: このデバイスにはカメラがありません。",
+        "NotSupportedError": "エラー: セキュア コンテキストが必要です (HTTPS、localhost)。",
+        "NotReadableError": "エラー: カメラは既に使用されていますか?",
+        "OverconstrainedError": "エラー: インストールされたカメラは適切ではありません。",
+        "StreamApiNotSupportedError": "エラー: このブラウザではストリーム API がサポートされていません。",
+        "InsecureContextError": "エラー: カメラへのアクセスは、安全なコンテキストでのみ許可されています。 "
+      }
+    }
+  },
+  "offer": {
+    "make": {
+      "ui": {
+        "title": "申し出をする",
+        "panel": {
+          "information": "情報",
+          "hint": {
+            "thisIsYourOffer": "これはあなたのオファーテキストです。",
+            "unsignedOffer": "署名に失敗しました。無効なオファーです"
+          }
+        },
+        "label": {
+          "yourOfferTitle": "あなたの申し出",
+          "bundle": "バンドル"
+        },
+        "button": {
+          "done": "終わり",
+          "uploadToDexie": "デクシーにアップロード"
+        },
+        "field": {
+          "offer": "オファー",
+          "request": "リクエスト"
+        }
+      },
+      "messages": {
+        "failedToSign": "オファーに失敗しました。"
+      }
+    },
+    "symbol": {
+      "Cat": "猫",
+      "hint": {
+        "XCH": "オリジナルトークン"
+      }
+    },
+    "take": {
+      "ui": {
+        "title": "オファーを受ける",
+        "hint": {
+          "pasteOffer": "ここにオファー データを貼り付けるか、オファー ファイルをアップロードします。",
+          "error": "オファー文字列が正しくありません。"
+        },
+        "panel": {
+          "information": "情報"
+        },
+        "label": {
+          "royaltyToCreator": "クリエイター",
+          "totalRequested": "要求された合計金額",
+          "nftPrice": "NFT 価格",
+          "royalty": "ロイヤリティ",
+          "total": "合計",
+          "receive": "受け取る",
+          "offer": "オファー",
+          "fee": "手数料",
+          "totalPayment": "お支払い総額"
+        },
+        "button": {
+          "cancel": "キャンセル",
+          "submit": "送信",
+          "upload": "オファーファイルをアップロード"
+        },
+        "field": {
+          "offer": "オファー"
+        },
+        "tooltip": {
+          "spaceScan": "Spacescan.ioで見る",
+          "verifiedCns": "検証済み中枢神経系",
+          "unverifiedCns": "これは偽の中枢神経系です。"
+        },
+        "notification": {
+          "observation": "現在、観察モードです。"
+        }
+      },
+      "information": {
+        "requested": "見返りに",
+        "offered": "あなたが受け取る",
+        "addCat": "CATs リストに追加します。",
+        "unsupportOfferNftOffer": "このタイプのオファーはまだサポートされていません。",
+        "acceptOffer": "オファーを受け入れますか？<br>お取引内容をご確認ください。"
+      },
+      "messages": {
+        "failedToSign": "オファーを受けられませんでした。",
+        "unsupportOfferNftOffer": "このタイプのオファーはまだサポートされていません。"
+      }
+    }
+  },
+  "ManageCats": {
+    "ui": {
+      "title": {
+        "ManageCats": "猫の管理"
+      },
+      "label": {
+        "listingCats": "猫一覧",
+        "name": "名前",
+        "assetID": "アセット ID",
+        "search": "検索",
+        "custom": "カスタム"
+      },
+      "button": {
+        "add": "追加"
+      },
+      "tooltip": {
+        "removeToken": "CAT を削除",
+        "drag": "ドラッグして並べ替え",
+        "copy": "アセット ID をコピー"
+      },
+      "message": {
+        "nameRequired": "お名前必須",
+        "assetIdRequired": "アセット ID が必要です。"
+      }
+    },
+    "message": {
+      "notification": {
+        "wrongAssetId": "アセット ID が間違っています。"
+      },
+      "confirmation": {
+        "removeToken": "本当に CAT を削除しますか?",
+        "closeWithContent": "このページには保存されていない変更があり、別の場所に移動すると失われます。",
+        "confirm": "確認",
+        "cancel": "キャンセル"
+      },
+      "alert": {
+        "isExisted": "アセット ID/名前は既に CAT リストに存在します!"
+      }
+    }
+  },
+  "offline": {
+    "proxy": {
+      "scan": {
+        "title": "サイン",
+        "numberField": "署名されていないメッセージ",
+        "numberMessage": "Offline Sign で次の QR コードをスキャンします。 "
+      },
+      "confirmBundle": {
+        "title": "確認",
+        "button": {
+          "cancel": "キャンセル",
+          "submit": "送信"
+        },
+        "notification": "送信してもよろしいですか？<br/>お取引内容をご確認ください。"
+      }
+    },
+    "client": {
+      "text": {
+        "qrcodesStatus": "{index} / {total}",
+        "unsafeMode": "アンセーフ モード",
+        "status": "スキャン済み: {fragment} / {total} fragment(s)。"
+      },
+      "scan": {
+        "title": "オフラインサイン",
+        "numberField": "署名付きメッセージ",
+        "numberMessage": "取引を開始したばかりのオンライン デバイスでこの QR コードをスキャンしてください。",
+        "scrollDown": "ページを下にスクロールし、オフライン デバイスで QR コードをスキャンして、署名付きメッセージを取得します。"
+      },
+      "show": {
+        "hint": "Proxy を使用して QR をスキャンし、トランザクションを送信します。",
+        "overflow": "データが最大長を超えているため、QR コードを生成できません",
+        "bundle": "バンドル",
+        "copy": "コピー"
+      }
+    },
+    "ui": {
+      "button": {
+        "cancel": "キャンセル"
+      }
+    }
+  },
+  "addByMnemonic": {
+    "ui": {
+      "label": {
+        "name": "アカウント名",
+        "mnemonic": "{len} 記憶語"
+      },
+      "message": {
+        "nameRequired": "アカウント名が必要です。",
+        "mnemonicRequired": "ニーモニックが必要です。",
+        "invalidMnemonic": "インポートに失敗しました。"
+      },
+      "button": {
+        "back": "戻る",
+        "submit": "送信"
+      },
+      "tooltip": {
+        "mnemonic": "呼び名と呼び名の間はスペースを空けて順番に入力してください。"
+      }
+    },
+    "message": {
+      "error": {
+        "accountMnemonicExists": "同じ呼び名のアカウントが既に存在します。"
+      }
+    }
+  },
+  "addByAddress": {
+    "ui": {
+      "title": "アドレスで追加",
+      "label": {
+        "name": "アカウント名",
+        "publicKey": "公開鍵"
+      },
+      "message": {
+        "nameRequired": "アカウント名が必要です。",
+        "illegalAddress": "住所が正しくありません。",
+        "duplicateAddress": "重複した住所: [{accName}] は同じ住所です。",
+        "duplicateName": "重複した名前",
+        "duplicatePublicKey": "重複する公開鍵: [{accName}] は同じ公開鍵を持っています。"
+      },
+      "button": {
+        "back": "戻る",
+        "submit": "送信"
+      }
+    }
+  },
+  "addByPassword": {
+    "ui": {
+      "title": "シャドウウォレットを追加",
+      "label": {
+        "name": "アカウント名",
+        "password": "パスフレーズ",
+        "rePassword": "パスフレーズの再入力"
+      },
+      "message": {
+        "nameRequired": "アカウント名が必要です。",
+        "passwordRequired": "パスフレーズが必要です。",
+        "invalidPassword": "パスフレーズが一致しません。"
+      },
+      "button": {
+        "back": "戻る",
+        "submit": "送信"
+      }
+    },
+    "message": {
+      "error": {
+        "accountPasswordExists": "[{accName}] は同じパスフレーズを持っています。"
+      }
+    }
+  },
+  "addBySerial": {
+    "ui": {
+      "title": "シリアル番号でアカウントを追加",
+      "label": {
+        "name": "アカウント名"
+      },
+      "message": {
+        "nameRequired": "アカウント名が必要です。"
+      },
+      "button": {
+        "back": "戻る",
+        "submit": "送信"
+      }
+    }
+  },
+  "bundleSummary": {
+    "ui": {
+      "fee": {
+        "title": "手数料",
+        "mojos": "{fee} モジョ"
+      },
+      "inputs": {
+        "title": "合計金額"
+      },
+      "label": {
+        "details": "詳細"
+      },
+      "detail": {
+        "title": "詳細",
+        "itemTo": "{住所}へ",
+        "span": {
+          "hint": "ヒント(対応アドレス)",
+          "memo": "メモ"
+        }
+      }
+    },
+    "notification": {
+      "error": {
+        "unknownMod": "不明なバンドルです。正しく解析できません。"
+      }
+    }
+  },
+  "batchSend": {
+    "ui": {
+      "title": {
+        "send": "一括送信"
+      },
+      "tooltip": {
+        "help": "1 回の操作で複数のトランザクションの送信をサポートします。",
+        "upload": "「.csv」形式のファイルをアップロードします。"
+      },
+      "field": {
+        "csv": {
+          "fillSample": "充填サンプル",
+          "or": " また ",
+          "downloadSample": "サンプル CSV ファイルをダウンロードする",
+          "drag": "この領域にドラッグ アンド ドロップして、直接アップロードします。",
+          "sampleName": "サンプル"
+        }
+      },
+      "summary": {
+        "notification": "送信してもよろしいですか？<br/>お取引内容をご確認ください。"
+      },
+      "button": {
+        "upload": "CSVをアップロード"
+      },
+      "messages": {
+        "failedToSign": "署名に失敗しました: ",
+        "wrongFileType": "ファイルは .csv 形式でアップロードしてください。",
+        "onlyOneFile": "アップロードできるファイルは 1 つだけです。"
+      }
+    },
+    "messages": {
+      "error": {
+        "ADDRESS_NOT_MATCH_NETWORK": "入力されたアドレス [{address}] は現在のネットワークと一致しません。",
+        "COIN_NOT_EXIST": "{symbol} コインは存在しません!"
+      }
+    },
+    "sample": {
+      "address": "住所",
+      "coin": "コイン",
+      "amount": "金額（モジョ）",
+      "memo": "メモ（送金するコインがXCHの場合、メモは記入できません）"
+    }
+  },
+  "utxo": {
+    "ui": {
+      "label": {
+        "cost": "送信",
+        "receive": "受け取る",
+        "queue": "列",
+        "confirmed": "確認済み"
+      },
+      "text": {
+        "empty": "取引はありません。"
+      }
+    }
+  },
+  "utxoDetail": {
+    "ui": {
+      "title": {
+        "cost": "送信",
+        "receive": "受け取る"
+      },
+      "label": {
+        "amount": "額",
+        "time": "時間",
+        "spentHeight": "使用した高さ",
+        "confirmedHeight": "確定身長",
+        "parentCoinInfo": "親コイン情報",
+        "puzzleHash": "住所",
+        "coinName": "コイン名",
+        "coins": "コイン",
+        "pending": "保留中"
+      },
+      "button": {
+        "unlockCoins": "コインのロックを解除"
+      },
+      "tooltip": {
+        "copy": "コピー"
+      }
+    },
+    "message": {
+      "unlockCoins": "コインのロックを解除しても、取引はキャンセルされません。"
+    }
+  },
+  "sendSummary": {
+    "ui": {
+      "label": {
+        "sending": "送信",
+        "to": "に",
+        "fee": "手数料",
+        "total": "合計",
+        "assetId": "アセット ID",
+        "NftUri": "NFT"
+      }
+    }
+  },
+  "bundleText": {
+    "ui": {
+      "title": "バンドル",
+      "copy": "コピー",
+      "button": {
+        "show": "見せる",
+        "hide": "隠れる"
+      }
+    }
+  },
+  "mintCat": {
+    "ui": {
+      "title": "発行CAT",
+      "label": {
+        "amount": "額",
+        "memo": "メモ",
+        "symbolName": "CAT名(修正可)"
+      },
+      "summary": {
+        "notification": "本当に CAT を発行しますか?<br/>お取引内容をご確認ください。",
+        "label": {
+          "leadingText": "CATの発行"
+        }
+      },
+      "messages": {
+        "failedToSign": "署名に失敗しました: ",
+        "tokenNameUnavailable": "CAT 名は使用できません。"
+      }
+    }
+  },
+  "addressBook": {
+    "ui": {
+      "title": {
+        "list": "住所録",
+        "add": "追加"
+      },
+      "button": {
+        "cancel": "キャンセル",
+        "confirm": "確認",
+        "addContact": "住所を追加",
+        "showInnerAcc": "マイアカウント"
+      },
+      "tooltip": {
+        "remove": "削除"
+      }
+    },
+    "messages": {
+      "notification": {
+        "contactAdded": "追加した。",
+        "contactRemoved": "削除されました。",
+        "saved": "保存しました。"
+      },
+      "alert": {
+        "addressExists": "このアドレスはアドレス帳に既に存在します。"
+      },
+      "confirmation": {
+        "removeConfirm": "アドレス帳からこのアドレスを削除してもよろしいですか?"
+      }
+    }
+  },
+  "addressDetail": {
+    "ui": {
+      "title": {
+        "detail": "詳細",
+        "edit": "編集"
+      },
+      "label": {
+        "name": "名前",
+        "address": "住所"
+      },
+      "tooltip": {
+        "copy": "コピー"
+      },
+      "button": {
+        "edit": "編集"
+      }
+    }
+  },
+  "addressBookField": {
+    "ui": {
+      "label": {
+        "name": "名前",
+        "address": "*住所"
+      },
+      "messages": {
+        "emptyAddress": "住所を入力します。",
+        "illegalAddress": "住所が正しくありません。"
+      },
+      "button": {
+        "cancel": "キャンセル",
+        "save": "保存"
+      }
+    }
+  },
+  "mintNft": {
+    "ui": {
+      "title": "ミントNFT",
+      "label": {
+        "did": "DID",
+        "memo": "メモ",
+        "uri": "URI",
+        "hash": "ハッシュ"
+      },
+      "summary": {
+        "notification": "NFTを鋳造してもよろしいですか？<br/>お取引内容をご確認ください。",
+        "label": {
+          "leadingText": "ミント NFT"
+        }
+      },
+      "tooltip": {
+        "upload": "ファイルを選択して、NFT のハッシュを生成します。"
+      },
+      "button": {
+        "upload": "画像ハッシュを取得"
+      },
+      "messages": {
+        "failedToSign": "署名に失敗しました: "
+      }
+    }
+  },
+  "addressField": {
+    "ui": {
+      "label": {
+        "address": "住所",
+        "bindingAddress": "バインディング アドレス:",
+        "lastChanged": "最終変更日:",
+        "hour": "{value}時間前",
+        "day": "{value}日前",
+        "week": "{value} 週間前",
+        "month": "{value} か月前",
+        "year": "{value}年前"
+      },
+      "tooltip": {
+        "qr": "QR をスキャン",
+        "addressBook": "アドレス帳を開く",
+        "confirmed": "確認済み",
+        "confirming": "確認中",
+        "wrong": "間違い"
+      },
+      "span": {
+        "newAddress": "新しいアドレスが見つかりました。クリックしてアドレス帳に追加します。"
+      },
+      "resolve": {
+        "fail": "名前解決に失敗",
+        "notFound": "見つかりません"
+      }
+    }
+  },
+  "errorLog": {
+    "ui": {
+      "title": "エラーログ",
+      "label": {
+        "message": "メッセージ",
+        "stack": "スタック"
+      },
+      "field": {
+        "msg": "メッセージ",
+        "info": "情報",
+        "url": "URL",
+        "empty": "記録なし"
+      },
+      "button": {
+        "clearAll": "すべてクリア"
+      }
+    }
+  },
+  "searchCat": {
+    "ui": {
+      "placeholder": "猫の名前",
+      "tag": {
+        "imported": "輸入した"
+      },
+      "text": {
+        "emptyList": "空の結果",
+        "ascription": "TailDatabase を利用"
+      }
+    }
+  },
+  "settings": {
+    "menu": {
+      "title": "設定",
+      "items": {
+        "general": {
+          "title": "全般的",
+          "description": "言語、ネットワーク、通貨の変換"
+        },
+        "security": {
+          "title": "安全",
+          "description": "パスワード、ニーモニック、個人情報のエクスポート"
+        },
+        "addressBook": {
+          "title": "住所録",
+          "description": "連絡先住所の追加、編集、削除、および管理"
+        },
+        "network": {
+          "title": "通信網",
+          "description": "ネットワークの追加、編集、削除、および管理"
+        },
+        "collection": {
+          "title": "コレクション",
+          "description": "コレクションの作成、編集、削除、および管理"
+        },
+        "advanced": {
+          "title": "高度",
+          "description": "実験的"
+        },
+        "devhelper": {
+          "title": "デベロッパー",
+          "description": "Bech32m、CLVM、バンドル、オファー、コイン"
+        },
+        "about": {
+          "title": "だいたい",
+          "description": "プライバシー ポリシー、Pawket バージョン、お問い合わせ"
+        },
+        "lock": "ウォレットをロック"
+      }
+    },
+    "general": {
+      "title": "全般的",
+      "label": {
+        "language": "言語",
+        "network": "通信網",
+        "currency": "通貨換算",
+        "offlineMode": "オフラインモード",
+        "darkMode": "ダークモード"
+      }
+    },
+    "security": {
+      "title": "安全",
+      "label": {
+        "mnemonic": "記憶語",
+        "password": "ログインパスワード",
+        "export": "個人情報のエクスポート",
+        "reset": "ウォレットのリセット"
+      },
+      "message": {
+        "clear": "ウォレットをリセットすると、デバイスからすべてのデータ (ニーモニック ワードとパスワードを含む) が完全に削除されます。ウォレットのニーモニック ワードがバックアップされていることを確認してください。",
+        "inputPassword": "続行するにはパスワードを入力してください",
+        "passwordNotCorrect": "パスワードが正しくありません。",
+        "backupConfirmTitle": "注意して進めてください",
+        "backupConfirm": "この操作により、ウォレットのバックアップ情報 (ニーモニック ワードと公開鍵を含む) がエクスポートされ、他のデバイスでウォレットを復元するために使用できます。"
+      },
+      "button": {
+        "showMnemonic": "ニーモニックワードを明らかにする",
+        "hideMnemonic": "記憶語を非表示",
+        "password": "パスワードを変更する",
+        "backup": "ウォレット情報のバックアップ",
+        "reset": "ウォレットのリセット"
+      }
+    },
+    "devhelper": {
+      "title": "デベロッパー"
+    },
+    "advanced": {
+      "title": "高度",
+      "label": {
+        "experimental": "実験的"
+      },
+      "confirmation": {
+        "experimental": "実験的な機能は安定しておらず、まだ完全にテストされていません。試してみて、フィードバックをお寄せください。"
+      },
+      "description": "このモードを有効にすると、「Make Offer」、「Take Offer」、「Batch Send」、「Issue CAT」、「Shadow Wallet」などの実験的な機能を使用できます。",
+      "warning": "実験的な機能は安定しておらず、まだ完全にテストされていません。試してみて、フィードバックをお寄せください。"
+    },
+    "about": {
+      "title": "だいたい",
+      "links": {
+        "title": "リンク",
+        "label": {
+          "privacyPolicy": "プライバシーポリシー",
+          "pawketWebsite": "ポーケットのウェブサイト",
+          "github": "Github",
+          "twitter": "Twitter",
+          "discord": "Discord",
+          "donate": "開発者に寄付する"
+        },
+        "url": {
+          "privacyPolicy": "https://info.pawket.app/privacy-policy",
+          "pawketWebsite": "https://info.pawket.app",
+          "github": "https://github.com/SutuLabs",
+          "twitter": "https://twitter.com/pawket_app",
+          "discord": "https://discord.com/invite/ndQgpHwe4V"
+        }
+      }
+    }
+  },
+  "explore": {
+    "title": "探検",
+    "loading": "読み込み中",
+    "ascription": "デクシーによって供給",
+    "nft": {
+      "title": "NFTマーケット"
+    },
+    "cat": {
+      "title": "CATマーケット"
+    },
+    "button": {
+      "buy": "買う",
+      "sell": "売る",
+      "takeOffer": "オファーを受ける"
+    },
+    "table": {
+      "header": {
+        "offer": "オファー",
+        "receive": "受け取る",
+        "price": "価格",
+        "operation": "アクション"
+      }
+    }
+  },
+  "accountManagement": {
+    "ui": {
+      "title": "アカウント管理",
+      "label": {
+        "default": "デフォルト",
+        "serial": "シリアル",
+        "address": "住所",
+        "imported": "輸入した",
+        "passPhrase": "パスフレーズ",
+        "publicKey": "公開鍵",
+        "unknown": "知らない"
+      },
+      "button": {
+        "addBySerial": "シリアルで追加",
+        "addByPassword": "シャドウウォレットを追加",
+        "addByLegacy": "Import Chia Official Wallet（24ワード）",
+        "addByMnemonic": "Import Nucle/Goby Wallet（12ワード）",
+        "addByAddress": "アドレスで追加(監視モード)",
+        "addByPublicKey": "公開鍵で追加"
+      },
+      "tooltip": {
+        "addBySerial": "派生シリアルアカウントは順番に作成されます。",
+        "addByPassword": "アカウントはニーモニックとパスフレーズで保護されています。",
+        "addByLegacy": "輸入嘉オフィシャルウォレット。",
+        "addByMnemonic": "Nucle/Goby ウォレットをインポートします。",
+        "addByAddress": "このモードでは読み取り専用がサポートされています。",
+        "addByPublicKey": "オフライン ウォレットの公開鍵を追加して、トランザクションの開始と完了を支援します。"
+      },
+      "modal": {
+        "addByLegacy": "チア公式ウォレットをインポート",
+        "addByMnemonic": "Nucle/Goby ウォレットのインポート"
+      },
+      "value": {
+        "defaultName": "アカウント{n}"
+      }
+    },
+    "message": {
+      "confirmation": {
+        "removeAccount": "[{accountName}] を削除しますか? ",
+        "cancelText": "キャンセル",
+        "confirmText": "OK"
+      },
+      "prompt": {
+        "setAccountName": "新しい名前を入力",
+        "cancelText": "キャンセル",
+        "confirmText": "OK"
+      },
+      "notification": {
+        "saved": "保存しました"
+      }
+    }
+  },
+  "welcome": {
+    "ui": {
+      "description": "XCH/CAT を Pawket で管理しましょう!",
+      "slogan": "Pawket は、今後も Chia の世界であなたの良きパートナーであり続けます。",
+      "button": {
+        "start": "始める"
+      }
+    }
+  },
+  "disclaimer": {
+    "ui": {
+      "title": "免責事項",
+      "tip": "ニーモニック ワードと秘密鍵は必ずバックアップしてください。",
+      "privary": "当社は、プライバシーポリシーを随時変更することがあります。",
+      "agreementPrefix": "私は受け入れる ",
+      "agreement": "プライバシーポリシー",
+      "link": "https://info.pawket.app/privacy-policy/",
+      "agreementSuffix": "Pawketにアクセスしたい。",
+      "button": {
+        "continue": "続く"
+      }
+    }
+  },
+  "createPassword": {
+    "title": "パスワードの作成",
+    "tip": "開始する前に、ログインパスワードを設定してください。",
+    "label": {
+      "password": "パスワード",
+      "confirm": "パスワードを認証する"
+    },
+    "button": {
+      "continue": "続く"
+    }
+  },
+  "createWallet": {
+    "title": "ウォレットの作成",
+    "button": {
+      "create": "作成",
+      "import": "輸入",
+      "backup": "ウォレットのバックアップをインポート"
+    }
+  },
+  "newWallet": {
+    "title": "新しいウォレット"
+  },
+  "importWallet": {
+    "title": "ウォレットのインポート"
+  },
+  "accountInfo": {
+    "ui": {
+      "title": {
+        "export": "口座情報"
+      },
+      "label": {
+        "name": "名前",
+        "type": "タイプ",
+        "fingerprint": "指紋",
+        "masterPublicKey": "マスター公開鍵 (m)",
+        "farmerPublicKey": "農家の公開鍵 (m/12381/8444/0/0)",
+        "poolPublicKey": "プール公開鍵 (m/12381/8444/1/0)",
+        "firstWalletAddress": "最初のウォレットアドレス",
+        "mnemonicSeed": "記憶語（24語）",
+        "connectionManagement": "接続管理",
+        "details": "詳細"
+      },
+      "tooltip": {
+        "fingerprintTip": "チア公式ウォレットに対応",
+        "mnemonicTip": "チア公式ウォレットに対応",
+        "disconnect": "切断する"
+      },
+      "button": {
+        "reveal": "明らかな",
+        "hide": "隠れる",
+        "delete": "消去"
+      }
+    },
+    "message": {
+      "inputPassword": "続行するにはパスワードを入力してください",
+      "passwordNotCorrect": "パスワードが正しくありません。",
+      "disconnect": "このサイトから [{acc}] を切断してもよろしいですか?"
+    }
+  },
+  "nftDetail": {
+    "ui": {
+      "label": {
+        "nftId": "NFT ID:",
+        "collection": "コレクション",
+        "did": "DID",
+        "description": "説明",
+        "expirationDate": "有効期限"
+      },
+      "button": {
+        "transfer": "移行",
+        "makeOffer": "売る",
+        "move": "動く",
+        "showMore": "もっと見せる",
+        "showLess": "詳細を隠す"
+      },
+      "title": {
+        "properties": "プロパティ",
+        "bindingInformation": "バインディング情報",
+        "details": "詳細"
+      },
+      "bindingInformation": {
+        "address": "住所",
+        "publicKey": "公開鍵",
+        "did": "DID",
+        "text": "文章",
+        "edit": "編集"
+      },
+      "details": {
+        "nftId": "NFT ID:",
+        "launcherId": "Launcher ID",
+        "ownerDid": "Owner DID",
+        "ownerAddress": "Owner Address",
+        "royaltyPercentage": "Royalty Percentage",
+        "dataUrl": "Data URL {index}",
+        "dataHash": "Data Hash",
+        "metadataUrl": "Metadata URL {index}",
+        "metadataHash": "Metadata Hash",
+        "licenseUrl": "License URL",
+        "licenseHash": "License Hash",
+        "series": "Series"
+      },
+      "dropdown": {
+        "spaceScan": "Spacescan.ioで見る",
+        "mintGarden": "Mintgarden.io で見る",
+        "setAsProfilePic": "アカウントアバターとして設定",
+        "signWithNft": "サイン",
+        "nftBurn": "NFTを燃やす"
+      },
+      "profile": {
+        "all": "すべてのNFT",
+        "unassigned": "割り当てられていない NFT"
+      }
+    }
+  },
+  "did": {
+    "ui": {
+      "title": {
+        "detail": "詳細"
+      },
+      "button": {
+        "addDid": "DID を追加",
+        "sign": "サイン"
+      },
+      "label": {
+        "name": "名前",
+        "did": "DID",
+        "tool": "道具"
+      },
+      "prompt": {
+        "newName": "新しい名前を入力"
+      }
+    },
+    "addDid": {
+      "title": "DID を追加",
+      "tip": "DID を作成するには、1 つの mojo を使用します。",
+      "balance": "バランス",
+      "confirmation": "DID を作成してもよろしいですか?<br>お取引内容をご確認ください。",
+      "spend": "払う"
+    }
+  },
+  "nftTransfer": {
+    "ui": {
+      "title": "移行",
+      "description": "この NFT を新しい所有者に譲渡します。",
+      "summary": {
+        "confirmation": "NFTを転送してもよろしいですか？<br>お取引内容をご確認ください。"
+      }
+    }
+  },
+  "collection": {
+    "myCollection": {
+      "title": "私のコレクション",
+      "specialNote": "特記事項: コレクション情報はブロックチェーンにアップロードされず、データはローカル デバイスに保存されます。",
+      "button": {
+        "newCollection": "新しいコレクション"
+      },
+      "tooltip": {
+        "edit": "編集",
+        "remove": "削除"
+      },
+      "messages": {
+        "confirmation": {
+          "delete": "コレクションを削除してもよろしいですか?"
+        },
+        "information": {
+          "NO_COLLECTION": "コレクションなし"
+        }
+      }
+    },
+    "createCollection": {
+      "title": "コレクションを作成",
+      "label": {
+        "id": "*ID",
+        "name": "*名前",
+        "description": "説明",
+        "icon": "*アイコン",
+        "uploadImage": "画像をアップロード:",
+        "url": "URL:",
+        "hash": "ハッシュ：",
+        "fillUrl": "画像の URL を入力",
+        "iconUrl": "アイコン URL",
+        "iconHash": "アイコンハッシュ",
+        "properties": "*プロパティ",
+        "creator": "クリエイター",
+        "address": "*住所",
+        "royaltyPercentage": "*ロイヤルティのパーセンテージ",
+        "royaltyAddress": "*ロイヤリティアドレス",
+        "licenseUrl": "※ライセンスURL"
+      },
+      "button": {
+        "upload": "アップロード"
+      },
+      "messages": {
+        "error": {
+          "INVALID_PROPERTY": "無効なプロパティ",
+          "INVALID_ADDRESS": "無効なアドレス"
+        }
+      }
+    }
+  },
+  "scanAssets": {
+    "ui": {
+      "title": "アセットのスキャン",
+      "prompt": {
+        "selectAssetType": "より多くのアドレスをスキャンすることで、リストに表示されていない資産 (XCH、CAT、NFT などを含む) を発見し、それらを一般的に使用されるアドレスに転送できます。",
+        "scanning": "走査...",
+        "wait": "数分間お待ちください。",
+        "paused": "一時停止中...",
+        "canceled": "キャンセル。",
+        "finished": "終了した！",
+        "scanned": "スキャン済み"
+      },
+      "label": {
+        "scan": "スキャン",
+        "token": "トークン",
+        "nft": "NFT",
+        "did": "DID",
+        "myCats": "私の猫たち",
+        "maxAddress": "スキャン アドレスの最大数",
+        "scanning": "走査",
+        "result": "結果",
+        "name": "名前",
+        "id": "ID",
+        "balance": "バランス",
+        "action": "アクション",
+        "imported": "輸入した"
+      },
+      "button": {
+        "start": "スキャン開始",
+        "pause": "一時停止",
+        "cancel": "キャンセル",
+        "continue": "続く",
+        "reScan": "再スキャン",
+        "add": "追加",
+        "send": "送信",
+        "sign": "サイン"
+      }
+    },
+    "message": {
+      "confirmation": {
+        "close": "スキャンが完了していません。",
+        "cancel": "スキャンが完了していません。"
+      },
+      "error": {
+        "ABORT_OOM": "スキャンが中止されました。",
+        "NETWORK_ERROR": "ネットワークエラー。",
+        "UNKNOWN": "不明なエラー。"
+      }
+    }
+  },
+  "moveNft": {
+    "ui": {
+      "title": "NFTを移動",
+      "label": {
+        "moveToProfile": "プロフィールに移動",
+        "selectDid": "DID を選択",
+        "move": "NFTを移動",
+        "to": "に"
+      },
+      "confirmation": "NFTを移動してもよろしいですか？ <br>お取引内容をご確認ください。"
+    }
+  },
+  "signMessage": {
+    "ui": {
+      "title": "サインメッセージ",
+      "prompt": "メッセージが信頼できるソースからのものであることを確認してください。",
+      "label": {
+        "signWdid": "DID で署名:",
+        "signWithNft": "NFT で署名:",
+        "signWithAddress": "住所で署名:",
+        "message": "メッセージ",
+        "result": "結果"
+      }
+    }
+  },
+  "verifyMessage": {
+    "ui": {
+      "title": "メッセージの確認",
+      "label": {
+        "message": "メッセージ",
+        "result": "結果"
+      },
+      "button": {
+        "verify": "確認"
+      },
+      "sigResult": {
+        "pass": "署名チェックに合格",
+        "fail": "署名チェックに失敗しました",
+        "none": "署名がチェックされていません"
+      },
+      "coinResult": {
+        "pass": "コインチェック通過",
+        "fail": "コインチェック失敗",
+        "none": "コイン未確認"
+      }
+    }
+  },
+  "batchMintNft": {
+    "ui": {
+      "title": "バッチミントNFT",
+      "label": {
+        "royaltyAddress": "ロイヤリティアドレス",
+        "royaltyPercentage": "ロイヤリティの割合"
+      }
+    }
+  },
+  "addNetwork": {
+    "ui": {
+      "title": {
+        "add": "ネットワークを追加",
+        "edit": "ネットワークの編集"
+      },
+      "warning": "悪意のあるネットワーク プロバイダーは、ブロックチェーンの状態について嘘をつき、ネットワーク アクティビティを記録する可能性があります。",
+      "label": {
+        "networkName": "ネットワーク名",
+        "rpcUrl": "RPC URL",
+        "chainId": "チェーン ID",
+        "currencySymbol": "通貨記号",
+        "addressPrefix": "アドレスプレフィックス",
+        "decimalPlace": "通貨の小数点以下の桁数",
+        "blockExplorer": "ブロック エクスプローラーの URL (オプション)"
+      },
+      "button": {
+        "addNetwork": "ネットワークを追加"
+      }
+    },
+    "message": {
+      "notification": {
+        "networkExists": "このネットワーク名は既に存在します!"
+      },
+      "confirmation": {
+        "delete": "このネットワークを削除してもよろしいですか?"
+      }
+    }
+  },
+  "updateCns": {
+    "ui": {
+      "title": "CNS アドレスの更新",
+      "confirmation": "ドメイン名のバインディング情報を更新します。<br/>お取引内容をご確認ください。",
+      "label": {
+        "updateTo": "に更新",
+        "cns": "CNS",
+        "targetAddress": "ターゲットアドレス",
+        "currentBindingAddress": "現在のバインディングアドレス"
+      }
+    }
+  },
+  "addByPublicKey": {
+    "ui": {
+      "title": "PublicKey によるアカウントの追加",
+      "message": {
+        "publicKeyRequired": "公開鍵が必要です。"
+      }
+    }
+  },
+  "encryptMessage": {
+    "ui": {
+      "title": "メッセージの暗号化",
+      "tab": {
+        "singleMessage": "単一のメッセージ",
+        "multipleMessage": "複数のメッセージ"
+      },
+      "label": {
+        "encryptWithAddress": "アドレスで暗号化",
+        "activatePrefix": "このアドレスは有効化されていません。ここをクリックして送金してください ",
+        "activate": "活性化",
+        "message": "メッセージ",
+        "receiverAddress": "受信者アドレス"
+      },
+      "button": {
+        "encrypt": "暗号化する"
+      }
+    },
+    "message": {
+      "error": {
+        "INACTIVE_ADDRESS": "受信者アドレスがアクティブ化されていません。"
+      }
+    }
+  },
+  "decryptMessage": {
+    "ui": {
+      "title": "メッセージの復号化",
+      "label": {
+        "message": "メッセージ",
+        "result": "結果"
+      },
+      "button": {
+        "decrypt": "復号化"
+      }
+    },
+    "message": {
+      "error": {
+        "CANNOT_FIND_ADDRESS": "復号化アドレスが受信者アドレスと一致しません。",
+        "INVALID_MESSAGE": "メッセージが無効です。",
+        "INVALID_ADDRESS": "送信者/受信者のアドレスが無効です。"
+      }
+    }
+  },
+  "bindingInformation": {
+    "ui": {
+      "title": "バインディング情報",
+      "label": {
+        "publicKey": "公開鍵",
+        "did": "DID",
+        "text": "文章"
+      },
+      "notification": "ドメイン名のバインディング情報を更新します。<br>お取引内容をご確認ください。",
+      "tag": {
+        "currentPk": "当座預金PK",
+        "fillPk": "現在のアカウントの公開鍵を入力します"
+      },
+      "button": {
+        "update": "アップデート"
+      }
+    }
+  },
+  "scan": {
+    "ui": {
+      "title": "スキャン",
+      "label": {
+        "scanQr": "QRコードをスキャン",
+        "publicKeyQr": "公開鍵 QR コード"
+      },
+      "hint": {
+        "scan": "アドレス、公開鍵をスキャン"
+      }
+    }
+  },
+  "backup": {
+    "ui": {
+      "title": {
+        "verifyPassword": "パスワードを照合します",
+        "backup": "バックアップ情報"
+      },
+      "tip": {
+        "setPassword": "このパスワードは、バックアップを新しいデバイスにインポートしてウォレットを復元する際のログイン パスワードとして使用されます。"
+      },
+      "label": {
+        "passwordType": {
+          "current": "現在のログインパスワードを使用",
+          "new": "新しいパスワードを使用する"
+        },
+        "selectBackupInfo": "バックアップ情報の選択",
+        "setYourLoginPassword": "ログインパスワードを設定する"
+      },
+      "items": {
+        "masterAccount": "マスターアカウント情報",
+        "settings": "設定",
+        "customNetwork": "カスタム ネットワーク",
+        "accountList": "アカウント一覧",
+        "addressBook": "住所録",
+        "didNames": "DID 名"
+      },
+      "button": {
+        "downloadBak": "バックアップファイルをダウンロード",
+        "complete": "完了",
+        "next": "次"
+      }
+    },
+    "message": {
+      "error": {
+        "passwordRequired": "パスワードが必要。",
+        "passwordNotCorrect": "パスワードが正しくありません。"
+      }
+    }
+  },
+  "importBackup": {
+    "title": "バックアップのアップロード",
+    "password": {
+      "tip": "ログインパスワードを入力してください",
+      "label": "パスワード"
+    },
+    "error": {
+      "LARGE_FILE": "ファイルが大きすぎます",
+      "UNSUPPORTED_FILE": "サポートされていないファイル"
+    }
+  },
+  "buyUsds": {
+    "ui": {
+      "title": "USDSを購入する",
+      "button": {
+        "continue": "購入を続ける",
+        "stably": "安定的にオープンして購入"
+      },
+      "tip": "現在、ACH 銀行振込による Chia ブロックチェーンでの USDS の購入のみをサポートしています。",
+      "stablyPrefix": "このサービスは、によって提供されます",
+      "stably": " Stably ",
+      "stablySuffix": "Pawket からは完全に独立しています。"
+    }
+  },
+  "nftBurn": {
+    "title": "NFTバーン",
+    "description": "この NFT は、検証可能な使用不可能なアドレスに送信することで流通から削除することにより、バーンされます。",
+    "confirmation": "このNFTを燃やしてもよろしいですか？<br>お取引内容をご確認ください。"
+  },
+  "cns": {
+    "title": "Chiaネームサービス",
+    "placeholder": "Chia ドメイン名の検索",
+    "button": {
+      "search": "検索",
+      "loading": "読み込み中",
+      "register": "登録",
+      "cancel": "キャンセル"
+    },
+    "label": {
+      "notOpenYet": "まだ開いていません",
+      "registered": "登録済み",
+      "result": "結果",
+      "available": "利用可能",
+      "unavailable": "利用不可",
+      "registrationPeriod": "登録期間",
+      "registrationFee": "登録料",
+      "annualFee": "年会費",
+      "royaltyPercentage": "ロイヤリティの割合",
+      "total": "合計",
+      "networkIssue": "ネットワークの問題",
+      "myNames": "私の名前は",
+      "register": "{cnsName}.xch を登録します",
+      "name": "名前",
+      "oneYear": "1年",
+      "address": "住所（任意）"
+    },
+    "message": {
+      "notOpen": " CNSの試用期間中は、当面の間、6文字以上の名前のみ登録可能です。",
+      "registered": "この名前は登録されています。",
+      "profileHomepage": "プロフィールホームページ",
+      "unavailable": "この名前は予約されています。",
+      "noName": "Chia ドメイン名がありません。"
+    }
+  },
+  "connect": {
+    "ui": {
+      "label": {
+        "connectWithPawket": "ポーケットとつながる",
+        "enterPassword": "パスワードを入力してサイトに接続します",
+        "trust": "接続するサイトが信頼できることを確認してください",
+        "selectAccount": "このサイトで使用するアカウントを選択してください",
+        "loadingBalance": "残高を読み込んでいます..",
+        "allowSiteTo": "このサイトに許可:",
+        "viewInfo": "アカウントの住所、残高、DID、およびアクティビティを表示します。",
+        "requestTranx": "トランザクションの承認をリクエストします。",
+        "gettingData": "Pawket からデータを取得しています...",
+        "noWallet": "ノーポーケットウォレット",
+        "noWalletInfo": "Pawket にウォレットが設定されていません。"
+      },
+      "button": {
+        "next": "次",
+        "connect": "接続",
+        "setUp": "ウォレットの設定"
+      }
+    },
+    "messages": {
+      "success": "成功！",
+      "invalidCall": "無効な呼び出し:",
+      "noAppName": "アプリ名を指定してください!",
+      "offerAccepted": "オファーが受け入れられました！",
+      "invalidData": "署名に失敗しました: 無効な入力データ",
+      "unknownDid": "署名に失敗しました: 指定された DID は現在のアカウントに存在しません",
+      "unknownNetwork": "指定されたネットワークは存在しません",
+      "sendCompleted": "トランザクションが送信されました!",
+      "catAdded": "CATが追加されました！",
+      "cancelled": "キャンセル",
+      "incorrectPassword": "パスワードが正しくありません。"
+    }
+  }
+}

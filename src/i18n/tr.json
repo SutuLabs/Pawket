@@ -1,0 +1,1651 @@
+{
+  "default": {
+    "accountName": "Hesap1"
+  },
+  "html": {
+    "document": {
+      "title": "Pawket"
+    }
+  },
+  "common": {
+    "button": {
+      "confirm": "Onaylamak",
+      "cancel": "İptal etmek",
+      "back": "Geri",
+      "save": "Kaydetmek",
+      "submit": "Göndermek",
+      "delete": "Silmek",
+      "sign": "İmza",
+      "generate": "oluştur",
+      "copy": "kopyala"
+    },
+    "tooltip": {
+      "copy": "kopyala"
+    },
+    "message": {
+      "saved": "Kaydedildi.",
+      "added": "Katma.",
+      "noResult": "Sonuç yok.",
+      "uploadSuccess": "yüklendi."
+    }
+  },
+  "app": {
+    "ui": {
+      "button": {
+        "lang": "Türkçe"
+      },
+      "navigation": {
+        "wallet": "Cüzdan",
+        "cns": "CNS",
+        "explore": "Keşfetmek",
+        "settings": "Ayarlar"
+      }
+    },
+    "message": {
+      "notification": {
+        "copySuccess": "kopyalandı.",
+        "copyFailed": "Kopyalama başarısız oldu.",
+        "transactionComplete": {
+          "title": "İşlem Tamamlandı!",
+          "body": "{block} bloğundaki işleminiz tamamlandı."
+        }
+      }
+    }
+  },
+  "footer": {
+    "ui": {
+      "productInfo": {
+        "name": "Pawket",
+        "author": "SutuLabs",
+        "authorLink": "https://github.com/SutuLabs"
+      },
+      "button": {
+        "home": "Ev",
+        "developer": "Geliştirici"
+      },
+      "error": {
+        "READ_VERSION_FAILED": "Sürüm okunamadı."
+      }
+    }
+  },
+  "self-test": {
+    "message": {
+      "checking": "Kontrol etme",
+      "passed": "Geçti",
+      "failed": "Kontrol edilemedi: "
+    }
+  },
+  "verifyPassword": {
+    "ui": {
+      "button": {
+        "confirm": "Onaylamak",
+        "clear": "Cüzdanı Sıfırla"
+      },
+      "title": {
+        "verifyPassword": "Parolayı Doğrula"
+      },
+      "alt": {
+        "logoAlt": "Pawket Logosu"
+      }
+    },
+    "message": {
+      "confirmation": {
+        "clear": "Cüzdanın sıfırlanması, cihazınızdaki tüm verileri (hatırlatıcılar ve parolalar dahil) kalıcı olarak kaldıracaktır, cüzdan anımsatıcılarının yedeklendiğinden emin olun. ",
+        "confirmText": "Onaylamak",
+        "cancelText": "İptal etmek"
+      },
+      "error": {
+        "passwordNotMatch": "Parola eşleşmiyor.",
+        "incorrectPassword": "Yanlış parola.",
+        "passwordEmpty": "Şifre boş olamaz."
+      },
+      "tip": {
+        "weakPassword": "Zayıf",
+        "mediumPassword": "Orta",
+        "strongPassword": "Güçlü"
+      }
+    }
+  },
+  "createSeed": {
+    "ui": {
+      "button": {
+        "confirm": "Onaylamak",
+        "later": "Daha sonra",
+        "ready": "Sonraki",
+        "12word": "12 kelime",
+        "24word": "24 kelime",
+        "import12": "Pawket Anımsatıcı Sözcüklerini İçe Aktar",
+        "import24": "Chia Resmi Anımsatıcı Sözcüklerini İçe Aktar"
+      },
+      "text": {
+        "create": {
+          "tip1": "Hoş geldin! ",
+          "tip2": "UYARI: HATIRLAYICI SÖZLERİNİZİ ASLA AÇIKLAMAYIN. "
+        },
+        "import12": {
+          "title": "Pawket Anımsatıcı Sözcüklerini İçe Aktar",
+          "tip": "Lütfen anımsatıcılar arasında boşluk bırakarak Pawket Anımsatıcı Sözcüklerinizi sırayla girin."
+        },
+        "import24": {
+          "title": "Chia Resmi Anımsatıcı Sözcüklerini İçe Aktar",
+          "tip": "Lütfen anımsatıcılar arasında boşluk bırakarak Chia resmi Anımsatıcı Sözlerinizi sırayla girin."
+        }
+      }
+    },
+    "message": {
+      "error": {
+        "wrongSeed": "İçe aktarma başarısız oldu, lütfen Anımsatıcı Sözcüklerinizi kontrol edin."
+      }
+    }
+  },
+  "accountDetail": {
+    "ui": {
+      "button": {
+        "receive": "Almak",
+        "buy": "Satın almak",
+        "send": "Göndermek",
+        "scan": "tarama",
+        "confirm": "Onaylamak",
+        "cancel": "İptal etmek",
+        "manageCats": "CAT'leri yönetin"
+      },
+      "tab": {
+        "asset": "Varlık",
+        "utxos": "UTXO'lar",
+        "nft": "NFT",
+        "did": "DID"
+      },
+      "tooltip": {
+        "lock": "Cüzdanı Kilitle",
+        "errorLog": "Hata Günlüğü",
+        "refresh": "Yenile"
+      },
+      "dApps": {
+        "title": "dApp'ler",
+        "tooltip": {
+          "donate": "Gelişimi Desteklemek İçin Bağış Yapın",
+          "scanAssets": "Varlıkları Tara",
+          "proxy": "Çevrimdışı Oturum",
+          "takeOffer": "Teklif Offer",
+          "makeOffer": "Teklif yap",
+          "batchSend": "Toplu Gönderim",
+          "mintCat": "CAT yayınlayın",
+          "mintNft": "Nane NFT",
+          "batchMintNft": "toplu nane",
+          "verify": "Mesajı Doğrula",
+          "encryptMessage": "Mesajı Şifrele",
+          "decryptMessage": "Mesajın Şifresini Çöz"
+        },
+        "button": {
+          "donate": "Bağış yapmak",
+          "scanAssets": "Varlıkları Tara",
+          "proxy": "Çevrimdışı Oturum",
+          "takeOffer": "Teklif Offer",
+          "makeOffer": "Teklif yap",
+          "batchSend": "Toplu Gönderim",
+          "mintCat": "CAT yayınlayın",
+          "mintNft": "Nane NFT",
+          "batchMintNft": "toplu nane",
+          "verify": "Mesajı Doğrula",
+          "encryptMessage": "Mesajı Şifrele",
+          "decryptMessage": "Mesajın Şifresini Çöz"
+        }
+      }
+    },
+    "message": {
+      "confirmation": {
+        "lock": "Cüzdanı kilitle?"
+      },
+      "notification": {
+        "donate": "Geliştiricilere bağışta bulunuyorsunuz.",
+        "observeMode": "Gözlem Modunda etkileşim işlevi devre dışı bırakıldı",
+        "offline": "Şu anda çevrimdışı modda.",
+        "turnOffPrefix": "Tıklamak",
+        "turnOff": "Burada",
+        "turnOffSuffix": "kapatmak.",
+        "test": "Not: kitten.pawket.app, bazı yayınlanmamış yeni özellikleri deneyimleyebileceğiniz bir test sitesidir."
+      }
+    }
+  },
+  "changePassword": {
+    "ui": {
+      "title": {
+        "changePassword": "Şifre değiştir"
+      },
+      "label": {
+        "oldPassword": "eski Şifre",
+        "newPassword": "Yeni Şifre",
+        "rePassword": "Şifrenizi tekrar girin"
+      },
+      "button": {
+        "back": "Geri",
+        "submitChange": "Göndermek"
+      }
+    },
+    "message": {
+      "error": {
+        "passwordRequired": "Şifre gereklidir.",
+        "passwordNotCorrect": "Yanlış parola.",
+        "passwordNotMatch": "Parola eşleşmiyor."
+      },
+      "alert": {
+        "passwordChanged": "Şifre değiştirildi. "
+      }
+    }
+  },
+  "explorerLink": {
+    "ui": {
+      "title": {
+        "link": "Adresleri Al"
+      },
+      "label": {
+        "maxAddress": "Maksimum adres sayısı",
+        "address": "Adres",
+        "coin": "Madeni para",
+        "sign": "İmza",
+        "link": "Kaşif",
+        "observer": "Gözlemci",
+        "nonObserver": "Gözlemci Olmayan"
+      },
+      "tooltip": {
+        "blockchainExplorer": "Blok Gezgini'nde görüntüle",
+        "receiveAddress": "Değeri artırırsanız daha fazla adresteki bakiyeyi kontrol edebilirsiniz, ancak cüzdan daha yavaş çalışacaktır."
+      }
+    }
+  },
+  "send": {
+    "ui": {
+      "title": {
+        "send": "Göndermek"
+      },
+      "label": {
+        "amount": "Miktar",
+        "memo": "Hafıza",
+        "fee": "Ücret"
+      },
+      "button": {
+        "submit": "Göndermek",
+        "showSend": "Göstermek"
+      },
+      "slider": {
+        "low": "Düşük",
+        "medium": "Orta",
+        "high": "Yüksek",
+        "custom": "Gelenek"
+      },
+      "messages": {
+        "getFailedResponse": "Hata yanıtı alın: ",
+        "failedToSubmit": "Bellek havuzuna gönderilemedi: ",
+        "failedToSign": "İmzalanamadı: ",
+        "submitted": "Bellek havuzuna gönderildi.",
+        "invalidAmount": "Geçersiz miktar.",
+        "insufficientFunds": "Yetersiz bakiye."
+      },
+      "span": {
+        "loading": "Yükleniyor",
+        "maxLeadingText": "Maks:"
+      },
+      "text": {
+        "offlineOnlySupportXch": "Çevrimdışı gönderim artık yalnızca XCH'yi destekliyor."
+      },
+      "summary": {
+        "notification": "göndereceğinizden emin misiniz?<br/>Lütfen işleminizi gözden geçirin."
+      }
+    },
+    "messages": {
+      "error": {
+        "DOUBLE_SPEND": "Çift Harcama",
+        "UNKNOWN_UNSPENT": "Bilinmeyen bir UTXO kullanılmış, belki önceki işlem blok zincirinde onaylanmamıştır.",
+        "BAD_AGGREGATE_SIGNATURE": "Hatalı Toplu İmza",
+        "INVALID_CONDITION": "Geçersiz Koşul",
+        "COIN_AMOUNT_EXCEEDS_MAXIMUM": "Madeni Para Miktarı Maksimumu Aşıyor",
+        "INVALID_FEE_LOW_FEE": "Geçersiz Ücret/Düşük Ücret",
+        "MEMPOOL_NOT_INITIALIZED": "Mempool Başlatılmamış",
+        "ALREADY_INCLUDING_TRANSACTION": "Zaten İşlem Dahil",
+        "INCOMPATIBLE_NETWORK_ID": "Uyumsuz Ağ Kimliği",
+        "NO_TRANSACTIONS_WHILE_SYNCING": "Senkronizasyon Sırasında İşlem Yok",
+        "INVALID_FEE_TOO_CLOSE_TO_ZERO": "Geçersiz Ücret, Sıfıra Çok Yakın",
+        "COIN_AMOUNT_NEGATIVE": "Jeton Miktarı Negatif",
+        "INVALID_ADDRESS": "Geçersiz adres",
+        "ADDRESS_NOT_MATCH_NETWORK": "Doldurulan adres mevcut ağ ile eşleşmiyor. ",
+        "PENDING": "İşlem zaten beklemede, lütfen tamamlanmasını bekleyin."
+      }
+    }
+  },
+  "scanQrCode": {
+    "message": {
+      "error": {
+        "NotAllowedError": "HATA: Kamera erişim izni vermeniz gerekiyor.",
+        "NotFoundError": "HATA: Bu cihazda kamera yok.",
+        "NotSupportedError": "HATA: Güvenli içerik gerekli (HTTPS, yerel ana bilgisayar).",
+        "NotReadableError": "HATA: Kamera kullanımda mı?",
+        "OverconstrainedError": "HATA: Yüklenen kamera uygun değil.",
+        "StreamApiNotSupportedError": "HATA: Akış API'sı bu tarayıcıda desteklenmiyor.",
+        "InsecureContextError": "HATA: Kamera erişimine yalnızca güvenli bağlamda izin verilir. "
+      }
+    }
+  },
+  "offer": {
+    "make": {
+      "ui": {
+        "title": "Teklif yap",
+        "panel": {
+          "information": "Bilgi",
+          "hint": {
+            "thisIsYourOffer": "Bu sizin teklif metninizdir.",
+            "unsignedOffer": "İmza başarısız oldu, geçersiz Teklif"
+          }
+        },
+        "label": {
+          "yourOfferTitle": "Teklifiniz",
+          "bundle": "paket"
+        },
+        "button": {
+          "done": "Tamamlamak",
+          "uploadToDexie": "Dexie'ye yükle"
+        },
+        "field": {
+          "offer": "Teklif",
+          "request": "Rica etmek"
+        }
+      },
+      "messages": {
+        "failedToSign": "Teklif yapılamadı."
+      }
+    },
+    "symbol": {
+      "Cat": "KEDİ",
+      "hint": {
+        "XCH": "Orijinal Jeton"
+      }
+    },
+    "take": {
+      "ui": {
+        "title": "Teklif Al",
+        "hint": {
+          "pasteOffer": "Teklif verilerinizi buraya yapıştırın veya teklif dosyanızı yükleyin.",
+          "error": "Teklif diziniz yanlış."
+        },
+        "panel": {
+          "information": "Bilgi"
+        },
+        "label": {
+          "royaltyToCreator": "Yaratıcı",
+          "totalRequested": "Talep Edilen Toplam Tutar",
+          "nftPrice": "NFT Fiyatı",
+          "royalty": "Telif hakkı",
+          "total": "Toplam",
+          "receive": "Almak",
+          "offer": "Teklif",
+          "fee": "Ücret",
+          "totalPayment": "Toplam ödeme"
+        },
+        "button": {
+          "cancel": "İptal etmek",
+          "submit": "Göndermek",
+          "upload": "Teklif Dosyasını Yükle"
+        },
+        "field": {
+          "offer": "Teklif"
+        },
+        "tooltip": {
+          "spaceScan": "Spacescan.io'da görüntüle",
+          "verifiedCns": "Doğrulanmış CNS",
+          "unverifiedCns": "Bu sahte bir CNS. "
+        },
+        "notification": {
+          "observation": "Şu anda Gözlem Modunda. "
+        }
+      },
+      "information": {
+        "requested": "Karşılık olarak",
+        "offered": "alacaksın",
+        "addCat": "CAT Listesine Ekle.",
+        "unsupportOfferNftOffer": "Bu teklif türü henüz desteklenmiyor.",
+        "acceptOffer": "Teklifi kabul edeceğinizden emin misiniz?<br>Lütfen işleminizi gözden geçirin."
+      },
+      "messages": {
+        "failedToSign": "Teklif alınamadı.",
+        "unsupportOfferNftOffer": "Bu teklif türü henüz desteklenmiyor."
+      }
+    }
+  },
+  "ManageCats": {
+    "ui": {
+      "title": {
+        "ManageCats": "Kedileri Yönet"
+      },
+      "label": {
+        "listingCats": "CAT Listesi",
+        "name": "İsim",
+        "assetID": "Öğe kimliği",
+        "search": "Aramak",
+        "custom": "Gelenek"
+      },
+      "button": {
+        "add": "Eklemek"
+      },
+      "tooltip": {
+        "removeToken": "CAT'yi kaldır",
+        "drag": "Sıralamak için sürükleyin",
+        "copy": "Öğe kimliğini kopyala"
+      },
+      "message": {
+        "nameRequired": "İsim gerekli.",
+        "assetIdRequired": "Öğe kimliği gerekli."
+      }
+    },
+    "message": {
+      "notification": {
+        "wrongAssetId": "Yanlış varlık kimliği. "
+      },
+      "confirmation": {
+        "removeToken": "CAT'i kaldıracağınızdan emin misiniz?",
+        "closeWithContent": "Bu sayfada, sayfadan ayrılırsanız kaybolacak olan kaydedilmemiş değişiklikleriniz var. ",
+        "confirm": "Onaylamak",
+        "cancel": "İptal etmek"
+      },
+      "alert": {
+        "isExisted": "Varlık Kimliği/Adı, CAT Listesinde zaten var!"
+      }
+    }
+  },
+  "offline": {
+    "proxy": {
+      "scan": {
+        "title": "İmza",
+        "numberField": "İmzasız Mesajlar",
+        "numberMessage": "Aşağıdaki QR kodlarını Offline Sign ile tarayın. "
+      },
+      "confirmBundle": {
+        "title": "Onaylamak",
+        "button": {
+          "cancel": "İptal etmek",
+          "submit": "Göndermek"
+        },
+        "notification": "göndereceğinizden emin misiniz?<br/>Lütfen işleminizi gözden geçirin."
+      }
+    },
+    "client": {
+      "text": {
+        "qrcodesStatus": "{index} / {total}",
+        "unsafeMode": "Güvenli Olmayan Mod",
+        "status": "Taranan: {fragment} / {total} parça(lar)."
+      },
+      "scan": {
+        "title": "Çevrimdışı Oturum",
+        "numberField": "İmzalı Mesaj",
+        "numberMessage": "Lütfen bu QR kodunu işlemi başlatan çevrimiçi cihazla tarayın.",
+        "scrollDown": "Sayfayı aşağı kaydırın ve imzalı mesajı almak için çevrimdışı cihazda QR kodunu tarayın."
+      },
+      "show": {
+        "hint": "İşleminizi göndermek üzere QR'yi taramak için Proxy'yi kullanın.",
+        "overflow": "Veri maksimum uzunluğu aşıyor, QR kodu oluşturulamıyor",
+        "bundle": "paket",
+        "copy": "kopyala"
+      }
+    },
+    "ui": {
+      "button": {
+        "cancel": "İptal etmek"
+      }
+    }
+  },
+  "addByMnemonic": {
+    "ui": {
+      "label": {
+        "name": "Hesap adı",
+        "mnemonic": "{len} Anımsatıcı Sözcükler"
+      },
+      "message": {
+        "nameRequired": "Hesap adı gerekli.",
+        "mnemonicRequired": "Anımsatıcı gereklidir.",
+        "invalidMnemonic": "İçe aktarma başarısız oldu. "
+      },
+      "button": {
+        "back": "Geri",
+        "submit": "Göndermek"
+      },
+      "tooltip": {
+        "mnemonic": "Lütfen Anımsatıcı Sözcüklerinizi, anımsatıcılar arasında boşluk bırakarak sırayla girin."
+      }
+    },
+    "message": {
+      "error": {
+        "accountMnemonicExists": "Aynı Anımsatıcı Sözlere sahip bir hesap zaten var."
+      }
+    }
+  },
+  "addByAddress": {
+    "ui": {
+      "title": "Adrese Göre Ekle",
+      "label": {
+        "name": "Hesap adı",
+        "publicKey": "Genel anahtar"
+      },
+      "message": {
+        "nameRequired": "Hesap adı gerekli.",
+        "illegalAddress": "Yanlış adres.",
+        "duplicateAddress": "Yinelenen Adres: [{accName}] aynı adrese sahip.",
+        "duplicateName": "Yinelenen Ad",
+        "duplicatePublicKey": "Yinelenen PublicKey: [{accName}] aynı publicKey'e sahip."
+      },
+      "button": {
+        "back": "Geri",
+        "submit": "Göndermek"
+      }
+    }
+  },
+  "addByPassword": {
+    "ui": {
+      "title": "Gölge Cüzdanı Ekle",
+      "label": {
+        "name": "Hesap adı",
+        "password": "Parola",
+        "rePassword": "Parolayı Yeniden Girin"
+      },
+      "message": {
+        "nameRequired": "Hesap adı gerekli.",
+        "passwordRequired": "Parola gerekli.",
+        "invalidPassword": "Parola eşleşmiyor."
+      },
+      "button": {
+        "back": "Geri",
+        "submit": "Göndermek"
+      }
+    },
+    "message": {
+      "error": {
+        "accountPasswordExists": "[{accName}] aynı parolaya sahip."
+      }
+    }
+  },
+  "addBySerial": {
+    "ui": {
+      "title": "Seri Numaraya Göre Hesap Ekle",
+      "label": {
+        "name": "Hesap adı"
+      },
+      "message": {
+        "nameRequired": "Hesap adı gerekli."
+      },
+      "button": {
+        "back": "Geri",
+        "submit": "Göndermek"
+      }
+    }
+  },
+  "bundleSummary": {
+    "ui": {
+      "fee": {
+        "title": "Ücret",
+        "mojos": "{ücret} mojo(lar)"
+      },
+      "inputs": {
+        "title": "Toplam tutar"
+      },
+      "label": {
+        "details": "Detaylar"
+      },
+      "detail": {
+        "title": "Detaylar",
+        "itemTo": "adrese}",
+        "span": {
+          "hint": "İpucu(İlgili Adres)",
+          "memo": "Hafıza"
+        }
+      }
+    },
+    "notification": {
+      "error": {
+        "unknownMod": "Bilinmeyen paket, doğru şekilde ayrıştırılamıyor."
+      }
+    }
+  },
+  "batchSend": {
+    "ui": {
+      "title": {
+        "send": "Toplu Gönderim"
+      },
+      "tooltip": {
+        "help": "Tek bir işlemde birden fazla işlem göndermeyi destekler. ",
+        "upload": "\".csv\" biçiminde bir dosya yükleyin."
+      },
+      "field": {
+        "csv": {
+          "fillSample": "Numune Doldur",
+          "or": " veya ",
+          "downloadSample": "Örnek bir CSV dosyası indirin",
+          "drag": "Doğrudan yüklemek için bu alana sürükleyip bırakın.",
+          "sampleName": "Örnek"
+        }
+      },
+      "summary": {
+        "notification": "göndereceğinizden emin misiniz?<br/>Lütfen işleminizi gözden geçirin."
+      },
+      "button": {
+        "upload": "CSV Yükle"
+      },
+      "messages": {
+        "failedToSign": "İmzalanamadı: ",
+        "wrongFileType": "Lütfen dosyayı .csv formatında yükleyin.",
+        "onlyOneFile": "Yalnızca bir dosya yüklemesi desteklenir."
+      }
+    },
+    "messages": {
+      "error": {
+        "ADDRESS_NOT_MATCH_NETWORK": "Doldurulan adres [{address}] mevcut ağ ile eşleşmiyor. ",
+        "COIN_NOT_EXIST": "{sembol} madeni para mevcut değil!"
+      }
+    },
+    "sample": {
+      "address": "Adres",
+      "coin": "Madeni para",
+      "amount": "Miktar(mojo)",
+      "memo": "Memo(Gönderdiğiniz koin XCH ise notu dolduramazsınız)"
+    }
+  },
+  "utxo": {
+    "ui": {
+      "label": {
+        "cost": "Göndermek",
+        "receive": "Almak",
+        "queue": "Sıra",
+        "confirmed": "Onaylanmış"
+      },
+      "text": {
+        "empty": "İşleminiz yok."
+      }
+    }
+  },
+  "utxoDetail": {
+    "ui": {
+      "title": {
+        "cost": "Göndermek",
+        "receive": "Almak"
+      },
+      "label": {
+        "amount": "Miktar",
+        "time": "Zaman",
+        "spentHeight": "Harcanan Yükseklik",
+        "confirmedHeight": "Onaylanmış Yükseklik",
+        "parentCoinInfo": "Ana Para Bilgisi",
+        "puzzleHash": "Adres",
+        "coinName": "Madeni Para Adı",
+        "coins": "madeni paralar",
+        "pending": "Askıda olması"
+      },
+      "button": {
+        "unlockCoins": "Madeni Paraların Kilidini Açın"
+      },
+      "tooltip": {
+        "copy": "kopyala"
+      }
+    },
+    "message": {
+      "unlockCoins": "Madeni paranın kilidinin açılması işlemi iptal etmeyecektir. "
+    }
+  },
+  "sendSummary": {
+    "ui": {
+      "label": {
+        "sending": "gönderme",
+        "to": "İle",
+        "fee": "Ücret",
+        "total": "Toplam",
+        "assetId": "Öğe kimliği",
+        "NftUri": "NFT"
+      }
+    }
+  },
+  "bundleText": {
+    "ui": {
+      "title": "paket",
+      "copy": "kopyala",
+      "button": {
+        "show": "Göstermek",
+        "hide": "Saklamak"
+      }
+    }
+  },
+  "mintCat": {
+    "ui": {
+      "title": "CAT yayınlayın",
+      "label": {
+        "amount": "Miktar",
+        "memo": "Hafıza",
+        "symbolName": "CAT Adı(Değiştirilebilir)"
+      },
+      "summary": {
+        "notification": "CAT'i vereceğinizden emin misiniz?<br/>Lütfen işleminizi gözden geçirin.",
+        "label": {
+          "leadingText": "CAT verilmesi"
+        }
+      },
+      "messages": {
+        "failedToSign": "İmzalanamadı: ",
+        "tokenNameUnavailable": "CAT adı mevcut değil."
+      }
+    }
+  },
+  "addressBook": {
+    "ui": {
+      "title": {
+        "list": "Adres defteri",
+        "add": "Eklemek"
+      },
+      "button": {
+        "cancel": "İptal etmek",
+        "confirm": "Onaylamak",
+        "addContact": "Adres Ekle",
+        "showInnerAcc": "Hesaplarım"
+      },
+      "tooltip": {
+        "remove": "Kaldırmak"
+      }
+    },
+    "messages": {
+      "notification": {
+        "contactAdded": "Katma.",
+        "contactRemoved": "Kaldırıldı.",
+        "saved": "Kaydedildi."
+      },
+      "alert": {
+        "addressExists": "Adres, Adres Defterinde zaten var."
+      },
+      "confirmation": {
+        "removeConfirm": "Bu adresi Adres Defterinizden kaldırmak istediğinizden emin misiniz?"
+      }
+    }
+  },
+  "addressDetail": {
+    "ui": {
+      "title": {
+        "detail": "Detaylar",
+        "edit": "Düzenlemek"
+      },
+      "label": {
+        "name": "İsim",
+        "address": "Adres"
+      },
+      "tooltip": {
+        "copy": "kopyala"
+      },
+      "button": {
+        "edit": "Düzenlemek"
+      }
+    }
+  },
+  "addressBookField": {
+    "ui": {
+      "label": {
+        "name": "İsim",
+        "address": "*Adres"
+      },
+      "messages": {
+        "emptyAddress": "adresi girin.",
+        "illegalAddress": "Yanlış adres."
+      },
+      "button": {
+        "cancel": "İptal etmek",
+        "save": "Kaydetmek"
+      }
+    }
+  },
+  "mintNft": {
+    "ui": {
+      "title": "Nane NFT",
+      "label": {
+        "did": "DID",
+        "memo": "Hafıza",
+        "uri": "URI",
+        "hash": "Doğramak"
+      },
+      "summary": {
+        "notification": "NFT'yi basacağınızdan emin misiniz?<br/>Lütfen işleminizi gözden geçirin.",
+        "label": {
+          "leadingText": "NFT basımı"
+        }
+      },
+      "tooltip": {
+        "upload": "NFT'niz için bir karma oluşturmak üzere bir dosya seçin."
+      },
+      "button": {
+        "upload": "Görüntü Karmasını Alın"
+      },
+      "messages": {
+        "failedToSign": "İmzalanamadı: "
+      }
+    }
+  },
+  "addressField": {
+    "ui": {
+      "label": {
+        "address": "Adres",
+        "bindingAddress": "Bağlayıcı Adres:",
+        "lastChanged": "Son değişiklik:",
+        "hour": "{value}sa. önce",
+        "day": "{value}d önce",
+        "week": "{value}hafta önce",
+        "month": "{value}ay önce",
+        "year": "{value}yıl önce"
+      },
+      "tooltip": {
+        "qr": "QR'yi tarayın",
+        "addressBook": "Adres Defterini Aç",
+        "confirmed": "Onaylanmış",
+        "confirming": "onaylanıyor",
+        "wrong": "Yanlış"
+      },
+      "span": {
+        "newAddress": "Yeni Adres Bulundu, Adres Defterine Eklemek İçin Tıklayınız."
+      },
+      "resolve": {
+        "fail": "Ad çözümlenemedi",
+        "notFound": "Bulunamadı"
+      }
+    }
+  },
+  "errorLog": {
+    "ui": {
+      "title": "Hata Günlüğü",
+      "label": {
+        "message": "İleti",
+        "stack": "Yığın"
+      },
+      "field": {
+        "msg": "İleti",
+        "info": "Bilgi",
+        "url": "url",
+        "empty": "Kayıt yok"
+      },
+      "button": {
+        "clearAll": "Hepsini temizle"
+      }
+    }
+  },
+  "searchCat": {
+    "ui": {
+      "placeholder": "kedi adı",
+      "tag": {
+        "imported": "İthal"
+      },
+      "text": {
+        "emptyList": "Boş Sonuç",
+        "ascription": "TailDatabase tarafından desteklenmektedir"
+      }
+    }
+  },
+  "settings": {
+    "menu": {
+      "title": "Ayarlar",
+      "items": {
+        "general": {
+          "title": "Genel",
+          "description": "Dil, ağ ve para birimi dönüştürme"
+        },
+        "security": {
+          "title": "Güvenlik",
+          "description": "Parola, anımsatıcı ve özel bilgi aktarımı"
+        },
+        "addressBook": {
+          "title": "Adres defteri",
+          "description": "İletişim adreslerinizi ekleyin, düzenleyin, kaldırın ve yönetin"
+        },
+        "network": {
+          "title": "Ağ",
+          "description": "Ağınızı ekleyin, düzenleyin, kaldırın ve yönetin"
+        },
+        "collection": {
+          "title": "Toplamak",
+          "description": "Koleksiyonunuzu oluşturun, düzenleyin, kaldırın ve yönetin"
+        },
+        "advanced": {
+          "title": "Gelişmiş",
+          "description": "Deneysel"
+        },
+        "devhelper": {
+          "title": "Geliştirici",
+          "description": "Bech32m, CLVM, Paket, Teklif, Madeni Para"
+        },
+        "about": {
+          "title": "Hakkında",
+          "description": "Gizlilik Politikası, Pawket Sürümü, Bize Ulaşın"
+        },
+        "lock": "Cüzdanı Kilitle"
+      }
+    },
+    "general": {
+      "title": "Genel",
+      "label": {
+        "language": "Dil",
+        "network": "Ağ",
+        "currency": "Para birimi dönüştürme",
+        "offlineMode": "Çevrimdışı mod",
+        "darkMode": "Karanlık Mod"
+      }
+    },
+    "security": {
+      "title": "Güvenlik",
+      "label": {
+        "mnemonic": "Hatırlatıcı Kelimeler",
+        "password": "Giriş şifresi",
+        "export": "Özel Bilgileri Dışa Aktarma",
+        "reset": "Cüzdanı Sıfırla"
+      },
+      "message": {
+        "clear": "Mnemonic Words'ün yedeklendiğinden emin olun. ",
+        "inputPassword": "Devam Etmek İçin Parolayı Girin",
+        "passwordNotCorrect": "Yanlış parola.",
+        "backupConfirmTitle": "DİKKATLE İLERLE",
+        "backupConfirm": "Bu işlem, cüzdanı diğer cihazlara geri yüklemek için kullanılabilen cüzdan yedekleme bilgilerini (Mnemonic Words ve Public Key dahil) dışa aktaracaktır."
+      },
+      "button": {
+        "showMnemonic": "Anımsatıcı Kelimeleri Ortaya Çıkar",
+        "hideMnemonic": "Anımsatıcı Sözcükleri Gizle",
+        "password": "Şifre değiştir",
+        "backup": "Cüzdan Bilgilerini Yedekle",
+        "reset": "Cüzdanı Sıfırla"
+      }
+    },
+    "devhelper": {
+      "title": "Geliştirici"
+    },
+    "advanced": {
+      "title": "Gelişmiş",
+      "label": {
+        "experimental": "Deneysel"
+      },
+      "confirmation": {
+        "experimental": "Deneysel özellikler kararlı değildir ve henüz tam olarak test edilmemiştir, deneyebilir ve bize geri bildirimde bulunabilirsiniz."
+      },
+      "description": "Bu modu etkinleştirdikten sonra, \"Teklif Yap\", \"Teklif Al\", \"Toplu Gönderim\", \"CAT Ver\", \"Gölge Cüzdan\" vb. deneysel işlevleri kullanabilirsiniz.",
+      "warning": "Deneysel özellikler kararlı değildir ve henüz tam olarak test edilmemiştir, deneyebilir ve bize geri bildirimde bulunabilirsiniz. "
+    },
+    "about": {
+      "title": "Hakkında",
+      "links": {
+        "title": "Bağlantılar",
+        "label": {
+          "privacyPolicy": "Gizlilik Politikası",
+          "pawketWebsite": "Pawket Web Sitesi",
+          "github": "Github",
+          "twitter": "Twitter",
+          "discord": "Discord",
+          "donate": "Geliştiricilere Bağış Yapın"
+        },
+        "url": {
+          "privacyPolicy": "https://info.pawket.app/privacy-policy",
+          "pawketWebsite": "https://info.pawket.app",
+          "github": "https://github.com/SutuLabs",
+          "twitter": "https://twitter.com/pawket_app",
+          "discord": "https://discord.com/invite/ndQgpHwe4V"
+        }
+      }
+    }
+  },
+  "explore": {
+    "title": "Keşfetmek",
+    "loading": "Yükleniyor",
+    "ascription": "Powered by Dexie",
+    "nft": {
+      "title": "NFT Pazarı"
+    },
+    "cat": {
+      "title": "CAT Pazarı"
+    },
+    "button": {
+      "buy": "Satın almak",
+      "sell": "Satmak",
+      "takeOffer": "Teklif Offer"
+    },
+    "table": {
+      "header": {
+        "offer": "Teklif",
+        "receive": "Almak",
+        "price": "Fiyat",
+        "operation": "Aksiyon"
+      }
+    }
+  },
+  "accountManagement": {
+    "ui": {
+      "title": "Hesap Yönetimi",
+      "label": {
+        "default": "Varsayılan",
+        "serial": "Seri",
+        "address": "Adres",
+        "imported": "İthal",
+        "passPhrase": "Parola",
+        "publicKey": "Genel anahtar",
+        "unknown": "Bilinmeyen"
+      },
+      "button": {
+        "addBySerial": "Seri ile ekle",
+        "addByPassword": "Gölge Cüzdanı Ekle",
+        "addByLegacy": "Chia Resmi Cüzdanını İçe Aktar （24 kelimelik）",
+        "addByMnemonic": "Nucle/Goby Cüzdanını İçe Aktar （12 kelimelik）",
+        "addByAddress": "Adrese Göre Ekle(Gözlem Modu)",
+        "addByPublicKey": "PublicKey ile ekle"
+      },
+      "tooltip": {
+        "addBySerial": "Türetilmiş seri hesaplar sırayla oluşturulur.",
+        "addByPassword": "MNEMONIC ve PASSPHRASE tarafından korunan hesap. ",
+        "addByLegacy": "Chia resmi cüzdanını ithal edin.",
+        "addByMnemonic": "Nucle/Goby cüzdanını içe aktarın.",
+        "addByAddress": "Bu modda salt okunur desteklenir.",
+        "addByPublicKey": "İşlemleri başlatmaya ve tamamlamaya yardımcı olması için çevrimdışı cüzdanın genel anahtarını ekleyin."
+      },
+      "modal": {
+        "addByLegacy": "Chia Resmi Cüzdanını İçe Aktar",
+        "addByMnemonic": "Nucle/Goby Cüzdanını İçe Aktar"
+      },
+      "value": {
+        "defaultName": "Hesap numarası}"
+      }
+    },
+    "message": {
+      "confirmation": {
+        "removeAccount": "[{accountName}] kaldırılsın mı? ",
+        "cancelText": "İptal etmek",
+        "confirmText": "TAMAM"
+      },
+      "prompt": {
+        "setAccountName": "Yeni Ad Girin",
+        "cancelText": "İptal etmek",
+        "confirmText": "TAMAM"
+      },
+      "notification": {
+        "saved": "kaydedildi"
+      }
+    }
+  },
+  "welcome": {
+    "ui": {
+      "description": "XCH/CAT'lerinizi Pawket'te Yönetin!",
+      "slogan": "Pawket, Chia dünyasındaki iyi arkadaşınızdır ve olmaya devam edecektir.",
+      "button": {
+        "start": "BAŞLANGIÇ"
+      }
+    }
+  },
+  "disclaimer": {
+    "ui": {
+      "title": "Feragatname",
+      "tip": "Anımsatıcı Sözcüklerinizi ve özel anahtarlarınızı her zaman yedeklediğinizden emin olun. ",
+      "privary": "Gizlilik Politikasını zaman zaman değiştirebiliriz. ",
+      "agreementPrefix": "kabul ediyorum ",
+      "agreement": "Gizlilik Politikası",
+      "link": "https://info.pawket.app/privacy-policy/",
+      "agreementSuffix": "ve Pawket'e erişmek istiyorum.",
+      "button": {
+        "continue": "DEVAM ETMEK"
+      }
+    }
+  },
+  "createPassword": {
+    "title": "Şifre oluştur",
+    "tip": "Başlamadan önce, lütfen bir oturum açma şifresi belirleyin. ",
+    "label": {
+      "password": "Şifre",
+      "confirm": "Şifreyi Onayla"
+    },
+    "button": {
+      "continue": "DEVAM ETMEK"
+    }
+  },
+  "createWallet": {
+    "title": "Cüzdan Oluştur",
+    "button": {
+      "create": "Yaratmak",
+      "import": "İçe aktarmak",
+      "backup": "Cüzdan Yedeklemesini İçe Aktar"
+    }
+  },
+  "newWallet": {
+    "title": "Yeni Cüzdan"
+  },
+  "importWallet": {
+    "title": "Cüzdanı İçe Aktar"
+  },
+  "accountInfo": {
+    "ui": {
+      "title": {
+        "export": "Hesap Bilgileri"
+      },
+      "label": {
+        "name": "İsim",
+        "type": "Tip",
+        "fingerprint": "Parmak izi",
+        "masterPublicKey": "Ana ortak anahtar (m)",
+        "farmerPublicKey": "Çiftçi genel anahtarı (m/12381/8444/0/0)",
+        "poolPublicKey": "Havuz genel anahtarı (m/12381/8444/1/0)",
+        "firstWalletAddress": "İlk cüzdan adresi",
+        "mnemonicSeed": "Hatırlatıcı Kelimeler (24 kelimelik)",
+        "connectionManagement": "Bağlantı Yönetimi",
+        "details": "Detaylar"
+      },
+      "tooltip": {
+        "fingerprintTip": "Chia resmi cüzdanı ile uyumlu",
+        "mnemonicTip": "Chia resmi cüzdanı ile uyumlu",
+        "disconnect": "bağlantıyı kes"
+      },
+      "button": {
+        "reveal": "Ortaya çıkarmak",
+        "hide": "Saklamak",
+        "delete": "Silmek"
+      }
+    },
+    "message": {
+      "inputPassword": "Devam Etmek İçin Parolayı Girin",
+      "passwordNotCorrect": "Yanlış parola.",
+      "disconnect": "[{acc}] ürününün bu siteyle olan bağlantısını kestiğinizden emin misiniz?"
+    }
+  },
+  "nftDetail": {
+    "ui": {
+      "label": {
+        "nftId": "NFT Kimliği:",
+        "collection": "Toplamak",
+        "did": "DID",
+        "description": "Tanım",
+        "expirationDate": "Son kullanma tarihi"
+      },
+      "button": {
+        "transfer": "Aktar",
+        "makeOffer": "Satmak",
+        "move": "Taşınmak",
+        "showMore": "Daha fazla göster",
+        "showLess": "Daha az göster"
+      },
+      "title": {
+        "properties": "Özellikler",
+        "bindingInformation": "Bağlayıcı Bilgi",
+        "details": "Detaylar"
+      },
+      "bindingInformation": {
+        "address": "Adres",
+        "publicKey": "Genel anahtar",
+        "did": "DID",
+        "text": "Metin",
+        "edit": "Düzenlemek"
+      },
+      "details": {
+        "nftId": "NFT ID:",
+        "launcherId": "Launcher ID",
+        "ownerDid": "Owner DID",
+        "ownerAddress": "Owner Address",
+        "royaltyPercentage": "Royalty Percentage",
+        "dataUrl": "Data URL {index}",
+        "dataHash": "Data Hash",
+        "metadataUrl": "Metadata URL {index}",
+        "metadataHash": "Metadata Hash",
+        "licenseUrl": "License URL",
+        "licenseHash": "License Hash",
+        "series": "Series"
+      },
+      "dropdown": {
+        "spaceScan": "Spacescan.io'da görüntüle",
+        "mintGarden": "Mintgarden.io'da görüntüle",
+        "setAsProfilePic": "Hesap Avatarı Olarak Ayarla",
+        "signWithNft": "İmza",
+        "nftBurn": "NFT'yi yaz"
+      },
+      "profile": {
+        "all": "Tüm NFT'ler",
+        "unassigned": "Atanmamış NFT'ler"
+      }
+    }
+  },
+  "did": {
+    "ui": {
+      "title": {
+        "detail": "Detaylar"
+      },
+      "button": {
+        "addDid": "DID'yi ekle",
+        "sign": "İmza"
+      },
+      "label": {
+        "name": "İsim",
+        "did": "DID",
+        "tool": "Alet"
+      },
+      "prompt": {
+        "newName": "Yeni Ad Girin"
+      }
+    },
+    "addDid": {
+      "title": "DID'yi ekle",
+      "tip": "Bir DID oluşturmak için 1 mojo kullanacaksınız.",
+      "balance": "Denge",
+      "confirmation": "Bir DID oluşturacağınızdan emin misiniz?<br>Lütfen işleminizi gözden geçirin.",
+      "spend": "Harcamak"
+    }
+  },
+  "nftTransfer": {
+    "ui": {
+      "title": "Aktar",
+      "description": "Bu NFT'yi yeni bir sahibine devredeceksiniz.",
+      "summary": {
+        "confirmation": "NFT'yi aktaracağınızdan emin misiniz?<br>Lütfen işleminizi gözden geçirin."
+      }
+    }
+  },
+  "collection": {
+    "myCollection": {
+      "title": "Benim koleksiyonum",
+      "specialNote": "Özel Not: Toplama bilgileri blok zincirine yüklenmeyecek ve veriler yerel cihazınızda saklanacaktır. ",
+      "button": {
+        "newCollection": "Yeni koleksiyon"
+      },
+      "tooltip": {
+        "edit": "Düzenlemek",
+        "remove": "Kaldırmak"
+      },
+      "messages": {
+        "confirmation": {
+          "delete": "Koleksiyonu kaldırmak istediğinizden emin misiniz?"
+        },
+        "information": {
+          "NO_COLLECTION": "Koleksiyon Yok"
+        }
+      }
+    },
+    "createCollection": {
+      "title": "Koleksiyon Oluştur",
+      "label": {
+        "id": "*İD",
+        "name": "*İsim",
+        "description": "Tanım",
+        "icon": "*Simge",
+        "uploadImage": "Fotoğraf yükleniyor:",
+        "url": "URL:",
+        "hash": "Doğramak:",
+        "fillUrl": "Resim URL'sini doldurun",
+        "iconUrl": "Simge URL'si",
+        "iconHash": "Simge Karması",
+        "properties": "*Özellikler",
+        "creator": "Yaratıcı",
+        "address": "*Adres",
+        "royaltyPercentage": "*Telif Yüzdesi",
+        "royaltyAddress": "*Telif Adresi",
+        "licenseUrl": "*Lisans URL'si"
+      },
+      "button": {
+        "upload": "Yüklemek"
+      },
+      "messages": {
+        "error": {
+          "INVALID_PROPERTY": "Geçersiz Özellik",
+          "INVALID_ADDRESS": "Geçersiz adres"
+        }
+      }
+    }
+  },
+  "scanAssets": {
+    "ui": {
+      "title": "Varlıkları Tara",
+      "prompt": {
+        "selectAssetType": "Daha fazla adres tarayarak, listede gösterilmeyen varlıkları (XCH, CAT, NFT vb. dahil) keşfedebilir ve bunları yaygın olarak kullanılan bir adrese aktarabilirsiniz.",
+        "scanning": "Tarama...",
+        "wait": "Lütfen birkaç dakika sabırlı olun.",
+        "paused": "duraklatıldı...",
+        "canceled": "İptal edildi.",
+        "finished": "Bitti!",
+        "scanned": "tarandı"
+      },
+      "label": {
+        "scan": "tarama",
+        "token": "Jeton",
+        "nft": "NFT",
+        "did": "DID",
+        "myCats": "Kedilerim",
+        "maxAddress": "Maksimum tarama adresi sayısı",
+        "scanning": "Tarama",
+        "result": "Sonuç",
+        "name": "İsim",
+        "id": "İD",
+        "balance": "Denge",
+        "action": "Aksiyon",
+        "imported": "İthal"
+      },
+      "button": {
+        "start": "Taramayı Başlat",
+        "pause": "Duraklat",
+        "cancel": "İptal etmek",
+        "continue": "Devam etmek",
+        "reScan": "yeniden tara",
+        "add": "Eklemek",
+        "send": "Göndermek",
+        "sign": "İmza"
+      }
+    },
+    "message": {
+      "confirmation": {
+        "close": "Tarama tamamlanmadı. ",
+        "cancel": "Tarama tamamlanmadı. "
+      },
+      "error": {
+        "ABORT_OOM": "Tarama durduruldu. ",
+        "NETWORK_ERROR": "Ağ hatası. ",
+        "UNKNOWN": "Bilinmeyen hata. "
+      }
+    }
+  },
+  "moveNft": {
+    "ui": {
+      "title": "NFT'yi Taşı",
+      "label": {
+        "moveToProfile": "Profile Taşı",
+        "selectDid": "Bir DID seçin",
+        "move": "NFT'yi Taşı",
+        "to": "İle"
+      },
+      "confirmation": "NFT'yi taşıyacağınızdan emin misiniz? <br>Lütfen işleminizi gözden geçirin."
+    }
+  },
+  "signMessage": {
+    "ui": {
+      "title": "Mesajı İmzala",
+      "prompt": "Mesajın güvenilir bir kaynaktan geldiğinden emin olun. ",
+      "label": {
+        "signWdid": "DID ile imzalayın:",
+        "signWithNft": "NFT ile imzalayın:",
+        "signWithAddress": "Adresle İmzalayın:",
+        "message": "İleti",
+        "result": "Sonuç"
+      }
+    }
+  },
+  "verifyMessage": {
+    "ui": {
+      "title": "Mesajı Doğrula",
+      "label": {
+        "message": "İleti",
+        "result": "Sonuç"
+      },
+      "button": {
+        "verify": "Doğrulamak"
+      },
+      "sigResult": {
+        "pass": "İmza kontrolü geçti",
+        "fail": "İmza kontrolü başarısız oldu",
+        "none": "İmza kontrol edilmedi"
+      },
+      "coinResult": {
+        "pass": "Madeni para kontrolü geçti",
+        "fail": "Madeni para kontrolü başarısız oldu",
+        "none": "Madeni para kontrol edilmedi"
+      }
+    }
+  },
+  "batchMintNft": {
+    "ui": {
+      "title": "Toplu Nane NFT",
+      "label": {
+        "royaltyAddress": "Kraliyet Adresi",
+        "royaltyPercentage": "Telif Oranı"
+      }
+    }
+  },
+  "addNetwork": {
+    "ui": {
+      "title": {
+        "add": "Ağ ekle",
+        "edit": "Ağı Düzenle"
+      },
+      "warning": "Kötü niyetli bir ağ sağlayıcısı, blok zincirinin durumu hakkında yalan söyleyebilir ve ağ etkinliğinizi kaydedebilir. ",
+      "label": {
+        "networkName": "Ağ Adı",
+        "rpcUrl": "RPC URL'si",
+        "chainId": "Zincir Kimliği",
+        "currencySymbol": "Para Birimi Sembolü",
+        "addressPrefix": "Adres Öneki",
+        "decimalPlace": "Para Birimi Ondalık Basamaklar",
+        "blockExplorer": "Blok Gezgini URL'si (İsteğe bağlı)"
+      },
+      "button": {
+        "addNetwork": "Ağ ekle"
+      }
+    },
+    "message": {
+      "notification": {
+        "networkExists": "Bu ağ adı zaten var!"
+      },
+      "confirmation": {
+        "delete": "Bu ağı kaldırmak istediğinizden emin misiniz?"
+      }
+    }
+  },
+  "updateCns": {
+    "ui": {
+      "title": "CNS Adresini Güncelle",
+      "confirmation": "Alan adınız için bağlayıcı bilgileri güncelleyeceksiniz.<br/>Lütfen işleminizi gözden geçirin.",
+      "label": {
+        "updateTo": "Şuraya güncelle:",
+        "cns": "CNS",
+        "targetAddress": "Hedef Adres",
+        "currentBindingAddress": "Geçerli bağlama adresi"
+      }
+    }
+  },
+  "addByPublicKey": {
+    "ui": {
+      "title": "PublicKey ile Hesap Ekle",
+      "message": {
+        "publicKeyRequired": "PublicKey gerekli."
+      }
+    }
+  },
+  "encryptMessage": {
+    "ui": {
+      "title": "Mesajı Şifrele",
+      "tab": {
+        "singleMessage": "Tek Mesaj",
+        "multipleMessage": "Çoklu Mesajlar"
+      },
+      "label": {
+        "encryptWithAddress": "Adresle Şifrele",
+        "activatePrefix": "Adres aktive edilmedi, herhangi bir transfer yapmak için buraya tıklayın ",
+        "activate": "etkinleştir",
+        "message": "İleti",
+        "receiverAddress": "Alıcı adresi"
+      },
+      "button": {
+        "encrypt": "Şifrele"
+      }
+    },
+    "message": {
+      "error": {
+        "INACTIVE_ADDRESS": "Alıcı adresi etkinleştirilmedi."
+      }
+    }
+  },
+  "decryptMessage": {
+    "ui": {
+      "title": "Mesajın Şifresini Çöz",
+      "label": {
+        "message": "İleti",
+        "result": "Sonuç"
+      },
+      "button": {
+        "decrypt": "şifresini çöz"
+      }
+    },
+    "message": {
+      "error": {
+        "CANNOT_FIND_ADDRESS": "Şifre çözme adresi, Alıcı Adresiyle eşleşmiyor.",
+        "INVALID_MESSAGE": "Geçersiz mesaj.",
+        "INVALID_ADDRESS": "Geçersiz Gönderici / Alıcı Adresi."
+      }
+    }
+  },
+  "bindingInformation": {
+    "ui": {
+      "title": "Bağlayıcı Bilgi",
+      "label": {
+        "publicKey": "Genel anahtar",
+        "did": "DID",
+        "text": "Metin"
+      },
+      "notification": "Alan adınız için bağlayıcı bilgileri güncelleyeceksiniz.<br>Lütfen işleminizi gözden geçirin.",
+      "tag": {
+        "currentPk": "Cari hesap PK",
+        "fillPk": "Cari hesabın genel anahtarını doldurun"
+      },
+      "button": {
+        "update": "Güncelleme"
+      }
+    }
+  },
+  "scan": {
+    "ui": {
+      "title": "tarama",
+      "label": {
+        "scanQr": "QR Kodunu Tara",
+        "publicKeyQr": "Genel Anahtar QR Kodu"
+      },
+      "hint": {
+        "scan": "Tarama Adresi, PublicKey"
+      }
+    }
+  },
+  "backup": {
+    "ui": {
+      "title": {
+        "verifyPassword": "Parolayı Doğrula",
+        "backup": "Yedekleme Bilgileri"
+      },
+      "tip": {
+        "setPassword": "Bu şifre, cüzdanınızı geri yüklemek için yedeği yeni bir cihaza aktarırken oturum açma şifresi olarak kullanılacaktır."
+      },
+      "label": {
+        "passwordType": {
+          "current": "Geçerli oturum açma parolasını kullan",
+          "new": "yeni bir şifre kullan"
+        },
+        "selectBackupInfo": "Yedekleme Bilgilerini Seçin",
+        "setYourLoginPassword": "Oturum Açma Parolanızı Belirleyin"
+      },
+      "items": {
+        "masterAccount": "Ana Hesap Bilgileri",
+        "settings": "Ayarlar",
+        "customNetwork": "Özel Ağ",
+        "accountList": "Hesap Listesi",
+        "addressBook": "Adres defteri",
+        "didNames": "DID İsimleri"
+      },
+      "button": {
+        "downloadBak": "Yedekleme Dosyasını İndir",
+        "complete": "Tamamlamak",
+        "next": "Sonraki"
+      }
+    },
+    "message": {
+      "error": {
+        "passwordRequired": "Şifre gereklidir.",
+        "passwordNotCorrect": "Yanlış parola."
+      }
+    }
+  },
+  "importBackup": {
+    "title": "Yedeği Yükle",
+    "password": {
+      "tip": "Lütfen giriş şifrenizi giriniz",
+      "label": "Şifre"
+    },
+    "error": {
+      "LARGE_FILE": "dosya çok büyük",
+      "UNSUPPORTED_FILE": "Desteklenmeyen dosya"
+    }
+  },
+  "buyUsds": {
+    "ui": {
+      "title": "USD satın al",
+      "button": {
+        "continue": "Satın Almaya Devam Et",
+        "stably": "Satın Almak İçin Kararlı Bir Şekilde Açın"
+      },
+      "tip": "Şu anda yalnızca ACH banka havalesi yoluyla Chia blok zincirinde USDS satın almayı desteklemektedir.",
+      "stablyPrefix": "Bu Hizmet tarafından sağlanır",
+      "stably": " Stably ",
+      "stablySuffix": "ve Pawket'ten tamamen bağımsızdır."
+    }
+  },
+  "nftBurn": {
+    "title": "NFT yanması",
+    "description": "Bu NFT'yi, doğrulanabilir bir şekilde harcanamaz bir adrese göndererek dolaşımdan kaldırarak yakacaksınız.",
+    "confirmation": "Bu NFT'yi yakacağınızdan emin misiniz? <br>Lütfen işleminizi gözden geçirin."
+  },
+  "cns": {
+    "title": "Chia İsim Hizmeti",
+    "placeholder": "Chia Alan Adı Arayın",
+    "button": {
+      "search": "Aramak",
+      "loading": "Yükleniyor",
+      "register": "Kayıt olmak",
+      "cancel": "İptal etmek"
+    },
+    "label": {
+      "notOpenYet": "Henüz Açılmadı",
+      "registered": "Kayıtlı",
+      "result": "Sonuç",
+      "available": "Mevcut",
+      "unavailable": "Kullanım dışı",
+      "registrationPeriod": "Kayıt Dönemi",
+      "registrationFee": "Kayıt ücreti",
+      "annualFee": "Yıllık ücret",
+      "royaltyPercentage": "Telif Oranı",
+      "total": "Toplam",
+      "networkIssue": "Ağ sorunu",
+      "myNames": "Benim adım",
+      "register": "{cnsName}.xch'i kaydedin",
+      "name": "İsim",
+      "oneYear": "1 yıl",
+      "address": "Adres(Opsiyonel)"
+    },
+    "message": {
+      "notOpen": " CNS'nin deneme işletim süresi boyunca, şimdilik sadece 6 veya daha fazla karaktere sahip isimler kaydedilebilir. ",
+      "registered": "Bu isim tescillendi. ",
+      "profileHomepage": "Profil Ana Sayfası",
+      "unavailable": "Bu isim saklıdır. ",
+      "noName": "Burada Chia Alan Adı Yok. "
+    }
+  },
+  "connect": {
+    "ui": {
+      "label": {
+        "connectWithPawket": "Pawket ile Bağlan",
+        "enterPassword": "Siteye bağlanmak için şifrenizi girin",
+        "trust": "Bağlandığınız siteye güvendiğinizden emin olun",
+        "selectAccount": "Bu sitede kullanmak için bir hesap seçin",
+        "loadingBalance": "Bakiye yükleniyor..",
+        "allowSiteTo": "Bu sitenin şunları yapmasına izin verin:",
+        "viewInfo": "Hesap adreslerinizi, bakiyenizi, DID'lerinizi ve aktivitelerinizi görüntüleyin.",
+        "requestTranx": "İşlemler için onay isteyin.",
+        "gettingData": "Pawket'ten Veri Alınıyor...",
+        "noWallet": "Pawket Cüzdan Yok",
+        "noWalletInfo": "Pawket'te kurulu bir cüzdanınız yok."
+      },
+      "button": {
+        "next": "Sonraki",
+        "connect": "Bağlamak",
+        "setUp": "Cüzdan'ı kurun"
+      }
+    },
+    "messages": {
+      "success": "Başarı!",
+      "invalidCall": "Geçersiz Arama:",
+      "noAppName": "Lütfen bir uygulama adı belirtin!",
+      "offerAccepted": "Teklif kabul edildi!",
+      "invalidData": "İmzalanamadı: Geçersiz Giriş Verileri",
+      "unknownDid": "İmzalama Başarısız: Belirtilen DID Cari Hesapta Mevcut Değil",
+      "unknownNetwork": "Belirtilen ağ mevcut değil",
+      "sendCompleted": "İşlem gönderildi!",
+      "catAdded": "KAT eklendi!",
+      "cancelled": "İptal edildi",
+      "incorrectPassword": "Yanlış parola."
+    }
+  }
+}

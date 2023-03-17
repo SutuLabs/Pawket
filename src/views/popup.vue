@@ -9,8 +9,9 @@
       <template #start> </template>
       <template #end>
         <b-navbar-dropdown :label="$t('app.ui.button.lang')">
-          <b-navbar-item @click="changeLang('en')" :active="$i18n.locale === 'en'"> English </b-navbar-item>
-          <b-navbar-item @click="changeLang('zhcn')" :active="$i18n.locale === 'zhcn'"> 简体中文 </b-navbar-item>
+          <b-navbar-item v-for="[key, value] in languageList" :key="key" @click="changeLang(key)" :active="$i18n.locale === key">
+            {{ value }}
+          </b-navbar-item>
         </b-navbar-dropdown>
       </template>
     </b-navbar>
@@ -22,7 +23,8 @@ import { Component, Vue } from "vue-property-decorator";
 import { NotificationProgrammatic as Notification } from "buefy";
 import store from "@/store";
 import DevHelper from "@/components/DevHelper/DevHelper.vue";
-import UniStorage from '@/services/storage';
+import UniStorage from "@/services/storage";
+import { languageList } from "@/i18n/i18n";
 
 @Component
 export default class App extends Vue {
@@ -33,6 +35,10 @@ export default class App extends Vue {
 
   get debugMode(): boolean {
     return store.state.app.debug;
+  }
+
+  get languageList(): Map<string, string> {
+    return languageList;
   }
 
   alphaClick(): void {
@@ -46,7 +52,7 @@ export default class App extends Vue {
     }
   }
 
-  async changeLang(lang: string):Promise< void> {
+  async changeLang(lang: string): Promise<void> {
     this.$i18n.locale = lang;
     await UniStorage.create().setItem("Locale", lang);
   }

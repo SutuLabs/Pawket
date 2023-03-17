@@ -8,8 +8,9 @@
       <p class="px-4 has-text-centered is-size- has-text-primary">{{ $t("welcome.ui.slogan") }}</p>
 
       <div class="px-4 has-text-centered pt-6">
-        <b-radio v-model="language" name="language" native-value="en"> English </b-radio>
-        <b-radio v-model="language" name="language" native-value="zhcn"> 简体中文 </b-radio>
+        <b-radio v-for="[key, value] in languageList" :key="key" v-model="language" name="language" :native-value="key">
+          {{ value }}
+        </b-radio>
         <p class="py-6 mt-2">
           <b-button type="is-primary" @click="next()"
             ><span class="px-5">{{ $t("welcome.ui.button.start") }}</span></b-button
@@ -21,6 +22,7 @@
 </template>
 
 <script lang="ts">
+import { languageList } from "@/i18n/i18n";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component
@@ -36,6 +38,10 @@ export default class Welcome extends Vue {
   set language(value: string) {
     this.$i18n.locale = value;
     localStorage.setItem("Locale", value);
+  }
+
+  get languageList(): Map<string, string> {
+    return languageList;
   }
 }
 </script>
