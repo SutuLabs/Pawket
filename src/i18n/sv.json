@@ -789,6 +789,9 @@
       "button": {
         "cancel": "Annullera",
         "save": "Spara"
+      },
+      "placeholder": {
+        "address": "Adress eller CNS"
       }
     }
   },

@@ -789,6 +789,9 @@
       "button": {
         "cancel": "Cancel",
         "save": "Save"
+      },
+      "placeholder": {
+        "address": "Address or CNS"
       }
     }
   },

@@ -789,6 +789,9 @@
             "button": {
                 "cancel": "Annulla",
                 "save": "Salva"
+            },
+            "placeholder": {
+                "address": "Alamat atau CNS"
             }
         }
     },
