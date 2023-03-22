@@ -24,7 +24,7 @@ export async function generateOffer(
   net: NetworkContext,
   nonceHex: string | null = null,
   catModName: "cat_v1" | "cat_v2" = "cat_v2",
-  settlementModName: "settlement_payments" | "settlement_payments_v1" = "settlement_payments",
+  settlementModName: "settlement_payments" | "settlement_payments_v1" = "settlement_payments_v1",
 ): Promise<UnsignedSpendBundle> {
   if (offered.length != 1 || requested.length != 1) throw new Error("currently, only support single offer/request");
 
@@ -161,7 +161,7 @@ export async function generateOfferPlan(
   fee: bigint,
   tokenSymbol: string,
   royaltyFee: bigint | undefined = undefined,
-  settlementModName: "settlement_payments" | "settlement_payments_v1" = "settlement_payments",
+  settlementModName: "settlement_payments" | "settlement_payments_v1" = "settlement_payments_v1",
 ): Promise<OfferPlan[]> {
   const plans: OfferPlan[] = [];
 
@@ -212,7 +212,7 @@ export function getReversePlan(
 
 export async function combineOfferSpendBundle(
   spendbundles: SpendBundle[],
-  settlementModName: "settlement_payments" | "settlement_payments_v1" = "settlement_payments",
+  settlementModName: "settlement_payments" | "settlement_payments_v1" = "settlement_payments_v1",
 ): Promise<SpendBundle> {
   if (spendbundles.length != 2) throw new Error("unexpected length of spendbundle");
 
@@ -313,7 +313,7 @@ export async function generateNftOffer(
   puzzles: TokenPuzzleObserver[],
   net: NetworkContext,
   nonceHex: string | null = null,
-  settlementModName: "settlement_payments" | "settlement_payments_v1" = "settlement_payments",
+  settlementModName: "settlement_payments" | "settlement_payments_v1" = "settlement_payments_v1",
 ): Promise<UnsignedSpendBundle> {
   const settlement_tgt = prefix0x(modshash[settlementModName]);
   const spends: CoinSpend[] = [];
@@ -394,7 +394,7 @@ export async function generateNftOffer(
 
       // console.log("puzzleCopy", puzzleCopy);
       const solution_text = `((${prefix0x(nonce)} (${req.target} ${req.amount} (${req.target}))))`;
-      const msg = await getPuzAnnoMsg(modsprog["settlement_payments"], solution_text);
+      const msg = await getPuzAnnoMsg(modsprog["settlement_payments_v1"], solution_text);
       puz_anno_ids.push(getPuzzleAnnoId(coin.puzzle_hash, msg));
 
       const puzzle_reveal = prefix0x(await puzzle.encodePuzzle(nftPuzzle));

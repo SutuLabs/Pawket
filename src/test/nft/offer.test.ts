@@ -126,7 +126,7 @@ test('create and accept nft offer for xch', async () => {
   );
   const bundle = await signSpendBundle(ubundle, tokenPuzzles, tnet.chainId);
   expect(bundle).toMatchSnapshot("bundle");
-  const offerText = await encodeOffer(bundle, 4);
+  const offerText = await encodeOffer(bundle, 6);
   expect(offerText).toMatchSnapshot("offer text");
 
   const makerBundle = await decodeOffer(offerText);
@@ -243,7 +243,8 @@ async function acceptOffer(fee: bigint, offerText: string) {
     availcoins,
     fee,
     net.symbol,
-    royalty_amount
+    royalty_amount,
+    revSummary.settlementModName,
   );
   expect(offplangen).toMatchSnapshot("offplangen");
   const utakerBundle = await generateNftOffer(
@@ -253,11 +254,12 @@ async function acceptOffer(fee: bigint, offerText: string) {
     revSummary.requested,
     tokenPuzzles,
     net,
-    nonce
+    nonce,
+    revSummary.settlementModName,
   );
   const takerBundle = await signSpendBundle(utakerBundle, tokenPuzzles, net.chainId);
   expect(takerBundle).toMatchSnapshot("takerBundle");
-  const combined = await combineOfferSpendBundle([makerBundle, takerBundle]);
+  const combined = await combineOfferSpendBundle([makerBundle, takerBundle], revSummary.settlementModName);
   await assertSpendbundle(combined, net.chainId);
   expect(combined).toMatchSnapshot("combined");
 }

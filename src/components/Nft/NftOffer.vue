@@ -192,7 +192,7 @@ export default class NftOffer extends Vue {
       const ubundle = await generateNftOffer(offplan, this.nft.analysis, this.nft.coin, reqs, observers, networkContext());
       const bundle = await signSpendBundle(ubundle, this.tokenPuzzles, networkContext());
       this.bundle = bundle;
-      this.offerText = await encodeOffer(bundle, 4);
+      this.offerText = await encodeOffer(bundle, 6);
 
       this.step = "Confirmation";
 

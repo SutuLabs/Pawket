@@ -155,7 +155,7 @@ async function testMintCnsAndOffer(
   // combine into one spendbundle
   const offerBundle = await signSpendBundle(uofferBundle, tokenPuzzles, net.chainId);
 
-  const offerText = await encodeOffer(offerBundle, 4);
+  const offerText = await encodeOffer(offerBundle, 6);
   expect(offerText).toMatchSnapshot("offer text");
 
   // for offer taker
