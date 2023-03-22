@@ -199,10 +199,7 @@
       "notification": {
         "donate": "Anda menyumbang ke pengembang.",
         "observeMode": "Fungsi interaksi dinonaktifkan dalam Mode Pengamatan",
-        "offline": "Saat ini dalam mode offline.",
-        "turnOffPrefix": "Klik",
-        "turnOff": "Di Sini",
-        "turnOffSuffix": "mematikan.",
+        "offline": "Mode Offline.",
         "test": "Catatan: kitten.pawket.app adalah situs uji coba tempat Anda dapat mencoba beberapa fitur baru yang belum dirilis."
       }
     }

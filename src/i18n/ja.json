@@ -199,10 +199,7 @@
       "notification": {
         "donate": "あなたは開発者に寄付しています。",
         "observeMode": "監視モードではインタラクション機能が無効になっています",
-        "offline": "現在オフラインモードです。",
-        "turnOffPrefix": "クリック",
-        "turnOff": "ここ",
-        "turnOffSuffix": "電源を切るために。",
+        "offline": "オフラインモード",
         "test": "注:kitten.pawket.app は、未リリースの新機能を体験できるテスト サイトです。"
       }
     }

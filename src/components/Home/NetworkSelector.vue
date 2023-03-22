@@ -10,6 +10,10 @@
           <span class="icon is-small"> <i class="mdi mdi-menu-down"></i> </span>
         </button>
       </template>
+      <b-dropdown-item aria-role="listitem" class="dropdown-item has-text-left pr-0">
+        {{ $t("settings.general.label.offlineMode") }}
+        <b-switch class="is-pulled-right is-align-self-center" v-model="offlineMode" size="is-small"></b-switch>
+      </b-dropdown-item>
       <b-dropdown-item
         aria-role="listitem"
         :class="{
@@ -62,6 +66,20 @@ export default class NetworkSelector extends Vue {
 
   get offline(): boolean {
     return store.state.vault.disconnected;
+  }
+
+  get offlineMode(): boolean {
+    return store.state.vault.offline;
+  }
+
+  set offlineMode(value: boolean) {
+    if (value) {
+      Vue.set(store.state.vault, "offline", true);
+      localStorage.setItem("OFFLINE_MODE", "on");
+    } else {
+      Vue.set(store.state.vault, "offline", false);
+      localStorage.setItem("OFFLINE_MODE", "off");
+    }
   }
 
   getdotStyle(networkId: string, greyOnOffline = true): string {
