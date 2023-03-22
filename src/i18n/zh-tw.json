@@ -199,10 +199,7 @@
       "notification": {
         "donate": "你正在向開發者贊助",
         "observeMode": "觀察模式下無法使用交互功能。",
-        "offline": "當前處於離線模式",
-        "turnOffPrefix": "點擊",
-        "turnOff": "此處",
-        "turnOffSuffix": "關閉。",
+        "offline": "離線模式",
         "test": "注意：kitten.pawket.app是一個測試站點，你可以在此體驗一些未發布的新功能。"
       }
     }

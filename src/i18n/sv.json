@@ -200,9 +200,6 @@
         "donate": "Du donerar till utvecklarna.",
         "observeMode": "Interaktionsfunktionen inaktiverad i observationsläge",
         "offline": "För närvarande i offlineläge.",
-        "turnOffPrefix": "Klick",
-        "turnOff": "här",
-        "turnOffSuffix": "att stänga av.",
         "test": "Obs: kitten.pawket.app är en testsajt där du kan uppleva några nya funktioner som inte har släppts."
       }
     }

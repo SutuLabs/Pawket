@@ -199,10 +199,7 @@
             "notification": {
                 "donate": "Stai donando agli sviluppatori.",
                 "observeMode": "Funzione di interazione disabilitata in modalità Osserva",
-                "offline": "Attualmente in modalità offline.",
-                "turnOffPrefix": "Clic",
-                "turnOff": "Qui",
-                "turnOffSuffix": "per disattivare.",
+                "offline": "Modalità Offline.",
                 "test": "Nota: kitten.pawket.app è un sito di prova in cui puoi sperimentare alcune nuove funzionalità inedite."
             }
         }

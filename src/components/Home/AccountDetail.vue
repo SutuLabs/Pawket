@@ -3,9 +3,6 @@
     <div :class="{ box: !isMobile }">
       <div class="notification has-background-grey-dark has-text-centered has-text-info-light py-2" v-if="offline">
         {{ $t("accountDetail.message.notification.offline") }}
-        {{ $t("accountDetail.message.notification.turnOffPrefix") }}
-        <router-link :to="{ path: '/settings/general' }"> {{ $t("accountDetail.message.notification.turnOff") }}</router-link>
-        {{ $t("accountDetail.message.notification.turnOffSuffix") }}
       </div>
       <div class="container">
         <div class="py-5 has-text-centered" v-if="account && account.key">

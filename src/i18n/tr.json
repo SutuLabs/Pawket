@@ -200,9 +200,6 @@
         "donate": "Geliştiricilere bağışta bulunuyorsunuz.",
         "observeMode": "Gözlem Modunda etkileşim işlevi devre dışı bırakıldı",
         "offline": "Şu anda çevrimdışı modda.",
-        "turnOffPrefix": "Tıklamak",
-        "turnOff": "Burada",
-        "turnOffSuffix": "kapatmak.",
         "test": "Not: kitten.pawket.app, bazı yayınlanmamış yeni özellikleri deneyimleyebileceğiniz bir test sitesidir."
       }
     }
