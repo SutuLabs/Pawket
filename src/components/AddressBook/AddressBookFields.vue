@@ -3,13 +3,29 @@
     <b-field :label="$t('addressBookField.ui.label.name')">
       <b-input v-model="name" maxlength="36"></b-input>
     </b-field>
-    <b-field :label="$t('addressBookField.ui.label.address')" :type="isLegalAddress ? '' : 'is-danger'" :message="errorMessage">
+    <b-field :type="isLegalAddress ? '' : 'is-danger'">
+      <template #label>
+        {{ $t("addressBookField.ui.label.address") }}
+      </template>
+      <template #message>
+        <span v-if="errorMessage">
+          {{ errorMessage }}
+        </span>
+        <span v-if="resolvedAddress" class="break-all">
+          {{ resolvedAddress }}
+        </span>
+        <span v-if="cnsName" class="break-all">
+          <b-tag type="is-link is-light">{{ cnsName }}</b-tag>
+        </span>
+      </template>
       <b-input
         v-model="address"
         ref="address"
+        :placeholder="$t('addressBookField.ui.placeholder.address')"
         expanded
         @input.enter.native="resetErr"
         :custom-class="isLegalAddress ? '' : 'is-danger'"
+        :loading="isResolving"
       ></b-input>
       <p class="control">
         <b-button @click="scanQrCode()">
@@ -27,6 +43,10 @@
 </template>
 
 <script lang="ts">
+import { resolveName, StandardResolveAnswer } from "@/services/api/resolveName";
+import { getCnsName, reverseResolveAnswer } from "@/services/api/reverseResolve";
+import puzzle from "@/services/crypto/puzzle";
+import { CoinSpend } from "@/services/spendbundle";
 import { decodeAddress } from "@/services/view/camera";
 import { xchPrefix } from "@/store/modules/network";
 import { bech32m } from "@scure/base";
@@ -42,17 +62,45 @@ export default class AddressBookField extends Vue {
   public name = "";
   public address = "";
   public isLegalAddress = true;
+  public isResolving = false;
   public errorMessage = "";
+  public resolveAnswer: StandardResolveAnswer | null = null;
+  public cnsResolve: reverseResolveAnswer | null = null;
+  public proofCoin: CoinSpend | null = null;
+  public cnsName = "";
+  public resolvedAddress = "";
 
-  resetErr(): void {
+  async resetErr(): Promise<void> {
     this.isLegalAddress = true;
     this.errorMessage = "";
+    this.resolveAnswer = null;
+    this.cnsResolve = null;
+    this.cnsName = "";
+    this.resolvedAddress = "";
+    if (this.address.match(/[a-zA-Z0-9-]{4,}\.xch$/)) {
+      this.isResolving = true;
+      this.resolveAnswer = await resolveName(this.address);
+      this.isResolving = false;
+      if (this.resolveAnswer?.status == "Found") {
+        this.resolvedAddress = puzzle.getAddressFromPuzzleHash(this.resolveAnswer.data ?? "", xchPrefix());
+      }
+    } else if (this.address.startsWith(xchPrefix())) {
+      this.isResolving = true;
+      var res = await getCnsName([puzzle.getPuzzleHashFromAddress(this.address)]);
+      if (res.length) this.cnsResolve = res[0];
+      this.cnsName = this.cnsResolve?.cns ?? "";
+      this.isResolving = false;
+    }
   }
 
   save(): void {
     if (this.address.length < 1) {
       this.isLegalAddress = false;
       this.errorMessage = this.$tc("addressBookField.ui.messages.emptyAddress");
+      return;
+    }
+    if (this.resolvedAddress) {
+      this.$emit("save", this.name, this.resolvedAddress);
       return;
     }
     try {
@@ -91,3 +139,8 @@ export default class AddressBookField extends Vue {
   }
 }
 </script>
+<style scoped lang="scss">
+.break-all {
+  word-break: break-all;
+}
+</style>

@@ -789,6 +789,9 @@
       "button": {
         "cancel": "Отмена",
         "save": "Сохранять"
+      },
+      "placeholder": {
+        "address": "Адрес или CNS"
       }
     }
   },

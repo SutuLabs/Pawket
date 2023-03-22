@@ -789,6 +789,9 @@
       "button": {
         "cancel": "İptal etmek",
         "save": "Kaydetmek"
+      },
+      "placeholder": {
+        "address": "Adres veya CNS"
       }
     }
   },

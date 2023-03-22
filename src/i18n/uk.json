@@ -789,6 +789,9 @@
       "button": {
         "cancel": "Скасувати",
         "save": "зберегти"
+      },
+      "placeholder": {
+        "address": "Адреса або CNS"
       }
     }
   },

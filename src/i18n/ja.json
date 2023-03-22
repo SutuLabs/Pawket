@@ -789,6 +789,9 @@
       "button": {
         "cancel": "キャンセル",
         "save": "保存"
+      },
+      "placeholder": {
+        "address": "アドレスまたはCNS"
       }
     }
   },
