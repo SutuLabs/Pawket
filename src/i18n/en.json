@@ -199,7 +199,7 @@
       "notification": {
         "donate": "You are donating to the developers.",
         "observeMode": "Interaction function disabled in Observe Mode",
-        "offline": "Ofline Mode.",
+        "offline": "Offline Mode",
         "test": "Note: kitten.pawket.app is a test site where you can experience some unreleased new features."
       }
     }

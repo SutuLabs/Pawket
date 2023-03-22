@@ -199,7 +199,7 @@
       "notification": {
         "donate": "你正在向开发者捐赠",
         "observeMode": "观察模式下无法使用交互功能。",
-        "offline": "当前处于离线模式",
+        "offline": "离线模式",
         "test": "注意：kitten.pawket.app 是一个测试站点，你可以在此体验一些未发布的新功能。"
       }
     }
