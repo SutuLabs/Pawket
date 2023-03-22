@@ -180,12 +180,12 @@ test('Take Offer Xch For CAT', async () => {
   expect(cats).toMatchSnapshot("cats dict");
   const revSummary = getReversePlan(summary, change_hex, cats);
   expect(revSummary).toMatchSnapshot("reverse summary");
-  const offplan = await generateOfferPlan(revSummary.offered, change_hex, availcoins, 0n, xchSymbol());
+  const offplan = await generateOfferPlan(revSummary.offered, change_hex, availcoins, 0n, xchSymbol(), undefined, revSummary.settlementModName);
   expect(offplan).toMatchSnapshot("offer plan");
-  const utakerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, net, nonce, "cat_v1");
+  const utakerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, net, nonce, "cat_v2", revSummary.settlementModName);
   const takerBundle = await signSpendBundle(utakerBundle, tokenPuzzles, net.chainId);
   expect(takerBundle).toMatchSnapshot("taker bundle");
-  const combined = await combineOfferSpendBundle([makerBundle, takerBundle]);
+  const combined = await combineOfferSpendBundle([makerBundle, takerBundle], revSummary.settlementModName);
   await assertSpendbundle(combined, net.chainId);
   expect(combined).toMatchSnapshot("bundle");
 });

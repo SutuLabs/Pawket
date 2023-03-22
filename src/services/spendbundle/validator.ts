@@ -93,7 +93,7 @@ export async function checkSpendBundle(bundle: SpendBundle | undefined, chainId:
         result = await puzzle.executePuzzleHex(cs.puzzle_reveal, cs.solution);
       } catch (err) {
         try {
-          result = await puzzle.executePuzzleHex(modshex["settlement_payments"], cs.solution);
+          result = await puzzle.executePuzzleHex(modshex["settlement_payments_v1"], cs.solution);
           ca.availability = "Settlement";
         } catch (err) {
           console.warn("error executing puzzle", err);
