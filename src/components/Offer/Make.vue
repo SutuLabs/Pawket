@@ -266,7 +266,7 @@ export default class MakeOffer extends Vue {
       }
 
       if (this.bundle && this.signed) lockCoins(this.account, this.bundle.coin_spends, Date.now(), chainId());
-      this.offerText = await encodeOffer(this.bundle, 4);
+      this.offerText = await encodeOffer(this.bundle, 6);
 
       this.step = "Confirmation";
     } catch (error) {

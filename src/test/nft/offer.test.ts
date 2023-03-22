@@ -126,7 +126,7 @@ test('create and accept nft offer for xch', async () => {
   );
   const bundle = await signSpendBundle(ubundle, tokenPuzzles, tnet.chainId);
   expect(bundle).toMatchSnapshot("bundle");
-  const offerText = await encodeOffer(bundle, 4);
+  const offerText = await encodeOffer(bundle, 6);
   expect(offerText).toMatchSnapshot("offer text");
 
   const makerBundle = await decodeOffer(offerText);

@@ -309,7 +309,7 @@ Instance.init().then(() => {
         r.nonce,
         r.intermediateKey);
       const offerBundle = await signSpendBundle(uofferBundle, tokenPuzzles, net.chainId);
-      const offer = await encodeOffer(offerBundle, 4);
+      const offer = await encodeOffer(offerBundle, 6);
 
       res.send(JSON.stringify({
         offer,
