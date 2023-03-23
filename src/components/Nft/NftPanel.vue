@@ -283,6 +283,11 @@ export default class NftPanel extends Vue {
     this.refresh();
   }
 
+  @Watch("accountId")
+  onAccountChange(): void {
+    this.refresh();
+  }
+
   @Watch("filteredNfts")
   downloadRelated(): void {
     for (let i = 0; i < this.filteredNfts.length; i++) {
