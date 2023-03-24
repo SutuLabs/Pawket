@@ -1647,5 +1647,18 @@
       "cancelled": "Inställt",
       "incorrectPassword": "Fel lösenord."
     }
+  },
+  "splitCoin": {
+    "ui": {
+      "title": "Delat mynt",
+      "confirmation": {
+        "confirmText": "Är du säker på att dela mynt? <br> Granska din transaktion.",
+        "label": {
+          "spliting": "Splittring",
+          "into": "In i",
+          "coins": "Mynt"
+        }
+      }
+    }
   }
 }

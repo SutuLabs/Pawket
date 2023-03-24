@@ -1647,5 +1647,18 @@
       "cancelled": "已取消",
       "incorrectPassword": "密碼不正確。"
     }
+  },
+  "splitCoin": {
+    "ui": {
+      "title": "拆分硬幣",
+      "confirmation": {
+        "confirmText": "確定要拆分硬幣嗎？<br>請務必再次檢查你的交易內容。",
+        "label": {
+          "spliting": "拆分",
+          "into": "成",
+          "coins": "硬幣"
+        }
+      }
+    }
   }
 }

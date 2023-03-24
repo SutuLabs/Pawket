@@ -1647,5 +1647,18 @@
             "cancelled": "Annullato",
             "incorrectPassword": "Password errata."
         }
+    },
+    "splitCoin": {
+        "ui": {
+            "title": "Moneta divisa",
+            "confirmation": {
+                "confirmText": "Sei sicuro di dividere le monete? <br> Controlla la tua transazione.",
+                "label": {
+                    "spliting": "Scissione",
+                    "into": "In",
+                    "coins": "Monete"
+                }
+            }
+        }
     }
 }

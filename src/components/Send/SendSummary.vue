@@ -25,6 +25,12 @@
         </span>
       </template>
     </b-field>
+    <b-field v-if="mojoLeadingText">
+      <template #label>
+        <span class="is-size-6">{{ mojoLeadingText }}</span>
+        <span class="is-pulled-right"> 1 mojo x {{ amount }} </span>
+      </template>
+    </b-field>
     <b-field v-if="assetId">
       <template #label>
         <span class="is-size-6">{{ $t("sendSummary.ui.label.assetId") }}</span>
@@ -101,6 +107,7 @@ export default class SendSummary extends Vue {
   @Prop() public total!: bigint;
   @Prop() public nftUri!: string;
   @Prop() public nftHash!: string;
+  @Prop() public mojoLeadingText!: string;
 
   get xchSymbol(): string {
     return xchSymbol();

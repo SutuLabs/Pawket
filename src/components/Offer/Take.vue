@@ -193,7 +193,7 @@
               </ul>
             </span>
           </div>
-          <div class="label">
+          <div class="label clear-both">
             <span class="is-size-6 has-text-grey">{{ $t("offer.take.ui.label.fee") }}</span>
             <span class="is-size-6 is-pulled-right has-text-grey">
               {{ demojo(fee) }}
@@ -833,5 +833,8 @@ img.nft-image {
   outline: none;
   min-width: 80px;
   min-height: 35px;
+}
+.clear-both {
+  clear: both;
 }
 </style>
