@@ -1647,5 +1647,18 @@
       "cancelled": "キャンセル",
       "incorrectPassword": "パスワードが正しくありません。"
     }
+  },
+  "splitCoin": {
+    "ui": {
+      "title": "スプリットコイン",
+      "confirmation": {
+        "confirmText": "コインを分割してもよろしいですか？ <br> お取引内容をご確認ください。",
+        "label": {
+          "spliting": "分割",
+          "into": "の中へ",
+          "coins": "コイン"
+        }
+      }
+    }
   }
 }

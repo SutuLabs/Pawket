@@ -1647,5 +1647,18 @@
       "cancelled": "İptal edildi",
       "incorrectPassword": "Yanlış parola."
     }
+  },
+  "splitCoin": {
+    "ui": {
+      "title": "Bölünmüş Para",
+      "confirmation": {
+        "confirmText": "Madeni paraları böleceğinizden emin misiniz? <br> Lütfen işleminizi gözden geçirin.",
+        "label": {
+          "spliting": "bölme",
+          "into": "İçine",
+          "coins": "madeni paralar"
+        }
+      }
+    }
   }
 }

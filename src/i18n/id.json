@@ -1647,5 +1647,18 @@
       "cancelled": "Dibatalkan",
       "incorrectPassword": "Kata kunci Salah."
     }
+  },
+  "splitCoin": {
+    "ui": {
+      "title": "Membagi Koin",
+      "confirmation": {
+        "confirmText": "Apakah Anda yakin untuk membagi koin? <br> Harap tinjau transaksi Anda.",
+        "label": {
+          "spliting": "Membelah",
+          "into": "Ke dalam",
+          "coins": "Koin"
+        }
+      }
+    }
   }
 }

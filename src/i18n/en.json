@@ -1647,5 +1647,18 @@
       "cancelled": "Cancelled",
       "incorrectPassword": "Incorrect password."
     }
+  },
+  "splitCoin": {
+    "ui": {
+      "title": "Split Coin",
+      "confirmation": {
+        "confirmText": "Are you sure to split coins? <br> Please review your transaction.",
+        "label": {
+          "spliting": "Spliting",
+          "into": "Into",
+          "coins": "Coins"
+        }
+      }
+    }
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <confirmation
     :value="bundle"
-    title="Split Coin"
+    :title="$t('splitCoin.ui.title')"
     @close="close()"
     @back="cancel()"
     @sign="sign()"
@@ -38,21 +38,23 @@
     </template>
     <template #confirm>
       <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-        <span v-html="$sanitize($tc('mintCat.ui.summary.notification'))"></span>
+        <span v-html="$sanitize($tc('splitCoin.ui.confirmation.confirmText'))"></span>
       </b-notification>
       <send-summary
         :amount="numericAmount"
         :fee="feeBigInt"
+        :unit="selectedToken"
         :address="address"
-        leadingText="Spliting"
+        :leadingText="$t('splitCoin.ui.confirmation.label.spliting')"
+        :mojoLeadingText="$t('splitCoin.ui.confirmation.label.into')"
         :total="total"
         :contactName="contactName"
       ></send-summary>
       <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
       <b-field class="output">
         <template #label>
-          Coins
-          <b-button size="is-small" type="is-info" @click="copy(coinSummary)">Copy</b-button>
+          {{ $t("splitCoin.ui.confirmation.label.coins") }}
+          <b-button size="is-small" type="is-info" @click="copy(coinSummary)">{{ $t("common.button.copy") }}</b-button>
         </template>
         <b-input type="textarea" v-model="coinSummary" readonly></b-input>
       </b-field>
