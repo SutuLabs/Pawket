@@ -247,7 +247,10 @@ store.registerModule<IAccountState>("account", {
 
       // replace hintPuzzle of analysis
       assetRecords.coins.forEach(coin => coin.records.forEach(rec => {
-        if (rec.analysis) rec.analysis.hintPuzzle = prefix0x(coin.puzzleHash)
+        if (rec.analysis && rec.coin) {
+          rec.analysis.hintPuzzle = prefix0x(coin.puzzleHash);
+          rec.analysis.coin = convertToOriginCoin(rec.coin);
+        }
       }))
 
       if (parameters.coinType == "DidV1") {
