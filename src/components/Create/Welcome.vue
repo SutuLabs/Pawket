@@ -6,11 +6,12 @@
       </div>
       <p class="px-4 has-text-centered is-size-6 py-6">{{ $t("welcome.ui.description") }}</p>
       <p class="px-4 has-text-centered is-size- has-text-primary">{{ $t("welcome.ui.slogan") }}</p>
-
       <div class="px-4 has-text-centered pt-6">
-        <b-radio v-for="[key, value] in languageList" :key="key" v-model="language" name="language" :native-value="key">
-          {{ value }}
-        </b-radio>
+        <b-select v-model="language">
+          <option v-for="[key, value] in languageList" :label="value" :value="key" :key="key">
+            {{ value }}
+          </option>
+        </b-select>
         <p class="py-6 mt-2">
           <b-button type="is-primary" @click="next()"
             ><span class="px-5">{{ $t("welcome.ui.button.start") }}</span></b-button
