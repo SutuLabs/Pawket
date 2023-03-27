@@ -183,7 +183,12 @@ export async function generateOfferPlan(
       memos: undefined,
     };
     // always create royalty coin even it's 0, the official client generate puzzle assert for that coin
-    const tgts = royaltyFee === undefined ? [tgt] : [tgt, royaltyTgt]
+    // start from settlement_payments_v1, royalty coin with 0 is not required
+    const tgts = royaltyFee === undefined
+      ? [tgt]
+      : (settlementModName === "settlement_payments" || royaltyFee > 0)
+        ? [tgt, royaltyTgt]
+        : [tgt]
 
     const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, fee, tokenSymbol);
     const keys = Object.keys(plan);
@@ -453,20 +458,24 @@ export async function generateNftOffer(
       const parent = getCoinName0x(sp[sp.length - 1].coin);
       // royalty_amount = uint64(offered_amount * royalty_percentage / 10000)
       const amount = (off.plan.targets[0].amount * BigInt(nft.tradePricePercentage)) / BigInt(10000);
-      const solution_text = `((${prefix0x(nft.launcherId)} (${prefix0x(nft.royaltyAddress)} ${amount} (${prefix0x(
-        nft.royaltyAddress
-      )}))))`;
-      const solution = prefix0x(await puzzle.encodePuzzle(solution_text));
-      const roysp: CoinSpend = {
-        coin: {
-          parent_coin_info: parent,
-          amount,
-          puzzle_hash: settlement_tgt,
-        },
-        puzzle_reveal: modshex0x[settlementModName],
-        solution,
-      };
-      spends.push(roysp);
+      // original settlement_payments implementation always has one zero royalty coin if applicable,
+      // but settlement_payments_v1 don't have this zero royalty coin
+      if (amount > 0 || settlementModName == "settlement_payments") {
+        const solution_text = `((${prefix0x(nft.launcherId)} (${prefix0x(nft.royaltyAddress)} ${amount} (${prefix0x(
+          nft.royaltyAddress
+        )}))))`;
+        const solution = prefix0x(await puzzle.encodePuzzle(solution_text));
+        const roysp: CoinSpend = {
+          coin: {
+            parent_coin_info: parent,
+            amount,
+            puzzle_hash: settlement_tgt,
+          },
+          puzzle_reveal: modshex0x[settlementModName],
+          solution,
+        };
+        spends.push(roysp);
+      }
     }
   }
 

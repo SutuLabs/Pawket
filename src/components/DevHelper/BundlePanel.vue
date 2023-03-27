@@ -469,7 +469,7 @@ export default class BundlePanel extends Vue {
       this.solution_executor = "NORMAL";
     } catch (err) {
       try {
-        const result = await puzzle.executePuzzle(modsprog["settlement_payments"], solution);
+        const result = await puzzle.executePuzzle(modsprog["settlement_payments_v1"], solution);
         this.solution_result = result.raw;
         this.solution_results = result.conditions;
         this.solution_executor = "SETTLEMENT";
