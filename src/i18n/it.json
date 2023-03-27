@@ -134,7 +134,8 @@
         },
         "message": {
             "error": {
-                "wrongSeed": "Importazione fallita, controlla le tue parole mnemoniche."
+                "wrongSeed": "Importazione fallita, controlla le tue parole mnemoniche.",
+                "notInBip39": "{wordList} non è (sono) presenti nell'elenco di parole BIP39"
             }
         }
     },

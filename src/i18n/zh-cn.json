@@ -134,7 +134,8 @@
     },
     "message": {
       "error": {
-        "wrongSeed": "导入失败，请输入正确的助记词"
+        "wrongSeed": "导入失败，请输入正确的助记词",
+        "notInBip39": "{wordList}不在BIP39助记词列表"
       }
     }
   },

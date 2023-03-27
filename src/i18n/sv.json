@@ -134,7 +134,8 @@
     },
     "message": {
       "error": {
-        "wrongSeed": "Importen misslyckades, kontrollera dina Mnemoniska ord."
+        "wrongSeed": "Importen misslyckades, kontrollera dina Mnemoniska ord.",
+        "notInBip39": "{wordList} finns inte i BIP39-ordlistan"
       }
     }
   },

@@ -134,7 +134,8 @@
     },
     "message": {
       "error": {
-        "wrongSeed": "導入失敗，請輸入正確的幫助詞"
+        "wrongSeed": "導入失敗，請輸入正確的幫助詞",
+        "notInBip39": "{wordList}不在BIP39助記詞列表"
       }
     }
   },

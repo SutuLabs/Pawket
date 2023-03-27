@@ -134,7 +134,8 @@
     },
     "message": {
       "error": {
-        "wrongSeed": "Impor gagal, harap periksa Kata Mnemonik Anda."
+        "wrongSeed": "Impor gagal, harap periksa Kata Mnemonik Anda.",
+        "notInBip39": "{wordList} tidak ada dalam daftar kata BIP39"
       }
     }
   },

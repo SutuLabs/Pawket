@@ -134,7 +134,8 @@
     },
     "message": {
       "error": {
-        "wrongSeed": "İçe aktarma başarısız oldu, lütfen Anımsatıcı Sözcüklerinizi kontrol edin."
+        "wrongSeed": "İçe aktarma başarısız oldu, lütfen Anımsatıcı Sözcüklerinizi kontrol edin.",
+        "notInBip39": "{wordList} BIP39 kelime listesinde mevcut / değil"
       }
     }
   },
