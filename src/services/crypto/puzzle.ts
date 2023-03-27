@@ -300,6 +300,11 @@ class PuzzleMaker {
       throw new Error(`Error calculating puzzle [${modname ? `M'${modname}` : puzzle_reveal.slice(0, 200)}] from solution [${solution.slice(0, 200)}]: ${result.slice(0, 200)}`);
     }
 
+    // FIXME: when using rust experiment backend, there exist scenario when result=69 but no exception raised while brun command line thrown exception
+    if (result == "69") {
+      const modname = modsdict[puzzle_reveal];
+      throw new Error(`Suspected error calculating puzzle [${modname ? `M'${modname}` : puzzle_reveal.slice(0, 200)}] from solution [${solution.slice(0, 200)}]: ${result.slice(0, 200)}`);
+    }
     return result;
   }
 
