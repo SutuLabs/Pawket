@@ -23,7 +23,8 @@
 </template>
 
 <script lang="ts">
-import { languageList } from "@/i18n/i18n";
+import { debugLanguageList, languageList } from "@/i18n/i18n";
+import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component
@@ -41,8 +42,12 @@ export default class Welcome extends Vue {
     localStorage.setItem("Locale", value);
   }
 
+  get debugMode(): boolean {
+    return store.state.app.debug;
+  }
+
   get languageList(): Map<string, string> {
-    return languageList;
+    return this.debugMode ? debugLanguageList : languageList;
   }
 }
 </script>

@@ -29,6 +29,11 @@ const languages = {
 export const languageList: Map<string, string> = new Map<string, string>([
   ["en", "English"],
   ["zhcn", "简体中文"],
+]);
+
+export const debugLanguageList: Map<string, string> = new Map<string, string>([
+  ["en", "English"],
+  ["zhcn", "简体中文"],
   ['ru', "Русский"],
   ['uk', "Українська"],
   ['id', "Bahasa Indonesia"],

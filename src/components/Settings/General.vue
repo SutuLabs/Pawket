@@ -43,7 +43,7 @@ import { NotificationProgrammatic as Notification } from "buefy";
 import { NetworkInfo } from "@/store/modules/network";
 import TopBar from "@/components/Common/TopBar.vue";
 import { AccountEntity } from "@/models/account";
-import { languageList } from "@/i18n/i18n";
+import { debugLanguageList, languageList } from "@/i18n/i18n";
 
 @Component({
   components: { TopBar },
@@ -54,8 +54,12 @@ export default class General extends Vue {
     ["CNY", CurrencyType.CNY],
   ]);
 
+  get debugMode(): boolean {
+    return store.state.app.debug;
+  }
+
   get languageList(): Map<string, string> {
-    return languageList;
+    return this.debugMode ? debugLanguageList : languageList;
   }
 
   get currency(): CurrencyType {
