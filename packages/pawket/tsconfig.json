@@ -21,7 +21,7 @@
         ],
         "paths": {
             "@/*": [
-                "packages/pawket/src/*"
+                "src/*"
             ]
         },
         "lib": [
@@ -32,9 +32,9 @@
         ]
     },
     "include": [
-        "packages/pawket/src/**/*.ts",
-        "packages/pawket/src/**/*.tsx",
-        "packages/pawket/src/**/*.vue",
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.vue",
         "tests/**/*.ts",
         "tests/**/*.tsx"
     ],
