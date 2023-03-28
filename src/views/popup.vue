@@ -24,7 +24,7 @@ import { NotificationProgrammatic as Notification } from "buefy";
 import store from "@/store";
 import DevHelper from "@/components/DevHelper/DevHelper.vue";
 import UniStorage from "@/services/storage";
-import { languageList } from "@/i18n/i18n";
+import { debugLanguageList, languageList } from "@/i18n/i18n";
 
 @Component
 export default class App extends Vue {
@@ -38,7 +38,7 @@ export default class App extends Vue {
   }
 
   get languageList(): Map<string, string> {
-    return languageList;
+    return this.debugMode ? debugLanguageList : languageList;
   }
 
   alphaClick(): void {
