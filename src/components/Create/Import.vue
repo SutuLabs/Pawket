@@ -90,8 +90,8 @@ export default class Add extends Vue {
   }
 
   async checkSeedMnemonic(): Promise<void> {
-    const seedMnemonic = this.seedMnemonic.replace(/\s+/g, " ").trim();
-    this.seedMnemonicList = this.seedMnemonic.split(" ");
+    const seedMnemonic = this.seedMnemonic.replace(/\n/g, " ").replace(/\s+/g, " ").trim();
+    this.seedMnemonicList = seedMnemonic.split(" ");
     if (this.seedMnemonicList.length < 12) return;
     if (this.seedMnemonicList.length != this.mnemonicLen) {
       this.isLegal = false;
