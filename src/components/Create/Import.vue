@@ -25,7 +25,7 @@
       <div class="px-5">
         <b-field :type="isLegal ? '' : 'is-danger'">
           <template #message>
-            <p>{{ fingerprint ? "Fingerprint:" + fingerprint : "" }}</p>
+            <p class="has-text-dark">{{ fingerprint ? "Fingerprint:" + fingerprint : "" }}</p>
             {{ errMsg }}
           </template>
           <b-input type="textarea" v-model="seedMnemonic" @input="clearErrorMsg()"></b-input>
@@ -90,7 +90,6 @@ export default class Add extends Vue {
   }
 
   async checkSeedMnemonic(): Promise<void> {
-    this.clearErrorMsg();
     const seedMnemonic = this.seedMnemonic.replace(/\s+/g, " ").trim();
     this.seedMnemonicList = this.seedMnemonic.split(" ");
     if (this.seedMnemonicList.length < 12) return;
