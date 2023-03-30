@@ -1642,6 +1642,7 @@
       "invalidData": "Gagal Menandatangani: Data Input Tidak Valid",
       "unknownDid": "Gagal Menandatangani: DID yang Ditentukan Tidak Ada di Rekening Giro",
       "unknownNetwork": "Jaringan yang ditentukan tidak ada",
+      "unknownAddress": "Gagal Menandatangani: Alamat Yang Ditentukan Tidak Ada di Rekening Giro",
       "sendCompleted": "Transaksi diajukan!",
       "catAdded": "KUCING ditambahkan!",
       "cancelled": "Dibatalkan",

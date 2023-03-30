@@ -1642,6 +1642,7 @@
       "invalidData": "签名失败: 无效输入信息",
       "unknownDid": "签名失败: 未找到指定DID",
       "unknownNetwork": "未找到指定网络",
+      "unknownAddress": "签名失败: 未找到指定地址",
       "sendCompleted": "交易已提交!",
       "catAdded": "CAT已添加!",
       "cancelled": "已取消",

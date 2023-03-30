@@ -1642,6 +1642,7 @@
       "invalidData": "Failed To Sign: Invalid Input Data",
       "unknownDid": "Failed To Sign: The Specified DID Does Not Exist in Current Account",
       "unknownNetwork": "The specified network does not exist",
+      "unknownAddress": "Failed To Sign: The Specified Address Does Not Exist in Current Account",
       "sendCompleted": "Transaction is submitted!",
       "catAdded": "CAT is added!",
       "cancelled": "Cancelled",

@@ -1642,6 +1642,7 @@
             "invalidData": "Impossibile firmare: dati di input non validi",
             "unknownDid": "Impossibile firmare: il DID specificato non esiste nel conto corrente",
             "unknownNetwork": "La rete specificata non esiste",
+            "unknownAddress": "Impossibile firmare: l'indirizzo specificato non esiste nel conto corrente",
             "sendCompleted": "Transazione inviata!",
             "catAdded": "GATTO è aggiunto!",
             "cancelled": "Annullato",

@@ -469,12 +469,12 @@ export default class Connect extends Vue {
     const idx = this.addresses.findIndex((addr) => addr.address == data?.address);
     if (idx == -1) {
       Notification.open({
-        message: tc("connect.messages.unknownDid"),
+        message: tc("connect.messages.unknownAddress"),
         type: "is-danger",
         position: "is-top",
         duration: 5000,
       });
-      this.failed(tc("connect.messages.unknownDid"));
+      this.failed(tc("connect.messages.unknownAddress"));
       return;
     }
     this.$buefy.modal.open({

@@ -1642,6 +1642,7 @@
       "invalidData": "署名に失敗しました: 無効な入力データ",
       "unknownDid": "署名に失敗しました: 指定された DID は現在のアカウントに存在しません",
       "unknownNetwork": "指定されたネットワークは存在しません",
+      "unknownAddress": "署名に失敗しました: 指定されたアドレスは現在のアカウントに存在しません",
       "sendCompleted": "トランザクションが送信されました!",
       "catAdded": "CATが追加されました！",
       "cancelled": "キャンセル",
