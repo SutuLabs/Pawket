@@ -1643,6 +1643,7 @@
       "invalidData": "Det gick inte att signera: Ogiltig indata",
       "unknownDid": "Det gick inte att signera: Det angivna DID:et finns inte på det aktuella kontot",
       "unknownNetwork": "Det angivna nätverket finns inte",
+      "unknownAddress": "Det gick inte att signera: Den angivna adressen finns inte i det aktuella kontot",
       "sendCompleted": "Transaktionen har skickats!",
       "catAdded": "CAT har lagts till!",
       "cancelled": "Inställt",

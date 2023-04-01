@@ -1643,6 +1643,7 @@
       "invalidData": "簽名失敗: 無效率輸入信息",
       "unknownDid": "簽名失敗: 未找到指定DID",
       "unknownNetwork": "未找到指定網絡",
+      "unknownAddress": "簽名失敗: 未找到指定地址",
       "sendCompleted": "交易已提交！",
       "catAdded": "CAT已添加！",
       "cancelled": "已取消",

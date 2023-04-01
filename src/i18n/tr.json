@@ -1643,6 +1643,7 @@
       "invalidData": "İmzalanamadı: Geçersiz Giriş Verileri",
       "unknownDid": "İmzalama Başarısız: Belirtilen DID Cari Hesapta Mevcut Değil",
       "unknownNetwork": "Belirtilen ağ mevcut değil",
+      "unknownAddress": "İmzalama Başarısız: Belirtilen Adres Cari Hesapta Mevcut Değil",
       "sendCompleted": "İşlem gönderildi!",
       "catAdded": "KAT eklendi!",
       "cancelled": "İptal edildi",

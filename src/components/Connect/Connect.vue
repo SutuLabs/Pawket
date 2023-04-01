@@ -111,7 +111,7 @@
 
 <script lang="ts">
 import { demojo } from "@/filters/unitConversion";
-import { AccountEntity, CustomCat, OneTokenInfo } from "@/models/account";
+import { AccountEntity, AccountToken, AccountTokenAddress, CustomCat, OneTokenInfo } from "@/models/account";
 import encryption from "@/services/crypto/encryption";
 import puzzle from "@/services/crypto/puzzle";
 import receive, { DidDetail } from "@/services/crypto/receive";
@@ -130,6 +130,7 @@ import { tc } from "@/i18n/i18n";
 import ManageCats from "../Cat/ManageCats.vue";
 type Stage = "Verify" | "Account" | "Authorize" | "Cmd";
 type SignWithDidData = { did: string; message: string };
+type SignWithAddressData = { address: string; message: string };
 type AddCatData = { id: string; name?: string };
 type MessageEventSource = Window | MessagePort | ServiceWorker;
 @Component
@@ -221,6 +222,14 @@ export default class Connect extends Vue {
 
   get symbol(): string {
     return xchSymbol();
+  }
+
+  get token(): AccountToken {
+    return this.account.tokens[xchSymbol()];
+  }
+
+  get addresses(): AccountTokenAddress[] {
+    return this.token.addresses.filter((a) => a.type == "Observed");
   }
 
   clearErrorMsg(): void {
@@ -322,6 +331,9 @@ export default class Connect extends Vue {
       case "sign-with-did":
         this.signWithDid();
         break;
+      case "sign-with-address":
+        this.signWithAddress();
+        break;
       case "get-address":
         this.stage = "Cmd";
         this.getAddress();
@@ -346,7 +358,7 @@ export default class Connect extends Vue {
   }
 
   checkCmd(cmd: string): boolean {
-    const cmdList = ["take-offer", "send", "sign-with-did", "get-address", "get-did", "add-cat"];
+    const cmdList = ["take-offer", "send", "sign-with-did", "sign-with-address", "get-address", "get-did", "add-cat"];
     if (!cmd) {
       Notification.open({
         message: tc("connect.messages.noAppName"),
@@ -424,6 +436,60 @@ export default class Connect extends Vue {
       canCancel: [""],
       props: { account: this.account, defaultAssetId: data?.id, defaultName: data?.name, defaultTab: 1 },
       events: { success: () => this.success(this.$t("connect.messages.catAdded")) },
+    });
+  }
+
+  async signWithAddress(): Promise<void> {
+    this.loading = true;
+    await store.dispatch("refreshAdress", { idx: this.selectedAcc });
+    if (this.account.key.privateKey)
+      this.account.addressPuzzles = await receive.getAssetsRequestDetail(
+        this.account.key.privateKey,
+        0,
+        12,
+        [],
+        {},
+        "xch",
+        "XCH",
+        "cat_v2"
+      );
+    this.loading = false;
+    let data: SignWithAddressData | null = null;
+    try {
+      data = JSON.parse(this.data) as SignWithAddressData;
+    } catch (error) {
+      Notification.open({
+        message: tc("connect.messages.invalidData"),
+        type: "is-danger",
+        position: "is-top",
+        duration: 5000,
+      });
+      this.failed(tc("connect.messages.invalidData"));
+    }
+    const idx = this.addresses.findIndex((addr) => addr.address == data?.address);
+    if (idx == -1) {
+      Notification.open({
+        message: tc("connect.messages.unknownAddress"),
+        type: "is-danger",
+        position: "is-top",
+        duration: 5000,
+      });
+      this.failed(tc("connect.messages.unknownAddress"));
+      return;
+    }
+    this.$buefy.modal.open({
+      parent: this,
+      component: SignMessage,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      fullScreen: true,
+      props: {
+        account: this.account,
+        xch: data?.address,
+        initMessage: data?.message,
+      },
+      events: { signResult: this.sendSignResult },
     });
   }
 
