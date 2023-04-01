@@ -23,7 +23,11 @@
         <p class="is-size-6 p-5">{{ $t("createSeed.ui.text.import24.tip") }}</p>
       </section>
       <div class="px-5">
-        <b-field :type="isLegal ? '' : 'is-danger'" :message="isLegal ? '' : $t('createSeed.message.error.wrongSeed')">
+        <b-field :type="isLegal ? '' : 'is-danger'">
+          <template #message>
+            <p class="has-text-dark">{{ fingerprint ? "Fingerprint:" + fingerprint : "" }}</p>
+            {{ errMsg }}
+          </template>
           <b-input type="textarea" v-model="seedMnemonic" @input="clearErrorMsg()"></b-input>
         </b-field>
       </div>
@@ -39,6 +43,9 @@
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import TopBar from "@/components/Common/TopBar.vue";
+import account from "@/services/crypto/account";
+import { wordlists } from "bip39";
+import { tc } from "@/i18n/i18n";
 
 type Mode = "Menu" | "Import";
 type MnemonicLen = 12 | 24;
@@ -52,22 +59,67 @@ export default class Add extends Vue {
   mode: Mode = "Menu";
   public isLegal = true;
   public mnemonicLen: MnemonicLen = 12;
+  public timeoutId?: ReturnType<typeof setTimeout>;
   seedMnemonic = "";
   seedMnemonicList: string[] = [];
   submitting = false;
+  fingerprint = 0;
+  errMsg = "";
 
   import12(): void {
     this.mnemonicLen = 12;
     this.mode = "Import";
+    this.autoCheck();
   }
 
   import24(): void {
     this.mnemonicLen = 24;
     this.mode = "Import";
+    this.autoCheck();
   }
 
   clearErrorMsg(): void {
     this.isLegal = true;
+    this.errMsg = "";
+    this.fingerprint = 0;
+  }
+
+  autoCheck(): void {
+    this.checkSeedMnemonic();
+    this.timeoutId = setTimeout(() => this.autoCheck(), 1000);
+  }
+
+  async checkSeedMnemonic(): Promise<void> {
+    const seedMnemonic = this.seedMnemonic.replace(/\n/g, " ").replace(/\s+/g, " ").trim();
+    this.seedMnemonicList = seedMnemonic.split(" ");
+    if (this.seedMnemonicList.length < 12) return;
+    if (this.seedMnemonicList.length != this.mnemonicLen) {
+      this.isLegal = false;
+      this.errMsg = tc("createSeed.message.error.wrongSeed");
+      return;
+    }
+    const unknownWords: string[] = [];
+    for (let word of this.seedMnemonicList) {
+      if (!word) continue;
+      const idx = wordlists["english"].findIndex((w) => w == word);
+      if (idx == -1) unknownWords.push(word);
+    }
+    if (unknownWords.length > 0) {
+      this.isLegal = false;
+      this.errMsg = tc("createSeed.message.error.notInBip39", undefined, { wordList: unknownWords.join(", ") });
+    }
+    try {
+      if (this.mnemonicLen == 12) {
+        const acckey = await account.getAccount(seedMnemonic, "1");
+        this.fingerprint = acckey.fingerprint;
+      } else {
+        const acckey = await account.getAccount("", null, seedMnemonic);
+        this.fingerprint = acckey.fingerprint;
+      }
+    } catch (error) {
+      this.isLegal = false;
+      this.errMsg = tc("createSeed.message.error.wrongSeed");
+    }
   }
 
   async confirm(): Promise<void> {
@@ -77,9 +129,24 @@ export default class Add extends Vue {
     this.seedMnemonicList = this.seedMnemonic.split(" ");
     if (this.seedMnemonicList.length != this.mnemonicLen) {
       this.isLegal = false;
+      this.errMsg = tc("createSeed.message.error.wrongSeed");
       this.submitting = false;
       return;
     }
+    try {
+      if (this.mnemonicLen == 12) {
+        const acckey = await account.getAccount(this.seedMnemonic, "1");
+        this.fingerprint = acckey.fingerprint;
+      } else {
+        const acckey = await account.getAccount("", null, this.seedMnemonic);
+        this.fingerprint = acckey.fingerprint;
+      }
+    } catch (error) {
+      this.isLegal = false;
+      this.errMsg = tc("createSeed.message.error.wrongSeed");
+      this.submitting = false;
+    }
+
     await store.dispatch("importSeed", this.seedMnemonic).catch((error) => (this.isLegal = error == null));
     this.submitting = false;
     this.$router.push("/home").catch(() => undefined);
@@ -89,6 +156,11 @@ export default class Add extends Vue {
     this.mode = "Menu";
     this.isLegal = true;
     this.seedMnemonic = "";
+    if (this.timeoutId) clearTimeout(this.timeoutId);
+  }
+
+  unmounted(): void {
+    if (this.timeoutId) clearTimeout(this.timeoutId);
   }
 
   back(): void {

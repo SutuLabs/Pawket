@@ -134,7 +134,8 @@
     },
     "message": {
       "error": {
-        "wrongSeed": "Import failed, please check your Mnemonic Words."
+        "wrongSeed": "Import failed, please check your Mnemonic Words.",
+        "notInBip39": "{wordList} is (are) not present in the BIP39 word list"
       }
     }
   },
