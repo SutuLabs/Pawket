@@ -1,8 +1,8 @@
 import { readdirSync, readFileSync, writeFileSync } from 'fs';
-import puzzle from '../src/services/crypto/puzzle';
-import { Instance } from "../src/services/util/instance";
+import puzzle from '../pawket-chia-lib/services/crypto/puzzle';
+import { Instance } from "../pawket-chia-lib/services/util/instance";
 import { sha256tree } from 'clvm_tools';
-import { sexpAssemble } from '../src/services/coin/analyzer';
+import { sexpAssemble } from '../pawket-chia-lib/services/coin/analyzer';
 
 const suffix = ".clvm";
 

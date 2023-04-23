@@ -7,7 +7,7 @@ import { getCoinName0x, NetworkContext } from "../coin/coinUtility";
 import receive, { TokenPuzzleDetail } from "../crypto/receive";
 import { generateOfferPlan, generateNftOffer } from "./bundler";
 import { prefix0x } from "../coin/condition";
-import { GetParentPuzzleResponse } from "@/models/api";
+import { GetParentPuzzleResponse } from "../../models/api";
 import { OfferEntity } from "./summary";
 import utility from "../crypto/utility";
 import { Instance } from "../util/instance";

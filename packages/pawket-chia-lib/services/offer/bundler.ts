@@ -8,12 +8,12 @@ import { TokenPuzzleDetail, TokenPuzzleObserver } from "../crypto/receive";
 import catBundle from "../transfer/catBundle";
 import stdBundle from "../transfer/stdBundle";
 import { getOfferSummary, OfferEntity, OfferPlan, OfferSummary } from "./summary";
-import { GetParentPuzzleResponse } from "@/models/api";
+import { GetParentPuzzleResponse } from "../../models/api";
 import { assemble, curry, disassemble } from "clvm_tools";
 import { modshash, modshex0x, modsprog } from "../coin/mods";
 import { getCoinName, getCoinName0x, NetworkContext } from "../coin/coinUtility";
 import { Instance } from "../util/instance";
-import { NftCoinAnalysisResult } from "@/models/nft";
+import { NftCoinAnalysisResult } from "../../models/nft";
 import { generateTransferNftBundle, getTransferNftPuzzle, getTransferNftSolution } from "../coin/nft";
 import crypto from "../crypto/isoCrypto"
 

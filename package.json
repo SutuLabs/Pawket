@@ -11,7 +11,7 @@
     "build:pawket": "cd ./packages/pawket && vue-cli-service build",
     "build:ext": "cross-env VUE_CLI_SERVICE_CONFIG_PATH=vue.config.ext.js vue-cli-service build",
     "build:mixch": "cross-env VUE_CLI_SERVICE_CONFIG_PATH=vue.config.mixch.js vue-cli-service build",
-    "build:cli": "ncc build cli/server.ts -o dist/cli && cp node_modules/clvm/browser/blsjs.wasm dist/cli",
+    "build:cli": "cd ./packages/cli && ncc build server.ts -o ../../dist/cli && cp ../../node_modules/clvm/browser/blsjs.wasm ../../dist/cli",
     "build:cli:docker": "yarn build:cli && docker build -f cli/Dockerfile -t wizicer/coin-processor:latest .",
     "build:cordova": "vue-cli-service build --env cordova",
     "lint": "vue-cli-service lint",
@@ -25,7 +25,7 @@
     "compile": "ts-node cli/compile.ts",
     "brun": "ts-node cli/brun.ts",
     "publish:docker": "docker push wizicer/coin-processor:latest",
-    "test": "jest --coverage=false"
+    "test": "cd ./packages/pawket-chia-lib && jest --coverage=false"
   },
   "devDependencies": {
     "eslint": "^6.7.2",

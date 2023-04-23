@@ -2,6 +2,7 @@
 const path = require('path');
 const { IgnorePlugin } = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { env } = require('process');
 
 module.exports = {
   devServer: {
@@ -29,6 +30,10 @@ module.exports = {
       options[0].fileBlacklist = options[0].fileBlacklist || []
       options[0].fileBlacklist.push(/mermaid(.)+?\.js$/)
       return options
+    })
+    config.plugin('html').tap(args => {
+      args[0].custom = (!env.cordova) ? `<script src="cordova.js"></script>` : '';
+      return args;
     })
   },
 };

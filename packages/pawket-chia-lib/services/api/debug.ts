@@ -1,5 +1,5 @@
-import { GetCoinSolutionResponse } from "@/models/api";
-import { CoinSpend } from "@/services/spendbundle";
+import { GetCoinSolutionResponse } from "../../models/api";
+import { CoinSpend } from "../spendbundle";
 
 class DebugApi {
   public async getCoinSolution(coinId: string, rpcUrl: string): Promise<CoinSpend> {

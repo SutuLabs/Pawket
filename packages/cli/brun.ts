@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from 'fs';
-import puzzle from '../src/services/crypto/puzzle';
-import { Instance } from "../src/services/util/instance";
+import puzzle from '../pawket-chia-lib/services/crypto/puzzle';
+import { Instance } from "../pawket-chia-lib/services/util/instance";
 
 const args = process.argv.slice(2);
 

@@ -1,4 +1,4 @@
-import { GetParentPuzzleRequest, GetParentPuzzleResponse } from "@/models/api";
+import { GetParentPuzzleRequest, GetParentPuzzleResponse } from "../../models/api";
 
 export async function getLineageProofPuzzle(parentCoinId: string, baseUrl: string): Promise<GetParentPuzzleResponse> {
   const resp = await fetch(baseUrl + "Wallet/get-puzzle", {

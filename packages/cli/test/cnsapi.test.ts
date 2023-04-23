@@ -1,4 +1,4 @@
-import { Instance } from "../../src/services/util/instance";
+import { Instance } from "../../pawket-chia-lib/services/util/instance";
 import request from "supertest"
 import app from "../app"
 import case1 from "./cases/cns_case1.json"

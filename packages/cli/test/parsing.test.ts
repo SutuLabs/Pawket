@@ -1,4 +1,4 @@
-import { Instance } from "../../src/services/util/instance";
+import { Instance } from "../../pawket-chia-lib/services/util/instance";
 import request from "supertest"
 import app from "../app"
 import bcase1 from "./cases/block_case1.json"
@@ -29,7 +29,7 @@ describe("Parsing API test", () => {
   test('Block Parsing Case 8', () => testCase("/parse_block", bcase8));
 
   test('Puzzle Parsing Case 1', () => testCase("/parse_puzzle", pcase1));
-  test.each(txcase1.map(_ => Object.assign(_, { toString: function () { return this.id; } })))(
+  test.each(txcase1.map(_ => Object.assign(_, { toString: function (): string { return (<any>this).id; } })))(
     "Analyze Tx Case %s",
     (ca) => testCase("/analyze_tx", ca)
   );

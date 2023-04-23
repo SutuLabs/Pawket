@@ -1,8 +1,8 @@
 import { readdirSync, readFileSync, writeFileSync } from 'fs';
-import puzzle from '../src/services/crypto/puzzle';
-import { Instance } from "../src/services/util/instance";
+import puzzle from '../pawket-chia-lib/services/crypto/puzzle';
+import { Instance } from "../pawket-chia-lib/services/util/instance";
 import { sha256tree } from 'clvm_tools';
-import { sexpAssemble } from '../src/services/coin/analyzer';
+import { sexpAssemble } from '../pawket-chia-lib/services/coin/analyzer';
 
 const suffix = ".clvm.hex";
 
@@ -51,9 +51,9 @@ export const ${camelName}sHex: { [name in ${typename}Name]: string } = ${JSON.st
 
 export const ${camelName}sHash: { [name in ${typename}Name]: string } = ${JSON.stringify(sha256data, null, 2)};
 `;
-    writeFileSync(`src/services/coin/${camelName}s.ts`, content);
+    writeFileSync(`../pawket-chia-lib/services/coin/${camelName}s.ts`, content);
   };
 
-  await writeTypeFile("../ref/chia-blockchain/chia/wallet/puzzles/", "ImportMod");
-  await writeTypeFile("cli/clvm/", "OtherMod");
+  await writeTypeFile("../../../ref/chia-blockchain/chia/wallet/puzzles/", "ImportMod");
+  await writeTypeFile("clvm/", "OtherMod");
 });

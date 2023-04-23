@@ -4,7 +4,7 @@ import { prefix0x } from "../coin/condition";
 import puzzle from "../crypto/puzzle";
 import utility from "../crypto/utility";
 import transfer from "../transfer/transfer";
-import { assert } from "./runner";
+import { assert } from "./testUtility";
 
 function xchPrefix() { return "xch"; }
 function xchSymbol() { return "XCH"; }

@@ -1,4 +1,4 @@
-import { Hex0x } from "@/services/coin/condition";
+import { Hex0x } from "../services/coin/condition";
 import { OriginCoin } from "../services/spendbundle";
 
 export interface NftItemAttribute {

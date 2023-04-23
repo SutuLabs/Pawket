@@ -12,12 +12,12 @@ import { constructSingletonTopLayerPuzzle, getNextCoinName0x, getPuzzleDetail, h
 import { findByPath } from "./lisp";
 import { ConditionOpcode } from "./opcode";
 import { DidCoinAnalysisResult } from "./did";
-import { CnsBindingKeys, CnsBindingValues, CnsDataKey, CnsUpdatableDataKey, NftCoinAnalysisResult, NftDataKey, NftMetadataKeys, NftMetadataValues, NftUpdatableDataKey } from "@/models/nft";
+import { CnsBindingKeys, CnsBindingValues, CnsDataKey, CnsUpdatableDataKey, NftCoinAnalysisResult, NftDataKey, NftMetadataKeys, NftMetadataValues, NftUpdatableDataKey } from "../../models/nft";
 import { CannotParsePuzzle, expectModArgs, sexpAssemble, UncurriedPuzzle, uncurryPuzzle } from "./analyzer";
 import { disassemble, sha256tree } from "clvm_tools";
 import { SExp } from "clvm";
 import { Instance } from "../util/instance";
-import { CnsCoinAnalysisResult, CnsMetadataKeys, CnsMetadataValues } from "@/models/nft";
+import { CnsCoinAnalysisResult, CnsMetadataKeys, CnsMetadataValues } from "../../models/nft";
 
 type MetadataValues = NftMetadataValues | CnsMetadataValues;
 

@@ -1,9 +1,9 @@
 import { Hex0x, prefix0x } from "./condition";
 import { Bytes, bigint_to_bytes } from "clvm";
 import { GetPuzzleApiCallback } from "../transfer/transfer";
-import { CoinItem, CoinRecord } from "@/models/wallet";
+import { CoinItem, CoinRecord } from "../../models/wallet";
 import { CoinSpend, OriginCoin } from "../spendbundle";
-import { AccountEntity } from "@/models/account";
+import { AccountEntity } from "../../models/account";
 
 export interface NetworkContext {
   prefix: string;

@@ -1,6 +1,6 @@
-import { AccountKey } from "@/services/crypto/account";
-import { AddressType } from "@/services/crypto/puzzle";
-import { DidDetail, NftDetail, TokenPuzzleDetail, TokenPuzzleObserver } from "@/services/crypto/receive";
+import { AccountKey } from "../services/crypto/account";
+import { AddressType } from "../services/crypto/puzzle";
+import { DidDetail, NftDetail, TokenPuzzleDetail, TokenPuzzleObserver } from "../services/crypto/receive";
 import { DonwloadedNftCollection } from "./nft";
 import { CoinRecord } from "./wallet";
 

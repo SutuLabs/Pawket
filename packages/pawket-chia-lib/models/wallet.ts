@@ -1,4 +1,4 @@
-import { DidCoinAnalysisResult } from "@/services/coin/did";
+import { DidCoinAnalysisResult } from "../services/coin/did";
 import { Hex0x } from "../services/coin/condition";
 import { CnsCoinAnalysisResult, NftCoinAnalysisResult } from "./nft";
 

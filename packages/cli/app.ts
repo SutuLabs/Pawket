@@ -1,21 +1,21 @@
 import 'dotenv/config'
 import express from 'express'
-import puzzle from "../src/services/crypto/puzzle";
-import { Instance } from "../src/services/util/instance";
+import puzzle from "../pawket-chia-lib/services/crypto/puzzle";
+import { Instance } from "../pawket-chia-lib/services/util/instance";
 import { assemble } from "clvm_tools/clvm_tools/binutils";
-import { analyzeCoin, convertUncurriedPuzzle, getModsPath, parseBlock, parseCoin, sexpAssemble, simplifyPuzzle, uncurryPuzzle } from "../src/services/coin/analyzer";
-import { Hex0x, prefix0x } from '../src/services/coin/condition';
-import { encodeOffer } from "../src/services/offer/encoding";
-import { generateMintCnsOffer } from "../src/services/offer/cns";
-import { OriginCoin, signSpendBundle } from '../src/services/spendbundle';
-import transfer, { SymbolCoins, TransferTarget } from '../src/services/transfer/transfer';
-import receive, { TokenPuzzleDetail } from '../src/services/crypto/receive';
-import utility from '../src/services/crypto/utility';
-import { NetworkContext } from '../src/services/coin/coinUtility';
-import { getLineageProofPuzzle } from "../src/services/transfer/call";
-import { CnsMetadataValues } from '../src/models/nft';
-import { CustomCat } from '../src/models/account';
-import { CoinItem } from '../src/models/wallet';
+import { analyzeCoin, convertUncurriedPuzzle, getModsPath, parseBlock, parseCoin, sexpAssemble, simplifyPuzzle, uncurryPuzzle } from "../pawket-chia-lib/services/coin/analyzer";
+import { Hex0x, prefix0x } from '../pawket-chia-lib/services/coin/condition';
+import { encodeOffer } from "../pawket-chia-lib/services/offer/encoding";
+import { generateMintCnsOffer } from "../pawket-chia-lib/services/offer/cns";
+import { OriginCoin, signSpendBundle } from '../pawket-chia-lib/services/spendbundle';
+import transfer, { SymbolCoins, TransferTarget } from '../pawket-chia-lib/services/transfer/transfer';
+import receive, { TokenPuzzleDetail } from '../pawket-chia-lib/services/crypto/receive';
+import utility from '../pawket-chia-lib/services/crypto/utility';
+import { NetworkContext } from '../pawket-chia-lib/services/coin/coinUtility';
+import { getLineageProofPuzzle } from "../pawket-chia-lib/services/transfer/call";
+import { CnsMetadataValues } from '../pawket-chia-lib/models/nft';
+import { CustomCat } from '../pawket-chia-lib/models/account';
+import { CoinItem } from '../pawket-chia-lib/models/wallet';
 import fetch from 'cross-fetch';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

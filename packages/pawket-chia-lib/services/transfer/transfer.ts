@@ -1,5 +1,5 @@
 import { CoinSpend, OriginCoin, UnsignedSpendBundle } from "../spendbundle";
-import { GetParentPuzzleResponse } from "@/models/api";
+import { GetParentPuzzleResponse } from "../../models/api";
 import { CoinConditions, conditionsToTextList, ConditionType, Hex0x } from "../coin/condition";
 import { TokenPuzzleObserver } from "../crypto/receive";
 import stdBundle from "./stdBundle";
