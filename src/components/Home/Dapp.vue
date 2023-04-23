@@ -2,7 +2,7 @@
   <div>
     <a href="javascript:void(0)" @click="toggleDapp()">
       <p class="has-text-weight-bold is-size-5 mb-5">
-        {{ $t("accountDetail.ui.dApps.title") }}
+        {{ isIos ? $t("accountDetail.ui.dApps.iosTitle") : $t("accountDetail.ui.dApps.title") }}
         <b-icon class="is-pulled-right" :icon="displayDapp ? 'menu-up' : 'menu-down'" size="is-medium"></b-icon>
       </p>
     </a>
@@ -158,6 +158,7 @@ import VerifyMessage from "../Cryptography/VerifyMessage.vue";
 import DecryptMessage from "../Cryptography/DecryptMessage.vue";
 import EncryptMessage from "../Cryptography/EncryptMessage.vue";
 import SplitCoin from "@/components/Mint/SplitCoin.vue";
+import { isIos } from "@/services/util/platform";
 
 @Component
 export default class Dapp extends Vue {
@@ -184,6 +185,10 @@ export default class Dapp extends Vue {
 
   get path(): string {
     return this.$route.path;
+  }
+
+  get isIos(): boolean {
+    return isIos();
   }
 
   @Watch("path")

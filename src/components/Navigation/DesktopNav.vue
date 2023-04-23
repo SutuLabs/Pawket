@@ -14,7 +14,7 @@
         {{ $t("app.ui.navigation.wallet") }}
       </b-button>
     </router-link>
-    <router-link to="/cns">
+    <router-link v-if="!isIos" to="/cns">
       <b-button
         icon-left="dns"
         type="is-primary"
@@ -28,7 +28,7 @@
         {{ $t("app.ui.navigation.cns") }}
       </b-button>
     </router-link>
-    <router-link to="/explore">
+    <router-link v-if="!isIos" to="/explore">
       <b-button
         icon-left="earth"
         type="is-primary"
@@ -61,6 +61,7 @@
 <script lang="ts">
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
+import { isIos } from "@/services/util/platform";
 
 @Component
 export default class DesktopNav extends Vue {
@@ -82,6 +83,10 @@ export default class DesktopNav extends Vue {
 
   get test(): boolean {
     return window.location.hostname == "kitten.pawket.app";
+  }
+
+  get isIos(): boolean {
+    return isIos();
   }
 }
 </script>

@@ -16,6 +16,7 @@
         <p class="is-size-7">{{ $t("app.ui.navigation.wallet") }}</p>
       </router-link>
       <router-link
+        v-if="!isIos"
         :to="'/cns'"
         :class="{
           'navbar-item': true,
@@ -30,6 +31,7 @@
         <p class="is-size-7">{{ $t("app.ui.navigation.cns") }}</p>
       </router-link>
       <router-link
+        v-if="!isIos"
         :to="'/explore'"
         :class="{
           'navbar-item': true,
@@ -65,6 +67,7 @@
 <script lang="ts">
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
+import { isIos } from "@/services/util/platform";
 
 @Component
 export default class MobileNav extends Vue {
@@ -78,6 +81,10 @@ export default class MobileNav extends Vue {
 
   get test(): boolean {
     return window.location.hostname == "kitten.pawket.app";
+  }
+
+  get isIos(): boolean {
+    return isIos();
   }
 }
 </script>

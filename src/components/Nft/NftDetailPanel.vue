@@ -85,7 +85,7 @@
           </div>
           <div class="buttons is-hidden-mobile">
             <b-button
-              :label="$t('nftDetail.ui.button.transfer')"
+              :label="isIos ? $t('nftDetail.ui.button.iosTransfer') : $t('nftDetail.ui.button.transfer')"
               type="is-primary"
               @click="transfer()"
               icon-left="share"
@@ -93,6 +93,7 @@
               outlined
             ></b-button>
             <b-button
+              v-if="!isIos"
               :label="$t('nftDetail.ui.button.makeOffer')"
               type="is-info"
               @click="offer()"
@@ -396,6 +397,7 @@ import { modshash } from "@/services/coin/mods";
 import { tc } from "@/i18n/i18n";
 import SignMessage from "../Cryptography/SignMessage.vue";
 import { getScalarString } from "@/services/coin/nft";
+import { isIos } from "@/services/util/platform";
 
 @Component({
   components: {
@@ -432,6 +434,10 @@ export default class NftDetailPanel extends Vue {
 
   get path(): string {
     return this.$route.path;
+  }
+
+  get isIos(): boolean {
+    return isIos();
   }
 
   @Watch("path")

@@ -190,7 +190,8 @@
           "verify": "信息验证",
           "encryptMessage": "加密消息",
           "decryptMessage": "解密消息"
-        }
+        },
+        "iosTitle": "工具箱"
       }
     },
     "message": {
@@ -1157,7 +1158,8 @@
         "makeOffer": "出售",
         "move": "归档",
         "showMore": "显示更多",
-        "showLess": "收起"
+        "showLess": "收起",
+        "iosTransfer": "发送"
       },
       "title": {
         "properties": "属性",

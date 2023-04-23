@@ -190,7 +190,8 @@
           "verify": "Verify Message",
           "encryptMessage": "Encrypt Message",
           "decryptMessage": "Decrypt Message"
-        }
+        },
+        "iosTitle": "Tools"
       }
     },
     "message": {
@@ -1157,7 +1158,8 @@
         "makeOffer": "Sell",
         "move": "Move",
         "showMore": "Show More",
-        "showLess": "Show Less"
+        "showLess": "Show Less",
+        "iosTransfer": "Send"
       },
       "title": {
         "properties": "Properties",
