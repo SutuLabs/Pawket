@@ -8,7 +8,7 @@ module.exports = {
   devServer: {
     host: 'localhost'
   },
-  outputDir: "dist/web",
+  outputDir: "../../dist/web",
   productionSourceMap: false,
   configureWebpack: {
     resolve: {

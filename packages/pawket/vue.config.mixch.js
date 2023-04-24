@@ -8,12 +8,12 @@ module.exports = {
   devServer: {
     host: 'localhost'
   },
-  outputDir: "dist/mixch",
+  outputDir: "../../dist/mixch",
   productionSourceMap: false,
   configureWebpack: {
     resolve: {
       alias: {
-        clvm_tools$: path.resolve(__dirname, 'node_modules/clvm_tools/browser'),
+        clvm_tools$: path.resolve(__dirname, '../../node_modules/clvm_tools/browser'),
       },
     },
     plugins: [
