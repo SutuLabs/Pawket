@@ -69,7 +69,7 @@
                   </div>
                 </a>
               </div>
-              <div class="b-tooltip" v-if="isIos">
+              <div class="b-tooltip" v-if="!isIos">
                 <a @click="$router.push('/home/buy')" href="javascript:void(0)" class="has-text-primary">
                   <div class="mx-3">
                     <span class="icon has-background-primary is-medium is-circle"
