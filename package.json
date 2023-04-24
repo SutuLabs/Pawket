@@ -7,7 +7,7 @@
   "scripts": {
     "postinstall": "lerna bootstrap",
     "serve": "cd ./packages/pawket && vue-cli-service serve",
-    "build:all": "yarn check-i18n --ci && yarn jest --ci && yarn build:pawket && yarn build:mixch",
+    "build:all": "yarn check-i18n --ci && yarn build:pawket && yarn build:mixch",
     "build:pawket": "cd ./packages/pawket && vue-cli-service build",
     "build:ext": "cross-env VUE_CLI_SERVICE_CONFIG_PATH=vue.config.ext.js vue-cli-service build",
     "build:mixch": "cross-env VUE_CLI_SERVICE_CONFIG_PATH=vue.config.mixch.js vue-cli-service build",
@@ -25,7 +25,9 @@
     "compile": "ts-node cli/compile.ts",
     "brun": "ts-node cli/brun.ts",
     "publish:docker": "docker push wizicer/coin-processor:latest",
-    "test": "cd ./packages/pawket-chia-lib && jest --coverage=false"
+    "test:chia": "cd ./packages/pawket-chia-lib && jest --coverage=false",
+    "test:cli": "cd ./packages/cli && jest --coverage=false",
+    "test": "yarn test:cli && yarn test:chia"
   },
   "devDependencies": {
     "eslint": "^6.7.2",

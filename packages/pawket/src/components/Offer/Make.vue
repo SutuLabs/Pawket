@@ -113,25 +113,25 @@
 <script lang="ts">
 import { Component, Vue, Prop, Emit, Watch } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
-import { AccountEntity } from "@/models/account";
-import { Hex, prefix0x } from "@/services/coin/condition";
+import { signSpendBundle, SpendBundle } from "../../../../pawket-chia-lib/services/spendbundle";
+import { AccountEntity } from "../../../../pawket-chia-lib/models/account";
+import { Hex, prefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
 import store from "@/store";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
-import { SymbolCoins } from "@/services/transfer/transfer";
-import { TokenPuzzleDetail } from "@/services/crypto/receive";
-import puzzle from "@/services/crypto/puzzle";
+import { SymbolCoins } from "../../../../pawket-chia-lib/services/transfer/transfer";
+import { TokenPuzzleDetail } from "../../../../pawket-chia-lib/services/crypto/receive";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
 import DevHelper from "@/components/DevHelper/DevHelper.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { getOfferEntities, OfferEntity, OfferSummary, OfferTokenAmount } from "@/services/offer/summary";
+import { getOfferEntities, OfferEntity, OfferSummary, OfferTokenAmount } from "../../../../pawket-chia-lib/services/offer/summary";
 import { getCatIdDict, getCatNameDict, getCatNames } from "@/services/view/cat";
-import { encodeOffer } from "@/services/offer/encoding";
-import { generateOffer, generateOfferPlan } from "@/services/offer/bundler";
+import { encodeOffer } from "../../../../pawket-chia-lib/services/offer/encoding";
+import { generateOffer, generateOfferPlan } from "../../../../pawket-chia-lib/services/offer/bundler";
 import bigDecimal from "js-big-decimal";
 import { chainId, networkContext, xchSymbol } from "@/store/modules/network";
 import dexie from "@/services/api/dexie";
 import { tc } from "@/i18n/i18n";
-import { lockCoins } from "@/services/coin/coinUtility";
+import { lockCoins } from "../../../../pawket-chia-lib/services/coin/coinUtility";
 import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
 import TopBar from "../Common/TopBar.vue";
 

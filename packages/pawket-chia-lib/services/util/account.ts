@@ -1,4 +1,4 @@
-import { AccountEntity, CustomCat, TokenInfo } from "@/models/account";
+import { AccountEntity, CustomCat, TokenInfo } from "../../models/account";
 import receive, { TokenPuzzleDetail, TokenPuzzleObserver } from "../crypto/receive";
 
 export const DEFAULT_ADDRESS_RETRIEVAL_COUNT = 4;

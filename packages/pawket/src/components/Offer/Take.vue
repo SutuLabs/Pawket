@@ -262,14 +262,14 @@
 <script lang="ts">
 import { Component, Vue, Prop, Emit, Watch } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import { combineSpendBundle, signSpendBundle, SpendBundle } from "@/services/spendbundle";
+import { combineSpendBundle, signSpendBundle, SpendBundle } from "../../../../pawket-chia-lib/services/spendbundle";
 import { getCatIdDict, getCatNameDict, getTokenInfo } from "@/services/view/cat";
-import { AccountEntity, CustomCat, OneTokenInfo, TokenInfo } from "@/models/account";
+import { AccountEntity, CustomCat, OneTokenInfo, TokenInfo } from "../../../../pawket-chia-lib/models/account";
 import { demojo } from "@/filters/unitConversion";
-import { SymbolCoins } from "@/services/transfer/transfer";
-import { TokenPuzzleDetail } from "@/services/crypto/receive";
-import { getOfferSummary, OfferSummary } from "@/services/offer/summary";
-import { decodeOffer } from "@/services/offer/encoding";
+import { SymbolCoins } from "../../../../pawket-chia-lib/services/transfer/transfer";
+import { TokenPuzzleDetail } from "../../../../pawket-chia-lib/services/crypto/receive";
+import { getOfferSummary, OfferSummary } from "../../../../pawket-chia-lib/services/offer/summary";
+import { decodeOffer } from "../../../../pawket-chia-lib/services/offer/encoding";
 import { NotificationProgrammatic as Notification } from "buefy";
 import {
   combineOfferSpendBundle,
@@ -277,9 +277,9 @@ import {
   generateOffer,
   generateOfferPlan,
   getReversePlan,
-} from "@/services/offer/bundler";
-import { Hex, Hex0x, prefix0x } from "@/services/coin/condition";
-import puzzle from "@/services/crypto/puzzle";
+} from "../../../../pawket-chia-lib/services/offer/bundler";
+import { Hex, Hex0x, prefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
 import store from "@/store";
 import { debugBundle, submitBundle } from "@/services/view/bundleAction";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
@@ -290,11 +290,11 @@ import bigDecimal from "js-big-decimal";
 import { shorten } from "@/filters/addressConversion";
 import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
 import TopBar from "../Common/TopBar.vue";
-import { constructPureFeeSpendBundle } from "@/services/coin/nft";
+import { constructPureFeeSpendBundle } from "../../../../pawket-chia-lib/services/coin/nft";
 import BundleSummary from "../Bundle/BundleSummary.vue";
 import { resolveName } from "@/services/api/resolveName";
-import { CnsCoinAnalysisResult } from "@/models/nft";
-import { unprefix0x } from "@/services/coin/condition";
+import { CnsCoinAnalysisResult } from "../../../../pawket-chia-lib/models/nft";
+import { unprefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
 import TailDb, { TailInfo } from "@/services/api/tailDb";
 
 @Component({

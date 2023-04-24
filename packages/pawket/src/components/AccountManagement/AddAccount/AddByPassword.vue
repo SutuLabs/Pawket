@@ -39,7 +39,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import store from "@/store/index";
-import account from "@/services/crypto/account";
+import account from "../../../../../pawket-chia-lib/services/crypto/account";
 import TopBar from "@/components/Common/TopBar.vue";
 
 @Component({ components: { TopBar } })

@@ -111,11 +111,11 @@
 
 <script lang="ts">
 import { demojo } from "@/filters/unitConversion";
-import { AccountEntity, AccountToken, AccountTokenAddress, CustomCat, OneTokenInfo } from "@/models/account";
-import encryption from "@/services/crypto/encryption";
-import puzzle from "@/services/crypto/puzzle";
-import receive, { DidDetail } from "@/services/crypto/receive";
-import utility from "@/services/crypto/utility";
+import { AccountEntity, AccountToken, AccountTokenAddress, CustomCat, OneTokenInfo } from "../../../../pawket-chia-lib/models/account";
+import encryption from "../../../../pawket-chia-lib/services/crypto/encryption";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
+import receive, { DidDetail } from "../../../../pawket-chia-lib/services/crypto/receive";
+import utility from "../../../../pawket-chia-lib/services/crypto/utility";
 import store from "@/store";
 import { getAllCats } from "@/store/modules/account";
 import { NotificationProgrammatic as Notification } from "buefy";

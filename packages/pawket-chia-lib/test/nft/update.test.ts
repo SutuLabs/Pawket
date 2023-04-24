@@ -1,4 +1,4 @@
-import { Instance } from "@/services/util/instance";
+import { Instance } from "../../services/util/instance";
 import { testUpdateNft } from "./functions";
 
 beforeAll(async () => {

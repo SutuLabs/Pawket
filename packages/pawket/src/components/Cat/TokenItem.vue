@@ -33,7 +33,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { shorten } from "@/filters/addressConversion";
-import { CustomCat } from "@/models/account";
+import { CustomCat } from "../../../../pawket-chia-lib/models/account";
 import { nameOmit } from "@/filters/nameConversion";
 import KeyBox from "@/components/Common/KeyBox.vue";
 

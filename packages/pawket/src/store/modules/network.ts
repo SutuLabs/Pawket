@@ -1,9 +1,9 @@
 import store from "@/store";
-import { TokenInfo } from "@/models/account";
-import puzzle from "@/services/crypto/puzzle";
+import { TokenInfo } from "../../../../pawket-chia-lib/models/account";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
 import Vue from "vue";
-import { NetworkContext } from "@/services/coin/coinUtility";
-import { getLineageProofPuzzle } from "@/services/transfer/call";
+import { NetworkContext } from "../../../../pawket-chia-lib/services/coin/coinUtility";
+import { getLineageProofPuzzle } from "../../../../pawket-chia-lib/services/transfer/call";
 
 export function xchPrefix(): string {
   return store.state.network.prefix;

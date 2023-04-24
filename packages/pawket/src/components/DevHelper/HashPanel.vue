@@ -29,7 +29,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import puzzle from "@/services/crypto/puzzle";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
 import { xchPrefix } from "@/store/modules/network";
 
 @Component({

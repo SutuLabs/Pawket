@@ -244,8 +244,8 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import puzzle, { ConditionArgs, ConditionEntity } from "@/services/crypto/puzzle";
-import { beautifyLisp } from "@/services/coin/lisp";
+import puzzle, { ConditionArgs, ConditionEntity } from "../../../../pawket-chia-lib/services/crypto/puzzle";
+import { beautifyLisp } from "../../../../pawket-chia-lib/services/coin/lisp";
 import {
   conditionDict,
   ConditionInfo,
@@ -254,16 +254,16 @@ import {
   Hex0x,
   getFirstLevelArgMsg,
   getArgMsg,
-} from "@/services/coin/condition";
-import { modsdict, modsprog } from "@/services/coin/mods";
+} from "../../../../pawket-chia-lib/services/coin/condition";
+import { modsdict, modsprog } from "../../../../pawket-chia-lib/services/coin/mods";
 import UncurryPuzzle from "@/components/DevHelper/UncurryPuzzle.vue";
 import AnnouncementList from "@/components/DevHelper/AnnouncementList.vue";
-import { decodeOffer } from "@/services/offer/encoding";
+import { decodeOffer } from "../../../../pawket-chia-lib/services/offer/encoding";
 import { chainId, rpcUrl, xchPrefix } from "@/store/modules/network";
-import { getCoinName } from "@/services/coin/coinUtility";
-import debug from "@/services/api/debug";
+import { getCoinName } from "../../../../pawket-chia-lib/services/coin/coinUtility";
+import debug from "../../../../pawket-chia-lib/services/api/debug";
 import { demojo } from "@/filters/unitConversion";
-import { OneTokenInfo } from "@/models/account";
+import { OneTokenInfo } from "../../../../pawket-chia-lib/models/account";
 import {
   AggSigMessage,
   AnnouncementCoin,
@@ -274,8 +274,8 @@ import {
   CoinSpend,
   OriginCoin,
   SpendBundle,
-} from "@/services/spendbundle";
-import { sha256 } from "@/services/offer/bundler";
+} from "../../../../pawket-chia-lib/services/spendbundle";
+import { sha256 } from "../../../../pawket-chia-lib/services/offer/bundler";
 
 @Component({
   components: {

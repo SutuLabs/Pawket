@@ -1,5 +1,5 @@
-import { AccountEntity, TokenInfo } from "@/models/account";
-import { prefix0x } from "@/services/coin/condition";
+import { AccountEntity, TokenInfo } from "../../../../pawket-chia-lib/models/account";
+import { prefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
 import store from "@/store";
 import { getAccountCats } from "@/store/modules/account";
 

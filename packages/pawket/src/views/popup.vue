@@ -23,7 +23,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { NotificationProgrammatic as Notification } from "buefy";
 import store from "@/store";
 import DevHelper from "@/components/DevHelper/DevHelper.vue";
-import UniStorage from "@/services/storage";
+import UniStorage from "../../../pawket-chia-lib/services/storage";
 import { debugLanguageList, languageList } from "@/i18n/i18n";
 
 @Component

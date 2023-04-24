@@ -25,8 +25,8 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import QrcodeVue from "qrcode.vue";
-import { SpendBundle } from "@/services/spendbundle";
-import { encodeOffer } from "@/services/offer/encoding";
+import { SpendBundle } from "../../../../pawket-chia-lib/services/spendbundle";
+import { encodeOffer } from "../../../../pawket-chia-lib/services/offer/encoding";
 
 @Component({
   components: {

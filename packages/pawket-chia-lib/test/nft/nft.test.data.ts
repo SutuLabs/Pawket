@@ -1,6 +1,6 @@
-import { GetParentPuzzleResponse } from "@/models/api";
-import { NftMetadataValues } from "@/models/nft";
-import { DidCoinAnalysisResult } from "@/services/coin/did";
+import { GetParentPuzzleResponse } from "../../models/api";
+import { NftMetadataValues } from "../../models/nft";
+import { DidCoinAnalysisResult } from "../../services/coin/did";
 
 export const didAnalysis: DidCoinAnalysisResult = {
   "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",

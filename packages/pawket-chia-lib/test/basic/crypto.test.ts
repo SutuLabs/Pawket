@@ -1,20 +1,20 @@
-import puzzle from "@/services/crypto/puzzle";
-import utility from "@/services/crypto/utility";
-import transfer from "@/services/transfer/transfer";
-import { convertToOriginCoin, getCoinName } from "@/services/coin/coinUtility";
-import { Instance } from "@/services/util/instance";
-import { analyzeDidCoin } from "@/services/coin/did";
-import { prefix0x } from "@/services/coin/condition";
-import { analyzeNftCoin } from "@/services/coin/nft";
-import { calculate_synthetic_secret_key, getSignMessage, signMessage, verifySignature } from "@/services/crypto/sign";
+import puzzle from "../../services/crypto/puzzle";
+import utility from "../../services/crypto/utility";
+import transfer from "../../services/transfer/transfer";
+import { convertToOriginCoin, getCoinName } from "../../services/coin/coinUtility";
+import { Instance } from "../../services/util/instance";
+import { analyzeDidCoin } from "../../services/coin/did";
+import { prefix0x } from "../../services/coin/condition";
+import { analyzeNftCoin } from "../../services/coin/nft";
+import { calculate_synthetic_secret_key, getSignMessage, signMessage, verifySignature } from "../../services/crypto/sign";
 import { G2Element, PrivateKey } from "@chiamine/bls-signatures";
 
 import didcoin2 from "../cases/didcoin2.json"
 import nftcoin6 from "../cases/nftcoin6.json"
-import { ByteBase, CryptographyService, EcPrivateKey, EcPublicKey } from "@/services/crypto/encryption";
-import { EcdhHelper } from "@/services/crypto/ecdh";
+import { ByteBase, CryptographyService, EcPrivateKey, EcPublicKey } from "../../services/crypto/encryption";
+import { EcdhHelper } from "../../services/crypto/ecdh";
 import { getTestAccountWithPuzzles } from "../utility";
-import { DEFAULT_HIDDEN_PUZZLE_HASH } from "@/services/coin/consts";
+import { DEFAULT_HIDDEN_PUZZLE_HASH } from "../../services/coin/consts";
 
 beforeAll(async () => {
   await Instance.init();

@@ -67,7 +67,7 @@
 <script lang="ts">
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
-import { isIos } from "@/services/util/platform";
+import { isIos } from "../../../../pawket-chia-lib/services/util/platform";
 
 @Component
 export default class MobileNav extends Vue {

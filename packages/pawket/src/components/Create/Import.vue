@@ -43,7 +43,7 @@
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import TopBar from "@/components/Common/TopBar.vue";
-import account from "@/services/crypto/account";
+import account from "../../../../pawket-chia-lib/services/crypto/account";
 import { wordlists } from "bip39";
 import { tc } from "@/i18n/i18n";
 

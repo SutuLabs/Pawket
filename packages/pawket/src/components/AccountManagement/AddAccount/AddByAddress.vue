@@ -33,7 +33,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import store from "@/store/index";
-import puzzle from "@/services/crypto/puzzle";
+import puzzle from "../../../../../pawket-chia-lib/services/crypto/puzzle";
 import { Bytes } from "clvm";
 import { bech32m } from "@scure/base";
 import TopBar from "@/components/Common/TopBar.vue";

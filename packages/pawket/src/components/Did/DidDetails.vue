@@ -28,13 +28,13 @@
 
 <script lang="ts">
 import { tc } from "@/i18n/i18n";
-import { DidDetail } from "@/services/crypto/receive";
+import { DidDetail } from "../../../../pawket-chia-lib/services/crypto/receive";
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import store from "@/store";
 import SignMessage from "../Cryptography/SignMessage.vue";
 import { isMobile } from "@/services/view/responsive";
-import { AccountEntity } from "@/models/account";
+import { AccountEntity } from "../../../../pawket-chia-lib/models/account";
 import TopBar from "../Common/TopBar.vue";
 @Component({ components: { KeyBox, TopBar } })
 export default class DidDetails extends Vue {

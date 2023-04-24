@@ -64,10 +64,10 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
-import { AccountEntity, CustomCat, TokenInfo } from "@/models/account";
+import { AccountEntity, CustomCat, TokenInfo } from "../../../../pawket-chia-lib/models/account";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { TokenPuzzleDetail } from "@/services/crypto/receive";
+import { TokenPuzzleDetail } from "../../../../pawket-chia-lib/services/crypto/receive";
 import store from "@/store";
 import {
   getMessagesToSign,
@@ -77,9 +77,9 @@ import {
   signSpendBundle,
   SpendBundle,
   UnsignedSpendBundle,
-} from "@/services/spendbundle";
+} from "../../../../pawket-chia-lib/services/spendbundle";
 import bigDecimal from "js-big-decimal";
-import { SymbolCoins } from "@/services/transfer/transfer";
+import { SymbolCoins } from "../../../../pawket-chia-lib/services/transfer/transfer";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
 import { debugBundle, submitBundle } from "@/services/view/bundleAction";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
@@ -91,10 +91,10 @@ import { Bytes } from "clvm";
 import { getTokenInfo } from "@/services/view/cat";
 import AddressField from "@/components/Common/AddressField.vue";
 import Confirmation from "../Common/Confirmation.vue";
-import { getBootstrapSpendBundle } from "@/services/coin/nft";
-import puzzle from "@/services/crypto/puzzle";
-import { Hex, prefix0x } from "@/services/coin/condition";
-import { getCoinName0x } from "@/services/coin/coinUtility";
+import { getBootstrapSpendBundle } from "../../../../pawket-chia-lib/services/coin/nft";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
+import { Hex, prefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
+import { getCoinName0x } from "../../../../pawket-chia-lib/services/coin/coinUtility";
 import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
 
 @Component({

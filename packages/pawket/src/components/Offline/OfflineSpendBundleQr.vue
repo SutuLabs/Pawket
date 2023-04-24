@@ -67,15 +67,15 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import QrcodeVue from "qrcode.vue";
 import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from "vue-qrcode-reader";
 import { initCameraHandleError } from "@/services/view/camera";
-import { combineSpendBundleSignature, MessagesToSign, signMessages, signSpendBundle, SpendBundle } from "@/services/spendbundle";
-import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
+import { combineSpendBundleSignature, MessagesToSign, signMessages, signSpendBundle, SpendBundle } from "../../../../pawket-chia-lib/services/spendbundle";
+import { decodeOffer, encodeOffer } from "../../../../pawket-chia-lib/services/offer/encoding";
 import { networkContext, xchPrefix } from "@/store/modules/network";
-import { AccountEntity } from "@/models/account";
+import { AccountEntity } from "../../../../pawket-chia-lib/models/account";
 import { getAssetsRequestDetail } from "@/services/view/coinAction";
 import TopBar from "../Common/TopBar.vue";
 import { encode, decode } from "@msgpack/msgpack";
-import utility from "@/services/crypto/utility";
-import { prefix0x } from "@/services/coin/condition";
+import utility from "../../../../pawket-chia-lib/services/crypto/utility";
+import { prefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
 
 export interface CompactMessagesToSign {
   messages: CompactMessageToSign[];

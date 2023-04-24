@@ -1,19 +1,19 @@
 import { getTestAccount } from "../utility";
-import { SymbolCoins } from "@/services/transfer/transfer";
-import { analyzeNftCoin, generateUpdatedNftBundle } from "@/services/coin/nft";
-import puzzle from "@/services/crypto/puzzle";
-import { GetParentPuzzleResponse } from "@/models/api";
-import { Instance } from "@/services/util/instance";
-import { getAccountAddressDetails } from "@/services/util/account";
+import { SymbolCoins } from "../../services/transfer/transfer";
+import { analyzeNftCoin, generateUpdatedNftBundle } from "../../services/coin/nft";
+import puzzle from "../../services/crypto/puzzle";
+import { GetParentPuzzleResponse } from "../../models/api";
+import { Instance } from "../../services/util/instance";
+import { getAccountAddressDetails } from "../../services/util/account";
 
 import { cnsMetadata, knownCoins } from "./cns.test.data";
-import { getCoinName0x, NetworkContext } from "@/services/coin/coinUtility";
+import { getCoinName0x, NetworkContext } from "../../services/coin/coinUtility";
 
-import { assertSpendbundle } from "@/services/spendbundle/validator";
-import { OriginCoin, signSpendBundle } from "@/services/spendbundle";
-import { CnsBindingValues, CnsCoinAnalysisResult } from "@/models/nft";
+import { assertSpendbundle } from "../../services/spendbundle/validator";
+import { OriginCoin, signSpendBundle } from "../../services/spendbundle";
+import { CnsBindingValues, CnsCoinAnalysisResult } from "../../models/nft";
 import { expiryDate, mintOneCns } from "./functions";
-import { AccountEntity } from "@/models/account";
+import { AccountEntity } from "../../models/account";
 
 const net: NetworkContext = {
   prefix: "xch",

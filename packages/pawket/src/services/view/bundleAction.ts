@@ -1,12 +1,12 @@
 import { tc } from "@/i18n/i18n";
-import { ApiResponse } from "@/models/api";
-import { SpendBundle } from "@/services/spendbundle";
+import { ApiResponse } from "../../../../pawket-chia-lib/models/api";
+import { SpendBundle } from "../../../../pawket-chia-lib/services/spendbundle";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { ModalProgrammatic as Modal } from "buefy";
 import DevHelper from "@/components/DevHelper/DevHelper.vue";
 import { chainId, rpcUrl } from "@/store/modules/network";
-import { lockCoins } from "../coin/coinUtility";
-import { AccountEntity } from "@/models/account";
+import { lockCoins } from "../../../../pawket-chia-lib/services/coin/coinUtility";
+import { AccountEntity } from "../../../../pawket-chia-lib/models/account";
 
 export async function submitBundle(bundle: SpendBundle, account: AccountEntity, setSubmitting: (state: boolean) => void, success: () => void): Promise<void> {
   setSubmitting(true);

@@ -18,7 +18,7 @@
 <script lang="ts">
 import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
 import store from "@/store/index";
-import { AccountEntity } from "@/models/account";
+import { AccountEntity } from "../../../../pawket-chia-lib/models/account";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import QrcodeVue from "qrcode.vue";
 import TopBar from "@/components/Common/TopBar.vue";

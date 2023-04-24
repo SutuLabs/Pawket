@@ -65,10 +65,10 @@
 </template>
 
 <script lang="ts">
-import { CustomCat } from "@/models/account";
+import { CustomCat } from "../../../../pawket-chia-lib/models/account";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import TailDb, { TailInfo } from "@/services/api/tailDb";
-import { unprefix0x } from "@/services/coin/condition";
+import { unprefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
 
 @Component
 export default class SearchCat extends Vue {

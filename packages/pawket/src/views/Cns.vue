@@ -222,22 +222,22 @@
 </template>
 
 <script lang="ts">
-import { getPrice, Price, register } from "@/services/api/cns-register";
+import { getPrice, Price, register } from "../../../pawket-chia-lib/services/api/cns-register";
 import { resolveName, StandardResolveAnswer } from "@/services/api/resolveName";
 import { bech32m } from "@scure/base";
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { NotificationProgrammatic as Notification } from "buefy";
 import AddressField from "@/components/Common/AddressField.vue";
 import store from "@/store";
-import { AccountEntity, CustomCat } from "@/models/account";
+import { AccountEntity, CustomCat } from "../../../pawket-chia-lib/models/account";
 import TakeOffer from "@/components/Offer/Take.vue";
 import { getAllCats } from "@/store/modules/account";
 import { isMobile } from "@/services/view/responsive";
-import { DidDetail, NftDetail } from "@/services/crypto/receive";
-import { DonwloadedNftCollection, NftOffChainMetadata } from "@/models/nft";
-import { getScalarString } from "@/services/coin/nft";
-import utility from "@/services/crypto/utility";
-import { unprefix0x } from "@/services/coin/condition";
+import { DidDetail, NftDetail } from "../../../pawket-chia-lib/services/crypto/receive";
+import { DonwloadedNftCollection, NftOffChainMetadata } from "../../../pawket-chia-lib/models/nft";
+import { getScalarString } from "../../../pawket-chia-lib/services/coin/nft";
+import utility from "../../../pawket-chia-lib/services/crypto/utility";
+import { unprefix0x } from "../../../pawket-chia-lib/services/coin/condition";
 import NftDetailPanel from "@/components/Nft/NftDetailPanel.vue";
 import TopBar from "@/components/Common/TopBar.vue";
 

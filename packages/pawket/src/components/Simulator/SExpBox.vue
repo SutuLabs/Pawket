@@ -46,8 +46,8 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { SExp, isAtom, isCons } from "clvm";
 import AtomBox from "./AtomBox.vue";
 import Breakpoint from "./Breakpoint.vue";
-import { getIter } from "@/services/simulator/sexpExt";
-import { SExpWithId } from "@/services/simulator/opVm";
+import { getIter } from "../../../../pawket-chia-lib/services/simulator/sexpExt";
+import { SExpWithId } from "../../../../pawket-chia-lib/services/simulator/opVm";
 
 @Component({
   components: {

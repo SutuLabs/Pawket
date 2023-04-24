@@ -123,18 +123,18 @@
   </section>
 </template>
 <script lang="ts">
-import { AccountEntity } from "@/models/account";
+import { AccountEntity } from "../../../../pawket-chia-lib/models/account";
 import { Component, Vue, Watch } from "vue-property-decorator";
 import store from "@/store";
 import NftDetailPanel from "@/components/Nft/NftDetailPanel.vue";
 import { isMobile } from "@/services/view/responsive";
-import { DidDetail, NftDetail } from "@/services/crypto/receive";
-import { DonwloadedNftCollection, NftOffChainMetadata } from "@/models/nft";
-import utility from "@/services/crypto/utility";
-import { unprefix0x } from "@/services/coin/condition";
-import { getScalarString } from "@/services/coin/nft";
+import { DidDetail, NftDetail } from "../../../../pawket-chia-lib/services/crypto/receive";
+import { DonwloadedNftCollection, NftOffChainMetadata } from "../../../../pawket-chia-lib/models/nft";
+import utility from "../../../../pawket-chia-lib/services/crypto/utility";
+import { unprefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
+import { getScalarString } from "../../../../pawket-chia-lib/services/coin/nft";
 import { notifyPrimary } from "@/services/notification/notification";
-import puzzle from "@/services/crypto/puzzle";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
 import { tc } from "@/i18n/i18n";
 import { shorten } from "@/filters/addressConversion";
 import NftTransfer from "./NftTransfer.vue";

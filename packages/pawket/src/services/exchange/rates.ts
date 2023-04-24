@@ -1,4 +1,4 @@
-import { GetExchangeRateResponse } from "@/models/api";
+import { GetExchangeRateResponse } from "../../../../pawket-chia-lib/models/api";
 import { rpcUrl } from "@/store/modules/network";
 
 export async function getExchangeRate(from: string, to: string): Promise<GetExchangeRateResponse | null> {

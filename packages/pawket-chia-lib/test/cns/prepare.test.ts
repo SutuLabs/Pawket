@@ -1,15 +1,15 @@
 import { getTestAccount } from "../utility";
-import { SymbolCoins } from "@/services/transfer/transfer";
-import { getBootstrapSpendBundle } from "@/services/coin/nft";
-import { GetParentPuzzleResponse } from "@/models/api";
-import { Instance } from "@/services/util/instance";
-import { getAccountAddressDetails } from "@/services/util/account";
+import { SymbolCoins } from "../../services/transfer/transfer";
+import { getBootstrapSpendBundle } from "../../services/coin/nft";
+import { GetParentPuzzleResponse } from "../../models/api";
+import { Instance } from "../../services/util/instance";
+import { getAccountAddressDetails } from "../../services/util/account";
 
 import { knownCoins } from "./cns.test.data";
-import { NetworkContext } from "@/services/coin/coinUtility";
+import { NetworkContext } from "../../services/coin/coinUtility";
 
-import { assertSpendbundle } from "@/services/spendbundle/validator";
-import { signSpendBundle } from "@/services/spendbundle";
+import { assertSpendbundle } from "../../services/spendbundle/validator";
+import { signSpendBundle } from "../../services/spendbundle";
 
 const net: NetworkContext = {
   prefix: "xch",

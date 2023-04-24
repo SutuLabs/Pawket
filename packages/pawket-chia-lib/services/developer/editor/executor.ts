@@ -1,9 +1,9 @@
-import { prefix0x } from "@/services/coin/condition";
-import puzzle, { PuzzleDetail } from "@/services/crypto/puzzle";
-import { getAccountAddressDetails } from "@/services/util/account";
-import { getTestAccount } from "@/test/utility";
-import coins from "@/services/developer/coins.json";
-import { CoinItem } from "@/models/wallet";
+import { prefix0x } from "../../coin/condition";
+import puzzle, { PuzzleDetail } from "../../crypto/puzzle";
+import { getAccountAddressDetails } from "../../util/account";
+import { getTestAccount } from "../../../test/utility";
+import coins from "../../developer/coins.json";
+import { CoinItem } from "../../../models/wallet";
 
 interface ExecuteResultObject {
   result?: unknown[][];

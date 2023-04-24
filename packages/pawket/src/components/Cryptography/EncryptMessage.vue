@@ -137,16 +137,16 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
-import { AccountEntity } from "@/models/account";
+import { AccountEntity } from "../../../../pawket-chia-lib/models/account";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { DidDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
-import puzzle from "@/services/crypto/puzzle";
-import { csvToArray } from "@/services/util/csv";
+import { DidDetail, TokenPuzzleDetail } from "../../../../pawket-chia-lib/services/crypto/receive";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
+import { csvToArray } from "../../../../pawket-chia-lib/services/util/csv";
 import { rpcUrl } from "@/store/modules/network";
 import store from "@/store";
-import { prefix0x } from "@/services/coin/condition";
-import { EcdhHelper } from "@/services/crypto/ecdh";
+import { prefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
+import { EcdhHelper } from "../../../../pawket-chia-lib/services/crypto/ecdh";
 import AddressField from "@/components/Common/AddressField.vue";
 import Send from "../Send/Send.vue";
 import { isMobile } from "@/services/view/responsive";

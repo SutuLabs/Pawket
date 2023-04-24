@@ -39,12 +39,12 @@
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import { SpendBundle } from "@/services/spendbundle";
+import { SpendBundle } from "../../../../pawket-chia-lib/services/spendbundle";
 import BundlePanel from "@/components/DevHelper/BundlePanel.vue";
-import { getOfferSummary, OfferSummary } from "@/services/offer/summary";
-import { decodeOffer } from "@/services/offer/encoding";
+import { getOfferSummary, OfferSummary } from "../../../../pawket-chia-lib/services/offer/summary";
+import { decodeOffer } from "../../../../pawket-chia-lib/services/offer/encoding";
 import { xchPrefix, xchSymbol } from "@/store/modules/network";
-import puzzle from "@/services/crypto/puzzle";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
 
 @Component({
   components: {

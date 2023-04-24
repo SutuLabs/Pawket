@@ -55,12 +55,12 @@
 
 <script lang="ts">
 import { demojo } from "@/filters/unitConversion";
-import { OneTokenInfo, TokenInfo } from "@/models/account";
+import { OneTokenInfo, TokenInfo } from "../../../../pawket-chia-lib/models/account";
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import puzzle from "@/services/crypto/puzzle";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
 import { xchPrefix } from "@/store/modules/network";
-import { PendingTransaction, unlockCoins } from "@/services/coin/coinUtility";
+import { PendingTransaction, unlockCoins } from "../../../../pawket-chia-lib/services/coin/coinUtility";
 
 @Component({
   components: {

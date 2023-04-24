@@ -1,12 +1,12 @@
-import { OriginCoin, SpendBundle } from "@/services/spendbundle";
-import { AccountEntity } from "@/models/account";
-import { GetParentPuzzleResponse } from "@/models/api";
-import receive from "@/services/crypto/receive";
-import { curryMod } from "@/services/offer/bundler";
-import { modshash, modsprog } from "@/services/coin/mods";
-import { Hex0x, prefix0x } from "@/services/coin/condition";
-import puzzle from "@/services/crypto/puzzle";
-import { getCoinName0x } from "@/services/coin/coinUtility";
+import { OriginCoin, SpendBundle } from "../services/spendbundle";
+import { AccountEntity } from "../models/account";
+import { GetParentPuzzleResponse } from "../models/api";
+import receive from "../services/crypto/receive";
+import { curryMod } from "../services/offer/bundler";
+import { modshash, modsprog } from "../services/coin/mods";
+import { Hex0x, prefix0x } from "../services/coin/condition";
+import puzzle from "../services/crypto/puzzle";
+import { getCoinName0x } from "../services/coin/coinUtility";
 
 export function assert<T>(expectValue: T, actualValue: T, desc: string | undefined = undefined): void {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

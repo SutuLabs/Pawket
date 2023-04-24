@@ -85,14 +85,14 @@
 </template>
 
 <script lang="ts">
-import { AccountEntity, OneTokenInfo } from "@/models/account";
-import { Hex, prefix0x } from "@/services/coin/condition";
-import { generateUpdatedNftBundle } from "@/services/coin/nft";
-import puzzle from "@/services/crypto/puzzle";
-import { DidDetail, NftDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
-import utility from "@/services/crypto/utility";
-import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
-import { SymbolCoins } from "@/services/transfer/transfer";
+import { AccountEntity, OneTokenInfo } from "../../../../pawket-chia-lib/models/account";
+import { Hex, prefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
+import { generateUpdatedNftBundle } from "../../../../pawket-chia-lib/services/coin/nft";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
+import { DidDetail, NftDetail, TokenPuzzleDetail } from "../../../../pawket-chia-lib/services/crypto/receive";
+import utility from "../../../../pawket-chia-lib/services/crypto/utility";
+import { signSpendBundle, SpendBundle } from "../../../../pawket-chia-lib/services/spendbundle";
+import { SymbolCoins } from "../../../../pawket-chia-lib/services/transfer/transfer";
 import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
 import store from "@/store";
 import { networkContext, xchPrefix } from "@/store/modules/network";
@@ -104,7 +104,7 @@ import { NotificationProgrammatic as Notification } from "buefy";
 import { submitBundle } from "@/services/view/bundleAction";
 import { demojo } from "@/filters/unitConversion";
 import BundleSummary from "../Bundle/BundleSummary.vue";
-import { CnsBindingValues, CnsMetadataValues } from "@/models/nft";
+import { CnsBindingValues, CnsMetadataValues } from "../../../../pawket-chia-lib/models/nft";
 
 @Component({
   components: { Confirmation, FeeSelector, AddressField, BundleSummary },

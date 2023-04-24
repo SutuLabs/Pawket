@@ -28,11 +28,11 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import puzzle from "@/services/crypto/puzzle";
-import { modsdict } from "@/services/coin/mods";
-import { beautifyLisp, findByPath } from "@/services/coin/lisp";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
+import { modsdict } from "../../../../pawket-chia-lib/services/coin/mods";
+import { beautifyLisp, findByPath } from "../../../../pawket-chia-lib/services/coin/lisp";
 import { assemble, disassemble } from "clvm_tools";
-import { unprefix0x } from "@/services/coin/condition";
+import { unprefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
 
 @Component({
   components: {

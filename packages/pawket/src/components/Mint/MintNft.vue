@@ -121,14 +121,14 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
-import { AccountEntity, TokenInfo } from "@/models/account";
+import { AccountEntity, TokenInfo } from "../../../../pawket-chia-lib/models/account";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { DidDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
+import { DidDetail, TokenPuzzleDetail } from "../../../../pawket-chia-lib/services/crypto/receive";
 import store from "@/store";
-import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
+import { signSpendBundle, SpendBundle } from "../../../../pawket-chia-lib/services/spendbundle";
 import bigDecimal from "js-big-decimal";
-import { SymbolCoins } from "@/services/transfer/transfer";
+import { SymbolCoins } from "../../../../pawket-chia-lib/services/transfer/transfer";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
 import { debugBundle, submitBundle } from "@/services/view/bundleAction";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
@@ -139,12 +139,12 @@ import { getTokenInfo } from "@/services/view/cat";
 import AddressField from "@/components/Common/AddressField.vue";
 import { Bytes } from "clvm";
 import { bech32m } from "@scure/base";
-import utility from "@/services/crypto/utility";
-import { generateMintNftBundle } from "@/services/coin/nft";
-import { NftMetadataValues } from "@/models/nft";
-import puzzle from "@/services/crypto/puzzle";
+import utility from "../../../../pawket-chia-lib/services/crypto/utility";
+import { generateMintNftBundle } from "../../../../pawket-chia-lib/services/coin/nft";
+import { NftMetadataValues } from "../../../../pawket-chia-lib/models/nft";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
 import Confirmation from "../Common/Confirmation.vue";
-import { Hex, prefix0x } from "@/services/coin/condition";
+import { Hex, prefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
 import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
 import { shorten } from "@/filters/addressConversion";
 

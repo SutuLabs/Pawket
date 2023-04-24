@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { SExpWithId } from "@/services/simulator/opVm";
+import { SExpWithId } from "../../../../pawket-chia-lib/services/simulator/opVm";
 
 @Component({
   components: {},

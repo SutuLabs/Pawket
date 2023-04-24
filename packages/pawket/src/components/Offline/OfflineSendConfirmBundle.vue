@@ -35,10 +35,10 @@
 import { Component, Prop, Vue, Emit } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import store from "@/store";
-import { SpendBundle } from "@/services/spendbundle";
+import { SpendBundle } from "../../../../pawket-chia-lib/services/spendbundle";
 import { debugBundle, submitBundle } from "@/services/view/bundleAction";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
-import { AccountEntity } from "@/models/account";
+import { AccountEntity } from "../../../../pawket-chia-lib/models/account";
 
 @Component({
   components: {

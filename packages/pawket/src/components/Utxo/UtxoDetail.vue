@@ -55,11 +55,11 @@
 
 <script lang="ts">
 import { demojo } from "@/filters/unitConversion";
-import { CoinRecord } from "@/models/wallet";
-import { OneTokenInfo, TokenInfo } from "@/models/account";
+import { CoinRecord } from "../../../../pawket-chia-lib/models/wallet";
+import { OneTokenInfo, TokenInfo } from "../../../../pawket-chia-lib/models/account";
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import puzzle from "@/services/crypto/puzzle";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
 import { xchPrefix } from "@/store/modules/network";
 import TopBar from "../Common/TopBar.vue";
 

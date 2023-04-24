@@ -33,10 +33,10 @@
 <script lang="ts">
 import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import { AccountEntity, CustomCat } from "@/models/account";
+import { AccountEntity, CustomCat } from "../../../../pawket-chia-lib/models/account";
 import QrcodeVue from "qrcode.vue";
 import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from "vue-qrcode-reader";
-import utility from "@/services/crypto/utility";
+import utility from "../../../../pawket-chia-lib/services/crypto/utility";
 import { decodeAddress, initCameraHandleError } from "@/services/view/camera";
 import { getAllCats } from "@/store/modules/account";
 import { xchPrefix } from "@/store/modules/network";

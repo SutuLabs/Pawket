@@ -78,8 +78,8 @@
   </div>
 </template>
 <script lang="ts">
-import { TokenInfo } from "@/models/account";
-import { getNetworkInfo } from "@/services/api/networkApi";
+import { TokenInfo } from "../../../../pawket-chia-lib/models/account";
+import { getNetworkInfo } from "../../../../pawket-chia-lib/services/api/networkApi";
 import { notifyPrimary } from "@/services/notification/notification";
 import store from "@/store";
 import { NetworkDetail } from "@/store/modules/network";

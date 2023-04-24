@@ -377,27 +377,27 @@
 
 <script lang="ts">
 import { isMobile } from "@/services/view/responsive";
-import { AccountEntity } from "@/models/account";
+import { AccountEntity } from "../../../../pawket-chia-lib/models/account";
 import { Component, Emit, Prop, Vue, Watch } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import TopBar from "@/components/Common/TopBar.vue";
 import NftOffer from "@/components/Nft/NftOffer.vue";
 import NftTransfer from "@/components/Nft/NftTransfer.vue";
-import { DidDetail, NftDetail } from "@/services/crypto/receive";
-import { NftOffChainMetadata } from "@/models/nft";
+import { DidDetail, NftDetail } from "../../../../pawket-chia-lib/services/crypto/receive";
+import { NftOffChainMetadata } from "../../../../pawket-chia-lib/models/nft";
 import store from "@/store";
 import { notifyPrimary } from "@/services/notification/notification";
 import NftMove from "./NftMove.vue";
 import NftUpdate from "./NftUpdate.vue";
-import puzzle from "@/services/crypto/puzzle";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
 import { xchPrefix } from "@/store/modules/network";
 import { shorten } from "@/filters/addressConversion";
 import EditCnsBindings from "../Cns/EditCnsBindings.vue";
-import { modshash } from "@/services/coin/mods";
+import { modshash } from "../../../../pawket-chia-lib/services/coin/mods";
 import { tc } from "@/i18n/i18n";
 import SignMessage from "../Cryptography/SignMessage.vue";
-import { getScalarString } from "@/services/coin/nft";
-import { isIos } from "@/services/util/platform";
+import { getScalarString } from "../../../../pawket-chia-lib/services/coin/nft";
+import { isIos } from "../../../../pawket-chia-lib/services/util/platform";
 
 @Component({
   components: {

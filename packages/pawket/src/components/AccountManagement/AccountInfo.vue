@@ -162,15 +162,15 @@
 </template>
 
 <script lang="ts">
-import utility from "@/services/crypto/utility";
+import utility from "../../../../pawket-chia-lib/services/crypto/utility";
 import store from "@/store";
-import { AccountEntity, AccountType } from "@/models/account";
+import { AccountEntity, AccountType } from "../../../../pawket-chia-lib/models/account";
 import { isPasswordCorrect } from "@/store/modules/vault";
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import { accountTypeConverter } from "@/filters/accountTypeConversion";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import TopBar from "@/components/Common/TopBar.vue";
-import encryption from "@/services/crypto/encryption";
+import encryption from "../../../../pawket-chia-lib/services/crypto/encryption";
 import QrcodeVue from "qrcode.vue";
 import { tc } from "@/i18n/i18n";
 

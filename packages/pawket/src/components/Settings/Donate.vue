@@ -13,9 +13,9 @@
 </template>
 
 <script lang="ts">
-import puzzle from "@/services/crypto/puzzle";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
 import store from "@/store";
-import { AccountEntity } from "@/models/account";
+import { AccountEntity } from "../../../../pawket-chia-lib/models/account";
 import { xchPrefix } from "@/store/modules/network";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Send from "@/components/Send/Send.vue";

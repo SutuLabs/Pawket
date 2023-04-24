@@ -127,9 +127,9 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import AddressField from "@/components/Common/AddressField.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { v4 as uuidv4 } from "uuid";
-import { CollectionItem, Property } from "@/models/collection";
-import { prefix0x } from "@/services/coin/condition";
-import puzzle from "@/services/crypto/puzzle";
+import { CollectionItem, Property } from "../../../../pawket-chia-lib/models/collection";
+import { prefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
 
 type Mode = "EDIT" | "CREATE";
 

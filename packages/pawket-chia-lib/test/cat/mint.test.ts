@@ -1,12 +1,12 @@
-import { OriginCoin, signSpendBundle } from "@/services/spendbundle";
-import { analyzeCatCoin } from "@/services/coin/cat";
-import { NetworkContextWithOptionalApi } from "@/services/coin/coinUtility";
-import { unprefix0x } from "@/services/coin/condition";
-import { assertSpendbundle } from "@/services/spendbundle/validator";
-import puzzle, { PuzzlePrivateKey } from "@/services/crypto/puzzle";
-import utility from "@/services/crypto/utility";
-import { generateMintCatBundle } from "@/services/mint/cat";
-import { Instance } from "@/services/util/instance";
+import { OriginCoin, signSpendBundle } from "../../services/spendbundle";
+import { analyzeCatCoin } from "../../services/coin/cat";
+import { NetworkContextWithOptionalApi } from "../../services/coin/coinUtility";
+import { unprefix0x } from "../../services/coin/condition";
+import { assertSpendbundle } from "../../services/spendbundle/validator";
+import puzzle, { PuzzlePrivateKey } from "../../services/crypto/puzzle";
+import utility from "../../services/crypto/utility";
+import { generateMintCatBundle } from "../../services/mint/cat";
+import { Instance } from "../../services/util/instance";
 
 const net: NetworkContextWithOptionalApi = {
   prefix: "xch",

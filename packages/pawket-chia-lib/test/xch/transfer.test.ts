@@ -1,13 +1,13 @@
-import { combineSpendBundleSignature, getMessagesToSign, OriginCoin, signMessages } from "@/services/spendbundle";
-import { NetworkContextWithOptionalApi } from "@/services/coin/coinUtility";
-import { prefix0x } from "@/services/coin/condition";
-import { assertSpendbundle } from "@/services/spendbundle/validator";
-import puzzle from "@/services/crypto/puzzle";
-import utility from "@/services/crypto/utility";
-import transfer, { TransferTarget } from "@/services/transfer/transfer";
-import { Instance } from "@/services/util/instance";
+import { combineSpendBundleSignature, getMessagesToSign, OriginCoin, signMessages } from "../../services/spendbundle";
+import { NetworkContextWithOptionalApi } from "../../services/coin/coinUtility";
+import { prefix0x } from "../../services/coin/condition";
+import { assertSpendbundle } from "../../services/spendbundle/validator";
+import puzzle from "../../services/crypto/puzzle";
+import utility from "../../services/crypto/utility";
+import transfer, { TransferTarget } from "../../services/transfer/transfer";
+import { Instance } from "../../services/util/instance";
 import { createFakeXchCoin, getTestAccount, logBundle } from "../utility";
-import { getAccountAddressDetails } from "@/services/util/account";
+import { getAccountAddressDetails } from "../../services/util/account";
 
 const net: NetworkContextWithOptionalApi = {
   prefix: "xch",

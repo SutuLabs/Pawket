@@ -80,7 +80,7 @@ class Receive {
   async getAssetsRequestDetail(
     sk_hex: string,
     startId: number,
-    maxId: number,
+    maxId: number | undefined,
     customCats: CustomCat[],
     tokenInfo: TokenInfo,
     prefix: string,
@@ -108,7 +108,7 @@ class Receive {
   async getAssetsRequestObserver(
     pk_hex: Hex0x,
     startId: number,
-    maxId: number,
+    maxId: number | undefined,
     customCats: CustomCat[],
     tokenInfo: TokenInfo,
     prefix: string,

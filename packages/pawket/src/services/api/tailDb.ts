@@ -1,5 +1,5 @@
 import { chainId, mainnetChainId, rpcUrl } from "@/store/modules/network";
-import UniStorage from "../storage";
+import UniStorage from "../../../../pawket-chia-lib/services/storage";
 
 interface Tail {
   name: string;

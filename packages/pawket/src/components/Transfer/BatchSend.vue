@@ -80,19 +80,19 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
-import { AccountEntity } from "@/models/account";
+import { AccountEntity } from "../../../../pawket-chia-lib/models/account";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { TokenPuzzleDetail } from "@/services/crypto/receive";
-import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
-import puzzle from "@/services/crypto/puzzle";
-import { Hex, prefix0x } from "@/services/coin/condition";
-import transfer, { SymbolCoins, TransferTarget } from "@/services/transfer/transfer";
+import { TokenPuzzleDetail } from "../../../../pawket-chia-lib/services/crypto/receive";
+import { signSpendBundle, SpendBundle } from "../../../../pawket-chia-lib/services/spendbundle";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
+import { Hex, prefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
+import transfer, { SymbolCoins, TransferTarget } from "../../../../pawket-chia-lib/services/transfer/transfer";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
 import { submitBundle } from "@/services/view/bundleAction";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
-import { csvToArray } from "@/services/util/csv";
+import { csvToArray } from "../../../../pawket-chia-lib/services/util/csv";
 import { networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
 import TopBar from "../Common/TopBar.vue";

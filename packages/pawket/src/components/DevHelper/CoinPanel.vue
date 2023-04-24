@@ -32,15 +32,15 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import debug from "../../services/api/debug";
-import { CoinSpend } from "@/services/spendbundle";
+import debug from "../../../../pawket-chia-lib/services/api/debug";
+import { CoinSpend } from "../../../../pawket-chia-lib/services/spendbundle";
 import BundlePanel from "@/components/DevHelper/BundlePanel.vue";
-import puzzle from "@/services/crypto/puzzle";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
 import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
-import { ConditionOpcode } from "@/services/coin/opcode";
-import { prefix0x } from "@/services/coin/condition";
+import { ConditionOpcode } from "../../../../pawket-chia-lib/services/coin/opcode";
+import { prefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { getCoinName } from "@/services/coin/coinUtility";
+import { getCoinName } from "../../../../pawket-chia-lib/services/coin/coinUtility";
 import { rpcUrl } from "@/store/modules/network";
 import store from "@/store";
 

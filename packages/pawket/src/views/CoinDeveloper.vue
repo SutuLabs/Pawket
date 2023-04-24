@@ -59,10 +59,10 @@ import { Component, Vue } from "vue-property-decorator";
 import SExpBox from "@/components/Simulator/SExpBox.vue";
 import * as monaco from "monaco-editor";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import cdvdev from "@/services/developer/editor/types/cdv.dev.ts";
-import { registerClspLanguage, defineClspTheme } from "@/services/developer/editor/clspLanguage";
-import { executeCode } from "@/services/developer/editor/executor";
-import { MixchCodeFilePersistent, MixchCodePersistent, persistent, retrieve } from "@/services/developer/editor/persistence";
+import cdvdev from "../../../../pawket-chia-lib/services/developer/editor/types/cdv.dev.ts";
+import { registerClspLanguage, defineClspTheme } from "../../../pawket-chia-lib/services/developer/editor/clspLanguage";
+import { executeCode } from "../../../pawket-chia-lib/services/developer/editor/executor";
+import { MixchCodeFilePersistent, MixchCodePersistent, persistent, retrieve } from "../../../pawket-chia-lib/services/developer/editor/persistence";
 import { getOutputType, LogType } from "@/components/DevHelper/Inspector.vue";
 import Inspector from "@/components/DevHelper/Inspector.vue";
 

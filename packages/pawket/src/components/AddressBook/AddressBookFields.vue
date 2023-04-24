@@ -45,8 +45,8 @@
 <script lang="ts">
 import { resolveName, StandardResolveAnswer } from "@/services/api/resolveName";
 import { getCnsName, reverseResolveAnswer } from "@/services/api/reverseResolve";
-import puzzle from "@/services/crypto/puzzle";
-import { CoinSpend } from "@/services/spendbundle";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
+import { CoinSpend } from "../../../../pawket-chia-lib/services/spendbundle";
 import { decodeAddress } from "@/services/view/camera";
 import { xchPrefix } from "@/store/modules/network";
 import { bech32m } from "@scure/base";

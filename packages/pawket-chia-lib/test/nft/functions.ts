@@ -1,19 +1,19 @@
 import { getTestAccount } from "../utility";
-import { SymbolCoins } from "@/services/transfer/transfer";
-import { analyzeNftCoin, generateMintNftBundle, generateTransferNftBundle, generateUpdatedNftBundle } from "@/services/coin/nft";
-import puzzle from "@/services/crypto/puzzle";
-import { GetParentPuzzleResponse } from "@/models/api";
-import { getAccountAddressDetails } from "@/services/util/account";
-import { DidCoinAnalysisResult } from "@/services/coin/did";
+import { SymbolCoins } from "../../services/transfer/transfer";
+import { analyzeNftCoin, generateMintNftBundle, generateTransferNftBundle, generateUpdatedNftBundle } from "../../services/coin/nft";
+import puzzle from "../../services/crypto/puzzle";
+import { GetParentPuzzleResponse } from "../../models/api";
+import { getAccountAddressDetails } from "../../services/util/account";
+import { DidCoinAnalysisResult } from "../../services/coin/did";
 
 import nftcoin0 from "../cases/nftcoin0.json"
 import nftcoin7 from "../cases/nftcoin7.json"
 
-import { NftMetadataValues } from "@/models/nft";
+import { NftMetadataValues } from "../../models/nft";
 import { didAnalysis, knownCoins } from "./nft.test.data";
-import { convertToOriginCoin, NetworkContext } from "@/services/coin/coinUtility";
-import { assertSpendbundle } from "@/services/spendbundle/validator";
-import { signSpendBundle } from "@/services/spendbundle";
+import { convertToOriginCoin, NetworkContext } from "../../services/coin/coinUtility";
+import { assertSpendbundle } from "../../services/spendbundle/validator";
+import { signSpendBundle } from "../../services/spendbundle";
 
 const net: NetworkContext = {
   prefix: "txch",

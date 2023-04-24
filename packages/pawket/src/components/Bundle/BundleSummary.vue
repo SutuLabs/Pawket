@@ -68,22 +68,22 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import { SpendBundle } from "@/services/spendbundle";
-import puzzle from "@/services/crypto/puzzle";
+import { SpendBundle } from "../../../../pawket-chia-lib/services/spendbundle";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
 import { disassemble } from "clvm_tools/clvm_tools/binutils";
-import { getArgMsg, getFirstLevelArgMsg, getNumber, unprefix0x } from "@/services/coin/condition";
-import { modshexdict } from "@/services/coin/mods";
+import { getArgMsg, getFirstLevelArgMsg, getNumber, unprefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
+import { modshexdict } from "../../../../pawket-chia-lib/services/coin/mods";
 import store from "@/store";
 import { debugBundle } from "@/services/view/bundleAction";
-import { ConditionOpcode } from "@/services/coin/opcode";
+import { ConditionOpcode } from "../../../../pawket-chia-lib/services/coin/opcode";
 import { uncurry } from "clvm_tools/clvm_tools/curry";
 import { SExp, Tuple } from "clvm";
-import { AccountEntity, OneTokenInfo } from "@/models/account";
+import { AccountEntity, OneTokenInfo } from "../../../../pawket-chia-lib/models/account";
 import { getCatNameDict } from "@/services/view/cat";
 import { demojo } from "@/filters/unitConversion";
 import BundleText from "@/components/Bundle/BundelText.vue";
 import { xchPrefix, xchSymbol } from "@/store/modules/network";
-import { sexpAssemble } from "@/services/coin/analyzer";
+import { sexpAssemble } from "../../../../pawket-chia-lib/services/coin/analyzer";
 
 interface CoinType {
   amount: bigint;

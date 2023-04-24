@@ -124,15 +124,15 @@
 import { Component, Vue } from "vue-property-decorator";
 import { EncryptKeyHashIteration, isPasswordCorrect, IVaultState, PasswordHashIteration } from "@/store/modules/vault";
 import TopBar from "../Common/TopBar.vue";
-import { AccountEntity, PersistentAccount } from "@/models/account";
-import UniStorage from "@/services/storage";
+import { AccountEntity, PersistentAccount } from "../../../../pawket-chia-lib/models/account";
+import UniStorage from "../../../../pawket-chia-lib/services/storage";
 import { DidName } from "@/store/modules/account";
 import { Contact } from "../AddressBook/AddressBook.vue";
 import { NetworkDetail } from "@/store/modules/network";
 import store from "@/store";
-import encryption from "@/services/crypto/encryption";
+import encryption from "../../../../pawket-chia-lib/services/crypto/encryption";
 import { CurrencyType } from "@/services/exchange/currencyType";
-import utility from "@/services/crypto/utility";
+import utility from "../../../../pawket-chia-lib/services/crypto/utility";
 
 export interface Setting {
   debugMode: boolean;

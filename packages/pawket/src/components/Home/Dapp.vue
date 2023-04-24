@@ -142,7 +142,7 @@
 </template>
 <script lang="ts">
 import store from "@/store";
-import { AccountEntity, CustomCat } from "@/models/account";
+import { AccountEntity, CustomCat } from "../../../../pawket-chia-lib/models/account";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import MintCat from "@/components/Mint/MintCat.vue";
 import MintNft from "@/components/Mint/MintNft.vue";
@@ -158,7 +158,7 @@ import VerifyMessage from "../Cryptography/VerifyMessage.vue";
 import DecryptMessage from "../Cryptography/DecryptMessage.vue";
 import EncryptMessage from "../Cryptography/EncryptMessage.vue";
 import SplitCoin from "@/components/Mint/SplitCoin.vue";
-import { isIos } from "@/services/util/platform";
+import { isIos } from "../../../../pawket-chia-lib/services/util/platform";
 
 @Component
 export default class Dapp extends Vue {

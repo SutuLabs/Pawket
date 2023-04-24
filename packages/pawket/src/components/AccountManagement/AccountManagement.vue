@@ -103,7 +103,7 @@
 
 <script lang="ts">
 import store from "@/store";
-import { AccountEntity } from "@/models/account";
+import { AccountEntity } from "../../../../pawket-chia-lib/models/account";
 import { Component, Vue, Watch } from "vue-property-decorator";
 import AccountInfo from "./AccountInfo.vue";
 import TopBar from "@/components/Common/TopBar.vue";

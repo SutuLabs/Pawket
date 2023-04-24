@@ -1,21 +1,21 @@
 import store from "@/store";
-import account, { AccountKey } from "@/services/crypto/account";
+import account, { AccountKey } from "../../../../pawket-chia-lib/services/crypto/account";
 import Vue from "vue";
-import receive, { CoinClassType, DidDetail, NftDetail, TokenPuzzleAddress } from "@/services/crypto/receive";
+import receive, { CoinClassType, DidDetail, NftDetail, TokenPuzzleAddress } from "../../../../pawket-chia-lib/services/crypto/receive";
 import { convertToChainId, chainId, rpcUrl, xchPrefix, xchSymbol } from "@/store/modules/network";
-import { AccountEntity, AccountTokens, AccountType, CustomCat, TokenInfo } from "@/models/account";
+import { AccountEntity, AccountTokens, AccountType, CustomCat, TokenInfo } from "../../../../pawket-chia-lib/models/account";
 import {
   DEFAULT_ADDRESS_RETRIEVAL_COUNT,
   getAccountAddressDetails as getAccountAddressDetailsExternal,
   getAccountPuzzleObservers,
-} from "@/services/util/account";
-import { convertToOriginCoin, getCompletedTransactions, unlockCoins } from "@/services/coin/coinUtility";
-import { OriginCoin } from "@/services/spendbundle";
-import { prefix0x } from "@/services/coin/condition";
+} from "../../../../pawket-chia-lib/services/util/account";
+import { convertToOriginCoin, getCompletedTransactions, unlockCoins } from "../../../../pawket-chia-lib/services/coin/coinUtility";
+import { OriginCoin } from "../../../../pawket-chia-lib/services/spendbundle";
+import { prefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
 import { desktopNotify } from "@/services/notification/notification";
 import { tc } from "@/i18n/i18n";
-import puzzle from "@/services/crypto/puzzle";
-import { getScalarString } from "@/services/coin/nft";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
+import { getScalarString } from "../../../../pawket-chia-lib/services/coin/nft";
 
 export function getAccountCats(account: AccountEntity): CustomCat[] {
   const cats = account.allCats?.filter((c) => convertToChainId(c.network) == chainId()) ?? [];

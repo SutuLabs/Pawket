@@ -14,7 +14,7 @@
         "sourceMap": true,
         "baseUrl": ".",
         "types": [
-            "raw-loader.d.ts",
+            "src/raw-loader.d.ts",
             "webpack-env",
             "chrome",
             "jest"

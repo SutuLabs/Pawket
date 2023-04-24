@@ -41,15 +41,15 @@
 import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { analyzeDidCoin } from "@/services/coin/did";
-import puzzle from "@/services/crypto/puzzle";
-import { prefix0x, unprefix0x } from "@/services/coin/condition";
-import { getSignMessage, verifySignature } from "@/services/crypto/sign";
+import { analyzeDidCoin } from "../../../../pawket-chia-lib/services/coin/did";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
+import { prefix0x, unprefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
+import { getSignMessage, verifySignature } from "../../../../pawket-chia-lib/services/crypto/sign";
 import { rpcUrl } from "@/store/modules/network";
-import { CoinSpend } from "@/services/spendbundle";
-import debug from "@/services/api/debug";
-import { analyzeNftCoin } from "@/services/coin/nft";
-import utility from "@/services/crypto/utility";
+import { CoinSpend } from "../../../../pawket-chia-lib/services/spendbundle";
+import debug from "../../../../pawket-chia-lib/services/api/debug";
+import { analyzeNftCoin } from "../../../../pawket-chia-lib/services/coin/nft";
+import utility from "../../../../pawket-chia-lib/services/crypto/utility";
 import { tc } from "@/i18n/i18n";
 import Confirmation from "../Common/Confirmation.vue";
 

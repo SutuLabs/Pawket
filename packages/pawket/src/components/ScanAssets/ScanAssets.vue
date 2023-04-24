@@ -166,35 +166,35 @@
   </div>
 </template>
 <script lang="ts">
-import { AccountEntity, AccountTokens, CustomCat, OneTokenInfo, TokenInfo } from "@/models/account";
+import { AccountEntity, AccountTokens, CustomCat, OneTokenInfo, TokenInfo } from "../../../../pawket-chia-lib/models/account";
 import { getCatIdDict, getCatNames, getTokenInfo } from "@/services/view/cat";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import receive, { DidDetail, NftDetail, TokenPuzzleObserver } from "@/services/crypto/receive";
+import receive, { DidDetail, NftDetail, TokenPuzzleObserver } from "../../../../pawket-chia-lib/services/crypto/receive";
 import { ensureAddress, rpcUrl, xchPrefix, xchSymbol } from "@/store/modules/network";
-import { CoinRecord, GetRecordsResponse } from "@/models/wallet";
-import debug from "@/services/api/debug";
-import { analyzeNftCoin, getScalarString } from "@/services/coin/nft";
-import puzzle, { PuzzleObserver } from "@/services/crypto/puzzle";
-import { analyzeCatCoin, CatCoinAnalysisResult } from "@/services/coin/cat";
-import utility from "@/services/crypto/utility";
+import { CoinRecord, GetRecordsResponse } from "../../../../pawket-chia-lib/models/wallet";
+import debug from "../../../../pawket-chia-lib/services/api/debug";
+import { analyzeNftCoin, getScalarString } from "../../../../pawket-chia-lib/services/coin/nft";
+import puzzle, { PuzzleObserver } from "../../../../pawket-chia-lib/services/crypto/puzzle";
+import { analyzeCatCoin, CatCoinAnalysisResult } from "../../../../pawket-chia-lib/services/coin/cat";
+import utility from "../../../../pawket-chia-lib/services/crypto/utility";
 import { demojo } from "@/filters/unitConversion";
 import TailDb, { TailInfo } from "@/services/api/tailDb";
 import { shorten } from "@/filters/addressConversion";
 import ManageCats from "../Cat/ManageCats.vue";
 import NftTransfer from "../Nft/NftTransfer.vue";
 import { isMobile } from "@/services/view/responsive";
-import { unprefix0x } from "@/services/coin/condition";
-import coin from "@/services/transfer/coin";
+import { unprefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
+import coin from "../../services/transfer/coin";
 import Send from "../Send/Send.vue";
 import { getAllCats } from "@/store/modules/account";
 import { NotificationProgrammatic as Notification } from "buefy";
 import store from "@/store";
-import { analyzeDidCoin, DidCoinAnalysisResult } from "@/services/coin/did";
+import { analyzeDidCoin, DidCoinAnalysisResult } from "../../../../pawket-chia-lib/services/coin/did";
 import KeyBox from "../Common/KeyBox.vue";
 import SignMessage from "../Cryptography/SignMessage.vue";
-import { convertToOriginCoin } from "@/services/coin/coinUtility";
+import { convertToOriginCoin } from "../../../../pawket-chia-lib/services/coin/coinUtility";
 import TopBar from "../Common/TopBar.vue";
-import { SymbolCoins } from "@/services/transfer/transfer";
+import { SymbolCoins } from "../../../../pawket-chia-lib/services/transfer/transfer";
 
 type Option = "Token" | "NftV1" | "CatV2" | "DidV1";
 type Mode = "option" | "result";

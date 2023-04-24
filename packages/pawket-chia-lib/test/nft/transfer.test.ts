@@ -1,4 +1,4 @@
-import { Instance } from "@/services/util/instance";
+import { Instance } from "../../services/util/instance";
 import { didAnalysis } from "./nft.test.data";
 import { testTransferNft } from "./functions";
 

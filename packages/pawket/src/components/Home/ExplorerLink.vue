@@ -76,12 +76,12 @@
 <script lang="ts">
 import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
 import store from "@/store/index";
-import { AccountEntity, AccountToken, AccountTokenAddress } from "@/models/account";
+import { AccountEntity, AccountToken, AccountTokenAddress } from "../../../../pawket-chia-lib/models/account";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import QrcodeVue from "qrcode.vue";
 import { shorten } from "@/filters/addressConversion";
 import TopBar from "@/components/Common/TopBar.vue";
-import puzzle, { AddressType } from "@/services/crypto/puzzle";
+import puzzle, { AddressType } from "../../../../pawket-chia-lib/services/crypto/puzzle";
 import { notifyPrimary } from "@/services/notification/notification";
 import { xchSymbol } from "@/store/modules/network";
 import { getCnsName, reverseResolveAnswer } from "@/services/api/reverseResolve";

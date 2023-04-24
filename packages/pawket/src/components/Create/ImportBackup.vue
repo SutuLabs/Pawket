@@ -53,12 +53,12 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import TopBar from "@/components/Common/TopBar.vue";
-import encryption from "@/services/crypto/encryption";
+import encryption from "../../../../pawket-chia-lib/services/crypto/encryption";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { BackupInfo } from "../Settings/Backup.vue";
 import store from "@/store";
 import { tc } from "@/i18n/i18n";
-import utility from "@/services/crypto/utility";
+import utility from "../../../../pawket-chia-lib/services/crypto/utility";
 import { EncryptKeyHashIteration } from "@/store/modules/vault";
 
 @Component({

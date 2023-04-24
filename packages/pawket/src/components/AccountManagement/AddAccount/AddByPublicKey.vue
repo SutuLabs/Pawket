@@ -71,7 +71,7 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import store from "@/store/index";
 import TopBar from "@/components/Common/TopBar.vue";
-import { prefix0x } from "@/services/coin/condition";
+import { prefix0x } from "../../../../../pawket-chia-lib/services/coin/condition";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { resolveName, StandardResolveAnswer } from "@/services/api/resolveName";
 

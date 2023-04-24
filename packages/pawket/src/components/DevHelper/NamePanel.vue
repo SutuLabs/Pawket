@@ -22,11 +22,11 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import puzzle from "@/services/crypto/puzzle";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
 import { xchPrefix } from "@/store/modules/network";
 import { demojo } from "@/filters/unitConversion";
-import { getCoinName0x } from "@/services/coin/coinUtility";
-import { prefix0x } from "@/services/coin/condition";
+import { getCoinName0x } from "../../../../pawket-chia-lib/services/coin/coinUtility";
+import { prefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
 
 @Component({
   components: {

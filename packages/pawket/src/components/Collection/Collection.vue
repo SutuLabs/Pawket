@@ -46,7 +46,7 @@ import { Component, Emit, Vue } from "vue-property-decorator";
 import TopBar from "@/components/Common/TopBar.vue";
 import ManageCollection from "@/components/Collection/ManageCollection.vue";
 import { isMobile } from "@/services/view/responsive";
-import { CollectionItem } from "@/models/collection";
+import { CollectionItem } from "../../../../pawket-chia-lib/models/collection";
 @Component({
   components: { TopBar },
 })

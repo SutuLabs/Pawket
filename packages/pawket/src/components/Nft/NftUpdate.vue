@@ -80,24 +80,24 @@
 <script lang="ts">
 import { Component, Vue, Prop, Emit } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
-import { AccountEntity, OneTokenInfo } from "@/models/account";
+import { signSpendBundle, SpendBundle } from "../../../../pawket-chia-lib/services/spendbundle";
+import { AccountEntity, OneTokenInfo } from "../../../../pawket-chia-lib/models/account";
 import store from "@/store";
 import AddressField from "@/components/Common/AddressField.vue";
-import { SymbolCoins } from "@/services/transfer/transfer";
-import { CnsDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
+import { SymbolCoins } from "../../../../pawket-chia-lib/services/transfer/transfer";
+import { CnsDetail, TokenPuzzleDetail } from "../../../../pawket-chia-lib/services/crypto/receive";
 import DevHelper from "@/components/DevHelper/DevHelper.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { submitBundle } from "@/services/view/bundleAction";
-import { generateUpdatedNftBundle } from "@/services/coin/nft";
+import { generateUpdatedNftBundle } from "../../../../pawket-chia-lib/services/coin/nft";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import { demojo } from "@/filters/unitConversion";
 import { shorten } from "@/filters/addressConversion";
 import BundleSummary from "../Bundle/BundleSummary.vue";
 import Confirmation from "../Common/Confirmation.vue";
-import puzzle from "@/services/crypto/puzzle";
-import { Hex, prefix0x } from "@/services/coin/condition";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
+import { Hex, prefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
 import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
 
 @Component({

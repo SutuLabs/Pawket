@@ -91,7 +91,7 @@
 <script lang="ts">
 import { shorten } from "@/filters/addressConversion";
 import { demojo } from "@/filters/unitConversion";
-import { OneTokenInfo } from "@/models/account";
+import { OneTokenInfo } from "../../../../pawket-chia-lib/models/account";
 import { xchSymbol } from "@/store/modules/network";
 import { Component, Prop, Vue } from "vue-property-decorator";
 

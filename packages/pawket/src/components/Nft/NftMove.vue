@@ -78,25 +78,25 @@
 <script lang="ts">
 import { Component, Vue, Prop, Emit } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
-import { AccountEntity, OneTokenInfo } from "@/models/account";
+import { signSpendBundle, SpendBundle } from "../../../../pawket-chia-lib/services/spendbundle";
+import { AccountEntity, OneTokenInfo } from "../../../../pawket-chia-lib/models/account";
 import store from "@/store";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
-import { SymbolCoins } from "@/services/transfer/transfer";
-import { DidDetail, NftDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
+import { SymbolCoins } from "../../../../pawket-chia-lib/services/transfer/transfer";
+import { DidDetail, NftDetail, TokenPuzzleDetail } from "../../../../pawket-chia-lib/services/crypto/receive";
 import DevHelper from "@/components/DevHelper/DevHelper.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { getOfferSummary, OfferSummary } from "@/services/offer/summary";
-import { decodeOffer } from "@/services/offer/encoding";
+import { getOfferSummary, OfferSummary } from "../../../../pawket-chia-lib/services/offer/summary";
+import { decodeOffer } from "../../../../pawket-chia-lib/services/offer/encoding";
 import { networkContext, xchSymbol } from "@/store/modules/network";
 import { submitBundle } from "@/services/view/bundleAction";
-import { generateTransferNftBundle } from "@/services/coin/nft";
+import { generateTransferNftBundle } from "../../../../pawket-chia-lib/services/coin/nft";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import { demojo } from "@/filters/unitConversion";
 import { shorten } from "@/filters/addressConversion";
 import BundleSummary from "../Bundle/BundleSummary.vue";
 import Confirmation from "../Common/Confirmation.vue";
-import { Hex, prefix0x } from "@/services/coin/condition";
+import { Hex, prefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
 import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
 
 @Component({

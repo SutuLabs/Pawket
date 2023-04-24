@@ -149,11 +149,11 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import Send from "@/components/Send/Send.vue";
 import { demojo } from "@/filters/unitConversion";
 import { xchToCurrency } from "@/filters/usdtConversion";
-import { TokenInfo, AccountEntity, CustomCat, OneTokenInfo, AccountToken } from "@/models/account";
+import { TokenInfo, AccountEntity, CustomCat, OneTokenInfo, AccountToken } from "../../../../pawket-chia-lib/models/account";
 import { getTokenInfo } from "@/services/view/cat";
 import { getExchangeRate } from "@/services/exchange/rates";
 import { CurrencyType } from "@/services/exchange/currencyType";
-import { CoinRecord } from "@/models/wallet";
+import { CoinRecord } from "../../../../pawket-chia-lib/models/wallet";
 import { nameOmit } from "@/filters/nameConversion";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { NetworkInfo, xchSymbol } from "@/store/modules/network";
@@ -165,9 +165,9 @@ import AddressAccountQr from "./AddressAccountQr.vue";
 import { getAllCats } from "@/store/modules/account";
 import NetworkSelector from "./NetworkSelector.vue";
 import Scan from "../Scan/Scan.vue";
-import { GetExchangeRateResponse } from "@/models/api";
+import { GetExchangeRateResponse } from "../../../../pawket-chia-lib/models/api";
 import BuyUSDS from "./BuyUSDS.vue";
-import { isIos } from "@/services/util/platform";
+import { isIos } from "../../../../pawket-chia-lib/services/util/platform";
 
 @Component({
   components: {

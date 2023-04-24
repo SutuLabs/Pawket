@@ -108,8 +108,8 @@
 import { Component, Vue } from "vue-property-decorator";
 import { SExp, None } from "clvm";
 import SExpBox from "@/components/Simulator/SExpBox.vue";
-import OpVm, { OpStackType, SExpWithId, ValStackType } from "@/services/simulator/opVm";
-import { first, rest } from "@/services/simulator/sexpExt";
+import OpVm, { OpStackType, SExpWithId, ValStackType } from "../../../pawket-chia-lib/services/simulator/opVm";
+import { first, rest } from "../../../pawket-chia-lib/services/simulator/sexpExt";
 
 interface ExampleType {
   name: string;

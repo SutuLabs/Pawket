@@ -1,5 +1,5 @@
 import { tc } from "@/i18n/i18n";
-import { AccountType } from "@/models/account";
+import { AccountType } from "../../../pawket-chia-lib/models/account";
 
 export function accountTypeConverter(accountType: AccountType): string {
   let convertedType = tc("accountManagement.ui.label.unknown");

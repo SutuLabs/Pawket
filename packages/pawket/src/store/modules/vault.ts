@@ -1,11 +1,11 @@
 import store, { IRootState } from "@/store";
-import utility from "../../services/crypto/utility";
-import { PersistentAccount } from "@/models/account";
+import utility from "../../../../pawket-chia-lib/services/crypto/utility";
+import { PersistentAccount } from "../../../../pawket-chia-lib/models/account";
 import Vue from "vue";
-import encryption from "@/services/crypto/encryption";
-import puzzle from "@/services/crypto/puzzle";
+import encryption from "../../../../pawket-chia-lib/services/crypto/encryption";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
 import i18n, { tc } from "@/i18n/i18n";
-import UniStorage from "@/services/storage";
+import UniStorage from "../../../../pawket-chia-lib/services/storage";
 import { CurrencyType } from "@/services/exchange/currencyType";
 import { xchPrefix } from "./network";
 import router from "@/router";

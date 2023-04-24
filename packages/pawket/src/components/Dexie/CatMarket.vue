@@ -31,7 +31,7 @@
 import { isMobile } from "@/services/view/responsive";
 import { Component, Vue } from "vue-property-decorator";
 import Dexie from "@/services/api/dexie";
-import { MarketItem, Markets } from "@/models/market";
+import { MarketItem, Markets } from "../../../../pawket-chia-lib/models/market";
 import { chainId, mainnetChainId } from "@/store/modules/network";
 
 @Component({})

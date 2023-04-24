@@ -37,8 +37,8 @@
 <script lang="ts">
 import { demojo } from "@/filters/unitConversion";
 import { xchToCurrency } from "@/filters/usdtConversion";
-import { AccountEntity, AccountToken, CustomCat, OneTokenInfo, TokenInfo } from "@/models/account";
-import { GetExchangeRateResponse } from "@/models/api";
+import { AccountEntity, AccountToken, CustomCat, OneTokenInfo, TokenInfo } from "../../../../pawket-chia-lib/models/account";
+import { GetExchangeRateResponse } from "../../../../pawket-chia-lib/models/api";
 import { CurrencyType } from "@/services/exchange/currencyType";
 import { getExchangeRate } from "@/services/exchange/rates";
 import { getTokenInfo } from "@/services/view/cat";

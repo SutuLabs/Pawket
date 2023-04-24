@@ -1,10 +1,10 @@
-import { CnsMetadataValues } from "@/models/nft";
-import { NetworkContext } from "@/services/coin/coinUtility";
-import { generateMintNftBundle } from "@/services/coin/nft";
-import puzzle from "@/services/crypto/puzzle";
-import { SpendBundle, signSpendBundle } from "@/services/spendbundle";
-import { SymbolCoins } from "@/services/transfer/transfer";
-import { getAccountAddressDetails } from "@/services/util/account";
+import { CnsMetadataValues } from "../../models/nft";
+import { NetworkContext } from "../../services/coin/coinUtility";
+import { generateMintNftBundle } from "../../services/coin/nft";
+import puzzle from "../../services/crypto/puzzle";
+import { SpendBundle, signSpendBundle } from "../../services/spendbundle";
+import { SymbolCoins } from "../../services/transfer/transfer";
+import { getAccountAddressDetails } from "../../services/util/account";
 import { getTestAccount } from "../utility";
 
 export async function mintOneCns(

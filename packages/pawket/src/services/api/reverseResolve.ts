@@ -1,6 +1,6 @@
 import { rpcUrl } from "@/store/modules/network";
 import { StandardResolveAnswer, StandardResolveQuery, StandardResolveQueryResponse } from "./resolveName";
-import UniStorage from "../storage";
+import UniStorage from "../../../../pawket-chia-lib/services/storage";
 
 const ttl = 1000 * 60 * 60 * 24
 

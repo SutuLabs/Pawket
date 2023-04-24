@@ -73,16 +73,16 @@
 
 <script lang="ts">
 import { Component, Emit, Prop, Vue, Watch } from "vue-property-decorator";
-import { AccountEntity, AccountTokens, TokenInfo } from "@/models/account";
+import { AccountEntity, AccountTokens, TokenInfo } from "../../../../pawket-chia-lib/models/account";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { TokenPuzzleDetail } from "@/services/crypto/receive";
+import { TokenPuzzleDetail } from "../../../../pawket-chia-lib/services/crypto/receive";
 import store from "@/store";
-import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
-import puzzle from "@/services/crypto/puzzle";
+import { signSpendBundle, SpendBundle } from "../../../../pawket-chia-lib/services/spendbundle";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
 import bigDecimal from "js-big-decimal";
-import { Hex, Hex0x, prefix0x } from "@/services/coin/condition";
-import transfer, { SymbolCoins, TransferTarget } from "@/services/transfer/transfer";
+import { Hex, Hex0x, prefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
+import transfer, { SymbolCoins, TransferTarget } from "../../../../pawket-chia-lib/services/transfer/transfer";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
 import { debugBundle, submitBundle } from "@/services/view/bundleAction";
 import FeeSelector from "@/components/Send/FeeSelector.vue";

@@ -6,7 +6,7 @@ import Buefy from "buefy";
 import i18n from "./i18n/i18n";
 import "@mdi/font/css/materialdesignicons.css";
 import sanitizeHTML from "sanitize-html";
-import { Instance } from "./services/util/instance";
+import { Instance } from "../../pawket-chia-lib/services/util/instance";
 
 Vue.config.productionTip = false;
 Vue.use(Buefy);

@@ -34,7 +34,7 @@
 
 <script lang="ts">
 import store from "@/store";
-import { AccountEntity } from "@/models/account";
+import { AccountEntity } from "../../../../pawket-chia-lib/models/account";
 import { Component, Vue } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import ChangePassword from "@/components/Settings/ChangePassword.vue";

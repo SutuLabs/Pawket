@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import runner from "@/services/selftest/runner";
+import runner from "../../services/selftest/runner";
 import store from "@/store";
 import { SelfTestStatus } from "@/store/modules/app";
 import { Component, Vue } from "vue-property-decorator";

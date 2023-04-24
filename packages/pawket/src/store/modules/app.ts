@@ -1,9 +1,9 @@
 import { NotificationProgrammatic as Notification } from "buefy";
 import store from '@/store'
 import { ModuleInstance } from "@chiamine/bls-signatures";
-import TestRunner from "@/services/selftest/runner";
+import TestRunner from "../../services/selftest/runner";
 import { tc } from "../../i18n/i18n";
-import { Instance } from "@/services/util/instance";
+import { Instance } from "../../../../pawket-chia-lib/services/util/instance";
 
 export type SelfTestStatus = "Checking" | "Passed" | "Failed";
 export interface IAppState {

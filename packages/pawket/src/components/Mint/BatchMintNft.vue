@@ -114,23 +114,23 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
-import { AccountEntity } from "@/models/account";
+import { AccountEntity } from "../../../../pawket-chia-lib/models/account";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { DidDetail, TokenPuzzleDetail } from "@/services/crypto/receive";
-import { signSpendBundle, SpendBundle } from "@/services/spendbundle";
-import puzzle from "@/services/crypto/puzzle";
-import { SymbolCoins } from "@/services/transfer/transfer";
+import { DidDetail, TokenPuzzleDetail } from "../../../../pawket-chia-lib/services/crypto/receive";
+import { signSpendBundle, SpendBundle } from "../../../../pawket-chia-lib/services/spendbundle";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
+import { SymbolCoins } from "../../../../pawket-chia-lib/services/transfer/transfer";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
 import { submitBundle } from "@/services/view/bundleAction";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
-import { csvToArray } from "@/services/util/csv";
+import { csvToArray } from "../../../../pawket-chia-lib/services/util/csv";
 import { networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
-import { NftMetadataValues } from "@/models/nft";
-import { generateMintNftBundle } from "@/services/coin/nft";
+import { NftMetadataValues } from "../../../../pawket-chia-lib/models/nft";
+import { generateMintNftBundle } from "../../../../pawket-chia-lib/services/coin/nft";
 import store from "@/store";
-import { Hex, prefix0x } from "@/services/coin/condition";
+import { Hex, prefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
 import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
 import TopBar from "../Common/TopBar.vue";
 import { shorten } from "@/filters/addressConversion";

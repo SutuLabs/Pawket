@@ -109,13 +109,13 @@
 import { isMobile } from "@/services/view/responsive";
 import { Component, Vue, Watch } from "vue-property-decorator";
 import TakeOffer from "@/components/Offer/Take.vue";
-import { Offer, Offered } from "@/models/dexieOffer";
-import { AccountEntity, CustomCat } from "@/models/account";
+import { Offer, Offered } from "../../../../pawket-chia-lib/models/dexieOffer";
+import { AccountEntity, CustomCat } from "../../../../pawket-chia-lib/models/account";
 import store from "@/store";
 import { getAllCats } from "@/store/modules/account";
 import Dexie from "@/services/api/dexie";
 import { tc } from "@/i18n/i18n";
-import puzzle from "@/services/crypto/puzzle";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
 
 @Component({})
 export default class DexieOffer extends Vue {

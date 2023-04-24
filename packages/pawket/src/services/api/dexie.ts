@@ -1,5 +1,5 @@
-import { DexieOfferResponse } from "@/models/dexieOffer";
-import { Market, Markets } from "@/models/market";
+import { DexieOfferResponse } from "../../../../pawket-chia-lib/models/dexieOffer";
+import { Market, Markets } from "../../../../pawket-chia-lib/models/market";
 import { chainId, mainnetChainId, rpcUrl } from "@/store/modules/network";
 
 class Dexie {

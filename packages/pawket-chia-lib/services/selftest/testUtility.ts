@@ -1,6 +1,4 @@
-import { SpendBundle } from "@/services/spendbundle";
-import { testCoinName, testCryptography, testPuzzleAssemble } from "./cryptoTest";
-import { testStandardTransfer } from "./stdTransferTest";
+import { SpendBundle } from "../spendbundle";
 
 class TestUtility {
   async runTest(test: () => Promise<void>): Promise<void> {

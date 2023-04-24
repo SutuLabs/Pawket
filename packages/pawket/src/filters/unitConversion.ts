@@ -1,4 +1,4 @@
-import { OneTokenInfo } from "@/models/account";
+import { OneTokenInfo } from "../../../pawket-chia-lib/models/account";
 import { xchSymbol } from "@/store/modules/network";
 import bigDecimal from "js-big-decimal";
 import { nameOmit } from "./nameConversion";

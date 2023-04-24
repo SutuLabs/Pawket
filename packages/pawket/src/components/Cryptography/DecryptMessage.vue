@@ -37,11 +37,11 @@
 import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import puzzle from "@/services/crypto/puzzle";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
 import { rpcUrl } from "@/store/modules/network";
-import { AccountEntity } from "@/models/account";
-import { EcdhHelper } from "@/services/crypto/ecdh";
-import { prefix0x } from "@/services/coin/condition";
+import { AccountEntity } from "../../../../pawket-chia-lib/models/account";
+import { EcdhHelper } from "../../../../pawket-chia-lib/services/crypto/ecdh";
+import { prefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
 
 @Component({
   components: {

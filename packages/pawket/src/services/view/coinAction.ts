@@ -1,7 +1,7 @@
-import { AccountEntity } from "@/models/account";
-import { TokenPuzzleAddress, TokenPuzzleDetail, TokenPuzzleObserver } from "../crypto/receive";
-import { SymbolCoins } from "../transfer/transfer";
-import coinHandler from "@/services/transfer/coin";
+import { AccountEntity } from "../../../../pawket-chia-lib/models/account";
+import { TokenPuzzleAddress, TokenPuzzleDetail, TokenPuzzleObserver } from "../../../../pawket-chia-lib/services/crypto/receive";
+import { SymbolCoins } from "../../../../pawket-chia-lib/services/transfer/transfer";
+import coinHandler from "../transfer/coin";
 import store from "@/store";
 
 export async function getAvailableCoins(account: AccountEntity): Promise<SymbolCoins> {

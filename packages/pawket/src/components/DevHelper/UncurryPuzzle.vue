@@ -56,10 +56,10 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
 import { uncurry } from "clvm_tools/clvm_tools/curry";
 import { SExp, Tuple } from "clvm";
-import { ModParameter, modsdict, modsparams, modsprog } from "@/services/coin/mods";
-import puzzle from "@/services/crypto/puzzle";
-import { CannotParsePuzzle, SimplePuzzle, simplifyPuzzle } from "@/services/coin/analyzer";
-import { prefix0x } from "@/services/coin/condition";
+import { ModParameter, modsdict, modsparams, modsprog } from "../../../../pawket-chia-lib/services/coin/mods";
+import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
+import { CannotParsePuzzle, SimplePuzzle, simplifyPuzzle } from "../../../../pawket-chia-lib/services/coin/analyzer";
+import { prefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
 import store from "@/store";
 
 @Component({

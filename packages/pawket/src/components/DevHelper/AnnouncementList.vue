@@ -43,7 +43,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import { AnnouncementCoin } from "@/services/spendbundle";
+import { AnnouncementCoin } from "../../../../pawket-chia-lib/services/spendbundle";
 
 @Component({
   components: {

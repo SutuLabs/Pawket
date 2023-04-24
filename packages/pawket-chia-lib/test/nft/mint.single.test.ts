@@ -1,4 +1,4 @@
-import { Instance } from "@/services/util/instance";
+import { Instance } from "../../services/util/instance";
 import { nftMetadata } from "./nft.test.data";
 import { testMintNft } from "./functions";
 

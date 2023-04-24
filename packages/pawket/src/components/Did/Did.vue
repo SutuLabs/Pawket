@@ -29,8 +29,8 @@
 
 <script lang="ts">
 import { nameOmit } from "@/filters/nameConversion";
-import { AccountEntity } from "@/models/account";
-import { DidDetail } from "@/services/crypto/receive";
+import { AccountEntity } from "../../../../pawket-chia-lib/models/account";
+import { DidDetail } from "../../../../pawket-chia-lib/services/crypto/receive";
 import { isMobile } from "@/services/view/responsive";
 import store from "@/store";
 import { DidName } from "@/store/modules/account";

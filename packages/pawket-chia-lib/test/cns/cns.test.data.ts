@@ -1,5 +1,5 @@
-import { GetParentPuzzleResponse } from "@/models/api";
-import { CnsMetadataValues } from "@/models/nft";
+import { GetParentPuzzleResponse } from "../../models/api";
+import { CnsMetadataValues } from "../../models/nft";
 
 export const knownCoins: GetParentPuzzleResponse[] = [
   {

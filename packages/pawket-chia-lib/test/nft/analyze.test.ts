@@ -1,5 +1,5 @@
-import { analyzeNftCoin } from "@/services/coin/nft";
-import { Instance } from "@/services/util/instance";
+import { analyzeNftCoin } from "../../services/coin/nft";
+import { Instance } from "../../services/util/instance";
 
 import nftcoin1 from "../cases/nftcoin1.json"
 import nftcoin2 from "../cases/nftcoin2.json"

@@ -1,4 +1,4 @@
-import { AccountEntity } from "@/models/account";
+import { AccountEntity } from "../../models/account";
 import { PointG1, utils } from "@noble/bls12-381";
 import { Bytes, bigint_from_bytes } from "clvm";
 import { sexpAssemble } from "../coin/analyzer";

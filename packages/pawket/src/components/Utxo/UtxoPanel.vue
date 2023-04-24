@@ -77,14 +77,14 @@
 </template>
 <script lang="ts">
 import { demojo } from "@/filters/unitConversion";
-import { CoinRecord } from "@/models/wallet";
-import { AccountEntity, OneTokenInfo, TokenInfo } from "@/models/account";
+import { CoinRecord } from "../../../../pawket-chia-lib/models/wallet";
+import { AccountEntity, OneTokenInfo, TokenInfo } from "../../../../pawket-chia-lib/models/account";
 import { Component, Vue, Watch } from "vue-property-decorator";
 import UtxoDetail from "@/components/Utxo/UtxoDetail.vue";
 import { isMobile } from "@/services/view/responsive";
 import { getTokenInfo } from "@/services/view/cat";
 import store from "@/store";
-import { getLockedCoinsFromLocalStorage, LockedCoin, PendingTransaction } from "@/services/coin/coinUtility";
+import { getLockedCoinsFromLocalStorage, LockedCoin, PendingTransaction } from "../../../../pawket-chia-lib/services/coin/coinUtility";
 import PendingTxnDetail from "./PendingTxnDetail.vue";
 import { chainId, xchSymbol } from "@/store/modules/network";
 

@@ -29,7 +29,7 @@
   </div>
 </template>
 <script lang="ts">
-import account from "@/services/crypto/account";
+import account from "../../../../pawket-chia-lib/services/crypto/account";
 import store from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 import TopBar from "@/components/Common/TopBar.vue";

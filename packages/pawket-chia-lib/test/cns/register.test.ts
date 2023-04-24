@@ -1,22 +1,22 @@
 import { getTestAccount } from "../utility";
-import { SymbolCoins } from "@/services/transfer/transfer";
-import { analyzeNftCoin } from "@/services/coin/nft";
-import puzzle from "@/services/crypto/puzzle";
-import { GetParentPuzzleResponse } from "@/models/api";
-import { Instance } from "@/services/util/instance";
-import { getAccountAddressDetails } from "@/services/util/account";
+import { SymbolCoins } from "../../services/transfer/transfer";
+import { analyzeNftCoin } from "../../services/coin/nft";
+import puzzle from "../../services/crypto/puzzle";
+import { GetParentPuzzleResponse } from "../../models/api";
+import { Instance } from "../../services/util/instance";
+import { getAccountAddressDetails } from "../../services/util/account";
 
-import { CnsMetadataValues } from "@/models/nft";
+import { CnsMetadataValues } from "../../models/nft";
 import { cnsMetadata, knownCoins } from "./cns.test.data";
-import { CoinSpend, signSpendBundle } from "@/services/spendbundle";
-import { combineOfferSpendBundle, generateNftOffer, generateOfferPlan, getReversePlan } from "@/services/offer/bundler";
-import { decodeOffer, encodeOffer } from "@/services/offer/encoding";
-import { getOfferSummary } from "@/services/offer/summary";
-import { generateMintCnsOffer } from "@/services/offer/cns";
-import { NetworkContext } from "@/services/coin/coinUtility";
-import { Hex, prefix0x } from "@/services/coin/condition";
+import { CoinSpend, signSpendBundle } from "../../services/spendbundle";
+import { combineOfferSpendBundle, generateNftOffer, generateOfferPlan, getReversePlan } from "../../services/offer/bundler";
+import { decodeOffer, encodeOffer } from "../../services/offer/encoding";
+import { getOfferSummary } from "../../services/offer/summary";
+import { generateMintCnsOffer } from "../../services/offer/cns";
+import { NetworkContext } from "../../services/coin/coinUtility";
+import { Hex, prefix0x } from "../../services/coin/condition";
 
-import { assertSpendbundle } from "@/services/spendbundle/validator";
+import { assertSpendbundle } from "../../services/spendbundle/validator";
 import { expiryDate, mintOneCns } from "./functions";
 
 const net: NetworkContext = {
