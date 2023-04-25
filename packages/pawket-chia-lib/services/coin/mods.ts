@@ -1,6 +1,7 @@
 import { Hex0x, prefix0x } from "./condition";
 import { importModsHex, importModsProg, importModsHash, ImportModName } from "./importMods";
 import { OtherModName, otherModsHash, otherModsHex, otherModsProg } from "./otherMods";
+import { TibetModName, tibetModsHash, tibetModsHex, tibetModsProg } from "./tibetMods";
 
 export interface ModParameter {
   name: string;
@@ -435,12 +436,12 @@ const modsParameters: ModDetail[] = [
   },
 ]
 
-const allModsProg = Object.assign({}, importModsProg, otherModsProg);
-const allModsHex = Object.assign({}, importModsHex, otherModsHex);
-const allModsHash = Object.assign({}, importModsHash, otherModsHash);
+const allModsProg = Object.assign({}, importModsProg, otherModsProg, tibetModsProg);
+const allModsHex = Object.assign({}, importModsHex, otherModsHex, tibetModsHex);
+const allModsHash = Object.assign({}, importModsHash, otherModsHash, tibetModsHash);
 const mods = Object.keys(allModsProg).map((_) => ({ name: _ as ModName }));
 
-export type ModName = ImportModName | OtherModName;
+export type ModName = ImportModName | OtherModName | TibetModName;
 export const modsdict: { [mod: string]: ModName } = mods.reduce((acc, cur) => ({ ...acc, [allModsProg[cur.name]]: cur.name }), {});
 export const modsprog: { [name in ModName]: string } = mods.reduce((acc, cur) => ({ ...acc, [cur.name]: allModsProg[cur.name] }), {} as { [name in ModName]: string });
 export const modsparams: { [name in ModName]: ModParameter[] | undefined } = mods.reduce((acc, cur) => ({ ...acc, [cur.name]: modsParameters.find(_ => _.name == cur.name)?.parameters }), {} as { [name in ModName]: ModParameter[] });

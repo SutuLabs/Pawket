@@ -55,5 +55,6 @@ export const ${camelName}sHash: { [name in ${typename}Name]: string } = ${JSON.s
   };
 
   await writeTypeFile("../../../ref/chia-blockchain/chia/wallet/puzzles/", "ImportMod");
+  await writeTypeFile("../../../ref/tibet/clvm/", "TibetMod");
   await writeTypeFile("clvm/", "OtherMod");
 });
