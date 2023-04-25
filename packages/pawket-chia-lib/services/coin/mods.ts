@@ -250,6 +250,111 @@ const modsParametersYaml=`
     desc: ''
   - name: block_ref
     desc: ''
+
+- name: add_liquidity
+  parameters:
+  - name: CAT_MOD_HASH
+    desc: sha256tree of the cat_v2 module (uncurried)
+  - name: LIQUIDITY_TAIL_MOD_HASH
+    desc: sha256 tree of the liquidity TAIL (uncurried)
+  - name: current_state
+  - name: params
+  - name: my_singleton_struct
+
+- name: liquidity_tail
+  parameters:
+  - name: SINGLETON_STRUCT
+    desc: pair / controller SINGLETON_STRUCT; to quote did_innerpuz.clvm, 
+  - name: Truths
+    desc: 'my singleton_struct, formerly a Truth - ((SINGLETON_MOD_HASH, (LAUNCHER_ID, LAUNCHER_PUZZLE_HASH)))'
+  - name: parent_is_cat
+  - name: lineage_proof
+  - name: delta
+  - name: inner_conditions
+  - name: tail_solution 
+    desc: (singleton_inner_puzzle_hash)
+
+- name: p2_merkle_tree_modified
+  parameters:
+  - name: INNER_PUZZLE
+  - name: MERKLE_ROOT
+  - name: CURRIED_ARGS
+    desc: (liquidity . (xch_reserve token_reserve)) (state)
+  - name: parameters
+  - name: merkle_proof
+  - name: inner_solution
+
+- name: p2_singleton_flashloan
+  parameters:
+  - name: SINGLETON_MOD_HASH
+  - name: LAUNCHER_ID
+  - name: LAUNCHER_PUZZLE_HASH
+  - name: singleton_inner_puzzle_hash
+  - name: my_id
+  - name: additional_output_conditions
+    desc: literally anyone can modify these - please be careful
+
+- name: pair_inner_puzzle
+  parameters:
+  - name: P2_MERKLE_TREE_MODIFIED_MOD_HASH
+    desc: sha256 of the parent module / puzzle (uncurried)
+  - name: SINGLETON_STRUCT
+    desc: to quote did_innerpuz.clvm, 'my singleton_struct, formerly a Truth - ((SINGLETON_MOD_HASH, (LAUNCHER_ID, LAUNCHER_PUZZLE_HASH)))'
+  - name: P2_SINGLETON_FLASHLOAN_MOD_HASH
+    desc: sha256tree of the p2_singleton_flashloan module (uncurried)
+  - name: CAT_MOD_HASH
+    desc: sha256tree of the cat_v2 module (uncurried)
+  - name: SETTLEMENT_PAYMENTS_MOD_HASH
+    desc: sha256 tree of settlement_payments.clvm (not that it has any curried arguments, but still)
+  - name: TAIL_HASH
+    desc: identifies the token this pair holds
+  - name: inner_puzzle
+    desc: |
+      this is verified to be included in the merkle tree in p2_merkle_tree
+      puzzle returns the new state, CURRIED_ARGS = (liquidity . (xch_reserve token_reserve)), and a list of extra conditions
+      (new_state . extra_conditions)
+  - name: pair_inner_puzzle_hash
+  - name: merkle_root
+  - name: state
+  - name: inner_solution
+    desc: given by the user; format (coin_ids . new_state_solution) = ((my_coin_id . (xch_reserve_coin_id . token_reserve_coin_id)) . new_state_solution)
+- name: remove_liquidity
+  parameters:
+  - name: CAT_MOD_HASH
+    desc: sha256tree of the cat_v2 module (uncurried)
+  - name: LIQUIDITY_TAIL_MOD_HASH
+    desc: sha256 tree of the liquidity TAIL (uncurried)
+  - name: current_state
+  - name: params
+  - name: my_singleton_struct
+- name: router
+  parameters:
+  - name: PAIR_INNER_PUZZLE_MOD_HASH
+  - name: SINGLETON_MOD_HASH
+    desc: pay attention here - it's not SINGLETON_STRUCT
+  - name: P2_MERKLE_TREE_MODIFIED_MOD_HASH
+  - name: P2_SINGLETON_FLASHLOAN_MOD_HASH
+  - name: CAT_MOD_HASH
+  - name: SETTLEMENT_PAYMENTS_MOD_HASH
+  - name: MERKLE_ROOT
+    desc: calculated off-chain
+  - name: LAUNCHER_PUZZLE_HASH
+  - name: ROUTER_MOD_HASH
+    desc: my mod hash (for re-creation) ; required for the router to work
+  - name: my_coin_id
+  - name: new_pair_tail_hash
+    desc: hash of TAIL
+- name: swap
+  parameters:
+  - name: INVERSE_FEE
+    desc: |
+      this cleverly-named variable is calculated as 1000 - FEE
+      FEE is, for example, 7 for 0.7% (will get divided by a thousand)
+      meaning INVERSE_FEE is 993 (user swaps 99.3% of their input assets to output - tokens or XCH)
+      0.7% is kept as lp fee
+  - name: current_state
+  - name: params
+  - name: my_singleton_struct
 `;
 
 const modsParameters: ModDetail[] = load(modsParametersYaml) as ModDetail[];
