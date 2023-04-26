@@ -222,7 +222,10 @@ class Receive {
     return tokenBalances;
   }
 
-  async getAssets(
+  /**
+   * @deprecated The method should not be used
+   */
+  async getAssetsLegacy(
     records: GetRecordsResponse,
     rpcUrl: string,
     oneFound: ((parameter: OptionalOneFoundParameterType) => void) | undefined = undefined
