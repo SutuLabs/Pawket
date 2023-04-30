@@ -12,6 +12,9 @@ export interface CoinSpend {
   coin: OriginCoin;
   puzzle_reveal: Hex0x;
   solution: Hex0x;
+  confirmed_index?: number;
+  spent_index?: number;
+  timestamp?: number;
 }
 
 export interface SpendBundle {

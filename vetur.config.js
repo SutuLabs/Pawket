@@ -11,7 +11,9 @@ module.exports = {
   // **optional** default: `[{ root: './' }]`
   // support monorepos
   projects: [
-    "./packages/pawket", // Shorthand for specifying only the project root location
+    "./packages/cli",
+    "./packages/pawket",
+    "./packages/pawket-chia-lib",
     // {
     //   // **required**
     //   // Where is your project?

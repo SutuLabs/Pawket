@@ -17,7 +17,7 @@ export interface GetParentPuzzleResponse {
 }
 
 export interface GetCoinSolutionResponse {
-  coinSpend: CoinSpend;
+  coinSpends: CoinSpend[];
 }
 
 export interface GetExchangeRateResponse {
@@ -27,3 +27,14 @@ export interface GetExchangeRateResponse {
   price: number;
   time: string;
 }
+
+export interface GetBlockResponse {
+  blocks: BlockTransactionGeneratorRetrieval[];
+  refBlocks: BlockTransactionGeneratorRetrieval[];
+};
+
+export interface BlockTransactionGeneratorRetrieval {
+  index: number;
+  generator: string;
+  generator_ref_list: number[];
+};

@@ -31,13 +31,26 @@
           <ul>
             <li
               class="pt-1"
-              v-for="(val, key) in {
-                Amount: bundle.coin_spends[selectedCoin].coin.amount,
-                'Parent Coin': bundle.coin_spends[selectedCoin].coin.parent_coin_info,
-                'Coin Name': used_coin_name,
-                'Coin Address': used_coin_tgt_address,
-                'Coin PuzHash': bundle.coin_spends[selectedCoin].coin.puzzle_hash,
-              }"
+              v-for="(val, key) in Object.assign(
+                {},
+                bundle.coin_spends[selectedCoin].confirmed_index && bundle.coin_spends[selectedCoin].spent_index
+                  ? {
+                      'Confirmed/Spent Index': `${bundle.coin_spends[selectedCoin].confirmed_index} / ${bundle.coin_spends[selectedCoin].spent_index}`,
+                    }
+                  : {},
+                bundle.coin_spends[selectedCoin].timestamp
+                  ? {
+                      Timestamp: new Date(bundle.coin_spends[selectedCoin].timestamp * 1000).toString(),
+                    }
+                  : {},
+                {
+                  Amount: bundle.coin_spends[selectedCoin].coin.amount,
+                  'Parent Coin': bundle.coin_spends[selectedCoin].coin.parent_coin_info,
+                  'Coin Name': used_coin_name,
+                  'Coin Address': used_coin_tgt_address,
+                  'Coin PuzHash': bundle.coin_spends[selectedCoin].coin.puzzle_hash,
+                }
+              )"
               :key="key"
             >
               <b-taglist attached>
@@ -149,6 +162,9 @@
         <template #label>
           Overall Check
           <b-button tag="a" size="is-small" @click="check()"> Check </b-button>
+          <b-button tag="a" size="is-small" v-if="bundle.coin_spends.length == 1" @click="reverse()">
+            Reverse Engineer Spendbundle
+          </b-button>
         </template>
         <template #message>
           <h3 v-if="mgraphGenerated">Fee: {{ fee }}</h3>
@@ -254,13 +270,14 @@ import {
   Hex0x,
   getFirstLevelArgMsg,
   getArgMsg,
+  getFirstLevelArg,
 } from "../../../../pawket-chia-lib/services/coin/condition";
 import { modsdict, modsprog } from "../../../../pawket-chia-lib/services/coin/mods";
 import UncurryPuzzle from "@/components/DevHelper/UncurryPuzzle.vue";
 import AnnouncementList from "@/components/DevHelper/AnnouncementList.vue";
 import { decodeOffer } from "../../../../pawket-chia-lib/services/offer/encoding";
 import { chainId, rpcUrl, xchPrefix } from "@/store/modules/network";
-import { getCoinName } from "../../../../pawket-chia-lib/services/coin/coinUtility";
+import { getCoinName, getCoinName0x } from "../../../../pawket-chia-lib/services/coin/coinUtility";
 import debug from "../../../../pawket-chia-lib/services/api/debug";
 import { demojo } from "@/filters/unitConversion";
 import { OneTokenInfo } from "../../../../pawket-chia-lib/models/account";
@@ -276,6 +293,13 @@ import {
   SpendBundle,
 } from "../../../../pawket-chia-lib/services/spendbundle";
 import { sha256 } from "../../../../pawket-chia-lib/services/offer/bundler";
+import { parseBlock, parseCoinWithConds, sexpAssemble } from "../../../../pawket-chia-lib/services/coin/analyzer";
+import { ConditionOpcode } from "../../../../pawket-chia-lib/services/coin/opcode";
+
+export interface CoinAnnouncementMessage {
+  coinName: Hex0x;
+  message: string;
+}
 
 @Component({
   components: {
@@ -658,6 +682,77 @@ export default class BundlePanel extends Vue {
       console.warn("mermaid failure definition:", graphDefinition);
       throw error;
     }
+  }
+
+  public async reverse(): Promise<void> {
+    const index = this.bundle?.coin_spends[0].spent_index;
+    const thisCoin = this.bundle?.coin_spends[0].coin;
+    if (!index || !thisCoin) return;
+    const thisCoinName = getCoinName0x(thisCoin);
+
+    // get block and parse block
+    const resp = await debug.getBlock(index, rpcUrl());
+    const block = resp.blocks.at(0);
+    const refBlocks = resp.refBlocks.map((_) => _.generator);
+    if (!block || !refBlocks) return;
+    const bg = await parseBlock(block?.generator, refBlocks);
+    const prog = sexpAssemble(bg);
+    const coins = await Promise.all(Array.from(prog.first().as_iter()).map(async (_) => await parseCoinWithConds(_)));
+    const puzAnnoCreates: Array<CoinAnnouncementMessage> = [];
+    const puzAnnoAsserts: Array<CoinAnnouncementMessage> = [];
+    const coinAnnoCreates: Array<CoinAnnouncementMessage> = [];
+    const coinAnnoAsserts: Array<CoinAnnouncementMessage> = [];
+
+    for (let i = 0; i < coins.length; i++) {
+      const coin = coins[i];
+      const coinName = coin.coin_name;
+      for (let j = 0; j < coin.conditions.length; j++) {
+        const cond = coin.conditions[j];
+        if (cond.code == ConditionOpcode.CREATE_COIN_ANNOUNCEMENT) {
+          const message = sha256(coin.coin_name, getFirstLevelArg(cond.args.at(0)));
+          coinAnnoCreates.push({ coinName, message });
+        } else if (cond.code == ConditionOpcode.ASSERT_COIN_ANNOUNCEMENT) {
+          coinAnnoAsserts.push({ coinName, message: getFirstLevelArgMsg(cond.args.at(0)) });
+        } else if (cond.code == ConditionOpcode.CREATE_PUZZLE_ANNOUNCEMENT) {
+          const message = sha256(coin.puzzle_hash, getFirstLevelArg(cond.args.at(0)));
+          puzAnnoCreates.push({ coinName, message });
+        } else if (cond.code == ConditionOpcode.ASSERT_PUZZLE_ANNOUNCEMENT) {
+          puzAnnoAsserts.push({ coinName, message: getFirstLevelArgMsg(cond.args.at(0)) });
+        }
+      }
+    }
+
+    const coinsToDeal: Hex0x[] = [thisCoinName];
+    const coinsDealed: Hex0x[] = [];
+    function addToCTD(coinName: Hex0x): void {
+      if (coinsToDeal.indexOf(coinName) == -1 && coinsDealed.indexOf(coinName) == -1) coinsToDeal.push(coinName);
+    }
+    while (coinsToDeal.length > 0) {
+      const coin = coinsToDeal.splice(0, 1)[0];
+      coinsDealed.push(coin);
+      puzAnnoAsserts
+        .filter((_) => _.coinName == coin)
+        .forEach((ass) => puzAnnoCreates.filter((cre) => cre.message == ass.message).forEach((cre) => addToCTD(cre.coinName)));
+      coinAnnoAsserts
+        .filter((_) => _.coinName == coin)
+        .forEach((ass) => coinAnnoCreates.filter((cre) => cre.message == ass.message).forEach((cre) => addToCTD(cre.coinName)));
+    }
+
+    const bundle: SpendBundle = {
+      aggregated_signature: "0x00",
+      coin_spends: coins
+        .filter((_) => coinsDealed.some((c) => c == _.coin_name))
+        .map((_) => ({
+          coin: {
+            parent_coin_info: _.parent,
+            amount: BigInt(_.amount),
+            puzzle_hash: _.puzzle_hash,
+          },
+          puzzle_reveal: _.puzzle,
+          solution: _.solution,
+        })),
+    };
+    this.bundle = bundle;
   }
 }
 </script>

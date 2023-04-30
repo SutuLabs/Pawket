@@ -6,7 +6,7 @@ import { ModName, modshex, modshexdict } from "./mods";
 import { getCoinName0x } from './coinUtility';
 import { Hex0x, prefix0x, unprefix0x } from './condition';
 import { sha256tree } from 'clvm_tools';
-import puzzle from '../crypto/puzzle';
+import puzzle, { ConditionEntity } from '../crypto/puzzle';
 import { analyzeCatCoin } from './cat';
 import { analyzeDidCoin } from './did';
 import { analyzeNftCoin } from './nft';
@@ -32,13 +32,21 @@ export interface UncurriedPuzzle {
   args: (CannotUncurryArgument | UncurriedPuzzle)[],
 }
 
-export interface CoinInfo {
+export interface BasicCoinInfo {
   parent: Hex0x;
-  puzzle: string;
-  parsed_puzzle: SimplePuzzle | CannotParsePuzzle;
+  puzzle: Hex0x;
   amount: string;
-  solution: string;
+  solution: Hex0x;
   coin_name: Hex0x;
+}
+
+export interface CoinInfoWithConds extends BasicCoinInfo {
+  puzzle_hash: Hex0x;
+  conditions: ConditionEntity[];
+}
+
+export interface CoinInfo extends BasicCoinInfo {
+  parsed_puzzle: SimplePuzzle | CannotParsePuzzle;
   mods: string;
   key_param?: string;
   analysis?: string;
@@ -81,6 +89,34 @@ export async function uncurryPuzzle(
   } catch (err) {
     return { raw: puz_hex ? prefix0x(puz_hex) : "" };
   }
+}
+
+export async function parseCoinWithConds(all: SExp): Promise<CoinInfoWithConds> {
+  const parent = prefix0x(disassemble(all.first()));
+  let next = all.rest();
+  const puz = next.first();
+  const puz_hex = prefix0x(puz.as_bin().hex());
+  next = next.rest();
+  const amount = next.first().as_bigint();
+  next = next.rest();
+  const solution = prefix0x(next.first().as_bin().hex());
+
+  const puzzle_hash = prefix0x(sha256tree(puz).hex());
+  const coin: OriginCoin = { amount, parent_coin_info: parent, puzzle_hash };
+  const coin_name = getCoinName0x(coin);
+
+  const execResult = await puzzle.executePuzzleHex(puz_hex, solution);
+  const conditions = execResult.conditions;
+
+  return {
+    parent,
+    puzzle_hash,
+    puzzle: puz_hex,
+    amount: amount.toString(),
+    solution,
+    coin_name,
+    conditions,
+  };
 }
 
 export async function parseCoin(all: SExp): Promise<CoinInfo> {
