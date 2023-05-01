@@ -1,4 +1,4 @@
-name: Deploy
+name: deploy-mixch
 on:
   workflow_dispatch: {}
   workflow_run:
@@ -16,7 +16,9 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/download-artifact@v3
+      - name: Download artifact
+        id: download-artifact
+        uses: dawidd6/action-download-artifact@v2
         with:
           name: mixch
 
