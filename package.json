@@ -32,7 +32,8 @@
   "devDependencies": {
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
-    "lerna": "^6.6.1"
+    "lerna": "^6.6.1",
+    "vue-i18n-extract": "^2.0.4"
   },
   "eslintConfig": {
     "root": true,
