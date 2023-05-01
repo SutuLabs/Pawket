@@ -9,7 +9,7 @@ env:
   VERSION: 0.3.${{ github.run_number }}
 
 jobs:
-  build:
+  build-pawket:
     runs-on: ubuntu-latest
     if: github.event.workflow_run.conclusion == 'success'
 
@@ -28,7 +28,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          sed -i 's/0.0.0.0/${VERSION}/' .env.production
+          sed -i 's/0.0.0.0/${VERSION}/' packages/pawket/.env.production
       - name: Build pawket
         run: |
           yarn build:pawket
@@ -52,5 +52,5 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: pawket
+          name: mixch
           path: dist/mixch

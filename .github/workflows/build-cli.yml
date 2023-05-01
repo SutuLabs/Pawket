@@ -21,7 +21,7 @@ env:
   VERSION: 0.3.${{ github.run_number }}
 
 jobs:
-  build:
+  build-cli:
     runs-on: ubuntu-latest
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
 
@@ -52,5 +52,5 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: cli-package
+          name: cli
           path: dist/cli
