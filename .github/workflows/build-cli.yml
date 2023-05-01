@@ -7,14 +7,12 @@ on:
   push:
     branches:
       - master
-      - feat_action
     paths:
       - "cli/**"
       - ".github/workflows/**"
   pull_request:
     branches:
       - master
-      - feat_action
     paths:
       - "cli/**"
       - ".github/workflows/**"
