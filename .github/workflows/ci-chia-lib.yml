@@ -4,36 +4,33 @@ on:
   push:
     branches:
       - master
-      - feat_action
     paths:
-      - 'pawket-chia-lib/**'
+      - "pawket-chia-lib/**"
+      - ".github/workflows/**"
   pull_request:
     branches:
       - master
-      - feat_action
     paths:
-      - 'pawket-chia-lib/**'
+      - "pawket-chia-lib/**"
+      - ".github/workflows/**"
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
-    
+
     steps:
+      - uses: actions/checkout@v3
+
       - name: Set Node.js 16.x
         uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: 'yarn'
-          cache-dependency-path: 'yarn.lock'
-      
-      - name: Install yarn
-        run: npm -g i yarn
-      
-      - uses: actions/checkout@v3
-      
+          cache: "yarn"
+          cache-dependency-path: "yarn.lock"
+
       - name: Install Dependencies
         run: yarn
-      
-      - name: Build and Test
+
+      - name: Test
         run: |
           yarn test:chia
