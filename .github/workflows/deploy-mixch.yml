@@ -1,0 +1,25 @@
+name: Deploy
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-pawket
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: mixch
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v1
