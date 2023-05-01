@@ -11,24 +11,21 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Set Node.js 16.x
         uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: 'yarn'
-          cache-dependency-path: 'yarn.lock'
-      
-      # - name: Install yarn
-      #   run: npm -g i yarn
-      
+          cache: "yarn"
+          cache-dependency-path: "yarn.lock"
+
       - name: Install Dependencies
         run: yarn
-      
+
       - name: Install Dependencies
         run: |
           sed -i 's/0.0.0.0/${VERSION}/' .env.production
@@ -44,14 +41,14 @@ jobs:
         with:
           name: pawket
           path: dist/web
-      
+
       - name: Build mixch
         run: |
           yarn build:mixch
 
       - name: version
         run: |
-          echo ${{ VERSION }}>dist/mixch/version.txt
+          echo ${VERSION}>dist/mixch/version.txt
 
       - uses: actions/upload-artifact@v3
         with:

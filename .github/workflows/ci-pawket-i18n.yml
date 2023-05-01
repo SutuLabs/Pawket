@@ -6,36 +6,33 @@ on:
       - master
       - feat_action
     paths:
-      - 'pawket/**'
-      - '.github/workflows/**'
+      - "pawket/**"
+      - ".github/workflows/**"
   pull_request:
     branches:
       - master
       - feat_action
     paths:
-      - 'pawket/**'
-      - '.github/workflows/**'
+      - "pawket/**"
+      - ".github/workflows/**"
 
 jobs:
-  build:
+  check-i18n:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Set Node.js 16.x
         uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: 'yarn'
-          cache-dependency-path: 'yarn.lock'
-      
-      # - name: Install yarn
-      #   run: npm -g i yarn
-      
+          cache: "yarn"
+          cache-dependency-path: "yarn.lock"
+
       - name: Install Dependencies
         run: yarn
-      
+
       - name: Build and Test
         run: |
           yarn check-i18n --ci
