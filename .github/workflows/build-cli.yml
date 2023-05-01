@@ -50,7 +50,7 @@ jobs:
 
       - name: version
         run: |
-          echo ${{ VERSION }}>dist/cli/version.txt
+          echo ${VERSION}>dist/cli/version.txt
 
       - uses: actions/upload-artifact@v3
         with:

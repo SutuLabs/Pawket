@@ -31,14 +31,14 @@ jobs:
       
       - name: Install Dependencies
         run: |
-          sed -i 's/0.0.0.0/${{ VERSION }}/' .env.production
+          sed -i 's/0.0.0.0/${VERSION}/' .env.production
       - name: Build pawket
         run: |
           yarn build:pawket
 
       - name: version
         run: |
-          echo ${{ VERSION }}>dist/web/version.txt
+          echo ${VERSION}>dist/web/version.txt
 
       - uses: actions/upload-artifact@v3
         with:
