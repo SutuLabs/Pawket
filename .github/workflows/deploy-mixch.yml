@@ -23,6 +23,11 @@ jobs:
           name: mixch
           workflow: build-pawket.yml
 
+      - uses: actions/upload-artifact@v3
+        with:
+          name: mixch
+          path: .
+
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v1
