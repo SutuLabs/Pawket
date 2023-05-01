@@ -1,0 +1,1666 @@
+{
+  "default": {
+    "accountName": "Konto1"
+  },
+  "html": {
+    "document": {
+      "title": "Pawket"
+    }
+  },
+  "common": {
+    "button": {
+      "confirm": "Bekräfta",
+      "cancel": "Annullera",
+      "back": "Tillbaka",
+      "save": "Spara",
+      "submit": "Skicka in",
+      "delete": "Radera",
+      "sign": "Skylt",
+      "generate": "Generera",
+      "copy": "Kopiera"
+    },
+    "tooltip": {
+      "copy": "Kopiera"
+    },
+    "message": {
+      "saved": "Sparad.",
+      "added": "Lagt till.",
+      "noResult": "Inget resultat.",
+      "uploadSuccess": "Uppladdad."
+    }
+  },
+  "app": {
+    "ui": {
+      "button": {
+        "lang": "Svenska"
+      },
+      "navigation": {
+        "wallet": "Plånbok",
+        "cns": "CNS",
+        "explore": "Utforska",
+        "settings": "inställningar"
+      }
+    },
+    "message": {
+      "notification": {
+        "copySuccess": "Kopierade.",
+        "copyFailed": "Kopieringen misslyckades.",
+        "transactionComplete": {
+          "title": "Transaktionen klar!",
+          "body": "Din transaktion vid block {block} har slutförts."
+        }
+      }
+    }
+  },
+  "footer": {
+    "ui": {
+      "productInfo": {
+        "name": "Pawket",
+        "author": "SutuLabs",
+        "authorLink": "https://github.com/SutuLabs"
+      },
+      "button": {
+        "home": "Hem",
+        "developer": "Utvecklare"
+      },
+      "error": {
+        "READ_VERSION_FAILED": "Det gick inte att läsa versionen."
+      }
+    }
+  },
+  "self-test": {
+    "message": {
+      "checking": "Kontroll",
+      "passed": "passerade",
+      "failed": "Det gick inte att kontrollera: "
+    }
+  },
+  "verifyPassword": {
+    "ui": {
+      "button": {
+        "confirm": "Bekräfta",
+        "clear": "Återställ Wallet"
+      },
+      "title": {
+        "verifyPassword": "Verifiera lösenord"
+      },
+      "alt": {
+        "logoAlt": "Pawket logotyp"
+      }
+    },
+    "message": {
+      "confirmation": {
+        "clear": "Om du återställer plånboken tar du permanent bort all data (inklusive minnesminnen och lösenord) från din enhet, se till att plånbokens minneskort har säkerhetskopierats. ",
+        "confirmText": "Bekräfta",
+        "cancelText": "Annullera"
+      },
+      "error": {
+        "passwordNotMatch": "Lösenordet matchar inte.",
+        "incorrectPassword": "Fel lösenord.",
+        "passwordEmpty": "Lösenordet får inte vara tomt."
+      },
+      "tip": {
+        "weakPassword": "Svag",
+        "mediumPassword": "Medium",
+        "strongPassword": "Stark"
+      }
+    }
+  },
+  "createSeed": {
+    "ui": {
+      "button": {
+        "confirm": "Bekräfta",
+        "later": "Senare",
+        "ready": "Nästa",
+        "12word": "12 ord",
+        "24word": "24 ord",
+        "import12": "Importera Pawket Mnemoniska ord",
+        "import24": "Importera Chia officiella Mnemoniska ord"
+      },
+      "text": {
+        "create": {
+          "tip1": "Välkommen! ",
+          "tip2": "VARNING: AVSLUTA ALDRIG DINA MNEMONISKA ORD. "
+        },
+        "import12": {
+          "title": "Importera Pawket Mnemoniska ord",
+          "tip": "Vänligen ange dina Pawket Mnemonics Ord i ordning, använd mellanslag mellan Mnemonics."
+        },
+        "import24": {
+          "title": "Importera Chia officiella Mnemoniska ord",
+          "tip": "Vänligen ange dina Chia officiella Mnemonics Ord i ordning, använd mellanslag mellan Mnemonics."
+        }
+      }
+    },
+    "message": {
+      "error": {
+        "wrongSeed": "Importen misslyckades, kontrollera dina Mnemoniska ord.",
+        "notInBip39": "{wordList} finns inte i BIP39-ordlistan"
+      }
+    }
+  },
+  "accountDetail": {
+    "ui": {
+      "button": {
+        "receive": "Motta",
+        "buy": "köpa",
+        "send": "Skicka",
+        "scan": "Skanna",
+        "confirm": "Bekräfta",
+        "cancel": "Annullera",
+        "manageCats": "Hantera CATs"
+      },
+      "tab": {
+        "asset": "Tillgång",
+        "utxos": "UTXO",
+        "nft": "NFT",
+        "did": "DID"
+      },
+      "tooltip": {
+        "lock": "Lås plånbok",
+        "errorLog": "Felloggen",
+        "refresh": "Uppdatera"
+      },
+      "dApps": {
+        "title": "dApps",
+        "tooltip": {
+          "donate": "Donera för att stödja utveckling",
+          "scanAssets": "Skanna tillgångar",
+          "proxy": "Offline tecken",
+          "takeOffer": "Ta Offer",
+          "makeOffer": "Gör erbjudande",
+          "batchSend": "Batch skicka",
+          "mintCat": "Utfärda CAT",
+          "mintNft": "Mint NFT",
+          "batchMintNft": "Batch Mint",
+          "verify": "Verifiera meddelande",
+          "encryptMessage": "Kryptera meddelande",
+          "decryptMessage": "Dekryptera meddelande"
+        },
+        "button": {
+          "donate": "Donera",
+          "scanAssets": "Skanna tillgångar",
+          "proxy": "Offline tecken",
+          "takeOffer": "Ta Offer",
+          "makeOffer": "Gör erbjudande",
+          "batchSend": "Batch skicka",
+          "mintCat": "Utfärda CAT",
+          "mintNft": "Mint NFT",
+          "batchMintNft": "Batch Mint",
+          "verify": "Verifiera meddelande",
+          "encryptMessage": "Kryptera meddelande",
+          "decryptMessage": "Dekryptera meddelande"
+        }
+      }
+    },
+    "message": {
+      "confirmation": {
+        "lock": "Låsa plånboken?"
+      },
+      "notification": {
+        "donate": "Du donerar till utvecklarna.",
+        "observeMode": "Interaktionsfunktionen inaktiverad i observationsläge",
+        "offline": "Offlineläge.",
+        "test": "Obs: kitten.pawket.app är en testsajt där du kan uppleva några nya funktioner som inte har släppts."
+      }
+    }
+  },
+  "changePassword": {
+    "ui": {
+      "title": {
+        "changePassword": "Ändra lösenord"
+      },
+      "label": {
+        "oldPassword": "Gammalt lösenord",
+        "newPassword": "nytt lösenord",
+        "rePassword": "Skriv lösenordet igen"
+      },
+      "button": {
+        "back": "Tillbaka",
+        "submitChange": "Skicka in"
+      }
+    },
+    "message": {
+      "error": {
+        "passwordRequired": "Lösenord krävs.",
+        "passwordNotCorrect": "Fel lösenord.",
+        "passwordNotMatch": "Lösenordet matchar inte."
+      },
+      "alert": {
+        "passwordChanged": "Lösenordet har ändrats. "
+      }
+    }
+  },
+  "explorerLink": {
+    "ui": {
+      "title": {
+        "link": "Ta emot adresser"
+      },
+      "label": {
+        "maxAddress": "Max antal adresser",
+        "address": "Adress",
+        "coin": "Mynt",
+        "sign": "Skylt",
+        "link": "Utforskare",
+        "observer": "Observatör",
+        "nonObserver": "Icke-observatör"
+      },
+      "tooltip": {
+        "blockchainExplorer": "Visa på Block Explorer",
+        "receiveAddress": "Du kan kontrollera saldot på fler adresser om du ökar värdet, men plånboken går långsammare."
+      }
+    }
+  },
+  "send": {
+    "ui": {
+      "title": {
+        "send": "Skicka"
+      },
+      "label": {
+        "amount": "Belopp",
+        "memo": "PM",
+        "fee": "Avgift"
+      },
+      "button": {
+        "submit": "Skicka in",
+        "showSend": "Show"
+      },
+      "slider": {
+        "low": "Låg",
+        "medium": "Medium",
+        "high": "Hög",
+        "custom": "Beställnings"
+      },
+      "messages": {
+        "getFailedResponse": "Få felsvar: ",
+        "failedToSubmit": "Det gick inte att skicka till minnespoolen: ",
+        "failedToSign": "Det gick inte att underteckna: ",
+        "submitted": "Inlämnad till minnespoolen.",
+        "invalidAmount": "Ogiltigt belopp.",
+        "insufficientFunds": "Otillräckliga medel."
+      },
+      "span": {
+        "loading": "Läser in",
+        "maxLeadingText": "Max:"
+      },
+      "text": {
+        "offlineOnlySupportXch": "Offline skicka bara stöd XCH nu."
+      },
+      "summary": {
+        "notification": "Är du säker på att skicka?<br/>Granska din transaktion."
+      }
+    },
+    "messages": {
+      "error": {
+        "DOUBLE_SPEND": "Dubbla utgifter",
+        "UNKNOWN_UNSPENT": "En okänd UTXO har använts, kanske den tidigare transaktionen inte har bekräftats på blockkedjan.",
+        "BAD_AGGREGATE_SIGNATURE": "Dålig samlad signatur",
+        "INVALID_CONDITION": "Ogiltigt tillstånd",
+        "COIN_AMOUNT_EXCEEDS_MAXIMUM": "Myntbelopp överstiger max",
+        "INVALID_FEE_LOW_FEE": "Ogiltig avgift/låg avgift",
+        "MEMPOOL_NOT_INITIALIZED": "Mempool inte initierad",
+        "ALREADY_INCLUDING_TRANSACTION": "Inkluderar redan transaktion",
+        "INCOMPATIBLE_NETWORK_ID": "Inkompatibelt nätverks-ID",
+        "NO_TRANSACTIONS_WHILE_SYNCING": "Ingen transaktion under synkronisering",
+        "INVALID_FEE_TOO_CLOSE_TO_ZERO": "Ogiltig avgift, för nära noll",
+        "COIN_AMOUNT_NEGATIVE": "Myntbeloppet är negativt",
+        "INVALID_ADDRESS": "Ogiltig adress",
+        "ADDRESS_NOT_MATCH_NETWORK": "Den ifyllda adressen matchar inte det aktuella nätverket. ",
+        "PENDING": "Transaktionen har redan väntande status, vänta tills den är klar."
+      }
+    }
+  },
+  "scanQrCode": {
+    "message": {
+      "error": {
+        "NotAllowedError": "FEL: Du måste ge kameratillstånd.",
+        "NotFoundError": "FEL: Ingen kamera på den här enheten.",
+        "NotSupportedError": "FEL: Säker kontext krävs (HTTPS, localhost).",
+        "NotReadableError": "FEL: Används kameran redan?",
+        "OverconstrainedError": "FEL: Installerad kamera är inte lämplig.",
+        "StreamApiNotSupportedError": "FEL: Stream API stöds inte i den här webbläsaren.",
+        "InsecureContextError": "FEL: Kameraåtkomst tillåts endast i säkra sammanhang. "
+      }
+    }
+  },
+  "offer": {
+    "make": {
+      "ui": {
+        "title": "Gör erbjudande",
+        "panel": {
+          "information": "Information",
+          "hint": {
+            "thisIsYourOffer": "Det här är din erbjudandetext.",
+            "unsignedOffer": "Signaturen misslyckades, ogiltigt erbjudande"
+          }
+        },
+        "label": {
+          "yourOfferTitle": "Ditt erbjudande",
+          "bundle": "Bunt"
+        },
+        "button": {
+          "done": "Gjort",
+          "uploadToDexie": "Ladda upp till Dexie"
+        },
+        "field": {
+          "offer": "Erbjudande",
+          "request": "Begäran"
+        }
+      },
+      "messages": {
+        "failedToSign": "Det gick inte att lägga ett bud."
+      }
+    },
+    "symbol": {
+      "Cat": "KATT",
+      "hint": {
+        "XCH": "Original Token"
+      }
+    },
+    "take": {
+      "ui": {
+        "title": "Ta erbjudande",
+        "hint": {
+          "pasteOffer": "Klistra in din erbjudandedata här eller ladda upp din erbjudandefil.",
+          "error": "Din erbjudandesträng är felaktig."
+        },
+        "panel": {
+          "information": "Information"
+        },
+        "label": {
+          "royaltyToCreator": "Skapare",
+          "totalRequested": "Totalt begärt belopp",
+          "nftPrice": "NFT-pris",
+          "royalty": "Kunglighet",
+          "total": "Total",
+          "receive": "Motta",
+          "offer": "Erbjudande",
+          "fee": "Avgift",
+          "totalPayment": "Total betalning"
+        },
+        "button": {
+          "cancel": "Annullera",
+          "submit": "Skicka in",
+          "upload": "Ladda upp erbjudandefil"
+        },
+        "field": {
+          "offer": "Erbjudande"
+        },
+        "tooltip": {
+          "spaceScan": "Se på Spacescan.io",
+          "verifiedCns": "Verifierad CNS",
+          "unverifiedCns": "Detta är en falsk CNS. "
+        },
+        "notification": {
+          "observation": "För närvarande i observationsläge. "
+        }
+      },
+      "information": {
+        "requested": "I utbyte mot",
+        "offered": "Du kommer att få",
+        "addCat": "Lägg till i CAT-listan.",
+        "unsupportOfferNftOffer": "Den här typen av erbjudanden stöds inte ännu.",
+        "acceptOffer": "Är du säker på att acceptera erbjudandet?<br>Granska din transaktion."
+      },
+      "messages": {
+        "failedToSign": "Det gick inte att ta erbjudandet.",
+        "unsupportOfferNftOffer": "Den här typen av erbjudanden stöds inte ännu."
+      }
+    }
+  },
+  "ManageCats": {
+    "ui": {
+      "title": {
+        "ManageCats": "Hantera katter"
+      },
+      "label": {
+        "listingCats": "CATs lista",
+        "name": "namn",
+        "assetID": "Tillgångs-ID",
+        "search": "Sök",
+        "custom": "Beställnings"
+      },
+      "button": {
+        "add": "Lägg till"
+      },
+      "tooltip": {
+        "removeToken": "Ta bort CAT",
+        "drag": "Dra för att sortera",
+        "copy": "Kopiera tillgångs-ID"
+      },
+      "message": {
+        "nameRequired": "Namn krävs.",
+        "assetIdRequired": "Tillgångs-ID krävs."
+      }
+    },
+    "message": {
+      "notification": {
+        "wrongAssetId": "Fel tillgångs-ID. "
+      },
+      "confirmation": {
+        "removeToken": "Är du säker på att ta bort CAT?",
+        "closeWithContent": "Du har osparade ändringar på den här sidan som kommer att gå förlorade om du navigerar bort. ",
+        "confirm": "Bekräfta",
+        "cancel": "Annullera"
+      },
+      "alert": {
+        "isExisted": "Tillgångs-ID/namn finns redan i CAT-listan!"
+      }
+    }
+  },
+  "offline": {
+    "proxy": {
+      "scan": {
+        "title": "Skylt",
+        "numberField": "Osignerade meddelanden",
+        "numberMessage": "Skanna dessa följande QR-koder med Offline Sign. "
+      },
+      "confirmBundle": {
+        "title": "Bekräfta",
+        "button": {
+          "cancel": "Annullera",
+          "submit": "Skicka in"
+        },
+        "notification": "Är du säker på att skicka?<br/>Granska din transaktion."
+      }
+    },
+    "client": {
+      "text": {
+        "qrcodesStatus": "{index} / {total}",
+        "unsafeMode": "Osäkert läge",
+        "status": "Skannat: {fragment} / {total} fragment(er)."
+      },
+      "scan": {
+        "title": "Offline tecken",
+        "numberField": "Signerat meddelande",
+        "numberMessage": "Skanna den här QR-koden med den onlineenhet som just startade transaktionen.",
+        "scrollDown": "Rulla ner på sidan och skanna QR-koden på offlineenheten för att få det signerade meddelandet."
+      },
+      "show": {
+        "hint": "Använd proxy för att skanna QR för att skicka din transaktion.",
+        "overflow": "Data överskrider maximal längd, kan inte generera QR-kod",
+        "bundle": "Bunt",
+        "copy": "Kopiera"
+      }
+    },
+    "ui": {
+      "button": {
+        "cancel": "Annullera"
+      }
+    }
+  },
+  "addByMnemonic": {
+    "ui": {
+      "label": {
+        "name": "Kontonamn",
+        "mnemonic": "{len} Mnemoniska ord"
+      },
+      "message": {
+        "nameRequired": "Kontonamn krävs.",
+        "mnemonicRequired": "Mnemonik krävs.",
+        "invalidMnemonic": "Importen misslyckades. "
+      },
+      "button": {
+        "back": "Tillbaka",
+        "submit": "Skicka in"
+      },
+      "tooltip": {
+        "mnemonic": "Vänligen ange dina Mnemonics Ord i ordning, använd mellanslag mellan Mnemonics."
+      }
+    },
+    "message": {
+      "error": {
+        "accountMnemonicExists": "Ett konto med samma Mnemonic Words finns redan."
+      }
+    }
+  },
+  "addByAddress": {
+    "ui": {
+      "title": "Lägg till efter adress",
+      "label": {
+        "name": "Kontonamn",
+        "publicKey": "PublicKey"
+      },
+      "message": {
+        "nameRequired": "Kontonamn krävs.",
+        "illegalAddress": "Felaktig adress.",
+        "duplicateAddress": "Dubblettadress: [{accName}] har samma adress.",
+        "duplicateName": "Duplicerat namn",
+        "duplicatePublicKey": "Duplicate PublicKey: [{accName}] har samma publicKey."
+      },
+      "button": {
+        "back": "Tillbaka",
+        "submit": "Skicka in"
+      }
+    }
+  },
+  "addByPassword": {
+    "ui": {
+      "title": "Lägg till Shadow Wallet",
+      "label": {
+        "name": "Kontonamn",
+        "password": "Lösenfras",
+        "rePassword": "Ange lösenordsfrasen igen"
+      },
+      "message": {
+        "nameRequired": "Kontonamn krävs.",
+        "passwordRequired": "Lösenfras krävs.",
+        "invalidPassword": "Lösenfrasen matchar inte."
+      },
+      "button": {
+        "back": "Tillbaka",
+        "submit": "Skicka in"
+      }
+    },
+    "message": {
+      "error": {
+        "accountPasswordExists": "[{accName}] har samma lösenfras."
+      }
+    }
+  },
+  "addBySerial": {
+    "ui": {
+      "title": "Lägg till konto via seriell",
+      "label": {
+        "name": "Kontonamn"
+      },
+      "message": {
+        "nameRequired": "Kontonamn krävs."
+      },
+      "button": {
+        "back": "Tillbaka",
+        "submit": "Skicka in"
+      }
+    }
+  },
+  "bundleSummary": {
+    "ui": {
+      "fee": {
+        "title": "Avgift",
+        "mojos": "{fee} mojo(s)"
+      },
+      "inputs": {
+        "title": "Totala summan"
+      },
+      "label": {
+        "details": "Detaljer"
+      },
+      "detail": {
+        "title": "Detaljer",
+        "itemTo": "att poängtera}",
+        "span": {
+          "hint": "Tips (motsvarande adress)",
+          "memo": "PM"
+        }
+      }
+    },
+    "notification": {
+      "error": {
+        "unknownMod": "Okänd bunt, kan inte tolka korrekt."
+      }
+    }
+  },
+  "batchSend": {
+    "ui": {
+      "title": {
+        "send": "Batch skicka"
+      },
+      "tooltip": {
+        "help": "Stöder att skicka flera transaktioner i en operation. ",
+        "upload": "Ladda upp en fil i \".csv\"-format."
+      },
+      "field": {
+        "csv": {
+          "fillSample": "Fyll prov",
+          "or": " eller ",
+          "downloadSample": "Ladda ner ett exempel på en CSV-fil",
+          "drag": "Dra och släpp till det här området för att ladda upp direkt.",
+          "sampleName": "Prov"
+        }
+      },
+      "summary": {
+        "notification": "Är du säker på att skicka?<br/>Granska din transaktion."
+      },
+      "button": {
+        "upload": "Ladda upp CSV"
+      },
+      "messages": {
+        "failedToSign": "Det gick inte att underteckna: ",
+        "wrongFileType": "Ladda upp filen i .csv-format.",
+        "onlyOneFile": "Endast en filuppladdning stöds."
+      }
+    },
+    "messages": {
+      "error": {
+        "ADDRESS_NOT_MATCH_NETWORK": "Den ifyllda adressen [{address}] matchar inte det aktuella nätverket. ",
+        "COIN_NOT_EXIST": "{symbol}-myntet finns inte!"
+      }
+    },
+    "sample": {
+      "address": "Adress",
+      "coin": "Mynt",
+      "amount": "Belopp (mojo)",
+      "memo": "Memo (Om myntet du skickar är XCH kan du inte fylla i memo)"
+    }
+  },
+  "utxo": {
+    "ui": {
+      "label": {
+        "cost": "Skicka",
+        "receive": "Motta",
+        "queue": "Kö",
+        "confirmed": "Bekräftad"
+      },
+      "text": {
+        "empty": "Du har inga transaktioner."
+      }
+    }
+  },
+  "utxoDetail": {
+    "ui": {
+      "title": {
+        "cost": "Skicka",
+        "receive": "Motta"
+      },
+      "label": {
+        "amount": "Belopp",
+        "time": "Tid",
+        "spentHeight": "Tillbringade höjd",
+        "confirmedHeight": "Bekräftad höjd",
+        "parentCoinInfo": "ParentCoinInfo",
+        "puzzleHash": "Adress",
+        "coinName": "Mynts namn",
+        "coins": "Mynt",
+        "pending": "I väntan på"
+      },
+      "button": {
+        "unlockCoins": "Lås upp mynt"
+      },
+      "tooltip": {
+        "copy": "Kopiera"
+      }
+    },
+    "message": {
+      "unlockCoins": "Att låsa upp myntet kommer inte att avbryta transaktionen. "
+    }
+  },
+  "sendSummary": {
+    "ui": {
+      "label": {
+        "sending": "Sändning",
+        "to": "Till",
+        "fee": "Avgift",
+        "total": "Total",
+        "assetId": "Tillgångs-ID",
+        "NftUri": "NFT"
+      }
+    }
+  },
+  "bundleText": {
+    "ui": {
+      "title": "Bunt",
+      "copy": "Kopiera",
+      "button": {
+        "show": "Show",
+        "hide": "Dölj"
+      }
+    }
+  },
+  "mintCat": {
+    "ui": {
+      "title": "Utfärda CAT",
+      "label": {
+        "amount": "Belopp",
+        "memo": "PM",
+        "symbolName": "CAT-namn (kan ändras)"
+      },
+      "summary": {
+        "notification": "Är du säker på att du utfärdar CAT?<br/>Granska din transaktion.",
+        "label": {
+          "leadingText": "Utfärdar CAT"
+        }
+      },
+      "messages": {
+        "failedToSign": "Det gick inte att underteckna: ",
+        "tokenNameUnavailable": "CAT-namnet är inte tillgängligt."
+      }
+    }
+  },
+  "addressBook": {
+    "ui": {
+      "title": {
+        "list": "Adressbok",
+        "add": "Lägg till"
+      },
+      "button": {
+        "cancel": "Annullera",
+        "confirm": "Bekräfta",
+        "addContact": "Lägg till adress",
+        "showInnerAcc": "Mina konton"
+      },
+      "tooltip": {
+        "remove": "Avlägsna"
+      }
+    },
+    "messages": {
+      "notification": {
+        "contactAdded": "Lagt till.",
+        "contactRemoved": "Tog bort.",
+        "saved": "Sparad."
+      },
+      "alert": {
+        "addressExists": "Adressen finns redan i adressboken."
+      },
+      "confirmation": {
+        "removeConfirm": "Är du säker på att ta bort den här adressen från din adressbok?"
+      }
+    }
+  },
+  "addressDetail": {
+    "ui": {
+      "title": {
+        "detail": "Detaljer",
+        "edit": "Redigera"
+      },
+      "label": {
+        "name": "namn",
+        "address": "Adress"
+      },
+      "tooltip": {
+        "copy": "Kopiera"
+      },
+      "button": {
+        "edit": "Redigera"
+      }
+    }
+  },
+  "addressBookField": {
+    "ui": {
+      "label": {
+        "name": "namn",
+        "address": "*Adress"
+      },
+      "messages": {
+        "emptyAddress": "Ange adressen.",
+        "illegalAddress": "Felaktig adress."
+      },
+      "button": {
+        "cancel": "Annullera",
+        "save": "Spara"
+      },
+      "placeholder": {
+        "address": "Adress eller CNS"
+      }
+    }
+  },
+  "mintNft": {
+    "ui": {
+      "title": "Mint NFT",
+      "label": {
+        "did": "DID",
+        "memo": "PM",
+        "uri": "URI",
+        "hash": "Hash"
+      },
+      "summary": {
+        "notification": "Är du säker på att du ska prägla NFT?<br/>Granska din transaktion.",
+        "label": {
+          "leadingText": "Minting NFT"
+        }
+      },
+      "tooltip": {
+        "upload": "Välj en fil för att generera en hash för din NFT."
+      },
+      "button": {
+        "upload": "Skaffa bildhash"
+      },
+      "messages": {
+        "failedToSign": "Det gick inte att underteckna: "
+      }
+    }
+  },
+  "addressField": {
+    "ui": {
+      "label": {
+        "address": "Adress",
+        "bindingAddress": "Bindande adress:",
+        "lastChanged": "Senast ändrad:",
+        "hour": "{value}h sedan",
+        "day": "{value}d sedan",
+        "week": "{value} v sedan",
+        "month": "{value}mån sedan",
+        "year": "{value}y sedan"
+      },
+      "tooltip": {
+        "qr": "Skanna QR",
+        "addressBook": "Öppna adressboken",
+        "confirmed": "Bekräftad",
+        "confirming": "Bekräftande",
+        "wrong": "Fel"
+      },
+      "span": {
+        "newAddress": "Ny adress hittades, klicka för att lägga till i adressboken."
+      },
+      "resolve": {
+        "fail": "Misslyckades med att lösa namnet",
+        "notFound": "Hittades inte"
+      }
+    }
+  },
+  "errorLog": {
+    "ui": {
+      "title": "Felloggen",
+      "label": {
+        "message": "Meddelande",
+        "stack": "Stack"
+      },
+      "field": {
+        "msg": "Meddelande",
+        "info": "Info",
+        "url": "URL",
+        "empty": "Inga uppgifter"
+      },
+      "button": {
+        "clearAll": "Rensa alla"
+      }
+    }
+  },
+  "searchCat": {
+    "ui": {
+      "placeholder": "CAT-namn",
+      "tag": {
+        "imported": "Importerad"
+      },
+      "text": {
+        "emptyList": "Tomt resultat",
+        "ascription": "Drivs av TailDatabase"
+      }
+    }
+  },
+  "settings": {
+    "menu": {
+      "title": "inställningar",
+      "items": {
+        "general": {
+          "title": "Allmän",
+          "description": "Språk, nätverk och valutakonvertering"
+        },
+        "security": {
+          "title": "säkerhet",
+          "description": "Export av lösenord, minnesminne och privat information"
+        },
+        "addressBook": {
+          "title": "Adressbok",
+          "description": "Lägg till, redigera, ta bort och hantera dina kontaktadresser"
+        },
+        "network": {
+          "title": "Nätverk",
+          "description": "Lägg till, redigera, ta bort och hantera ditt nätverk"
+        },
+        "collection": {
+          "title": "Samling",
+          "description": "Skapa, redigera, ta bort och hantera din samling"
+        },
+        "advanced": {
+          "title": "Avancerad",
+          "description": "Experimentell"
+        },
+        "devhelper": {
+          "title": "Utvecklare",
+          "description": "Bech32m, CLVM, Bundle, Offer, Mynt"
+        },
+        "about": {
+          "title": "Handla om",
+          "description": "Sekretesspolicy, Pawket-version, Kontakta oss"
+        },
+        "lock": "Lås plånbok"
+      }
+    },
+    "general": {
+      "title": "Allmän",
+      "label": {
+        "language": "Språk",
+        "network": "Nätverk",
+        "currency": "Valutaväxling",
+        "offlineMode": "Offlineläge",
+        "darkMode": "Mörkt läge"
+      }
+    },
+    "security": {
+      "title": "säkerhet",
+      "label": {
+        "mnemonic": "Mnemoniska ord",
+        "password": "Inloggningslösenord",
+        "export": "Exportera privat information",
+        "reset": "Återställ Wallet"
+      },
+      "message": {
+        "clear": "Återställning av plånbok kommer att permanent ta bort all data (inklusive Mnemonic Words och lösenord) från din enhet, se till att plånbok Mnemonic Words har säkerhetskopierats. ",
+        "inputPassword": "Ange lösenord för att fortsätta",
+        "passwordNotCorrect": "Fel lösenord.",
+        "backupConfirmTitle": "FORTSÄTT MED FÖRSIKTIGHET",
+        "backupConfirm": "Denna operation kommer att exportera säkerhetskopieringsinformationen för plånboken (inklusive Mnemonic Words och Public Key), som kan användas för att återställa plånboken på andra enheter."
+      },
+      "button": {
+        "showMnemonic": "Avslöja Mnemoniska ord",
+        "hideMnemonic": "Göm Mnemoniska ord",
+        "password": "Ändra lösenord",
+        "backup": "Säkerhetskopiera plånboksinformation",
+        "reset": "Återställ Wallet"
+      }
+    },
+    "devhelper": {
+      "title": "Utvecklare"
+    },
+    "advanced": {
+      "title": "Avancerad",
+      "label": {
+        "experimental": "Experimentell"
+      },
+      "confirmation": {
+        "experimental": "Experimentella funktioner är inte stabila och inte helt testade ännu, du kan prova och ge oss din feedback."
+      },
+      "description": "Efter att ha aktiverat det här läget kan du använda experimentella funktioner, som \"Gör erbjudande\", \"Ta erbjudande\", \"Sändning i grupp\", \"Utfärda CAT\", \"Shadow Wallet\" etc.",
+      "warning": "Experimentella funktioner är inte stabila och inte helt testade ännu, du kan prova och ge oss din feedback. "
+    },
+    "about": {
+      "title": "Handla om",
+      "links": {
+        "title": "Länkar",
+        "label": {
+          "privacyPolicy": "Integritetspolicy",
+          "pawketWebsite": "Pawkets hemsida",
+          "github": "Github",
+          "twitter": "Twitter",
+          "discord": "Discord",
+          "donate": "Donera till utvecklare"
+        },
+        "url": {
+          "privacyPolicy": "https://info.pawket.app/privacy-policy",
+          "pawketWebsite": "https://info.pawket.app",
+          "github": "https://github.com/SutuLabs",
+          "twitter": "https://twitter.com/pawket_app",
+          "discord": "https://discord.com/invite/ndQgpHwe4V"
+        }
+      }
+    }
+  },
+  "explore": {
+    "title": "Utforska",
+    "loading": "Läser in",
+    "ascription": "Drivs av Dexie",
+    "nft": {
+      "title": "NFT-marknaden"
+    },
+    "cat": {
+      "title": "CAT-marknaden"
+    },
+    "button": {
+      "buy": "köpa",
+      "sell": "Sälja",
+      "takeOffer": "Ta Offer"
+    },
+    "table": {
+      "header": {
+        "offer": "Erbjudande",
+        "receive": "Motta",
+        "price": "Pris",
+        "operation": "Handling"
+      }
+    }
+  },
+  "accountManagement": {
+    "ui": {
+      "title": "Kontohantering",
+      "label": {
+        "default": "Standard",
+        "serial": "Serie",
+        "address": "Adress",
+        "imported": "Importerad",
+        "passPhrase": "Lösenfras",
+        "publicKey": "PublicKey",
+        "unknown": "Okänd"
+      },
+      "button": {
+        "addBySerial": "Lägg till med seriell",
+        "addByPassword": "Lägg till Shadow Wallet",
+        "addByLegacy": "Importera Chia officiell plånbok (24-ord)",
+        "addByMnemonic": "Importera Nucle/Goby Wallet (12-ord)",
+        "addByAddress": "Lägg till efter adress (observationsläge)",
+        "addByPublicKey": "Lägg till med PublicKey"
+      },
+      "tooltip": {
+        "addBySerial": "Härledda seriekonton skapas i ordning.",
+        "addByPassword": "Kontot skyddas av MNEMONIC och PASSPHRASE. ",
+        "addByLegacy": "Importera Chia officiell plånbok.",
+        "addByMnemonic": "Importera Nucle/Goby-plånbok.",
+        "addByAddress": "Skrivskyddat stöds i detta läge.",
+        "addByPublicKey": "Lägg till den offentliga nyckeln för offline-plånboken för att hjälpa till att initiera och slutföra transaktioner."
+      },
+      "modal": {
+        "addByLegacy": "Importera Chia officiell plånbok",
+        "addByMnemonic": "Importera Nucle/Goby Wallet"
+      },
+      "value": {
+        "defaultName": "Konto{n}"
+      }
+    },
+    "message": {
+      "confirmation": {
+        "removeAccount": "Vill du ta bort [{accountName}]? ",
+        "cancelText": "Annullera",
+        "confirmText": "OK"
+      },
+      "prompt": {
+        "setAccountName": "Ange nytt namn",
+        "cancelText": "Annullera",
+        "confirmText": "OK"
+      },
+      "notification": {
+        "saved": "Sparad"
+      }
+    }
+  },
+  "welcome": {
+    "ui": {
+      "description": "Hantera dina XCH/CATs i Pawket!",
+      "slogan": "Pawket är och kommer att fortsätta att vara din goda följeslagare i Chia-världen.",
+      "button": {
+        "start": "START"
+      }
+    }
+  },
+  "disclaimer": {
+    "ui": {
+      "title": "varning",
+      "tip": "Se till att alltid säkerhetskopiera dina Mnemoniska ord och privata nycklar. ",
+      "privary": "Vi kan komma att ändra integritetspolicyn då och då. ",
+      "agreementPrefix": "jag accepterar ",
+      "agreement": "Integritetspolicy",
+      "link": "https://info.pawket.app/privacy-policy/",
+      "agreementSuffix": "och vill komma åt Pawket.",
+      "button": {
+        "continue": "FORTSÄTTA"
+      }
+    }
+  },
+  "createPassword": {
+    "title": "Skapa lösenord",
+    "tip": "Innan du börjar, vänligen ange ett inloggningslösenord. ",
+    "label": {
+      "password": "Lösenord",
+      "confirm": "Bekräfta lösenord"
+    },
+    "button": {
+      "continue": "FORTSÄTTA"
+    }
+  },
+  "createWallet": {
+    "title": "Skapa plånbok",
+    "button": {
+      "create": "Skapa",
+      "import": "Importera",
+      "backup": "Importera säkerhetskopia av plånbok"
+    }
+  },
+  "newWallet": {
+    "title": "Ny plånbok"
+  },
+  "importWallet": {
+    "title": "Importera plånbok"
+  },
+  "accountInfo": {
+    "ui": {
+      "title": {
+        "export": "Kontoinformation"
+      },
+      "label": {
+        "name": "namn",
+        "type": "Typ",
+        "fingerprint": "Fingeravtryck",
+        "masterPublicKey": "Huvudnyckel (m)",
+        "farmerPublicKey": "Lantbruksnyckel (m/12381/8444/0/0)",
+        "poolPublicKey": "Offentlig poolnyckel (m/12381/8444/1/0)",
+        "firstWalletAddress": "Första plånboksadressen",
+        "mnemonicSeed": "Mnemoniska ord (24 ord)",
+        "connectionManagement": "Anslutningshantering",
+        "details": "Detaljer"
+      },
+      "tooltip": {
+        "fingerprintTip": "Kompatibel med Chia officiella plånbok",
+        "mnemonicTip": "Kompatibel med Chia officiella plånbok",
+        "disconnect": "Koppla ifrån"
+      },
+      "button": {
+        "reveal": "Avslöja",
+        "hide": "Dölj",
+        "delete": "Radera"
+      }
+    },
+    "message": {
+      "inputPassword": "Ange lösenord för att fortsätta",
+      "passwordNotCorrect": "Fel lösenord.",
+      "disconnect": "Är du säker på att koppla bort [{acc}] från den här webbplatsen?"
+    }
+  },
+  "nftDetail": {
+    "ui": {
+      "label": {
+        "nftId": "NFT ID:",
+        "collection": "Samling",
+        "did": "DID",
+        "description": "Beskrivning",
+        "expirationDate": "Utgångsdatum"
+      },
+      "button": {
+        "transfer": "Överföra",
+        "makeOffer": "Sälja",
+        "move": "Flytta",
+        "showMore": "Visa mer",
+        "showLess": "Visa mindre"
+      },
+      "title": {
+        "properties": "Egenskaper",
+        "bindingInformation": "Bindande information",
+        "details": "Detaljer"
+      },
+      "bindingInformation": {
+        "address": "Adress",
+        "publicKey": "Offentlig nyckel",
+        "did": "DID",
+        "text": "Text",
+        "edit": "Redigera"
+      },
+      "details": {
+        "nftId": "NFT ID:",
+        "launcherId": "Launcher ID",
+        "ownerDid": "Owner DID",
+        "ownerAddress": "Owner Address",
+        "royaltyPercentage": "Royalty Percentage",
+        "dataUrl": "Data URL {index}",
+        "dataHash": "Data Hash",
+        "metadataUrl": "Metadata URL {index}",
+        "metadataHash": "Metadata Hash",
+        "licenseUrl": "License URL",
+        "licenseHash": "License Hash",
+        "series": "Series"
+      },
+      "dropdown": {
+        "spaceScan": "Se på Spacescan.io",
+        "mintGarden": "Se på Mintgarden.io",
+        "setAsProfilePic": "Ställ in som kontoavatar",
+        "signWithNft": "Skylt",
+        "nftBurn": "Bränn NFT"
+      },
+      "profile": {
+        "all": "Alla NFT:er",
+        "unassigned": "Ej tilldelade NFT:er"
+      }
+    }
+  },
+  "did": {
+    "ui": {
+      "title": {
+        "detail": "Detaljer"
+      },
+      "button": {
+        "addDid": "Lägg till DID",
+        "sign": "Skylt"
+      },
+      "label": {
+        "name": "namn",
+        "did": "DID",
+        "tool": "Verktyg"
+      },
+      "prompt": {
+        "newName": "Ange nytt namn"
+      }
+    },
+    "addDid": {
+      "title": "Lägg till DID",
+      "tip": "Du kommer att använda 1 mojo för att skapa en DID.",
+      "balance": "Balans",
+      "confirmation": "Är du säker på att du skapar en DID?<br>Granska din transaktion.",
+      "spend": "Spendera"
+    }
+  },
+  "nftTransfer": {
+    "ui": {
+      "title": "Överföra",
+      "description": "Du kommer att överföra denna NFT till en ny ägare.",
+      "summary": {
+        "confirmation": "Är du säker på att du vill överföra NFT?<br>Granska din transaktion."
+      }
+    }
+  },
+  "collection": {
+    "myCollection": {
+      "title": "Min samling",
+      "specialNote": "Särskild anmärkning: Insamlingsinformation kommer inte att laddas upp till blockkedjan, och data kommer att lagras på din lokala enhet. ",
+      "button": {
+        "newCollection": "Ny kollektion"
+      },
+      "tooltip": {
+        "edit": "Redigera",
+        "remove": "Avlägsna"
+      },
+      "messages": {
+        "confirmation": {
+          "delete": "Är du säker på att ta bort samlingen?"
+        },
+        "information": {
+          "NO_COLLECTION": "Ingen samling"
+        }
+      }
+    },
+    "createCollection": {
+      "title": "Skapa samling",
+      "label": {
+        "id": "*ID",
+        "name": "*Namn",
+        "description": "Beskrivning",
+        "icon": "*Ikon",
+        "uploadImage": "Ladda upp bild:",
+        "url": "URL:",
+        "hash": "Hash:",
+        "fillUrl": "Fyll i bildens URL",
+        "iconUrl": "Ikon URL",
+        "iconHash": "Ikon Hash",
+        "properties": "*Egenskaper",
+        "creator": "Skapare",
+        "address": "*Adress",
+        "royaltyPercentage": "*Royalty Procent",
+        "royaltyAddress": "*Royalty-adress",
+        "licenseUrl": "*Licens-URL"
+      },
+      "button": {
+        "upload": "Ladda upp"
+      },
+      "messages": {
+        "error": {
+          "INVALID_PROPERTY": "Ogiltig egendom",
+          "INVALID_ADDRESS": "Ogiltig adress"
+        }
+      }
+    }
+  },
+  "scanAssets": {
+    "ui": {
+      "title": "Skanna tillgångar",
+      "prompt": {
+        "selectAssetType": "Genom att skanna fler adresser kan du upptäcka tillgångar som inte visas i listan (inklusive XCH, CAT, NFT etc.) och överföra dem till en vanlig adress.",
+        "scanning": "Läser in...",
+        "wait": "Ha tålamod i några minuter.",
+        "paused": "Pausad...",
+        "canceled": "Inställt.",
+        "finished": "Färdiga!",
+        "scanned": "Skannat"
+      },
+      "label": {
+        "scan": "Skanna",
+        "token": "Tecken",
+        "nft": "NFT",
+        "did": "DID",
+        "myCats": "Mina katter",
+        "maxAddress": "Maximalt antal skanningsadresser",
+        "scanning": "Läser in",
+        "result": "Resultat",
+        "name": "namn",
+        "id": "ID",
+        "balance": "Balans",
+        "action": "Handling",
+        "imported": "Importerad"
+      },
+      "button": {
+        "start": "Starta skanning",
+        "pause": "Paus",
+        "cancel": "Annullera",
+        "continue": "Fortsätta",
+        "reScan": "Skanna igen",
+        "add": "Lägg till",
+        "send": "Skicka",
+        "sign": "Skylt"
+      }
+    },
+    "message": {
+      "confirmation": {
+        "close": "Skanningen har inte slutförts. ",
+        "cancel": "Skanningen har inte slutförts. "
+      },
+      "error": {
+        "ABORT_OOM": "Skanningen avbröts. ",
+        "NETWORK_ERROR": "Nätverksfel. ",
+        "UNKNOWN": "Okänt fel. "
+      }
+    }
+  },
+  "moveNft": {
+    "ui": {
+      "title": "Flytta NFT",
+      "label": {
+        "moveToProfile": "Flytta till profil",
+        "selectDid": "Välj en DID",
+        "move": "Flytta NFT",
+        "to": "Till"
+      },
+      "confirmation": "Är du säker på att du flyttar NFT? <br>Granska din transaktion."
+    }
+  },
+  "signMessage": {
+    "ui": {
+      "title": "Signera meddelande",
+      "prompt": "Se till att meddelandet kommer från pålitlig källa. ",
+      "label": {
+        "signWdid": "Signera med DID:",
+        "signWithNft": "Signera med NFT:",
+        "signWithAddress": "Skylt med adress:",
+        "message": "Meddelande",
+        "result": "Resultat"
+      }
+    }
+  },
+  "verifyMessage": {
+    "ui": {
+      "title": "Verifiera meddelande",
+      "label": {
+        "message": "Meddelande",
+        "result": "Resultat"
+      },
+      "button": {
+        "verify": "Kontrollera"
+      },
+      "sigResult": {
+        "pass": "Underskriftskontroll godkänd",
+        "fail": "Signaturkontroll misslyckades",
+        "none": "Signaturen ej markerad"
+      },
+      "coinResult": {
+        "pass": "Myntcheck godkänd",
+        "fail": "Myntkontrollen misslyckades",
+        "none": "Mynt ej kontrollerat"
+      }
+    }
+  },
+  "batchMintNft": {
+    "ui": {
+      "title": "Batch Mint NFT",
+      "label": {
+        "royaltyAddress": "Royalty-adress",
+        "royaltyPercentage": "Royalty procent"
+      }
+    }
+  },
+  "addNetwork": {
+    "ui": {
+      "title": {
+        "add": "Lägg till nätverk",
+        "edit": "Redigera nätverk"
+      },
+      "warning": "En skadlig nätverksleverantör kan ljuga om tillståndet för blockkedjan och registrera din nätverksaktivitet. ",
+      "label": {
+        "networkName": "Nätverksnamn",
+        "rpcUrl": "RPC URL",
+        "chainId": "Kedje-ID",
+        "currencySymbol": "Valutasymbol",
+        "addressPrefix": "Adressprefix",
+        "decimalPlace": "Valuta decimaler",
+        "blockExplorer": "Blockera Explorer-URL (valfritt)"
+      },
+      "button": {
+        "addNetwork": "Lägg till nätverk"
+      }
+    },
+    "message": {
+      "notification": {
+        "networkExists": "Detta nätverksnamn finns redan!"
+      },
+      "confirmation": {
+        "delete": "Är du säker på att ta bort det här nätverket?"
+      }
+    }
+  },
+  "updateCns": {
+    "ui": {
+      "title": "Uppdatera CNS-adress",
+      "confirmation": "Du kommer att uppdatera den bindande informationen för ditt domännamn.<br/>Granska din transaktion.",
+      "label": {
+        "updateTo": "Uppdatera till",
+        "cns": "CNS",
+        "targetAddress": "Måladress",
+        "currentBindingAddress": "Aktuell bindande adress"
+      }
+    }
+  },
+  "addByPublicKey": {
+    "ui": {
+      "title": "Lägg till konto med PublicKey",
+      "message": {
+        "publicKeyRequired": "PublicKey krävs."
+      }
+    }
+  },
+  "encryptMessage": {
+    "ui": {
+      "title": "Kryptera meddelande",
+      "tab": {
+        "singleMessage": "Enstaka meddelande",
+        "multipleMessage": "Flera meddelanden"
+      },
+      "label": {
+        "encryptWithAddress": "Kryptera med adress",
+        "activatePrefix": "Adressen har inte aktiverats, klicka här för att göra någon överföring till ",
+        "activate": "Aktivera",
+        "message": "Meddelande",
+        "receiverAddress": "Mottagarens adress"
+      },
+      "button": {
+        "encrypt": "Kryptera"
+      }
+    },
+    "message": {
+      "error": {
+        "INACTIVE_ADDRESS": "Mottagarens adress har inte aktiverats."
+      }
+    }
+  },
+  "decryptMessage": {
+    "ui": {
+      "title": "Dekryptera meddelande",
+      "label": {
+        "message": "Meddelande",
+        "result": "Resultat"
+      },
+      "button": {
+        "decrypt": "Avkryptera"
+      }
+    },
+    "message": {
+      "error": {
+        "CANNOT_FIND_ADDRESS": "Dekrypteringsadressen matchar inte mottagaradressen.",
+        "INVALID_MESSAGE": "Ogiltigt meddelande.",
+        "INVALID_ADDRESS": "Ogiltig avsändar-/mottagaradress."
+      }
+    }
+  },
+  "bindingInformation": {
+    "ui": {
+      "title": "Bindande information",
+      "label": {
+        "publicKey": "Offentlig nyckel",
+        "did": "DID",
+        "text": "Text"
+      },
+      "notification": "Du kommer att uppdatera den bindande informationen för ditt domännamn.<br>Granska din transaktion.",
+      "tag": {
+        "currentPk": "Löpande konto PK",
+        "fillPk": "Fyll i den offentliga nyckeln för det aktuella kontot"
+      },
+      "button": {
+        "update": "Uppdatering"
+      }
+    }
+  },
+  "scan": {
+    "ui": {
+      "title": "Skanna",
+      "label": {
+        "scanQr": "Skanna QR kod",
+        "publicKeyQr": "Public Key QR-kod"
+      },
+      "hint": {
+        "scan": "Skanna adress, PublicKey"
+      }
+    }
+  },
+  "backup": {
+    "ui": {
+      "title": {
+        "verifyPassword": "Verifiera lösenord",
+        "backup": "Säkerhetskopieringsinformation"
+      },
+      "tip": {
+        "setPassword": "Detta lösenord kommer att användas som inloggningslösenord när du importerar säkerhetskopian till en ny enhet för att återställa din plånbok."
+      },
+      "label": {
+        "passwordType": {
+          "current": "Använd nuvarande inloggningslösenord",
+          "new": "Använd ett nytt lösenord"
+        },
+        "selectBackupInfo": "Välj Backup Information",
+        "setYourLoginPassword": "Ställ in ditt inloggningslösenord"
+      },
+      "items": {
+        "masterAccount": "Huvudkontoinformation",
+        "settings": "inställningar",
+        "customNetwork": "Anpassat nätverk",
+        "accountList": "Kontolista",
+        "addressBook": "Adressbok",
+        "didNames": "DID Namn"
+      },
+      "button": {
+        "downloadBak": "Ladda ner backup-fil",
+        "complete": "Komplett",
+        "next": "Nästa"
+      }
+    },
+    "message": {
+      "error": {
+        "passwordRequired": "Lösenord krävs.",
+        "passwordNotCorrect": "Fel lösenord."
+      }
+    }
+  },
+  "importBackup": {
+    "title": "Ladda upp säkerhetskopia",
+    "password": {
+      "tip": "Vänligen ange ditt inloggningslösenord",
+      "label": "Lösenord"
+    },
+    "error": {
+      "LARGE_FILE": "Filen är för stor",
+      "UNSUPPORTED_FILE": "Fil som inte stöds"
+    }
+  },
+  "buyUsds": {
+    "ui": {
+      "title": "Köp USDS",
+      "button": {
+        "continue": "Fortsätt att köpa",
+        "stably": "Öppna stabilt för att köpa"
+      },
+      "tip": "Stöder för närvarande endast köp av USDS på Chia blockchain via ACH banköverföring.",
+      "stablyPrefix": "Denna tjänst tillhandahålls av",
+      "stably": " Stably ",
+      "stablySuffix": "och är helt oberoende av Pawket."
+    }
+  },
+  "nftBurn": {
+    "title": "NFT-bränning",
+    "description": "Du kommer att bränna denna NFT genom att ta bort den från cirkulationen genom att skicka den till en verifierbart oförbrukningsbar adress.",
+    "confirmation": "Är du säker på att du ska bränna denna NFT? <br>Granska din transaktion."
+  },
+  "cns": {
+    "title": "Chia Name Service",
+    "placeholder": "Sök efter ett Chia-domännamn",
+    "button": {
+      "search": "Sök",
+      "loading": "Läser in",
+      "register": "Registrera",
+      "cancel": "Annullera"
+    },
+    "label": {
+      "notOpenYet": "Inte öppen än",
+      "registered": "Registrerad",
+      "result": "Resultat",
+      "available": "Tillgängliga",
+      "unavailable": "Inte tillgänglig",
+      "registrationPeriod": "Registreringsperiod",
+      "registrationFee": "Anmälningsavgift",
+      "annualFee": "Årlig avgift",
+      "royaltyPercentage": "Royalty procent",
+      "total": "Total",
+      "networkIssue": "Nätverksproblem",
+      "myNames": "Mitt namn är",
+      "register": "Registrera {cnsName}.xch",
+      "name": "namn",
+      "oneYear": "1 år",
+      "address": "Adress (valfritt)"
+    },
+    "message": {
+      "notOpen": " Under testperioden för CNS kan endast namn med 6 eller fler tecken registreras för närvarande. ",
+      "registered": "Detta namn har registrerats. ",
+      "profileHomepage": "Profil Hemsida",
+      "unavailable": "Detta namn är reserverat. ",
+      "noName": "Inget Chia-domännamn här. "
+    }
+  },
+  "connect": {
+    "ui": {
+      "label": {
+        "connectWithPawket": "Anslut med Pawket",
+        "enterPassword": "Ange ditt lösenord för att ansluta till webbplatsen",
+        "trust": "Se till att du litar på webbplatsen du ansluter",
+        "selectAccount": "Välj ett konto att använda på den här webbplatsen",
+        "loadingBalance": "Laddar saldo..",
+        "allowSiteTo": "Tillåt den här webbplatsen att:",
+        "viewInfo": "Visa dina kontoadresser, saldo, DID och aktiviteter.",
+        "requestTranx": "Begär godkännande för transaktioner.",
+        "gettingData": "Hämtar data från Pawket...",
+        "noWallet": "Ingen Pawket-plånbok",
+        "noWalletInfo": "Du har ingen plånbok inställd i Pawket."
+      },
+      "button": {
+        "next": "Nästa",
+        "connect": "Ansluta",
+        "setUp": "Konfigurera Wallet"
+      }
+    },
+    "messages": {
+      "success": "Framgång!",
+      "invalidCall": "Ogiltigt samtal:",
+      "noAppName": "Vänligen ange ett appnamn!",
+      "offerAccepted": "Erbjudandet har accepterats!",
+      "invalidData": "Det gick inte att signera: Ogiltig indata",
+      "unknownDid": "Det gick inte att signera: Det angivna DID:et finns inte på det aktuella kontot",
+      "unknownNetwork": "Det angivna nätverket finns inte",
+      "unknownAddress": "Det gick inte att signera: Den angivna adressen finns inte i det aktuella kontot",
+      "sendCompleted": "Transaktionen har skickats!",
+      "catAdded": "CAT har lagts till!",
+      "cancelled": "Inställt",
+      "incorrectPassword": "Fel lösenord."
+    }
+  },
+  "splitCoin": {
+    "ui": {
+      "title": "Delat mynt",
+      "confirmation": {
+        "confirmText": "Är du säker på att dela mynt? <br> Granska din transaktion.",
+        "label": {
+          "spliting": "Splittring",
+          "into": "In i",
+          "coins": "Mynt"
+        }
+      }
+    }
+  }
+}

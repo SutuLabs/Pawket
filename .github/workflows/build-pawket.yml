@@ -1,0 +1,59 @@
+name: build-cli
+
+on:
+  workflow_run:
+    workflows: [ci-chia-lib, ci-pawket-i18n]
+    types: [completed]
+
+env:
+  VERSION: 0.3.${{ github.run_number }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Set Node.js 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+          cache-dependency-path: 'yarn.lock'
+      
+      - name: Install yarn
+        run: npm -g i yarn
+      
+      - uses: actions/checkout@v3
+      
+      - name: Install Dependencies
+        run: yarn
+      
+      - name: Install Dependencies
+        run: |
+          sed -i 's/0.0.0.0/${{ VERSION }}/' .env.production
+      - name: Build pawket
+        run: |
+          yarn build:pawket
+
+      - name: version
+        run: |
+          echo ${{ VERSION }}>dist/web/version.txt
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: pawket
+          path: dist/web
+      
+      - name: Build mixch
+        run: |
+          yarn build:mixch
+
+      - name: version
+        run: |
+          echo ${{ VERSION }}>dist/mixch/version.txt
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: pawket
+          path: dist/mixch

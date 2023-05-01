@@ -1,0 +1,1666 @@
+{
+  "default": {
+    "accountName": "Рахунок1"
+  },
+  "html": {
+    "document": {
+      "title": "Pawket"
+    }
+  },
+  "common": {
+    "button": {
+      "confirm": "Підтвердити",
+      "cancel": "Скасувати",
+      "back": "Назад",
+      "save": "зберегти",
+      "submit": "Надіслати",
+      "delete": "Видалити",
+      "sign": "Знак",
+      "generate": "Генерувати",
+      "copy": "Копіювати"
+    },
+    "tooltip": {
+      "copy": "Копіювати"
+    },
+    "message": {
+      "saved": "Збережено.",
+      "added": "Додано.",
+      "noResult": "Жодного результату.",
+      "uploadSuccess": "Завантажено."
+    }
+  },
+  "app": {
+    "ui": {
+      "button": {
+        "lang": "Українська"
+      },
+      "navigation": {
+        "wallet": "Гаманець",
+        "cns": "CNS",
+        "explore": "Досліджуйте",
+        "settings": "Налаштування"
+      }
+    },
+    "message": {
+      "notification": {
+        "copySuccess": "Скопійовано.",
+        "copyFailed": "Помилка копіювання.",
+        "transactionComplete": {
+          "title": "Трансакцію завершено!",
+          "body": "Вашу транзакцію в блоці {block} завершено."
+        }
+      }
+    }
+  },
+  "footer": {
+    "ui": {
+      "productInfo": {
+        "name": "Pawket",
+        "author": "SutuLabs",
+        "authorLink": "https://github.com/SutuLabs"
+      },
+      "button": {
+        "home": "додому",
+        "developer": "Розробник"
+      },
+      "error": {
+        "READ_VERSION_FAILED": "Не вдалося прочитати версію."
+      }
+    }
+  },
+  "self-test": {
+    "message": {
+      "checking": "Перевірка",
+      "passed": "Пройшов",
+      "failed": "Не вдалося перевірити: "
+    }
+  },
+  "verifyPassword": {
+    "ui": {
+      "button": {
+        "confirm": "Підтвердити",
+        "clear": "Скинути гаманець"
+      },
+      "title": {
+        "verifyPassword": "Підтвердіть пароль"
+      },
+      "alt": {
+        "logoAlt": "Логотип Pawket"
+      }
+    },
+    "message": {
+      "confirmation": {
+        "clear": "Скидання гаманця назавжди видалить усі дані (зокрема мнемоніки та паролі) з вашого пристрою. Переконайтеся, що для мнемоніки гаманця створено резервну копію. ",
+        "confirmText": "Підтвердити",
+        "cancelText": "Скасувати"
+      },
+      "error": {
+        "passwordNotMatch": "Пароль не збігається.",
+        "incorrectPassword": "Невірний пароль.",
+        "passwordEmpty": "Пароль не може бути пустим."
+      },
+      "tip": {
+        "weakPassword": "Слабкий",
+        "mediumPassword": "Середній",
+        "strongPassword": "Сильний"
+      }
+    }
+  },
+  "createSeed": {
+    "ui": {
+      "button": {
+        "confirm": "Підтвердити",
+        "later": "Пізніше",
+        "ready": "Далі",
+        "12word": "12 слів",
+        "24word": "24 Слова",
+        "import12": "Імпорт мнемонічних слів Pawket",
+        "import24": "Імпортувати офіційні мнемонічні слова Чіа"
+      },
+      "text": {
+        "create": {
+          "tip1": "Ласкаво просимо! ",
+          "tip2": "ПОПЕРЕДЖЕННЯ: НІКОЛИ НЕ РОЗКРИВАЙТЕ СВОЇ МНЕМОНІЧНІ СЛОВА. "
+        },
+        "import12": {
+          "title": "Імпорт мнемонічних слів Pawket",
+          "tip": "Будь ласка, введіть мнемонічні слова Pawket по порядку, використовуючи пробіли між мнемоніками."
+        },
+        "import24": {
+          "title": "Імпортувати офіційні мнемонічні слова Чіа",
+          "tip": "Будь ласка, введіть свої офіційні мнемонічні слова Chia по порядку, використовуючи пробіли між мнемонічними словами."
+        }
+      }
+    },
+    "message": {
+      "error": {
+        "wrongSeed": "Помилка імпорту, перевірте свої мнемонічні слова.",
+        "notInBip39": "{wordList} присутній / відсутній у списку слів BIP39"
+      }
+    }
+  },
+  "accountDetail": {
+    "ui": {
+      "button": {
+        "receive": "Отримати",
+        "buy": "купити",
+        "send": "Надіслати",
+        "scan": "Сканувати",
+        "confirm": "Підтвердити",
+        "cancel": "Скасувати",
+        "manageCats": "Керуйте CAT"
+      },
+      "tab": {
+        "asset": "Актив",
+        "utxos": "UTXO",
+        "nft": "NFT",
+        "did": "DID"
+      },
+      "tooltip": {
+        "lock": "Блокування гаманця",
+        "errorLog": "Журнал помилок",
+        "refresh": "Оновити"
+      },
+      "dApps": {
+        "title": "dApps",
+        "tooltip": {
+          "donate": "Пожертвуйте на підтримку розвитку",
+          "scanAssets": "Сканувати ресурси",
+          "proxy": "Офлайн знак",
+          "takeOffer": "Прийняти пропозицію",
+          "makeOffer": "Зробити пропозицію",
+          "batchSend": "Пакетне надсилання",
+          "mintCat": "Випуск КАТ",
+          "mintNft": "Монетний двір NFT",
+          "batchMintNft": "Пакетний Монетний двір",
+          "verify": "Підтвердити повідомлення",
+          "encryptMessage": "Зашифрувати повідомлення",
+          "decryptMessage": "Розшифрувати повідомлення"
+        },
+        "button": {
+          "donate": "Пожертвуйте",
+          "scanAssets": "Сканувати ресурси",
+          "proxy": "Офлайн знак",
+          "takeOffer": "Прийняти пропозицію",
+          "makeOffer": "Зробити пропозицію",
+          "batchSend": "Пакетне надсилання",
+          "mintCat": "Випуск КАТ",
+          "mintNft": "Монетний двір NFT",
+          "batchMintNft": "Пакетний Монетний двір",
+          "verify": "Підтвердити повідомлення",
+          "encryptMessage": "Зашифрувати повідомлення",
+          "decryptMessage": "Розшифрувати повідомлення"
+        }
+      }
+    },
+    "message": {
+      "confirmation": {
+        "lock": "Заблокувати гаманець?"
+      },
+      "notification": {
+        "donate": "Ви жертвуєте розробникам.",
+        "observeMode": "Функцію взаємодії вимкнено в режимі спостереження",
+        "offline": "Автономний режим",
+        "test": "Примітка: kitten.pawket.app є тестовим сайтом, де ви можете випробувати деякі неопубліковані нові функції."
+      }
+    }
+  },
+  "changePassword": {
+    "ui": {
+      "title": {
+        "changePassword": "Змінити пароль"
+      },
+      "label": {
+        "oldPassword": "Старий пароль",
+        "newPassword": "Новий пароль",
+        "rePassword": "Повторно введіть пароль"
+      },
+      "button": {
+        "back": "Назад",
+        "submitChange": "Надіслати"
+      }
+    },
+    "message": {
+      "error": {
+        "passwordRequired": "Необхідно ввести пароль.",
+        "passwordNotCorrect": "Невірний пароль.",
+        "passwordNotMatch": "Пароль не збігається."
+      },
+      "alert": {
+        "passwordChanged": "Пароль змінено. "
+      }
+    }
+  },
+  "explorerLink": {
+    "ui": {
+      "title": {
+        "link": "Отримати адреси"
+      },
+      "label": {
+        "maxAddress": "Максимальна кількість адрес",
+        "address": "Адреса",
+        "coin": "Монета",
+        "sign": "Знак",
+        "link": "Провідник",
+        "observer": "Спостерігач",
+        "nonObserver": "Неспостерігач"
+      },
+      "tooltip": {
+        "blockchainExplorer": "Переглянути в Block Explorer",
+        "receiveAddress": "Ви можете перевірити баланс на більшій кількості адрес, якщо збільшите значення, але гаманець працюватиме повільніше."
+      }
+    }
+  },
+  "send": {
+    "ui": {
+      "title": {
+        "send": "Надіслати"
+      },
+      "label": {
+        "amount": "Сума",
+        "memo": "Пам'ятка",
+        "fee": "Комісія"
+      },
+      "button": {
+        "submit": "Надіслати",
+        "showSend": "Показати"
+      },
+      "slider": {
+        "low": "Низький",
+        "medium": "Середній",
+        "high": "Високий",
+        "custom": "Custom"
+      },
+      "messages": {
+        "getFailedResponse": "Отримати відповідь про помилку: ",
+        "failedToSubmit": "Не вдалося надіслати до пулу пам’яті: ",
+        "failedToSign": "Не вдалося підписати: ",
+        "submitted": "Надіслано до пулу пам’яті.",
+        "invalidAmount": "Недійсна сума.",
+        "insufficientFunds": "Недостатньо коштів."
+      },
+      "span": {
+        "loading": "Завантаження",
+        "maxLeadingText": "Макс."
+      },
+      "text": {
+        "offlineOnlySupportXch": "Тепер надсилання в автономному режимі підтримує лише XCH."
+      },
+      "summary": {
+        "notification": "Ви впевнені, що надішлете?<br/>Будь ласка, перегляньте свою транзакцію."
+      }
+    },
+    "messages": {
+      "error": {
+        "DOUBLE_SPEND": "Подвійні витрати",
+        "UNKNOWN_UNSPENT": "Використано невідомий UTXO, можливо, попередня транзакція не була підтверджена в блокчейні.",
+        "BAD_AGGREGATE_SIGNATURE": "Поганий сукупний підпис",
+        "INVALID_CONDITION": "Недійсна умова",
+        "COIN_AMOUNT_EXCEEDS_MAXIMUM": "Сума монети перевищує максимальну",
+        "INVALID_FEE_LOW_FEE": "Недійсна комісія/низька комісія",
+        "MEMPOOL_NOT_INITIALIZED": "Mempool не ініціалізовано",
+        "ALREADY_INCLUDING_TRANSACTION": "Уже включає трансакцію",
+        "INCOMPATIBLE_NETWORK_ID": "Несумісний ідентифікатор мережі",
+        "NO_TRANSACTIONS_WHILE_SYNCING": "Немає транзакцій під час синхронізації",
+        "INVALID_FEE_TOO_CLOSE_TO_ZERO": "Недійсна плата, занадто близька до нуля",
+        "COIN_AMOUNT_NEGATIVE": "Сума монети негативна",
+        "INVALID_ADDRESS": "Недійсна адреса",
+        "ADDRESS_NOT_MATCH_NETWORK": "Заповнена адреса не відповідає поточній мережі. ",
+        "PENDING": "Трансакція вже має статус очікування, дочекайтеся завершення."
+      }
+    }
+  },
+  "scanQrCode": {
+    "message": {
+      "error": {
+        "NotAllowedError": "ПОМИЛКА. Потрібно надати дозвіл на доступ до камери.",
+        "NotFoundError": "ПОМИЛКА: на цьому пристрої немає камери.",
+        "NotSupportedError": "ПОМИЛКА: потрібен безпечний контекст (HTTPS, локальний хост).",
+        "NotReadableError": "ПОМИЛКА: камера вже використовується?",
+        "OverconstrainedError": "ПОМИЛКА: встановлена ​​камера не підходить.",
+        "StreamApiNotSupportedError": "ПОМИЛКА: Stream API не підтримується в цьому браузері.",
+        "InsecureContextError": "ПОМИЛКА: доступ до камери дозволено лише в безпечному контексті. "
+      }
+    }
+  },
+  "offer": {
+    "make": {
+      "ui": {
+        "title": "Зробити пропозицію",
+        "panel": {
+          "information": "Інформація",
+          "hint": {
+            "thisIsYourOffer": "Це текст вашої пропозиції.",
+            "unsignedOffer": "Помилка підпису, недійсна пропозиція"
+          }
+        },
+        "label": {
+          "yourOfferTitle": "Ваша пропозиція",
+          "bundle": "пучок"
+        },
+        "button": {
+          "done": "Готово",
+          "uploadToDexie": "Завантажити в Dexie"
+        },
+        "field": {
+          "offer": "Пропозиція",
+          "request": "запит"
+        }
+      },
+      "messages": {
+        "failedToSign": "Не вдалося зробити пропозицію."
+      }
+    },
+    "symbol": {
+      "Cat": "КІШКА",
+      "hint": {
+        "XCH": "Оригінальний маркер"
+      }
+    },
+    "take": {
+      "ui": {
+        "title": "Прийняти пропозицію",
+        "hint": {
+          "pasteOffer": "Вставте дані вашої пропозиції сюди або завантажте файл пропозиції.",
+          "error": "Ваш рядок пропозиції неправильний."
+        },
+        "panel": {
+          "information": "Інформація"
+        },
+        "label": {
+          "royaltyToCreator": "Творець",
+          "totalRequested": "Загальна сума запиту",
+          "nftPrice": "Ціна NFT",
+          "royalty": "Роялті",
+          "total": "Всього",
+          "receive": "Отримати",
+          "offer": "Пропозиція",
+          "fee": "Комісія",
+          "totalPayment": "Загальна оплата"
+        },
+        "button": {
+          "cancel": "Скасувати",
+          "submit": "Надіслати",
+          "upload": "Завантажте файл пропозиції"
+        },
+        "field": {
+          "offer": "Пропозиція"
+        },
+        "tooltip": {
+          "spaceScan": "Переглянути на Spacescan.io",
+          "verifiedCns": "Перевірена ЦНС",
+          "unverifiedCns": "Це підробка ЦНС. "
+        },
+        "notification": {
+          "observation": "Зараз у режимі спостереження. "
+        }
+      },
+      "information": {
+        "requested": "В обмін на",
+        "offered": "Ви отримаєте",
+        "addCat": "Додати до списку CATs.",
+        "unsupportOfferNftOffer": "Цей тип пропозиції ще не підтримується.",
+        "acceptOffer": "Ви впевнені, що приймаєте пропозицію?<br>Будь ласка, перегляньте свою транзакцію."
+      },
+      "messages": {
+        "failedToSign": "Не вдалося прийняти пропозицію.",
+        "unsupportOfferNftOffer": "Цей тип пропозиції ще не підтримується."
+      }
+    }
+  },
+  "ManageCats": {
+    "ui": {
+      "title": {
+        "ManageCats": "Керуйте котами"
+      },
+      "label": {
+        "listingCats": "Список CATs",
+        "name": "Ім'я",
+        "assetID": "ID активу",
+        "search": "Пошук",
+        "custom": "Custom"
+      },
+      "button": {
+        "add": "додати"
+      },
+      "tooltip": {
+        "removeToken": "Видаліть CAT",
+        "drag": "Перетягніть для сортування",
+        "copy": "Копіювати ідентифікатор ресурсу"
+      },
+      "message": {
+        "nameRequired": "Необхідно вказати ім'я.",
+        "assetIdRequired": "Потрібно вказати ідентифікатор ресурсу."
+      }
+    },
+    "message": {
+      "notification": {
+        "wrongAssetId": "Неправильний ідентифікатор активу. "
+      },
+      "confirmation": {
+        "removeToken": "Ви впевнені, що хочете видалити CAT?",
+        "closeWithContent": "У вас є незбережені зміни на цій сторінці, які буде втрачено, якщо ви перейдете з неї. ",
+        "confirm": "Підтвердити",
+        "cancel": "Скасувати"
+      },
+      "alert": {
+        "isExisted": "Ідентифікатор/назва активу вже існує в списку CAT!"
+      }
+    }
+  },
+  "offline": {
+    "proxy": {
+      "scan": {
+        "title": "Знак",
+        "numberField": "Непідписані повідомлення",
+        "numberMessage": "Відскануйте ці QR-коди за допомогою Offline Sign. "
+      },
+      "confirmBundle": {
+        "title": "Підтвердити",
+        "button": {
+          "cancel": "Скасувати",
+          "submit": "Надіслати"
+        },
+        "notification": "Ви впевнені, що надішлете?<br/>Будь ласка, перегляньте свою транзакцію."
+      }
+    },
+    "client": {
+      "text": {
+        "qrcodesStatus": "{index} / {total}",
+        "unsafeMode": "Небезпечний режим",
+        "status": "Відскановано: {fragment} / {total} кількість фрагментів."
+      },
+      "scan": {
+        "title": "Офлайн знак",
+        "numberField": "Підписано повідомлення",
+        "numberMessage": "Відскануйте цей QR-код за допомогою онлайн-пристрою, який щойно ініціював транзакцію.",
+        "scrollDown": "Прокрутіть сторінку вниз і відскануйте QR-код на офлайн-пристрої, щоб отримати підписане повідомлення."
+      },
+      "show": {
+        "hint": "Використовуйте проксі для сканування QR для надсилання транзакції.",
+        "overflow": "Дані перевищують максимальну довжину, неможливо створити QR-код",
+        "bundle": "пучок",
+        "copy": "Копіювати"
+      }
+    },
+    "ui": {
+      "button": {
+        "cancel": "Скасувати"
+      }
+    }
+  },
+  "addByMnemonic": {
+    "ui": {
+      "label": {
+        "name": "Ім'я облікового запису",
+        "mnemonic": "{len} Мнемонічні слова"
+      },
+      "message": {
+        "nameRequired": "Потрібно вказати назву облікового запису.",
+        "mnemonicRequired": "Потрібна мнемоніка.",
+        "invalidMnemonic": "Помилка імпорту. "
+      },
+      "button": {
+        "back": "Назад",
+        "submit": "Надіслати"
+      },
+      "tooltip": {
+        "mnemonic": "Будь ласка, введіть свої мнемонічні слова по порядку, використовуючи пробіли між мнемоніками."
+      }
+    },
+    "message": {
+      "error": {
+        "accountMnemonicExists": "Обліковий запис із такими ж Мнемонічними словами вже існує."
+      }
+    }
+  },
+  "addByAddress": {
+    "ui": {
+      "title": "Додати за адресою",
+      "label": {
+        "name": "Ім'я облікового запису",
+        "publicKey": "PublicKey"
+      },
+      "message": {
+        "nameRequired": "Потрібно вказати назву облікового запису.",
+        "illegalAddress": "Неправильна адреса.",
+        "duplicateAddress": "Дубльована адреса: [{accName}] має ту саму адресу.",
+        "duplicateName": "Повторюване ім'я",
+        "duplicatePublicKey": "Дубльований публічний ключ: [{accName}] має той самий публічний ключ."
+      },
+      "button": {
+        "back": "Назад",
+        "submit": "Надіслати"
+      }
+    }
+  },
+  "addByPassword": {
+    "ui": {
+      "title": "Додати тіньовий гаманець",
+      "label": {
+        "name": "Ім'я облікового запису",
+        "password": "Парольна фраза",
+        "rePassword": "Повторно введіть парольну фразу"
+      },
+      "message": {
+        "nameRequired": "Потрібно вказати назву облікового запису.",
+        "passwordRequired": "Потрібно ввести парольну фразу.",
+        "invalidPassword": "Пароль не збігається."
+      },
+      "button": {
+        "back": "Назад",
+        "submit": "Надіслати"
+      }
+    },
+    "message": {
+      "error": {
+        "accountPasswordExists": "[{accName}] має таку саму парольну фразу."
+      }
+    }
+  },
+  "addBySerial": {
+    "ui": {
+      "title": "Додати обліковий запис за серійним номером",
+      "label": {
+        "name": "Ім'я облікового запису"
+      },
+      "message": {
+        "nameRequired": "Потрібно вказати назву облікового запису."
+      },
+      "button": {
+        "back": "Назад",
+        "submit": "Надіслати"
+      }
+    }
+  },
+  "bundleSummary": {
+    "ui": {
+      "fee": {
+        "title": "Комісія",
+        "mojos": "{fee} моджо(и)"
+      },
+      "inputs": {
+        "title": "Загальна кількість"
+      },
+      "label": {
+        "details": "Подробиці"
+      },
+      "detail": {
+        "title": "Подробиці",
+        "itemTo": "адресувати}",
+        "span": {
+          "hint": "Підказка (відповідна адреса)",
+          "memo": "Пам'ятка"
+        }
+      }
+    },
+    "notification": {
+      "error": {
+        "unknownMod": "Невідомий пакет, неможливо правильно проаналізувати."
+      }
+    }
+  },
+  "batchSend": {
+    "ui": {
+      "title": {
+        "send": "Пакетне надсилання"
+      },
+      "tooltip": {
+        "help": "Підтримує надсилання кількох транзакцій за одну операцію. ",
+        "upload": "Завантажте файл у форматі \".csv\"."
+      },
+      "field": {
+        "csv": {
+          "fillSample": "Заповнити зразок",
+          "or": " або ",
+          "downloadSample": "Завантажте зразок файлу CSV",
+          "drag": "Перетягніть у цю область, щоб завантажити безпосередньо.",
+          "sampleName": "Зразок"
+        }
+      },
+      "summary": {
+        "notification": "Ви впевнені, що надішлете?<br/>Будь ласка, перегляньте свою транзакцію."
+      },
+      "button": {
+        "upload": "Завантажте CSV"
+      },
+      "messages": {
+        "failedToSign": "Не вдалося підписати: ",
+        "wrongFileType": "Завантажте файл у форматі .csv.",
+        "onlyOneFile": "Підтримується лише одне завантаження файлу."
+      }
+    },
+    "messages": {
+      "error": {
+        "ADDRESS_NOT_MATCH_NETWORK": "Заповнена адреса [{address}] не відповідає поточній мережі. ",
+        "COIN_NOT_EXIST": "Монети {symbol} не існує!"
+      }
+    },
+    "sample": {
+      "address": "Адреса",
+      "coin": "Монета",
+      "amount": "Сума (mojo)",
+      "memo": "Пам'ятка (якщо монета, яку ви надсилаєте, XCH, ви не можете заповнити пам'ятку)"
+    }
+  },
+  "utxo": {
+    "ui": {
+      "label": {
+        "cost": "Надіслати",
+        "receive": "Отримати",
+        "queue": "Черга",
+        "confirmed": "Підтверджено"
+      },
+      "text": {
+        "empty": "У вас немає транзакцій."
+      }
+    }
+  },
+  "utxoDetail": {
+    "ui": {
+      "title": {
+        "cost": "Надіслати",
+        "receive": "Отримати"
+      },
+      "label": {
+        "amount": "Сума",
+        "time": "час",
+        "spentHeight": "Витрачена висота",
+        "confirmedHeight": "Підтверджена висота",
+        "parentCoinInfo": "ParentCoinInfo",
+        "puzzleHash": "Адреса",
+        "coinName": "Назва монети",
+        "coins": "Монети",
+        "pending": "В очікуванні"
+      },
+      "button": {
+        "unlockCoins": "Розблокувати монети"
+      },
+      "tooltip": {
+        "copy": "Копіювати"
+      }
+    },
+    "message": {
+      "unlockCoins": "Розблокування монети не скасує транзакцію. "
+    }
+  },
+  "sendSummary": {
+    "ui": {
+      "label": {
+        "sending": "Відправка",
+        "to": "до",
+        "fee": "Комісія",
+        "total": "Всього",
+        "assetId": "ID активу",
+        "NftUri": "NFT"
+      }
+    }
+  },
+  "bundleText": {
+    "ui": {
+      "title": "пучок",
+      "copy": "Копіювати",
+      "button": {
+        "show": "Показати",
+        "hide": "Сховати"
+      }
+    }
+  },
+  "mintCat": {
+    "ui": {
+      "title": "Випуск КАТ",
+      "label": {
+        "amount": "Сума",
+        "memo": "Пам'ятка",
+        "symbolName": "Назва CAT (з можливістю зміни)"
+      },
+      "summary": {
+        "notification": "Ви впевнені, що видаєте CAT?<br/>Будь ласка, перегляньте свою транзакцію.",
+        "label": {
+          "leadingText": "Видача САТ"
+        }
+      },
+      "messages": {
+        "failedToSign": "Не вдалося підписати: ",
+        "tokenNameUnavailable": "Назва CAT недоступна."
+      }
+    }
+  },
+  "addressBook": {
+    "ui": {
+      "title": {
+        "list": "Адресна книга",
+        "add": "додати"
+      },
+      "button": {
+        "cancel": "Скасувати",
+        "confirm": "Підтвердити",
+        "addContact": "Додати адресу",
+        "showInnerAcc": "Мої акаунти"
+      },
+      "tooltip": {
+        "remove": "видалити"
+      }
+    },
+    "messages": {
+      "notification": {
+        "contactAdded": "Додано.",
+        "contactRemoved": "Видалено.",
+        "saved": "Збережено."
+      },
+      "alert": {
+        "addressExists": "Адреса вже існує в адресній книзі."
+      },
+      "confirmation": {
+        "removeConfirm": "Ви впевнені, що хочете видалити цю адресу з вашої адресної книги?"
+      }
+    }
+  },
+  "addressDetail": {
+    "ui": {
+      "title": {
+        "detail": "Подробиці",
+        "edit": "Редагувати"
+      },
+      "label": {
+        "name": "Ім'я",
+        "address": "Адреса"
+      },
+      "tooltip": {
+        "copy": "Копіювати"
+      },
+      "button": {
+        "edit": "Редагувати"
+      }
+    }
+  },
+  "addressBookField": {
+    "ui": {
+      "label": {
+        "name": "Ім'я",
+        "address": "*Адреса"
+      },
+      "messages": {
+        "emptyAddress": "Введіть адресу.",
+        "illegalAddress": "Неправильна адреса."
+      },
+      "button": {
+        "cancel": "Скасувати",
+        "save": "зберегти"
+      },
+      "placeholder": {
+        "address": "Адреса або CNS"
+      }
+    }
+  },
+  "mintNft": {
+    "ui": {
+      "title": "Монетний двір NFT",
+      "label": {
+        "did": "DID",
+        "memo": "Пам'ятка",
+        "uri": "URI",
+        "hash": "Хеш"
+      },
+      "summary": {
+        "notification": "Ви впевнені, що карбуєте NFT?<br/>Будь ласка, перегляньте свою транзакцію.",
+        "label": {
+          "leadingText": "Карбування NFT"
+        }
+      },
+      "tooltip": {
+        "upload": "Виберіть файл, щоб створити хеш для вашого NFT."
+      },
+      "button": {
+        "upload": "Отримати хеш зображення"
+      },
+      "messages": {
+        "failedToSign": "Не вдалося підписати: "
+      }
+    }
+  },
+  "addressField": {
+    "ui": {
+      "label": {
+        "address": "Адреса",
+        "bindingAddress": "Адреса зв'язку:",
+        "lastChanged": "Останні зміни:",
+        "hour": "{value} год тому",
+        "day": "{value} дн. тому",
+        "week": "{value} тиждень тому",
+        "month": "{value}міс. тому",
+        "year": "{value}y тому"
+      },
+      "tooltip": {
+        "qr": "Сканувати QR",
+        "addressBook": "Відкрийте адресну книгу",
+        "confirmed": "Підтверджено",
+        "confirming": "Підтвердження",
+        "wrong": "неправильно"
+      },
+      "span": {
+        "newAddress": "Знайдено нову адресу, натисніть, щоб додати до адресної книги."
+      },
+      "resolve": {
+        "fail": "Не вдалося вирішити назву",
+        "notFound": "Не знайдено"
+      }
+    }
+  },
+  "errorLog": {
+    "ui": {
+      "title": "Журнал помилок",
+      "label": {
+        "message": "повідомлення",
+        "stack": "Стек"
+      },
+      "field": {
+        "msg": "повідомлення",
+        "info": "Інформація",
+        "url": "Url",
+        "empty": "Немає записів"
+      },
+      "button": {
+        "clearAll": "Очистити все"
+      }
+    }
+  },
+  "searchCat": {
+    "ui": {
+      "placeholder": "Ім'я КІШКИ",
+      "tag": {
+        "imported": "Імпортні"
+      },
+      "text": {
+        "emptyList": "Порожній результат",
+        "ascription": "На базі TailDatabase"
+      }
+    }
+  },
+  "settings": {
+    "menu": {
+      "title": "Налаштування",
+      "items": {
+        "general": {
+          "title": "Загальний",
+          "description": "Конвертація мови, мережі та валюти"
+        },
+        "security": {
+          "title": "Безпека",
+          "description": "Пароль, мнемоніка та експорт приватної інформації"
+        },
+        "addressBook": {
+          "title": "Адресна книга",
+          "description": "Додавайте, редагуйте, видаляйте свої контактні адреси та керуйте ними"
+        },
+        "network": {
+          "title": "Мережа",
+          "description": "Додавайте, редагуйте, видаляйте свою мережу та керуйте нею"
+        },
+        "collection": {
+          "title": "Колекція",
+          "description": "Створюйте, редагуйте, видаляйте свою колекцію та керуйте нею"
+        },
+        "advanced": {
+          "title": "Просунутий",
+          "description": "Експериментальний"
+        },
+        "devhelper": {
+          "title": "Розробник",
+          "description": "Bech32m, CLVM, Bundle, Offer, Coin"
+        },
+        "about": {
+          "title": "про",
+          "description": "Політика конфіденційності, версія Pawket, зв’яжіться з нами"
+        },
+        "lock": "Блокування гаманця"
+      }
+    },
+    "general": {
+      "title": "Загальний",
+      "label": {
+        "language": "Мова",
+        "network": "Мережа",
+        "currency": "Конвертація валют",
+        "offlineMode": "Автономний режим",
+        "darkMode": "Темний режим"
+      }
+    },
+    "security": {
+      "title": "Безпека",
+      "label": {
+        "mnemonic": "Мнемонічні слова",
+        "password": "Логін Пароль",
+        "export": "Експортувати особисту інформацію",
+        "reset": "Скинути гаманець"
+      },
+      "message": {
+        "clear": "Скидання гаманця назавжди видалить усі дані (включаючи мнемонічні слова та паролі) з вашого пристрою. Переконайтеся, що створено резервну копію мнемонічних слів гаманця. ",
+        "inputPassword": "Введіть пароль, щоб продовжити",
+        "passwordNotCorrect": "Невірний пароль.",
+        "backupConfirmTitle": "ДІЙТЕ ОБЕРЕЖНО",
+        "backupConfirm": "Ця операція експортує інформацію резервної копії гаманця (включаючи мнемонічні слова та відкритий ключ), які можна використовувати для відновлення гаманця на інших пристроях."
+      },
+      "button": {
+        "showMnemonic": "Розкрийте мнемонічні слова",
+        "hideMnemonic": "Приховати мнемонічні слова",
+        "password": "Змінити пароль",
+        "backup": "Резервне копіювання інформації гаманця",
+        "reset": "Скинути гаманець"
+      }
+    },
+    "devhelper": {
+      "title": "Розробник"
+    },
+    "advanced": {
+      "title": "Просунутий",
+      "label": {
+        "experimental": "Експериментальний"
+      },
+      "confirmation": {
+        "experimental": "Експериментальні функції нестабільні та ще не повністю протестовані, ви можете спробувати та надіслати нам свій відгук."
+      },
+      "description": "Після ввімкнення цього режиму ви можете використовувати експериментальні функції, такі як «Зробити пропозицію», «Прийняти пропозицію», «Пакетна відправка», «Випустити CAT», «Тіньовий гаманець» тощо.",
+      "warning": "Експериментальні функції нестабільні та ще не повністю протестовані, ви можете спробувати та надіслати нам свій відгук. "
+    },
+    "about": {
+      "title": "про",
+      "links": {
+        "title": "Посилання",
+        "label": {
+          "privacyPolicy": "Політика конфіденційності",
+          "pawketWebsite": "Веб-сайт Pawket",
+          "github": "Github",
+          "twitter": "Twitter",
+          "discord": "Discord",
+          "donate": "Пожертвуйте розробникам"
+        },
+        "url": {
+          "privacyPolicy": "https://info.pawket.app/privacy-policy",
+          "pawketWebsite": "https://info.pawket.app",
+          "github": "https://github.com/SutuLabs",
+          "twitter": "https://twitter.com/pawket_app",
+          "discord": "https://discord.com/invite/ndQgpHwe4V"
+        }
+      }
+    }
+  },
+  "explore": {
+    "title": "Досліджуйте",
+    "loading": "Завантаження",
+    "ascription": "Технологія Dexie",
+    "nft": {
+      "title": "Ринок NFT"
+    },
+    "cat": {
+      "title": "CAT Ринок"
+    },
+    "button": {
+      "buy": "купити",
+      "sell": "Продати",
+      "takeOffer": "Прийняти пропозицію"
+    },
+    "table": {
+      "header": {
+        "offer": "Пропозиція",
+        "receive": "Отримати",
+        "price": "Ціна",
+        "operation": "Дія"
+      }
+    }
+  },
+  "accountManagement": {
+    "ui": {
+      "title": "Управління рахунками",
+      "label": {
+        "default": "За замовчуванням",
+        "serial": "Серійний",
+        "address": "Адреса",
+        "imported": "Імпортні",
+        "passPhrase": "Парольна фраза",
+        "publicKey": "PublicKey",
+        "unknown": "Невідомий"
+      },
+      "button": {
+        "addBySerial": "Додати за серійним номером",
+        "addByPassword": "Додати тіньовий гаманець",
+        "addByLegacy": "Офіційний гаманець імпорту Чіа (24 слова)",
+        "addByMnemonic": "Імпорт гаманця Nucle/Goby（12 слів）",
+        "addByAddress": "Додати за адресою (режим спостереження)",
+        "addByPublicKey": "Додати за допомогою PublicKey"
+      },
+      "tooltip": {
+        "addBySerial": "Похідні серійні облікові записи створюються по порядку.",
+        "addByPassword": "Обліковий запис захищено MNEMONIC і PASSPHRASE. ",
+        "addByLegacy": "Імпорт офіційного гаманця Chia.",
+        "addByMnemonic": "Імпортувати гаманець Nucle/Goby.",
+        "addByAddress": "У цьому режимі підтримується лише читання.",
+        "addByPublicKey": "Додайте відкритий ключ офлайн-гаманця, щоб допомогти ініціювати та завершувати транзакції."
+      },
+      "modal": {
+        "addByLegacy": "Імпорт офіційного гаманця Chia",
+        "addByMnemonic": "Імпорт гаманця Nucle/Goby"
+      },
+      "value": {
+        "defaultName": "обліковий запис{n}"
+      }
+    },
+    "message": {
+      "confirmation": {
+        "removeAccount": "Видалити [{accountName}]? ",
+        "cancelText": "Скасувати",
+        "confirmText": "в порядку"
+      },
+      "prompt": {
+        "setAccountName": "Введіть нову назву",
+        "cancelText": "Скасувати",
+        "confirmText": "в порядку"
+      },
+      "notification": {
+        "saved": "Збережено"
+      }
+    }
+  },
+  "welcome": {
+    "ui": {
+      "description": "Керуйте своїми XCH/CAT у Pawket!",
+      "slogan": "Pawket є і надалі буде вашим хорошим супутником у світі Чіа.",
+      "button": {
+        "start": "ПОЧАТОК"
+      }
+    }
+  },
+  "disclaimer": {
+    "ui": {
+      "title": "Відмова від відповідальності",
+      "tip": "Завжди створюйте резервні копії своїх мнемонічних слів і закритих ключів. ",
+      "privary": "Час від часу ми можемо змінювати Політику конфіденційності. ",
+      "agreementPrefix": "Я приймаю ",
+      "agreement": "Політика конфіденційності",
+      "link": "https://info.pawket.app/privacy-policy/",
+      "agreementSuffix": "і хочуть отримати доступ до Pawket.",
+      "button": {
+        "continue": "ПРОДОВЖУЙТЕ"
+      }
+    }
+  },
+  "createPassword": {
+    "title": "Створити пароль",
+    "tip": "Перед початком встановіть пароль для входу. ",
+    "label": {
+      "password": "Пароль",
+      "confirm": "Підтвердьте пароль"
+    },
+    "button": {
+      "continue": "ПРОДОВЖУЙТЕ"
+    }
+  },
+  "createWallet": {
+    "title": "Створити гаманець",
+    "button": {
+      "create": "Створити",
+      "import": "Імпорт",
+      "backup": "Імпорт резервної копії Wallet"
+    }
+  },
+  "newWallet": {
+    "title": "Новий гаманець"
+  },
+  "importWallet": {
+    "title": "Імпорт гаманця"
+  },
+  "accountInfo": {
+    "ui": {
+      "title": {
+        "export": "Інформація про обліковий запис"
+      },
+      "label": {
+        "name": "Ім'я",
+        "type": "Тип",
+        "fingerprint": "Відбиток пальця",
+        "masterPublicKey": "Головний відкритий ключ (м)",
+        "farmerPublicKey": "Відкритий ключ фермера (m/12381/8444/0/0)",
+        "poolPublicKey": "Відкритий ключ пулу (m/12381/8444/1/0)",
+        "firstWalletAddress": "Перша адреса гаманця",
+        "mnemonicSeed": "Мнемонічні слова (24 слова)",
+        "connectionManagement": "Керування підключенням",
+        "details": "Подробиці"
+      },
+      "tooltip": {
+        "fingerprintTip": "Сумісний з офіційним гаманцем Chia",
+        "mnemonicTip": "Сумісний з офіційним гаманцем Chia",
+        "disconnect": "Відключити"
+      },
+      "button": {
+        "reveal": "Розкрити",
+        "hide": "Сховати",
+        "delete": "Видалити"
+      }
+    },
+    "message": {
+      "inputPassword": "Введіть пароль, щоб продовжити",
+      "passwordNotCorrect": "Невірний пароль.",
+      "disconnect": "Ви впевнені, що від’єднуєте [{acc}] від цього сайту?"
+    }
+  },
+  "nftDetail": {
+    "ui": {
+      "label": {
+        "nftId": "Ідентифікатор NFT:",
+        "collection": "Колекція",
+        "did": "DID",
+        "description": "опис",
+        "expirationDate": "Термін придатності"
+      },
+      "button": {
+        "transfer": "Трансфер",
+        "makeOffer": "Продати",
+        "move": "рухатися",
+        "showMore": "Показати більше",
+        "showLess": "Показати менше"
+      },
+      "title": {
+        "properties": "Властивості",
+        "bindingInformation": "Обов'язкова інформація",
+        "details": "Подробиці"
+      },
+      "bindingInformation": {
+        "address": "Адреса",
+        "publicKey": "відкритий ключ",
+        "did": "DID",
+        "text": "текст",
+        "edit": "Редагувати"
+      },
+      "details": {
+        "nftId": "NFT ID:",
+        "launcherId": "Launcher ID",
+        "ownerDid": "Owner DID",
+        "ownerAddress": "Owner Address",
+        "royaltyPercentage": "Royalty Percentage",
+        "dataUrl": "Data URL {index}",
+        "dataHash": "Data Hash",
+        "metadataUrl": "Metadata URL {index}",
+        "metadataHash": "Metadata Hash",
+        "licenseUrl": "License URL",
+        "licenseHash": "License Hash",
+        "series": "Series"
+      },
+      "dropdown": {
+        "spaceScan": "Переглянути на Spacescan.io",
+        "mintGarden": "Переглянути на Mintgarden.io",
+        "setAsProfilePic": "Встановити як аватар облікового запису",
+        "signWithNft": "Знак",
+        "nftBurn": "Записати NFT"
+      },
+      "profile": {
+        "all": "Усі NFT",
+        "unassigned": "Непризначені NFT"
+      }
+    }
+  },
+  "did": {
+    "ui": {
+      "title": {
+        "detail": "Подробиці"
+      },
+      "button": {
+        "addDid": "Додати DID",
+        "sign": "Знак"
+      },
+      "label": {
+        "name": "Ім'я",
+        "did": "DID",
+        "tool": "Інструмент"
+      },
+      "prompt": {
+        "newName": "Введіть нову назву"
+      }
+    },
+    "addDid": {
+      "title": "Додати DID",
+      "tip": "Ви будете використовувати 1 моджо, щоб створити DID.",
+      "balance": "Баланс",
+      "confirmation": "Ви впевнені, що хочете створити DID?<br>Будь ласка, перегляньте свою транзакцію.",
+      "spend": "витрачати"
+    }
+  },
+  "nftTransfer": {
+    "ui": {
+      "title": "Трансфер",
+      "description": "Ви передасте цей NFT новому власнику.",
+      "summary": {
+        "confirmation": "Ви впевнені, що передасте NFT?<br>Будь ласка, перегляньте свою транзакцію."
+      }
+    }
+  },
+  "collection": {
+    "myCollection": {
+      "title": "Моя колекція",
+      "specialNote": "Особлива примітка: інформація про збір не буде завантажена в блокчейн, а дані зберігатимуться на вашому локальному пристрої. ",
+      "button": {
+        "newCollection": "Нова колекція"
+      },
+      "tooltip": {
+        "edit": "Редагувати",
+        "remove": "видалити"
+      },
+      "messages": {
+        "confirmation": {
+          "delete": "Ви впевнені, що хочете видалити колекцію?"
+        },
+        "information": {
+          "NO_COLLECTION": "Без колекції"
+        }
+      }
+    },
+    "createCollection": {
+      "title": "Створити колекцію",
+      "label": {
+        "id": "*ID",
+        "name": "*Ім'я",
+        "description": "опис",
+        "icon": "*Значок",
+        "uploadImage": "Завантажити зображення:",
+        "url": "URL:",
+        "hash": "Хеш:",
+        "fillUrl": "Заповніть URL-адресу зображення",
+        "iconUrl": "URL-адреса значка",
+        "iconHash": "Піктограма Hash",
+        "properties": "*Властивості",
+        "creator": "Творець",
+        "address": "*Адреса",
+        "royaltyPercentage": "* Відсоток роялті",
+        "royaltyAddress": "*Адреса роялті",
+        "licenseUrl": "* URL-адреса ліцензії"
+      },
+      "button": {
+        "upload": "Завантажити"
+      },
+      "messages": {
+        "error": {
+          "INVALID_PROPERTY": "Недійсне властивість",
+          "INVALID_ADDRESS": "Недійсна адреса"
+        }
+      }
+    }
+  },
+  "scanAssets": {
+    "ui": {
+      "title": "Сканувати ресурси",
+      "prompt": {
+        "selectAssetType": "Скануючи додаткові адреси, ви можете виявити активи, яких немає в списку (зокрема XCH, CAT, NFT тощо), і перенести їх на адресу, яка зазвичай використовується.",
+        "scanning": "Сканування...",
+        "wait": "Будь ласка, потерпіть кілька хвилин.",
+        "paused": "Призупинено...",
+        "canceled": "Скасовано.",
+        "finished": "Готово!",
+        "scanned": "Відскановані"
+      },
+      "label": {
+        "scan": "Сканувати",
+        "token": "Токен",
+        "nft": "NFT",
+        "did": "DID",
+        "myCats": "Мої КОТИ",
+        "maxAddress": "Максимальна кількість сканованих адрес",
+        "scanning": "Сканування",
+        "result": "Результат",
+        "name": "Ім'я",
+        "id": "ID",
+        "balance": "Баланс",
+        "action": "Дія",
+        "imported": "Імпортні"
+      },
+      "button": {
+        "start": "Розпочати сканування",
+        "pause": "Пауза",
+        "cancel": "Скасувати",
+        "continue": "Продовжити",
+        "reScan": "Повторне сканування",
+        "add": "додати",
+        "send": "Надіслати",
+        "sign": "Знак"
+      }
+    },
+    "message": {
+      "confirmation": {
+        "close": "Сканування не завершено. ",
+        "cancel": "Сканування не завершено. "
+      },
+      "error": {
+        "ABORT_OOM": "Сканування перервано. ",
+        "NETWORK_ERROR": "Помилка мережі. ",
+        "UNKNOWN": "Невідома помилка. "
+      }
+    }
+  },
+  "moveNft": {
+    "ui": {
+      "title": "Перемістити NFT",
+      "label": {
+        "moveToProfile": "Перейти до профілю",
+        "selectDid": "Виберіть DID",
+        "move": "Перемістити NFT",
+        "to": "до"
+      },
+      "confirmation": "Ви впевнені, що перемістите NFT? <br>Будь ласка, перегляньте свою транзакцію."
+    }
+  },
+  "signMessage": {
+    "ui": {
+      "title": "Підписати повідомлення",
+      "prompt": "Переконайтеся, що повідомлення надійшло з надійного джерела. ",
+      "label": {
+        "signWdid": "Підписати DID:",
+        "signWithNft": "Підписати за допомогою NFT:",
+        "signWithAddress": "Підпишіться адресою:",
+        "message": "повідомлення",
+        "result": "Результат"
+      }
+    }
+  },
+  "verifyMessage": {
+    "ui": {
+      "title": "Підтвердити повідомлення",
+      "label": {
+        "message": "повідомлення",
+        "result": "Результат"
+      },
+      "button": {
+        "verify": "Підтвердити"
+      },
+      "sigResult": {
+        "pass": "Перевірку підпису пройдено",
+        "fail": "Не вдалося перевірити підпис",
+        "none": "Підпис не перевірено"
+      },
+      "coinResult": {
+        "pass": "Перевірка монет пройдена",
+        "fail": "Не вдалося перевірити монети",
+        "none": "Монета не перевірена"
+      }
+    }
+  },
+  "batchMintNft": {
+    "ui": {
+      "title": "Batch Mint NFT",
+      "label": {
+        "royaltyAddress": "Роялті Адреса",
+        "royaltyPercentage": "Відсоток роялті"
+      }
+    }
+  },
+  "addNetwork": {
+    "ui": {
+      "title": {
+        "add": "Додати мережу",
+        "edit": "Редагувати мережу"
+      },
+      "warning": "Зловмисний мережевий провайдер може брехати про стан блокчейну та записувати вашу мережеву активність. ",
+      "label": {
+        "networkName": "Назва мережі",
+        "rpcUrl": "RPC URL",
+        "chainId": "ID ланцюга",
+        "currencySymbol": "символ валюти",
+        "addressPrefix": "Префікс адреси",
+        "decimalPlace": "Десяткові знаки валюти",
+        "blockExplorer": "Блокувати URL-адресу дослідника (необов’язково)"
+      },
+      "button": {
+        "addNetwork": "Додати мережу"
+      }
+    },
+    "message": {
+      "notification": {
+        "networkExists": "Ця назва мережі вже існує!"
+      },
+      "confirmation": {
+        "delete": "Ви впевнені, що хочете видалити цю мережу?"
+      }
+    }
+  },
+  "updateCns": {
+    "ui": {
+      "title": "Оновити адресу CNS",
+      "confirmation": "Ви оновите обов’язкову інформацію для свого доменного імені.<br/>Будь ласка, перегляньте свою транзакцію.",
+      "label": {
+        "updateTo": "Оновити до",
+        "cns": "CNS",
+        "targetAddress": "Цільова адреса",
+        "currentBindingAddress": "Поточна адреса прив'язки"
+      }
+    }
+  },
+  "addByPublicKey": {
+    "ui": {
+      "title": "Додайте обліковий запис за допомогою публічного ключа",
+      "message": {
+        "publicKeyRequired": "Потрібен публічний ключ."
+      }
+    }
+  },
+  "encryptMessage": {
+    "ui": {
+      "title": "Зашифрувати повідомлення",
+      "tab": {
+        "singleMessage": "Єдине повідомлення",
+        "multipleMessage": "Кілька повідомлень"
+      },
+      "label": {
+        "encryptWithAddress": "Зашифрувати за допомогою адреси",
+        "activatePrefix": "Адреса не активована, натисніть тут, щоб здійснити будь-який переказ ",
+        "activate": "активувати",
+        "message": "повідомлення",
+        "receiverAddress": "Адреса одержувача"
+      },
+      "button": {
+        "encrypt": "Зашифрувати"
+      }
+    },
+    "message": {
+      "error": {
+        "INACTIVE_ADDRESS": "Адреса отримувача не активована."
+      }
+    }
+  },
+  "decryptMessage": {
+    "ui": {
+      "title": "Розшифрувати повідомлення",
+      "label": {
+        "message": "повідомлення",
+        "result": "Результат"
+      },
+      "button": {
+        "decrypt": "Розшифрувати"
+      }
+    },
+    "message": {
+      "error": {
+        "CANNOT_FIND_ADDRESS": "Адреса дешифрування не збігається з адресою одержувача.",
+        "INVALID_MESSAGE": "Недійсне повідомлення.",
+        "INVALID_ADDRESS": "Недійсна адреса відправника/одержувача."
+      }
+    }
+  },
+  "bindingInformation": {
+    "ui": {
+      "title": "Обов'язкова інформація",
+      "label": {
+        "publicKey": "відкритий ключ",
+        "did": "DID",
+        "text": "текст"
+      },
+      "notification": "Ви оновите обов’язкову інформацію для свого доменного імені.<br>Будь ласка, перегляньте свою транзакцію.",
+      "tag": {
+        "currentPk": "Розрахунковий рахунок ПК",
+        "fillPk": "Заповніть відкритий ключ поточного рахунку"
+      },
+      "button": {
+        "update": "оновлення"
+      }
+    }
+  },
+  "scan": {
+    "ui": {
+      "title": "Сканувати",
+      "label": {
+        "scanQr": "Відскануйте QR-код",
+        "publicKeyQr": "QR-код відкритого ключа"
+      },
+      "hint": {
+        "scan": "Сканувати адресу, відкритий ключ"
+      }
+    }
+  },
+  "backup": {
+    "ui": {
+      "title": {
+        "verifyPassword": "Підтвердіть пароль",
+        "backup": "Резервна інформація"
+      },
+      "tip": {
+        "setPassword": "Цей пароль використовуватиметься як пароль для входу під час імпорту резервної копії на новий пристрій для відновлення вашого гаманця."
+      },
+      "label": {
+        "passwordType": {
+          "current": "Використовуйте поточний пароль для входу",
+          "new": "Використовуйте новий пароль"
+        },
+        "selectBackupInfo": "Виберіть Відомості про резервне копіювання",
+        "setYourLoginPassword": "Встановіть пароль для входу"
+      },
+      "items": {
+        "masterAccount": "Інформація про головний обліковий запис",
+        "settings": "Налаштування",
+        "customNetwork": "Спеціальна мережа",
+        "accountList": "Список облікових записів",
+        "addressBook": "Адресна книга",
+        "didNames": "DID Імена"
+      },
+      "button": {
+        "downloadBak": "Завантажте файл резервної копії",
+        "complete": "Повний",
+        "next": "Далі"
+      }
+    },
+    "message": {
+      "error": {
+        "passwordRequired": "Необхідно ввести пароль.",
+        "passwordNotCorrect": "Невірний пароль."
+      }
+    }
+  },
+  "importBackup": {
+    "title": "Завантажити резервну копію",
+    "password": {
+      "tip": "Будь ласка, введіть свій пароль для входу",
+      "label": "Пароль"
+    },
+    "error": {
+      "LARGE_FILE": "Файл завеликий",
+      "UNSUPPORTED_FILE": "Непідтримуваний файл"
+    }
+  },
+  "buyUsds": {
+    "ui": {
+      "title": "Купуйте USDS",
+      "button": {
+        "continue": "Продовжуйте купувати",
+        "stably": "Відкрийте стабільно, щоб купити"
+      },
+      "tip": "Наразі підтримується лише покупка USDS у блокчейні Chia через банківський переказ ACH.",
+      "stablyPrefix": "Цю послугу надає",
+      "stably": " Stably ",
+      "stablySuffix": "і повністю не залежить від Pawket."
+    }
+  },
+  "nftBurn": {
+    "title": "Запис NFT",
+    "description": "Ви спалите цей NFT, вилучивши його з обігу, надіславши на адресу, яку можна перевірити.",
+    "confirmation": "Ви впевнені, що записуєте цей NFT? <br>Будь ласка, перегляньте свою транзакцію."
+  },
+  "cns": {
+    "title": "Служба імен Chia",
+    "placeholder": "Знайдіть доменне ім’я Chia",
+    "button": {
+      "search": "Пошук",
+      "loading": "Завантаження",
+      "register": "зареєструватися",
+      "cancel": "Скасувати"
+    },
+    "label": {
+      "notOpenYet": "Ще не відкрито",
+      "registered": "Зареєстрований",
+      "result": "Результат",
+      "available": "в наявності",
+      "unavailable": "Недоступний",
+      "registrationPeriod": "Період реєстрації",
+      "registrationFee": "Реєстраційний внесок",
+      "annualFee": "Річний внесок",
+      "royaltyPercentage": "Відсоток роялті",
+      "total": "Всього",
+      "networkIssue": "Проблема з мережею",
+      "myNames": "Моє ім'я",
+      "register": "Зареєструвати {cnsName}.xch",
+      "name": "Ім'я",
+      "oneYear": "1 рік",
+      "address": "Адреса (необов'язково)"
+    },
+    "message": {
+      "notOpen": " У період пробної експлуатації CNS поки що можна зареєструвати лише імена з 6 і більше символів. ",
+      "registered": "Це ім'я зареєстровано. ",
+      "profileHomepage": "Домашня сторінка профілю",
+      "unavailable": "Ця назва зарезервована. ",
+      "noName": "Тут немає доменного імені Chia. "
+    }
+  },
+  "connect": {
+    "ui": {
+      "label": {
+        "connectWithPawket": "Підключіться до Pawket",
+        "enterPassword": "Введіть пароль для підключення до сайту",
+        "trust": "Переконайтеся, що ви довіряєте сайту, який ви підключаєте",
+        "selectAccount": "Виберіть обліковий запис для використання на цьому сайті",
+        "loadingBalance": "Завантаження балансу..",
+        "allowSiteTo": "Дозволити цьому сайту:",
+        "viewInfo": "Переглядайте адреси своїх облікових записів, баланс, DID і дії.",
+        "requestTranx": "Запит на схвалення транзакцій.",
+        "gettingData": "Отримання даних від Pawket...",
+        "noWallet": "Немає гаманця Pawket",
+        "noWalletInfo": "У вас не налаштовано гаманець у Pawket."
+      },
+      "button": {
+        "next": "Далі",
+        "connect": "Підключитися",
+        "setUp": "Налаштувати Wallet"
+      }
+    },
+    "messages": {
+      "success": "Успіх!",
+      "invalidCall": "Недійсний виклик:",
+      "noAppName": "Будь ласка, вкажіть назву програми!",
+      "offerAccepted": "Пропозицію прийнято!",
+      "invalidData": "Не вдалося підписати: недійсні вхідні дані",
+      "unknownDid": "Не вдалося підписати: вказаний DID не існує в поточному обліковому записі",
+      "unknownNetwork": "Зазначена мережа не існує",
+      "unknownAddress": "Не вдалося підписати: указана адреса не існує в поточному обліковому записі",
+      "sendCompleted": "Транзакцію подано!",
+      "catAdded": "CAT додано!",
+      "cancelled": "Скасовано",
+      "incorrectPassword": "Невірний пароль."
+    }
+  },
+  "splitCoin": {
+    "ui": {
+      "title": "Спліт монета",
+      "confirmation": {
+        "confirmText": "Ви впевнені, що хочете розділити монети? <br> Будь ласка, перегляньте свою транзакцію.",
+        "label": {
+          "spliting": "Розщеплення",
+          "into": "в",
+          "coins": "Монети"
+        }
+      }
+    }
+  }
+}

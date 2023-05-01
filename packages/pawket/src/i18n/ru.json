@@ -1,0 +1,1666 @@
+{
+  "default": {
+    "accountName": "Аккаунт1"
+  },
+  "html": {
+    "document": {
+      "title": "Pawket"
+    }
+  },
+  "common": {
+    "button": {
+      "confirm": "Подтверждать",
+      "cancel": "Отмена",
+      "back": "Назад",
+      "save": "Сохранять",
+      "submit": "Представлять на рассмотрение",
+      "delete": "Удалить",
+      "sign": "Знак",
+      "generate": "Создать",
+      "copy": "Копировать"
+    },
+    "tooltip": {
+      "copy": "Копировать"
+    },
+    "message": {
+      "saved": "Сохранено.",
+      "added": "Добавлен.",
+      "noResult": "Безрезультатно.",
+      "uploadSuccess": "Загружено."
+    }
+  },
+  "app": {
+    "ui": {
+      "button": {
+        "lang": "Русский"
+      },
+      "navigation": {
+        "wallet": "Кошелек",
+        "cns": "ЦНС",
+        "explore": "Исследовать",
+        "settings": "Настройки"
+      }
+    },
+    "message": {
+      "notification": {
+        "copySuccess": "Скопировано.",
+        "copyFailed": "Ошибка копирования.",
+        "transactionComplete": {
+          "title": "Транзакция завершена!",
+          "body": "Ваша транзакция в блоке {block} завершена."
+        }
+      }
+    }
+  },
+  "footer": {
+    "ui": {
+      "productInfo": {
+        "name": "Pawket",
+        "author": "SutuLabs",
+        "authorLink": "https://github.com/SutuLabs"
+      },
+      "button": {
+        "home": "Дом",
+        "developer": "Разработчик"
+      },
+      "error": {
+        "READ_VERSION_FAILED": "Не удалось прочитать версию."
+      }
+    }
+  },
+  "self-test": {
+    "message": {
+      "checking": "Проверка",
+      "passed": "Прошедший",
+      "failed": "Не удалось проверить: "
+    }
+  },
+  "verifyPassword": {
+    "ui": {
+      "button": {
+        "confirm": "Подтверждать",
+        "clear": "Сбросить кошелек"
+      },
+      "title": {
+        "verifyPassword": "подтвердите пароль"
+      },
+      "alt": {
+        "logoAlt": "Логотип Покет"
+      }
+    },
+    "message": {
+      "confirmation": {
+        "clear": "Сброс кошелька безвозвратно удалит все данные (включая мнемоники и пароли) с вашего устройства, убедитесь, что мнемоники кошелька были сохранены. ",
+        "confirmText": "Подтверждать",
+        "cancelText": "Отмена"
+      },
+      "error": {
+        "passwordNotMatch": "Пароль не подходит.",
+        "incorrectPassword": "Неверный пароль.",
+        "passwordEmpty": "Пароль не может быть пустым."
+      },
+      "tip": {
+        "weakPassword": "Слабый",
+        "mediumPassword": "Середина",
+        "strongPassword": "Сильный"
+      }
+    }
+  },
+  "createSeed": {
+    "ui": {
+      "button": {
+        "confirm": "Подтверждать",
+        "later": "Позже",
+        "ready": "Следующий",
+        "12word": "12 слов",
+        "24word": "24 слова",
+        "import12": "Импорт мнемонических слов Pawket",
+        "import24": "Импорт официальных мнемонических слов Chia"
+      },
+      "text": {
+        "create": {
+          "tip1": "Добро пожаловать! ",
+          "tip2": "ВНИМАНИЕ: НИКОГДА НЕ РАЗГЛАШАЙТЕ СВОИ МНЕМОНИКИ. "
+        },
+        "import12": {
+          "title": "Импорт мнемонических слов Pawket",
+          "tip": "Пожалуйста, введите мнемонические слова Pawket по порядку, используя пробелы между мнемоническими знаками."
+        },
+        "import24": {
+          "title": "Импорт официальных мнемонических слов Chia",
+          "tip": "Пожалуйста, введите официальные мнемонические слова Chia по порядку, используя пробелы между мнемоническими знаками."
+        }
+      }
+    },
+    "message": {
+      "error": {
+        "wrongSeed": "Не удалось импортировать, проверьте мнемонические слова.",
+        "notInBip39": "{wordList} не присутствует (отсутствуют) в списке слов BIP39"
+      }
+    }
+  },
+  "accountDetail": {
+    "ui": {
+      "button": {
+        "receive": "Получать",
+        "buy": "Купить",
+        "send": "Отправлять",
+        "scan": "Сканировать",
+        "confirm": "Подтверждать",
+        "cancel": "Отмена",
+        "manageCats": "Управление CAT"
+      },
+      "tab": {
+        "asset": "Объект",
+        "utxos": "UTXO",
+        "nft": "NFT",
+        "did": "DID"
+      },
+      "tooltip": {
+        "lock": "Заблокировать кошелек",
+        "errorLog": "Журнал ошибок",
+        "refresh": "Обновить"
+      },
+      "dApps": {
+        "title": "децентрализованные приложения",
+        "tooltip": {
+          "donate": "Пожертвовать на развитие",
+          "scanAssets": "Сканировать активы",
+          "proxy": "Автономный знак",
+          "takeOffer": "Принять Offer",
+          "makeOffer": "Сделать предложение",
+          "batchSend": "Пакетная отправка",
+          "mintCat": "Выпуск КПП",
+          "mintNft": "Монетный двор NFT",
+          "batchMintNft": "Пакетный монетный двор",
+          "verify": "Проверить сообщение",
+          "encryptMessage": "Зашифровать сообщение",
+          "decryptMessage": "Расшифровать сообщение"
+        },
+        "button": {
+          "donate": "Пожертвовать",
+          "scanAssets": "Сканировать активы",
+          "proxy": "Автономный знак",
+          "takeOffer": "Принять Offer",
+          "makeOffer": "Сделать предложение",
+          "batchSend": "Пакетная отправка",
+          "mintCat": "Выпуск КПП",
+          "mintNft": "Монетный двор NFT",
+          "batchMintNft": "Пакетный монетный двор",
+          "verify": "Проверить сообщение",
+          "encryptMessage": "Зашифровать сообщение",
+          "decryptMessage": "Расшифровать сообщение"
+        }
+      }
+    },
+    "message": {
+      "confirmation": {
+        "lock": "Заблокировать кошелек?"
+      },
+      "notification": {
+        "donate": "Вы делаете пожертвование разработчикам.",
+        "observeMode": "Функция взаимодействия отключена в режиме наблюдения",
+        "offline": "Автономный режим",
+        "test": "Примечание. kitt.pawket.app — это тестовый сайт, на котором вы можете ознакомиться с некоторыми неизданными новыми функциями."
+      }
+    }
+  },
+  "changePassword": {
+    "ui": {
+      "title": {
+        "changePassword": "Изменить пароль"
+      },
+      "label": {
+        "oldPassword": "Старый пароль",
+        "newPassword": "Новый пароль",
+        "rePassword": "Повторно введите пароль"
+      },
+      "button": {
+        "back": "Назад",
+        "submitChange": "Представлять на рассмотрение"
+      }
+    },
+    "message": {
+      "error": {
+        "passwordRequired": "Необходим пароль.",
+        "passwordNotCorrect": "Неверный пароль.",
+        "passwordNotMatch": "Пароль не подходит."
+      },
+      "alert": {
+        "passwordChanged": "Пароль был изменен. "
+      }
+    }
+  },
+  "explorerLink": {
+    "ui": {
+      "title": {
+        "link": "Получать адреса"
+      },
+      "label": {
+        "maxAddress": "Максимальное количество адресов",
+        "address": "Адрес",
+        "coin": "Монета",
+        "sign": "Знак",
+        "link": "Исследователь",
+        "observer": "Наблюдатель",
+        "nonObserver": "Ненаблюдатель"
+      },
+      "tooltip": {
+        "blockchainExplorer": "Посмотреть в обозревателе блоков",
+        "receiveAddress": "Вы можете проверить баланс на большем количестве адресов, если увеличите значение, но кошелек будет работать медленнее."
+      }
+    }
+  },
+  "send": {
+    "ui": {
+      "title": {
+        "send": "Отправлять"
+      },
+      "label": {
+        "amount": "Количество",
+        "memo": "Памятка",
+        "fee": "Платеж"
+      },
+      "button": {
+        "submit": "Представлять на рассмотрение",
+        "showSend": "Показывать"
+      },
+      "slider": {
+        "low": "Низкий",
+        "medium": "Середина",
+        "high": "Высокий",
+        "custom": "Обычай"
+      },
+      "messages": {
+        "getFailedResponse": "Получить ответ об ошибке: ",
+        "failedToSubmit": "Не удалось отправить в пул памяти: ",
+        "failedToSign": "Не удалось подписать: ",
+        "submitted": "Отправляется в пул памяти.",
+        "invalidAmount": "Недопустимая сумма.",
+        "insufficientFunds": "Недостаточно средств."
+      },
+      "span": {
+        "loading": "Загрузка",
+        "maxLeadingText": "Макс:"
+      },
+      "text": {
+        "offlineOnlySupportXch": "Автономная отправка теперь поддерживает только XCH."
+      },
+      "summary": {
+        "notification": "Вы уверены, что хотите отправить?<br/>Пожалуйста, проверьте вашу транзакцию."
+      }
+    },
+    "messages": {
+      "error": {
+        "DOUBLE_SPEND": "Двойная трата",
+        "UNKNOWN_UNSPENT": "Был использован неизвестный UTXO, возможно, предыдущая транзакция не была подтверждена в блокчейне.",
+        "BAD_AGGREGATE_SIGNATURE": "Плохая совокупная подпись",
+        "INVALID_CONDITION": "Неверное условие",
+        "COIN_AMOUNT_EXCEEDS_MAXIMUM": "Количество монет превышает максимальное",
+        "INVALID_FEE_LOW_FEE": "Неверная комиссия/низкая комиссия",
+        "MEMPOOL_NOT_INITIALIZED": "Мемпул не инициализирован",
+        "ALREADY_INCLUDING_TRANSACTION": "Уже включая транзакцию",
+        "INCOMPATIBLE_NETWORK_ID": "Несовместимый идентификатор сети",
+        "NO_TRANSACTIONS_WHILE_SYNCING": "Нет транзакций при синхронизации",
+        "INVALID_FEE_TOO_CLOSE_TO_ZERO": "Недействительная комиссия, слишком близкая к нулю",
+        "COIN_AMOUNT_NEGATIVE": "Количество монет отрицательное",
+        "INVALID_ADDRESS": "Неверный адрес",
+        "ADDRESS_NOT_MATCH_NETWORK": "Заполненный адрес не соответствует текущей сети. ",
+        "PENDING": "Транзакция уже находится в состоянии ожидания, дождитесь завершения."
+      }
+    }
+  },
+  "scanQrCode": {
+    "message": {
+      "error": {
+        "NotAllowedError": "ОШИБКА: Вам необходимо предоставить разрешение на доступ к камере.",
+        "NotFoundError": "ОШИБКА: на этом устройстве нет камеры.",
+        "NotSupportedError": "ОШИБКА: требуется защищенный контекст (HTTPS, localhost).",
+        "NotReadableError": "ОШИБКА: Камера уже используется?",
+        "OverconstrainedError": "ОШИБКА: Установленная камера не подходит.",
+        "StreamApiNotSupportedError": "ОШИБКА: Stream API не поддерживается в этом браузере.",
+        "InsecureContextError": "ОШИБКА: Доступ к камере разрешен только в безопасном контексте. "
+      }
+    }
+  },
+  "offer": {
+    "make": {
+      "ui": {
+        "title": "Сделать предложение",
+        "panel": {
+          "information": "Информация",
+          "hint": {
+            "thisIsYourOffer": "Это текст вашего предложения.",
+            "unsignedOffer": "Ошибка подписи, недействительное предложение"
+          }
+        },
+        "label": {
+          "yourOfferTitle": "Ваше предложение",
+          "bundle": "Пучок"
+        },
+        "button": {
+          "done": "Сделанный",
+          "uploadToDexie": "Загрузить в Декси"
+        },
+        "field": {
+          "offer": "Предложение",
+          "request": "Запрос"
+        }
+      },
+      "messages": {
+        "failedToSign": "Не удалось сделать предложение."
+      }
+    },
+    "symbol": {
+      "Cat": "КОТ",
+      "hint": {
+        "XCH": "Оригинальный токен"
+      }
+    },
+    "take": {
+      "ui": {
+        "title": "Принять предложение",
+        "hint": {
+          "pasteOffer": "Вставьте сюда данные вашего предложения или загрузите файл вашего предложения.",
+          "error": "Ваша строка предложения неверна."
+        },
+        "panel": {
+          "information": "Информация"
+        },
+        "label": {
+          "royaltyToCreator": "Создатель",
+          "totalRequested": "Общая запрошенная сумма",
+          "nftPrice": "Цена NFT",
+          "royalty": "Роялти",
+          "total": "Общий",
+          "receive": "Получать",
+          "offer": "Предложение",
+          "fee": "Платеж",
+          "totalPayment": "Всего к оплате"
+        },
+        "button": {
+          "cancel": "Отмена",
+          "submit": "Представлять на рассмотрение",
+          "upload": "Загрузить файл предложения"
+        },
+        "field": {
+          "offer": "Предложение"
+        },
+        "tooltip": {
+          "spaceScan": "Посмотреть на Spacescan.io",
+          "verifiedCns": "Проверенный ЦНС",
+          "unverifiedCns": "Это подделка ЦНС. "
+        },
+        "notification": {
+          "observation": "Сейчас в режиме наблюдения. "
+        }
+      },
+      "information": {
+        "requested": "В обмен на",
+        "offered": "Вы получите",
+        "addCat": "Добавить в список CAT.",
+        "unsupportOfferNftOffer": "Этот тип предложения пока не поддерживается.",
+        "acceptOffer": "Вы уверены, что принимаете предложение?<br>Пожалуйста, проверьте вашу транзакцию."
+      },
+      "messages": {
+        "failedToSign": "Не удалось принять предложение.",
+        "unsupportOfferNftOffer": "Этот тип предложения пока не поддерживается."
+      }
+    }
+  },
+  "ManageCats": {
+    "ui": {
+      "title": {
+        "ManageCats": "Управлять кошками"
+      },
+      "label": {
+        "listingCats": "Список CAT",
+        "name": "Имя",
+        "assetID": "Идентификатор объекта",
+        "search": "Поиск",
+        "custom": "Обычай"
+      },
+      "button": {
+        "add": "Добавлять"
+      },
+      "tooltip": {
+        "removeToken": "Удалить КАТ",
+        "drag": "Перетащите, чтобы отсортировать",
+        "copy": "Скопировать идентификатор актива"
+      },
+      "message": {
+        "nameRequired": "Требуется имя.",
+        "assetIdRequired": "Требуется идентификатор актива."
+      }
+    },
+    "message": {
+      "notification": {
+        "wrongAssetId": "Неверный идентификатор актива. "
+      },
+      "confirmation": {
+        "removeToken": "Вы уверены, что удалили CAT?",
+        "closeWithContent": "На этой странице есть несохраненные изменения, которые будут потеряны, если вы покинете ее. ",
+        "confirm": "Подтверждать",
+        "cancel": "Отмена"
+      },
+      "alert": {
+        "isExisted": "Идентификатор/имя актива уже существует в списке CAT!"
+      }
+    }
+  },
+  "offline": {
+    "proxy": {
+      "scan": {
+        "title": "Знак",
+        "numberField": "Неподписанные сообщения",
+        "numberMessage": "Отсканируйте следующие QR-коды с помощью Offline Sign. "
+      },
+      "confirmBundle": {
+        "title": "Подтверждать",
+        "button": {
+          "cancel": "Отмена",
+          "submit": "Представлять на рассмотрение"
+        },
+        "notification": "Вы уверены, что хотите отправить?<br/>Пожалуйста, проверьте вашу транзакцию."
+      }
+    },
+    "client": {
+      "text": {
+        "qrcodesStatus": "{index} / {total}",
+        "unsafeMode": "Небезопасный режим",
+        "status": "Отсканировано: {fragment} / {total} фрагментов."
+      },
+      "scan": {
+        "title": "Автономный знак",
+        "numberField": "Подписанное сообщение",
+        "numberMessage": "Отсканируйте этот QR-код онлайн-устройством, которое только что инициировало транзакцию.",
+        "scrollDown": "Прокрутите страницу вниз и отсканируйте QR-код на автономном устройстве, чтобы получить подписанное сообщение."
+      },
+      "show": {
+        "hint": "Используйте прокси для сканирования QR, чтобы отправить транзакцию.",
+        "overflow": "Данные превышают максимальную длину, не удается сгенерировать QR-код",
+        "bundle": "Пучок",
+        "copy": "Копировать"
+      }
+    },
+    "ui": {
+      "button": {
+        "cancel": "Отмена"
+      }
+    }
+  },
+  "addByMnemonic": {
+    "ui": {
+      "label": {
+        "name": "Имя учетной записи",
+        "mnemonic": "{len} Мнемонические слова"
+      },
+      "message": {
+        "nameRequired": "Требуется имя учетной записи.",
+        "mnemonicRequired": "Мнемотехника обязательна.",
+        "invalidMnemonic": "Не удалось импортировать. "
+      },
+      "button": {
+        "back": "Назад",
+        "submit": "Представлять на рассмотрение"
+      },
+      "tooltip": {
+        "mnemonic": "Пожалуйста, вводите мнемонические слова по порядку, используя пробелы между мнемониками."
+      }
+    },
+    "message": {
+      "error": {
+        "accountMnemonicExists": "Аккаунт с таким мнемоническим словом уже существует."
+      }
+    }
+  },
+  "addByAddress": {
+    "ui": {
+      "title": "Добавить по адресу",
+      "label": {
+        "name": "Имя учетной записи",
+        "publicKey": "ПубличныйКлюч"
+      },
+      "message": {
+        "nameRequired": "Требуется имя учетной записи.",
+        "illegalAddress": "Неверный адрес.",
+        "duplicateAddress": "Повторяющийся адрес: [{accName}] имеет тот же адрес.",
+        "duplicateName": "Повторяющееся имя",
+        "duplicatePublicKey": "Дубликат открытого ключа: [{accName}] имеет такой же открытый ключ."
+      },
+      "button": {
+        "back": "Назад",
+        "submit": "Представлять на рассмотрение"
+      }
+    }
+  },
+  "addByPassword": {
+    "ui": {
+      "title": "Добавить теневой кошелек",
+      "label": {
+        "name": "Имя учетной записи",
+        "password": "Парольная фраза",
+        "rePassword": "Повторно введите кодовую фразу"
+      },
+      "message": {
+        "nameRequired": "Требуется имя учетной записи.",
+        "passwordRequired": "Требуется пароль.",
+        "invalidPassword": "Парольная фраза не совпадает."
+      },
+      "button": {
+        "back": "Назад",
+        "submit": "Представлять на рассмотрение"
+      }
+    },
+    "message": {
+      "error": {
+        "accountPasswordExists": "У [{accName}] такая же кодовая фраза."
+      }
+    }
+  },
+  "addBySerial": {
+    "ui": {
+      "title": "Добавить учетную запись по серийному номеру",
+      "label": {
+        "name": "Имя учетной записи"
+      },
+      "message": {
+        "nameRequired": "Требуется имя учетной записи."
+      },
+      "button": {
+        "back": "Назад",
+        "submit": "Представлять на рассмотрение"
+      }
+    }
+  },
+  "bundleSummary": {
+    "ui": {
+      "fee": {
+        "title": "Платеж",
+        "mojos": "{плата} моджо (ы)"
+      },
+      "inputs": {
+        "title": "Общая сумма"
+      },
+      "label": {
+        "details": "Подробности"
+      },
+      "detail": {
+        "title": "Подробности",
+        "itemTo": "адресовать}",
+        "span": {
+          "hint": "Подсказка(Соответствующий адрес)",
+          "memo": "Памятка"
+        }
+      }
+    },
+    "notification": {
+      "error": {
+        "unknownMod": "Неизвестный пакет, не может правильно проанализировать."
+      }
+    }
+  },
+  "batchSend": {
+    "ui": {
+      "title": {
+        "send": "Пакетная отправка"
+      },
+      "tooltip": {
+        "help": "Поддерживает отправку нескольких транзакций за одну операцию. ",
+        "upload": "Загрузите файл в формате «.csv»."
+      },
+      "field": {
+        "csv": {
+          "fillSample": "Образец заполнения",
+          "or": " или ",
+          "downloadSample": "Загрузите образец CSV-файла",
+          "drag": "Перетащите в эту область, чтобы загрузить напрямую.",
+          "sampleName": "Образец"
+        }
+      },
+      "summary": {
+        "notification": "Вы уверены, что хотите отправить?<br/>Пожалуйста, проверьте вашу транзакцию."
+      },
+      "button": {
+        "upload": "Загрузить CSV-файл"
+      },
+      "messages": {
+        "failedToSign": "Не удалось подписать: ",
+        "wrongFileType": "Пожалуйста, загрузите файл в формате .csv.",
+        "onlyOneFile": "Поддерживается только одна загрузка файла."
+      }
+    },
+    "messages": {
+      "error": {
+        "ADDRESS_NOT_MATCH_NETWORK": "Заполненный адрес [{address}] не соответствует текущей сети. ",
+        "COIN_NOT_EXIST": "Монета {symbol} не существует!"
+      }
+    },
+    "sample": {
+      "address": "Адрес",
+      "coin": "Монета",
+      "amount": "Сумма (моджо)",
+      "memo": "Памятка (если вы отправляете монету XCH, вы не можете заполнить памятку)"
+    }
+  },
+  "utxo": {
+    "ui": {
+      "label": {
+        "cost": "Отправлять",
+        "receive": "Получать",
+        "queue": "Очередь",
+        "confirmed": "Подтвержденный"
+      },
+      "text": {
+        "empty": "У вас нет транзакций."
+      }
+    }
+  },
+  "utxoDetail": {
+    "ui": {
+      "title": {
+        "cost": "Отправлять",
+        "receive": "Получать"
+      },
+      "label": {
+        "amount": "Количество",
+        "time": "Время",
+        "spentHeight": "Израсходованная высота",
+        "confirmedHeight": "Подтвержденная высота",
+        "parentCoinInfo": "ParentCoinInfo",
+        "puzzleHash": "Адрес",
+        "coinName": "Название монеты",
+        "coins": "Монеты",
+        "pending": "В ожидании"
+      },
+      "button": {
+        "unlockCoins": "Разблокировать монеты"
+      },
+      "tooltip": {
+        "copy": "Копировать"
+      }
+    },
+    "message": {
+      "unlockCoins": "Разблокировка монеты не отменяет транзакцию. "
+    }
+  },
+  "sendSummary": {
+    "ui": {
+      "label": {
+        "sending": "Отправка",
+        "to": "К",
+        "fee": "Платеж",
+        "total": "Общий",
+        "assetId": "Идентификатор объекта",
+        "NftUri": "NFT"
+      }
+    }
+  },
+  "bundleText": {
+    "ui": {
+      "title": "Пучок",
+      "copy": "Копировать",
+      "button": {
+        "show": "Показывать",
+        "hide": "Скрывать"
+      }
+    }
+  },
+  "mintCat": {
+    "ui": {
+      "title": "Выпуск КПП",
+      "label": {
+        "amount": "Количество",
+        "memo": "Памятка",
+        "symbolName": "Имя CAT (изменяемое)"
+      },
+      "summary": {
+        "notification": "Вы уверены, что выдаете CAT?<br/>Пожалуйста, проверьте вашу транзакцию.",
+        "label": {
+          "leadingText": "Выдача CAT"
+        }
+      },
+      "messages": {
+        "failedToSign": "Не удалось подписать: ",
+        "tokenNameUnavailable": "Имя CAT недоступно."
+      }
+    }
+  },
+  "addressBook": {
+    "ui": {
+      "title": {
+        "list": "Адресная книга",
+        "add": "Добавлять"
+      },
+      "button": {
+        "cancel": "Отмена",
+        "confirm": "Подтверждать",
+        "addContact": "Добавить адрес",
+        "showInnerAcc": "Мои счета"
+      },
+      "tooltip": {
+        "remove": "Удалять"
+      }
+    },
+    "messages": {
+      "notification": {
+        "contactAdded": "Добавлен.",
+        "contactRemoved": "Удаленный.",
+        "saved": "Сохранено."
+      },
+      "alert": {
+        "addressExists": "Адрес уже существует в адресной книге."
+      },
+      "confirmation": {
+        "removeConfirm": "Вы уверены, что хотите удалить этот адрес из адресной книги?"
+      }
+    }
+  },
+  "addressDetail": {
+    "ui": {
+      "title": {
+        "detail": "Подробности",
+        "edit": "Редактировать"
+      },
+      "label": {
+        "name": "Имя",
+        "address": "Адрес"
+      },
+      "tooltip": {
+        "copy": "Копировать"
+      },
+      "button": {
+        "edit": "Редактировать"
+      }
+    }
+  },
+  "addressBookField": {
+    "ui": {
+      "label": {
+        "name": "Имя",
+        "address": "*Адрес"
+      },
+      "messages": {
+        "emptyAddress": "Введите адрес.",
+        "illegalAddress": "Неверный адрес."
+      },
+      "button": {
+        "cancel": "Отмена",
+        "save": "Сохранять"
+      },
+      "placeholder": {
+        "address": "Адрес или CNS"
+      }
+    }
+  },
+  "mintNft": {
+    "ui": {
+      "title": "Монетный двор NFT",
+      "label": {
+        "did": "DID",
+        "memo": "Памятка",
+        "uri": "URI",
+        "hash": "Хэш"
+      },
+      "summary": {
+        "notification": "Вы уверены, что используете NFT?<br/>Пожалуйста, проверьте вашу транзакцию.",
+        "label": {
+          "leadingText": "Минтинг NFT"
+        }
+      },
+      "tooltip": {
+        "upload": "Выберите файл для создания хэша для вашего NFT."
+      },
+      "button": {
+        "upload": "Получить хэш изображения"
+      },
+      "messages": {
+        "failedToSign": "Не удалось подписать: "
+      }
+    }
+  },
+  "addressField": {
+    "ui": {
+      "label": {
+        "address": "Адрес",
+        "bindingAddress": "Адрес привязки:",
+        "lastChanged": "Последнее изменение:",
+        "hour": "{value} час назад",
+        "day": "{value} дн. назад",
+        "week": "{value} н. д. назад",
+        "month": "{value} мес. назад",
+        "year": "{value} год назад"
+      },
+      "tooltip": {
+        "qr": "Сканировать QR-код",
+        "addressBook": "Открыть адресную книгу",
+        "confirmed": "Подтвержденный",
+        "confirming": "Подтверждение",
+        "wrong": "Неправильный"
+      },
+      "span": {
+        "newAddress": "Найден новый адрес, нажмите, чтобы добавить в адресную книгу."
+      },
+      "resolve": {
+        "fail": "Не удалось разрешить имя",
+        "notFound": "Не найдено"
+      }
+    }
+  },
+  "errorLog": {
+    "ui": {
+      "title": "Журнал ошибок",
+      "label": {
+        "message": "Сообщение",
+        "stack": "Куча"
+      },
+      "field": {
+        "msg": "Сообщение",
+        "info": "Информация",
+        "url": "URL",
+        "empty": "Нет записей"
+      },
+      "button": {
+        "clearAll": "Очистить все"
+      }
+    }
+  },
+  "searchCat": {
+    "ui": {
+      "placeholder": "имя кошки",
+      "tag": {
+        "imported": "Импортировано"
+      },
+      "text": {
+        "emptyList": "Пустой результат",
+        "ascription": "Работает на TailDatabase"
+      }
+    }
+  },
+  "settings": {
+    "menu": {
+      "title": "Настройки",
+      "items": {
+        "general": {
+          "title": "Общий",
+          "description": "Язык, сеть и конвертация валюты"
+        },
+        "security": {
+          "title": "Безопасность",
+          "description": "Пароль, мнемоника и экспорт личной информации"
+        },
+        "addressBook": {
+          "title": "Адресная книга",
+          "description": "Добавляйте, редактируйте, удаляйте и управляйте своими контактными адресами"
+        },
+        "network": {
+          "title": "Сеть",
+          "description": "Добавляйте, редактируйте, удаляйте и управляйте своей сетью"
+        },
+        "collection": {
+          "title": "Коллекция",
+          "description": "Создавайте, редактируйте, удаляйте и управляйте своей коллекцией"
+        },
+        "advanced": {
+          "title": "Передовой",
+          "description": "Экспериментальный"
+        },
+        "devhelper": {
+          "title": "Разработчик",
+          "description": "Bech32m, CLVM, Bundle, Offer, Coin"
+        },
+        "about": {
+          "title": "О",
+          "description": "Политика конфиденциальности, версия Pawket, свяжитесь с нами"
+        },
+        "lock": "Заблокировать кошелек"
+      }
+    },
+    "general": {
+      "title": "Общий",
+      "label": {
+        "language": "Язык",
+        "network": "Сеть",
+        "currency": "обмен валюты",
+        "offlineMode": "Автономный режим",
+        "darkMode": "Темный режим"
+      }
+    },
+    "security": {
+      "title": "Безопасность",
+      "label": {
+        "mnemonic": "Мнемонические слова",
+        "password": "Логин Пароль",
+        "export": "Экспорт личной информации",
+        "reset": "Сбросить кошелек"
+      },
+      "message": {
+        "clear": "Сброс кошелька безвозвратно удалит все данные (включая мнемонические слова и пароли) с вашего устройства, убедитесь, что для мнемонических слов кошелька создана резервная копия. ",
+        "inputPassword": "Введите пароль, чтобы продолжить",
+        "passwordNotCorrect": "Неверный пароль.",
+        "backupConfirmTitle": "ДЕЙСТВОВАТЬ С ОСТОРОЖНОСТЬЮ",
+        "backupConfirm": "Эта операция экспортирует информацию о резервной копии кошелька (включая мнемонические слова и открытый ключ), которую можно использовать для восстановления кошелька на других устройствах."
+      },
+      "button": {
+        "showMnemonic": "Показать мнемонические слова",
+        "hideMnemonic": "Скрыть мнемонические слова",
+        "password": "Изменить пароль",
+        "backup": "Резервное копирование информации кошелька",
+        "reset": "Сбросить кошелек"
+      }
+    },
+    "devhelper": {
+      "title": "Разработчик"
+    },
+    "advanced": {
+      "title": "Передовой",
+      "label": {
+        "experimental": "Экспериментальный"
+      },
+      "confirmation": {
+        "experimental": "Экспериментальные функции нестабильны и еще не полностью протестированы, вы можете попробовать и оставить свой отзыв."
+      },
+      "description": "После включения этого режима вы можете использовать экспериментальные функции, такие как «Сделать предложение», «Принять предложение», «Пакетная отправка», «Выдать CAT», «Shadow Wallet» и т. д.",
+      "warning": "Экспериментальные функции нестабильны и еще не полностью протестированы, вы можете попробовать и оставить свой отзыв. "
+    },
+    "about": {
+      "title": "О",
+      "links": {
+        "title": "Ссылки",
+        "label": {
+          "privacyPolicy": "политика конфиденциальности",
+          "pawketWebsite": "Веб-сайт Pawket",
+          "github": "Github",
+          "twitter": "Twitter",
+          "discord": "Discord",
+          "donate": "Пожертвовать разработчикам"
+        },
+        "url": {
+          "privacyPolicy": "https://info.pawket.app/privacy-policy",
+          "pawketWebsite": "https://info.pawket.app",
+          "github": "https://github.com/SutuLabs",
+          "twitter": "https://twitter.com/pawket_app",
+          "discord": "https://discord.com/invite/ndQgpHwe4V"
+        }
+      }
+    }
+  },
+  "explore": {
+    "title": "Исследовать",
+    "loading": "Загрузка",
+    "ascription": "Работает на Декси",
+    "nft": {
+      "title": "NFT-рынок"
+    },
+    "cat": {
+      "title": "КАТ Маркет"
+    },
+    "button": {
+      "buy": "Купить",
+      "sell": "Продавать",
+      "takeOffer": "Принять Offer"
+    },
+    "table": {
+      "header": {
+        "offer": "Предложение",
+        "receive": "Получать",
+        "price": "Цена",
+        "operation": "Действие"
+      }
+    }
+  },
+  "accountManagement": {
+    "ui": {
+      "title": "Управление аккаунтом",
+      "label": {
+        "default": "По умолчанию",
+        "serial": "Серийный",
+        "address": "Адрес",
+        "imported": "Импортировано",
+        "passPhrase": "Парольная фраза",
+        "publicKey": "ПубличныйКлюч",
+        "unknown": "Неизвестный"
+      },
+      "button": {
+        "addBySerial": "Добавить по серийному номеру",
+        "addByPassword": "Добавить теневой кошелек",
+        "addByLegacy": "Импорт официального кошелька Chia (24 слова)",
+        "addByMnemonic": "Импорт кошелька Nucle/Goby (12 слов)",
+        "addByAddress": "Добавить по адресу (режим наблюдения)",
+        "addByPublicKey": "Добавить по публичному ключу"
+      },
+      "tooltip": {
+        "addBySerial": "Производные серийные счета создаются по порядку.",
+        "addByPassword": "Аккаунт защищен МНЕМОНИКОЙ и ПАРОЛЬНОЙ ФРАЗОЙ. ",
+        "addByLegacy": "Импорт официального кошелька Chia.",
+        "addByMnemonic": "Импортируйте кошелек Nucle/Goby.",
+        "addByAddress": "В этом режиме поддерживается только чтение.",
+        "addByPublicKey": "Добавьте открытый ключ автономного кошелька, чтобы упростить инициацию и завершение транзакций."
+      },
+      "modal": {
+        "addByLegacy": "Импорт официального кошелька Chia",
+        "addByMnemonic": "Импорт кошелька Nucle/Goby"
+      },
+      "value": {
+        "defaultName": "Аккаунт{n}"
+      }
+    },
+    "message": {
+      "confirmation": {
+        "removeAccount": "Удалить [{accountName}]? ",
+        "cancelText": "Отмена",
+        "confirmText": "ХОРОШО"
+      },
+      "prompt": {
+        "setAccountName": "Введите новое имя",
+        "cancelText": "Отмена",
+        "confirmText": "ХОРОШО"
+      },
+      "notification": {
+        "saved": "Сохранено"
+      }
+    }
+  },
+  "welcome": {
+    "ui": {
+      "description": "Управляйте своими XCH/CAT в Pawket!",
+      "slogan": "Покет был и будет вашим хорошим компаньоном в мире чиа.",
+      "button": {
+        "start": "НАЧИНАТЬ"
+      }
+    }
+  },
+  "disclaimer": {
+    "ui": {
+      "title": "Отказ от ответственности",
+      "tip": "Всегда делайте резервные копии мнемонических слов и закрытых ключей. ",
+      "privary": "Время от времени мы можем изменять Политику конфиденциальности. ",
+      "agreementPrefix": "я принимаю ",
+      "agreement": "политика конфиденциальности",
+      "link": "https://info.pawket.app/privacy-policy/",
+      "agreementSuffix": "и хотите получить доступ к Pawket.",
+      "button": {
+        "continue": "ПРОДОЛЖАТЬ"
+      }
+    }
+  },
+  "createPassword": {
+    "title": "Придумайте пароль",
+    "tip": "Перед запуском установите пароль для входа. ",
+    "label": {
+      "password": "Пароль",
+      "confirm": "Подтвердите пароль"
+    },
+    "button": {
+      "continue": "ПРОДОЛЖАТЬ"
+    }
+  },
+  "createWallet": {
+    "title": "Создать кошелек",
+    "button": {
+      "create": "Создавать",
+      "import": "Импортировать",
+      "backup": "Импорт резервной копии кошелька"
+    }
+  },
+  "newWallet": {
+    "title": "Новый кошелек"
+  },
+  "importWallet": {
+    "title": "Импорт кошелька"
+  },
+  "accountInfo": {
+    "ui": {
+      "title": {
+        "export": "Информация Об Учетной Записи"
+      },
+      "label": {
+        "name": "Имя",
+        "type": "Тип",
+        "fingerprint": "Отпечаток пальца",
+        "masterPublicKey": "Главный открытый ключ (м)",
+        "farmerPublicKey": "Открытый ключ фермера (m/12381/8444/0/0)",
+        "poolPublicKey": "Открытый ключ пула (m/12381/8444/1/0)",
+        "firstWalletAddress": "Адрес первого кошелька",
+        "mnemonicSeed": "Мнемонические слова (24 слова)",
+        "connectionManagement": "Управление подключением",
+        "details": "Подробности"
+      },
+      "tooltip": {
+        "fingerprintTip": "Совместимость с официальным кошельком Chia",
+        "mnemonicTip": "Совместимость с официальным кошельком Chia",
+        "disconnect": "Отключить"
+      },
+      "button": {
+        "reveal": "Раскрывать",
+        "hide": "Скрывать",
+        "delete": "Удалить"
+      }
+    },
+    "message": {
+      "inputPassword": "Введите пароль, чтобы продолжить",
+      "passwordNotCorrect": "Неверный пароль.",
+      "disconnect": "Вы действительно хотите отключить [{acc}] от этого сайта?"
+    }
+  },
+  "nftDetail": {
+    "ui": {
+      "label": {
+        "nftId": "Идентификатор NFT:",
+        "collection": "Коллекция",
+        "did": "DID",
+        "description": "Описание",
+        "expirationDate": "Дата окончания срока"
+      },
+      "button": {
+        "transfer": "Передача",
+        "makeOffer": "Продавать",
+        "move": "Двигаться",
+        "showMore": "Показать больше",
+        "showLess": "Показывай меньше"
+      },
+      "title": {
+        "properties": "Характеристики",
+        "bindingInformation": "Информация о привязке",
+        "details": "Подробности"
+      },
+      "bindingInformation": {
+        "address": "Адрес",
+        "publicKey": "Открытый ключ",
+        "did": "DID",
+        "text": "Текст",
+        "edit": "Редактировать"
+      },
+      "details": {
+        "nftId": "NFT ID:",
+        "launcherId": "Launcher ID",
+        "ownerDid": "Owner DID",
+        "ownerAddress": "Owner Address",
+        "royaltyPercentage": "Royalty Percentage",
+        "dataUrl": "Data URL {index}",
+        "dataHash": "Data Hash",
+        "metadataUrl": "Metadata URL {index}",
+        "metadataHash": "Metadata Hash",
+        "licenseUrl": "License URL",
+        "licenseHash": "License Hash",
+        "series": "Series"
+      },
+      "dropdown": {
+        "spaceScan": "Посмотреть на Spacescan.io",
+        "mintGarden": "Посмотреть на Mintgarden.io",
+        "setAsProfilePic": "Сделать аватаром учетной записи",
+        "signWithNft": "Знак",
+        "nftBurn": "Сжечь NFT"
+      },
+      "profile": {
+        "all": "Все NFT",
+        "unassigned": "Неназначенные NFT"
+      }
+    }
+  },
+  "did": {
+    "ui": {
+      "title": {
+        "detail": "Подробности"
+      },
+      "button": {
+        "addDid": "Добавить DID",
+        "sign": "Знак"
+      },
+      "label": {
+        "name": "Имя",
+        "did": "DID",
+        "tool": "Инструмент"
+      },
+      "prompt": {
+        "newName": "Введите новое имя"
+      }
+    },
+    "addDid": {
+      "title": "Добавить DID",
+      "tip": "Вы будете использовать 1 моджо для создания DID.",
+      "balance": "Баланс",
+      "confirmation": "Вы уверены, что хотите создать DID?<br>Пожалуйста, проверьте вашу транзакцию.",
+      "spend": "Тратить"
+    }
+  },
+  "nftTransfer": {
+    "ui": {
+      "title": "Передача",
+      "description": "Вы передадите этот NFT новому владельцу.",
+      "summary": {
+        "confirmation": "Вы уверены, что переносите NFT?<br>Пожалуйста, проверьте вашу транзакцию."
+      }
+    }
+  },
+  "collection": {
+    "myCollection": {
+      "title": "Моя коллекция",
+      "specialNote": "Особое примечание: информация о коллекции не будет загружаться в блокчейн, а данные будут храниться на вашем локальном устройстве. ",
+      "button": {
+        "newCollection": "Новая коллекция"
+      },
+      "tooltip": {
+        "edit": "Редактировать",
+        "remove": "Удалять"
+      },
+      "messages": {
+        "confirmation": {
+          "delete": "Вы уверены, что хотите удалить коллекцию?"
+        },
+        "information": {
+          "NO_COLLECTION": "Нет коллекции"
+        }
+      }
+    },
+    "createCollection": {
+      "title": "Создать коллекцию",
+      "label": {
+        "id": "*ИДЕНТИФИКАТОР",
+        "name": "*Имя",
+        "description": "Описание",
+        "icon": "*Икона",
+        "uploadImage": "Загрузить изображение:",
+        "url": "URL-адрес:",
+        "hash": "Хэш:",
+        "fillUrl": "Заполните URL-адрес изображения",
+        "iconUrl": "URL-адрес значка",
+        "iconHash": "Иконка Хэш",
+        "properties": "*Характеристики",
+        "creator": "Создатель",
+        "address": "*Адрес",
+        "royaltyPercentage": "* Процент роялти",
+        "royaltyAddress": "* Королевский адрес",
+        "licenseUrl": "* URL-адрес лицензии"
+      },
+      "button": {
+        "upload": "Загрузить"
+      },
+      "messages": {
+        "error": {
+          "INVALID_PROPERTY": "Недопустимое свойство",
+          "INVALID_ADDRESS": "Неверный адрес"
+        }
+      }
+    }
+  },
+  "scanAssets": {
+    "ui": {
+      "title": "Сканировать активы",
+      "prompt": {
+        "selectAssetType": "Сканируя больше адресов, вы можете обнаружить активы, не показанные в списке (включая XCH, CAT, NFT и т. д.), и перенести их на часто используемый адрес.",
+        "scanning": "Сканирование...",
+        "wait": "Пожалуйста, потерпите несколько минут.",
+        "paused": "Приостановлено...",
+        "canceled": "Отменено.",
+        "finished": "Законченный!",
+        "scanned": "Отсканировано"
+      },
+      "label": {
+        "scan": "Сканировать",
+        "token": "Токен",
+        "nft": "NFT",
+        "did": "DID",
+        "myCats": "Мои кошки",
+        "maxAddress": "Максимальное количество адресов сканирования",
+        "scanning": "Сканирование",
+        "result": "Результат",
+        "name": "Имя",
+        "id": "ИДЕНТИФИКАТОР",
+        "balance": "Баланс",
+        "action": "Действие",
+        "imported": "Импортировано"
+      },
+      "button": {
+        "start": "Начать сканирование",
+        "pause": "Пауза",
+        "cancel": "Отмена",
+        "continue": "Продолжать",
+        "reScan": "Повторное сканирование",
+        "add": "Добавлять",
+        "send": "Отправлять",
+        "sign": "Знак"
+      }
+    },
+    "message": {
+      "confirmation": {
+        "close": "Сканирование не завершено. ",
+        "cancel": "Сканирование не завершено. "
+      },
+      "error": {
+        "ABORT_OOM": "Сканирование было прервано. ",
+        "NETWORK_ERROR": "Ошибка сети. ",
+        "UNKNOWN": "Неизвестная ошибка. "
+      }
+    }
+  },
+  "moveNft": {
+    "ui": {
+      "title": "Переместить NFT",
+      "label": {
+        "moveToProfile": "Перейти к профилю",
+        "selectDid": "Выберите DID",
+        "move": "Переместить NFT",
+        "to": "К"
+      },
+      "confirmation": "Вы уверены, что переместите NFT? <br>Пожалуйста, проверьте вашу транзакцию."
+    }
+  },
+  "signMessage": {
+    "ui": {
+      "title": "Подписать сообщение",
+      "prompt": "Убедитесь, что сообщение исходит из надежного источника. ",
+      "label": {
+        "signWdid": "Подпишите с помощью DID:",
+        "signWithNft": "Подписать с помощью NFT:",
+        "signWithAddress": "Подписать с адресом:",
+        "message": "Сообщение",
+        "result": "Результат"
+      }
+    }
+  },
+  "verifyMessage": {
+    "ui": {
+      "title": "Проверить сообщение",
+      "label": {
+        "message": "Сообщение",
+        "result": "Результат"
+      },
+      "button": {
+        "verify": "Проверять"
+      },
+      "sigResult": {
+        "pass": "Проверка подписи пройдена",
+        "fail": "Проверка подписи не удалась",
+        "none": "Подпись не проверена"
+      },
+      "coinResult": {
+        "pass": "Проверка монеты прошла",
+        "fail": "Проверка монет не удалась",
+        "none": "Монета не проверена"
+      }
+    }
+  },
+  "batchMintNft": {
+    "ui": {
+      "title": "Пакетная чеканка NFT",
+      "label": {
+        "royaltyAddress": "Королевский адрес",
+        "royaltyPercentage": "Процент роялти"
+      }
+    }
+  },
+  "addNetwork": {
+    "ui": {
+      "title": {
+        "add": "Добавить сеть",
+        "edit": "Редактировать сеть"
+      },
+      "warning": "Вредоносный сетевой провайдер может лгать о состоянии блокчейна и записывать вашу сетевую активность. ",
+      "label": {
+        "networkName": "Имя сети",
+        "rpcUrl": "URL-адрес RPC",
+        "chainId": "Идентификатор цепочки",
+        "currencySymbol": "Символ валюты",
+        "addressPrefix": "Префикс адреса",
+        "decimalPlace": "Десятичные разряды валюты",
+        "blockExplorer": "URL-адрес обозревателя блоков (необязательно)"
+      },
+      "button": {
+        "addNetwork": "Добавить сеть"
+      }
+    },
+    "message": {
+      "notification": {
+        "networkExists": "Это сетевое имя уже существует!"
+      },
+      "confirmation": {
+        "delete": "Вы уверены, что хотите удалить эту сеть?"
+      }
+    }
+  },
+  "updateCns": {
+    "ui": {
+      "title": "Обновить адрес ЦНС",
+      "confirmation": "Вы обновите информацию о привязке для вашего доменного имени.<br/>Пожалуйста, проверьте вашу транзакцию.",
+      "label": {
+        "updateTo": "Обновить до",
+        "cns": "ЦНС",
+        "targetAddress": "Целевой адрес",
+        "currentBindingAddress": "Текущий адрес привязки"
+      }
+    }
+  },
+  "addByPublicKey": {
+    "ui": {
+      "title": "Добавить учетную запись по публичному ключу",
+      "message": {
+        "publicKeyRequired": "Публичный ключ обязателен."
+      }
+    }
+  },
+  "encryptMessage": {
+    "ui": {
+      "title": "Зашифровать сообщение",
+      "tab": {
+        "singleMessage": "Одно сообщение",
+        "multipleMessage": "Несколько сообщений"
+      },
+      "label": {
+        "encryptWithAddress": "Зашифровать с адресом",
+        "activatePrefix": "Адрес не был активирован, нажмите здесь, чтобы сделать любой перевод на ",
+        "activate": "активировать",
+        "message": "Сообщение",
+        "receiverAddress": "Адрес получателя"
+      },
+      "button": {
+        "encrypt": "Шифровать"
+      }
+    },
+    "message": {
+      "error": {
+        "INACTIVE_ADDRESS": "Адрес получателя не активирован."
+      }
+    }
+  },
+  "decryptMessage": {
+    "ui": {
+      "title": "Расшифровать сообщение",
+      "label": {
+        "message": "Сообщение",
+        "result": "Результат"
+      },
+      "button": {
+        "decrypt": "расшифровать"
+      }
+    },
+    "message": {
+      "error": {
+        "CANNOT_FIND_ADDRESS": "Адрес дешифрования не совпадает с адресом получателя.",
+        "INVALID_MESSAGE": "Недопустимое сообщение.",
+        "INVALID_ADDRESS": "Неверный адрес отправителя/получателя."
+      }
+    }
+  },
+  "bindingInformation": {
+    "ui": {
+      "title": "Информация о привязке",
+      "label": {
+        "publicKey": "Открытый ключ",
+        "did": "DID",
+        "text": "Текст"
+      },
+      "notification": "Вы обновите информацию о привязке для вашего доменного имени.<br>Пожалуйста, проверьте вашу транзакцию.",
+      "tag": {
+        "currentPk": "Расчетный счет ПК",
+        "fillPk": "Заполнить публичный ключ текущей учетной записи"
+      },
+      "button": {
+        "update": "Обновлять"
+      }
+    }
+  },
+  "scan": {
+    "ui": {
+      "title": "Сканировать",
+      "label": {
+        "scanQr": "Сканировать QR-код",
+        "publicKeyQr": "QR-код открытого ключа"
+      },
+      "hint": {
+        "scan": "Сканировать адрес, открытый ключ"
+      }
+    }
+  },
+  "backup": {
+    "ui": {
+      "title": {
+        "verifyPassword": "подтвердите пароль",
+        "backup": "Информация о резервном копировании"
+      },
+      "tip": {
+        "setPassword": "Этот пароль будет использоваться в качестве пароля для входа при импорте резервной копии на новое устройство для восстановления вашего кошелька."
+      },
+      "label": {
+        "passwordType": {
+          "current": "Использовать текущий пароль для входа",
+          "new": "Использовать новый пароль"
+        },
+        "selectBackupInfo": "Выберите информацию о резервном копировании",
+        "setYourLoginPassword": "Установите пароль для входа"
+      },
+      "items": {
+        "masterAccount": "Информация об основной учетной записи",
+        "settings": "Настройки",
+        "customNetwork": "Пользовательская сеть",
+        "accountList": "Список учетных записей",
+        "addressBook": "Адресная книга",
+        "didNames": "DID-имена"
+      },
+      "button": {
+        "downloadBak": "Скачать файл резервной копии",
+        "complete": "Полный",
+        "next": "Следующий"
+      }
+    },
+    "message": {
+      "error": {
+        "passwordRequired": "Необходим пароль.",
+        "passwordNotCorrect": "Неверный пароль."
+      }
+    }
+  },
+  "importBackup": {
+    "title": "Загрузить резервную копию",
+    "password": {
+      "tip": "Пожалуйста, введите пароль для входа",
+      "label": "Пароль"
+    },
+    "error": {
+      "LARGE_FILE": "Файл слишком большой",
+      "UNSUPPORTED_FILE": "Неподдерживаемый файл"
+    }
+  },
+  "buyUsds": {
+    "ui": {
+      "title": "Купить доллары США",
+      "button": {
+        "continue": "Продолжить покупку",
+        "stably": "Открыть стабильно, чтобы купить"
+      },
+      "tip": "В настоящее время поддерживается только покупка USDS на блокчейне Chia с помощью банковского перевода ACH.",
+      "stablyPrefix": "Эта услуга предоставляется",
+      "stably": " Стабильно ",
+      "stablySuffix": "и полностью независим от Покета."
+    }
+  },
+  "nftBurn": {
+    "title": "Сжигание NFT",
+    "description": "Вы сожжете этот NFT, удалив его из обращения, отправив на проверенный адрес, который невозможно потратить.",
+    "confirmation": "Вы уверены, что сожжете этот NFT? <br>Пожалуйста, проверьте вашу транзакцию."
+  },
+  "cns": {
+    "title": "Служба имен чиа",
+    "placeholder": "Поиск доменного имени Chia",
+    "button": {
+      "search": "Поиск",
+      "loading": "Загрузка",
+      "register": "регистр",
+      "cancel": "Отмена"
+    },
+    "label": {
+      "notOpenYet": "Еще не открыто",
+      "registered": "Зарегистрировано",
+      "result": "Результат",
+      "available": "Доступный",
+      "unavailable": "Недоступен",
+      "registrationPeriod": "Период регистрации",
+      "registrationFee": "Регистрационный взнос",
+      "annualFee": "Годовая плата",
+      "royaltyPercentage": "Процент роялти",
+      "total": "Общий",
+      "networkIssue": "Проблема с сетью",
+      "myNames": "Меня зовут",
+      "register": "Зарегистрируйте {cnsName}.xch",
+      "name": "Имя",
+      "oneYear": "1 год",
+      "address": "Адрес (необязательно)"
+    },
+    "message": {
+      "notOpen": " В период пробной эксплуатации CNS пока можно регистрировать только имена, содержащие 6 и более символов. ",
+      "registered": "Это имя было зарегистрировано. ",
+      "profileHomepage": "Домашняя страница профиля",
+      "unavailable": "Это имя зарезервировано. ",
+      "noName": "Здесь нет доменного имени Chia. "
+    }
+  },
+  "connect": {
+    "ui": {
+      "label": {
+        "connectWithPawket": "Связаться с Покет",
+        "enterPassword": "Введите пароль для подключения к сайту",
+        "trust": "Убедитесь, что вы доверяете сайту, к которому подключаетесь",
+        "selectAccount": "Выберите учетную запись для использования на этом сайте",
+        "loadingBalance": "Загрузка баланса..",
+        "allowSiteTo": "Разрешить этому сайту:",
+        "viewInfo": "Просмотрите адреса своей учетной записи, баланс, DID и действия.",
+        "requestTranx": "Запросить одобрение транзакций.",
+        "gettingData": "Получение данных от Pawket...",
+        "noWallet": "Нет кошелька Pawket",
+        "noWalletInfo": "У вас не настроен кошелек в Pawket."
+      },
+      "button": {
+        "next": "Следующий",
+        "connect": "Соединять",
+        "setUp": "Настроить кошелек"
+      }
+    },
+    "messages": {
+      "success": "Успех!",
+      "invalidCall": "Неверный вызов:",
+      "noAppName": "Пожалуйста, укажите название приложения!",
+      "offerAccepted": "Предложение принято!",
+      "invalidData": "Не удалось подписать: неверные входные данные",
+      "unknownDid": "Не удалось подписать: указанный DID не существует в текущей учетной записи",
+      "unknownNetwork": "Указанная сеть не существует",
+      "unknownAddress": "Не удалось подписать: указанный адрес не существует в текущей учетной записи",
+      "sendCompleted": "Сделка отправлена!",
+      "catAdded": "КОШКА добавлена!",
+      "cancelled": "Отменено",
+      "incorrectPassword": "Неверный пароль."
+    }
+  },
+  "splitCoin": {
+    "ui": {
+      "title": "Сплит Монета",
+      "confirmation": {
+        "confirmText": "Вы уверены, что разделите монеты? <br> Пожалуйста, проверьте вашу транзакцию.",
+        "label": {
+          "spliting": "Разделение",
+          "into": "В",
+          "coins": "Монеты"
+        }
+      }
+    }
+  }
+}

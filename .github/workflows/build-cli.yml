@@ -1,0 +1,56 @@
+name: build-cli
+
+on:
+  workflow_run:
+    workflows: [ci-chia-lib]
+    types: [completed]
+  push:
+    branches:
+      - master
+      - feat_action
+    paths:
+      - 'cli/**'
+  pull_request:
+    branches:
+      - master
+      - feat_action
+    paths:
+      - 'cli/**'
+
+env:
+  VERSION: 0.3.${{ github.run_number }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Set Node.js 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+          cache-dependency-path: 'yarn.lock'
+      
+      - name: Install yarn
+        run: npm -g i yarn
+      
+      - uses: actions/checkout@v3
+      
+      - name: Install Dependencies
+        run: yarn
+      
+      - name: Build and Test
+        run: |
+          yarn test:cli
+          yarn build:cli
+
+      - name: version
+        run: |
+          echo ${{ VERSION }}>dist/cli/version.txt
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: cli-package
+          path: dist/cli

@@ -1,0 +1,11 @@
+{
+    "recommendations": [
+        "chianetwork.chialisp",
+        "esbenp.prettier-vscode",
+        "vue.vscode-typescript-vue-plugin",
+        "usernamehw.errorlens",
+        "editorconfig.editorconfig",
+        "dbaeumer.vscode-eslint",
+        "wayou.vscode-todo-highlight"
+    ]
+}
