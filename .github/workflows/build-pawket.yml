@@ -1,4 +1,4 @@
-name: build-cli
+name: build-pawket
 
 on:
   workflow_run:

@@ -10,12 +10,14 @@ on:
       - feat_action
     paths:
       - 'cli/**'
+      - '.github/workflows/**'
   pull_request:
     branches:
       - master
       - feat_action
     paths:
       - 'cli/**'
+      - '.github/workflows/**'
 
 env:
   VERSION: 0.3.${{ github.run_number }}

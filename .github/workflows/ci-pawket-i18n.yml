@@ -7,12 +7,14 @@ on:
       - feat_action
     paths:
       - 'pawket/**'
+      - '.github/workflows/**'
   pull_request:
     branches:
       - master
       - feat_action
     paths:
       - 'pawket/**'
+      - '.github/workflows/**'
 
 jobs:
   build:

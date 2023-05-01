@@ -7,12 +7,14 @@ on:
       - feat_action
     paths:
       - 'pawket-chia-lib/**'
+      - '.github/workflows/**'
   pull_request:
     branches:
       - master
       - feat_action
     paths:
       - 'pawket-chia-lib/**'
+      - '.github/workflows/**'
 
 jobs:
   build:
