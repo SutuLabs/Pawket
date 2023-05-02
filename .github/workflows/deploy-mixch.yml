@@ -8,7 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: github.event.workflow_run.conclusion == 'success'
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     permissions:
       pages: write
       id-token: write
@@ -21,6 +21,12 @@ jobs:
         uses: dawidd6/action-download-artifact@v2
         with:
           name: mixch
+          workflow: build-pawket.yml
+
+      - uses: actions/configure-pages@v2
+      - uses: actions/upload-pages-artifact@v1
+        with:
+          path: .
 
       - name: Deploy
         id: deployment
