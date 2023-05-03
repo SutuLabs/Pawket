@@ -1,35 +1,28 @@
-import { readdirSync, readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import puzzle from '../pawket-chia-lib/services/crypto/puzzle';
 import { Instance } from "../pawket-chia-lib/services/util/instance";
 import { sha256tree } from 'clvm_tools';
 import { sexpAssemble } from '../pawket-chia-lib/services/coin/analyzer';
-
-const suffix = ".clvm.hex";
-
-const nameMappings: { [key: string]: string } = {
-  settlement_payments: "settlement_payments_v1",
-  settlement_payments_old: "settlement_payments",
-};
+import { Glob, GlobOptions } from 'glob'
 
 Instance.init().then(async () => {
-  const writeTypeFile = async function (dirname: string, typename: string) {
+  const writeTypeFile = async function (g: Glob<GlobOptions>, typename: string, suffix: string, nameMappings: Record<string, string> = {}) {
     const progdata: { [name: string]: string } = {};
     const hexdata: { [name: string]: string } = {};
     const sha256data: { [name: string]: string } = {};
     const names: string[] = [];
     const camelName = typename.charAt(0).toLowerCase() + typename.slice(1);
 
-    const filenames = readdirSync(dirname);
-    for (let i = 0; i < filenames.length; i++) {
-      const filename = filenames[i];
-      if (!filename.endsWith(suffix)) continue;
-      const content = readFileSync(dirname + filename, 'utf-8');
+    const filenames = Array.from(g).sort();
+    for (const filename of filenames) {
+      const fn = filename.toString();
+      const content = readFileSync(fn, 'utf-8');
       if (content.indexOf("unknown operator") >= 0) continue;
 
       try {
         const hex = content.trim();
         const d = await puzzle.disassemblePuzzle(hex);
-        const originKey = filename.slice(0, filename.length - suffix.length);
+        const originKey = getFilename(fn.slice(0, fn.length - suffix.length));
         const key = nameMappings[originKey] || originKey;
         progdata[key] = d;
         hexdata[key] = hex;
@@ -54,7 +47,16 @@ export const ${camelName}sHash: { [name in ${typename}Name]: string } = ${JSON.s
     writeFileSync(`../pawket-chia-lib/services/coin/${camelName}s.ts`, content);
   };
 
-  await writeTypeFile("../../../ref/chia-blockchain/chia/wallet/puzzles/", "ImportMod");
-  await writeTypeFile("../../../ref/tibet/clvm/", "TibetMod");
-  await writeTypeFile("clvm/", "OtherMod");
+  await writeTypeFile(new Glob("../../../ref/chia-blockchain/chia/wallet/puzzles/*.clvm.hex", {}), "ImportMod", ".clvm.hex",
+    {
+      settlement_payments: "settlement_payments_v1",
+      settlement_payments_old: "settlement_payments",
+    });
+  await writeTypeFile(new Glob("../../../ref/tibet/clvm/*.clvm.hex", {}), "TibetMod", ".clvm.hex");
+  await writeTypeFile(new Glob("clvm/*.clvm.hex", {}), "OtherMod", ".clvm.hex");
 });
+
+function getFilename(fullPath: string) {
+  // eslint-disable-next-line no-useless-escape
+  return fullPath.replace(/^.*[\\\/]/, '');
+}
