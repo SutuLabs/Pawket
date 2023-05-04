@@ -339,4 +339,8 @@ export const modsParametersYaml=`
   - name: current_state
   - name: params
   - name: my_singleton_struct
+
+- name: p2_1_of_n
+  parameters:
+  - name: MERKLE_ROOT
 `;

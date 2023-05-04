@@ -54,6 +54,8 @@ export const ${camelName}sHash: { [name in ${typename}Name]: string } = ${JSON.s
     });
   await writeTypeFile(new Glob("../../../ref/tibet/clvm/*.clvm.hex", {}), "TibetMod", ".clvm.hex");
   await writeTypeFile(new Glob("clvm/*.clvm.hex", {}), "OtherMod", ".clvm.hex");
+  await writeTypeFile(new Glob("../../../ref/internal-custody/cic/clsp/**/*.clsp.hex", {}), "InternalCustodyMod", ".clsp.hex");
+  await writeTypeFile(new Glob("../../../ref/chia-clawback-primitive/src/clsp/**/*.clsp.hex", {}), "ClawbackPrimitiveMod", ".clsp.hex");
 });
 
 function getFilename(fullPath: string) {
