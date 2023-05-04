@@ -27,7 +27,9 @@ class DebugApi {
     const presp = await response.json() as GetCoinSolutionResponse;
     const cs = presp.coinSpends?.at(0);
     if (!cs) {
-      await caches.delete(key);
+      caches.open("debug").then((cache) => {
+        cache.delete(key);
+      });
       throw new Error("abnormal response");
     }
     return cs;
