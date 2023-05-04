@@ -26,7 +26,7 @@ global.fetch = fetch
 const app: express.Express = express()
 app.use(express.json({ limit: '3mb' }))
 app.use(express.urlencoded({ extended: true }))
-const rpcUrl = "https://walletapi.chiabee.net/";
+const defaultRpcUrl = "https://walletapi.chiabee.net/";
 
 interface ParseBlockRequest {
   ref_list?: string[],
@@ -58,11 +58,12 @@ interface CnsOfferRequest {
   puzzleText: string;
   royaltyAddress: string;
   royaltyPercentage: number;
-  chainId: string;
-  symbol: string;
-  prefix: string;
+  chainId?: string;
+  symbol?: string;
+  prefix?: string;
   nonce?: string;//test only
   intermediateKey?: string;//test only
+  rpcUrl?: string;
 }
 
 interface TransferTargetOrigin {
@@ -81,6 +82,7 @@ interface BatchSendRequest {
   symbol?: string;
   prefix?: string;
   availcoins?: SymbolCoins;
+  rpcUrl?: string;
 }
 
 interface PuzzleRequest {
@@ -170,6 +172,7 @@ Instance.init().then(() => {
       r.chainId = r.chainId || "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb";
       r.prefix = r.prefix || "xch";
       r.symbol = r.symbol || "XCH";
+      const rpcUrl = r.rpcUrl || defaultRpcUrl;
 
       const sk = Instance.BLS?.PrivateKey.from_bytes(utility.fromHexString(r.privateKey), false);
       if (!sk) {
@@ -257,6 +260,7 @@ Instance.init().then(() => {
       r.chainId = r.chainId || "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb";
       r.prefix = r.prefix || "xch";
       r.symbol = r.symbol || "XCH";
+      const rpcUrl = r.rpcUrl || defaultRpcUrl;
       if (r.metadata.bindings.address?.startsWith("xch1")) r.metadata.bindings.address = puzzle.getPuzzleHashFromAddress(r.metadata.bindings.address);
 
       const availcoinsForMaker: SymbolCoins = {
@@ -293,7 +297,7 @@ Instance.init().then(() => {
         chainId: r.chainId,
         prefix: r.prefix,
         symbol: r.symbol,
-        api: (_) => getLineageProofPuzzle(_, "https://walletapi.chiabee.net/"),
+        api: (_) => getLineageProofPuzzle(_, rpcUrl),
       };
       const uofferBundle = await generateMintCnsOffer(
         r.targetAddress,
