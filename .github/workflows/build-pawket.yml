@@ -28,7 +28,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          sed -i 's/0.0.0.0/${VERSION}/' packages/pawket/.env.production
+          sed -i "s/0.0.0.0/${VERSION}/" packages/pawket/.env.production
       - name: Build pawket
         run: |
           yarn build:pawket
