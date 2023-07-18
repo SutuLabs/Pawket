@@ -165,17 +165,23 @@ function getRequestedCoins(bundle: UnsignedSpendBundle | SpendBundle): CoinSpend
   return bundle.coin_spends.filter(_ => _.coin.parent_coin_info == EmptyParent)
 }
 
-export function getOfferEntities(ents: OfferTokenAmount[], target: Hex0x, catIds: { [name: string]: string }, symbol: string): OfferEntity[] {
+export function getOfferEntities(
+  ents: OfferTokenAmount[],
+  target: Hex0x,
+  catIds: { [name: string]: string },
+  xchSymbol: string,
+  amountIsMojoBased = false
+): OfferEntity[] {
   return ents.map((_) => ({
-    id: _.token == symbol ? "" : catIds[_.token],
+    id: _.token == xchSymbol ? "" : catIds[_.token],
     symbol: _.token,
-    amount: getAmount(_.token, _.amount, symbol),
+    amount: amountIsMojoBased ? BigInt(_.amount) : getAmount(_.token, _.amount, xchSymbol),
     target: target,
   }));
 }
 
-function getAmount(symbol: string, amount: string, tokenSymbol: string): bigint {
-  const decimal = symbol == tokenSymbol ? 12 : 3;
+function getAmount(symbol: string, amount: string, xchSymbol: string): bigint {
+  const decimal = symbol == xchSymbol ? 12 : 3;
   return BigInt(bigDecimal.multiply(amount, Math.pow(10, decimal)));
 }
 
