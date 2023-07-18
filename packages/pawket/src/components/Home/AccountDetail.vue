@@ -69,7 +69,7 @@
                   </div>
                 </a>
               </div>
-              <div class="b-tooltip" v-if="!isIos">
+              <div class="b-tooltip" v-if="false && !isIos">
                 <a @click="$router.push('/home/buy')" href="javascript:void(0)" class="has-text-primary">
                   <div class="mx-3">
                     <span class="icon has-background-primary is-medium is-circle"
@@ -86,6 +86,16 @@
                       ><i class="mdi mdi-arrow-right mdi-24px has-text-white"></i
                     ></span>
                     <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.send") }}</p>
+                  </div>
+                </a>
+              </div>
+              <div class="b-tooltip" v-if="!isIos">
+                <a @click="$router.push('/home/swap')" href="javascript:void(0)" class="has-text-primary">
+                  <div class="mx-3">
+                    <span class="icon has-background-primary is-medium is-circle"
+                      ><i class="mdi mdi-swap-horizontal-bold mdi-24px has-text-white"></i
+                    ></span>
+                    <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.swap") }}</p>
                   </div>
                 </a>
               </div>
@@ -167,6 +177,7 @@ import NetworkSelector from "./NetworkSelector.vue";
 import Scan from "../Scan/Scan.vue";
 import { GetExchangeRateResponse } from "../../../../pawket-chia-lib/models/api";
 import BuyUSDS from "./BuyUSDS.vue";
+import SwapPage from "../Swap/SwapPage.vue";
 import { isIos } from "../../../../pawket-chia-lib/services/util/platform";
 
 @Component({
@@ -263,6 +274,9 @@ export default class AccountDetail extends Vue {
         break;
       case "/home/buy":
         this.buy();
+        break;
+      case "/home/swap":
+        this.swap();
         break;
       case "/home/errorLog":
         this.openErrorLog();
@@ -473,6 +487,20 @@ export default class AccountDetail extends Vue {
       fullScreen: isMobile(),
       props: { account: this.account },
       events: { close: () => this.handleModalClose("/home/buy") },
+    });
+  }
+
+  swap(): void {
+    this.$buefy.modal.open({
+      parent: this,
+      component: SwapPage,
+      trapFocus: true,
+      width: 700,
+      canCancel: ["outside", "escape"],
+      onCancel: () => this.handleModalClose("/home/swap"),
+      fullScreen: isMobile(),
+      props: { account: this.account },
+      events: { close: () => this.handleModalClose("/home/swap") },
     });
   }
 

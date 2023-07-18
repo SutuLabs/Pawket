@@ -144,6 +144,7 @@
       "button": {
         "receive": "Receive",
         "buy": "Buy",
+        "swap": "Swap",
         "send": "Send",
         "scan": "Scan",
         "confirm": "Confirm",
