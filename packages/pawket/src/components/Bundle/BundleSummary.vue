@@ -51,7 +51,13 @@
                   <span class="has-text-grey">
                     <small>({{ coin.amount }} mojos)</small>
                   </span>
-                  {{ $t("bundleSummary.ui.detail.itemTo", { address: coin.address }) }}
+                  <span>
+                    {{ $t("bundleSummary.ui.detail.itemTo") }}
+                  </span>
+                  <span v-if="coin.account" :title="coin.address" class="is-underlined">{{ coin.account }}</span>
+                  <span v-else :title="coin.address">
+                    {{ nameOmit(coin.address) }}
+                  </span>
                   <span v-if="coin.hint" :title="$t('bundleSummary.ui.detail.span.hint')">({{ coin.hint }})</span>
                   <span v-if="coin.memo" :title="$t('bundleSummary.ui.detail.span.memo')">[{{ coin.memo }}]</span>
                 </li>
@@ -84,11 +90,13 @@ import { demojo } from "@/filters/unitConversion";
 import BundleText from "@/components/Bundle/BundelText.vue";
 import { xchPrefix, xchSymbol } from "@/store/modules/network";
 import { sexpAssemble } from "../../../../pawket-chia-lib/services/coin/analyzer";
+import { nameOmit } from "@/filters/nameConversion";
 
 interface CoinType {
   amount: bigint;
   unit?: string;
   address: string;
+  account?: string;
   hint?: string;
   memo?: string;
   others?: string[];
@@ -202,6 +210,10 @@ export default class BundleSummary extends Vue {
 
   async executePuzzle(puz_hex: string, solution_hex: string): Promise<CoinType[]> {
     const result = await puzzle.executePuzzleHex(puz_hex, solution_hex);
+    const addDict: { [address: string]: string } = store.state.account.accounts.reduce(
+      (obj, cv) => ({ ...obj, [cv.firstAddress ?? ""]: cv.name }),
+      {}
+    );
     const coins: CoinType[] = result.conditions
       .filter((_) => _.code == ConditionOpcode.CREATE_COIN)
       .map((_) => {
@@ -220,6 +232,7 @@ export default class BundleSummary extends Vue {
       })
       .map((_) => ({
         address: _.address,
+        account: addDict[_.address],
         amount: _.amount,
         hint: this.tryGetHintAddress(_.args.at(0)),
         memo: _.args.at(1),
@@ -230,6 +243,10 @@ export default class BundleSummary extends Vue {
 
   demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null, digits = -1): string {
     return demojo(mojo, token, digits);
+  }
+
+  nameOmit(name: string): string {
+    return nameOmit(name);
   }
 
   tryGetHintAddress(hex: string | undefined): string | undefined {

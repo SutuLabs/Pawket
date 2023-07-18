@@ -589,7 +589,7 @@
       },
       "detail": {
         "title": "Details",
-        "itemTo": "to {address}",
+        "itemTo": "to",
         "span": {
           "hint": "Hint(Corresponding Address)",
           "memo": "Memo"

@@ -588,7 +588,7 @@
       },
       "detail": {
         "title": "发送详情",
-        "itemTo": " 发送至 {address}",
+        "itemTo": " 发送至",
         "span": {
           "hint": "提示（原始地址）",
           "memo": "备注"
