@@ -1,8 +1,8 @@
 <template>
   <div class="modal-card margin-auto">
     <top-bar :title="$t('swap.ui.title')" @close="back()" :showClose="true"></top-bar>
-
     <section class="modal-card-body">
+      <b-loading :is-full-page="false" v-model="loading"></b-loading>
       <template v-if="stage == 'sign'">
         <template v-if="swappableTokens.length > 0">
           <b-field v-if="false">
@@ -56,6 +56,13 @@
             <template #message>
               <div class="container my-5">
                 <ul class="fee-container">
+                  <li
+                    v-if="priceComparison[0] && priceComparison[1]"
+                    @click="selectedPriceComparison = selectedPriceComparison == 0 ? 1 : 0"
+                  >
+                    <!-- <span class="caption">Price</span> -->
+                    <span class="fee">{{ priceComparison[selectedPriceComparison] }}</span>
+                  </li>
                   <li>
                     <span class="caption">Price Impact</span>
                     <span class="fee" :class="'has-text-' + impactColor">{{ priceImpact.toFixed(2) }}%</span>
@@ -79,18 +86,81 @@
             }}</b-button>
           </b-field>
         </template>
-        <template v-else>
-          You don't have swappable token. Swappable tokens:
-          <ul>
-            <li v-for="token in allPoolTokens" :key="token.asset_id">{{ token.short_name }}</li>
-          </ul>
+        <template v-if="swappableTokens.length == 0 && !loading">
+          <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
+            You don't have swappable token. Swappable tokens:
+            <b-taglist>
+              <b-tag v-for="token in allPoolTokens" :key="token.asset_id" type="is-info">{{ token.short_name }}</b-tag>
+            </b-taglist>
+          </b-notification>
         </template></template
       >
       <template v-if="stage == 'confirm'">
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
           <span v-html="$sanitize($tc('send.ui.summary.notification'))"></span>
         </b-notification>
+
+        <template v-if="summary">
+          <div class="has-text-weight-bold px-5">
+            <span class="is-size-6">Swap from</span>
+            <span class="is-pulled-right">
+              <span v-if="summary.fromToken == xchSymbol">
+                {{ demojo(summary.fromAmount) }}
+              </span>
+              <span v-else>
+                {{ demojo(summary.fromAmount, { unit: summary.fromToken, decimal: 3, symbol: "" }) }}
+              </span>
+            </span>
+          </div>
+          <div class="has-text-weight-bold px-5">
+            <span class="is-size-6">To</span>
+            <span class="is-pulled-right">
+              <span v-if="summary.toToken == xchSymbol">
+                {{ demojo(summary.toAmount) }}
+              </span>
+              <span v-else>
+                {{ demojo(summary.toAmount, { unit: summary.toToken, decimal: 3, symbol: "" }) }}
+              </span>
+            </span>
+          </div>
+          <div class="py-2"></div>
+          <div class="has-text-weight-bold px-5">
+            <span class="is-size-6 has-text-grey">Tx {{ $t("sendSummary.ui.label.fee") }}</span>
+            <span class="is-size-6 is-pulled-right has-text-grey">
+              {{ demojo(summary.fee) }}
+            </span>
+          </div>
+          <div class="has-text-weight-bold px-5">
+            <span class="is-size-6 has-text-grey">Dev fee</span>
+            <span class="is-size-6 is-pulled-right has-text-grey">
+              {{ demojo(summary.devfee) }}
+            </span>
+          </div>
+          <hr />
+          <div class="has-text-weight-bold px-5">
+            <span class="is-size-5">{{ $t("sendSummary.ui.label.total") }}</span>
+            <span class="is-pulled-right is-size-5 has-text-primary">
+              <span v-if="summary.fromToken == xchSymbol">
+                {{ demojo(summary.total) }}
+              </span>
+              <span v-else>
+                {{ demojo(summary.fromAmount, { unit: summary.fromToken, decimal: 3, symbol: "" }) }}
+                <span v-if="summary.totalFee > 0"> + {{ demojo(summary.totalFee) }} </span>
+              </span>
+            </span>
+          </div>
+        </template>
+
+        <hr />
         <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
+        <b-button :label="'backBtnName'" @click="stage = 'sign'"></b-button>
+        <b-button
+          class="is-pulled-right"
+          :label="'confirmBtnName'"
+          type="is-primary"
+          @click="$emit('confirm')"
+          :loading="loading"
+        ></b-button>
       </template>
       <p class="mt-3 has-text-grey is-size-7 has-text-centered">
         {{ $t("swap.ui.attributingPrefix") }}
@@ -110,7 +180,7 @@ import SimplifiedTokenAmountField from "./SimplifiedTokenAmountField.vue";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import { chainId, networkContext, xchSymbol } from "@/store/modules/network";
 import { getCatIdDict, getCatNameDict, getCatNames } from "@/services/view/cat";
-import { AccountEntity } from "../../../../pawket-chia-lib/models/account";
+import { AccountEntity, OneTokenInfo } from "../../../../pawket-chia-lib/models/account";
 import { TokenPuzzleDetail } from "../../../../pawket-chia-lib/services/crypto/receive";
 import {
   getAssetsRequestDetail,
@@ -131,6 +201,7 @@ import { generateOffer, generateOfferPlan } from "../../../../pawket-chia-lib/se
 import { lockCoins } from "../../../../pawket-chia-lib/services/coin/coinUtility";
 import { encodeOffer } from "../../../../pawket-chia-lib/services/offer/encoding";
 import { NotificationProgrammatic as Notification } from "buefy";
+import { demojo } from "@/filters/unitConversion";
 
 interface TibetTokenEntity {
   asset_id: string;
@@ -177,8 +248,9 @@ type SwapActionType = "buy" | "sell";
 })
 export default class SwapPage extends Vue {
   @Prop() public account!: AccountEntity;
-  swapAction: SwapActionType = "buy";
+  public swapAction: SwapActionType = "buy";
 
+  public loading = true;
   public fee = 0;
   public requests: TokenPuzzleDetail[] = [];
   public availcoins: SymbolCoins | null = null;
@@ -191,11 +263,33 @@ export default class SwapPage extends Vue {
   public priceImpact = -1;
   public stage: "sign" | "confirm" = "sign";
   public bundle: SpendBundle | null = null;
+  public summary: {
+    fromToken: string;
+    toToken: string;
+    fromAmount: bigint;
+    toAmount: bigint;
+    fee: bigint;
+    devfee: bigint;
+    totalFee: bigint;
+    total: bigint;
+  } | null = null;
+  public priceComparison: [string, string] = ["", ""];
+  public selectedPriceComparison: 0 | 1 = 0;
 
   mounted(): void {
-    this.loadSwapToken();
-    this.loadCoins();
+    this.loadInfo();
   }
+
+  async loadInfo(): Promise<void> {
+    this.loading = true;
+    try {
+      await this.loadSwapToken();
+      await this.loadCoins();
+    } finally {
+      this.loading = false;
+    }
+  }
+
   async loadSwapToken(): Promise<void> {
     const resp = await fetch("https://api.v2-testnet10.tibetswap.io/tokens");
     const tokens = (await resp.json()) as TibetTokenEntity[];
@@ -309,8 +403,10 @@ export default class SwapPage extends Vue {
       this.signing = true;
 
       const sellDecimal = this.swapAction == "buy" ? 12 : 3;
+      const buyDecimal = this.swapAction == "buy" ? 3 : 12;
       const xch_is_input = this.swapAction == "buy" ? true : false;
-      const mojo = bigDecimal.multiply(this.amountFrom, Math.pow(10, sellDecimal));
+      let mojo = bigDecimal.multiply(this.amountFrom, Math.pow(10, sellDecimal));
+
       const resp = await fetch(
         `https://api.v2-testnet10.tibetswap.io/quote/${this.swapTokenPair.launcher_id}` +
           `?amount_in=${mojo}` +
@@ -318,7 +414,22 @@ export default class SwapPage extends Vue {
           `&estimate_fee=true`
       );
 
-      const quote = (await resp.json()) as TibetQuoteEntity;
+      let quote = (await resp.json()) as TibetQuoteEntity;
+
+      const buymojo = bigDecimal.multiply(this.amountTo, Math.pow(10, buyDecimal));
+      const newmojo = this.getBuyPrice(BigInt(buymojo), BigInt(quote.input_reserve), BigInt(quote.output_reserve)).toString();
+      // newmojo < mojo
+      if (bigDecimal.compareTo(newmojo, mojo) == -1) mojo = newmojo;
+      console.log(mojo, newmojo, quote);
+
+      const resp2 = await fetch(
+        `https://api.v2-testnet10.tibetswap.io/quote/${this.swapTokenPair.launcher_id}` +
+          `?amount_in=${mojo}` +
+          `&xch_is_input=${xch_is_input}` +
+          `&estimate_fee=true`
+      );
+      quote = (await resp2.json()) as TibetQuoteEntity;
+
       console.log(quote);
 
       const sellToken = this.swapAction == "buy" ? xchSymbol() : this.swapToken;
@@ -341,7 +452,13 @@ export default class SwapPage extends Vue {
         true
       );
 
+      const xchMojo = this.swapAction == "buy" ? mojo : buymojo;
+      const tibetFee = BigInt(bigDecimal.ceil(bigDecimal.multiply(xchMojo, "0.003")));
+      const pawketFee = tibetFee;
+      const devfee = tibetFee + pawketFee;
+
       const offplan = await generateOfferPlan(offs, change_hex, this.availcoins, 0n, xchSymbol());
+      console.log("offplan", offplan);
       const observers = await getAssetsRequestObserver(this.account);
       const ubundle = await generateOffer(offplan, reqs, observers, networkContext());
       this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());
@@ -353,6 +470,18 @@ export default class SwapPage extends Vue {
 
       if (this.bundle && this.signed) lockCoins(this.account, this.bundle.coin_spends, Date.now(), chainId());
       this.offerText = await encodeOffer(this.bundle, 6);
+
+      this.summary = {
+        fromToken: this.tokenFrom,
+        toToken: this.tokenTo,
+        fromAmount: BigInt(quote.amount_in),
+        toAmount: BigInt(quote.amount_out),
+        fee: BigInt(this.fee),
+        devfee,
+        totalFee: devfee + BigInt(this.fee),
+        total: 0n,
+      };
+      this.summary.total = this.tokenFrom == xchSymbol() ? this.summary.fromAmount + this.summary.totalFee : 0n;
 
       this.stage = "confirm";
     } catch (error) {
@@ -426,16 +555,25 @@ export default class SwapPage extends Vue {
     if (changeType == "from") {
       const mojo = bigDecimal.multiply(this.amountFrom, Math.pow(10, sellDecimal));
       const am = BigInt(mojo);
-      const ato = this.getInputPrice(am, sell_reserve, buy_reserve).toString();
+      const ato = this.getSellPrice(am, sell_reserve, buy_reserve).toString();
       this.amountTo = bigDecimal.divide(ato, Math.pow(10, buyDecimal), buyDecimal);
       this.priceImpact = this.getPriceImpact(buy_reserve, BigInt(ato));
     } else {
       const mojo = bigDecimal.multiply(this.amountTo, Math.pow(10, buyDecimal));
       const am = BigInt(mojo);
-      const ato = this.getInputPrice(am, buy_reserve, sell_reserve).toString();
+      const ato = this.getBuyPrice(am, sell_reserve, buy_reserve).toString();
       this.amountFrom = bigDecimal.divide(ato, Math.pow(10, sellDecimal), sellDecimal);
+      // const ato = this.getSellPrice(am, buy_reserve, sell_reserve).toString();
+      // this.amountFrom = bigDecimal.divide(ato, Math.pow(10, sellDecimal), sellDecimal);
       this.priceImpact = this.getPriceImpact(buy_reserve, am);
     }
+
+    const fromDecimal = this.swapAction == direction ? 12 : 3;
+    const toDecimal = this.swapAction == direction ? 3 : 12;
+    this.priceComparison = [
+      `1 ${this.tokenFrom} ≈ ${bigDecimal.divide(this.amountTo, this.amountFrom, toDecimal)} ${this.tokenTo}`,
+      `1 ${this.tokenTo} ≈ ${bigDecimal.divide(this.amountFrom, this.amountTo, fromDecimal)} ${this.tokenFrom}`,
+    ];
   }
 
   // calculateSwap(sell:SwapCalculateEntity, buy:SwapCalculateEntity):{amount:string, priceImpact:number}{
@@ -446,7 +584,7 @@ export default class SwapPage extends Vue {
 
   //     const mojo = bigDecimal.multiply( this.amountFrom, Math.pow(10, fromDecimal));
   //     const am = BigInt(mojo);
-  //     const ato = this.getInputPrice(am, sell_reserve, buy_reserve).toString();
+  //     const ato = this.getSellPrice(am, sell_reserve, buy_reserve).toString();
   //     this.amountTo = bigDecimal.divide(ato, Math.pow(10, toDecimal), toDecimal);
   //     this.priceImpact = this.getPriceImpact(buy_reserve, BigInt(ato));
   // }
@@ -475,8 +613,18 @@ export default class SwapPage extends Vue {
     this.close();
   }
 
+  demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null): string {
+    return demojo(mojo, token);
+  }
+
+  get xchSymbol(): string {
+    return xchSymbol();
+  }
+
   // functions  ===============================================
-  getInputPrice(sell_amount: bigint, sell_reserve: bigint, buy_reserve: bigint): bigint {
+  // Input ≈ sell
+  // Output ≈ buy
+  getSellPrice(sell_amount: bigint, sell_reserve: bigint, buy_reserve: bigint): bigint {
     if (sell_amount == 0n) return 0n;
 
     const liquidityFee = 7n; // 0.7%
@@ -484,7 +632,20 @@ export default class SwapPage extends Vue {
     const sell_amount_with_fee = sell_amount * (1000n - liquidityFee);
     const numerator = sell_amount_with_fee * buy_reserve;
     const denominator = sell_reserve * 1000n + sell_amount_with_fee;
+    console.log(sell_amount, sell_reserve, buy_reserve,sell_amount_with_fee, numerator,denominator)
     return numerator / denominator;
+  }
+
+  getBuyPrice(buy_amount: bigint, sell_reserve: bigint, buy_reserve: bigint): bigint {
+    if (buy_amount > buy_reserve) return 0n;
+    console.log(buy_amount);
+
+    if (buy_amount == 0n) return 0n;
+    const liquidityFee = 7n; // 0.7%
+
+    const numerator = sell_reserve * buy_amount * 1000n;
+    const denominator = (buy_reserve - buy_amount) * (1000n - liquidityFee);
+    return numerator / denominator + 1n;
   }
 
   getPriceImpact(buy_reserve: bigint, buy_amount: bigint): number {
