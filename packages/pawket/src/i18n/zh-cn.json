@@ -148,7 +148,8 @@
         "scan": "扫描",
         "confirm": "确认",
         "cancel": "取消",
-        "manageCats": "管理 CATs"
+        "manageCats": "管理 CATs",
+        "swap": "兑换"
       },
       "tab": {
         "asset": "资产",
@@ -1662,6 +1663,45 @@
           "into": "成",
           "coins": "硬币"
         }
+      }
+    }
+  },
+  "swap": {
+    "ui": {
+      "title": "兑换",
+      "dropdownPlaceholder": "选择一个代币开始兑换",
+      "label": {
+        "amountFrom": "从（估值）",
+        "amountTo": "到（估值）"
+      },
+      "noCatSelected": "请从下拉框中选择一个CAT开始兑换",
+      "brief": {
+        "priceImpact": "价格浮动",
+        "liquidityFee": "流动性费",
+        "devFee": "服务费"
+      },
+      "noSwappableCat": "您没有可以进行兑换的CAT，可进行兑换的CAT如下：",
+      "summary": {
+        "notification": "确定要提交吗？<br/>请务必再次检查你的兑换内容。",
+        "from": "从",
+        "to": "到",
+        "txfee": "交易费",
+        "devfee": "服务费",
+        "total": "总计"
+      },
+      "button": {
+        "back": "返回",
+        "confirm": "确认",
+        "continueWithNoInfo": "请先检查兑换信息",
+        "continueWithNoWarning": "继续",
+        "continueWithWarning": "确定当前价格浮动并继续",
+        "continueWithGreatWarning": "确定当前价格浮动并继续"
+      },
+      "footer": {
+        "attributingPrefix": "本服务由 ",
+        "linkUrl": "https://v2.tibetswap.io/",
+        "linkName": "TibetSwap",
+        "attributingSuffix": " 提供，完全独立于Pawket。"
       }
     }
   }

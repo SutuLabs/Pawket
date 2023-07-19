@@ -1665,5 +1665,44 @@
         }
       }
     }
+  },
+  "swap": {
+    "ui": {
+      "title": "Swap",
+      "dropdownPlaceholder": "Select a CAT to continue",
+      "label": {
+        "amountFrom": "From (Estimated)",
+        "amountTo": "To (Estimated)"
+      },
+      "noCatSelected": "You have to select a CAT to start swap.",
+      "brief": {
+        "priceImpact": "Price Impact",
+        "liquidityFee": "Liquidity Fee",
+        "devFee": "Service Fee"
+      },
+      "noSwappableCat": "You don't have swappable CAT. Swappable CAT:",
+      "summary": {
+        "notification": "Are you sure to swap?<br/>Please review your transaction.",
+        "from": "From",
+        "to": "To",
+        "txfee": "Transaction Fee",
+        "devfee": "Service Fee",
+        "total": "Total"
+      },
+      "button": {
+        "back": "Back",
+        "confirm": "Confirm",
+        "continueWithNoInfo": "Review your swap first",
+        "continueWithNoWarning": "Continue",
+        "continueWithWarning": "Confirm Price Impact And Continue",
+        "continueWithGreatWarning": "Confirm Price Impact And Continue"
+      },
+      "footer": {
+        "attributingPrefix": "This Service is provided by",
+        "linkUrl": "https://v2.tibetswap.io/",
+        "linkName": "TibetSwap",
+        "attributingSuffix": " and is entirely independent from Pawket."
+      }
+    }
   }
 }
