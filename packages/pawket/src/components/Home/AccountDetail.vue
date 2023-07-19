@@ -89,13 +89,13 @@
                   </div>
                 </a>
               </div>
-              <div class="b-tooltip" v-if="!isIos">
+              <div class="b-tooltip" v-if="!isIos && experimentMode && debugMode">
                 <a @click="$router.push('/home/swap')" href="javascript:void(0)" class="has-text-primary">
                   <div class="mx-3">
-                    <span class="icon has-background-primary is-medium is-circle"
+                    <span class="icon has-background-grey is-medium is-circle"
                       ><i class="mdi mdi-swap-horizontal-bold mdi-24px has-text-white"></i
                     ></span>
-                    <p class="is-size-6 w-3">{{ $t("accountDetail.ui.button.swap") }}</p>
+                    <p class="is-size-6 w-3 has-text-grey">{{ $t("accountDetail.ui.button.swap") }}</p>
                   </div>
                 </a>
               </div>
