@@ -7,7 +7,10 @@
         <template v-if="swappableTokens.length > 0">
           <b-field>
             <b-select :placeholder="$t('swap.ui.dropdownPlaceholder')" expanded v-model="swapToken">
-              <option v-for="token in swappableTokens" :value="token.short_name" :key="token.asset_id">{{ token.name }}</option>
+              <option v-for="token in swappableTokens" :value="token.short_name" :key="token.asset_id">
+                <!-- <img :src="token.image_url" /> -->
+                {{ token.name }}
+              </option>
             </b-select>
           </b-field>
           <template v-if="swapToken">
@@ -37,7 +40,11 @@
             >
             </simplified-token-amount-field>
           </template>
-          <template v-else>{{ $t("swap.ui.noCatSelected") }}</template>
+          <template v-else>
+            <b-notification type="is-info is-light" has-icon icon="exclamation-thick" :closable="false">
+              {{ $t("swap.ui.noCatSelected") }}
+            </b-notification>
+          </template>
           <fee-selector v-if="false" v-model="fee"></fee-selector>
 
           <b-field>
@@ -74,8 +81,7 @@
           </b-field>
         </template>
         <template v-if="swappableTokens.length == 0 && !loading">
-          <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
-            You don't have swappable token. Swappable tokens:
+          <b-notification type="is-info is-light" has-icon icon="exclamation-thick" :closable="false">
             {{ $t("swap.ui.noSwappableCat") }}
             <b-taglist>
               <b-tag v-for="token in allPoolTokens" :key="token.asset_id" type="is-info">{{ token.short_name }}</b-tag>
@@ -112,12 +118,12 @@
             </span>
           </div>
           <div class="py-2"></div>
-          <div class="has-text-weight-bold px-5">
+          <!-- <div class="has-text-weight-bold px-5">
             <span class="is-size-6 has-text-grey">{{ $t("swap.ui.summary.txfee") }}</span>
             <span class="is-size-6 is-pulled-right has-text-grey">
               {{ demojo(summary.fee) }}
             </span>
-          </div>
+          </div> -->
           <div class="has-text-weight-bold px-5">
             <span class="is-size-6 has-text-grey">{{ $t("swap.ui.summary.devfee") }}</span>
             <span class="is-size-6 is-pulled-right has-text-grey">
@@ -477,31 +483,35 @@ export default class SwapPage extends Vue {
 
   changeAmount(changeType: "from" | "to"): void {
     if (!this.swapTokenPair) return;
-    const stp = this.swapTokenPair;
-    const sell_reserve = this.swapAction == "buy" ? BigInt(stp.xch_reserve) : BigInt(stp.token_reserve);
-    const buy_reserve = this.swapAction == "buy" ? BigInt(stp.token_reserve) : BigInt(stp.xch_reserve);
-    const sellDecimal = this.swapAction == "buy" ? 12 : 3;
-    const buyDecimal = this.swapAction == "buy" ? 3 : 12;
+    try {
+      const stp = this.swapTokenPair;
+      const sell_reserve = this.swapAction == "buy" ? BigInt(stp.xch_reserve) : BigInt(stp.token_reserve);
+      const buy_reserve = this.swapAction == "buy" ? BigInt(stp.token_reserve) : BigInt(stp.xch_reserve);
+      const sellDecimal = this.swapAction == "buy" ? 12 : 3;
+      const buyDecimal = this.swapAction == "buy" ? 3 : 12;
 
-    if (changeType == "from") {
-      const mojo = bigDecimal.multiply(this.amountFrom, Math.pow(10, sellDecimal));
-      const ato = getSellPrice(BigInt(mojo), sell_reserve, buy_reserve).toString();
-      this.amountTo = bigDecimal.divide(ato, Math.pow(10, buyDecimal), buyDecimal);
-      this.priceImpact = getPriceImpact(buy_reserve, BigInt(ato));
-    } else {
-      const mojo = bigDecimal.multiply(this.amountTo, Math.pow(10, buyDecimal));
-      const am = BigInt(mojo);
-      const ato = getBuyPrice(am, sell_reserve, buy_reserve).toString();
-      this.amountFrom = bigDecimal.divide(ato, Math.pow(10, sellDecimal), sellDecimal);
-      this.priceImpact = getPriceImpact(buy_reserve, am);
+      if (changeType == "from") {
+        const mojo = bigDecimal.multiply(this.amountFrom, Math.pow(10, sellDecimal));
+        const ato = getSellPrice(BigInt(mojo), sell_reserve, buy_reserve).toString();
+        this.amountTo = bigDecimal.divide(ato, Math.pow(10, buyDecimal), buyDecimal);
+        this.priceImpact = getPriceImpact(buy_reserve, BigInt(ato));
+      } else {
+        const mojo = bigDecimal.multiply(this.amountTo, Math.pow(10, buyDecimal));
+        const am = BigInt(mojo);
+        const ato = getBuyPrice(am, sell_reserve, buy_reserve).toString();
+        this.amountFrom = bigDecimal.divide(ato, Math.pow(10, sellDecimal), sellDecimal);
+        this.priceImpact = getPriceImpact(buy_reserve, am);
+      }
+
+      const fromDecimal = this.swapAction == "buy" ? 12 : 3;
+      const toDecimal = this.swapAction == "buy" ? 3 : 12;
+      this.priceComparison = [
+        `1 ${this.tokenFrom} ≈ ${bigDecimal.divide(this.amountTo, this.amountFrom, toDecimal)} ${this.tokenTo}`,
+        `1 ${this.tokenTo} ≈ ${bigDecimal.divide(this.amountFrom, this.amountTo, fromDecimal)} ${this.tokenFrom}`,
+      ];
+    } catch (err) {
+      //ignore
     }
-
-    const fromDecimal = this.swapAction == "buy" ? 12 : 3;
-    const toDecimal = this.swapAction == "buy" ? 3 : 12;
-    this.priceComparison = [
-      `1 ${this.tokenFrom} ≈ ${bigDecimal.divide(this.amountTo, this.amountFrom, toDecimal)} ${this.tokenTo}`,
-      `1 ${this.tokenTo} ≈ ${bigDecimal.divide(this.amountFrom, this.amountTo, fromDecimal)} ${this.tokenFrom}`,
-    ];
   }
   //========= end token amount input===================
 
