@@ -45,7 +45,7 @@
           <tr>
             <th>{{ $t("explorerLink.ui.label.address") }}</th>
             <th>{{ $t("explorerLink.ui.label.coin") }}</th>
-            <th v-if="experimentMode && !observeMode && !publicKeyAcc">{{ $t("explorerLink.ui.label.sign") }}</th>
+            <th v-if="!observeMode && !publicKeyAcc">{{ $t("explorerLink.ui.label.sign") }}</th>
             <th>{{ $t("explorerLink.ui.label.link") }}</th>
           </tr>
         </thead>
@@ -58,7 +58,7 @@
           >
             <td>{{ convertAddress(addr.address) }}</td>
             <td>{{ addr.coins.filter((_) => _.coin && !_.spent).length }}</td>
-            <td v-if="experimentMode && !observeMode && !publicKeyAcc">
+            <td v-if="!observeMode && !publicKeyAcc">
               <b-button size="is-small" @click="openSignMessage(addr.address)">{{ $t("explorerLink.ui.label.sign") }}</b-button>
             </td>
             <td>

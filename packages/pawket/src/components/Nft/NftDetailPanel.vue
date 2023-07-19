@@ -41,7 +41,7 @@
                     >{{ $t("nftDetail.ui.dropdown.setAsProfilePic") }}
                   </b-dropdown-item>
                 </a>
-                <a class="has-text-dark" @click="openSignMessage()" v-if="experimentMode && !observeMode && !publicKeyAcc">
+                <a class="has-text-dark" @click="openSignMessage()" v-if="!observeMode && !publicKeyAcc">
                   <b-dropdown-item aria-role="listitem">
                     <b-icon class="media-left" icon="lead-pencil" size="is-small"></b-icon
                     >{{ $t("nftDetail.ui.dropdown.signWithNft") }}

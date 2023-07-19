@@ -77,21 +77,21 @@
           </a>
         </b-tooltip>
       </div>
-      <div v-if="experimentMode && debugMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+      <div v-if="debugMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.mintNft')" position="is-right">
           <a href="javascript:void(0)" @click="$router.push('/home/mint-nft')" class="has-text-link">
             <div class="has-text-centered">
-              <b-icon icon="tag-faces" size="is-medium"></b-icon>
+              <b-icon icon="tag-faces" size="is-medium" type="is-grey"></b-icon>
               <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.mintNft") }}</p>
             </div>
           </a>
         </b-tooltip>
       </div>
-      <div v-if="experimentMode && debugMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+      <div v-if="debugMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.batchMintNft')" position="is-right">
           <a href="javascript:void(0)" @click="$router.push('/home/batch-mint-nft')" class="has-text-link">
             <div class="has-text-centered">
-              <b-icon icon="image-multiple-outline" size="is-medium"></b-icon>
+              <b-icon icon="image-multiple-outline" size="is-medium" type="is-grey"></b-icon>
               <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.batchMintNft") }}</p>
             </div>
           </a>
@@ -127,11 +127,11 @@
           </a>
         </b-tooltip>
       </div>
-      <div v-if="experimentMode && debugMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+      <div v-if="debugMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip label="Split Coin" position="is-right">
           <a href="javascript:void(0)" @click="$router.push('/home/split-coin')" class="has-text-link">
             <div class="has-text-centered">
-              <b-icon icon="call-split" size="is-medium"></b-icon>
+              <b-icon icon="call-split" size="is-medium" type="is-grey"></b-icon>
               <p class="is-size-7">Split Coin</p>
             </div>
           </a>

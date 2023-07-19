@@ -57,7 +57,7 @@
           <span class="mx-2">{{ $t("accountManagement.ui.button.addBySerial") }}</span>
         </b-tooltip>
       </a>
-      <a href="javascript:void(0)" class="panel-block" @click="addByPassword()" v-if="experimentMode">
+      <a href="javascript:void(0)" class="panel-block" @click="addByPassword()">
         <b-tooltip :label="$t('accountManagement.ui.tooltip.addByPassword')" position="is-right" multilined size="is-small">
           <span class="panel-icon">
             <b-icon icon="plus-thick"></b-icon>
