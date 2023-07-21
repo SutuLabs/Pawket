@@ -209,12 +209,14 @@ store.registerModule<IAccountState>("account", {
             if (act.spent && act.coin) return convertToOriginCoin(act.coin)
           })
           const uc = unlockCoins(coins as OriginCoin[]);
-          const txns = getCompletedTransactions(uc, activities);
-          txns.forEach(txn => {
-            const title = tc('app.message.notification.transactionComplete.title');
-            const body = tc('app.message.notification.transactionComplete.body', undefined, { block: txn });
-            desktopNotify(title, body);
-          })
+          const blockHeights = getCompletedTransactions(uc, activities);
+          blockHeights
+            .filter((_, i) => blockHeights.indexOf(_) === i) // filter duplicated items
+            .forEach(block => {
+              const title = tc('app.message.notification.transactionComplete.title');
+              const body = tc('app.message.notification.transactionComplete.body', undefined, { block });
+              desktopNotify(title, body);
+            })
           Vue.set(account, "activities", activities);
           Vue.set(account, "tokens", tokenBalances);
         } catch (error) {
