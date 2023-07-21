@@ -7,7 +7,7 @@
       </p>
     </a>
     <div v-if="displayDapp" class="columns is-mobile is-multiline mt-2">
-      <div class="column px-1 is-1-desktop is-3-mobile has-text-centered" style="display: none">
+      <div v-if="!isIos" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.donate')" position="is-right">
           <a href="javascript:void(0)" @click="openDonation()" class="has-text-link">
             <div class="has-text-centered">
