@@ -1,7 +1,7 @@
 import { AccountEntity, CustomCat, TokenInfo } from "../../models/account";
 import receive, { TokenPuzzleDetail, TokenPuzzleObserver } from "../crypto/receive";
 
-export const DEFAULT_ADDRESS_RETRIEVAL_COUNT = 4;
+export const DEFAULT_ADDRESS_RETRIEVAL_COUNT = 1;
 
 export async function getAccountAddressDetails(
   account: AccountEntity,
