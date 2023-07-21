@@ -29,6 +29,12 @@
         <a href="javascript:void(0)" @click="openDonation()"
           ><p>{{ $t("settings.about.links.label.donate") }}</p></a
         >
+
+        <hr class="p-0 my-2" />
+        <b-notification :closable="false">
+          <b-icon icon="star-face" size="is-small" class="mr-2" />
+          <span v-html="$t('settings.about.thanks')"> </span>
+        </b-notification>
       </div>
     </section>
   </div>
