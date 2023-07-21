@@ -3,6 +3,20 @@
     <top-bar :title="$t('offer.make.ui.title')" @close="close()" :showClose="true"></top-bar>
     <section class="modal-card-body">
       <template v-if="step == 'Input'">
+        <b-notification
+          v-if="unknownAssets.length > 0"
+          type="is-danger is-light"
+          has-icon
+          icon="exclamation-thick"
+          :closable="false"
+        >
+          {{ $t("offer.make.ui.unknownAssets") }}
+          <b-taglist>
+            <b-tag v-for="asset in unknownAssets" :key="asset.assetId" type="is-warning" :title="asset.assetId"
+              >{{ asset.name }}: {{ nameOmit(asset.assetId) }}</b-tag
+            >
+          </b-taglist>
+        </b-notification>
         <b-field :label="$t('offer.make.ui.field.offer')">
           <template v-for="(offer, idx) in offers">
             <token-amount-field
@@ -11,12 +25,14 @@
               :selectedToken="offer.token"
               :token-names="tokenNames"
               :fee="0"
-              :showMaxAmount="true"
               :max-amount="getMaxAmount(offer.token)"
               :total-amount="getTotalAmount(offer.token)"
               @set-max="setMax(offer)"
               label=""
               @change-token="(token) => (offer.token = token)"
+              :catSelectable="!disabledSelectCat"
+              :amountEditable="!disabledAmount"
+              :showMaxAmount="!disabledAmount"
             >
             </token-amount-field>
           </template>
@@ -32,6 +48,8 @@
               :showMaxAmount="false"
               label=""
               @change-token="(token) => (request.token = token)"
+              :catSelectable="!disabledSelectCat"
+              :amountEditable="!disabledAmount"
             >
             </token-amount-field>
           </template>
@@ -80,18 +98,8 @@
     </section>
     <footer class="modal-card-foot is-block">
       <div>
-        <b-button
-          v-if="!offerText"
-          :label="$t('common.button.cancel')"
-          class="is-pulled-left"
-          @click="$router.push('/home')"
-        ></b-button>
-        <b-button
-          v-if="offerText"
-          :label="$t('offer.make.ui.button.done')"
-          class="is-pulled-left"
-          @click="$router.push('/home')"
-        ></b-button>
+        <b-button v-if="!offerText" :label="$t('common.button.cancel')" class="is-pulled-left" @click="cancel()"></b-button>
+        <b-button v-if="offerText" :label="$t('offer.make.ui.button.done')" class="is-pulled-left" @click="cancel()"></b-button>
         <b-button v-if="!offerText" type="is-primary" :loading="signing" @click="sign()">
           {{ account.type == "PublicKey" ? $t("common.button.generate") : $t("common.button.sign") }}
         </b-button>
@@ -123,7 +131,12 @@ import { TokenPuzzleDetail } from "../../../../pawket-chia-lib/services/crypto/r
 import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
 import DevHelper from "@/components/DevHelper/DevHelper.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { getOfferEntities, OfferEntity, OfferSummary, OfferTokenAmount } from "../../../../pawket-chia-lib/services/offer/summary";
+import {
+  getOfferEntities,
+  OfferEntity,
+  OfferSummary,
+  OfferTokenAmount,
+} from "../../../../pawket-chia-lib/services/offer/summary";
 import { getCatIdDict, getCatNameDict, getCatNames } from "@/services/view/cat";
 import { encodeOffer } from "../../../../pawket-chia-lib/services/offer/encoding";
 import { generateOffer, generateOfferPlan } from "../../../../pawket-chia-lib/services/offer/bundler";
@@ -134,6 +147,7 @@ import { tc } from "@/i18n/i18n";
 import { lockCoins } from "../../../../pawket-chia-lib/services/coin/coinUtility";
 import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
 import TopBar from "../Common/TopBar.vue";
+import { nameOmit } from "@/filters/nameConversion";
 
 @Component({
   components: {
@@ -144,6 +158,17 @@ import TopBar from "../Common/TopBar.vue";
 })
 export default class MakeOffer extends Vue {
   @Prop() public account!: AccountEntity;
+  @Prop({ default: "" }) public initialFromAssetId!: string;
+  @Prop({ default: "" }) public initialFromCatName!: string;
+  @Prop({ default: "" }) public initialToAssetId!: string;
+  @Prop({ default: "" }) public initialToCatName!: string;
+  @Prop({ default: "0" }) public initialFromAmount!: string;
+  @Prop({ default: "0" }) public initialToAmount!: string;
+  @Prop({ default: false }) public disabledSelectCat!: string;
+  @Prop({ default: false }) public disabledAmount!: string;
+
+  public unknownAssets: { assetId: string; name: string }[] = [];
+
   public offerText = "";
   public offerBundle: SpendBundle | null = null;
   public summary: OfferSummary | null = null;
@@ -178,6 +203,15 @@ export default class MakeOffer extends Vue {
     return;
   }
 
+  cancel(): void {
+    if (this.bundle) {
+      this.step = "Input";
+      this.bundle = null;
+    } else {
+      this.close();
+    }
+  }
+
   get path(): string {
     return this.$route.path;
   }
@@ -188,18 +222,35 @@ export default class MakeOffer extends Vue {
   }
 
   get cats(): { [id: string]: string } {
-    return getCatNameDict(this.account);
+    return getCatNameDict(this.account, this.unknownAssets);
   }
 
   get catIds(): { [name: string]: string } {
-    return getCatIdDict(this.account);
+    return getCatIdDict(this.account, this.unknownAssets);
   }
 
   get tokenNames(): string[] {
-    return getCatNames(this.account);
+    return getCatNames(this.account, this.unknownAssets);
   }
 
   async mounted(): Promise<void> {
+    const initialFromAssetId = prefix0x(this.initialFromAssetId);
+    const initialToAssetId = prefix0x(this.initialToAssetId);
+
+    if (Number(this.initialFromAmount) > 0) {
+      const t = !initialFromAssetId ? xchSymbol() : this.cats[initialFromAssetId] ?? this.initialFromCatName;
+      if (initialFromAssetId && !this.cats[initialFromAssetId])
+        this.unknownAssets.push({ assetId: initialFromAssetId, name: t });
+      this.offers = [{ token: t, amount: this.initialFromAmount }];
+    }
+
+    if (Number(this.initialToAmount) > 0) {
+      const t = !initialToAssetId ? xchSymbol() : this.cats[initialToAssetId] ?? this.initialToCatName;
+      if (initialToAssetId && !this.cats[initialToAssetId])
+        this.unknownAssets.push({ assetId: initialToAssetId, name: t });
+      this.requests = [{ token: t, amount: this.initialToAmount }];
+    }
+
     await this.loadCoins();
   }
 
@@ -207,8 +258,12 @@ export default class MakeOffer extends Vue {
     return xchSymbol();
   }
 
+  nameOmit(name: string, upperCase = false): string {
+    return nameOmit(name, upperCase);
+  }
+
   getTotalAmount(token: string): string {
-    const totalMojo = this.account.tokens[token].amount ?? -1n;
+    const totalMojo = this.account.tokens?.[token]?.amount ?? -1n;
     const decimal = token == xchSymbol() ? 12 : 3;
     return bigDecimal.divide(totalMojo, Math.pow(10, decimal), decimal);
   }
@@ -268,6 +323,7 @@ export default class MakeOffer extends Vue {
       if (this.bundle && this.signed) lockCoins(this.account, this.bundle.coin_spends, Date.now(), chainId());
       this.offerText = await encodeOffer(this.bundle, 6);
 
+      this.$emit("offerResult", this.offerText);
       this.step = "Confirmation";
     } catch (error) {
       Notification.open({

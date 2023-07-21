@@ -4,6 +4,10 @@
       <div class="box mx-6 is-flex is-justify-content-center">
         <img v-if="origin" :src="`${origin}/favicon.ico`" class="image is-24x24 mx-3" />{{ origin }}
       </div>
+      <div v-if="stage == 'Initializing'">
+        <div class="is-size-3 has-text-weighted-bold mb-6">{{ $t("connect.ui.label.initializing") }}</div>
+        <b-loading :is-full-page="true" :active="true" :can-cancel="false"></b-loading>
+      </div>
       <div v-if="stage == 'Verify'">
         <div class="is-size-3 has-text-weighted-bold mb-6">{{ $t("connect.ui.label.connectWithPawket") }}</div>
         <div>{{ $t("connect.ui.label.enterPassword") }}</div>
@@ -111,7 +115,13 @@
 
 <script lang="ts">
 import { demojo } from "@/filters/unitConversion";
-import { AccountEntity, AccountToken, AccountTokenAddress, CustomCat, OneTokenInfo } from "../../../../pawket-chia-lib/models/account";
+import {
+  AccountEntity,
+  AccountToken,
+  AccountTokenAddress,
+  CustomCat,
+  OneTokenInfo,
+} from "../../../../pawket-chia-lib/models/account";
 import encryption from "../../../../pawket-chia-lib/services/crypto/encryption";
 import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
 import receive, { DidDetail } from "../../../../pawket-chia-lib/services/crypto/receive";
@@ -123,21 +133,33 @@ import { NetworkInfo, rpcUrl, xchPrefix, xchSymbol } from "@/store/modules/netwo
 import { getEncryptKey, isPasswordCorrect } from "@/store/modules/vault";
 import { Component, Vue } from "vue-property-decorator";
 import TakeOffer from "../Offer/Take.vue";
+import MakeOffer from "../Offer/Make.vue";
 import Send from "../Send/Send.vue";
 import SignMessage from "../Cryptography/SignMessage.vue";
 import { connectionItem } from "../AccountManagement/AccountInfo.vue";
 import { tc } from "@/i18n/i18n";
 import ManageCats from "../Cat/ManageCats.vue";
-type Stage = "Verify" | "Account" | "Authorize" | "Cmd";
+type Stage = "Initializing" | "Verify" | "Account" | "Authorize" | "Cmd";
 type SignWithDidData = { did: string; message: string };
 type SignWithAddressData = { address: string; message: string };
 type AddCatData = { id: string; name?: string };
 type MessageEventSource = Window | MessagePort | ServiceWorker;
+
+export interface OfferMakingRequest {
+  request: OfferAssetEntity[];
+  offer: OfferAssetEntity[];
+}
+
+export interface OfferAssetEntity {
+  name: string;
+  assetId: string;
+  amount: string | number | bigint;
+}
 @Component
 export default class Connect extends Vue {
   public password = "";
   public isCorrect = true;
-  public stage: Stage = "Verify";
+  public stage: Stage = "Initializing";
   public selectedAcc = 0;
   public accounts: AccountEntity[] = [];
   public cmd = "";
@@ -295,14 +317,31 @@ export default class Connect extends Vue {
   }
 
   mounted(): void {
+    setTimeout(() => {
+      if (this.stage == "Initializing") {
+        Notification.open({
+          message: tc("connect.messages.initialMessageNotReceive"),
+          type: "is-danger",
+          position: "is-top",
+          duration: 5000,
+        });
+        this.failed(tc("connect.messages.initialMessageNotReceive"));
+      }
+    }, 10000); // need to receive message within 10s
+
     window.addEventListener("message", (event: MessageEvent) => {
       if (event.origin == window.location.origin) return;
       Object.freeze(event);
       this.event = event;
       this.origin = this.event.origin;
       const data = JSON.parse(this.event.data);
-      if (this.checkCmd(data.cmd)) this.cmd = data.cmd;
-      else return;
+
+      if (!this.checkCmd(data.cmd)) return;
+      if (this.cmd == data.cmd) return;
+
+      this.cmd = data.cmd;
+      this.stage = "Verify";
+
       this.initialNetworkId = store.state.network.networkId;
       if (!this.setNetwork(data.network)) {
         Notification.open({
@@ -324,6 +363,9 @@ export default class Connect extends Vue {
     switch (this.cmd) {
       case "take-offer":
         this.openTakeOffer();
+        break;
+      case "make-offer":
+        this.openMakeOffer();
         break;
       case "send":
         this.send();
@@ -358,7 +400,16 @@ export default class Connect extends Vue {
   }
 
   checkCmd(cmd: string): boolean {
-    const cmdList = ["take-offer", "send", "sign-with-did", "sign-with-address", "get-address", "get-did", "add-cat"];
+    const cmdList = [
+      "take-offer",
+      "make-offer",
+      "send",
+      "sign-with-did",
+      "sign-with-address",
+      "get-address",
+      "get-did",
+      "add-cat",
+    ];
     if (!cmd) {
       Notification.open({
         message: tc("connect.messages.noAppName"),
@@ -396,6 +447,53 @@ export default class Connect extends Vue {
       events: {
         success: () => this.success(this.$t("connect.messages.offerAccepted")),
       },
+    });
+  }
+
+  openMakeOffer(): void {
+    let data: OfferMakingRequest | null = null;
+    try {
+      data = JSON.parse(this.data) as OfferMakingRequest;
+      if (data.offer?.length != 1 || data.offer?.length != 1) {
+        Notification.open({
+          message: tc("connect.messages.invalidMakeOfferParameterNumber"),
+          type: "is-danger",
+          position: "is-top",
+          duration: 5000,
+        });
+        this.failed(tc("connect.messages.invalidMakeOfferParameterNumber"));
+        return;
+      }
+    } catch (error) {
+      Notification.open({
+        message: tc("connect.messages.invalidData"),
+        type: "is-danger",
+        position: "is-top",
+        duration: 5000,
+      });
+      this.failed(tc("connect.messages.invalidData"));
+      return;
+    }
+
+    this.$buefy.modal.open({
+      parent: this,
+      component: MakeOffer,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      fullScreen: true,
+      props: {
+        account: this.account,
+        initialFromAssetId: data.offer[0].assetId,
+        initialFromCatName: data.offer[0].name,
+        initialToAssetId: data.request[0].assetId,
+        initialToCatName: data.request[0].name,
+        initialFromAmount: String(data.offer[0].amount),
+        initialToAmount: String(data.request[0].amount),
+        disabledSelectCat: true,
+        disabledAmount: true,
+      },
+      events: { offerResult: (offer: string) => this.success(offer, 1000) },
     });
   }
 
@@ -560,7 +658,7 @@ export default class Connect extends Vue {
     this.source?.postMessage({ status: "cancelled", cmd: this.cmd, msg: msg }, { targetOrigin: this.origin });
   }
 
-  success(msg: unknown): void {
+  success(msg: unknown, timeout = 5000): void {
     this.succeed = true;
     Notification.open({
       message: tc("connect.messages.success"),
@@ -569,7 +667,7 @@ export default class Connect extends Vue {
       duration: 5000,
     });
     this.source?.postMessage({ status: "success", cmd: this.cmd, msg: msg }, { targetOrigin: this.origin });
-    setTimeout(() => this.close(), 5000);
+    setTimeout(() => this.close(), timeout);
   }
 
   close(): void {

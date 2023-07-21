@@ -347,7 +347,8 @@
         "field": {
           "offer": "提供",
           "request": "请求"
-        }
+        },
+        "unknownAssets": "以下CAT是由dApp推荐的未知CAT，请认真检查！"
       },
       "messages": {
         "failedToSign": "发起 Offer 失败"
@@ -1631,7 +1632,8 @@
         "requestTranx": "请求允许交易",
         "gettingData": "从Pawket获取信息",
         "noWallet": "无Pawket钱包",
-        "noWalletInfo": "你没有在Pawket上创建钱包"
+        "noWalletInfo": "你没有在Pawket上创建钱包",
+        "initializing": "正在等待指令"
       },
       "button": {
         "next": "下一步",
@@ -1651,7 +1653,9 @@
       "sendCompleted": "交易已提交!",
       "catAdded": "CAT已添加!",
       "cancelled": "已取消",
-      "incorrectPassword": "密码不正确."
+      "incorrectPassword": "密码不正确.",
+      "initialMessageNotReceive": "未收到指令，请再试一次！",
+      "invalidMakeOfferParameterNumber": "目前Pawket只支持1对1的Offer生成！"
     }
   },
   "splitCoin": {

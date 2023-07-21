@@ -21,7 +21,7 @@
         </b-button>
       </span>
     </template>
-    <b-select :value="selectedToken" @input="changeToken">
+    <b-select :value="selectedToken" @input="changeToken" :disabled="!catSelectable">
       <option v-for="token in tokenNames" :key="token" :value="token">
         {{ token }}
       </option>
@@ -61,6 +61,7 @@ export default class TokenAmountField extends Vue {
   @Prop({ default: 0 }) public fee!: number;
 
   @Prop({ default: true }) public amountEditable!: boolean;
+  @Prop({ default: true }) public catSelectable!: boolean;
   @Prop({ default: true }) public showMaxAmount!: boolean;
   @Prop({ default: "-1" }) public maxAmount!: string;
   @Prop({ default: "-1" }) public totalAmount!: string;

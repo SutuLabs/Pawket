@@ -347,7 +347,8 @@
         "field": {
           "offer": "Offer",
           "request": "Request"
-        }
+        },
+        "unknownAssets": "Following unknown CAT is proposed, please check carefully!"
       },
       "messages": {
         "failedToSign": "Failed to make offer."
@@ -1631,7 +1632,8 @@
         "requestTranx": "Request approval for transactions.",
         "gettingData": "Getting Data from Pawket...",
         "noWallet": "No Pawket Wallet",
-        "noWalletInfo": "You do not have a wallet set up in Pawket."
+        "noWalletInfo": "You do not have a wallet set up in Pawket.",
+        "initializing": "Waiting for command"
       },
       "button": {
         "next": "Next",
@@ -1651,7 +1653,9 @@
       "sendCompleted": "Transaction is submitted!",
       "catAdded": "CAT is added!",
       "cancelled": "Cancelled",
-      "incorrectPassword": "Incorrect password."
+      "incorrectPassword": "Incorrect password.",
+      "initialMessageNotReceive": "Command not receive. Please try again.",
+      "invalidMakeOfferParameterNumber": "Currently, Pawket only support 1-vs-1 offer."
     }
   },
   "splitCoin": {
