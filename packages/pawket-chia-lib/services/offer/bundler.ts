@@ -195,6 +195,9 @@ export async function generateOfferPlan(
     if (keys.length > 1) {
       throw new Error(`spend plan must be less than 1, currently are ${keys.length}: ${keys.join(", ")}`);
     }
+    if (keys.length == 0) {
+      throw new Error(`You don't have proper coins to create this offer`);
+    }
 
     const offplan = { id: off.id, plan: plan[keys[0]] };
     plans.push(offplan);
