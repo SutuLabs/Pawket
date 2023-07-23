@@ -55,3 +55,165 @@ Object {
 `;
 
 exports[`Make Offer 2: offer 1`] = `"offer1qqp83w76wzru6cmqvpsxygqqemhmlaekcenaz02ma6hs5w600dhjlvfjn477nkwz369h88kll73h37fefnw7qzjkfpygjqsnvdpsxzwp3s50y6gnurll7tegj9h5mkvktn6ka5ka3jgfula48l0fsmnz6p2qun247960ndehvdlj75xfsjarxe50uthy6jdmywacn0ldgeatw4mqjae7p44qm7f0k987vjkejph5ytyg92ckaw2v8quwx428g78lz6d20smpwn5vdkl5wnhhkwdn8sfwevkmu0nyaac086a03gk7wlxullf6vtx9h0hu33wxqlrpm8dn9774dm9ulpykgv3jupgkww3j69x5msmd5ssedkscedjsgedj3uyjjphz69rskxm6p6x7sxj8d8etjat7mx95vpp9437zwk8d4ryux06vffe093v8hglmecw63v3up8gh0330nhfl885c9lg6u4v7c096zdjp5hsuncg2l9mau3n46tvaqss5hxgpln3adkcvzxakrl4x30ukke865462fxjw0ac0e5stdasa8cekhvakwzc0e0057sw9k459dws79yh5wvh9avevafafndjzfv8mpggdjrmv4lc9hv0rjf4amudadhae5l9gglwxxtqaurcj7dmral53t97ku5w4elulm9dqucyyz3fqzwxcn2xn5wqw4m8l97vxh5x94wclnnvv55n80th2f8z3lj4w239uum0ceeeyy643a0ajujeafr90e0uqu7n2nf43aht0lfatmerujncnhr0e904w0qmg0kt577umkw6k4zj8lldlcphf8ffyelfajhslnujx5jj0ds7mwnph5852lwgy4d2rpludzk9d6pl7xucsq2awq5nrhm9565th0x2wt3exu509m4p50fkdenul4nl33yp5kly4epe0r5nu5pwcgxs6gpt3x6r2l38kjgx2rjp2zpp5qu2qp8wvq4smxm4ghjvh5e9wc6ue6vf0n5p0vtt4ttrfvaeree063q8h8f4axkhechwj5vgww0t8rtxca4u7lg2gdhldlkgnem8nytwut3gvy0j4ln9ery4krktejhl775mnmk2sw2ah3ee2m63gtpcezudxdzrk398g55grqrc3jkqhw2h9g0"`;
+
+exports[`Make Offer BSH -> XCH: bundle 1`] = `
+Object {
+  "aggregated_signature": "0xb08ed61f6be27c04d6eba51e0782c045902a7c6d6b3ae319b4d0fb545e5c8a33e9c67d605b973007325a85ddb2366e9e156b51ea98f1cccec9f99ce16cb622094cb50b30463a35d2663b1e0a2d77a776a422a092623d567708145f799cc47ce6",
+  "coin_spends": Array [
+    Object {
+      "coin": Object {
+        "amount": 0n,
+        "parent_coin_info": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "puzzle_hash": "0xcfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ff0affff04ff02ffff04ff03ff80808080ffff04ffff01ffff333effff02ffff03ff05ffff01ff04ffff04ff0cffff04ffff02ff1effff04ff02ffff04ff09ff80808080ff808080ffff02ff16ffff04ff02ffff04ff19ffff04ffff02ff0affff04ff02ffff04ff0dff80808080ff808080808080ff8080ff0180ffff02ffff03ff05ffff01ff02ffff03ffff15ff29ff8080ffff01ff04ffff04ff08ff0980ffff02ff16ffff04ff02ffff04ff0dffff04ff0bff808080808080ffff01ff088080ff0180ffff010b80ff0180ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff1effff04ff02ffff04ff09ff80808080ffff02ff1effff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080",
+      "solution": "0xffffa0741f8564b6637aee92dd68548cfe7df8ec35b20029235565244944febd68bf8dffffa0907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96ff85174876e800ff80808080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 100000000000000n,
+        "parent_coin_info": "0x1b7cce83c2d0a9497065be76dc5023a679bc2618bd8a1a9892534db1e549c204",
+        "puzzle_hash": "0xf98317c995ef18d46a30ccfdd7a4e19f571f439c8fcf7d3412e915dc8caf171f",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ff5effff04ff02ffff04ffff04ff05ffff04ffff0bff34ff0580ffff04ff0bff80808080ffff04ffff02ff17ff2f80ffff04ff5fffff04ffff02ff2effff04ff02ffff04ff17ff80808080ffff04ffff02ff2affff04ff02ffff04ff82027fffff04ff82057fffff04ff820b7fff808080808080ffff04ff81bfffff04ff82017fffff04ff8202ffffff04ff8205ffffff04ff820bffff80808080808080808080808080ffff04ffff01ffffffff3d46ff02ff333cffff0401ff01ff81cb02ffffff20ff02ffff03ff05ffff01ff02ff32ffff04ff02ffff04ff0dffff04ffff0bff7cffff0bff34ff2480ffff0bff7cffff0bff7cffff0bff34ff2c80ff0980ffff0bff7cff0bffff0bff34ff8080808080ff8080808080ffff010b80ff0180ffff02ffff03ffff22ffff09ffff0dff0580ff2280ffff09ffff0dff0b80ff2280ffff15ff17ffff0181ff8080ffff01ff0bff05ff0bff1780ffff01ff088080ff0180ffff02ffff03ff0bffff01ff02ffff03ffff09ffff02ff2effff04ff02ffff04ff13ff80808080ff820b9f80ffff01ff02ff56ffff04ff02ffff04ffff02ff13ffff04ff5fffff04ff17ffff04ff2fffff04ff81bfffff04ff82017fffff04ff1bff8080808080808080ffff04ff82017fff8080808080ffff01ff088080ff0180ffff01ff02ffff03ff17ffff01ff02ffff03ffff20ff81bf80ffff0182017fffff01ff088080ff0180ffff01ff088080ff018080ff0180ff04ffff04ff05ff2780ffff04ffff10ff0bff5780ff778080ffffff02ffff03ff05ffff01ff02ffff03ffff09ffff02ffff03ffff09ff11ff5880ffff0159ff8080ff0180ffff01818f80ffff01ff02ff26ffff04ff02ffff04ff0dffff04ff0bffff04ffff04ff81b9ff82017980ff808080808080ffff01ff02ff7affff04ff02ffff04ffff02ffff03ffff09ff11ff5880ffff01ff04ff58ffff04ffff02ff76ffff04ff02ffff04ff13ffff04ff29ffff04ffff0bff34ff5b80ffff04ff2bff80808080808080ff398080ffff01ff02ffff03ffff09ff11ff7880ffff01ff02ffff03ffff20ffff02ffff03ffff09ffff0121ffff0dff298080ffff01ff02ffff03ffff09ffff0cff29ff80ff3480ff5c80ffff01ff0101ff8080ff0180ff8080ff018080ffff0109ffff01ff088080ff0180ffff010980ff018080ff0180ffff04ffff02ffff03ffff09ff11ff5880ffff0159ff8080ff0180ffff04ffff02ff26ffff04ff02ffff04ff0dffff04ff0bffff04ff17ff808080808080ff80808080808080ff0180ffff01ff04ff80ffff04ff80ff17808080ff0180ffff02ffff03ff05ffff01ff04ff09ffff02ff56ffff04ff02ffff04ff0dffff04ff0bff808080808080ffff010b80ff0180ff0bff7cffff0bff34ff2880ffff0bff7cffff0bff7cffff0bff34ff2c80ff0580ffff0bff7cffff02ff32ffff04ff02ffff04ff07ffff04ffff0bff34ff3480ff8080808080ffff0bff34ff8080808080ffff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff2effff04ff02ffff04ff09ff80808080ffff02ff2effff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ffff04ffff04ff30ffff04ff5fff808080ffff02ff7effff04ff02ffff04ffff04ffff04ff2fff0580ffff04ff5fff82017f8080ffff04ffff02ff26ffff04ff02ffff04ff0bffff04ff05ffff01ff808080808080ffff04ff17ffff04ff81bfffff04ff82017fffff04ffff02ff2affff04ff02ffff04ff8204ffffff04ffff02ff76ffff04ff02ffff04ff09ffff04ff820affffff04ffff0bff34ff2d80ffff04ff15ff80808080808080ffff04ff8216ffff808080808080ffff04ff8205ffffff04ff820bffff808080808080808080808080ff02ff5affff04ff02ffff04ff5fffff04ff3bffff04ffff02ffff03ff17ffff01ff09ff2dffff02ff2affff04ff02ffff04ff27ffff04ffff02ff76ffff04ff02ffff04ff29ffff04ff57ffff04ffff0bff34ff81b980ffff04ff59ff80808080808080ffff04ff81b7ff80808080808080ff8080ff0180ffff04ff17ffff04ff05ffff04ff8202ffffff04ffff04ffff04ff78ffff04ffff0eff5cffff02ff2effff04ff02ffff04ffff04ff2fffff04ff82017fff808080ff8080808080ff808080ffff04ffff04ff20ffff04ffff0bff81bfff5cffff02ff2effff04ff02ffff04ffff04ff15ffff04ffff10ff82017fffff11ff8202dfff2b80ff8202ff80ff808080ff8080808080ff808080ff138080ff80808080808080808080ff018080ffff04ffff01a037bef360ee858133b69d595a906dc45d01af50379dad515eb9518abb7c1d2a7affff04ffff01a06e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6bffff04ffff01ff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080ff0180808080",
+      "solution": "0xffff80ffff01ffff33ffa0cfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7ff821388ffffa0cfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e78080ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff865af3107a2c7880ffff3fffa04d08b054b2e679e0f0555a5ecf31ce69b4c2dfa7790653e251f46f0675513edc8080ff8080ffffa0ba70b644f3cd240ac0c500782d53e633d8c1de21bd554c2ee1e190b24d3c8bb2ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff865af3107a400080ffa08d48f79c03b886a882d4b727310020205fccf6ae4680d673cb3d22ac2fb2e2b2ffffa01b7cce83c2d0a9497065be76dc5023a679bc2618bd8a1a9892534db1e549c204ffa0f98317c995ef18d46a30ccfdd7a4e19f571f439c8fcf7d3412e915dc8caf171fff865af3107a400080ffffa01b7cce83c2d0a9497065be76dc5023a679bc2618bd8a1a9892534db1e549c204ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff865af3107a400080ff80ff8080",
+    },
+  ],
+}
+`;
+
+exports[`Make Offer BSH -> XCH: offer 1`] = `"offer1qqr83wcuu2rykcmqvpsxygqqemhmlaekcenaz02ma6hs5w600dhjlvfjn477nkwz369h88kll73h37fefnwk3qqnz8s0lle09zgk7nwejew02mkjmkxfp8nlk5laaxrwvtg9grjd2hchf7dhxa3h7t6sexzt5vmx3l3wun2fhv3mhzdla4r84d6hvzth8cxk5r0e97c5lej2mx0kha2aeglvq5pasxhfnfeumpew4n6zcjxa2amzwsret8j3udvfh4w4yvexqhakul820xyw2eanlry6nme94ejpn88e0d7unsleu8evuul6elte5z9azj7a8v67tj0gzg02kdqf2qeulfrpkmar3kmar3kmdr3kmd83s60fu3smdl6xh0ypp0mstehm8cnmc6mdxn0rvdejdfpway2ccm6srenn6urvdmgvand96gat25z4t938y8ava799wdaduylnyhdttjnn0quagf4gxs7rjhppll8dh2zw8gd454fq2acvx7gdrmvwqrgttmxlmenmy0ed4at8rml5u75mhe332jh8evutps3x3rf78r5cda36meg3ycrdmr08pde4vzvmxt5ngk7qceh5zp35gqdxelchzp40hlt0zth0sn6cr8yyegrf0nd32mj2cmlchn8sfmd2sx6j987het04x6zl4wya0f7dyrn07cygdln0qv652azqukc0mlc9hcwpks3k8k4heuppxs4wa08ph8xzmplw97hkgzm7znuzt8adxngwur3y2hl4lv9tvzduhean9fwq0r3j2n5qv0enheclp8hzmegpl0v8punkeu44a80yft9apcxqmlch73a8e87rhj3k63wnjhk74psvpg90zea744ekhwzk0nd9v6vdl6ny0xuq7cgk5u8ataq23jv9kz8335ugwu7jsspk73we8nm72nph9m042guldfsr4cfmg6njkwk3ujmwh8crkfpw5m9l3ed3m2zw36gxa3r9rtthx7v7tngne588cd0ruwvhxfmleeue3v6d38fkw2ahsxdet6d9x34njtka7tjk2ju5zexy4vsd90n3pzd0n3e6feseqr693le8rukmt7"`;
+
+exports[`Make Offer BSH -> XCH: offplan 1`] = `
+Array [
+  Object {
+    "id": "6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b",
+    "plan": Object {
+      "coins": Array [
+        Object {
+          "amount": 100000000000000n,
+          "parent_coin_info": "0x1b7cce83c2d0a9497065be76dc5023a679bc2618bd8a1a9892534db1e549c204",
+          "puzzle_hash": "0xf98317c995ef18d46a30ccfdd7a4e19f571f439c8fcf7d3412e915dc8caf171f",
+        },
+      ],
+      "targets": Array [
+        Object {
+          "address": "0xcfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7",
+          "amount": 5000n,
+          "memos": Array [
+            "0xcfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7",
+          ],
+          "symbol": "BSH",
+        },
+        Object {
+          "address": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+          "amount": 99999999995000n,
+          "symbol": "BSH",
+        },
+      ],
+    },
+  },
+]
+`;
+
+exports[`Make Offer BSH -> XCH: offs 1`] = `
+Array [
+  Object {
+    "amount": 5000n,
+    "id": "6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b",
+    "symbol": "BSH",
+    "target": "()",
+  },
+]
+`;
+
+exports[`Make Offer BSH -> XCH: reqs 1`] = `
+Array [
+  Object {
+    "amount": 100000000000n,
+    "id": "",
+    "symbol": "XCH",
+    "target": "0x907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96",
+  },
+]
+`;
+
+exports[`Make Offer XCH -> BSH: bundle 1`] = `
+Object {
+  "aggregated_signature": "0xb6d37695e598c34aa65ba43d3562f87fe1bdd7fd8301affa3e2d1d6930b66444e11e6ec7a79446c7fc5aa049a8b54218057f3a73cc14fc5f38aecb19917f29745a7b6296fd47d781d5ee3a36540fccfcff189dd6f648570bf6569756808e2101",
+  "coin_spends": Array [
+    Object {
+      "coin": Object {
+        "amount": 0n,
+        "parent_coin_info": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "puzzle_hash": "0xcfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ff0affff04ff02ffff04ff03ff80808080ffff04ffff01ffff333effff02ffff03ff05ffff01ff04ffff04ff0cffff04ffff02ff1effff04ff02ffff04ff09ff80808080ff808080ffff02ff16ffff04ff02ffff04ff19ffff04ffff02ff0affff04ff02ffff04ff0dff80808080ff808080808080ff8080ff0180ffff02ffff03ff05ffff01ff02ffff03ffff15ff29ff8080ffff01ff04ffff04ff08ff0980ffff02ff16ffff04ff02ffff04ff0dffff04ff0bff808080808080ffff01ff088080ff0180ffff010b80ff0180ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff1effff04ff02ffff04ff09ff80808080ffff02ff1effff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080",
+      "solution": "0xffffa0741f8564b6637aee92dd68548cfe7df8ec35b20029235565244944febd68bf8dffffa0907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96ff821388ff80808080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 1000000000000n,
+        "parent_coin_info": "0xba70b644f3cd240ac0c500782d53e633d8c1de21bd554c2ee1e190b24d3c8bb2",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff33ffa0cfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7ff85174876e80080ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff8600d18c2e280080ffff3fffa09ee0483cddf37e54d194653bb7399bd3aeb429f0421746bb5d80446a06fe25b08080ff8080",
+    },
+  ],
+}
+`;
+
+exports[`Make Offer XCH -> BSH: offer 1`] = `"offer1qqr83wcuu2rykcmqvpsxygqqemhmlaekcenaz02ma6hs5w600dhjlvfjn477nkwz369h88kll73h37fefnwk3qqnz8s0lle09zgk7nwejew02mkjmkxfp8nlk5laaxrwvtg9grjd2hchf7dhxa3h7t6sexzt5vmx3l3wun2fhv3mhzdla4r84d6hvzth8cxk5r0e97c5lej2mx0khaymsqmvc7hgymfwnl865uqa8r99pggmlnx033kp0w98ksma7s0ra89se8t6v7cnmamgtxuj78ljyvaujvmw4pj5fgl476aafksnum48r60mfsum8kp2rsrg0dckt2gq8nhxqqfhdntj0qqdm6cwp4wud7lrwg40t4l7du005jm7jw6k596tarqr9dkgywpaa6y0jdkktg0xzcksm4utuvr8jkczny6wkvz4s6crys2l7h6q9pplcmc47u58hswsqptyc2qxl6mnzh8v68fsp2dkl7lkphsrp7dmh8ltgghyujd4mehrn7ljhgke58uucnwhd3ekhpjtrl2nm5qqatrdjl96v05aw8vxkk05zfda8fql758lwhhlm0xt3l5hnkhxefkpkc2f0pmj08rewnm380lzw65pu7926nsj4n64d3t8gnlvgkav8vknnv27kvj25wnfmf0l06ud2l04nxv97z0lnu6lvtht2mc7u8wdls4xsu6lg2fjqgqdflpwauuxn54n"`;
+
+exports[`Make Offer XCH -> BSH: offplan 1`] = `
+Array [
+  Object {
+    "id": "",
+    "plan": Object {
+      "coins": Array [
+        Object {
+          "amount": 1000000000000n,
+          "parent_coin_info": "0xba70b644f3cd240ac0c500782d53e633d8c1de21bd554c2ee1e190b24d3c8bb2",
+          "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+        },
+      ],
+      "targets": Array [
+        Object {
+          "address": "0xcfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7",
+          "amount": 100000000000n,
+          "memos": undefined,
+          "symbol": "XCH",
+        },
+        Object {
+          "address": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+          "amount": 900000000000n,
+          "symbol": "XCH",
+        },
+      ],
+    },
+  },
+]
+`;
+
+exports[`Make Offer XCH -> BSH: offs 1`] = `
+Array [
+  Object {
+    "amount": 100000000000n,
+    "id": "",
+    "symbol": "XCH",
+    "target": "()",
+  },
+]
+`;
+
+exports[`Make Offer XCH -> BSH: reqs 1`] = `
+Array [
+  Object {
+    "amount": 5000n,
+    "id": "",
+    "symbol": "BSH",
+    "target": "0x907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96",
+  },
+]
+`;
