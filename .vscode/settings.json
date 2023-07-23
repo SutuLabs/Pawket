@@ -38,6 +38,7 @@
     "editor.defaultFormatter": "vscode.typescript-language-features"
   },
   "files.associations": {
-    "*.clvm": "lisp"
+    "*.clvm": "lisp",
+    "**/test/**/*.test.data.ts": "plaintext",
   }
 }
