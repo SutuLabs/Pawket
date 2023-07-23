@@ -366,7 +366,6 @@ class PuzzleMaker {
   async executePuzzleHex(puz_hex: string, solution_hex: string): Promise<ExecuteResult> {
     const solution_result_hex = await this.calcPuzzleResult(puz_hex, solution_hex, "--hex", "--dump");
 
-    console.log(solution_result_hex)
     const conds = sexpAssemble(solution_result_hex);
     const solution_results = this.parseConditions(conds);
     return { raw: solution_result_hex, conditions: solution_results, sexp: conds };
