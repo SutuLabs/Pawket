@@ -301,7 +301,7 @@ class PuzzleMaker {
     }
 
     // FIXME: when using rust experiment backend, there exist scenario when result=69 but no exception raised while brun command line thrown exception
-    if (result == "69") {
+    if (result == "69" || result == "45") {
       const modname = modsdict[puzzle_reveal];
       throw new Error(`Suspected error calculating puzzle [${modname ? `M'${modname}` : puzzle_reveal.slice(0, 200)}] from solution [${solution.slice(0, 200)}]: ${result.slice(0, 200)}`);
     }
@@ -366,6 +366,7 @@ class PuzzleMaker {
   async executePuzzleHex(puz_hex: string, solution_hex: string): Promise<ExecuteResult> {
     const solution_result_hex = await this.calcPuzzleResult(puz_hex, solution_hex, "--hex", "--dump");
 
+    console.log(solution_result_hex)
     const conds = sexpAssemble(solution_result_hex);
     const solution_results = this.parseConditions(conds);
     return { raw: solution_result_hex, conditions: solution_results, sexp: conds };
