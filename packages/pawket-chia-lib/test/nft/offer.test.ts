@@ -247,6 +247,7 @@ async function acceptOffer(fee: bigint, offerText: string) {
     fee,
     net.symbol,
     royalty_amount,
+    [],
     revSummary.settlementModName,
   );
   expect(offplangen).toMatchSnapshot("offplangen");

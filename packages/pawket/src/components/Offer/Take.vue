@@ -647,6 +647,7 @@ export default class TakeOffer extends Vue {
           0n,
           xchSymbol(),
           0n,
+          [],
           this.summary.settlementModName
         );
         const observers = await getAssetsRequestObserver(this.account);
@@ -690,6 +691,7 @@ export default class TakeOffer extends Vue {
           fee,
           xchSymbol(),
           royalty_amount,
+          [],
           this.summary.settlementModName
         );
         const observers = await getAssetsRequestObserver(this.account);
