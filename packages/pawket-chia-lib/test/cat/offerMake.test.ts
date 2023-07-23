@@ -65,21 +65,18 @@ beforeAll(async () => {
 
 
 test('Make Offer XCH -> BSH', async () => {
-  const reqs: OfferEntity[] = [
-    {
-      "id": "",
-      "symbol": 'BSH',
-      "amount": 5000n,
-      "target": "0x907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96"
-    }
-  ];
+  const reqs: OfferEntity[] = getOfferEntities(
+    [{ token: 'BSH', amount: "5" }],
+    "0x907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96",
+    catIds(),
+    xchSymbol(),
+  );
 
   const offs: OfferEntity[] = getOfferEntities(
     [{ token: xchSymbol(), amount: "0.1" }],
     "()",
     catIds(),
     xchSymbol(),
-    false,
   );
 
   expect(offs).toMatchSnapshot("offs")
@@ -88,24 +85,20 @@ test('Make Offer XCH -> BSH', async () => {
 });
 
 test('Make Offer BSH -> XCH', async () => {
-  const reqs: OfferEntity[] = [
-    {
-      "id": "",
-      "symbol": xchSymbol(),
-      "amount": 100000000000n,
-      "target": "0x907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96"
-    }
-  ];
+  const reqs: OfferEntity[] = getOfferEntities(
+    [{ token: xchSymbol(), amount: "0.1" }],
+    "0x907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96",
+    catIds(),
+    xchSymbol(),
+  );
 
   const offs: OfferEntity[] = getOfferEntities(
     [{ token: 'BSH', amount: "5" }],
     "()",
     catIds(),
     xchSymbol(),
-    false,
   );
 
-  console.log(offs, reqs)
   expect(offs).toMatchSnapshot("offs")
   expect(reqs).toMatchSnapshot("reqs")
   await makeOfferTest(offs, reqs, 0n);
@@ -114,13 +107,13 @@ test('Make Offer BSH -> XCH', async () => {
 async function makeOfferTest(offs: OfferEntity[], reqs: OfferEntity[], fee = 0n) {
   const offplan = await generateOfferPlan(offs, change_hex, availcoins, fee, xchSymbol());
   expect(offplan).toMatchSnapshot("offplan")
-  const ubundle = await generateOffer(offplan, reqs, tokenPuzzles, net, nonce, "cat_v2");
+  const ubundle = await generateOffer(offplan, reqs, tokenPuzzles, net, nonce);
   const bundle = await signSpendBundle(ubundle, tokenPuzzles, net.chainId);
   const encoded = await encodeOffer(bundle, 6);
 
-  expect(bundle).toMatchSnapshot("bundle");
-  await assertSpendbundle(bundle, net.chainId);
   expect(encoded).toMatchSnapshot("offer");
+  await assertSpendbundle(bundle, net.chainId);
+  expect(bundle).toMatchSnapshot("bundle");
 }
 
 test('Make Offer 1', async () => {
