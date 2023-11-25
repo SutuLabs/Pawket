@@ -27,10 +27,10 @@ yarn install
 ### Compiles and hot-reloads for development
 
 ```sh
-yarn serve # for Pawket
-yarn serve:mixch # for Mixch
-yarn serve:ext # for Extension
-yarn serve:server # for Wallet CLI RPC API
+yarn dev # for Pawket
+yarn dev:mixch # for Mixch
+yarn dev:ext # for Extension
+yarn dev:server # for Wallet CLI RPC API
 ```
 
 ### Compiles and minifies for production
