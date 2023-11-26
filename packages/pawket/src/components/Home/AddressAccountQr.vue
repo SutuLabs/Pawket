@@ -61,7 +61,7 @@ export default class AddressAccountQr extends Vue {
 
 <style scoped lang="scss">
 // Import Bulma's core
-@import "~bulma/sass/utilities/derived-variables";
+@import "~bulma/sass/utilities/derived-variables.sass";
 .hover-primary:hover {
   background-color: $primary;
   color: white;

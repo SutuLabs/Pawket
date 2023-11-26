@@ -139,7 +139,7 @@ import { tc } from "@/i18n/i18n";
 import { shorten } from "@/filters/addressConversion";
 import NftTransfer from "./NftTransfer.vue";
 import { bech32m } from "@scure/base";
-import { createHash } from "crypto";
+import { Bytes } from "clvm";
 
 interface CollectionNfts {
   name: string;
@@ -181,9 +181,7 @@ export default class NftPanel extends Vue {
       nft.metadata.name = ext?.metadata?.name;
       const colname = ext?.metadata?.collection?.name ?? other;
       const colid = ext?.metadata?.collection?.id ?? other;
-      const hash = createHash("sha256")
-        .update(nft.analysis.launcherId + colid)
-        .digest();
+      const hash = Bytes.SHA256(nft.analysis.launcherId + colid).raw();
       const nftCollection = bech32m.encode("col", bech32m.toWords(hash));
       if (!col[colid]) {
         col[colid] = { name: colname, id: colid, nftCollection: nftCollection, nfts: [nft] };

@@ -36,7 +36,7 @@ import debug from "../../../../pawket-chia-lib/services/api/debug";
 import { CoinSpend } from "../../../../pawket-chia-lib/services/spendbundle";
 import BundlePanel from "@/components/DevHelper/BundlePanel.vue";
 import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
-import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
+import { assemble, disassemble } from "clvm_tools";
 import { ConditionOpcode } from "../../../../pawket-chia-lib/services/coin/opcode";
 import { prefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
 import { NotificationProgrammatic as Notification } from "buefy";
@@ -129,7 +129,7 @@ export default class CoinPanel extends Vue {
 </script>
 
 <style scoped lang="scss">
-@import "~bulma/sass/utilities/derived-variables";
+@import "~bulma/sass/utilities/derived-variables.sass";
 
 ul.coin-list {
   list-style: disc;

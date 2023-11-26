@@ -53,8 +53,8 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
-import { uncurry } from "clvm_tools/clvm_tools/curry";
+import { assemble, disassemble } from "clvm_tools";
+import { uncurry } from "clvm_tools";
 import { SExp, Tuple } from "clvm";
 import { ModParameter, modsdict, modsparams, modsprog } from "../../../../pawket-chia-lib/services/coin/mods";
 import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";

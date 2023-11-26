@@ -46,12 +46,12 @@ import store from "@/store";
 import { getAllCats } from "@/store/modules/account";
 import { xchSymbol } from "@/store/modules/network";
 import { Component, Vue, Watch } from "vue-property-decorator";
+import custom_cat from "@/assets/custom-cat.svg?url";
 
 @Component({
   components: {},
 })
 export default class CatPanel extends Vue {
-  private readonly custom_cat = require("@/assets/custom-cat.svg");
   public exchangeRate: GetExchangeRateResponse | null = null;
 
   get selectedAccount(): number {

@@ -20,7 +20,7 @@ import {
   EvalError,
   OPERATOR_LOOKUP,
 } from "clvm";
-import { assemble } from "clvm_tools/clvm_tools/binutils";
+import { assemble } from "clvm_tools";
 import { cons, first, rest } from "./sexpExt";
 
 export type ValStackType = idSExp[];

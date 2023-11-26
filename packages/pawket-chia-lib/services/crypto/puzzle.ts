@@ -3,7 +3,7 @@ import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
 import { PrivateKey, G1Element } from "@chiamine/bls-signatures";
 import utility from "./utility";
-import { assemble } from "clvm_tools/clvm_tools/binutils";
+import { assemble } from "clvm_tools";
 import { Instance } from "../util/instance";
 import { modsdict } from "../coin/mods";
 import { Hex0x, prefix0x, unprefix0x } from "../coin/condition";

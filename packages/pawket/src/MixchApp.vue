@@ -122,7 +122,7 @@ export default class MixchApp extends Vue {
   }
 
   get version(): string {
-    return process.env.VUE_APP_VERSION || tc("footer.ui.error.READ_VERSION_FAILED");
+    return import.meta.env.VITE_VERSION || tc("footer.ui.error.READ_VERSION_FAILED");
   }
 
   mounted(): void {

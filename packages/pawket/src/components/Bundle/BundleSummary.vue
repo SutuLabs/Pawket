@@ -76,13 +76,13 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { SpendBundle } from "../../../../pawket-chia-lib/services/spendbundle";
 import puzzle from "../../../../pawket-chia-lib/services/crypto/puzzle";
-import { disassemble } from "clvm_tools/clvm_tools/binutils";
+import { disassemble } from "clvm_tools";
 import { getArgMsg, getFirstLevelArgMsg, getNumber, unprefix0x } from "../../../../pawket-chia-lib/services/coin/condition";
 import { modshexdict } from "../../../../pawket-chia-lib/services/coin/mods";
 import store from "@/store";
 import { debugBundle } from "@/services/view/bundleAction";
 import { ConditionOpcode } from "../../../../pawket-chia-lib/services/coin/opcode";
-import { uncurry } from "clvm_tools/clvm_tools/curry";
+import { uncurry } from "clvm_tools";
 import { SExp, Tuple } from "clvm";
 import { AccountEntity, OneTokenInfo } from "../../../../pawket-chia-lib/models/account";
 import { getCatNameDict } from "@/services/view/cat";
@@ -259,7 +259,7 @@ export default class BundleSummary extends Vue {
 </script>
 
 <style scoped lang="scss">
-@import "~bulma/sass/utilities/derived-variables";
+@import "~bulma/sass/utilities/derived-variables.sass";
 
 ul {
   list-style: inside square;

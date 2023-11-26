@@ -4,7 +4,7 @@ import { curryMod } from "../offer/bundler";
 import { getFirstLevelArgMsg, getNumber, Hex0x, prefix0x } from "./condition";
 import { modshash, modsprog } from "./mods";
 import { Bytes, SExp, Tuple } from "clvm";
-import { assemble } from "clvm_tools/clvm_tools/binutils";
+import { assemble } from "clvm_tools";
 import { ConditionOpcode } from "./opcode";
 import { getCoinName0x } from "./coinUtility";
 

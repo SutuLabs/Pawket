@@ -1,5 +1,5 @@
 import { CoinSpend, OriginCoin } from "../spendbundle";
-import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
+import { assemble, disassemble } from "clvm_tools";
 import { uncurry } from "clvm_tools";
 import { SExp, Tuple } from "clvm";
 import { ConditionType, formatAmount, prefix0x, toNumberString } from "../coin/condition";

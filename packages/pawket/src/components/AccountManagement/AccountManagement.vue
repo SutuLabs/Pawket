@@ -347,7 +347,7 @@ export default class AccountManagement extends Vue {
 </script>
 
 <style scoped lang="scss">
-@import "~bulma/sass/utilities/derived-variables";
+@import "~bulma/sass/utilities/derived-variables.sass";
 
 .border-bottom {
   border-bottom: 2px solid #ededed;

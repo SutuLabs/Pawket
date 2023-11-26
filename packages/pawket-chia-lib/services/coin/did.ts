@@ -1,5 +1,5 @@
 import { CoinSpend, combineSpendBundle, OriginCoin, SpendBundle, UnsignedSpendBundle } from "../spendbundle";
-import { disassemble } from "clvm_tools/clvm_tools/binutils";
+import { disassemble } from "clvm_tools";
 import puzzle from "../crypto/puzzle";
 import { TokenPuzzleObserver } from "../crypto/receive";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";

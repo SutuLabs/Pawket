@@ -8,11 +8,11 @@ const routes: Array<RouteConfig> = [
   {
     path: "/login",
     name: "Login",
-    component: () => import(/* webpackChunkName: "home" */ "@/components/Login/VerifyPassword.vue"),
+    component: () => import("@/components/Login/VerifyPassword.vue"),
   },
   {
     path: "/home",
-    component: () => import(/* webpackChunkName: "home" */ "../views/Home.vue"),
+    component: () => import("../views/Home.vue"),
     children: [
       {
         path: "",
@@ -20,148 +20,148 @@ const routes: Array<RouteConfig> = [
       },
       {
         path: "asset",
-        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
+        component: () => import("@/components/Cat/CatPanel.vue"),
       },
       {
         path: "nft",
-        component: () => import(/* webpackChunkName: "home" */ "@/components/Nft/NftPanel.vue"),
+        component: () => import("@/components/Nft/NftPanel.vue"),
       },
       {
         path: "nft/:address",
       },
       {
         path: "did",
-        component: () => import(/* webpackChunkName: "home" */ "@/components/Did/Did.vue"),
+        component: () => import("@/components/Did/Did.vue"),
       },
       {
         path: "utxos",
-        component: () => import(/* webpackChunkName: "home" */ "@/components/Utxo/UtxoPanel.vue"),
+        component: () => import("@/components/Utxo/UtxoPanel.vue"),
       },
       {
         path: "cats",
-        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
+        component: () => import("@/components/Cat/CatPanel.vue"),
       },
       {
         path: "accounts",
-        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
+        component: () => import("@/components/Cat/CatPanel.vue"),
       },
       {
         path: "send",
-        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
+        component: () => import("@/components/Cat/CatPanel.vue"),
       },
       {
         path: "buy",
-        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
+        component: () => import("@/components/Cat/CatPanel.vue"),
       },
       {
         path: "swap",
-        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
+        component: () => import("@/components/Cat/CatPanel.vue"),
       },
       {
         path: "scan",
-        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
+        component: () => import("@/components/Cat/CatPanel.vue"),
       },
       {
         path: "receive",
-        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
+        component: () => import("@/components/Cat/CatPanel.vue"),
       },
       {
         path: "errorLog",
-        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
+        component: () => import("@/components/Cat/CatPanel.vue"),
       },
       {
         path: "proxy",
-        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
+        component: () => import("@/components/Cat/CatPanel.vue"),
       },
       {
         path: "make-offer",
-        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
+        component: () => import("@/components/Cat/CatPanel.vue"),
       },
       {
         path: "batch-send",
-        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
+        component: () => import("@/components/Cat/CatPanel.vue"),
       },
       {
         path: "issue-cat",
-        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
+        component: () => import("@/components/Cat/CatPanel.vue"),
       },
       {
         path: "mint-nft",
-        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
+        component: () => import("@/components/Cat/CatPanel.vue"),
       },
       {
         path: "take-offer",
-        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
+        component: () => import("@/components/Cat/CatPanel.vue"),
       },
       {
         path: "scan-assets",
-        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
+        component: () => import("@/components/Cat/CatPanel.vue"),
       },
       {
         path: "batch-mint-nft",
-        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
+        component: () => import("@/components/Cat/CatPanel.vue"),
       },
       {
         path: "verify-message",
-        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
+        component: () => import("@/components/Cat/CatPanel.vue"),
       },
       {
         path: "encrypt-message",
-        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
+        component: () => import("@/components/Cat/CatPanel.vue"),
       },
       {
         path: "decrypt-message",
-        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
+        component: () => import("@/components/Cat/CatPanel.vue"),
       },
       {
         path: "split-coin",
-        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
+        component: () => import("@/components/Cat/CatPanel.vue"),
       },
     ],
   },
   {
     path: "/create",
-    component: () => import(/* webpackChunkName: "create" */ "../views/Create.vue"),
+    component: () => import("../views/Create.vue"),
     children: [
       {
         path: "/",
         name: "Create",
-        component: () => import(/* webpackChunkName: "create" */ "../components/Create/Welcome.vue"),
+        component: () => import("../components/Create/Welcome.vue"),
       },
       {
         path: "disclaimer",
-        component: () => import(/* webpackChunkName: "create" */ "../components/Create/Disclaimer.vue"),
+        component: () => import("../components/Create/Disclaimer.vue"),
       },
       {
         path: "create-password",
-        component: () => import(/* webpackChunkName: "create" */ "../components/Create/CreatePassword.vue"),
+        component: () => import("../components/Create/CreatePassword.vue"),
       },
       {
         path: "create-wallet",
-        component: () => import(/* webpackChunkName: "create" */ "../components/Create/CreateWallet.vue"),
+        component: () => import("../components/Create/CreateWallet.vue"),
       },
       {
         path: "import",
-        component: () => import(/* webpackChunkName: "create" */ "../components/Create/Import.vue"),
+        component: () => import("../components/Create/Import.vue"),
       },
       {
         path: "import-backup",
-        component: () => import(/* webpackChunkName: "create" */ "../components/Create/ImportBackup.vue"),
+        component: () => import("../components/Create/ImportBackup.vue"),
       },
       {
         path: "add",
-        component: () => import(/* webpackChunkName: "create" */ "../components/Create/Add.vue"),
+        component: () => import("../components/Create/Add.vue"),
       },
     ],
   },
   {
     path: "/cns",
     name: "Cns",
-    component: () => import(/* webpackChunkName: "trade" */ "../views/Cns.vue"),
+    component: () => import("../views/Cns.vue"),
   },
   {
     path: "/explore",
-    component: () => import(/* webpackChunkName: "explore" */ "../views/Explore.vue"),
+    component: () => import("../views/Explore.vue"),
     children: [
       {
         path: "/",
@@ -172,70 +172,70 @@ const routes: Array<RouteConfig> = [
       },
       {
         path: "market",
-        component: () => import(/* webpackChunkName: "explore-market-nfts" */ "../components/Dexie/Market.vue"),
+        component: () => import("../components/Dexie/Market.vue"),
         children: [
           {
             path: "nft",
-            component: () => import(/* webpackChunkName: "explore-market-nfts" */ "../components/Dexie/NftMarket.vue"),
+            component: () => import("../components/Dexie/NftMarket.vue"),
           },
           {
             path: "cat",
-            component: () => import(/* webpackChunkName: "explore-market-nfts" */ "../components/Dexie/CatMarket.vue"),
+            component: () => import("../components/Dexie/CatMarket.vue"),
           },
         ],
       },
       {
         path: "offers/:type/:offered/:requested/:page",
-        component: () => import(/* webpackChunkName: "explore-offer" */ "../components/Dexie/Offer.vue"),
+        component: () => import("../components/Dexie/Offer.vue"),
       },
     ],
   },
   {
     path: "/settings",
     name: "Settings",
-    component: () => import(/* webpackChunkName: "settings" */ "../views/Settings.vue"),
+    component: () => import("../views/Settings.vue"),
     children: [
       {
         path: "general",
-        component: () => import(/* webpackChunkName: "settings" */ "@/components/Settings/General.vue"),
+        component: () => import("@/components/Settings/General.vue"),
       },
       {
         path: "security",
-        component: () => import(/* webpackChunkName: "settings" */ "@/components/Settings/Security.vue"),
+        component: () => import("@/components/Settings/Security.vue"),
       },
       {
         path: "addressBook",
-        component: () => import(/* webpackChunkName: "settings" */ "@/components/AddressBook/AddressBook.vue"),
+        component: () => import("@/components/AddressBook/AddressBook.vue"),
       },
       {
         path: "network",
-        component: () => import(/* webpackChunkName: "settings" */ "@/components/Settings/Network.vue"),
+        component: () => import("@/components/Settings/Network.vue"),
       },
       {
         path: "collection",
-        component: () => import(/* webpackChunkName: "settings" */ "@/components/Collection/Collection.vue"),
+        component: () => import("@/components/Collection/Collection.vue"),
       },
       {
         path: "advanced",
-        component: () => import(/* webpackChunkName: "settings" */ "@/components/Settings/Advanced.vue"),
+        component: () => import("@/components/Settings/Advanced.vue"),
       },
       {
         path: "devhelper",
-        component: () => import(/* webpackChunkName: "settings" */ "@/components/DevHelper/DevHelper.vue"),
+        component: () => import("@/components/DevHelper/DevHelper.vue"),
       },
       {
         path: "about",
-        component: () => import(/* webpackChunkName: "settings" */ "@/components/Settings/About.vue"),
+        component: () => import("@/components/Settings/About.vue"),
       },
     ],
   },
   {
     path: "/connect",
-    component: () => import(/* webpackChunkName: "settings" */ "@/components/Connect/Connect.vue"),
+    component: () => import("@/components/Connect/Connect.vue"),
     children: [
       {
         path: "take-offer",
-        component: () => import(/* webpackChunkName: "settings" */ "@/components/Offer/Take.vue"),
+        component: () => import("@/components/Offer/Take.vue"),
       },
     ]
   },

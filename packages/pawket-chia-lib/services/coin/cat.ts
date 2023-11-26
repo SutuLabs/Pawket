@@ -1,6 +1,6 @@
 import { skipFirstByte0x } from "./condition";
 import { sha256tree } from "clvm_tools";
-import { disassemble } from "clvm_tools/clvm_tools/binutils";
+import { disassemble } from "clvm_tools";
 import { CannotParsePuzzle, expectModArgs, sexpAssemble, UncurriedPuzzle, uncurryPuzzle } from "./analyzer";
 
 export interface CatCoinAnalysisResult {

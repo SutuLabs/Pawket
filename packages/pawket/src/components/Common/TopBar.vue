@@ -33,7 +33,7 @@ export default class TopBar extends Vue {
 </script>
 
 <style scoped lang="scss">
-@import "~bulma/sass/utilities/derived-variables";
+@import "~bulma/sass/utilities/derived-variables.sass";
 .hover-danger:hover {
   color: $danger !important;
 }

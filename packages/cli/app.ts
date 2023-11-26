@@ -2,7 +2,7 @@ import 'dotenv/config'
 import express from 'express'
 import puzzle from "../pawket-chia-lib/services/crypto/puzzle";
 import { Instance } from "../pawket-chia-lib/services/util/instance";
-import { assemble } from "clvm_tools/clvm_tools/binutils";
+import { assemble } from "clvm_tools";
 import { analyzeCoin, convertUncurriedPuzzle, getModsPath, parseBlock, parseCoin, sexpAssemble, simplifyPuzzle, uncurryPuzzle } from "../pawket-chia-lib/services/coin/analyzer";
 import { Hex0x, prefix0x } from '../pawket-chia-lib/services/coin/condition';
 import { encodeOffer } from "../pawket-chia-lib/services/offer/encoding";

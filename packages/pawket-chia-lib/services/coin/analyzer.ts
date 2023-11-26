@@ -1,7 +1,6 @@
-import 'dotenv/config'
-import { disassemble } from "clvm_tools/clvm_tools/binutils";
+import { disassemble } from "clvm_tools";
 import { SExp, Tuple, to_sexp_f, sexp_from_stream, Stream, Bytes } from "clvm";
-import { uncurry } from "clvm_tools/clvm_tools/curry";
+import { uncurry } from "clvm_tools";
 import { ModName, modshex, modshexdict } from "./mods";
 import { getCoinName0x } from './coinUtility';
 import { Hex0x, prefix0x, unprefix0x } from './condition';

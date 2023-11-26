@@ -15,7 +15,6 @@
         "baseUrl": ".",
         "types": [
             "src/raw-loader.d.ts",
-            "webpack-env",
             "chrome",
             "jest"
         ],
@@ -26,6 +25,7 @@
         },
         "lib": [
             "esnext",
+            "WebWorker",
             "dom",
             "dom.iterable",
             "scripthost"

@@ -1,10 +1,10 @@
 import { CoinSpend, SpendBundle, UnsignedSpendBundle } from "../spendbundle";
 import { Bytes, SExp, Tuple } from "clvm";
 import { getNumber, Hex0x, prefix0x, unprefix0x } from '../coin/condition';
-import { assemble, disassemble } from 'clvm_tools/clvm_tools/binutils';
+import { assemble, disassemble } from 'clvm_tools';
 import puzzle from "../crypto/puzzle";
 import { modsdict, modshash, modshashdict, modsprog } from '../coin/mods';
-import { uncurry } from 'clvm_tools/clvm_tools/curry';
+import { uncurry } from 'clvm_tools';
 import { ConditionOpcode } from "../coin/opcode";
 import { TokenSpendPlan } from "../transfer/transfer";
 import bigDecimal from "js-big-decimal";

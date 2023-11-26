@@ -30,7 +30,7 @@ import { debugLanguageList, languageList } from "@/i18n/i18n";
 export default class App extends Vue {
   public debugClick = 9;
   get version(): string {
-    return process.env.VUE_APP_VERSION || "";
+    return import.meta.env.VITE_VERSION || "";
   }
 
   get debugMode(): boolean {

@@ -279,7 +279,7 @@ export default class ManageCats extends Vue {
 </script>
 
 <style scoped lang="scss">
-@import "~bulma/sass/utilities/derived-variables";
+@import "~bulma/sass/utilities/derived-variables.sass";
 
 .y-scroll {
   overflow-y: auto;

@@ -73,7 +73,7 @@ store.registerModule<INetworkState>("network", {
     const networks: NetworkInfo = {
       mainnet: {
         name: "mainnet",
-        rpcUrl: process.env.VUE_APP_API_URL ?? "",
+        rpcUrl: import.meta.env.VITE_API_URL ?? "",
         prefix: "xch",
         symbol: "XCH",
         chainId: "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb",
@@ -89,7 +89,7 @@ store.registerModule<INetworkState>("network", {
       },
       testnet10: {
         name: "testnet10",
-        rpcUrl: process.env.VUE_APP_API_URL_TESTNET ?? "",
+        rpcUrl: import.meta.env.VITE_API_URL_TESTNET ?? "",
         prefix: "txch",
         symbol: "TXCH",
         chainId: "ae83525ba8d1dd3f09b277de18ca3e43fc0af20d20c4b3e92ef2a48bd291ccb2",

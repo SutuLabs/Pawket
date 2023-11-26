@@ -4,24 +4,18 @@
   "license": "GPL-3.0",
   "author": "SutuLabs",
   "scripts": {
-    "dev": "vue-cli-service serve",
+    "dev": "vite serve",
     "build:all": "yarn check-i18n --ci && yarn jest --ci && yarn build:pawket && yarn build:mixch",
-    "build:pawket": "vue-cli-service build",
+    "build:pawket": "vite build",
     "build:ext": "cross-env VUE_CLI_SERVICE_CONFIG_PATH=vue.config.ext.js vue-cli-service build",
     "build:mixch": "cross-env VUE_CLI_SERVICE_CONFIG_PATH=vue.config.mixch.js vue-cli-service build",
     "build:cli": "ncc build cli/server.ts -o dist/cli && cp node_modules/clvm/browser/blsjs.wasm dist/cli",
     "build:cli:docker": "yarn build:cli && docker build -f cli/Dockerfile -t wizicer/coin-processor:latest .",
-    "lint": "vue-cli-service lint",
+    "analyze:pawket": "vite build --mode analyze",
     "dev:ext": "cross-env VUE_CLI_SERVICE_CONFIG_PATH=vue.config.ext.js vue-cli-service --env.NODE_ENV=development build-watch --mode development",
     "dev:mixch": "cross-env VUE_CLI_SERVICE_CONFIG_PATH=vue.config.mixch.js vue-cli-service serve --port 8088",
     "check-i18n": "vue-i18n-extract report --vueFiles \"./src/**/*.?(js|ts|vue)\" --languageFiles \"./src/i18n/*.?(json|yml|yaml|js)\"",
-    "dev:server": "nodemon cli/server.ts",
-    "start": "cross-env MAX_THREAD=0 ts-node cli/server.ts",
-    "importmods": "ts-node cli/importmods.ts",
-    "compile": "ts-node cli/compile.ts",
-    "brun": "ts-node cli/brun.ts",
-    "publish:docker": "docker push wizicer/coin-processor:latest",
-    "test": "jest --coverage=false"
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src"
   },
   "dependencies": {
     "@mdi/font": "^6.5.95",
@@ -35,7 +29,7 @@
     "bip39": "^3.0.4",
     "buefy": "^0.9.14",
     "buffer": "^6.0.3",
-    "core-js": "^3.6.5",
+    "bulma": "^0.9.4",
     "elliptic": "^6.5.4",
     "fetch-intercept": "^2.4.0",
     "mermaid": "^9.1.5",
@@ -46,7 +40,7 @@
     "sanitize-html": "^2.7.0",
     "sortablejs": "^1.14.0",
     "uuid": "^8.3.2",
-    "vue": "^2.6.11",
+    "vue": "2.6.14",
     "vue-class-component": "^7.2.3",
     "vue-i18n": "^8.27.0",
     "vue-i18n-extract": "^2.0.4",
@@ -54,6 +48,7 @@
     "vue-property-decorator": "^9.1.2",
     "vue-qrcode-reader": "^3.1.0",
     "vue-router": "^3.2.0",
+    "vue-template-compiler": "2.6.14",
     "vuex": "^3.4.0",
     "whatwg-fetch": "^3.6.2",
     "zlib": "^1.0.5"
@@ -67,68 +62,36 @@
     "@types/node": "^18.0.4",
     "@types/pako": "^2.0.0",
     "@types/supertest": "^2.0.12",
-    "@typescript-eslint/eslint-plugin": "^4.18.0",
-    "@typescript-eslint/parser": "^4.18.0",
+    "@typescript-eslint/eslint-plugin": "^6.12.0",
+    "@typescript-eslint/parser": "^6.12.0",
     "@vercel/ncc": "^0.34.0",
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-plugin-pwa": "~4.5.0",
-    "@vue/cli-plugin-router": "~4.5.0",
-    "@vue/cli-plugin-typescript": "~4.5.0",
-    "@vue/cli-plugin-vuex": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
-    "@vue/eslint-config-prettier": "^6.0.0",
-    "@vue/eslint-config-typescript": "^7.0.0",
+    "@vitejs/plugin-vue": "^1.6.1",
+    "@vue/eslint-config-prettier": "^8.0.0",
+    "@vue/eslint-config-typescript": "^12.0.0",
     "clvm_tools": "^0.9.5",
     "cross-env": "^7.0.3",
     "cross-fetch": "^3.1.5",
     "dotenv": "^16.0.1",
-    "eslint": "^6.7.2",
+    "eslint": "^8.54.0",
     "eslint-plugin-prettier": "^3.3.1",
-    "eslint-plugin-vue": "^6.2.2",
+    "eslint-plugin-vue": "^8.7.1",
     "express": "^4.18.1",
     "jest": "^28.1.1",
     "js-big-decimal": "^1.3.4",
     "js-yaml": "^4.1.0",
-    "lerna": "^6.6.1",
     "nodemon": "^2.0.19",
     "pako": "^2.1.0",
     "pbkdf2-hmac": "^1.0.4",
-    "prettier": "^2.2.1",
+    "prettier": "^3.1.0",
     "raw-loader": "^4.0.2",
+    "rollup-plugin-visualizer": "^5.9.3",
     "sass": "^1.26.5",
-    "sass-loader": "^8.0.2",
     "supertest": "^6.2.4",
     "ts-jest": "^28.0.5",
     "ts-node": "^10.8.1",
     "typescript": "~4.6.4",
-    "vue-cli-plugin-chrome-extension-cli": "~1.1.1",
-    "vue-template-compiler": "^2.6.11"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true,
-      "webextensions": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended",
-      "@vue/typescript/recommended",
-      "@vue/prettier",
-      "@vue/prettier/@typescript-eslint"
-    ],
-    "parserOptions": {
-      "ecmaVersion": 2020
-    },
-    "rules": {}
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ],
-  "workspaces": [
-    "packages/*"
-  ]
+    "vite": "^2.5.4",
+    "vite-plugin-vue2": "1.9.0",
+    "vue-cli-plugin-chrome-extension-cli": "~1.1.1"
+  }
 }

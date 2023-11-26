@@ -36,24 +36,23 @@ import { isMobile } from "@/services/view/responsive";
 import store from "@/store";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { Component, Vue } from "vue-property-decorator";
-import DevHelper from "../DevHelper/DevHelper.vue";
 
 @Component({})
 export default class PawketFooter extends Vue {
   public debugClick = 9;
 
   get version(): string {
-    return process.env.VUE_APP_VERSION || tc("footer.ui.error.READ_VERSION_FAILED");
+    return import.meta.env.VITE_VERSION || tc("footer.ui.error.READ_VERSION_FAILED");
   }
 
   get isMobile(): boolean {
     return isMobile();
   }
 
-  showDebugHelper(): void {
+  async showDebugHelper(): Promise<void> {
     this.$buefy.modal.open({
       parent: this,
-      component: DevHelper,
+      component: (await import("../DevHelper/DevHelper.vue")).default,
       hasModalCard: true,
       trapFocus: true,
       fullScreen: isMobile(),
