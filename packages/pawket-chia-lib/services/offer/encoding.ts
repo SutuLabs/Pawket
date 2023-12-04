@@ -1,12 +1,12 @@
 import { CoinSpend, OriginCoin, SpendBundle } from "../spendbundle";
 import { bech32m } from "@scure/base";
-import zlib from 'zlib';
 import { Buffer } from 'buffer';
 import { Bytes, sexp_buffer_from_stream, Stream, sexp_from_stream, SExp } from "clvm";
 import { prefix0x } from '../coin/condition';
 import { assemble, disassemble } from 'clvm_tools';
 import puzzle from "../crypto/puzzle";
 import { modshex } from "../coin/mods";
+import { zlibSync, unzlibSync } from 'fflate'
 
 // sync with `chia\wallet\util\puzzle_compression.py`
 const initDict = [
@@ -39,7 +39,7 @@ export async function decodeOffer(offerText: string): Promise<SpendBundle> {
   const ver = buff.readUInt16BE(0);
   if (ver > initDict.length) throw new Error("error offer file version");
 
-  const d = zlib.inflateSync(buff.slice(2), { dictionary: getDictForVersion(ver) });
+  const d = unzlibSync(buff.slice(2), { dictionary: getDictForVersion(ver) });
 
   let pos = 0;
   const dv = new DataView(d.buffer);
@@ -113,7 +113,7 @@ export async function encodeOffer(bundle: SpendBundle, ver: number | undefined =
 
   ver = ver ?? initDict.length;
 
-  const def = zlib.deflateSync(buff, { dictionary: getDictForVersion(ver) });
+  const def = zlibSync(buff, { dictionary: getDictForVersion(ver) });
 
   const final_buff = Buffer.concat([getUint16Buffer(ver), def]);
 

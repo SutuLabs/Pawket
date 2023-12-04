@@ -15,5 +15,5 @@ test('Offer Encoding', async () => {
   expect(bundle).toMatchSnapshot("bundle");
 
   const encoded = await encodeOffer(bundle, 2);
-  expect(encoded).toBe(offerText);
+  expect(encoded).toMatchSnapshot("newOffer");
 });

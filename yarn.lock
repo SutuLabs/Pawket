@@ -4099,6 +4099,11 @@ fetch-intercept@^2.4.0:
   resolved "https://registry.npmjs.org/fetch-intercept/-/fetch-intercept-2.4.0.tgz"
   integrity sha512-BPZ2LM9Dh1ua2ovQf03N6rhWg1qxdVD5qK/G4llvcemt6M+jjxCuIDxJ+6IiG+uz//3UQmgfKEv0gOGvYIxZ7g==
 
+fflate@^0.8.1:
+  version "0.8.1"
+  resolved "https://registry.npmmirror.com/fflate/-/fflate-0.8.1.tgz#1ed92270674d2ad3c73f077cd0acf26486dae6c9"
+  integrity sha512-/exOvEuc+/iaUm105QIiOt4LpBdMTWsXxqR0HDF35vx3fmaKzw7354gTilCh5rkzEt8WYyG//ku3h3nRmd7CHQ==
+
 figures@^3.0.0:
   version "3.2.0"
   resolved "https://registry.nlark.com/figures/download/figures-3.2.0.tgz?cache=0&sync_timestamp=1625254221763&other_urls=https%3A%2F%2Fregistry.nlark.com%2Ffigures%2Fdownload%2Ffigures-3.2.0.tgz"
@@ -7313,8 +7318,3 @@ yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.npmjs.org/yocto-queue/-/yocto-queue-0.1.0.tgz"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
-
-zlib@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.npmjs.org/zlib/-/zlib-1.0.5.tgz"
-  integrity sha1-bnyXL8NxxkWmr7A6sUdp3vEU/MA=
