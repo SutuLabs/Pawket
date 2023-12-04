@@ -5,15 +5,12 @@
   "author": "SutuLabs",
   "scripts": {
     "dev": "vite serve",
+    "dev:mixch": "vite serve -c vite.config.mixch.ts",
     "build:all": "yarn check-i18n --ci && yarn jest --ci && yarn build:pawket && yarn build:mixch",
     "build:pawket": "vite build",
-    "build:ext": "cross-env VUE_CLI_SERVICE_CONFIG_PATH=vue.config.ext.js vue-cli-service build",
-    "build:mixch": "cross-env VUE_CLI_SERVICE_CONFIG_PATH=vue.config.mixch.js vue-cli-service build",
-    "build:cli": "ncc build cli/server.ts -o dist/cli && cp node_modules/clvm/browser/blsjs.wasm dist/cli",
-    "build:cli:docker": "yarn build:cli && docker build -f cli/Dockerfile -t wizicer/coin-processor:latest .",
+    "build:mixch": "vite build -c vite.config.mixch.ts",
     "analyze:pawket": "vite build --mode analyze",
-    "dev:ext": "cross-env VUE_CLI_SERVICE_CONFIG_PATH=vue.config.ext.js vue-cli-service --env.NODE_ENV=development build-watch --mode development",
-    "dev:mixch": "cross-env VUE_CLI_SERVICE_CONFIG_PATH=vue.config.mixch.js vue-cli-service serve --port 8088",
+    "analyze:mixch": "vite build -c vite.config.mixch.ts --mode analyze",
     "check-i18n": "vue-i18n-extract report --vueFiles \"./src/**/*.?(js|ts|vue)\" --languageFiles \"./src/i18n/*.?(json|yml|yaml|js)\"",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src"
   },

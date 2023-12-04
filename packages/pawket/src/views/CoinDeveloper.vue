@@ -59,7 +59,7 @@ import { Component, Vue } from "vue-property-decorator";
 import SExpBox from "@/components/Simulator/SExpBox.vue";
 import * as monaco from "monaco-editor";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import cdvdev from "../services/dev/cdv.dev.ts";
+import cdvdev from "../services/dev/cdv.dev.ts?raw";
 import { registerClspLanguage, defineClspTheme } from "../../../pawket-chia-lib/services/developer/editor/clspLanguage";
 import { executeCode } from "../../../pawket-chia-lib/services/developer/editor/executor";
 import { MixchCodeFilePersistent, MixchCodePersistent, persistent, retrieve } from "../../../pawket-chia-lib/services/developer/editor/persistence";
@@ -173,7 +173,7 @@ export default class CoinDeveloper extends Vue {
   changeTab(newIndex: number): void {
     if (!this.editor) return;
 
-    var currentState = this.editor.saveViewState();
+    const currentState = this.editor.saveViewState();
 
     // var currentModel = this.editor.getModel();
     const file = this.editorData[this.selectedFileIndex];

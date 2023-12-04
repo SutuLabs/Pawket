@@ -4,13 +4,14 @@ import { defineConfig } from 'vite'
 import { createVuePlugin as vue } from "vite-plugin-vue2";
 import { fileURLToPath } from 'url';
 import { visualizer } from 'rollup-plugin-visualizer';
+import { resolve } from 'path'
 
 const htmlPlugin = () => {
     return {
         name: "html-transform",
         transformIndexHtml(html: string) {
-            html = html.replace("%APPNAME%", "Pawket");
-            html = html.replace("%ENTRY%", "main.ts");
+            html = html.replace("%APPNAME%", "Mixch");
+            html = html.replace("%ENTRY%", "mixch.ts");
             return html;
         },
     };
@@ -19,8 +20,8 @@ const htmlPlugin = () => {
 export default defineConfig(({ mode }) => ({
     base: "/",
     plugins: [
-        htmlPlugin(),
         vue(),
+        htmlPlugin(),
     ],
     define: {
         'process.env.NODE_ENV': process.env.NODE_ENV,
@@ -28,7 +29,7 @@ export default defineConfig(({ mode }) => ({
         'process.env.VITE_API_URL_TESTNET': process.env.VITE_API_URL_TESTNET,
         'process.env.VITE_VERSION': process.env.VITE_VERSION,
     },
-    publicDir: './public/pawket',
+    publicDir: './public/mixch',
     resolve: {
         alias: [
             { find: '@', replacement: fileURLToPath(new URL('./src', import.meta.url)) },
@@ -48,18 +49,21 @@ export default defineConfig(({ mode }) => ({
         }
     },
     server: {
-        port: 8080,
+        port: 8088,
     },
     build: {
         target: ["esnext"],
-        outDir: "../../dist/web",
+        outDir: "../../dist/mixch",
         emptyOutDir: true,
         rollupOptions: {
+            input: {
+                app: resolve(__dirname, 'index.html'),
+            },
             plugins: [
                 mode === 'analyze' &&
                 visualizer({
                     open: true,
-                    filename: '../../dist/web.stats.html',
+                    filename: '../../dist/mixch.stats.html',
                     gzipSize: true,
                     brotliSize: true,
                 }),
