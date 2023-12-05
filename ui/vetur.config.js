@@ -11,7 +11,7 @@ module.exports = {
   // **optional** default: `[{ root: './' }]`
   // support monorepos
   projects: [
-    "./packages/cli",
+    "./cli",
     "./ui",
     "./lib-chia",
     // {
