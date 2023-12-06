@@ -48,7 +48,7 @@ stages:
     - task: CmdLine@2
       inputs:
         workingDirectory: '$(Build.SourcesDirectory)'
-        script: 'yarn'
+        script: 'yarn --frozen-lockfile'
       displayName: 'yarn'
 
     - task: CmdLine@2
