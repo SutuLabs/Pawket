@@ -45,7 +45,7 @@ stages:
       inputs:
         workingDirectory: '$(Build.SourcesDirectory)'
         script: |
-          sed -i 's/0.0.0.0/$(versionNumber)/' .env.production
+          sed -i 's/0.0.0.0/$(versionNumber)/' ui/.env.production
       displayName: 'set version'
 
     - task: CmdLine@2
