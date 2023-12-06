@@ -9,10 +9,8 @@ module.exports = {
       "@vue/typescript/recommended",
       "@vue/prettier/@typescript-eslint",
     ],
-    parser: "@babel/eslint-parser",
     parserOptions: {
       ecmaVersion: 2020,
-      sourceType: "module"
     },
     rules: {
       "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
