@@ -45,7 +45,6 @@ import { tc } from "@/i18n/i18n";
 import { xchToCurrency } from "@/filters/usdtConversion";
 import { CurrencyType } from "@/services/exchange/currencyType";
 import { xchSymbol } from "@/store/modules/network";
-import { OneTokenInfo } from "../../../../lib-chia/models/account";
 import { demojo } from "@/filters/unitConversion";
 
 @Component({
