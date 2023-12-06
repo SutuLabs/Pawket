@@ -33,4 +33,4 @@ jobs:
 
       - name: Test
         run: |
-          yarn test:chia
+          yarn test:lib
