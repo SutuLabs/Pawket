@@ -10,6 +10,7 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
+  nodeModulesCache: $(Pipeline.Workspace)/node_modules
   webArtifactName: chia-wallet
   extArtifactName: chia-wallet-ext
   mixchArtifactName: chia-mixch
@@ -34,6 +35,15 @@ stages:
       inputs:
         versionSpec: '16.x'
       displayName: 'Install Node.js'
+
+    - task: Cache@2
+      inputs:
+        key: '"yarn" | "$(Agent.OS)" | yarn.lock'
+        restoreKeys: |
+          "yarn" | "$(Agent.OS)"
+          "yarn"
+        path: $(nodeModulesCache)
+      displayName: Cache Yarn packages
 
     - task: CmdLine@2
       inputs:
