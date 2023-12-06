@@ -10,7 +10,7 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  nodeModulesCache: $(Pipeline.Workspace)/node_modules
+  nodeModulesCache: $(Pipeline.Workspace)/.yarn
   webArtifactName: chia-wallet
   extArtifactName: chia-wallet-ext
   mixchArtifactName: chia-mixch
@@ -38,10 +38,10 @@ stages:
 
     - task: Cache@2
       inputs:
-        key: '"yarn" | "$(Agent.OS)" | yarn.lock'
+        key: 'yarn | "$(Agent.OS)" | yarn.lock'
         restoreKeys: |
-          "yarn" | "$(Agent.OS)"
-          "yarn"
+          yarn | "$(Agent.OS)"
+          yarn
         path: $(nodeModulesCache)
       displayName: Cache Yarn packages
 
