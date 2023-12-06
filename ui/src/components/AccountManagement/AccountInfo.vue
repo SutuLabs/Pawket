@@ -64,6 +64,37 @@
           ></qrcode-vue>
         </span>
       </div>
+      <div class="border-bottom py-2 has-text-grey" v-if="account.key.mnemonic12 && debugMode">
+        <span class="is-size-6 has-text-weight-bold"
+          >{{ $t("accountInfo.ui.label.mnemonic12Seed") }}:
+          <b-tooltip :label="$t('accountInfo.ui.tooltip.mnemonic12Tip')" position="is-top">
+            <b-icon icon="help-circle" size="is-small"> </b-icon> </b-tooltip
+        ></span>
+        <span class="is-pulled-right" v-if="!observeMode">
+          <b-button v-if="!showMnemonic12" size="is-small" @click="show12()" class="is-primary">{{
+            $t("accountInfo.ui.button.reveal")
+          }}</b-button>
+          <b-button v-else size="is-small" @click="showMnemonic12 = false" class="is-link">
+            {{ $t("accountInfo.ui.button.hide") }}
+          </b-button>
+        </span>
+        <span v-if="showMnemonic12">
+          <br />
+          {{ account.key.mnemonic12 }}
+          <key-box
+            icon="checkbox-multiple-blank-outline"
+            :tooltip="$t('common.tooltip.copy')"
+            :value="account.key.mnemonic12"
+          ></key-box>
+          <qrcode-vue
+            v-if="debugMode"
+            :value="account.key.mnemonic12"
+            size="300"
+            class="qrcode"
+            style="width: 320px"
+          ></qrcode-vue>
+        </span>
+      </div>
       <div class="border-bottom py-2" v-if="connections.length">
         <a
           href="javascript:void(0)"
@@ -128,21 +159,21 @@
             {{ $t("accountInfo.ui.label.firstWalletAddress") }}:
             <key-box :value="account.firstAddress" :showValue="true"></key-box>
           </li>
-          <li v-if="debugMode">
+          <li v-if="debugMode" class="has-text-grey">
             Master PrivateKey:
             <key-box :value="masterprikey" :showValue="true"></key-box>
           </li>
-          <li v-if="debugMode">
+          <li v-if="debugMode" class="has-text-grey">
             First Wallet SecretKey: &lt;PrivateKey
             <key-box :value="walletprikey" :showValue="true"></key-box>&gt;
           </li>
-          <li v-if="debugMode">
+          <li v-if="debugMode" class="has-text-grey">
             First Wallet PublicKey:
             <key-box :value="walletpubkey" :showValue="true"></key-box>
           </li>
         </ul>
       </div>
-      <div v-if="debugMode" class="border-bottom py-2">
+      <div v-if="debugMode" class="border-bottom py-2 has-text-grey">
         <span class="is-size-6 has-text-weight-bold">Get Encrypted Puzzle Detail Tuple</span>
         <span class="is-pulled-right" v-if="!observeMode">
           <b-button v-if="!showPdt" size="is-small" @click="showPdtInfo()" class="is-primary">Calculate</b-button>
@@ -191,6 +222,7 @@ export default class AccountDetail extends Vue {
   public walletprikey = "";
   public walletpubkey = "";
   public showMnemonic = false;
+  public showMnemonic12 = false;
   public showPdt = false;
   public pdtInfo = "";
   public showDetail = false;
@@ -263,6 +295,18 @@ export default class AccountDetail extends Vue {
   }
 
   async show(): Promise<void> {
+    this.showInternal(() => {
+      this.showMnemonic = true;
+    });
+  }
+
+  async show12(): Promise<void> {
+    this.showInternal(() => {
+      this.showMnemonic12 = true;
+    });
+  }
+
+  async showInternal(action: () => void): Promise<void> {
     this.$buefy.dialog.prompt({
       message: this.$tc("accountInfo.message.inputPassword"),
       inputAttrs: {
@@ -282,7 +326,7 @@ export default class AccountDetail extends Vue {
           return;
         }
         close();
-        this.showMnemonic = true;
+        action();
       },
     });
   }

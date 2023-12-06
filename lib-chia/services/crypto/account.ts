@@ -10,6 +10,7 @@ import utility from "./utility";
 
 export interface AccountKey {
   compatibleMnemonic?: string;
+  mnemonic12?: string;
   fingerprint: number;
   privateKey?: string;
   publicKey?: Hex0x;
@@ -28,6 +29,9 @@ class AccountHelper {
     const seeds = mnemonicToSeedSync(mnemonic, password ?? "");
     let compatibleMnemonic = entropyToMnemonic(
       new Buffer(seeds.slice(0, 32))
+    );
+    let mnemonic12 = entropyToMnemonic(
+      new Buffer(seeds.slice(0, 16))
     );
     if (legacyMnemonic) compatibleMnemonic = legacyMnemonic;
 
@@ -56,6 +60,7 @@ class AccountHelper {
     // );
     return {
       compatibleMnemonic: compatibleMnemonic,
+      mnemonic12: mnemonic12,
       fingerprint: pk.get_fingerprint(),
       privateKey: utility.toHexString(sk.serialize()),
     };

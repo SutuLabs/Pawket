@@ -1128,12 +1128,14 @@
         "firstWalletAddress": "First wallet address",
         "mnemonicSeed": "Mnemonic Words (24-word)",
         "connectionManagement": "Connection Management",
-        "details": "Details"
+        "details": "Details",
+        "mnemonic12Seed": "Reference Mnemonic Words (12-word)"
       },
       "tooltip": {
         "fingerprintTip": "Compatible with Chia official wallet",
         "mnemonicTip": "Compatible with Chia official wallet",
-        "disconnect": "Disconnect"
+        "disconnect": "Disconnect",
+        "mnemonic12Tip": "Only a reference, not compatible with Chia official wallet"
       },
       "button": {
         "reveal": "Reveal",

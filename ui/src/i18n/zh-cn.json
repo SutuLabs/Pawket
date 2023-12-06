@@ -1128,12 +1128,14 @@
         "firstWalletAddress": "钱包首地址",
         "mnemonicSeed": "助记词种子(24词)",
         "connectionManagement": "连接管理",
-        "details": "显示详情"
+        "details": "显示详情",
+        "mnemonic12Seed": "助记词种子(12词)"
       },
       "tooltip": {
         "fingerprintTip": "与 Chia 客户端兼容",
         "mnemonicTip": "与 Chia 客户端兼容",
-        "disconnect": "取消连接"
+        "disconnect": "取消连接",
+        "mnemonic12Tip": "不与 Chia 客户端兼容"
       },
       "button": {
         "reveal": "显示助记词",
