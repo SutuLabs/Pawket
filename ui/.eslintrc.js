@@ -9,6 +9,7 @@ module.exports = {
       "@vue/typescript/recommended",
       "@vue/prettier/@typescript-eslint",
     ],
+    parser: "@babel/eslint-parser",
     parserOptions: {
       ecmaVersion: 2020,
       sourceType: "module"
