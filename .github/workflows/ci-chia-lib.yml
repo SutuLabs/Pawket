@@ -5,13 +5,13 @@ on:
     branches:
       - master
     paths:
-      - "pawket-chia-lib/**"
+      - "lib-chia/**"
       - ".github/workflows/**"
   pull_request:
     branches:
       - master
     paths:
-      - "pawket-chia-lib/**"
+      - "lib-chia/**"
       - ".github/workflows/**"
 
 jobs:
