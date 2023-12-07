@@ -30,7 +30,7 @@ class AccountHelper {
     let compatibleMnemonic = entropyToMnemonic(
       new Buffer(seeds.slice(0, 32))
     );
-    let mnemonic12 = entropyToMnemonic(
+    const mnemonic12 = entropyToMnemonic(
       new Buffer(seeds.slice(0, 16))
     );
     if (legacyMnemonic) compatibleMnemonic = legacyMnemonic;
