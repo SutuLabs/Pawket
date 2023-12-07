@@ -7,7 +7,7 @@ trigger:
     - master
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'ubuntu-latest'
 
 variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
