@@ -3,8 +3,8 @@ import { testUpdateNft } from "./functions";
 
 beforeAll(async () => {
   await Instance.init();
-})
+});
 
-test('Update Nft', async () => {
+test("Update Nft", async () => {
   await testUpdateNft(0n);
 });

@@ -31,10 +31,10 @@ export interface GetExchangeRateResponse {
 export interface GetBlockResponse {
   blocks: BlockTransactionGeneratorRetrieval[];
   refBlocks: BlockTransactionGeneratorRetrieval[];
-};
+}
 
 export interface BlockTransactionGeneratorRetrieval {
   index: number;
   generator: string;
   generator_ref_list: number[];
-};
+}

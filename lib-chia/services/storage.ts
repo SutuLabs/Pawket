@@ -22,42 +22,27 @@ export default class UniStorage {
   }
 
   public async setItem(key: string, value: string): Promise<void> {
-    if (this.type == "localStorage")
-      return localStorage.setItem(key, value);
-    else if (this.type == "chrome.sync")
-      return await chrome.storage.sync.set({ [key]: value });
-    else if (this.type == "chrome.local")
-      return await chrome.storage.local.set({ [key]: value });
-    else if (this.type == "background")
-      return await this.storeToBackground(key, value);
-    else
-      throw new Error("unexpected type: " + this.type)
+    if (this.type == "localStorage") return localStorage.setItem(key, value);
+    else if (this.type == "chrome.sync") return await chrome.storage.sync.set({ [key]: value });
+    else if (this.type == "chrome.local") return await chrome.storage.local.set({ [key]: value });
+    else if (this.type == "background") return await this.storeToBackground(key, value);
+    else throw new Error("unexpected type: " + this.type);
   }
 
   public async getItem(key: string): Promise<string | null> {
-    if (this.type == "localStorage")
-      return localStorage.getItem(key);
-    else if (this.type == "chrome.sync")
-      return (await chrome.storage.sync.get(key))[key];
-    else if (this.type == "chrome.local")
-      return (await chrome.storage.local.get(key))[key];
-    else if (this.type == "background")
-      return await this.retrieveFromBackground(key);
-    else
-      throw new Error("unexpected type: " + this.type)
+    if (this.type == "localStorage") return localStorage.getItem(key);
+    else if (this.type == "chrome.sync") return (await chrome.storage.sync.get(key))[key];
+    else if (this.type == "chrome.local") return (await chrome.storage.local.get(key))[key];
+    else if (this.type == "background") return await this.retrieveFromBackground(key);
+    else throw new Error("unexpected type: " + this.type);
   }
 
   public async removeItem(key: string): Promise<void> {
-    if (this.type == "localStorage")
-      return localStorage.removeItem(key);
-    else if (this.type == "chrome.sync")
-      return await chrome.storage.sync.remove(key);
-    else if (this.type == "chrome.local")
-      return await chrome.storage.local.remove(key);
-    else if (this.type == "background")
-      return await this.removeFromBackground(key);
-    else
-      throw new Error("unexpected type: " + this.type)
+    if (this.type == "localStorage") return localStorage.removeItem(key);
+    else if (this.type == "chrome.sync") return await chrome.storage.sync.remove(key);
+    else if (this.type == "chrome.local") return await chrome.storage.local.remove(key);
+    else if (this.type == "background") return await this.removeFromBackground(key);
+    else throw new Error("unexpected type: " + this.type);
   }
 
   private storeToBackground(key: string, value: string): Promise<void> {

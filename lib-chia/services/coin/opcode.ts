@@ -36,4 +36,3 @@ export class ConditionOpcode {
   public static ASSERT_HEIGHT_RELATIVE = 82;
   public static ASSERT_HEIGHT_ABSOLUTE = 83;
 }
-

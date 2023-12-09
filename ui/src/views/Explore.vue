@@ -1,6 +1,6 @@
 <template>
   <div class="column nav-box mb-6">
-    <router-view :class="{ 'box': !isMobile, 'mt-6': isMobile }"></router-view>
+    <router-view :class="{ box: !isMobile, 'mt-6': isMobile }"></router-view>
   </div>
 </template>
 <script lang="ts">

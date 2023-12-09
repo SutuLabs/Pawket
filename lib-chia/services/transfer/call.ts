@@ -8,11 +8,11 @@ export async function getLineageProofPuzzle(parentCoinId: string, baseUrl: strin
       "Content-Type": "application/json",
     },
     body: JSON.stringify(<GetParentPuzzleRequest>{
-      parentCoinId
+      parentCoinId,
     }),
   });
 
-  const presp = await resp.json() as GetParentPuzzleResponse;
+  const presp = (await resp.json()) as GetParentPuzzleResponse;
   return presp;
 }
 

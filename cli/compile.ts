@@ -1,8 +1,8 @@
-import { readdirSync, readFileSync, writeFileSync } from 'fs';
-import puzzle from '../lib-chia/services/crypto/puzzle';
+import { readdirSync, readFileSync, writeFileSync } from "fs";
+import puzzle from "../lib-chia/services/crypto/puzzle";
 import { Instance } from "../lib-chia/services/util/instance";
-import { sha256tree } from 'clvm_tools';
-import { sexpAssemble } from '../lib-chia/services/coin/analyzer';
+import { sha256tree } from "clvm_tools";
+import { sexpAssemble } from "../lib-chia/services/coin/analyzer";
 
 const suffix = ".clvm";
 
@@ -12,7 +12,7 @@ Instance.init().then(async () => {
     for (let i = 0; i < filenames.length; i++) {
       const filename = filenames[i];
       if (!filename.endsWith(suffix)) continue;
-      const content = readFileSync(dirname + filename, 'utf-8');
+      const content = readFileSync(dirname + filename, "utf-8");
       if (content.indexOf("unknown operator") >= 0) continue;
 
       try {
@@ -24,11 +24,10 @@ Instance.init().then(async () => {
 
         writeFileSync(dirname + filename + ".hex", hex);
         writeFileSync(dirname + filename + ".hex.sha256tree", hash);
-      }
-      catch (err) {
+      } catch (err) {
         console.warn(`File ${filename} cannot be parsed! err:`, err);
       }
-    };
+    }
   };
 
   await compile("clvm/");

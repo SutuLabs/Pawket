@@ -50,7 +50,7 @@ export interface NftCoinAnalysisResult {
   metadataUpdaterPuzzleHash: string;
   p2InnerPuzzle: string;
   hintPuzzle: string;
-  nftOwnershipModHash: string,
+  nftOwnershipModHash: string;
   previousOwner: string;
   didOwner: string;
   p2Owner: string;
@@ -63,7 +63,15 @@ export interface NftCoinAnalysisResult {
   updaterInSolution?: boolean;
 }
 
-export type NftDataKey = "imageUri" | "imageHash" | "metadataUri" | "metadataHash" | "licenseUri" | "licenseHash" | "serialNumber" | "serialTotal";
+export type NftDataKey =
+  | "imageUri"
+  | "imageHash"
+  | "metadataUri"
+  | "metadataHash"
+  | "licenseUri"
+  | "licenseHash"
+  | "serialNumber"
+  | "serialTotal";
 export type NftUpdatableDataKey = "imageUri" | "metadataUri" | "licenseUri";
 
 export interface NftMetadataValues {
@@ -75,8 +83,8 @@ export interface NftMetadataValues {
   licenseHash: string | undefined;
   serialNumber: string | undefined;
   serialTotal: string | undefined;
-};
-export type NftMetadataKeys = { [key in NftDataKey]: string; };
+}
+export type NftMetadataKeys = { [key in NftDataKey]: string };
 
 export interface CnsCoinAnalysisResult extends NftCoinAnalysisResult {
   cnsExpiry: string;
@@ -94,7 +102,7 @@ export interface CnsMetadataValues extends NftMetadataValues {
    */
   address?: string;
   bindings: CnsBindingValues | undefined;
-};
+}
 
 export interface CnsBindingValues {
   address?: string;
@@ -102,11 +110,11 @@ export interface CnsBindingValues {
   publicKey?: string;
   text?: string;
   [key: string]: string | undefined; // for future-proof binding properties
-};
+}
 
 export type CnsDataKey = NftDataKey | "expiry" | "address" | "name" | "bindings";
 export type CnsUpdatableDataKey = NftUpdatableDataKey | "bindings";
 export type CnsBindingKey = "did" | "address" | "publicKey" | "text";
-export type CnsBindingKeys = { [key in CnsBindingKey]: string; };
+export type CnsBindingKeys = { [key in CnsBindingKey]: string };
 
-export type CnsMetadataKeys = { [key in CnsDataKey]: string; };
+export type CnsMetadataKeys = { [key in CnsDataKey]: string };

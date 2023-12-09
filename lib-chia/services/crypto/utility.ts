@@ -41,7 +41,7 @@ class Utility {
   derivePkPath(BLS: ModuleInstance, pk: G1Element, path: number[]): G1Element {
     for (let i = 0; i < path.length; i++) {
       const p = path[i];
-      pk =  BLS.AugSchemeMPL.derive_child_pk_unhardened(pk, p); 
+      pk = BLS.AugSchemeMPL.derive_child_pk_unhardened(pk, p);
     }
     return pk;
   }
@@ -64,8 +64,7 @@ class Utility {
     if (typeof data === "string") {
       const enc = new TextEncoder();
       return new Uint8Array(await crypto.subtle.digest("SHA-256", enc.encode(data)));
-    }
-    else {
+    } else {
       return new Uint8Array(await crypto.subtle.digest("SHA-256", data));
     }
   }
@@ -92,7 +91,7 @@ class Utility {
     return this.toHexString(new Uint8Array(d));
   }
 
-  public getRandom(length:number): Uint8Array {
+  public getRandom(length: number): Uint8Array {
     const seed = new Uint8Array(length);
     crypto.getRandomValues(seed);
     return seed;

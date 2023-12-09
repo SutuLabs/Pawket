@@ -11,7 +11,7 @@ export async function mintOneCns(
   fee: bigint,
   metadata: CnsMetadataValues,
   net: NetworkContext,
-  targetAddresses: string[] | undefined = undefined,
+  targetAddresses: string[] | undefined = undefined
 ): Promise<SpendBundle> {
   const target_hex = "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155";
   const change_hex = "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155";
@@ -28,16 +28,28 @@ export async function mintOneCns(
   const availcoins: SymbolCoins = {
     [net.symbol]: [
       {
-        "amount": 4998999984n,
-        "parent_coin_info": "0xf3b7d6d4bdd80b99c539f7ca900288f5dc2ac8fb23559656e981761e90b2fe71",
-        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155"
+        amount: 4998999984n,
+        parent_coin_info: "0xf3b7d6d4bdd80b99c539f7ca900288f5dc2ac8fb23559656e981761e90b2fe71",
+        puzzle_hash: "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
       },
-    ]
+    ],
   };
   const sk = "00186eae4cd4a3ec609ca1a8c1cda8467e3cb7cbbbf91a523d12d31129d5f8d7";
   const ubundle = await generateMintNftBundle(
-    targetAddress, changeAddress, fee, metadata, availcoins, tokenPuzzles, royaltyAddressHex,
-    tradePricePercentage, net, undefined, sk, targetAddresses, true);
+    targetAddress,
+    changeAddress,
+    fee,
+    metadata,
+    availcoins,
+    tokenPuzzles,
+    royaltyAddressHex,
+    tradePricePercentage,
+    net,
+    undefined,
+    sk,
+    targetAddresses,
+    true
+  );
   const bundle = await signSpendBundle(ubundle, tokenPuzzles, net.chainId);
   return bundle;
 }

@@ -69,7 +69,7 @@ __run()
     return function (...args: any[]) {
       __ex.result?.push(args);
       log.apply(console, args);
-    }
+    };
   })();
 
   // const ifrw = (ifr.contentWindow) ? ifr.contentWindow
@@ -79,7 +79,7 @@ __run()
   ifrw.document.write(text);
   ifrw.document.close();
 
-  return await new Promise(resolve => {
+  return await new Promise((resolve) => {
     const refresh = function () {
       if (!__ex.finish) {
         setTimeout(() => {

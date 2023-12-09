@@ -43,22 +43,25 @@ export class PartialSpendBundle {
 }
 
 export function combineSpendBundle(...spendbundles: (UnsignedSpendBundle | CoinSpend[] | undefined)[]): UnsignedSpendBundle;
-export function combineSpendBundle(...spendbundles: (SpendBundle | UnsignedSpendBundle | CoinSpend[] | undefined)[]): PartialSpendBundle;
-export function combineSpendBundle(...spendbundles: (PartialSpendBundle | UnsignedSpendBundle | CoinSpend[] | undefined)[]): PartialSpendBundle;
+export function combineSpendBundle(
+  ...spendbundles: (SpendBundle | UnsignedSpendBundle | CoinSpend[] | undefined)[]
+): PartialSpendBundle;
+export function combineSpendBundle(
+  ...spendbundles: (PartialSpendBundle | UnsignedSpendBundle | CoinSpend[] | undefined)[]
+): PartialSpendBundle;
 export function combineSpendBundle(
   ...spendbundles: (SpendBundle | PartialSpendBundle | UnsignedSpendBundle | CoinSpend[] | undefined)[]
 ): UnsignedSpendBundle | PartialSpendBundle | SpendBundle {
-
   const BLS = Instance.BLS;
   if (!BLS) throw new Error("BLS not initialized");
 
   const coin_spends = spendbundles
     .filter((_): _ is UnsignedSpendBundle | CoinSpend[] => !!_)
-    .flatMap(_ => Array.isArray(_) ? _ : _.coin_spends);
+    .flatMap((_) => (Array.isArray(_) ? _ : _.coin_spends));
   const sigs = spendbundles
-    .map(_ => _ && "aggregated_signature" in _ && _.aggregated_signature)
+    .map((_) => _ && "aggregated_signature" in _ && _.aggregated_signature)
     .filter((_): _ is Hex0x => !!_)
-    .map(_ => BLS.G2Element.from_bytes(Bytes.from(_, "hex").raw()));
+    .map((_) => BLS.G2Element.from_bytes(Bytes.from(_, "hex").raw()));
   if (sigs.length > 0) {
     const agg_sig = BLS.AugSchemeMPL.aggregate(sigs);
     const sig = Bytes.from(agg_sig.serialize()).hex();

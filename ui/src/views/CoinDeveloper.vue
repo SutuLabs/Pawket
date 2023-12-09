@@ -62,7 +62,12 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import cdvdev from "../services/dev/cdv.dev.ts";
 import { registerClspLanguage, defineClspTheme } from "../../../lib-chia/services/developer/editor/clspLanguage";
 import { executeCode } from "../../../lib-chia/services/developer/editor/executor";
-import { MixchCodeFilePersistent, MixchCodePersistent, persistent, retrieve } from "../../../lib-chia/services/developer/editor/persistence";
+import {
+  MixchCodeFilePersistent,
+  MixchCodePersistent,
+  persistent,
+  retrieve,
+} from "../../../lib-chia/services/developer/editor/persistence";
 import { getOutputType, LogType } from "@/components/DevHelper/Inspector.vue";
 import Inspector from "@/components/DevHelper/Inspector.vue";
 

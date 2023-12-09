@@ -41,13 +41,26 @@ export interface PendingTransaction {
   amount: { [key: string]: bigint };
 }
 
-export async function lockCoins(account: AccountEntity, coinSpends: CoinSpend[], transactionTime: number, network: string): Promise<void> {
+export async function lockCoins(
+  account: AccountEntity,
+  coinSpends: CoinSpend[],
+  transactionTime: number,
+  network: string
+): Promise<void> {
   const lc: LockedCoin[] = getLockedCoinsFromLocalStorage();
   const accountFinger = account.key.fingerprint;
   for (const cs of coinSpends) {
     const coinName = getCoinName(cs.coin);
-    const idx = account.activities?.findIndex(act => act.coin?.puzzleHash == cs.coin.puzzle_hash);
-    if (idx != undefined && idx > -1) lc.push({ coinName: coinName, coin: cs.coin, transactionTime: transactionTime, network: network, symbol: account.activities && account.activities[idx].symbol, accountFinger: accountFinger });
+    const idx = account.activities?.findIndex((act) => act.coin?.puzzleHash == cs.coin.puzzle_hash);
+    if (idx != undefined && idx > -1)
+      lc.push({
+        coinName: coinName,
+        coin: cs.coin,
+        transactionTime: transactionTime,
+        network: network,
+        symbol: account.activities && account.activities[idx].symbol,
+        accountFinger: accountFinger,
+      });
   }
   localStorage.setItem("LOCKED_COINS", JSON.stringify(lc));
 }
@@ -56,35 +69,37 @@ export function unlockCoins(coins: OriginCoin[]): OriginCoin[] {
   const lc: LockedCoin[] = getLockedCoinsFromLocalStorage();
   const uc: OriginCoin[] = [];
   for (const coin of coins) {
-    if (!coin) continue
+    if (!coin) continue;
     const cname = getCoinName(coin);
-    const idx = lc.findIndex(c => c.coinName == cname);
+    const idx = lc.findIndex((c) => c.coinName == cname);
     if (idx > -1) {
-      uc.push(coin)
+      uc.push(coin);
       lc.splice(idx, 1);
     }
   }
   localStorage.setItem("LOCKED_COINS", JSON.stringify(lc));
-  return uc
+  return uc;
 }
 
 export function getCompletedTransactions(coins: OriginCoin[], activities: CoinRecord[]): number[] {
   const txs: number[] = [];
   for (const sAct of activities) {
     if (sAct.spent && sAct.coin) {
-      const idx = coins.findIndex(c => c.puzzle_hash == sAct.coin?.puzzleHash && c.parent_coin_info == sAct.coin.parentCoinInfo);
+      const idx = coins.findIndex(
+        (c) => c.puzzle_hash == sAct.coin?.puzzleHash && c.parent_coin_info == sAct.coin.parentCoinInfo
+      );
       if (idx > -1) txs.push(sAct.spentBlockIndex);
     }
   }
-  return txs
+  return txs;
 }
 
 export function coinFilter(account: AccountEntity, coins: OriginCoin[], network: string): OriginCoin[] {
   let lc: LockedCoin[] = getLockedCoinsFromLocalStorage();
   lc = lc.filter((l) => l.network == network && l.accountFinger == account.key.fingerprint);
-  return coins.filter(coin => {
+  return coins.filter((coin) => {
     const name = getCoinName(coin);
-    return lc.findIndex(c => c.coinName == name) == -1;
+    return lc.findIndex((c) => c.coinName == name) == -1;
   });
 }
 
@@ -92,7 +107,7 @@ export function getLockedCoinsFromLocalStorage(): LockedCoin[] {
   const lcStr = localStorage.getItem("LOCKED_COINS");
   let lc: LockedCoin[];
   try {
-    lc = lcStr ? JSON.parse(lcStr) : []
+    lc = lcStr ? JSON.parse(lcStr) : [];
   } catch (error) {
     lc = [];
   }
@@ -120,16 +135,18 @@ export function getCoinNameHex(coin: CompatibleCoin): Bytes {
   return coinname;
 }
 
-export function convertToOriginCoin(coin: CoinItem | { amount: number, parent_coin_info: Hex0x | string, puzzle_hash: Hex0x | string }): OriginCoin {
+export function convertToOriginCoin(
+  coin: CoinItem | { amount: number; parent_coin_info: Hex0x | string; puzzle_hash: Hex0x | string }
+): OriginCoin {
   return "parentCoinInfo" in coin
     ? {
-      amount: BigInt(coin.amount),
-      parent_coin_info: coin.parentCoinInfo,
-      puzzle_hash: coin.puzzleHash,
-    }
+        amount: BigInt(coin.amount),
+        parent_coin_info: coin.parentCoinInfo,
+        puzzle_hash: coin.puzzleHash,
+      }
     : {
-      amount: BigInt(coin.amount),
-      parent_coin_info: prefix0x(coin.parent_coin_info),
-      puzzle_hash: prefix0x(coin.puzzle_hash),
-    };
+        amount: BigInt(coin.amount),
+        parent_coin_info: prefix0x(coin.parent_coin_info),
+        puzzle_hash: prefix0x(coin.puzzle_hash),
+      };
 }

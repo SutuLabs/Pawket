@@ -55,7 +55,7 @@ export default class Collection extends Vue {
 
   @Emit("close")
   close(): void {
-    this.$router.back()
+    this.$router.back();
     return;
   }
 

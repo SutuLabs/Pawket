@@ -1,19 +1,12 @@
 import utility from "./utility";
-import { ec as EC } from 'elliptic';
+import { ec as EC } from "elliptic";
 import isoCrypto from "./isoCrypto";
 
 class EncryptionHelper {
-
   public async encrypt(data: string, key: string, random: Uint8Array | undefined = undefined): Promise<string> {
     const enc = new TextEncoder();
-    const impkey = await isoCrypto.subtle.importKey(
-      "raw",
-      await utility.purehash(key),
-      "AES-CBC",
-      false,
-      ["encrypt", "decrypt"]
-    );
-    const iv = (random && random.length == 16) ? random : isoCrypto.getRandomValues(new Uint8Array(16));
+    const impkey = await isoCrypto.subtle.importKey("raw", await utility.purehash(key), "AES-CBC", false, ["encrypt", "decrypt"]);
+    const iv = random && random.length == 16 ? random : isoCrypto.getRandomValues(new Uint8Array(16));
     const part1 = utility.toHexString(iv);
     const part2 = utility.toHexString(
       new Uint8Array(
@@ -35,13 +28,7 @@ class EncryptionHelper {
     const arr = utility.fromHexString(encdata);
     if (arr.length < 16) return "";
     const iv = arr.subarray(0, 16);
-    const impkey = await isoCrypto.subtle.importKey(
-      "raw",
-      await utility.purehash(key),
-      "AES-CBC",
-      false,
-      ["encrypt", "decrypt"]
-    );
+    const impkey = await isoCrypto.subtle.importKey("raw", await utility.purehash(key), "AES-CBC", false, ["encrypt", "decrypt"]);
     return dec.decode(
       new Uint8Array(
         await isoCrypto.subtle.decrypt(
@@ -72,8 +59,8 @@ export class ByteBase {
 
   public static toHexString(byteArray: Uint8Array): string {
     return Array.from(byteArray, (byte) => {
-      return ('0' + (byte & 0xFF).toString(16)).slice(-2);
-    }).join('')
+      return ("0" + (byte & 0xff).toString(16)).slice(-2);
+    }).join("");
   }
 
   public static hexStringToByte(str: string): Uint8Array {
@@ -106,8 +93,7 @@ export class EcPrivateKey extends ByteBase {
       const a = this.parseInternal(hex);
       if (a.data.length != this.size) return null;
       return a;
-    }
-    catch (err) {
+    } catch (err) {
       console.error("parse error", err);
       return null;
     }
@@ -130,8 +116,7 @@ export class EcPublicKey extends ByteBase {
       const a = this.parseInternal(hex);
       if (a.data.length != this.size) return null;
       return a;
-    }
-    catch (err) {
+    } catch (err) {
       console.error("parse error", err);
       return null;
     }
@@ -139,7 +124,6 @@ export class EcPublicKey extends ByteBase {
 }
 
 export class CryptographyService {
-
   private ec: EC;
   private size = 32;
   private subtle: SubtleCrypto;
@@ -159,17 +143,21 @@ export class CryptographyService {
     if (!pk2 || !sk1) throw new Error("malformat pk2 or sk1");
     const sharedkey = this.getSharedKey(pk2, sk1);
 
-    return await (new EncryptionHelper()).decrypt(encrypted, ByteBase.toHexString(sharedkey));
+    return await new EncryptionHelper().decrypt(encrypted, ByteBase.toHexString(sharedkey));
   }
 
-  public async encrypt(plaintext: string, pubKey2: string | EcPublicKey, privKey1: string | EcPrivateKey,
-    random: Uint8Array | undefined = undefined): Promise<string> {
+  public async encrypt(
+    plaintext: string,
+    pubKey2: string | EcPublicKey,
+    privKey1: string | EcPrivateKey,
+    random: Uint8Array | undefined = undefined
+  ): Promise<string> {
     const pk2 = typeof pubKey2 === "string" ? EcPublicKey.parse(pubKey2) : pubKey2;
     const sk1 = typeof privKey1 === "string" ? EcPrivateKey.parse(privKey1) : privKey1;
     if (!pk2 || !sk1) throw new Error("malformat pk2 or sk1");
     const sharedkey = this.getSharedKey(pk2, sk1);
 
-    return await (new EncryptionHelper()).encrypt(plaintext, ByteBase.toHexString(sharedkey), random);
+    return await new EncryptionHelper().encrypt(plaintext, ByteBase.toHexString(sharedkey), random);
   }
 
   public getPublicKey(privateKey: string | EcPrivateKey): EcPublicKey {

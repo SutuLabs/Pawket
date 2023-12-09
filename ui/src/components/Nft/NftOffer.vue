@@ -81,7 +81,13 @@ import { SymbolCoins } from "../../../../lib-chia/services/transfer/transfer";
 import { NftDetail, TokenPuzzleDetail } from "../../../../lib-chia/services/crypto/receive";
 import DevHelper from "@/components/DevHelper/DevHelper.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import { getOfferEntities, getOfferSummary, OfferEntity, OfferSummary, OfferTokenAmount } from "../../../../lib-chia/services/offer/summary";
+import {
+  getOfferEntities,
+  getOfferSummary,
+  OfferEntity,
+  OfferSummary,
+  OfferTokenAmount,
+} from "../../../../lib-chia/services/offer/summary";
 import { decodeOffer, encodeOffer } from "../../../../lib-chia/services/offer/encoding";
 import { networkContext, xchSymbol } from "@/store/modules/network";
 import { Hex, prefix0x } from "../../../../lib-chia/services/coin/condition";

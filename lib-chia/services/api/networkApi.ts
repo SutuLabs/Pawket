@@ -6,7 +6,7 @@ export async function getNetworkInfo(rpcUrl: string): Promise<NetworkResponse> {
     },
   });
 
-  const presp = await resp.json() as NetworkResponse;
+  const presp = (await resp.json()) as NetworkResponse;
   return presp;
 }
 

@@ -3,7 +3,6 @@ import { testCoinName, testCryptography, testPuzzleAssemble } from "../../../../
 import { testStandardTransfer } from "../../../../lib-chia/services/selftest/stdTransferTest";
 
 class TestRunner {
-
   async selfTest(): Promise<void> {
     try {
       const timestamp = this.getExpireTime();

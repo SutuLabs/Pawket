@@ -82,7 +82,7 @@ export default class ImportBackup extends Vue {
   }
 
   async afterUpload(): Promise<void> {
-    if(this.file?.size && this.file?.size > 1000000) {
+    if (this.file?.size && this.file?.size > 1000000) {
       Notification.open({
         message: this.$tc("importBackup.error.LARGE_FILE"),
         type: "is-danger",

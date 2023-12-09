@@ -115,13 +115,7 @@
 
 <script lang="ts">
 import { demojo } from "@/filters/unitConversion";
-import {
-  AccountEntity,
-  AccountToken,
-  AccountTokenAddress,
-  CustomCat,
-  OneTokenInfo,
-} from "../../../../lib-chia/models/account";
+import { AccountEntity, AccountToken, AccountTokenAddress, CustomCat, OneTokenInfo } from "../../../../lib-chia/models/account";
 import encryption from "../../../../lib-chia/services/crypto/encryption";
 import puzzle from "../../../../lib-chia/services/crypto/puzzle";
 import receive, { DidDetail } from "../../../../lib-chia/services/crypto/receive";

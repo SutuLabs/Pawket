@@ -139,7 +139,7 @@ class Receive {
     rpcUrl: string,
     hint = false,
     coinType: CoinClassType | undefined = undefined,
-    includeAnalysis = false,
+    includeAnalysis = false
   ): Promise<GetRecordsResponse> {
     const hashes = tokens.reduce((acc, token) => acc.concat(token.puzzles.map((_) => _.hash)), [] as string[]);
 
@@ -149,17 +149,20 @@ class Receive {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(Object.assign({
-        puzzleHashes: hashes,
-        includeSpentCoins,
-        hint,
-        coinType,
-      },
-        includeAnalysis ? { includeAnalysis } : {}
-      )),
+      body: JSON.stringify(
+        Object.assign(
+          {
+            puzzleHashes: hashes,
+            includeSpentCoins,
+            hint,
+            coinType,
+          },
+          includeAnalysis ? { includeAnalysis } : {}
+        )
+      ),
     });
     if (resp.status != 200) {
-      throw new Error('NETWORK_ERROR: ' + resp.status.toString() + '\nERROR: ' + await resp.text())
+      throw new Error("NETWORK_ERROR: " + resp.status.toString() + "\nERROR: " + (await resp.text()));
     }
     const json = (await resp.json()) as GetRecordsResponse;
     return json;
@@ -291,7 +294,7 @@ class Receive {
   async getSpentCoinPuzzle(puzzleHash: Hex0x, rpcUrl: string): Promise<Hex0x | undefined> {
     const records = await this.getCoinRecords([{ symbol: "", puzzles: [{ hash: puzzleHash, address: "" }] }], true, rpcUrl);
     const coins = records.coins.reduce((acc, token) => acc.concat(token.records), [] as CoinRecord[]);
-    const firstSpentCoin = coins.filter(_ => _.spent).at(0);
+    const firstSpentCoin = coins.filter((_) => _.spent).at(0);
     if (!firstSpentCoin || !firstSpentCoin.coin) return undefined;
     const coinName = getCoinName0x(convertToOriginCoin(firstSpentCoin.coin));
     const coin = await getLineageProofPuzzle(coinName, rpcUrl);

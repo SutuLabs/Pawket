@@ -12,7 +12,10 @@ export async function getAvailableCoins(account: AccountEntity): Promise<SymbolC
   );
 }
 
-export async function getAvailableCoinsWithRequests(account: AccountEntity, requests: TokenPuzzleAddress[]): Promise<SymbolCoins> {
+export async function getAvailableCoinsWithRequests(
+  account: AccountEntity,
+  requests: TokenPuzzleAddress[]
+): Promise<SymbolCoins> {
   return await coinHandler.getAvailableCoins(
     account,
     requests,
@@ -21,9 +24,7 @@ export async function getAvailableCoinsWithRequests(account: AccountEntity, requ
 }
 
 export async function getAssetsRequestDetail(account: AccountEntity): Promise<TokenPuzzleDetail[]> {
-  return account.type == "PublicKey"
-    ? []
-    : await coinHandler.getAssetsRequestDetail(account, store.state.account.tokenInfo);
+  return account.type == "PublicKey" ? [] : await coinHandler.getAssetsRequestDetail(account, store.state.account.tokenInfo);
 }
 
 export async function getAssetsRequestObserver(account: AccountEntity): Promise<TokenPuzzleObserver[]> {

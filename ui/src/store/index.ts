@@ -8,12 +8,11 @@ import { IErrorState } from "./modules/error";
 
 Vue.use(Vuex);
 export interface IRootState {
-  app: IAppState
-  account: IAccountState
-  vault: IVaultState
-  network: INetworkState
-  error: IErrorState
+  app: IAppState;
+  account: IAccountState;
+  vault: IVaultState;
+  network: INetworkState;
+  error: IErrorState;
 }
 
-export default new Vuex.Store<IRootState>({})
-
+export default new Vuex.Store<IRootState>({});

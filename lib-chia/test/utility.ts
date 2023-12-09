@@ -25,8 +25,7 @@ export function assertBundle(expect: SpendBundle, actual: SpendBundle): void {
       assert(expect.coin_spends[i].coin.parent_coin_info, actual.coin_spends[i].coin.parent_coin_info);
       assert(expect.coin_spends[i].coin.puzzle_hash, actual.coin_spends[i].coin.puzzle_hash);
     }
-  }
-  catch (err) {
+  } catch (err) {
     console.warn("expect bundle:", expect);
     console.warn("actual bundle:", actual);
     throw err;
@@ -51,7 +50,7 @@ export function getTestAccount(privateKey: string): AccountEntity {
     allCats: [],
     addressPuzzles: [],
     addressGenerated: 0,
-  }
+  };
 }
 
 export async function getTestAccountWithPuzzles(privateKey: string): Promise<AccountEntity> {
@@ -72,7 +71,7 @@ export async function getTestAccountWithPuzzles(privateKey: string): Promise<Acc
     allCats: [],
     addressPuzzles: await receive.getAssetsRequestDetail(privateKey, 0, maxId, [], {}, "xch", "XCH", "cat_v2"),
     addressGenerated: maxId,
-  }
+  };
 }
 
 export async function noNeedGetProof(): Promise<GetParentPuzzleResponse> {
@@ -81,14 +80,16 @@ export async function noNeedGetProof(): Promise<GetParentPuzzleResponse> {
 
 export async function logBundle(spendBundle: SpendBundle): Promise<void> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (BigInt.prototype as any).toJSON = function () { return this.toString(); };
+  (BigInt.prototype as any).toJSON = function () {
+    return this.toString();
+  };
   console.log(JSON.stringify(spendBundle));
 }
 
 const SpecialParent = "0xba70b644f3cd240ac0c500782d53e633d8c1de21bd554c2ee1e190b24d3c8bb2";
 export async function createFakeXchCoin(
   inner_p2_puzzle: string,
-  amount = 100000000000000n,// 100 XCH
+  amount = 100000000000000n // 100 XCH
 ): Promise<OriginCoin> {
   const puzzle_hash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(inner_p2_puzzle));
   return {
@@ -101,9 +102,9 @@ export async function createFakeXchCoin(
 export async function createFakeCatCoin(
   assetId: Hex0x,
   inner_p2_puzzle: string,
-  amount = 100000000000000n,// 100 XCH
-  catModName: "cat_v1" | "cat_v2" = "cat_v2",
-): Promise<{ cat: OriginCoin, parent: GetParentPuzzleResponse }> {
+  amount = 100000000000000n, // 100 XCH
+  catModName: "cat_v1" | "cat_v2" = "cat_v2"
+): Promise<{ cat: OriginCoin; parent: GetParentPuzzleResponse }> {
   const puzzle_reveal = await curryMod(modsprog[catModName], modshash[catModName], assetId, inner_p2_puzzle);
   if (!puzzle_reveal) throw new Error("cannot curry cat");
   const puzzle_reveal_hex = await puzzle.encodePuzzle(puzzle_reveal);
@@ -125,5 +126,5 @@ export async function createFakeCatCoin(
     parentParentCoinId: SpecialParent,
     puzzleReveal: prefix0x(puzzle_reveal_hex),
   };
-  return { cat, parent }
+  return { cat, parent };
 }

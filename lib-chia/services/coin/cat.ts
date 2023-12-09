@@ -10,12 +10,8 @@ export interface CatCoinAnalysisResult {
   hintPuzzle: string;
 }
 
-export async function analyzeCatCoin(
-  puz: string | (UncurriedPuzzle | CannotParsePuzzle),
-): Promise<CatCoinAnalysisResult | null> {
-  const parsed_puzzle = (typeof puz === "string")
-    ? await uncurryPuzzle(sexpAssemble(puz))
-    : puz;
+export async function analyzeCatCoin(puz: string | (UncurriedPuzzle | CannotParsePuzzle)): Promise<CatCoinAnalysisResult | null> {
+  const parsed_puzzle = typeof puz === "string" ? await uncurryPuzzle(sexpAssemble(puz)) : puz;
 
   if ("raw" in parsed_puzzle) return null;
 
@@ -25,9 +21,7 @@ export async function analyzeCatCoin(
   const tail_program_hash_parsed = parsed_puzzle.args[1];
   const inner_puzzle_parsed = parsed_puzzle.args[2];
 
-  if (!("raw" in mod_hash_parsed)
-    || !("raw" in tail_program_hash_parsed)
-  ) return null;
+  if (!("raw" in mod_hash_parsed) || !("raw" in tail_program_hash_parsed)) return null;
 
   const modHash = skipFirstByte0x(mod_hash_parsed.raw);
   const tailProgramHash = skipFirstByte0x(tail_program_hash_parsed.raw);
@@ -35,11 +29,7 @@ export async function analyzeCatCoin(
   const innerPuzzle = disassemble(innerPuzzleSexp);
   const hintPuzzle = sha256tree(innerPuzzleSexp).hex();
 
-  if (!modHash
-    || !tailProgramHash
-    || !innerPuzzle
-    || !hintPuzzle
-  ) return null;
+  if (!modHash || !tailProgramHash || !innerPuzzle || !hintPuzzle) return null;
 
   return {
     modHash,

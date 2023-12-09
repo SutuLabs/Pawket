@@ -69,7 +69,10 @@ interface SpendBundleCheckResult {
   fee: bigint;
 }
 
-export async function checkSpendBundle(bundle: SpendBundle | undefined, chainId: string): Promise<SpendBundleCheckResult | undefined> {
+export async function checkSpendBundle(
+  bundle: SpendBundle | undefined,
+  chainId: string
+): Promise<SpendBundleCheckResult | undefined> {
   if (!bundle) return undefined;
   const puzzleAnnoCreates: AnnouncementCoin[] = [];
   const puzzleAnnoAsserted: AnnouncementCoin[] = [];
@@ -129,18 +132,32 @@ export async function checkSpendBundle(bundle: SpendBundle | undefined, chainId:
           .map((_) => ({
             coinIndex: ca.coinIndex,
             amount: getNumber(getFirstLevelArgMsg(_.args.at(1))),
-            coinName: getCoinName0x({ parent_coin_info: ca.coinName, puzzle_hash: getFirstLevelArgMsg(_.args.at(0)), amount: getNumber(getFirstLevelArgMsg(_.args.at(1))) }),
+            coinName: getCoinName0x({
+              parent_coin_info: ca.coinName,
+              puzzle_hash: getFirstLevelArgMsg(_.args.at(0)),
+              amount: getNumber(getFirstLevelArgMsg(_.args.at(1))),
+            }),
           }))
       );
       aggSigMessages.push(
         ...result.conditions
           .filter((_) => _.code == ConditionOpcode.AGG_SIG_ME)
-          .map((_) => ({ coinIndex: i, coinName: ca.coinName, publicKey: getFirstLevelArgMsg(_.args.at(0)), message: getFirstLevelArgMsg(_.args.at(1)) }))
+          .map((_) => ({
+            coinIndex: i,
+            coinName: ca.coinName,
+            publicKey: getFirstLevelArgMsg(_.args.at(0)),
+            message: getFirstLevelArgMsg(_.args.at(1)),
+          }))
       );
       aggSigMessages.push(
         ...result.conditions
           .filter((_) => _.code == ConditionOpcode.AGG_SIG_UNSAFE)
-          .map((_) => ({ coinIndex: i, coinName: "", publicKey: getFirstLevelArgMsg(_.args.at(0)), message: getFirstLevelArgMsg(_.args.at(1)) }))
+          .map((_) => ({
+            coinIndex: i,
+            coinName: "",
+            publicKey: getFirstLevelArgMsg(_.args.at(0)),
+            message: getFirstLevelArgMsg(_.args.at(1)),
+          }))
       );
 
       const uncPuzzle = await uncurryPuzzle(sexpAssemble(cs.puzzle_reveal), cs.puzzle_reveal);
@@ -213,7 +230,7 @@ export async function checkSpendBundle(bundle: SpendBundle | undefined, chainId:
     sigVerified,
     coinPuzzles,
     fee,
-  }
+  };
 }
 
 export function verifySig(bundle: SpendBundle, aggSigMessages: AggSigMessage[], chainId: string): SignatureVerificationResult {
@@ -225,10 +242,10 @@ export function verifySig(bundle: SpendBundle, aggSigMessages: AggSigMessage[], 
     const msgs = aggSigMessages.map((_) =>
       _.coinName
         ? Uint8Array.from([
-          ...getUint8ArrayFromHexString(_.message),
-          ...getUint8ArrayFromHexString(_.coinName),
-          ...AGG_SIG_ME_ADDITIONAL_DATA,
-        ])
+            ...getUint8ArrayFromHexString(_.message),
+            ...getUint8ArrayFromHexString(_.coinName),
+            ...AGG_SIG_ME_ADDITIONAL_DATA,
+          ])
         : getUint8ArrayFromHexString(_.message)
     );
     const pks = aggSigMessages.map((_) => BLS.G1Element.from_bytes(getUint8ArrayFromHexString(_.publicKey)));
@@ -244,7 +261,11 @@ export function getUint8ArrayFromHexString(hex: string): Uint8Array {
   return Bytes.from(unprefix0x(hex), "hex").raw();
 }
 
-export async function assertSpendbundle(bundle: SpendBundle, chainId: string, fee: bigint | undefined = undefined): Promise<void> {
+export async function assertSpendbundle(
+  bundle: SpendBundle,
+  chainId: string,
+  fee: bigint | undefined = undefined
+): Promise<void> {
   const result = await checkSpendBundle(bundle, chainId);
   if (!result) throw new Error("Failed to check bundle");
   if (fee && result.fee != fee) throw new Error(`Fee expected ${fee}, but actual is ${result.fee}`);
@@ -252,27 +273,30 @@ export async function assertSpendbundle(bundle: SpendBundle, chainId: string, fe
 }
 
 export function assertSpendbundleCheckResult(result: SpendBundleCheckResult): void {
-  if (result.sigVerified != "Verified") throw new Error(`Spendbundle signature not pass the check: ${result.sigVerified}
+  if (result.sigVerified != "Verified")
+    throw new Error(`Spendbundle signature not pass the check: ${result.sigVerified}
   MSGs: (CoinName : PubKey : Message)
-    ${result.aggSigMessages.map(_ => `[${String(_.coinIndex).padStart(2, ' ')}]${_.coinName}:${_.publicKey}:${_.message}`).join("\n    ")}
+    ${result.aggSigMessages
+      .map((_) => `[${String(_.coinIndex).padStart(2, " ")}]${_.coinName}:${_.publicKey}:${_.message}`)
+      .join("\n    ")}
 `);
-  if (result.coinAvailability.some(_ => _.availability == "Unexecutable")) throw new Error("Unexecutable coin found");
+  if (result.coinAvailability.some((_) => _.availability == "Unexecutable")) throw new Error("Unexecutable coin found");
   checkAnnouncement(result.coinAnnoAsserted, result.coinAnnoCreates, "coin");
   checkAnnouncement(result.puzzleAnnoAsserted, result.puzzleAnnoCreates, "puzzle");
   checkCoinPuzzles(result.coinPuzzles);
 }
 
 function checkAnnouncement(asserted: AnnouncementCoin[], creates: AnnouncementCoin[], type: string): void {
-  const misAsserted = asserted.filter(a => creates.every(c => a.message != c.message));
+  const misAsserted = asserted.filter((a) => creates.every((c) => a.message != c.message));
   if (misAsserted.length > 0)
-    throw new Error(`Some ${type} asserts are not fulfilled: ${misAsserted.map(_ => `${_.coinIndex}`).join(",")}
-  Asserted: ${asserted.map(_ => `[${_.coinIndex}]${_.message}`).join(",")}
-  Creates: ${creates.map(_ => `[${_.coinIndex}]${_.message}`).join(",")}`);
+    throw new Error(`Some ${type} asserts are not fulfilled: ${misAsserted.map((_) => `${_.coinIndex}`).join(",")}
+  Asserted: ${asserted.map((_) => `[${_.coinIndex}]${_.message}`).join(",")}
+  Creates: ${creates.map((_) => `[${_.coinIndex}]${_.message}`).join(",")}`);
 }
 
 function checkCoinPuzzles(coinPuzzles: CoinPuzzleInfo[]) {
-  const abnormals = coinPuzzles.filter(_ => _.puzzleHash != _.puzzleRevealHash);
+  const abnormals = coinPuzzles.filter((_) => _.puzzleHash != _.puzzleRevealHash);
   if (abnormals.length > 0)
     throw new Error(`Some coin puzzles are not fulfilled:
-  ${abnormals.map(_ => `${_.coinIndex}: ${_.puzzleHash}!=${_.puzzleRevealHash}`).join("\n  ")}`);
+  ${abnormals.map((_) => `${_.coinIndex}: ${_.puzzleHash}!=${_.puzzleRevealHash}`).join("\n  ")}`);
 }

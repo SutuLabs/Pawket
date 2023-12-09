@@ -81,7 +81,7 @@ export default class ChangePassword extends Vue {
     this.isProcessing = true;
     this.isMatch = true;
 
-    if (!await isPasswordCorrect(this.oldPwd)) {
+    if (!(await isPasswordCorrect(this.oldPwd))) {
       this.isCorrect = false;
       this.isProcessing = false;
       return;

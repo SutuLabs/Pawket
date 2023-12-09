@@ -1,35 +1,35 @@
-import 'dotenv/config'
+import "dotenv/config";
 import { disassemble } from "clvm_tools/clvm_tools/binutils";
 import { SExp, Tuple, to_sexp_f, sexp_from_stream, Stream, Bytes } from "clvm";
 import { uncurry } from "clvm_tools/clvm_tools/curry";
 import { ModName, modshex, modshexdict } from "./mods";
-import { getCoinName0x } from './coinUtility';
-import { Hex0x, prefix0x, unprefix0x } from './condition';
-import { sha256tree } from 'clvm_tools';
-import puzzle, { ConditionEntity } from '../crypto/puzzle';
-import { analyzeCatCoin } from './cat';
-import { analyzeDidCoin } from './did';
-import { analyzeNftCoin } from './nft';
-import { OriginCoin } from '../spendbundle';
+import { getCoinName0x } from "./coinUtility";
+import { Hex0x, prefix0x, unprefix0x } from "./condition";
+import { sha256tree } from "clvm_tools";
+import puzzle, { ConditionEntity } from "../crypto/puzzle";
+import { analyzeCatCoin } from "./cat";
+import { analyzeDidCoin } from "./did";
+import { analyzeNftCoin } from "./nft";
+import { OriginCoin } from "../spendbundle";
 
 export interface SimplePuzzle {
-  mod: ModName,
-  args: (CannotUncurryArgument | SimplePuzzle)[],
+  mod: ModName;
+  args: (CannotUncurryArgument | SimplePuzzle)[];
 }
 
 export interface CannotUncurryArgument {
-  raw: string,
+  raw: string;
 }
 
 export interface CannotParsePuzzle {
-  raw: string,
+  raw: string;
 }
 
 export interface UncurriedPuzzle {
-  mod: ModName,
-  hex: string,
-  sexp: SExp,
-  args: (CannotUncurryArgument | UncurriedPuzzle)[],
+  mod: ModName;
+  hex: string;
+  sexp: SExp;
+  args: (CannotUncurryArgument | UncurriedPuzzle)[];
 }
 
 export interface BasicCoinInfo {
@@ -59,12 +59,8 @@ export async function simplifyPuzzle(
   return convertUncurriedPuzzle(await uncurryPuzzle(origin, puz_hex));
 }
 
-export function convertUncurriedPuzzle(
-  origin: UncurriedPuzzle | CannotParsePuzzle
-): SimplePuzzle | CannotParsePuzzle {
-  return "raw" in origin
-    ? { raw: origin.raw }
-    : { mod: origin.mod, args: origin.args.map(convertUncurriedPuzzle) };
+export function convertUncurriedPuzzle(origin: UncurriedPuzzle | CannotParsePuzzle): SimplePuzzle | CannotParsePuzzle {
+  return "raw" in origin ? { raw: origin.raw } : { mod: origin.mod, args: origin.args.map(convertUncurriedPuzzle) };
 }
 
 export async function uncurryPuzzle(
@@ -79,8 +75,9 @@ export async function uncurryPuzzle(
 
     const [mod, args] = uncurry(origin) as Tuple<SExp, SExp>;
     const argarr: SExp[] = !args ? [] : Array.from(args.as_iter());
-    const simpargs = (await Promise.all(argarr.map(_ => uncurryPuzzle(_))))
-      .map((_: (UncurriedPuzzle | CannotParsePuzzle)) => "raw" in _ ? { raw: _.raw } : _);
+    const simpargs = (await Promise.all(argarr.map((_) => uncurryPuzzle(_)))).map((_: UncurriedPuzzle | CannotParsePuzzle) =>
+      "raw" in _ ? { raw: _.raw } : _
+    );
     const mod_hex: string = mod.as_bin().hex();
     const modname = modshexdict[mod_hex];
     if (!modname) return { raw: prefix0x(puz_hex) };
@@ -136,7 +133,7 @@ export async function parseCoin(all: SExp): Promise<CoinInfo> {
   const uncPuzzle = await uncurryPuzzle(puz, puz_hex);
   const decPuzzle = convertUncurriedPuzzle(uncPuzzle);
   const mods = getModsPath(decPuzzle);
-  const key_param = getKeyParam(decPuzzle)
+  const key_param = getKeyParam(decPuzzle);
   const analysis = await analyzeCoin(mods, uncPuzzle, coin, solution);
 
   return {
@@ -156,34 +153,49 @@ export async function analyzeCoin(
   mods: string,
   uncPuzzle: UncurriedPuzzle | CannotParsePuzzle,
   coin: OriginCoin,
-  solution_hex: string,
+  solution_hex: string
 ): Promise<string | undefined> {
-  const analysis = mods.startsWith("cat_v1(") ? await analyzeCatCoin(uncPuzzle)
-    : mods.startsWith("cat_v2(") ? await analyzeCatCoin(uncPuzzle)
-      : mods.startsWith("singleton_top_layer_v1_1(did_innerpuz(")
-        ? await analyzeDidCoin(uncPuzzle, undefined, coin, solution_hex)
-        : mods.startsWith("singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),")
-          ? await analyzeNftCoin(uncPuzzle, undefined, coin, solution_hex)
-          : undefined;
+  const analysis = mods.startsWith("cat_v1(")
+    ? await analyzeCatCoin(uncPuzzle)
+    : mods.startsWith("cat_v2(")
+    ? await analyzeCatCoin(uncPuzzle)
+    : mods.startsWith("singleton_top_layer_v1_1(did_innerpuz(")
+    ? await analyzeDidCoin(uncPuzzle, undefined, coin, solution_hex)
+    : mods.startsWith(
+        "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),"
+      )
+    ? await analyzeNftCoin(uncPuzzle, undefined, coin, solution_hex)
+    : undefined;
 
   return analysis ? JSON.stringify(analysis) : undefined;
 }
 
 export async function parseBlock(generator_hex: string, ref_hex_list: string[] | undefined): Promise<string> {
   const getArgs = function (ref_list: string[]): SExp {
-    return SExp.to([sexpAssemble(generator_hex), [ref_list.map(_ => Bytes.from(unprefix0x(_), "hex"))]]);
+    return SExp.to([sexpAssemble(generator_hex), [ref_list.map((_) => Bytes.from(unprefix0x(_), "hex"))]]);
   };
 
-  const bg = ref_hex_list?.length ?? 0 > 0
-    ? await puzzle.calcPuzzleResult(modshex["generator"], getArgs(ref_hex_list ?? []).as_bin().hex(), "--hex", "--dump")
-    : await puzzle.calcPuzzleResult(generator_hex, "ff8080", "--hex", "--dump"); // ff8080 == "(())"
+  const bg =
+    ref_hex_list?.length ?? 0 > 0
+      ? await puzzle.calcPuzzleResult(
+          modshex["generator"],
+          getArgs(ref_hex_list ?? [])
+            .as_bin()
+            .hex(),
+          "--hex",
+          "--dump"
+        )
+      : await puzzle.calcPuzzleResult(generator_hex, "ff8080", "--hex", "--dump"); // ff8080 == "(())"
 
   return bg;
 }
 
 export function getModsPath(parsed_puzzle: SimplePuzzle | CannotParsePuzzle): string {
   if ("raw" in parsed_puzzle) return "";
-  return `${parsed_puzzle.mod}(${parsed_puzzle.args.map(_ => getModsPath(_)).filter(_ => _).join(",")})`;
+  return `${parsed_puzzle.mod}(${parsed_puzzle.args
+    .map((_) => getModsPath(_))
+    .filter((_) => _)
+    .join(",")})`;
 }
 
 function getKeyParam(parsed_puzzle: SimplePuzzle | CannotParsePuzzle): string | undefined {
@@ -207,8 +219,7 @@ function getKeyParam(parsed_puzzle: SimplePuzzle | CannotParsePuzzle): string | 
           if ("raw" in royaltyAddress) return royaltyAddress.raw;
         }
       }
-    }
-    else if (inner_puzzle.mod == "did_innerpuz") {
+    } else if (inner_puzzle.mod == "did_innerpuz") {
       const recovery = inner_puzzle.args[1];
       if ("raw" in recovery) return recovery.raw;
     }
@@ -218,12 +229,12 @@ function getKeyParam(parsed_puzzle: SimplePuzzle | CannotParsePuzzle): string | 
 }
 
 export const sexpAssemble = function (hexString: string): SExp {
-  const bts = Bytes.from(unprefix0x(hexString), "hex")
+  const bts = Bytes.from(unprefix0x(hexString), "hex");
   const input_sexp = sexp_from_stream(new Stream(bts as Bytes), to_sexp_f);
   return input_sexp;
 };
 
-export const expectModArgs = function (puz: SimplePuzzle, mods: (ModName | ModName[]), argLength: number): boolean {
+export const expectModArgs = function (puz: SimplePuzzle, mods: ModName | ModName[], argLength: number): boolean {
   if (!Array.isArray(mods)) mods = [mods];
   return mods.some((mod: ModName) => puz.mod == mod) && puz.args.length == argLength;
 };

@@ -3,7 +3,12 @@ import { xchSymbol } from "@/store/modules/network";
 import bigDecimal from "js-big-decimal";
 import { nameOmit } from "./nameConversion";
 
-export function demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null, digits = -1, symbol: string | null = null): string {
+export function demojo(
+  mojo: null | number | bigint,
+  token: OneTokenInfo | null = null,
+  digits = -1,
+  symbol: string | null = null
+): string {
   let unit = symbol ?? xchSymbol();
   let decimal = 12;
   if (token != null && typeof token == "object") {

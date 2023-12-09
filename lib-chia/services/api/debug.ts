@@ -1,6 +1,6 @@
 import { GetBlockResponse, GetCoinSolutionResponse } from "../../models/api";
 import { CoinSpend } from "../spendbundle";
-import pako from 'pako';
+import pako from "pako";
 
 class DebugApi {
   public async getCoinSolution(coinId: string, rpcUrl: string, isForce = false): Promise<CoinSpend> {
@@ -14,7 +14,7 @@ class DebugApi {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          coinIds: [coinId]
+          coinIds: [coinId],
         }),
       });
 
@@ -24,7 +24,7 @@ class DebugApi {
       });
     }
 
-    const presp = await response.json() as GetCoinSolutionResponse;
+    const presp = (await response.json()) as GetCoinSolutionResponse;
     const cs = presp.coinSpends?.at(0);
     if (!cs) {
       caches.open("debug").then((cache) => {
@@ -46,7 +46,7 @@ class DebugApi {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          indexes: [index]
+          indexes: [index],
         }),
       });
 
@@ -56,10 +56,18 @@ class DebugApi {
       });
     }
 
-    const presp = await response.json() as GetBlockResponse;
+    const presp = (await response.json()) as GetBlockResponse;
     const pp = {
-      blocks: presp.blocks.map(_ => ({ index: _.index, generator: decompressZlib(_.generator), generator_ref_list: _.generator_ref_list })),
-      refBlocks: presp.refBlocks.map(_ => ({ index: _.index, generator: decompressZlib(_.generator), generator_ref_list: _.generator_ref_list })),
+      blocks: presp.blocks.map((_) => ({
+        index: _.index,
+        generator: decompressZlib(_.generator),
+        generator_ref_list: _.generator_ref_list,
+      })),
+      refBlocks: presp.refBlocks.map((_) => ({
+        index: _.index,
+        generator: decompressZlib(_.generator),
+        generator_ref_list: _.generator_ref_list,
+      })),
     };
 
     return pp;
@@ -67,7 +75,7 @@ class DebugApi {
 }
 
 function decompressZlib(base64String: string): string {
-  return Buffer.from((pako.inflate(Buffer.from(base64String, 'base64')))).toString('hex');
+  return Buffer.from(pako.inflate(Buffer.from(base64String, "base64"))).toString("hex");
 }
 
 export default new DebugApi();

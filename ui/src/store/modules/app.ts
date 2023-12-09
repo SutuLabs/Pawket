@@ -1,5 +1,5 @@
 import { NotificationProgrammatic as Notification } from "buefy";
-import store from '@/store'
+import store from "@/store";
 import { ModuleInstance } from "@chiamine/bls-signatures";
 import TestRunner from "../../services/selftest/runner";
 import { tc } from "../../i18n/i18n";
@@ -14,7 +14,7 @@ export interface IAppState {
   selfTestError: string;
 }
 
-store.registerModule<IAppState>('app', {
+store.registerModule<IAppState>("app", {
   state() {
     return {
       clvmInitialized: false,
@@ -25,7 +25,6 @@ store.registerModule<IAppState>('app', {
     };
   },
   actions: {
-
     async initializeClvm({ state }) {
       if (state.clvmInitialized) return;
       await Instance.init();
@@ -62,12 +61,12 @@ store.registerModule<IAppState>('app', {
       try {
         document.execCommand("copy");
         Notification.open({
-          message: tc('app.message.notification.copySuccess'),
+          message: tc("app.message.notification.copySuccess"),
           type: "is-primary",
         });
       } catch (err) {
         Notification.open({
-          message: tc('app.message.notification.copyFailed'),
+          message: tc("app.message.notification.copyFailed"),
           type: "is-danger",
         });
       }

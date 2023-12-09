@@ -1,6 +1,6 @@
 import { CoinSpend, OriginCoin, SpendBundle, UnsignedSpendBundle } from "../spendbundle";
 import { Bytes } from "clvm";
-import { CoinConditions, ConditionType, Hex0x, prefix0x, unprefix0x } from '../coin/condition';
+import { CoinConditions, ConditionType, Hex0x, prefix0x, unprefix0x } from "../coin/condition";
 import puzzle, { ConditionArgs, PlaintextPuzzle } from "../crypto/puzzle";
 import { ConditionOpcode } from "../coin/opcode";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
@@ -15,7 +15,7 @@ import { getCoinName, getCoinName0x, NetworkContext } from "../coin/coinUtility"
 import { Instance } from "../util/instance";
 import { NftCoinAnalysisResult } from "../../models/nft";
 import { generateTransferNftBundle, getTransferNftPuzzle, getTransferNftSolution } from "../coin/nft";
-import crypto from "../crypto/isoCrypto"
+import crypto from "../crypto/isoCrypto";
 
 export async function generateOffer(
   offered: OfferPlan[],
@@ -24,7 +24,7 @@ export async function generateOffer(
   net: NetworkContext,
   nonceHex: string | null = null,
   catModName: "cat_v1" | "cat_v2" = "cat_v2",
-  settlementModName: "settlement_payments" | "settlement_payments_v1" = "settlement_payments_v1",
+  settlementModName: "settlement_payments" | "settlement_payments_v1" = "settlement_payments_v1"
 ): Promise<UnsignedSpendBundle> {
   if (offered.length != 1 || requested.length != 1) throw new Error("currently, only support single offer/request");
 
@@ -33,15 +33,15 @@ export async function generateOffer(
   const puz_anno_ids: string[] = [];
   const getNonce = () => {
     const nonceArr = new Uint8Array(256 / 8);
-    crypto.getRandomValues(nonceArr)
+    crypto.getRandomValues(nonceArr);
     return Bytes.from(nonceArr).hex();
-  }
+  };
   const nonce = nonceHex ?? getNonce();
   // console.log("nonce=",nonce)
   const getPuzAnnoMsg = async (puz: string, solution: string): Promise<Uint8Array> => {
     const output = await puzzle.calcPuzzleResult(puz, solution);
     const conds = puzzle.parseConditions(output);
-    const cannos = conds.filter(_ => _.code == ConditionOpcode.CREATE_PUZZLE_ANNOUNCEMENT);
+    const cannos = conds.filter((_) => _.code == ConditionOpcode.CREATE_PUZZLE_ANNOUNCEMENT);
     if (cannos.length != 1) throw new Error("Unexpected result of create puzzle");
     const canno = cannos[0];
     return canno.args[0] as Uint8Array;
@@ -49,14 +49,17 @@ export async function generateOffer(
   const getPuzzleAnnoId = (coin_puzzle_hash: string, puz_anno_msg: Uint8Array): string => {
     const puz_anno_id = sha256(coin_puzzle_hash, puz_anno_msg);
     return puz_anno_id;
-  }
+  };
 
-  const puzzleCopy: TokenPuzzleDetail[] = puzzles.map((_) => Object.assign({}, { symbol: _.symbol, puzzles: Object.assign([], _.puzzles) }))
+  const puzzleCopy: TokenPuzzleDetail[] = puzzles.map((_) =>
+    Object.assign({}, { symbol: _.symbol, puzzles: Object.assign([], _.puzzles) })
+  );
 
   // generate requested
   for (let i = 0; i < requested.length; i++) {
     const req = requested[i];
-    if (!req.id) {// XCH
+    if (!req.id) {
+      // XCH
       const coin: OriginCoin = {
         parent_coin_info: "0x0000000000000000000000000000000000000000000000000000000000000000",
         puzzle_hash: settlement_tgt,
@@ -66,13 +69,15 @@ export async function generateOffer(
       const puzzle_reveal_text = modsprog[settlementModName];
 
       // put special target into puzzle reverse dict
-      puzzleCopy.filter(_ => _.symbol == net.symbol)[0].puzzles.push({
-        privateKey: puzzle.getEmptyPrivateKey(), // this private key will not really calculated due to no AGG_SIG_ME exist in this spend
-        synPubKey: "()", // same reason as above
-        puzzle: puzzle_reveal_text,
-        hash: settlement_tgt,
-        address: "",
-      })
+      puzzleCopy
+        .filter((_) => _.symbol == net.symbol)[0]
+        .puzzles.push({
+          privateKey: puzzle.getEmptyPrivateKey(), // this private key will not really calculated due to no AGG_SIG_ME exist in this spend
+          synPubKey: "()", // same reason as above
+          puzzle: puzzle_reveal_text,
+          hash: settlement_tgt,
+          address: "",
+        });
 
       const solution_text = `((${prefix0x(nonce)} (${req.target} ${req.amount} ())))`;
       const msg = await getPuzAnnoMsg(puzzle_reveal_text, solution_text);
@@ -81,9 +86,8 @@ export async function generateOffer(
       const puzzle_reveal = prefix0x(await puzzle.encodePuzzle(puzzle_reveal_text));
       const solution = prefix0x(await puzzle.encodePuzzle(solution_text));
 
-      spends.push({ coin, solution, puzzle_reveal })
-    }
-    else {
+      spends.push({ coin, solution, puzzle_reveal });
+    } else {
       if (!req.symbol) throw new Error("symbol cannot be empty.");
 
       const assetId = req.id;
@@ -101,13 +105,15 @@ export async function generateOffer(
       const puzzle_reveal_text = cat_mod;
 
       // put special target into puzzle reverse dict
-      puzzleCopy.filter(_ => _.symbol == req.symbol)[0].puzzles.push({
-        privateKey: puzzle.getEmptyPrivateKey(), // this private key will not really calculated due to no AGG_SIG_ME exist in this spend
-        synPubKey: "()", // same reason as above
-        puzzle: puzzle_reveal_text,
-        hash: cat_settlement_tgt,
-        address: "",
-      })
+      puzzleCopy
+        .filter((_) => _.symbol == req.symbol)[0]
+        .puzzles.push({
+          privateKey: puzzle.getEmptyPrivateKey(), // this private key will not really calculated due to no AGG_SIG_ME exist in this spend
+          synPubKey: "()", // same reason as above
+          puzzle: puzzle_reveal_text,
+          hash: cat_settlement_tgt,
+          address: "",
+        });
 
       const solution_text = `((${prefix0x(nonce)} (${req.target} ${req.amount} (${req.target}))))`;
       const msg = await getPuzAnnoMsg(modsprog[settlementModName], solution_text);
@@ -130,15 +136,16 @@ export async function generateOffer(
       conds.push(CoinConditions.ASSERT_PUZZLE_ANNOUNCEMENT(puz_anno_id));
     }
     return conds;
-  }
+  };
 
   for (let i = 0; i < offered.length; i++) {
     const off = offered[i];
     const conds = getPuzzleAnnoConditions();
-    if (off.id) {//CAT
-      spends.push(...await catBundle.generateCoinSpends(off.plan, puzzleCopy, conds, net.api));
+    if (off.id) {
+      //CAT
+      spends.push(...(await catBundle.generateCoinSpends(off.plan, puzzleCopy, conds, net.api)));
     } else {
-      spends.push(...await stdBundle.generateCoinSpends(off.plan, puzzleCopy, conds));
+      spends.push(...(await stdBundle.generateCoinSpends(off.plan, puzzleCopy, conds)));
     }
   }
 
@@ -146,10 +153,12 @@ export async function generateOffer(
 }
 
 export function sha256(...args: (Hex0x | string | Uint8Array | undefined | ConditionArgs)[]): string {
-  const cont = new Uint8Array(args
-    .filter((_): _ is Hex0x | string | Uint8Array | ConditionArgs[] => !!_)
-    .map(_ => Array.isArray(_) ? new Uint8Array() : Bytes.from(typeof _ === "string" ? unprefix0x(_) : _, "hex").raw())
-    .reduce((acc, cur) => [...acc, ...cur], [] as number[]));
+  const cont = new Uint8Array(
+    args
+      .filter((_): _ is Hex0x | string | Uint8Array | ConditionArgs[] => !!_)
+      .map((_) => (Array.isArray(_) ? new Uint8Array() : Bytes.from(typeof _ === "string" ? unprefix0x(_) : _, "hex").raw()))
+      .reduce((acc, cur) => [...acc, ...cur], [] as number[])
+  );
   const result = Bytes.SHA256(cont);
   return prefix0x(result.hex());
 }
@@ -162,7 +171,7 @@ export async function generateOfferPlan(
   tokenSymbol: string,
   royaltyFee: bigint | undefined = undefined,
   extraTargets: TransferTarget[] = [],
-  settlementModName: "settlement_payments" | "settlement_payments_v1" = "settlement_payments_v1",
+  settlementModName: "settlement_payments" | "settlement_payments_v1" = "settlement_payments_v1"
 ): Promise<OfferPlan[]> {
   const plans: OfferPlan[] = [];
 
@@ -185,11 +194,12 @@ export async function generateOfferPlan(
     };
     // always create royalty coin even it's 0, the official client generate puzzle assert for that coin
     // start from settlement_payments_v1, royalty coin with 0 is not required
-    const tgts = royaltyFee === undefined
-      ? [tgt, ...extraTargets]
-      : (settlementModName === "settlement_payments" || royaltyFee > 0)
+    const tgts =
+      royaltyFee === undefined
+        ? [tgt, ...extraTargets]
+        : settlementModName === "settlement_payments" || royaltyFee > 0
         ? [tgt, royaltyTgt, ...extraTargets]
-        : [tgt, ...extraTargets]
+        : [tgt, ...extraTargets];
 
     const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, fee, tokenSymbol);
     const keys = Object.keys(plan);
@@ -204,21 +214,17 @@ export async function generateOfferPlan(
   return plans;
 }
 
-export function getReversePlan(
-  summary: OfferSummary,
-  change_hex: string,
-  cats: { [id: string]: string },
-): OfferSummary {
+export function getReversePlan(summary: OfferSummary, change_hex: string, cats: { [id: string]: string }): OfferSummary {
   return {
-    offered: summary.requested.map(_ => Object.assign({}, _, { symbol: cats[_.id] })),
-    requested: summary.offered.map(_ => Object.assign({}, _, { target: change_hex, symbol: cats[_.id] })),
+    offered: summary.requested.map((_) => Object.assign({}, _, { symbol: cats[_.id] })),
+    requested: summary.offered.map((_) => Object.assign({}, _, { target: change_hex, symbol: cats[_.id] })),
     settlementModName: summary.settlementModName,
   };
 }
 
 export async function combineOfferSpendBundle(
   spendbundles: SpendBundle[],
-  settlementModName: "settlement_payments" | "settlement_payments_v1" = "settlement_payments_v1",
+  settlementModName: "settlement_payments" | "settlement_payments_v1" = "settlement_payments_v1"
 ): Promise<SpendBundle> {
   if (spendbundles.length != 2) throw new Error("unexpected length of spendbundle");
 
@@ -228,18 +234,24 @@ export async function combineOfferSpendBundle(
   const sigs = spendbundles.map((_) => BLS.G2Element.from_bytes(Bytes.from(_.aggregated_signature, "hex").raw()));
   const agg_sig = BLS.AugSchemeMPL.aggregate(sigs);
   const sig = Bytes.from(agg_sig.serialize()).hex();
-  const spendbundlesCopy = spendbundles.map(sp => <SpendBundle>{
-    aggregated_signature: sp.aggregated_signature,
-    coin_spends: sp.coin_spends.map(csp => <CoinSpend>{
-      coin: <OriginCoin>{
-        amount: csp.coin.amount,
-        parent_coin_info: csp.coin.parent_coin_info,
-        puzzle_hash: csp.coin.puzzle_hash
-      },
-      puzzle_reveal: csp.puzzle_reveal,
-      solution: csp.solution
-    })
-  })
+  const spendbundlesCopy = spendbundles.map(
+    (sp) =>
+      <SpendBundle>{
+        aggregated_signature: sp.aggregated_signature,
+        coin_spends: sp.coin_spends.map(
+          (csp) =>
+            <CoinSpend>{
+              coin: <OriginCoin>{
+                amount: csp.coin.amount,
+                parent_coin_info: csp.coin.parent_coin_info,
+                puzzle_hash: csp.coin.puzzle_hash,
+              },
+              puzzle_reveal: csp.puzzle_reveal,
+              solution: csp.solution,
+            }
+        ),
+      }
+  );
   const summaries = await Promise.all(spendbundlesCopy.map((_) => getOfferSummary(_)));
   for (let i = 0; i < summaries.length; i++) {
     const summary = summaries[i];
@@ -249,8 +261,12 @@ export async function combineOfferSpendBundle(
     const reqcs = req.coin;
     if (!reqcs?.coin) throw new Error("unknown request coin");
     const offcss = summaries[(i + 1) % summaries.length].offered;
-    if (!(offcss.length == 1
-      || (offcss.length > 1 && offcss.every(_ => getCoinName(_.coin?.coin) == getCoinName(offcss[0].coin?.coin)))))
+    if (
+      !(
+        offcss.length == 1 ||
+        (offcss.length > 1 && offcss.every((_) => getCoinName(_.coin?.coin) == getCoinName(offcss[0].coin?.coin)))
+      )
+    )
       throw new Error("unexpected length of offer coin spends");
     const offcs = offcss[0].coin;
     if (!offcs?.coin) throw new Error("unknown offer coin");
@@ -259,15 +275,15 @@ export async function combineOfferSpendBundle(
 
     if (req.id) {
       const sumoffs = summaries[(i + 1) % summaries.length].offered;
-      if (!(sumoffs.length == 1
-        || (sumoffs.length > 1 && sumoffs.every(_ => _.cat_target == sumoffs[0].cat_target))))
+      if (!(sumoffs.length == 1 || (sumoffs.length > 1 && sumoffs.every((_) => _.cat_target == sumoffs[0].cat_target))))
         throw new Error("unexpected length of summary offers");
       cat_target = sumoffs[0].cat_target;
     }
     reqcs.coin.parent_coin_info = getCoinName0x(offcs.coin);
     reqcs.coin.amount = req.amount;
 
-    if (req.id && req.nft_target) { // generate nft solution
+    if (req.id && req.nft_target) {
+      // generate nft solution
       const localPuzzleApiCall = async function (): Promise<GetParentPuzzleResponse> {
         return {
           parentCoinId: "",
@@ -281,7 +297,8 @@ export async function combineOfferSpendBundle(
       const lsolr = lsol.substring(1, lsol.length - 1);
       const solution = await getTransferNftSolution(proof, lsolr);
       reqcs.solution = prefix0x(await puzzle.encodePuzzle(solution));
-    } else if (req.id) { // generate cat solution
+    } else if (req.id) {
+      // generate cat solution
       const inner_puzzle = await puzzle.disassemblePuzzle(reqcs.solution);
       if (!cat_target) throw new Error("cat target should be parsed");
       const offnewcoin: OriginCoin = {
@@ -299,7 +316,15 @@ export async function combineOfferSpendBundle(
         };
       };
       const proof = await catBundle.getLineageProof(getCoinName0x(offcs.coin), localPuzzleApiCall);
-      const solution = catBundle.getCatPuzzleSolution(inner_puzzle, offnewcoin, offnewcoin, offnewcoin, settlement_tgt, 0n, proof);
+      const solution = catBundle.getCatPuzzleSolution(
+        inner_puzzle,
+        offnewcoin,
+        offnewcoin,
+        offnewcoin,
+        settlement_tgt,
+        0n,
+        proof
+      );
       reqcs.solution = prefix0x(await puzzle.encodePuzzle(solution));
     }
   }
@@ -319,7 +344,7 @@ export async function generateNftOffer(
   puzzles: TokenPuzzleObserver[],
   net: NetworkContext,
   nonceHex: string | null = null,
-  settlementModName: "settlement_payments" | "settlement_payments_v1" = "settlement_payments_v1",
+  settlementModName: "settlement_payments" | "settlement_payments_v1" = "settlement_payments_v1"
 ): Promise<UnsignedSpendBundle> {
   const settlement_tgt = prefix0x(modshash[settlementModName]);
   const spends: CoinSpend[] = [];
@@ -344,7 +369,9 @@ export async function generateNftOffer(
     return puz_anno_id;
   };
 
-  const puzzleCopy: TokenPuzzleObserver[] = puzzles.map((_) => Object.assign({}, { symbol: _.symbol, puzzles: Object.assign([], _.puzzles) }))
+  const puzzleCopy: TokenPuzzleObserver[] = puzzles.map((_) =>
+    Object.assign({}, { symbol: _.symbol, puzzles: Object.assign([], _.puzzles) })
+  );
 
   // put special target into puzzle reverse dict
   puzzleCopy
@@ -440,7 +467,7 @@ export async function generateNftOffer(
           puzzles,
           net,
           undefined,
-          conds,
+          conds
         );
         puzzleCopy
           .filter((_) => _.symbol == net.symbol)[0]
@@ -493,7 +520,7 @@ export async function curryMod(mod: string, ...args: string[]): Promise<Plaintex
     const mods = disassemble(prog);
     return mods;
   } catch (err) {
-    console.warn(`failed to curry args [${args}] to mod [${mod}]`, err)
+    console.warn(`failed to curry args [${args}] to mod [${mod}]`, err);
     return null;
   }
 }

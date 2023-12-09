@@ -1,7 +1,4 @@
-import {
-  entropyToMnemonic,
-  mnemonicToSeedSync,
-} from "bip39";
+import { entropyToMnemonic, mnemonicToSeedSync } from "bip39";
 
 import pbkdf2Hmac from "pbkdf2-hmac";
 import { Hex, Hex0x } from "../coin/condition";
@@ -17,7 +14,6 @@ export interface AccountKey {
 }
 
 class AccountHelper {
-
   generateSeed() {
     const array = new Uint8Array(16);
     self.crypto.getRandomValues(array);
@@ -27,24 +23,14 @@ class AccountHelper {
   async getAccount(mnemonic: string, password: string | null, legacyMnemonic: string | null = null): Promise<AccountKey> {
     if (legacyMnemonic && (mnemonic || password)) throw new Error("legacy mnemonic cannot work with new mnemonic/password!");
     const seeds = mnemonicToSeedSync(mnemonic, password ?? "");
-    let compatibleMnemonic = entropyToMnemonic(
-      new Buffer(seeds.slice(0, 32))
-    );
-    const mnemonic12 = entropyToMnemonic(
-      new Buffer(seeds.slice(0, 16))
-    );
+    let compatibleMnemonic = entropyToMnemonic(new Buffer(seeds.slice(0, 32)));
+    const mnemonic12 = entropyToMnemonic(new Buffer(seeds.slice(0, 16)));
     if (legacyMnemonic) compatibleMnemonic = legacyMnemonic;
 
     // let d = mnemonicToSeedSync(compatibleMnemonic);
     const BLS = Instance.BLS;
     if (!BLS) throw new Error("BLS not initialized");
-    const key = await pbkdf2Hmac(
-      compatibleMnemonic,
-      "mnemonic",
-      2048,
-      64,
-      "SHA-512"
-    );
+    const key = await pbkdf2Hmac(compatibleMnemonic, "mnemonic", 2048, 64, "SHA-512");
 
     // console.log(key);
     const sk = BLS.AugSchemeMPL.key_gen(new Uint8Array(key));

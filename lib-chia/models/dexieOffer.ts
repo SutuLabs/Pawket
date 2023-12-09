@@ -29,7 +29,7 @@ export interface Offered {
   amount: number;
   preview: Preview;
   is_nft: boolean;
-  nft_data: NftData
+  nft_data: NftData;
 }
 
 export interface Preview {

@@ -23,8 +23,8 @@ function getDefaultCode(): MixchCodePersistent {
   return {
     files: [
       {
-        name: "default.js", code:
-          `
+        name: "default.js",
+        code: `
 const coin = coins[0];
 const puz = getPuzDetail(coin.puzzle_hash);
 
@@ -51,6 +51,6 @@ console.log("output", coin_spends, bundle, 'offer1qqz83wcsltt6wcmqvpsxzgqqt6eygz
   )
 )`,
       },
-    ]
+    ],
   };
 }

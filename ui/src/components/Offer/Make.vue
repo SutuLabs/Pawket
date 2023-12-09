@@ -131,12 +131,7 @@ import { TokenPuzzleDetail } from "../../../../lib-chia/services/crypto/receive"
 import puzzle from "../../../../lib-chia/services/crypto/puzzle";
 import DevHelper from "@/components/DevHelper/DevHelper.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
-import {
-  getOfferEntities,
-  OfferEntity,
-  OfferSummary,
-  OfferTokenAmount,
-} from "../../../../lib-chia/services/offer/summary";
+import { getOfferEntities, OfferEntity, OfferSummary, OfferTokenAmount } from "../../../../lib-chia/services/offer/summary";
 import { getCatIdDict, getCatNameDict, getCatNames } from "@/services/view/cat";
 import { encodeOffer } from "../../../../lib-chia/services/offer/encoding";
 import { generateOffer, generateOfferPlan } from "../../../../lib-chia/services/offer/bundler";
@@ -239,15 +234,13 @@ export default class MakeOffer extends Vue {
 
     if (Number(this.initialFromAmount) > 0) {
       const t = !initialFromAssetId ? xchSymbol() : this.cats[initialFromAssetId] ?? this.initialFromCatName;
-      if (initialFromAssetId && !this.cats[initialFromAssetId])
-        this.unknownAssets.push({ assetId: initialFromAssetId, name: t });
+      if (initialFromAssetId && !this.cats[initialFromAssetId]) this.unknownAssets.push({ assetId: initialFromAssetId, name: t });
       this.offers = [{ token: t, amount: this.initialFromAmount }];
     }
 
     if (Number(this.initialToAmount) > 0) {
       const t = !initialToAssetId ? xchSymbol() : this.cats[initialToAssetId] ?? this.initialToCatName;
-      if (initialToAssetId && !this.cats[initialToAssetId])
-        this.unknownAssets.push({ assetId: initialToAssetId, name: t });
+      if (initialToAssetId && !this.cats[initialToAssetId]) this.unknownAssets.push({ assetId: initialToAssetId, name: t });
       this.requests = [{ token: t, amount: this.initialToAmount }];
     }
 

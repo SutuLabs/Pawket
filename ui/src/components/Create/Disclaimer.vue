@@ -45,5 +45,4 @@ export default class Disclaimer extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

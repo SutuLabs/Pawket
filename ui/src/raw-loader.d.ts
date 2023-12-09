@@ -1,1 +1,1 @@
-declare module '*.dev.ts'
+declare module "*.dev.ts";

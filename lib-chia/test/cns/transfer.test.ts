@@ -1,3 +1,3 @@
-test('Transfer CNS', async () => {
+test("Transfer CNS", async () => {
   //
 });

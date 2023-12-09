@@ -148,7 +148,6 @@ export function defineClspTheme(name?: string): void {
       { token: "operators", foreground: "213EFF" },
       { token: "operators.common", foreground: "4060FF" },
     ],
-    colors: {
-    },
+    colors: {},
   });
 }

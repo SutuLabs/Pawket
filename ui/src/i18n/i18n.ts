@@ -34,14 +34,14 @@ export const languageList: Map<string, string> = new Map<string, string>([
 export const debugLanguageList: Map<string, string> = new Map<string, string>([
   ["en", "English"],
   ["zhcn", "简体中文"],
-  ['ru', "Русский"],
-  ['uk', "Українська"],
-  ['id', "Bahasa Indonesia"],
-  ['tr', "Türkçe"],
-  ['zhtw', "繁體中文"],
-  ['it', "Italiano"],
-  ['sv', "Svenska"],
-  ['ja', "日本語"],
+  ["ru", "Русский"],
+  ["uk", "Українська"],
+  ["id", "Bahasa Indonesia"],
+  ["tr", "Türkçe"],
+  ["zhtw", "繁體中文"],
+  ["it", "Italiano"],
+  ["sv", "Svenska"],
+  ["ja", "日本語"],
 ]);
 
 const messages = Object.assign(languages);
@@ -56,6 +56,6 @@ const i18n = new VueI18n({
 
 export const tc = (key: VueI18n.Path, choice?: VueI18n.Choice, values?: VueI18n.Values): string => {
   return i18n.tc(key, choice, values);
-}
+};
 
 export default i18n;

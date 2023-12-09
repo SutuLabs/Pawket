@@ -5,9 +5,8 @@ import { INetworkState } from "./modules/network";
 
 Vue.use(Vuex);
 export interface IRootState {
-  app: IAppState
-  network: INetworkState
+  app: IAppState;
+  network: INetworkState;
 }
 
-export default new Vuex.Store<IRootState>({})
-
+export default new Vuex.Store<IRootState>({});

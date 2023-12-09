@@ -41,8 +41,7 @@ export function assertBundle(expect: SpendBundle, actual: SpendBundle): void {
       assert(expect.coin_spends[i].coin.parent_coin_info, actual.coin_spends[i].coin.parent_coin_info);
       assert(expect.coin_spends[i].coin.puzzle_hash, actual.coin_spends[i].coin.puzzle_hash);
     }
-  }
-  catch (err) {
+  } catch (err) {
     console.warn("expect bundle:", expect);
     console.warn("actual bundle:", actual);
     throw err;

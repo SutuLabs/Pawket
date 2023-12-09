@@ -1,7 +1,11 @@
 import { CoinItem, CoinRecord } from "../../../../lib-chia/models/wallet";
 import { OriginCoin } from "../../../../lib-chia/services/spendbundle";
 import { prefix0x } from "../../../../lib-chia/services/coin/condition";
-import receive, { TokenPuzzleAddress, TokenPuzzleDetail, TokenPuzzleObserver } from "../../../../lib-chia/services/crypto/receive";
+import receive, {
+  TokenPuzzleAddress,
+  TokenPuzzleDetail,
+  TokenPuzzleObserver,
+} from "../../../../lib-chia/services/crypto/receive";
 import { getAccountCats } from "@/store/modules/account";
 import { SymbolCoins } from "../../../../lib-chia/services/transfer/transfer";
 import { chainId, rpcUrl, xchPrefix, xchSymbol } from "@/store/modules/network";
@@ -9,29 +13,20 @@ import { AccountEntity, TokenInfo } from "../../../../lib-chia/models/account";
 import { coinFilter } from "../../../../lib-chia/services/coin/coinUtility";
 import { getAccountAddressDetails, getAccountPuzzleObservers } from "../../../../lib-chia/services/util/account";
 
-
 class CoinHandler {
   public async getAssetsRequestDetail(account: AccountEntity, tokenInfo: TokenInfo): Promise<TokenPuzzleDetail[]> {
-    return await getAccountAddressDetails(
-      account,
-      getAccountCats(account),
-      tokenInfo,
-      xchPrefix(),
-      xchSymbol()
-    );
+    return await getAccountAddressDetails(account, getAccountCats(account), tokenInfo, xchPrefix(), xchSymbol());
   }
 
   public async getAssetsRequestObserver(account: AccountEntity, tokenInfo: TokenInfo): Promise<TokenPuzzleObserver[]> {
-    return await getAccountPuzzleObservers(
-      account,
-      getAccountCats(account),
-      tokenInfo,
-      xchPrefix(),
-      xchSymbol()
-    );
+    return await getAccountPuzzleObservers(account, getAccountCats(account), tokenInfo, xchPrefix(), xchSymbol());
   }
 
-  public async getAvailableCoins(account: AccountEntity, requests: TokenPuzzleAddress[], tokenNames: string[]): Promise<SymbolCoins> {
+  public async getAvailableCoins(
+    account: AccountEntity,
+    requests: TokenPuzzleAddress[],
+    tokenNames: string[]
+  ): Promise<SymbolCoins> {
     let coins = (await receive.getActivities(requests, false, rpcUrl()))
       .filter((_) => _.coin)
       .map((_) => _.coin as CoinItem)
@@ -41,7 +36,7 @@ class CoinHandler {
         puzzle_hash: _.puzzleHash,
       }));
 
-    coins = coinFilter(account, coins, chainId())
+    coins = coinFilter(account, coins, chainId());
 
     const availcoins = tokenNames
       .map((symbol) => {
@@ -52,7 +47,12 @@ class CoinHandler {
     return availcoins;
   }
 
-  public getAvailableCoinFromRecords(account: AccountEntity, requests: TokenPuzzleAddress[], records: CoinRecord[], tokenNames: string[]): SymbolCoins {
+  public getAvailableCoinFromRecords(
+    account: AccountEntity,
+    requests: TokenPuzzleAddress[],
+    records: CoinRecord[],
+    tokenNames: string[]
+  ): SymbolCoins {
     let coins = records
       .filter((_) => _.coin)
       .map((_) => _.coin as CoinItem)
@@ -62,7 +62,7 @@ class CoinHandler {
         puzzle_hash: _.puzzleHash,
       }));
 
-    coins = coinFilter(account, coins, chainId())
+    coins = coinFilter(account, coins, chainId());
 
     const availcoins = tokenNames
       .map((symbol) => {

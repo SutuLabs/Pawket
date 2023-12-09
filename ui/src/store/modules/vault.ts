@@ -44,7 +44,7 @@ store.registerModule<IVaultState>("vault", {
       currency: CurrencyType.USDT,
       selectedAccount: 0,
       offline: false,
-      disconnected: false
+      disconnected: false,
     };
   },
   actions: {

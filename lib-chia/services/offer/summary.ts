@@ -1,10 +1,10 @@
 import { CoinSpend, SpendBundle, UnsignedSpendBundle } from "../spendbundle";
 import { Bytes, SExp, Tuple } from "clvm";
-import { getNumber, Hex0x, prefix0x, unprefix0x } from '../coin/condition';
-import { assemble, disassemble } from 'clvm_tools/clvm_tools/binutils';
+import { getNumber, Hex0x, prefix0x, unprefix0x } from "../coin/condition";
+import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
 import puzzle from "../crypto/puzzle";
-import { modsdict, modshash, modshashdict, modsprog } from '../coin/mods';
-import { uncurry } from 'clvm_tools/clvm_tools/curry';
+import { modsdict, modshash, modshashdict, modsprog } from "../coin/mods";
+import { uncurry } from "clvm_tools/clvm_tools/curry";
 import { ConditionOpcode } from "../coin/opcode";
 import { TokenSpendPlan } from "../transfer/transfer";
 import bigDecimal from "js-big-decimal";
@@ -14,7 +14,6 @@ import { analyzeNftCoin, getNftMetadataInfo, getScalarString } from "../coin/nft
 import { NftDetail } from "../crypto/receive";
 
 export async function getOfferSummary(bundle: UnsignedSpendBundle | SpendBundle): Promise<OfferSummary> {
-
   const ocs = getOfferedCoins(bundle);
   const rcs = getRequestedCoins(bundle);
   const requested: OfferEntity[] = [];
@@ -28,26 +27,25 @@ export async function getOfferSummary(bundle: UnsignedSpendBundle | SpendBundle)
     }
 
     return "";
-  }
+  };
 
   const tryGetNftIdAndRoyaltyAndImage = async (puzzle_reveal: string): Promise<[string, number, string]> => {
     const puz = await simplifyPuzzle(assemble(puzzle_reveal), puzzle_reveal);
     const modpath = getModsPath(puz);
-    if (modpath == "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),p2_delegated_puzzle_or_hidden_puzzle())))"
-      || modpath == "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),settlement_payments())))"
-      || modpath == "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),settlement_payments_v1())))"
+    if (
+      modpath ==
+        "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),p2_delegated_puzzle_or_hidden_puzzle())))" ||
+      modpath ==
+        "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),settlement_payments())))" ||
+      modpath ==
+        "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),settlement_payments_v1())))"
     ) {
       const ss = ((puz as SimplePuzzle)?.args[0] as CannotParsePuzzle).raw;
-      const roy = (((((puz as SimplePuzzle)//singleton_top_layer_v1_1
-        ?.args[1] as SimplePuzzle)//nft_state_layer
-        ?.args[3] as SimplePuzzle)//nft_ownership_layer
-        ?.args[2] as SimplePuzzle)//nft_ownership_transfer_program_one_way_claim_with_royalties
-        ?.args[2] as CannotParsePuzzle)
-        ?.raw;
-      const rawmeta = (((puz as SimplePuzzle)//singleton_top_layer_v1_1
-        ?.args[1] as SimplePuzzle)//nft_state_layer
-        ?.args[1] as CannotParsePuzzle)
-        ?.raw;
+      const roy = (
+        ((((puz as SimplePuzzle)?.args[1] as SimplePuzzle)?.args[3] as SimplePuzzle)?.args[2] as SimplePuzzle) //singleton_top_layer_v1_1
+          ?.args[2] as CannotParsePuzzle
+      )?.raw; //nft_state_layer //nft_ownership_layer //nft_ownership_transfer_program_one_way_claim_with_royalties
+      const rawmeta = (((puz as SimplePuzzle)?.args[1] as SimplePuzzle)?.args[1] as CannotParsePuzzle)?.raw; //singleton_top_layer_v1_1 //nft_state_layer
 
       const parsed = parseMetadata(sexpAssemble(rawmeta));
       const metadata = getNftMetadataInfo(parsed);
@@ -59,7 +57,7 @@ export async function getOfferSummary(bundle: UnsignedSpendBundle | SpendBundle)
     }
 
     return ["", -1, ""];
-  }
+  };
 
   const getCoinEntities = async (coin: CoinSpend, type: "offer" | "request") => {
     const entities: OfferEntity[] = [];
@@ -73,11 +71,9 @@ export async function getOfferSummary(bundle: UnsignedSpendBundle | SpendBundle)
     if (type == "request") {
       if (modsdict[puzzle_reveal] == "settlement_payments") {
         result = await puzzle.calcPuzzleResult(modsprog["settlement_payments"], solution);
-      }
-      else if (modsdict[puzzle_reveal] == "settlement_payments_v1") {
+      } else if (modsdict[puzzle_reveal] == "settlement_payments_v1") {
         result = await puzzle.calcPuzzleResult(modsprog["settlement_payments_v1"], solution);
-      }
-      else {
+      } else {
         assetId = await tryGetAssetId(puzzle_reveal);
         if (!assetId) [nftId, royalty, imageUri] = await tryGetNftIdAndRoyaltyAndImage(puzzle_reveal);
         // the result executed by settlement_payments_v1 or settlement_payments is same
@@ -87,8 +83,7 @@ export async function getOfferSummary(bundle: UnsignedSpendBundle | SpendBundle)
       result = await puzzle.calcPuzzleResult(puzzle_reveal, solution);
       assetId = await tryGetAssetId(puzzle_reveal);
       if (!assetId) [nftId, royalty, imageUri] = await tryGetNftIdAndRoyaltyAndImage(puzzle_reveal);
-    }
-    else {
+    } else {
       throw new Error("not implement");
     }
 
@@ -96,55 +91,64 @@ export async function getOfferSummary(bundle: UnsignedSpendBundle | SpendBundle)
     for (let j = 0; j < conds.length; j++) {
       const cond = conds[j];
       if (cond.code == ConditionOpcode.CREATE_COIN) {
-        const tgt = prefix0x(Bytes.from(((cond.args[2] && cond.args[2]?.length > 0) ? cond.args[2][0] : cond.args[0]) as Uint8Array).hex());
+        const tgt = prefix0x(
+          Bytes.from((cond.args[2] && cond.args[2]?.length > 0 ? cond.args[2][0] : cond.args[0]) as Uint8Array).hex()
+        );
         const id = assetId ? assetId : nftId;
         const wraptgt = id ? prefix0x(Bytes.from(cond.args[0] as Uint8Array).hex()) : undefined;
         const analysis = await analyzeNftCoin(coin.puzzle_reveal, coin.coin.puzzle_hash, coin.coin, coin.solution);
-        const nft_detail: NftDetail | undefined = !analysis ? undefined :
-          {
-            metadata: {
-              uri: getScalarString(analysis.metadata.imageUri) ?? "",
-              hash: analysis.metadata.imageHash ?? "",
-            },
-            hintPuzzle: coin.coin.puzzle_hash,
-            coin: coin.coin,
-            address: puzzle.getAddressFromPuzzleHash(analysis.launcherId, "nft"),
-            analysis,
-          };
+        const nft_detail: NftDetail | undefined = !analysis
+          ? undefined
+          : {
+              metadata: {
+                uri: getScalarString(analysis.metadata.imageUri) ?? "",
+                hash: analysis.metadata.imageHash ?? "",
+              },
+              hintPuzzle: coin.coin.puzzle_hash,
+              coin: coin.coin,
+              address: puzzle.getAddressFromPuzzleHash(analysis.launcherId, "nft"),
+              analysis,
+            };
         entities.push({
           id,
           amount: getNumber(prefix0x(Bytes.from(cond.args[1] as Uint8Array).hex())),
           target: tgt,
-          cat_target: (assetId) ? wraptgt : undefined,
+          cat_target: assetId ? wraptgt : undefined,
           nft_target: nftId ? wraptgt : undefined,
           nft_detail,
-          royalty: (nftId && royalty != -1) ? royalty : undefined,
+          royalty: nftId && royalty != -1 ? royalty : undefined,
           nft_uri: imageUri,
           coin,
-        })
+        });
       }
     }
 
     return entities;
-  }
+  };
 
   for (let i = 0; i < ocs.length; i++) {
     const coin = ocs[i];
-    offered.push(...(await getCoinEntities(coin, "offer"))
-      .filter(_ => _.target == modshash["settlement_payments"] || _.target == modshash["settlement_payments_v1"]));
+    offered.push(
+      ...(await getCoinEntities(coin, "offer")).filter(
+        (_) => _.target == modshash["settlement_payments"] || _.target == modshash["settlement_payments_v1"]
+      )
+    );
   }
 
   for (let i = 0; i < rcs.length; i++) {
     const coin = rcs[i];
-    requested.push(...await getCoinEntities(coin, "request"));
+    requested.push(...(await getCoinEntities(coin, "request")));
   }
 
   const mods = modshashdict[unprefix0x(offered[0].target)];
-  const settlementModName
-    = offered.length == 0 ? undefined
-      : mods == "settlement_payments" ? "settlement_payments"
-        : mods == "settlement_payments_v1" ? "settlement_payments_v1"
-          : undefined;
+  const settlementModName =
+    offered.length == 0
+      ? undefined
+      : mods == "settlement_payments"
+      ? "settlement_payments"
+      : mods == "settlement_payments_v1"
+      ? "settlement_payments_v1"
+      : undefined;
   return { requested, offered, settlementModName };
 }
 
@@ -152,17 +156,17 @@ export async function internalUncurry(puz: string): Promise<UncurriedPuzzle> {
   const curried = assemble(puz);
   const [mod, args] = uncurry(curried) as Tuple<SExp, SExp>;
   const mods = disassemble(mod);
-  const argarr = Array.from(args.as_iter()).map(_ => disassemble(_ as SExp));
+  const argarr = Array.from(args.as_iter()).map((_) => disassemble(_ as SExp));
   return { module: mods, args: argarr };
 }
 
 const EmptyParent = "0x0000000000000000000000000000000000000000000000000000000000000000";
 
 function getOfferedCoins(bundle: UnsignedSpendBundle | SpendBundle): CoinSpend[] {
-  return bundle.coin_spends.filter(_ => _.coin.parent_coin_info != EmptyParent)
+  return bundle.coin_spends.filter((_) => _.coin.parent_coin_info != EmptyParent);
 }
 function getRequestedCoins(bundle: UnsignedSpendBundle | SpendBundle): CoinSpend[] {
-  return bundle.coin_spends.filter(_ => _.coin.parent_coin_info == EmptyParent)
+  return bundle.coin_spends.filter((_) => _.coin.parent_coin_info == EmptyParent);
 }
 
 export function getOfferEntities(
@@ -218,4 +222,3 @@ export interface OfferTokenAmount {
   token: string;
   amount: string;
 }
-

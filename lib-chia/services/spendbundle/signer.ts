@@ -11,10 +11,11 @@ import { Instance } from "../util/instance";
 import { calculate_synthetic_secret_key } from "../crypto/sign";
 import utility from "../crypto/utility";
 
-export async function signSpendBundle(ubundle: SpendBundle | UnsignedSpendBundle | CoinSpend[],
+export async function signSpendBundle(
+  ubundle: SpendBundle | UnsignedSpendBundle | CoinSpend[],
   puzzles: TokenPuzzlePrivateKey[],
   chainId: string | NetworkContext,
-  allSignCheck = false,
+  allSignCheck = false
 ): Promise<SpendBundle> {
   const BLS = Instance.BLS;
   if (!BLS) throw new Error("BLS not initialized");
@@ -33,19 +34,24 @@ export async function signSpendBundle(ubundle: SpendBundle | UnsignedSpendBundle
   return {
     aggregated_signature: prefix0x(sig),
     coin_spends: bundle.coin_spends,
-  }
+  };
 }
 
 async function getSignaturesFromSpendBundle(
   ubundle: UnsignedSpendBundle | SpendBundle | PartialSpendBundle,
   puzzles: TokenPuzzlePrivateKey[],
   chainId: string,
-  allSignCheck = false,
+  allSignCheck = false
 ): Promise<G2Element> {
   const BLS = Instance.BLS;
   if (!BLS) throw new Error("BLS not initialized");
-  const puzzleDict: { [key: string]: PuzzlePrivateKey } = Object.assign({}, ...puzzles.flatMap(_ => _.puzzles).map((x) => ({ [unprefix0x(x.synPubKey)]: x })));
-  const getPuzDetail = (synPubKey: Hex): PuzzlePrivateKey | undefined => { return puzzleDict[synPubKey]; }
+  const puzzleDict: { [key: string]: PuzzlePrivateKey } = Object.assign(
+    {},
+    ...puzzles.flatMap((_) => _.puzzles).map((x) => ({ [unprefix0x(x.synPubKey)]: x }))
+  );
+  const getPuzDetail = (synPubKey: Hex): PuzzlePrivateKey | undefined => {
+    return puzzleDict[synPubKey];
+  };
 
   const css = ubundle.coin_spends;
   const sigs: G2Element[] = [];
@@ -54,16 +60,14 @@ async function getSignaturesFromSpendBundle(
     if (coin_spend.coin.parent_coin_info == "0x0000000000000000000000000000000000000000000000000000000000000000") continue;
     const result = await puzzle.executePuzzleHex(coin_spend.puzzle_reveal, coin_spend.solution);
     // TODO: if one coin spend contain more than one AGG_SIG_ME, not consider here
-    const synPubKeyArgs = result.conditions.filter(_ => _.code == ConditionOpcode.AGG_SIG_ME)[0]?.args[0];
+    const synPubKeyArgs = result.conditions.filter((_) => _.code == ConditionOpcode.AGG_SIG_ME)[0]?.args[0];
     const synPubKeyUint8 = Array.isArray(synPubKeyArgs) ? undefined : synPubKeyArgs;
     const synPubKey = !synPubKeyUint8 ? undefined : Bytes.from(synPubKeyUint8).hex();
 
     const puz = !synPubKey ? undefined : getPuzDetail(synPubKey);
     if (!puz && allSignCheck) throw new Error(`cannot find puzzle by synthetic public key ${synPubKey}`);
 
-    const synthetic_sk = puz
-      ? calculate_synthetic_secret_key(BLS, puz.privateKey, DEFAULT_HIDDEN_PUZZLE_HASH.raw())
-      : undefined;
+    const synthetic_sk = puz ? calculate_synthetic_secret_key(BLS, puz.privateKey, DEFAULT_HIDDEN_PUZZLE_HASH.raw()) : undefined;
 
     const coinname = getCoinNameHex(coin_spend.coin);
     const signature = await signSolution(BLS, result.conditions, synthetic_sk, coinname, chainId, allSignCheck);
@@ -80,7 +84,7 @@ async function signSolution(
   synthetic_sk: PrivateKey | undefined,
   coinname: Bytes,
   chainId: string,
-  allSignCheck = false,
+  allSignCheck = false
 ): Promise<G2Element> {
   const AGG_SIG_ME_ADDITIONAL_DATA = Bytes.from(chainId, "hex");
   const sigs: G2Element[] = [];
@@ -89,8 +93,7 @@ async function signSolution(
     const cond = conds[i];
     if (cond.code == ConditionOpcode.AGG_SIG_UNSAFE) {
       throw new Error("not implement");
-    }
-    else if (cond.code == ConditionOpcode.AGG_SIG_ME) {
+    } else if (cond.code == ConditionOpcode.AGG_SIG_ME) {
       if (!cond.args || cond.args.length != 2) throw new Error("wrong args");
       const args = cond.args as Uint8Array[];
       const msg = Uint8Array.from([...args[1], ...coinname.raw(), ...AGG_SIG_ME_ADDITIONAL_DATA.raw()]);
@@ -111,7 +114,7 @@ async function signSolution(
 
 export async function combineSpendBundleSignature(
   ubundle: SpendBundle | UnsignedSpendBundle | CoinSpend[],
-  signature: Hex0x,
+  signature: Hex0x
 ): Promise<SpendBundle> {
   const BLS = Instance.BLS;
   if (!BLS) throw new Error("BLS not initialized");
@@ -128,17 +131,19 @@ export async function combineSpendBundleSignature(
   return {
     aggregated_signature: prefix0x(sig),
     coin_spends: bundle.coin_spends,
-  }
+  };
 }
 
-export async function signMessages(
-  { messages, chainId }: MessagesToSign,
-  puzzles: TokenPuzzlePrivateKey[],
-): Promise<Hex0x> {
+export async function signMessages({ messages, chainId }: MessagesToSign, puzzles: TokenPuzzlePrivateKey[]): Promise<Hex0x> {
   const BLS = Instance.BLS;
   if (!BLS) throw new Error("BLS not initialized");
-  const puzzleDict: { [key: string]: PuzzlePrivateKey } = Object.assign({}, ...puzzles.flatMap(_ => _.puzzles).map((x) => ({ [unprefix0x(x.synPubKey)]: x })));
-  const getPuzDetail = (synPubKey: Hex): PuzzlePrivateKey | undefined => { return puzzleDict[synPubKey]; }
+  const puzzleDict: { [key: string]: PuzzlePrivateKey } = Object.assign(
+    {},
+    ...puzzles.flatMap((_) => _.puzzles).map((x) => ({ [unprefix0x(x.synPubKey)]: x }))
+  );
+  const getPuzDetail = (synPubKey: Hex): PuzzlePrivateKey | undefined => {
+    return puzzleDict[synPubKey];
+  };
 
   const AGG_SIG_ME_ADDITIONAL_DATA = utility.fromHexString(chainId);
   const sigs: G2Element[] = [];
@@ -152,9 +157,7 @@ export async function signMessages(
 
     const puz = !pk_hex ? undefined : getPuzDetail(pk_hex);
 
-    const synthetic_sk = puz
-      ? calculate_synthetic_secret_key(BLS, puz.privateKey, DEFAULT_HIDDEN_PUZZLE_HASH.raw())
-      : undefined;
+    const synthetic_sk = puz ? calculate_synthetic_secret_key(BLS, puz.privateKey, DEFAULT_HIDDEN_PUZZLE_HASH.raw()) : undefined;
 
     if (!synthetic_sk) continue;
 
@@ -169,20 +172,21 @@ export async function signMessages(
 }
 
 export interface MessagesToSign {
-  messages: MessageToSign[],
-  chainId: Hex,
+  messages: MessageToSign[];
+  chainId: Hex;
 }
 
 export interface MessageToSign {
-  message: Hex,
-  coinname: Hex,
-  publicKey: Hex,
+  message: Hex;
+  coinname: Hex;
+  publicKey: Hex;
 }
 
-export async function getMessagesToSign(ubundle: SpendBundle | UnsignedSpendBundle | CoinSpend[],
+export async function getMessagesToSign(
+  ubundle: SpendBundle | UnsignedSpendBundle | CoinSpend[],
   puzzles: TokenPuzzleObserver[],
   chainId: string | NetworkContext,
-  allSignCheck = false,
+  allSignCheck = false
 ): Promise<MessagesToSign> {
   chainId = typeof chainId === "string" ? chainId : chainId.chainId;
 
@@ -192,16 +196,21 @@ export async function getMessagesToSign(ubundle: SpendBundle | UnsignedSpendBund
   return {
     chainId,
     messages,
-  }
+  };
 }
 
 async function getMessagesToSignFilterByPuzzles(
   ubundle: UnsignedSpendBundle | SpendBundle | PartialSpendBundle,
   puzzles: TokenPuzzleObserver[],
-  allSignCheck = false,
+  allSignCheck = false
 ): Promise<MessageToSign[]> {
-  const puzzleDict: { [key: string]: PuzzleObserver } = Object.assign({}, ...puzzles.flatMap(_ => _.puzzles).map((x) => ({ [unprefix0x(x.synPubKey)]: x })));
-  const getPuzDetail = (synPubKey: Hex): PuzzleObserver | undefined => { return puzzleDict[synPubKey]; }
+  const puzzleDict: { [key: string]: PuzzleObserver } = Object.assign(
+    {},
+    ...puzzles.flatMap((_) => _.puzzles).map((x) => ({ [unprefix0x(x.synPubKey)]: x }))
+  );
+  const getPuzDetail = (synPubKey: Hex): PuzzleObserver | undefined => {
+    return puzzleDict[synPubKey];
+  };
 
   const css = ubundle.coin_spends;
   const msgs: MessageToSign[] = [];
@@ -212,10 +221,10 @@ async function getMessagesToSignFilterByPuzzles(
     const coinname = getCoinNameHex(coin_spend.coin);
 
     const wmsgs = result.conditions
-      .filter(_ => _.code == ConditionOpcode.AGG_SIG_ME
-        && _.args.at(1) instanceof Uint8Array
-        && _.args.at(0) instanceof Uint8Array)
-      .map(_ => ({
+      .filter(
+        (_) => _.code == ConditionOpcode.AGG_SIG_ME && _.args.at(1) instanceof Uint8Array && _.args.at(0) instanceof Uint8Array
+      )
+      .map((_) => ({
         message: utility.toHexString(_.args.at(1) as Uint8Array),
         coinname: coinname.hex(),
         publicKey: utility.toHexString(_.args.at(0) as Uint8Array),

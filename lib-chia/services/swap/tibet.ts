@@ -1,4 +1,3 @@
-
 export interface TibetTokenEntity {
   asset_id: string;
   pair_id: string;
@@ -28,12 +27,12 @@ export interface TibetQuoteEntity {
 }
 
 const rpcUrls: { [chainId: string]: string } = {
-  "ae83525ba8d1dd3f09b277de18ca3e43fc0af20d20c4b3e92ef2a48bd291ccb2": "https://api.v2-testnet10.tibetswap.io",
-  "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb": "https://api.v2.tibetswap.io/"
-}
+  ae83525ba8d1dd3f09b277de18ca3e43fc0af20d20c4b3e92ef2a48bd291ccb2: "https://api.v2-testnet10.tibetswap.io",
+  ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb: "https://api.v2.tibetswap.io/",
+};
 
-export function isSwapAvailable(chainId: string) {
-  return !!rpcUrls[chainId]
+export function isSwapAvailable(chainId: string): boolean {
+  return !!rpcUrls[chainId];
 }
 
 export async function getSwapTokens(chainId: string): Promise<TibetTokenEntity[]> {
@@ -50,14 +49,15 @@ export async function getSwapPair(pairId: string, chainId: string): Promise<Tibe
 export async function getSwapQuote(
   pairId: string,
   sellAmount: bigint | string,
-  sellType: 'xch' | 'cat',
+  sellType: "xch" | "cat",
   chainId: string
 ): Promise<TibetQuoteEntity> {
   const resp = await fetch(
-    rpcUrls[chainId] + `/quote/${pairId}` +
-    `?amount_in=${sellAmount}` +
-    `&xch_is_input=${sellType == 'xch'}` +
-    `&estimate_fee=true`
+    rpcUrls[chainId] +
+      `/quote/${pairId}` +
+      `?amount_in=${sellAmount}` +
+      `&xch_is_input=${sellType == "xch"}` +
+      `&estimate_fee=true`
   );
 
   const quote = (await resp.json()) as TibetQuoteEntity;

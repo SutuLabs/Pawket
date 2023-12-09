@@ -11,15 +11,19 @@ import receive from "./receive";
 import { bigint_to_uint8array_padding, calculate_synthetic_offset } from "./sign";
 
 export class EcdhHelper {
-
-  public async encrypt(self: Hex0x, to: Hex0x, plain: string, account: AccountEntity, rpcUrl: string,
+  public async encrypt(
+    self: Hex0x,
+    to: Hex0x,
+    plain: string,
+    account: AccountEntity,
+    rpcUrl: string,
     random: Uint8Array | undefined = undefined
   ): Promise<string> {
     const synsk_self = this.addressToSynSk(self, account);
     const synpk_to: PointG1 = await this.addressToSynPk(to, rpcUrl);
 
     const sharedKey = synpk_to.multiplyPrecomputed(this.bytesToNumberBE(synsk_self)).toHex();
-    const encrypted = await encryption.encrypt(plain, sharedKey, random)
+    const encrypted = await encryption.encrypt(plain, sharedKey, random);
     return encrypted;
   }
 
@@ -28,7 +32,7 @@ export class EcdhHelper {
     const synpk_from: PointG1 = await this.addressToSynPk(from, rpcUrl);
 
     const sharedKey = synpk_from.multiplyPrecomputed(this.bytesToNumberBE(synsk_self)).toHex();
-    const plain = await encryption.decrypt(encrypted, sharedKey)
+    const plain = await encryption.decrypt(encrypted, sharedKey);
     return plain;
   }
 
@@ -44,8 +48,9 @@ export class EcdhHelper {
   // address(puzzle hash) -> sk -> synsk
   public addressToSynSk(puzzleHash: Hex0x, account: AccountEntity): Uint8Array {
     const all = account.addressPuzzles.reduce((acc, token) => acc.concat(token.puzzles), [] as PuzzleDetail[]);
-    const found = all.filter(_ => prefix0x(_.hash) == puzzleHash).at(0);
-    if (!found) throw new Error(`Cannot find the address [${puzzleHash}] from [${all.map(_ => _.hash).join(", ")}] to generate synsk`);
+    const found = all.filter((_) => prefix0x(_.hash) == puzzleHash).at(0);
+    if (!found)
+      throw new Error(`Cannot find the address [${puzzleHash}] from [${all.map((_) => _.hash).join(", ")}] to generate synsk`);
     const sk = found.privateKey.serialize();
     return this.calculate_synthetic_secret_key(sk, DEFAULT_HIDDEN_PUZZLE_HASH.raw());
   }

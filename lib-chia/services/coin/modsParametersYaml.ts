@@ -1,4 +1,4 @@
-export const modsParametersYaml=`
+export const modsParametersYaml = `
 - name: settlement_payments
   parameters:
   - name: notarized_payments

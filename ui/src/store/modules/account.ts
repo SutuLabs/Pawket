@@ -21,13 +21,13 @@ export function getAccountCats(account: AccountEntity): CustomCat[] {
   const cats = account.allCats?.filter((c) => convertToChainId(c.network) == chainId()) ?? [];
   for (const c of cats) {
     if (c.img == "https://images.taildatabase.com/tails/86b8ebab-7d76-4321-972a-a57b23dbf5b4.jpeg") {
-      c.img = "https://storage.pawket.app/ipfs/QmaDrAPVgYxp2TJoqaudjjRy9TqFDmyrTvy3MUEdW6YXt1?filename=USDS.png"
+      c.img = "https://storage.pawket.app/ipfs/QmaDrAPVgYxp2TJoqaudjjRy9TqFDmyrTvy3MUEdW6YXt1?filename=USDS.png";
     }
     if (c.img == "https://images.taildatabase.com/tails/cd864a92-facb-48a5-a02e-6344425538c8.png") {
-      c.img = "https://storage.pawket.app/ipfs/QmRU7jq8TKWgNW4Yc9FkHdzyofNfV8PbjJhw5B9xhd1DVK?filename=BSH.png"
+      c.img = "https://storage.pawket.app/ipfs/QmRU7jq8TKWgNW4Yc9FkHdzyofNfV8PbjJhw5B9xhd1DVK?filename=BSH.png";
     }
   }
-  return cats
+  return cats;
 }
 
 export function getDefaultCats(): CustomCat[] {
@@ -49,10 +49,10 @@ export function getAllCats(account: AccountEntity): CustomCat[] {
 
 function setDidName(dids: DidDetail[]): void {
   let currentNames: DidName[] = [];
-  let names: DidName[] = []
+  let names: DidName[] = [];
   try {
     names = JSON.parse(localStorage.getItem("DID_NAMES") ?? "[]") as DidName[];
-    currentNames = names.filter(n => dids.findIndex(d => d.did == n.did) > -1);
+    currentNames = names.filter((n) => dids.findIndex((d) => d.did == n.did) > -1);
   } catch (error) {
     currentNames = [];
   }
@@ -62,8 +62,8 @@ function setDidName(dids: DidDetail[]): void {
       dids[i].name = currentNames[idx].name;
     } else {
       let idx = 1;
-      while (currentNames.findIndex(n => n.name == `DID${idx}`) > -1) {
-        idx++
+      while (currentNames.findIndex((n) => n.name == `DID${idx}`) > -1) {
+        idx++;
       }
       dids[i].name = `DID${idx}`;
       currentNames.push({ name: `DID${idx}`, did: dids[i].did });
@@ -77,7 +77,7 @@ function setDidName(dids: DidDetail[]): void {
       currentNames.splice(idx, 1);
     }
   }
-  names.push(...currentNames)
+  names.push(...currentNames);
   localStorage.setItem("DID_NAMES", JSON.stringify(names));
 }
 
@@ -143,8 +143,17 @@ store.registerModule<IAccountState>("account", {
     async createAccountByPublicKey({ state, dispatch }, { name, publicKey }: { name: string; publicKey: string }) {
       state.accounts.push(
         getAccountEntity(
-          { compatibleMnemonic: "", fingerprint: account.getFingerprint(publicKey), privateKey: "", publicKey: prefix0x(publicKey) },
-          name, "PublicKey", undefined, undefined)
+          {
+            compatibleMnemonic: "",
+            fingerprint: account.getFingerprint(publicKey),
+            privateKey: "",
+            publicKey: prefix0x(publicKey),
+          },
+          name,
+          "PublicKey",
+          undefined,
+          undefined
+        )
       );
       await dispatch("initWalletAddress");
       await dispatch("persistent");
@@ -205,29 +214,27 @@ store.registerModule<IAccountState>("account", {
           rootState.network.peekHeight = records.peekHeight;
           const activities = receive.convertActivities(requests, records);
           const tokenBalances = receive.getTokenBalance(requests, records);
-          const coins = activities.map(act => {
-            if (act.spent && act.coin) return convertToOriginCoin(act.coin)
-          })
+          const coins = activities.map((act) => {
+            if (act.spent && act.coin) return convertToOriginCoin(act.coin);
+          });
           const uc = unlockCoins(coins as OriginCoin[]);
           const blockHeights = getCompletedTransactions(uc, activities);
           blockHeights
             .filter((_, i) => blockHeights.indexOf(_) === i) // filter duplicated items
-            .forEach(block => {
-              const title = tc('app.message.notification.transactionComplete.title');
-              const body = tc('app.message.notification.transactionComplete.body', undefined, { block });
+            .forEach((block) => {
+              const title = tc("app.message.notification.transactionComplete.title");
+              const body = tc("app.message.notification.transactionComplete.body", undefined, { block });
               desktopNotify(title, body);
-            })
+            });
           Vue.set(account, "activities", activities);
           Vue.set(account, "tokens", tokenBalances);
         } catch (error) {
           if (String(error).match(/Failed to fetch/)) rootState.vault.disconnected = true;
           console.warn("error get account balance", error);
         }
-      }
-      catch (error) {
+      } catch (error) {
         console.warn("error refresh account balance", error);
-      }
-      finally {
+      } finally {
         resetState();
       }
     },
@@ -248,15 +255,17 @@ store.registerModule<IAccountState>("account", {
       const assetRecords = await receive.getCoinRecords(requests, false, rpcUrl(), false, parameters.coinType, true);
 
       // replace hintPuzzle of analysis
-      assetRecords.coins.forEach(coin => coin.records.forEach(rec => {
-        if (rec.analysis && rec.coin) {
-          rec.analysis.hintPuzzle = prefix0x(coin.puzzleHash);
-          rec.analysis.coin = convertToOriginCoin(rec.coin);
-        }
-      }))
+      assetRecords.coins.forEach((coin) =>
+        coin.records.forEach((rec) => {
+          if (rec.analysis && rec.coin) {
+            rec.analysis.hintPuzzle = prefix0x(coin.puzzleHash);
+            rec.analysis.coin = convertToOriginCoin(rec.coin);
+          }
+        })
+      );
 
       if (parameters.coinType == "DidV1") {
-        const didRecords = assetRecords.coins.flatMap(coin => coin.records);
+        const didRecords = assetRecords.coins.flatMap((coin) => coin.records);
         for (const record of didRecords) {
           if (record.analysis && record.coin && "didInnerPuzzleHash" in record.analysis) {
             const did: DidDetail = {
@@ -275,7 +284,7 @@ store.registerModule<IAccountState>("account", {
         if (account.dids) setDidName(account.dids);
         Vue.set(account, "dids", account.dids);
       } else {
-        const nftRecords = assetRecords.coins.flatMap(coin => coin.records);
+        const nftRecords = assetRecords.coins.flatMap((coin) => coin.records);
         if (nftRecords.length && nftRecords[0].analysis) {
           for (const record of nftRecords) {
             if (record.analysis && record.coin && "didOwner" in record.analysis) {
@@ -364,10 +373,10 @@ export async function getAccountAddressDetails(
   const requests: TokenPuzzleAddress[] =
     account.type == "Address"
       ? <TokenPuzzleAddress[]>[
-        { symbol: xchSymbol(), puzzles: [{ hash: account.puzzleHash, type: "Unknown", address: account.firstAddress }] },
-      ]
+          { symbol: xchSymbol(), puzzles: [{ hash: account.puzzleHash, type: "Unknown", address: account.firstAddress }] },
+        ]
       : account.type == "PublicKey"
-        ? await getAccountPuzzleObservers(
+      ? await getAccountPuzzleObservers(
           account,
           getAccountCats(account),
           store.state.account.tokenInfo,
@@ -376,7 +385,7 @@ export async function getAccountAddressDetails(
           maxId,
           "cat_v2"
         )
-        : await getAccountAddressDetailsExternal(
+      : await getAccountAddressDetailsExternal(
           account,
           getAccountCats(account),
           store.state.account.tokenInfo,

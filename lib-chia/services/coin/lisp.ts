@@ -5,7 +5,9 @@ export function beautifyLisp(lisp: string): string {
   let indent = 0;
   const indentSpace = (indent: number) => {
     if (indent == 0) return "";
-    return Array(indent * 2).fill(" ").join("");
+    return Array(indent * 2)
+      .fill(" ")
+      .join("");
   };
   for (let i = 0; i < lisp.length; i++) {
     const c = lisp[i];
@@ -57,17 +59,14 @@ export function findByPath(program: SExp, path: string): SExp {
       const direction = path[i];
       if (direction == "r") {
         cursor = cursor.rest();
-      }
-      else if (direction == "f") {
+      } else if (direction == "f") {
         cursor = cursor.first();
-      }
-      else {
+      } else {
         throw new Error("only f or r allowed");
       }
     }
     return cursor;
-  }
-  catch (err) {
+  } catch (err) {
     return SExp.null();
   }
 }

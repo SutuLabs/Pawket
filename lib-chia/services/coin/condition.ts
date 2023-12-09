@@ -18,7 +18,7 @@ export class CoinConditions {
     return [ConditionOpcode.CREATE_COIN.toString(), puzzlehash, formatAmount(amount)];
   }
   public static CREATE_COIN_Extend(puzzlehash: Hex0x, amount: bigint, memos: string[]): ConditionType {
-    return [...this.CREATE_COIN(puzzlehash, amount), ...((memos && memos.length > 0) ? [memos] : [])];
+    return [...this.CREATE_COIN(puzzlehash, amount), ...(memos && memos.length > 0 ? [memos] : [])];
   }
   public static CREATE_COIN_ANNOUNCEMENT(message: string): ConditionType {
     return [ConditionOpcode.CREATE_COIN_ANNOUNCEMENT.toString(), prefix0x(message)];
@@ -46,11 +46,11 @@ export function prefix0x(str: string): Hex0x {
 }
 
 export function unprefix0x(str: Hex0x | string | undefined): string {
-  return str && str.startsWith("0x") ? str.substring(2) : (str ?? "");
+  return str && str.startsWith("0x") ? str.substring(2) : str ?? "";
 }
 
 export function skipFirstByte0x(str: string): Hex0x {
-  return "0x" + (str.slice(str.startsWith("0x") ? 4 : 2)) as Hex0x;
+  return ("0x" + str.slice(str.startsWith("0x") ? 4 : 2)) as Hex0x;
 }
 
 export function formatAmount(amount: bigint): Hex0x {
@@ -94,9 +94,7 @@ export function getArgMsg(arg: ConditionArgs): string {
 
 export function conditionsToTextList(conditions: ConditionType[]): string {
   return conditions
-    .map(_ => "(" + _
-      .map(_ => (typeof _ === "object" ? ("(" + _.join(" ") + ")") : (_ ? _ : "()")))
-      .join(" ") + ")")
+    .map((_) => "(" + _.map((_) => (typeof _ === "object" ? "(" + _.join(" ") + ")" : _ ? _ : "()")).join(" ") + ")")
     .join(" ");
 }
 
@@ -199,5 +197,7 @@ export const conditionInfos: ConditionInfo[] = [
   },
 ];
 
-export const conditionDict: { [id: number]: ConditionInfo } = conditionInfos
-  .reduce((arr, cur) => ({ ...arr, [cur.id]: cur }), {});
+export const conditionDict: { [id: number]: ConditionInfo } = conditionInfos.reduce(
+  (arr, cur) => ({ ...arr, [cur.id]: cur }),
+  {}
+);

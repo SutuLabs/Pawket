@@ -55,7 +55,7 @@ export default class ErrorLog extends Vue {
   }
 
   @Watch("path")
-  onPathChange():void {
+  onPathChange(): void {
     this.close();
   }
 }

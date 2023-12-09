@@ -15,40 +15,49 @@ export interface LineageProof {
 }
 
 class CatBundle {
-
   public async generateCoinSpends(
     plan: TokenSpendPlan,
     puzzles: TokenPuzzleObserver[],
     additionalConditions: ConditionType[] = [],
-    getPuzzle: GetPuzzleApiCallback,
+    getPuzzle: GetPuzzleApiCallback
   ): Promise<CoinSpend[]> {
     const coin_spends: CoinSpend[] = [];
 
-    const puzzleDict: { [key: string]: PuzzleObserver } = Object.assign({}, ...puzzles.flatMap(_ => _.puzzles).map((x) => ({ [prefix0x(x.hash)]: x })));
+    const puzzleDict: { [key: string]: PuzzleObserver } = Object.assign(
+      {},
+      ...puzzles.flatMap((_) => _.puzzles).map((x) => ({ [prefix0x(x.hash)]: x }))
+    );
     const getPuzDetail = (hash: string) => {
       const puz = puzzleDict[hash];
       if (!puz) throw new Error("cannot find puzzle");
       return puz;
-    }
+    };
 
     let subtotal = 0n;
     for (let i = 0; i < plan.coins.length; i++) {
       const coin = plan.coins[i];
-      const prevcoin = plan.coins[(i + plan.coins.length - 1) % plan.coins.length]
-      const nextcoin = plan.coins[(i + 1) % plan.coins.length]
+      const prevcoin = plan.coins[(i + plan.coins.length - 1) % plan.coins.length];
+      const nextcoin = plan.coins[(i + 1) % plan.coins.length];
       const puz = getPuzDetail(coin.puzzle_hash);
 
       // last coin with proper condition solution
-      const inner_puzzle_solution = i == plan.coins.length - 1 ?
-        transfer.getSolution(plan.targets, additionalConditions)
-        : "(() (q) ())";
+      const inner_puzzle_solution =
+        i == plan.coins.length - 1 ? transfer.getSolution(plan.targets, additionalConditions) : "(() (q) ())";
 
       const nextCoin_puz = getPuzDetail(nextcoin.puzzle_hash);
       const nextCoin_pk = nextCoin_puz.synPubKey;
       const nextCoin_inner_puzzle_hash = await puzzle.getPuzzleHashFromSyntheticKey(nextCoin_pk);
 
       const cs = await this.generateCoinSpend(
-        coin, prevcoin, nextcoin, nextCoin_inner_puzzle_hash, subtotal, puz, inner_puzzle_solution, getPuzzle);
+        coin,
+        prevcoin,
+        nextcoin,
+        nextCoin_inner_puzzle_hash,
+        subtotal,
+        puz,
+        inner_puzzle_solution,
+        getPuzzle
+      );
       coin_spends.push(cs);
       subtotal += coin.amount;
     }
@@ -56,10 +65,7 @@ class CatBundle {
     return coin_spends;
   }
 
-  public async getLineageProof(parentCoinId: string,
-    api: GetPuzzleApiCallback,
-    argnum = 3,
-  ): Promise<LineageProof> {
+  public async getLineageProof(parentCoinId: string, api: GetPuzzleApiCallback, argnum = 3): Promise<LineageProof> {
     // console.log("parentCoinId", parentCoinId)
 
     const presp = await api(parentCoinId);
@@ -96,9 +102,8 @@ class CatBundle {
     nextCoin: OriginCoin,
     nextCoin_inner_puzzle_hash: string,
     subtotal: bigint,
-    proof: LineageProof,
+    proof: LineageProof
   ): string {
-
     const ljoin = (...args: string[]) => "(" + args.join(" ") + ")";
 
     // inner_puzzle_solution    ;; if invalid, INNER_PUZZLE will fail
@@ -122,7 +127,7 @@ class CatBundle {
       this_coin_info,
       next_coin_proof,
       prev_subtotal,
-      extra_delta,
+      extra_delta
     );
     // console.log("solution", solution);
 
@@ -137,11 +142,18 @@ class CatBundle {
     subtotal: bigint,
     puz: PuzzleObserver,
     inner_puzzle_solution: string,
-    getPuzzle: GetPuzzleApiCallback,
+    getPuzzle: GetPuzzleApiCallback
   ): Promise<CoinSpend> {
     const puzzle_reveal = prefix0x(await puzzle.encodePuzzle(puz.puzzle));
     const solution = await this.generateSolution(
-      coin, prevCoin, nextCoin, nextCoin_inner_puzzle_hash, subtotal, inner_puzzle_solution, getPuzzle);
+      coin,
+      prevCoin,
+      nextCoin,
+      nextCoin_inner_puzzle_hash,
+      subtotal,
+      inner_puzzle_solution,
+      getPuzzle
+    );
     const solution_hex = prefix0x(await puzzle.encodePuzzle(solution));
     return { coin, puzzle_reveal, solution: solution_hex };
   }
@@ -153,11 +165,18 @@ class CatBundle {
     nextCoin_inner_puzzle_hash: string,
     subtotal: bigint,
     inner_puzzle_solution: string,
-    getPuzzle: GetPuzzleApiCallback,
+    getPuzzle: GetPuzzleApiCallback
   ): Promise<string> {
     const proof = await this.getLineageProof(coin.parent_coin_info, getPuzzle);
     const solution = this.getCatPuzzleSolution(
-      inner_puzzle_solution, coin, prevCoin, nextCoin, nextCoin_inner_puzzle_hash, subtotal, proof);
+      inner_puzzle_solution,
+      coin,
+      prevCoin,
+      nextCoin,
+      nextCoin_inner_puzzle_hash,
+      subtotal,
+      proof
+    );
     return solution;
   }
 }

@@ -34,7 +34,7 @@ export async function generateMintCatBundle(
   availcoins: SymbolCoins,
   requests: TokenPuzzleObserver[],
   net: NetworkContextWithOptionalApi,
-  catModName: "cat_v1" | "cat_v2" = "cat_v2",
+  catModName: "cat_v1" | "cat_v2" = "cat_v2"
 ): Promise<MintCatInfo> {
   const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(changeAddress));
@@ -43,7 +43,16 @@ export async function generateMintCatBundle(
   // eslint-disable-next-line no-useless-escape
   memo = memo.replace(/[&/\\#,+()$~%.'":*?<>{}\[\] ]/g, "_");
 
-  const { innerPuzzle, catPuzzle, assetId, bootstrapCoin } = await constructCatPuzzle(tgt_hex, change_hex, amount, fee, memo, availcoins, net.symbol, catModName);
+  const { innerPuzzle, catPuzzle, assetId, bootstrapCoin } = await constructCatPuzzle(
+    tgt_hex,
+    change_hex,
+    amount,
+    fee,
+    memo,
+    availcoins,
+    net.symbol,
+    catModName
+  );
   const ibundle = await constructInternalBundle(catPuzzle.hash, change_hex, amount, fee, availcoins, requests, net);
   const ebundle = await constructExternalBundle(innerPuzzle, catPuzzle, bootstrapCoin, amount);
   const bundle = combineSpendBundle(ibundle, ebundle);
@@ -52,7 +61,7 @@ export async function generateMintCatBundle(
     spendBundle: bundle,
     assetId,
     catPuzzle,
-  }
+  };
 }
 
 async function constructCatPuzzle(
@@ -63,7 +72,7 @@ async function constructCatPuzzle(
   memo: string,
   availcoins: SymbolCoins,
   tokenSymbol: string,
-  catModName: "cat_v1" | "cat_v2" = "cat_v2",
+  catModName: "cat_v1" | "cat_v2" = "cat_v2"
 ): Promise<CatPuzzleResponse> {
   const baseSymbol = Object.keys(availcoins)[0];
   const itgts: TransferTarget[] = [
@@ -89,7 +98,7 @@ async function constructCatPuzzle(
     catPuzzle: { plaintext: catPuzzle, hash: catPuzzleHash },
     assetId: tail_hash,
     bootstrapCoin,
-  }
+  };
 }
 
 async function constructInternalBundle(
@@ -99,10 +108,10 @@ async function constructInternalBundle(
   fee: bigint,
   availcoins: SymbolCoins,
   requests: TokenPuzzleObserver[],
-  net: NetworkContextWithOptionalApi,
+  net: NetworkContextWithOptionalApi
 ): Promise<UnsignedSpendBundle> {
   const baseSymbol = Object.keys(availcoins)[0];
-  const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: baseSymbol },];
+  const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: baseSymbol }];
   tgts[0].address = tgt_hex;
   const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, fee, net.symbol);
   const bundle = await transfer.generateSpendBundleWithoutCat(plan, requests, [], net);
@@ -113,7 +122,7 @@ async function constructExternalBundle(
   innerPuzzle: PuzzleInfo,
   catPuzzle: PuzzleInfo,
   bootstrapCoin: Hex0x,
-  amount: bigint,
+  amount: bigint
 ): Promise<UnsignedSpendBundle> {
   const coin: OriginCoin = { parent_coin_info: bootstrapCoin, amount, puzzle_hash: catPuzzle.hash };
   const coin_name = getCoinName0x(coin);

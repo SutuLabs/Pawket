@@ -1,4 +1,3 @@
-
-test('Analyze CNS', async () => {
+test("Analyze CNS", async () => {
   //
 });

@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-import { Component,  Vue, Emit } from "vue-property-decorator";
+import { Component, Vue, Emit } from "vue-property-decorator";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from "vue-qrcode-reader";
 import { initCameraHandleError } from "@/services/view/camera";

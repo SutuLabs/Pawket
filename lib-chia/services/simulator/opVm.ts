@@ -27,8 +27,8 @@ export type ValStackType = idSExp[];
 export type OpStackType = idOpType[];
 export type opType = (op_stack: OpStackType, value_stack: ValStackType) => number;
 export type OpType = "apply" | "cons" | "swap" | "eval";
-export type idSExp = { sexp: SExp; id: number; };
-export type idOpType = { op: OpType; id: number; };
+export type idSExp = { sexp: SExp; id: number };
+export type idOpType = { op: OpType; id: number };
 
 export interface StepType {
   value_stack: ValStackType;
@@ -61,7 +61,6 @@ export default class OpVm {
   puzzlecl = "";
   solutioncl = "";
   // started = false;
-
 
   private _uid = 10000;
   getuid(): number {
@@ -147,12 +146,16 @@ export default class OpVm {
     this.snapshot();
 
     const opent = this.op_stack.pop() as idOpType;
-    const op
-      = opent.op == "apply" ? this.apply_op
-        : opent.op == "swap" ? this.swap_op
-          : opent.op == "cons" ? this.cons_op
-            : opent.op == "eval" ? this.eval_op
-              : null;
+    const op =
+      opent.op == "apply"
+        ? this.apply_op
+        : opent.op == "swap"
+        ? this.swap_op
+        : opent.op == "cons"
+        ? this.cons_op
+        : opent.op == "eval"
+        ? this.eval_op
+        : null;
     if (op == null) throw new Error("unexpected op type: " + opent.op);
 
     const bop = op.bind(this);

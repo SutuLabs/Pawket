@@ -5,9 +5,7 @@
         <div class="box p-6">
           <section>
             <h1 class="title is-4">{{ $t("verifyPassword.ui.title.verifyPassword") }}</h1>
-            <b-field
-              :type="isCorrect ? '' : 'is-danger'"
-            >
+            <b-field :type="isCorrect ? '' : 'is-danger'">
               <b-input
                 type="password"
                 ref="password"

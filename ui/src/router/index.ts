@@ -16,7 +16,7 @@ const routes: Array<RouteConfig> = [
     children: [
       {
         path: "",
-        redirect: 'asset'
+        redirect: "asset",
       },
       {
         path: "asset",
@@ -237,7 +237,7 @@ const routes: Array<RouteConfig> = [
         path: "take-offer",
         component: () => import(/* webpackChunkName: "settings" */ "@/components/Offer/Take.vue"),
       },
-    ]
+    ],
   },
   {
     path: "/",

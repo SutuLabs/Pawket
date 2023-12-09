@@ -67,7 +67,13 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import QrcodeVue from "qrcode.vue";
 import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from "vue-qrcode-reader";
 import { initCameraHandleError } from "@/services/view/camera";
-import { combineSpendBundleSignature, MessagesToSign, signMessages, signSpendBundle, SpendBundle } from "../../../../lib-chia/services/spendbundle";
+import {
+  combineSpendBundleSignature,
+  MessagesToSign,
+  signMessages,
+  signSpendBundle,
+  SpendBundle,
+} from "../../../../lib-chia/services/spendbundle";
 import { decodeOffer, encodeOffer } from "../../../../lib-chia/services/offer/encoding";
 import { networkContext, xchPrefix } from "@/store/modules/network";
 import { AccountEntity } from "../../../../lib-chia/models/account";

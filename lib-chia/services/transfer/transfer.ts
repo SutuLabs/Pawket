@@ -9,38 +9,34 @@ import { NetworkContext, NetworkContextWithOptionalApi } from "../coin/coinUtili
 export type GetPuzzleApiCallback = (parentCoinId: string) => Promise<GetParentPuzzleResponse | undefined>;
 
 class Transfer {
-
   public generateSpendPlan(
     availcoins: SymbolCoins,
     targets: TransferTarget[],
     changeAddress: Hex0x,
     fee: bigint | undefined = undefined,
-    tokenSymbol: string | undefined = undefined,
+    tokenSymbol: string | undefined = undefined
   ): SpendPlan {
     const plan: SpendPlan = {};
     for (const symbol in availcoins) {
       if (!Object.prototype.hasOwnProperty.call(availcoins, symbol)) continue;
 
       const coins = availcoins[symbol];
-      const tgts = targets.filter(_ => _.symbol == symbol);
+      const tgts = targets.filter((_) => _.symbol == symbol);
 
-      const outgoingExtra = ((symbol == tokenSymbol) ? fee : 0n) ?? 0n;
+      const outgoingExtra = (symbol == tokenSymbol ? fee : 0n) ?? 0n;
       const outgoingTotal = tgts.reduce((acc, cur) => acc + cur.amount, 0n) + outgoingExtra;
       const incomingCoins = this.findCoins(coins, outgoingTotal);
 
       const incomingTotal = incomingCoins.reduce((acc, cur) => acc + cur.amount, 0n);
 
       const change = incomingTotal - outgoingTotal;
-      if (change < 0n)
-        throw new Error(`not enough balance to transfer ${symbol}, lacking ${outgoingTotal - incomingTotal}`);
+      if (change < 0n) throw new Error(`not enough balance to transfer ${symbol}, lacking ${outgoingTotal - incomingTotal}`);
 
       const transferTargets: TransferTarget[] = [];
       transferTargets.push(...tgts);
-      if (change > 0)
-        transferTargets.push({ symbol, address: changeAddress, amount: change })
+      if (change > 0) transferTargets.push({ symbol, address: changeAddress, amount: change });
 
-      if (incomingCoins.length > 0)
-        plan[symbol] = { coins: incomingCoins, targets: transferTargets };
+      if (incomingCoins.length > 0) plan[symbol] = { coins: incomingCoins, targets: transferTargets };
     }
 
     return plan;
@@ -50,7 +46,7 @@ class Transfer {
     plan: SpendPlan,
     puzzles: TokenPuzzleObserver[],
     catAdditionalConditions: ConditionType[],
-    net: NetworkContextWithOptionalApi,
+    net: NetworkContextWithOptionalApi
   ): Promise<UnsignedSpendBundle> {
     return await this.generateSpendBundleInternal(plan, puzzles, catAdditionalConditions, net);
   }
@@ -59,7 +55,7 @@ class Transfer {
     plan: SpendPlan,
     puzzles: TokenPuzzleObserver[],
     catAdditionalConditions: ConditionType[],
-    net: NetworkContext,
+    net: NetworkContext
   ): Promise<UnsignedSpendBundle> {
     return await this.generateSpendBundleInternal(plan, puzzles, catAdditionalConditions, net);
   }
@@ -68,7 +64,7 @@ class Transfer {
     plan: SpendPlan,
     puzzles: TokenPuzzleObserver[],
     catAdditionalConditions: ConditionType[],
-    net: NetworkContextWithOptionalApi,
+    net: NetworkContextWithOptionalApi
   ): Promise<UnsignedSpendBundle> {
     const coin_spends: CoinSpend[] = [];
 
@@ -77,10 +73,13 @@ class Transfer {
 
       const tp = plan[symbol];
       if (symbol == net.symbol) {
-        coin_spends.push(... await stdBundle.generateCoinSpends(tp, puzzles));
+        coin_spends.push(...(await stdBundle.generateCoinSpends(tp, puzzles)));
       } else {
-        if (!net.api) throw new Error(`getPuzzle cannot be null when composing cat[${symbol}] spendbundle other than native token[${net.symbol}]`);
-        coin_spends.push(... await catBundle.generateCoinSpends(tp, puzzles, catAdditionalConditions, net.api));
+        if (!net.api)
+          throw new Error(
+            `getPuzzle cannot be null when composing cat[${symbol}] spendbundle other than native token[${net.symbol}]`
+          );
+        coin_spends.push(...(await catBundle.generateCoinSpends(tp, puzzles, catAdditionalConditions, net.api)));
       }
     }
 
@@ -111,7 +110,7 @@ class Transfer {
         break;
       }
       outcoins.splice(i, 1);
-      i--;// fix array index change due to splice
+      i--; // fix array index change due to splice
       num += coin.amount;
     }
 
@@ -131,19 +130,15 @@ class Transfer {
   }
 
   public getSolution(targets: TransferTarget[], additionalConditions: ConditionType[]): string {
-
     const conditions: ConditionType[] = [];
 
     for (let i = 0; i < targets.length; i++) {
       const tgt = targets[i];
-      if (tgt.memos)
-        conditions.push(CoinConditions.CREATE_COIN_Extend(tgt.address, tgt.amount, tgt.memos));
-      else
-        conditions.push(CoinConditions.CREATE_COIN(tgt.address, tgt.amount));
+      if (tgt.memos) conditions.push(CoinConditions.CREATE_COIN_Extend(tgt.address, tgt.amount, tgt.memos));
+      else conditions.push(CoinConditions.CREATE_COIN(tgt.address, tgt.amount));
     }
 
-    if (additionalConditions && additionalConditions.length > 0)
-      conditions.push(...additionalConditions);
+    if (additionalConditions && additionalConditions.length > 0) conditions.push(...additionalConditions);
 
     const delegated_puzzle_solution = this.getDelegatedPuzzle(conditions);
     const solution_reveal = "(() " + delegated_puzzle_solution + " ())";
@@ -153,7 +148,7 @@ class Transfer {
 }
 
 export type SymbolCoins = {
-  [symbol: string]: OriginCoin[]
+  [symbol: string]: OriginCoin[];
 };
 
 export interface SpendPlan {

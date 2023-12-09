@@ -8,7 +8,12 @@ import { chainId, rpcUrl } from "@/store/modules/network";
 import { lockCoins } from "../../../../lib-chia/services/coin/coinUtility";
 import { AccountEntity } from "../../../../lib-chia/models/account";
 
-export async function submitBundle(bundle: SpendBundle, account: AccountEntity, setSubmitting: (state: boolean) => void, success: () => void): Promise<void> {
+export async function submitBundle(
+  bundle: SpendBundle,
+  account: AccountEntity,
+  setSubmitting: (state: boolean) => void,
+  success: () => void
+): Promise<void> {
   setSubmitting(true);
   /** 
    * Do not delele! For avoiding check i18n failure.
@@ -42,13 +47,13 @@ export async function submitBundle(bundle: SpendBundle, account: AccountEntity, 
         message: tc("send.ui.messages.submitted"),
         type: "is-primary",
       });
-      const txnTime = Date.now()
+      const txnTime = Date.now();
       lockCoins(account, bundle.coin_spends, txnTime, chainId());
       success();
     } else {
-      const err = typeof (json.error) === "string" ? json.error.match('error ([A-Z_]+)') : null;
-      const errMsg = err !== null ? err[1] : '';
-      const path = "send.messages.error." + errMsg
+      const err = typeof json.error === "string" ? json.error.match("error ([A-Z_]+)") : null;
+      const errMsg = err !== null ? err[1] : "";
+      const path = "send.messages.error." + errMsg;
       const msg = tc(path) == path ? json.error : tc(path);
       Notification.open({
         message: tc("send.ui.messages.getFailedResponse") + msg,

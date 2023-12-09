@@ -23,7 +23,7 @@ class TailDb {
   private validityPeriod: number = 24 * 60 * 60; // unit: second
 
   private async getCatFromTailDb(): Promise<void> {
-    const resp = await fetch(rpcUrl() + 'misc/taildb', {
+    const resp = await fetch(rpcUrl() + "misc/taildb", {
       method: "GET",
       headers: {
         Accept: "application/json",
@@ -72,7 +72,7 @@ class TailDb {
 
   public async getTailsDict(): Promise<{ [id: string]: TailInfo }> {
     const tails = await this.getTails();
-    const tailsDict = Object.assign({}, ...tails.map((tail) => ({ [tail.hash]: tail })))
+    const tailsDict = Object.assign({}, ...tails.map((tail) => ({ [tail.hash]: tail })));
     return tailsDict;
   }
 }
