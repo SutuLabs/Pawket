@@ -18,6 +18,7 @@
     "check-i18n": "vue-i18n-extract report --vueFiles \"./ui/src/**/*.?(js|ts|vue)\" --languageFiles \"./ui/src/i18n/?(en|zh-cn).?(json|yml|yaml|js)\"",
     "check-i18n:all": "vue-i18n-extract report --vueFiles \"./ui/src/**/*.?(js|ts|vue)\" --languageFiles \"./ui/src/i18n/*.?(json|yml|yaml|js)\"",
     "importmods": "cd ./cli && yarn importmods",
+    "lint": "eslint --ext .ts,.js,.vue --fix ui/ cli/ lib-chia/",
     "test:lib": "cd ./lib-chia && jest --coverage=false",
     "test:cli": "cd ./cli && jest --coverage=false",
     "test": "yarn test:cli && yarn test:lib"
