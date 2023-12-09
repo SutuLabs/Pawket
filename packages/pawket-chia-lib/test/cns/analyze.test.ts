@@ -1,4 +1,0 @@
-
-test('Analyze CNS', async () => {
-  //
-});

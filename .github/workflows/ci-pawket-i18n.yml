@@ -5,13 +5,13 @@ on:
     branches:
       - master
     paths:
-      - "pawket/**"
+      - "ui/**"
       - ".github/workflows/**"
   pull_request:
     branches:
       - master
     paths:
-      - "pawket/**"
+      - "ui/**"
       - ".github/workflows/**"
 
 jobs:

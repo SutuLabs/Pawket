@@ -1,0 +1,1715 @@
+{
+  "default": {
+    "accountName": "账户1"
+  },
+  "html": {
+    "document": {
+      "title": "Pawket"
+    }
+  },
+  "common": {
+    "button": {
+      "confirm": "确认",
+      "cancel": "取消",
+      "back": "返回",
+      "save": "保存",
+      "submit": "提交",
+      "delete": "删除",
+      "sign": "签名",
+      "generate": "生成",
+      "copy": "复制"
+    },
+    "tooltip": {
+      "copy": "复制"
+    },
+    "message": {
+      "saved": "已保存",
+      "added": "已添加",
+      "noResult": "结果为空",
+      "uploadSuccess": "已上传"
+    }
+  },
+  "app": {
+    "ui": {
+      "button": {
+        "lang": "简体中文"
+      },
+      "navigation": {
+        "wallet": "钱包",
+        "cns": "域名",
+        "explore": "探索",
+        "settings": "设置"
+      }
+    },
+    "message": {
+      "notification": {
+        "copySuccess": "已复制",
+        "copyFailed": "复制失败",
+        "transactionComplete": {
+          "title": "交易已完成！",
+          "body": "你在区块 {block} 的交易已经完成。"
+        }
+      }
+    }
+  },
+  "footer": {
+    "ui": {
+      "productInfo": {
+        "name": "薄荷钱包",
+        "author": "SutuLabs",
+        "authorLink": "https://github.com/SutuLabs"
+      },
+      "button": {
+        "home": "主页",
+        "developer": "开发者工具"
+      },
+      "error": {
+        "READ_VERSION_FAILED": "读取版本信息失败"
+      }
+    }
+  },
+  "self-test": {
+    "message": {
+      "checking": "检查中",
+      "passed": "服务正常",
+      "failed": "环境不支持: "
+    }
+  },
+  "verifyPassword": {
+    "ui": {
+      "button": {
+        "confirm": "确认",
+        "clear": "重置钱包"
+      },
+      "title": {
+        "verifyPassword": "验证密码"
+      },
+      "alt": {
+        "logoAlt": "Pawket图标"
+      }
+    },
+    "message": {
+      "confirmation": {
+        "clear": "重置钱包将会把所有钱包数据（含助记词、密码）从你的设备中永久删除。请确保你已经备份助记词，重置后可以通过助记词恢复钱包。确认重置吗？",
+        "confirmText": "确认",
+        "cancelText": "取消"
+      },
+      "error": {
+        "passwordNotMatch": "密码不一致",
+        "incorrectPassword": "密码不正确",
+        "passwordEmpty": "密码不能为空"
+      },
+      "tip": {
+        "weakPassword": "弱",
+        "mediumPassword": "中",
+        "strongPassword": "强"
+      }
+    }
+  },
+  "createSeed": {
+    "ui": {
+      "button": {
+        "confirm": "确认",
+        "later": "稍后记录",
+        "ready": "下一步",
+        "12word": "12 词",
+        "24word": "24 词",
+        "import12": "通过 Pawket 助记词导入",
+        "import24": "通过 Chia 客户端助记词导入"
+      },
+      "text": {
+        "create": {
+          "tip1": "欢迎使用薄荷钱包！以下是你的钱包助记词，用于备份和恢复你的钱包，请务必按照顺序记录在纸上。",
+          "tip2": "切勿向他人透露你的助记词，任何人一旦持有该助记词，即可控制你账户内的资产！"
+        },
+        "import12": {
+          "title": "导入 Pawket 助记词",
+          "tip": "请按顺序输入 Pawket 助记词，并使用空格作为间隔。"
+        },
+        "import24": {
+          "title": "导入 Chia 助记词",
+          "tip": "请按顺序输入 Chia 客户端助记词，并使用空格作为间隔。"
+        }
+      }
+    },
+    "message": {
+      "error": {
+        "wrongSeed": "导入失败，请输入正确的助记词",
+        "notInBip39": "{wordList}不在BIP39助记词列表"
+      }
+    }
+  },
+  "accountDetail": {
+    "ui": {
+      "button": {
+        "receive": "接收",
+        "buy": "购买",
+        "send": "发送",
+        "scan": "扫描",
+        "confirm": "确认",
+        "cancel": "取消",
+        "manageCats": "管理 CATs",
+        "swap": "兑换"
+      },
+      "tab": {
+        "asset": "资产",
+        "utxos": "UTXOs",
+        "nft": "NFT",
+        "did": "DID"
+      },
+      "tooltip": {
+        "lock": "锁定",
+        "errorLog": "错误日志",
+        "refresh": "刷新"
+      },
+      "dApps": {
+        "title": "应用",
+        "tooltip": {
+          "donate": "向开发者捐赠",
+          "scanAssets": "资产扫描",
+          "proxy": "离线签名",
+          "takeOffer": "接受 Offer",
+          "makeOffer": "发起 Offer",
+          "batchSend": "批量发送",
+          "mintCat": "发行 CAT",
+          "mintNft": "发行 NFT",
+          "batchMintNft": "批量发行 NFT",
+          "verify": "信息验证",
+          "encryptMessage": "加密消息",
+          "decryptMessage": "解密消息"
+        },
+        "button": {
+          "donate": "捐赠",
+          "scanAssets": "资产扫描",
+          "proxy": "离线签名",
+          "takeOffer": "接受 Offer",
+          "makeOffer": "发起 Offer",
+          "batchSend": "批量发送",
+          "mintCat": "发行 CAT",
+          "mintNft": "发行 NFT",
+          "batchMintNft": "批量发行 NFT",
+          "verify": "信息验证",
+          "encryptMessage": "加密消息",
+          "decryptMessage": "解密消息"
+        },
+        "iosTitle": "工具箱"
+      }
+    },
+    "message": {
+      "confirmation": {
+        "lock": "确认锁定钱包?"
+      },
+      "notification": {
+        "donate": "你正在向开发者捐赠",
+        "observeMode": "观察模式下无法使用交互功能。",
+        "offline": "离线模式",
+        "test": "注意：kitten.pawket.app 是一个测试站点，你可以在此体验一些未发布的新功能。"
+      }
+    }
+  },
+  "changePassword": {
+    "ui": {
+      "title": {
+        "changePassword": "修改密码"
+      },
+      "label": {
+        "oldPassword": "旧密码",
+        "newPassword": "新密码",
+        "rePassword": "确认新密码"
+      },
+      "button": {
+        "back": "返回",
+        "submitChange": "提交"
+      }
+    },
+    "message": {
+      "error": {
+        "passwordRequired": "密码不能为空",
+        "passwordNotCorrect": "密码不正确",
+        "passwordNotMatch": "密码不一致"
+      },
+      "alert": {
+        "passwordChanged": "密码已更改，请重新登录"
+      }
+    }
+  },
+  "explorerLink": {
+    "ui": {
+      "title": {
+        "link": "接收地址"
+      },
+      "label": {
+        "maxAddress": "最大地址数量",
+        "address": "地址",
+        "coin": "硬币",
+        "sign": "签名",
+        "link": "区块链浏览器",
+        "observer": "观察钱包",
+        "nonObserver": "私房钱包"
+      },
+      "tooltip": {
+        "blockchainExplorer": "在区块链浏览器里查看",
+        "receiveAddress": "如果将该数值调大，则可检索到更多地址和地址上的余额，但钱包响应时间会变长。"
+      }
+    }
+  },
+  "send": {
+    "ui": {
+      "title": {
+        "send": "发送"
+      },
+      "label": {
+        "amount": "金额",
+        "memo": "备注",
+        "fee": "交易费"
+      },
+      "button": {
+        "submit": "提交",
+        "showSend": "显示"
+      },
+      "slider": {
+        "low": "低",
+        "medium": "中",
+        "high": "高",
+        "custom": "自定义"
+      },
+      "messages": {
+        "getFailedResponse": "提交时发生错误: ",
+        "failedToSubmit": "提交至交易池失败: ",
+        "failedToSign": "签名失败: ",
+        "submitted": "已经提交至交易池，请等待确认。",
+        "invalidAmount": "金额无效",
+        "insufficientFunds": "余额不足"
+      },
+      "span": {
+        "loading": "载入中",
+        "maxLeadingText": "最大:"
+      },
+      "text": {
+        "offlineOnlySupportXch": "目前离线发送币种仅支持 XCH"
+      },
+      "summary": {
+        "notification": "确定要提交吗？<br/>请务必再次检查你的交易内容。"
+      }
+    },
+    "messages": {
+      "error": {
+        "DOUBLE_SPEND": "重复消费",
+        "UNKNOWN_UNSPENT": "未知的 UTXO 被使用，可能前一笔交易尚未上链",
+        "BAD_AGGREGATE_SIGNATURE": "错误的聚合签名",
+        "INVALID_CONDITION": "无效的条件",
+        "COIN_AMOUNT_EXCEEDS_MAXIMUM": "硬币总量超过最大值",
+        "INVALID_FEE_LOW_FEE": "费用无效，或费用太低",
+        "MEMPOOL_NOT_INITIALIZED": "内存池尚未完成初始化，稍等再试",
+        "ALREADY_INCLUDING_TRANSACTION": "该交易已经进入到内存池",
+        "INCOMPATIBLE_NETWORK_ID": "不兼容的网络 ID，选错网络了？",
+        "NO_TRANSACTIONS_WHILE_SYNCING": "节点正在同步，稍等再试",
+        "INVALID_FEE_TOO_CLOSE_TO_ZERO": "费用无效，或费用太低",
+        "COIN_AMOUNT_NEGATIVE": "硬币的金额无效，不能为负数",
+        "INVALID_ADDRESS": "地址无效",
+        "ADDRESS_NOT_MATCH_NETWORK": "所填写地址与当前网络不符，请填写正确的地址。",
+        "PENDING": "交易已经提交到内存池，请等待交易完成"
+      }
+    }
+  },
+  "scanQrCode": {
+    "message": {
+      "error": {
+        "NotAllowedError": "错误：你需要授权相机访问权限。",
+        "NotFoundError": "错误：此设备没有相机。",
+        "NotSupportedError": "错误：需要安全传输协议（HTTPS，localhost）。",
+        "NotReadableError": "错误：请检查相机是否在使用。",
+        "OverconstrainedError": "错误：已安装的相机不适合。",
+        "StreamApiNotSupportedError": "错误：浏览器不支持串流 API。",
+        "InsecureContextError": "错误：相机访问只在安全连接下允许。请使用 HTTPS 或 localhost，而不是 HTTP。"
+      }
+    }
+  },
+  "offer": {
+    "make": {
+      "ui": {
+        "title": "发起 Offer",
+        "panel": {
+          "information": "信息",
+          "hint": {
+            "thisIsYourOffer": "这是你的 Offer 信息",
+            "unsignedOffer": "签名失败，Offer 无效。"
+          }
+        },
+        "label": {
+          "yourOfferTitle": "你的 Offer",
+          "bundle": "数据包"
+        },
+        "button": {
+          "done": "完成",
+          "uploadToDexie": "上传至 Dexie"
+        },
+        "field": {
+          "offer": "提供",
+          "request": "请求"
+        },
+        "unknownAssets": "以下CAT是由dApp推荐的未知CAT，请认真检查！"
+      },
+      "messages": {
+        "failedToSign": "发起 Offer 失败"
+      }
+    },
+    "symbol": {
+      "Cat": "CAT",
+      "hint": {
+        "XCH": "原生代币"
+      }
+    },
+    "take": {
+      "ui": {
+        "title": "接受 Offer",
+        "hint": {
+          "pasteOffer": "在此处粘贴 Offer 信息，或者上传 Offer 文件。",
+          "error": "你的 Offer 信息有误"
+        },
+        "panel": {
+          "information": "信息"
+        },
+        "label": {
+          "royaltyToCreator": "创作者",
+          "totalRequested": "请求的总金额",
+          "nftPrice": "NFT 价格",
+          "royalty": "版权费",
+          "total": "总计",
+          "receive": "获得",
+          "offer": "支付",
+          "fee": "Fee",
+          "totalPayment": "总计支付"
+        },
+        "button": {
+          "cancel": "取消",
+          "submit": "提交",
+          "upload": "上传 Offer 文件"
+        },
+        "field": {
+          "offer": "Offer 信息"
+        },
+        "tooltip": {
+          "spaceScan": "在 Spacescan.io 查看",
+          "verifiedCns": "已验证的 CNS",
+          "unverifiedCns": "这是一个假的 CNS，谨防诈骗"
+        },
+        "notification": {
+          "observation": "目前处于观察模式。无法交易。"
+        }
+      },
+      "information": {
+        "requested": "付出",
+        "offered": "获得",
+        "addCat": "点击添加至 CATs 列表。",
+        "unsupportOfferNftOffer": "这种类型的 NFT Offer 尚不支持",
+        "acceptOffer": "确定要接受该 Offer 吗？<br>请务必再次检查你的交易内容。"
+      },
+      "messages": {
+        "failedToSign": "接受 Offer 失败",
+        "unsupportOfferNftOffer": "这种类型的 NFT Offer 尚不支持"
+      }
+    }
+  },
+  "ManageCats": {
+    "ui": {
+      "title": {
+        "ManageCats": "管理 CATs"
+      },
+      "label": {
+        "listingCats": "CATs 列表",
+        "name": "CAT 名称",
+        "assetID": "Asset ID",
+        "search": "搜索",
+        "custom": "自定义"
+      },
+      "button": {
+        "add": "添加"
+      },
+      "tooltip": {
+        "removeToken": "删除",
+        "drag": "拖动排序",
+        "copy": "复制 Asset ID"
+      },
+      "message": {
+        "nameRequired": "CAT 名称不能为空",
+        "assetIdRequired": "Asset ID 不能为空"
+      }
+    },
+    "message": {
+      "notification": {
+        "wrongAssetId": "CAT 的 Asset ID 不正确，添加失败！"
+      },
+      "confirmation": {
+        "removeToken": "确定要删除这个 CAT 吗?",
+        "closeWithContent": "该页面有内容尚未保存，如果您关闭页面，这些更改将会丢失。确定要关闭吗？",
+        "confirm": "确定",
+        "cancel": "取消"
+      },
+      "alert": {
+        "isExisted": "Asset ID/名称已存在于默认列表中!"
+      }
+    }
+  },
+  "offline": {
+    "proxy": {
+      "scan": {
+        "title": "签名",
+        "numberField": "未签名的信息",
+        "numberMessage": "使用离线签名扫描以下二维码。（注意切换至该公钥账户对应的钱包）"
+      },
+      "confirmBundle": {
+        "title": "确认发送",
+        "button": {
+          "cancel": "取消",
+          "submit": "提交"
+        },
+        "notification": "确定要提交吗？<br/>请务必再次检查你的交易内容。"
+      }
+    },
+    "client": {
+      "text": {
+        "qrcodesStatus": "{index} / {total}",
+        "unsafeMode": "精简模式",
+        "status": "已扫描: {fragment} / {total} fragment(s)."
+      },
+      "scan": {
+        "title": "离线签名",
+        "numberField": "签名信息",
+        "numberMessage": "请使用刚刚发起交易的在线设备扫描该二维码。",
+        "scrollDown": "下滑页面，扫描离线设备上的二维码，以获取签名信息。"
+      },
+      "show": {
+        "hint": "用离线代理扫描该二维码来发送交易",
+        "overflow": "数据过长, 无法生成二维码",
+        "bundle": "数据包",
+        "copy": "复制"
+      }
+    },
+    "ui": {
+      "button": {
+        "cancel": "取消"
+      }
+    }
+  },
+  "addByMnemonic": {
+    "ui": {
+      "label": {
+        "name": "账户名",
+        "mnemonic": "助记词 ({len}词)"
+      },
+      "message": {
+        "nameRequired": "账户名不能为空",
+        "mnemonicRequired": "助记词不能为空",
+        "invalidMnemonic": "导入失败，请输入正确的助记词"
+      },
+      "button": {
+        "back": "返回",
+        "submit": "提交"
+      },
+      "tooltip": {
+        "mnemonic": "请按顺序输入助记词，并使用空格作为间隔。"
+      }
+    },
+    "message": {
+      "error": {
+        "accountMnemonicExists": "该助记词账户已存在于账户列表中。"
+      }
+    }
+  },
+  "addByAddress": {
+    "ui": {
+      "title": "添加地址钱包",
+      "label": {
+        "name": "账户名",
+        "publicKey": "公钥"
+      },
+      "message": {
+        "nameRequired": "账户名不能为空",
+        "illegalAddress": "地址不正确",
+        "duplicateAddress": "地址重复: [{accName}]有相同地址。",
+        "duplicateName": "账户名重复",
+        "duplicatePublicKey": "公钥重复： [{accName}]有相同公钥。"
+      },
+      "button": {
+        "back": "返回",
+        "submit": "提交"
+      }
+    }
+  },
+  "addByPassword": {
+    "ui": {
+      "title": "添加影子钱包",
+      "label": {
+        "name": "账户名",
+        "password": "密码",
+        "rePassword": "确认密码"
+      },
+      "message": {
+        "nameRequired": "账户名不能为空",
+        "passwordRequired": "密码不能为空",
+        "invalidPassword": "密码不一致"
+      },
+      "button": {
+        "back": "返回",
+        "submit": "提交"
+      }
+    },
+    "message": {
+      "error": {
+        "accountPasswordExists": "[{accName}] 有相同密码。"
+      }
+    }
+  },
+  "addBySerial": {
+    "ui": {
+      "title": "添加序列账户",
+      "label": {
+        "name": "账户名"
+      },
+      "message": {
+        "nameRequired": "账户名不能为空"
+      },
+      "button": {
+        "back": "返回",
+        "submit": "提交"
+      }
+    }
+  },
+  "bundleSummary": {
+    "ui": {
+      "fee": {
+        "title": "交易费",
+        "mojos": "{fee} mojo(s)"
+      },
+      "inputs": {
+        "title": "消耗硬币总额"
+      },
+      "label": {
+        "details": "发送情况"
+      },
+      "detail": {
+        "title": "发送详情",
+        "itemTo": " 发送至",
+        "span": {
+          "hint": "提示（原始地址）",
+          "memo": "备注"
+        }
+      }
+    },
+    "notification": {
+      "error": {
+        "unknownMod": "不支持此类交易的详情显示"
+      }
+    }
+  },
+  "batchSend": {
+    "ui": {
+      "title": {
+        "send": "批量发送"
+      },
+      "tooltip": {
+        "help": "支持同时发送多笔交易。下载 CSV 示例文件填好后上传。",
+        "upload": "上传“.csv”格式文件。"
+      },
+      "field": {
+        "csv": {
+          "fillSample": "填写示例",
+          "or": " 或 ",
+          "downloadSample": "下载 CSV 示例文件",
+          "drag": "拖放到此区域可直接上传。",
+          "sampleName": "示例文件"
+        }
+      },
+      "summary": {
+        "notification": "确定要提交吗？<br/>请务必再次检查你的交易内容。"
+      },
+      "button": {
+        "upload": "上传CSV"
+      },
+      "messages": {
+        "failedToSign": "签名失败: ",
+        "wrongFileType": "请上传.csv 格式文件。",
+        "onlyOneFile": "仅支持上传单个文件。"
+      }
+    },
+    "messages": {
+      "error": {
+        "ADDRESS_NOT_MATCH_NETWORK": "所填写地址与当前网络不符，请填写正确的地址。",
+        "COIN_NOT_EXIST": "{symbol}不存在!"
+      }
+    },
+    "sample": {
+      "address": "地址",
+      "coin": "硬币名称",
+      "amount": "金额(mojo)",
+      "memo": "备注(如果你的硬币名称填写了 XCH，则不能填写备注内容。)"
+    }
+  },
+  "utxo": {
+    "ui": {
+      "label": {
+        "cost": "发送",
+        "receive": "接收",
+        "queue": "队列中",
+        "confirmed": "已确认"
+      },
+      "text": {
+        "empty": "暂无交易记录"
+      }
+    }
+  },
+  "utxoDetail": {
+    "ui": {
+      "title": {
+        "cost": "发送",
+        "receive": "接收"
+      },
+      "label": {
+        "amount": "金额",
+        "time": "时间",
+        "spentHeight": "花费区块高度",
+        "confirmedHeight": "确认区块高度",
+        "parentCoinInfo": "父硬币信息",
+        "puzzleHash": "地址",
+        "coinName": "硬币名",
+        "coins": "硬币详情",
+        "pending": "进行中"
+      },
+      "button": {
+        "unlockCoins": "解锁硬币"
+      },
+      "tooltip": {
+        "copy": "复制"
+      }
+    },
+    "message": {
+      "unlockCoins": "取消锁定不会取消交易。取消锁定后，该硬币可以自由使用，但此交易仍有成功的概率。确定要取消锁定吗？"
+    }
+  },
+  "sendSummary": {
+    "ui": {
+      "label": {
+        "sending": "即将发送",
+        "to": "至",
+        "fee": "交易费",
+        "total": "总计",
+        "assetId": "Asset ID",
+        "NftUri": "NFT"
+      }
+    }
+  },
+  "bundleText": {
+    "ui": {
+      "title": "数据包",
+      "copy": "复制",
+      "button": {
+        "show": "显示详情",
+        "hide": "隐藏详情"
+      }
+    }
+  },
+  "mintCat": {
+    "ui": {
+      "title": "发行 CAT",
+      "label": {
+        "amount": "金额",
+        "memo": "备注",
+        "symbolName": "CAT 名称（可更改）"
+      },
+      "summary": {
+        "notification": "确定要发行 CAT 吗？<br/>请务必再次检查你的交易内容。",
+        "label": {
+          "leadingText": "发行 CAT"
+        }
+      },
+      "messages": {
+        "failedToSign": "签名失败: ",
+        "tokenNameUnavailable": "CAT 名称不可用！"
+      }
+    }
+  },
+  "addressBook": {
+    "ui": {
+      "title": {
+        "list": "地址簿",
+        "add": "添加地址"
+      },
+      "button": {
+        "cancel": "取消",
+        "confirm": "确认",
+        "addContact": "添加地址",
+        "showInnerAcc": "我的账户"
+      },
+      "tooltip": {
+        "remove": "删除"
+      }
+    },
+    "messages": {
+      "notification": {
+        "contactAdded": "已添加",
+        "contactRemoved": "已删除",
+        "saved": "已保存"
+      },
+      "alert": {
+        "addressExists": "该地址已存在于地址簿中。"
+      },
+      "confirmation": {
+        "removeConfirm": "确定要将该地址从地址簿中删除吗？"
+      }
+    }
+  },
+  "addressDetail": {
+    "ui": {
+      "title": {
+        "detail": "详情",
+        "edit": "编辑"
+      },
+      "label": {
+        "name": "名称",
+        "address": "地址"
+      },
+      "tooltip": {
+        "copy": "复制"
+      },
+      "button": {
+        "edit": "编辑"
+      }
+    }
+  },
+  "addressBookField": {
+    "ui": {
+      "label": {
+        "name": "名称",
+        "address": "*地址"
+      },
+      "messages": {
+        "emptyAddress": "地址不能为空。",
+        "illegalAddress": "地址不正确。"
+      },
+      "button": {
+        "cancel": "取消",
+        "save": "保存"
+      },
+      "placeholder": {
+        "address": "地址或CNS"
+      }
+    }
+  },
+  "mintNft": {
+    "ui": {
+      "title": "发行 NFT",
+      "label": {
+        "memo": "备注",
+        "did": "DID",
+        "uri": "媒体文件地址",
+        "hash": "哈希值"
+      },
+      "summary": {
+        "notification": "确定要发行 NFT 吗？<br/>请务必再次检查你的交易内容。",
+        "label": {
+          "leadingText": "发行 NFT"
+        }
+      },
+      "tooltip": {
+        "upload": "选择一个文件生成该 NFT 的哈希值。"
+      },
+      "button": {
+        "upload": "获取图片哈希"
+      },
+      "messages": {
+        "failedToSign": "签名失败: "
+      }
+    }
+  },
+  "addressField": {
+    "ui": {
+      "label": {
+        "address": "地址",
+        "bindingAddress": "绑定地址:",
+        "lastChanged": "最后更改:",
+        "hour": "{value}小时前",
+        "day": "{value}日前",
+        "week": "{value}周前",
+        "month": "{value}月前",
+        "year": "{value}年前"
+      },
+      "tooltip": {
+        "qr": "扫描二维码",
+        "addressBook": "打开地址簿",
+        "confirmed": "已确认",
+        "confirming": "确认中",
+        "wrong": "错误"
+      },
+      "span": {
+        "newAddress": "检测到新地址，点击添加至地址薄。"
+      },
+      "resolve": {
+        "fail": "解析失败",
+        "notFound": "没有找到记录"
+      }
+    }
+  },
+  "errorLog": {
+    "ui": {
+      "title": "错误日志",
+      "label": {
+        "message": "信息",
+        "stack": "栈"
+      },
+      "field": {
+        "msg": "消息",
+        "info": "信息",
+        "url": "链接",
+        "empty": "没有记录"
+      },
+      "button": {
+        "clearAll": "清空"
+      }
+    }
+  },
+  "searchCat": {
+    "ui": {
+      "placeholder": "输入 CAT 名称",
+      "tag": {
+        "imported": "已导入"
+      },
+      "text": {
+        "emptyList": "结果为空",
+        "ascription": "由 TailDatabase 提供支持"
+      }
+    }
+  },
+  "settings": {
+    "menu": {
+      "title": "设置",
+      "items": {
+        "general": {
+          "title": "常规",
+          "description": "语言、网络、货币习惯"
+        },
+        "security": {
+          "title": "安全",
+          "description": "密码、助记词、账户信息导出"
+        },
+        "addressBook": {
+          "title": "地址簿",
+          "description": "添加、编辑、删除、管理你的联系人地址"
+        },
+        "network": {
+          "title": "网络",
+          "description": "添加、编辑、删除、管理你的网络"
+        },
+        "collection": {
+          "title": "收藏集",
+          "description": "创建、编辑、删除和管理你的收藏集"
+        },
+        "advanced": {
+          "title": "高级",
+          "description": "实验模式"
+        },
+        "devhelper": {
+          "title": "开发者工具",
+          "description": "Bech32m, CLVM, Bundle, Offer, Coin"
+        },
+        "about": {
+          "title": "关于",
+          "description": "隐私条款、钱包版本、官网"
+        },
+        "lock": "锁定钱包"
+      }
+    },
+    "general": {
+      "title": "常规",
+      "label": {
+        "language": "选择语言",
+        "network": "切换网络",
+        "currency": "货币转换",
+        "offlineMode": "离线模式",
+        "darkMode": "夜间模式"
+      }
+    },
+    "security": {
+      "title": "安全",
+      "label": {
+        "mnemonic": "钱包助记词",
+        "password": "登录密码",
+        "export": "导出账户信息",
+        "reset": "重置钱包"
+      },
+      "message": {
+        "clear": "重置钱包将会把所有钱包数据（含助记词、密码）从你的设备中永久删除。请确保你已经备份助记词，重置后可以通过助记词恢复钱包。确认重置吗？",
+        "inputPassword": "请输入密码",
+        "passwordNotCorrect": "密码不正确",
+        "backupConfirmTitle": "请谨慎操作",
+        "backupConfirm": "此操作将会导出包含钱包助记词、私钥在内的钱包备份信息。备份信息可用于在其他设备或浏览器恢复你的钱包。"
+      },
+      "button": {
+        "showMnemonic": "显示助记词 ",
+        "hideMnemonic": "隐藏助记词",
+        "password": "修改密码",
+        "backup": "备份钱包信息",
+        "reset": "重置钱包"
+      }
+    },
+    "devhelper": {
+      "title": "开发者工具"
+    },
+    "advanced": {
+      "title": "高级",
+      "label": {
+        "experimental": "实验模式"
+      },
+      "confirmation": {
+        "experimental": "实验功能尚未经过详细测试，目前仅供内部人员及热心粉丝使用。确定要启用吗？"
+      },
+      "description": "开启后可使用“发起 Offer”、“接受 Offer”、“批量发送”、“发行 CAT”、“影子钱包”等实验功能。",
+      "warning": "实验功能尚未经过详细测试，目前仅供内部人员及热心粉丝使用。请谨慎开启。"
+    },
+    "about": {
+      "title": "关于",
+      "links": {
+        "title": "链接",
+        "label": {
+          "privacyPolicy": "隐私条款",
+          "pawketWebsite": "薄荷钱包官网",
+          "github": "Github",
+          "twitter": "Twitter",
+          "discord": "Discord",
+          "donate": "支持开发者"
+        },
+        "url": {
+          "privacyPolicy": "https://info.pawket.app/zh/privacy-policy",
+          "pawketWebsite": "https://info.pawket.app/zh",
+          "github": "https://github.com/SutuLabs",
+          "twitter": "https://twitter.com/pawket_app",
+          "discord": "https://discord.com/invite/ndQgpHwe4V"
+        }
+      },
+      "thanks": "特别鸣谢 <a href=\"https://twitter.com/TheHonestFarm\" target=\"_blank\">Ultimate Farmers Club</a> 和 <a href=\"https://twitter.com/hezuoshe1024\" target=\"_blank\">hezuoshe.xch</a>"
+    }
+  },
+  "explore": {
+    "title": "探索",
+    "loading": "加载中",
+    "ascription": "由 Dexie 提供支持",
+    "nft": {
+      "title": "NFT 市场"
+    },
+    "cat": {
+      "title": "CAT 市场"
+    },
+    "button": {
+      "buy": "购买",
+      "sell": "出售",
+      "takeOffer": "接受 Offer"
+    },
+    "table": {
+      "header": {
+        "offer": "提供",
+        "receive": "获得",
+        "price": "价格",
+        "operation": "操作"
+      }
+    }
+  },
+  "accountManagement": {
+    "ui": {
+      "title": "账户管理",
+      "label": {
+        "default": "默认账户",
+        "serial": "序列账户",
+        "address": "地址账户",
+        "imported": "导入账户",
+        "passPhrase": "影子钱包",
+        "publicKey": "公钥账户",
+        "unknown": "未知"
+      },
+      "button": {
+        "addBySerial": "新增序列账户",
+        "addByPassword": "新增影子钱包",
+        "addByLegacy": "导入 Chia 客户端账户(24词)",
+        "addByMnemonic": "导入 Nucle/Goby 账户(12词)",
+        "addByAddress": "新增地址账户（观察模式）",
+        "addByPublicKey": "新增公钥账户"
+      },
+      "tooltip": {
+        "addBySerial": "按顺序创建派生的序列账户。",
+        "addByPassword": "由【助记词+口令】保护的账户。输入相同的口令即可进入相同的账户。",
+        "addByLegacy": "导入 Chia 客户端账户。",
+        "addByMnemonic": "导入 Nucle/Goby 账户。",
+        "addByAddress": "该模式下仅支持阅读。",
+        "addByPublicKey": "添加离线钱包的公钥，以帮助发起和完成交易。"
+      },
+      "modal": {
+        "addByLegacy": "导入 Chia 客户端账户",
+        "addByMnemonic": "导入 Nucle/Goby 账户"
+      },
+      "value": {
+        "defaultName": "账户{n}"
+      }
+    },
+    "message": {
+      "confirmation": {
+        "removeAccount": "确认删除「{accountName}」吗？",
+        "cancelText": "取消",
+        "confirmText": "确认"
+      },
+      "prompt": {
+        "setAccountName": "输入新账户名",
+        "cancelText": "取消",
+        "confirmText": "确认"
+      },
+      "notification": {
+        "saved": "已保存"
+      }
+    }
+  },
+  "welcome": {
+    "ui": {
+      "description": "安全、开源、易用的 Chia 轻钱包",
+      "slogan": "薄荷钱包将陪伴你尽情畅游 Chia 网络！",
+      "button": {
+        "start": "开始使用"
+      }
+    }
+  },
+  "disclaimer": {
+    "ui": {
+      "title": "免责声明",
+      "tip": "确保始终备份您的助记词和私钥。我们绝不会要求您分享您的助记词或私钥。永远不要相信任何人或任何要求您输入助记词或私钥的网站。",
+      "privary": "我们可能会不时更改隐私条款。我们鼓励您定期查看有关我们隐私条款的最新信息。如果我们对隐私条款进行任何更改，我们将更改其最后更新日期。",
+      "agreementPrefix": "我接受",
+      "agreement": "隐私条款",
+      "link": "https://info.pawket.app/zh/privacy-policy/",
+      "agreementSuffix": "并希望访问薄荷钱包。",
+      "button": {
+        "continue": "继续"
+      }
+    }
+  },
+  "createPassword": {
+    "title": "创建密码",
+    "tip": "开始前，请先设置登录密码。此密码将用于保障您的钱包在此设备上的安全。",
+    "label": {
+      "password": "密码",
+      "confirm": "确认密码"
+    },
+    "button": {
+      "continue": "继续"
+    }
+  },
+  "createWallet": {
+    "title": "创建钱包",
+    "button": {
+      "create": "创建",
+      "import": "导入",
+      "backup": "导入钱包备份信息"
+    }
+  },
+  "newWallet": {
+    "title": "新建钱包"
+  },
+  "importWallet": {
+    "title": "导入钱包"
+  },
+  "accountInfo": {
+    "ui": {
+      "title": {
+        "export": "账户信息"
+      },
+      "label": {
+        "name": "账户名称",
+        "type": "账户类型",
+        "fingerprint": "指纹",
+        "masterPublicKey": "主节点公钥 (m)",
+        "farmerPublicKey": "农夫节点公钥 (m/12381/8444/0/0)",
+        "poolPublicKey": "矿池公钥 (m/12381/8444/1/0)",
+        "firstWalletAddress": "钱包首地址",
+        "mnemonicSeed": "助记词种子(24词)",
+        "connectionManagement": "连接管理",
+        "details": "显示详情",
+        "mnemonic12Seed": "助记词种子(12词)"
+      },
+      "tooltip": {
+        "fingerprintTip": "与 Chia 客户端兼容",
+        "mnemonicTip": "与 Chia 客户端兼容",
+        "disconnect": "取消连接",
+        "mnemonic12Tip": "不与 Chia 客户端兼容"
+      },
+      "button": {
+        "reveal": "显示助记词",
+        "hide": "隐藏助记词",
+        "delete": "删除"
+      }
+    },
+    "message": {
+      "inputPassword": "请输入密码",
+      "passwordNotCorrect": "密码不正确",
+      "disconnect": "确定断开 [{acc}] 与该站点的连接吗？"
+    }
+  },
+  "nftDetail": {
+    "ui": {
+      "label": {
+        "nftId": "NFT ID:",
+        "collection": "收藏集",
+        "did": "DID",
+        "description": "描述",
+        "expirationDate": "过期时间"
+      },
+      "button": {
+        "transfer": "转发",
+        "makeOffer": "出售",
+        "move": "归档",
+        "showMore": "显示更多",
+        "showLess": "收起",
+        "iosTransfer": "发送"
+      },
+      "title": {
+        "properties": "属性",
+        "bindingInformation": "绑定信息",
+        "details": "详情"
+      },
+      "bindingInformation": {
+        "address": "地址",
+        "publicKey": "公钥",
+        "did": "DID",
+        "text": "文本",
+        "edit": "编辑"
+      },
+      "details": {
+        "nftId": "NFT ID:",
+        "launcherId": "Launcher ID",
+        "ownerDid": "Owner DID",
+        "ownerAddress": "Owner Address",
+        "royaltyPercentage": "Royalty Percentage",
+        "dataUrl": "Data URL {index}",
+        "dataHash": "Data Hash",
+        "metadataUrl": "Metadata URL {index}",
+        "metadataHash": "Metadata Hash",
+        "licenseUrl": "License URL",
+        "licenseHash": "License Hash",
+        "series": "Series"
+      },
+      "dropdown": {
+        "spaceScan": "在 Spacescan.io 查看",
+        "mintGarden": "在 Mintgarden.io 查看",
+        "setAsProfilePic": "设置为账户头像",
+        "signWithNft": "签名",
+        "nftBurn": "销毁 NFT"
+      },
+      "profile": {
+        "all": "全部 NFT",
+        "unassigned": "未分配的 NFT"
+      }
+    }
+  },
+  "did": {
+    "ui": {
+      "title": {
+        "detail": "详情"
+      },
+      "button": {
+        "addDid": "添加 DID",
+        "sign": "签名"
+      },
+      "label": {
+        "name": "名称",
+        "did": "DID",
+        "tool": "工具"
+      },
+      "prompt": {
+        "newName": "输入新名称"
+      }
+    },
+    "addDid": {
+      "title": "添加 DID",
+      "tip": "你将使用 1 mojo 创建一个 DID。",
+      "balance": "余额",
+      "confirmation": "确定要创建 DID 吗？<br>请务必再次检查你的交易内容。",
+      "spend": "花费"
+    }
+  },
+  "nftTransfer": {
+    "ui": {
+      "title": "转发",
+      "description": "你将把这个 NFT 转发给他人。",
+      "summary": {
+        "confirmation": "确定要转发这个 NFT 吗？<br>请务必再次检查你的交易内容。"
+      }
+    }
+  },
+  "collection": {
+    "myCollection": {
+      "title": "我的收藏集",
+      "specialNote": "特别提示：收藏集信息不会上链，数据保存在你本地设备中，更换设备后，收藏集将不会同步至账户中。",
+      "button": {
+        "newCollection": "新建收藏集"
+      },
+      "tooltip": {
+        "edit": "编辑",
+        "remove": "删除"
+      },
+      "messages": {
+        "confirmation": {
+          "delete": "确定删除该收藏集吗？"
+        },
+        "information": {
+          "NO_COLLECTION": "无收藏集"
+        }
+      }
+    },
+    "createCollection": {
+      "title": "创建收藏集",
+      "label": {
+        "id": "ID",
+        "name": "名称",
+        "description": "描述",
+        "icon": "图标",
+        "uploadImage": "上传图片:",
+        "url": "链接:",
+        "hash": "哈希:",
+        "fillUrl": "填写图片 URL",
+        "iconUrl": "图标 URL",
+        "iconHash": "图标哈希",
+        "properties": "属性",
+        "creator": "创作者",
+        "address": "地址",
+        "royaltyPercentage": "版权费",
+        "royaltyAddress": "版权费地址",
+        "licenseUrl": "许可协议 URL"
+      },
+      "button": {
+        "upload": "上传"
+      },
+      "messages": {
+        "error": {
+          "INVALID_PROPERTY": "属性信息无效",
+          "INVALID_ADDRESS": "地址无效"
+        }
+      }
+    }
+  },
+  "scanAssets": {
+    "ui": {
+      "title": "扫描资产",
+      "prompt": {
+        "selectAssetType": "通过扫描更多地址，发现未显示在列表中的资产（包括 XCH、CAT、NFT），并将它们转移到一个常用地址。",
+        "scanning": "正在扫描...",
+        "wait": "请耐心等待几分钟。",
+        "paused": "暂停中...",
+        "canceled": "已取消",
+        "finished": "扫描完成！",
+        "scanned": "已扫描"
+      },
+      "label": {
+        "scan": "扫描",
+        "token": "代币",
+        "nft": "NFT",
+        "did": "DID",
+        "myCats": "持有的 CAT",
+        "maxAddress": "最大扫描地址数量",
+        "scanning": "扫描",
+        "result": "扫描结果",
+        "name": "名称",
+        "balance": "余额",
+        "id": "ID",
+        "action": "操作",
+        "imported": "已导入"
+      },
+      "button": {
+        "start": "开始扫描",
+        "pause": "暂停",
+        "cancel": "取消",
+        "continue": "继续",
+        "reScan": "重新扫描",
+        "add": "添加",
+        "send": "发送",
+        "sign": "签名"
+      }
+    },
+    "message": {
+      "confirmation": {
+        "close": "还未扫描完成，确定关闭此页面吗？",
+        "cancel": "还未扫描完成，确定取消吗？"
+      },
+      "error": {
+        "ABORT_OOM": "扫描已中止，请刷新页面后重试。",
+        "NETWORK_ERROR": "网络错误，请稍后重试",
+        "UNKNOWN": "未知错误，请稍后重试"
+      }
+    }
+  },
+  "moveNft": {
+    "ui": {
+      "title": "NFT 归档",
+      "label": {
+        "moveToProfile": "移至 DID",
+        "selectDid": "选择一个 DID",
+        "move": "移动 NFT",
+        "to": "至"
+      },
+      "confirmation": "确定要移动这个 NFT 吗？<br>请务必再次检查你的交易内容。"
+    }
+  },
+  "signMessage": {
+    "ui": {
+      "title": "签名信息",
+      "prompt": "请确保该信息来自可信任的来源。如果你不理解或不同意该信息，请勿签名！",
+      "label": {
+        "signWdid": "签名DID：",
+        "signWithNft": "签名NFT:",
+        "signWithAddress": "签名地址:",
+        "message": "信息",
+        "result": "结果"
+      }
+    }
+  },
+  "verifyMessage": {
+    "ui": {
+      "title": "信息验证",
+      "label": {
+        "message": "信息",
+        "result": "结果"
+      },
+      "button": {
+        "verify": "验证"
+      },
+      "sigResult": {
+        "pass": "签名验证通过",
+        "fail": "签名验证失败",
+        "none": "未检查签名"
+      },
+      "coinResult": {
+        "pass": "硬币检查通过",
+        "fail": "硬币检查失败",
+        "none": "未检查硬币"
+      }
+    }
+  },
+  "batchMintNft": {
+    "ui": {
+      "title": "批量发行 NFT",
+      "label": {
+        "royaltyAddress": "版权费地址",
+        "royaltyPercentage": "版权费"
+      }
+    }
+  },
+  "addNetwork": {
+    "ui": {
+      "title": {
+        "add": "添加网络",
+        "edit": "编辑网络"
+      },
+      "warning": "恶意网络提供商可能会报告错误的区块链信息并记录你的网络活动。请添加你信任的自定义网络。",
+      "label": {
+        "networkName": "网络名称",
+        "rpcUrl": "RPC 地址",
+        "chainId": "链地址",
+        "currencySymbol": "货币符号",
+        "addressPrefix": "地址前缀",
+        "decimalPlace": "货币小数位数",
+        "blockExplorer": "区块链浏览器地址（选填）"
+      },
+      "button": {
+        "addNetwork": "添加网络"
+      }
+    },
+    "message": {
+      "notification": {
+        "networkExists": "网络名称已存在!"
+      },
+      "confirmation": {
+        "delete": "确定要移除该网络吗？"
+      }
+    }
+  },
+  "updateCns": {
+    "ui": {
+      "title": "更改 CNS 地址",
+      "confirmation": "即将更新你的域名绑定信息。<br/>请务必再次检查你的交易内容。",
+      "label": {
+        "updateTo": "更新至",
+        "cns": "CNS",
+        "targetAddress": "目标地址",
+        "currentBindingAddress": "当前绑定地址"
+      }
+    }
+  },
+  "addByPublicKey": {
+    "ui": {
+      "title": "添加公钥账户",
+      "message": {
+        "publicKeyRequired": "公钥不能为空。"
+      }
+    }
+  },
+  "encryptMessage": {
+    "ui": {
+      "title": "消息加密",
+      "tab": {
+        "singleMessage": "单条消息",
+        "multipleMessage": "多条消息"
+      },
+      "label": {
+        "encryptWithAddress": "加密地址",
+        "activatePrefix": "地址尚未激活，点此完成任意一笔转账来",
+        "activate": "激活",
+        "message": "消息",
+        "receiverAddress": "接收人地址"
+      },
+      "button": {
+        "encrypt": "加密"
+      }
+    },
+    "message": {
+      "error": {
+        "INACTIVE_ADDRESS": "接收地址未激活"
+      }
+    }
+  },
+  "decryptMessage": {
+    "ui": {
+      "title": "消息解密",
+      "label": {
+        "message": "消息",
+        "result": "结果"
+      },
+      "button": {
+        "decrypt": "解密"
+      }
+    },
+    "message": {
+      "error": {
+        "CANNOT_FIND_ADDRESS": "解密地址与 Receiver Address 不一致。",
+        "INVALID_MESSAGE": "无效消息。",
+        "INVALID_ADDRESS": "无效的发送/接收地址。"
+      }
+    }
+  },
+  "bindingInformation": {
+    "ui": {
+      "title": "绑定信息",
+      "label": {
+        "publicKey": "公钥",
+        "did": "DID",
+        "text": "文本"
+      },
+      "notification": "即将更新你的域名绑定信息。<br>请务必再次检查你的交易内容。",
+      "tag": {
+        "currentPk": "当前账户公钥",
+        "fillPk": "填入当前账户公钥"
+      },
+      "button": {
+        "update": "更新"
+      }
+    }
+  },
+  "scan": {
+    "ui": {
+      "title": "扫描",
+      "label": {
+        "scanQr": "扫描二维码",
+        "publicKeyQr": "公钥二维码"
+      },
+      "hint": {
+        "scan": "扫描地址，公钥"
+      }
+    }
+  },
+  "backup": {
+    "ui": {
+      "title": {
+        "verifyPassword": "验证密码",
+        "backup": "备份信息"
+      },
+      "tip": {
+        "setPassword": "该密码将用于，把备份数据导入新设备，恢复钱包时的登录密码。"
+      },
+      "label": {
+        "passwordType": {
+          "current": "使用当前登录密码",
+          "new": "使用新密码"
+        },
+        "selectBackupInfo": "选择导出信息",
+        "setYourLoginPassword": "设置你的登录密码"
+      },
+      "items": {
+        "masterAccount": "主账户信息",
+        "settings": "设置",
+        "customNetwork": "自定义网络",
+        "accountList": "账户列表",
+        "addressBook": "地址簿",
+        "didNames": "DID 名称"
+      },
+      "button": {
+        "downloadBak": "下载备份文件",
+        "complete": "完成",
+        "next": "下一步"
+      }
+    },
+    "message": {
+      "error": {
+        "passwordRequired": "密码不能为空",
+        "passwordNotCorrect": "密码不正确"
+      }
+    }
+  },
+  "importBackup": {
+    "title": "上传备份信息",
+    "password": {
+      "tip": "请输入你的登入密码",
+      "label": "密码"
+    },
+    "error": {
+      "LARGE_FILE": "文件过大",
+      "UNSUPPORTED_FILE": "不支持的文件"
+    }
+  },
+  "buyUsds": {
+    "ui": {
+      "title": "购买 USDS",
+      "button": {
+        "continue": "继续购买",
+        "stably": "打开 Stably 购买"
+      },
+      "tip": "目前仅支持通过 ACH 银行转账购买 Chia 区块链上的 USDS。",
+      "stablyPrefix": "本服务由",
+      "stably": "Stably ",
+      "stablySuffix": "提供，完全独立于Pawket。"
+    }
+  },
+  "nftBurn": {
+    "title": "销毁 NFT",
+    "description": "您将会把该 NFT 发送到一个可验证的不可花费的地址，将其从流通中移除，从而将其销毁。",
+    "confirmation": "你确定要销毁这个 NFT 吗？一经销毁，任何人（包括你）都将无法再次访问它。<br>请务必再次检查你的交易内容。"
+  },
+  "cns": {
+    "title": "Chia Name Service",
+    "placeholder": "搜索 Chia 域名",
+    "button": {
+      "search": "搜索",
+      "loading": "加载中",
+      "register": "注册",
+      "cancel": "取消"
+    },
+    "label": {
+      "notOpenYet": "尚未开放",
+      "registered": "已被注册",
+      "result": "搜索结果",
+      "available": "可注册",
+      "unavailable": "不可注册",
+      "registrationPeriod": "注册期限",
+      "registrationFee": "注册费",
+      "annualFee": "年费",
+      "royaltyPercentage": "版权费百分比",
+      "total": "总计",
+      "networkIssue": "网络问题",
+      "myNames": "我的域名",
+      "name": "域名",
+      "oneYear": "1 年",
+      "register": "注册 {cnsName}.xch",
+      "address": "绑定地址(选填)"
+    },
+    "message": {
+      "notOpen": "CNS 目前在试运营期间，暂时只开放 6 位及以上字符的名字注册。未来会逐步开放所有名字的注册。敬请期待！",
+      "registered": "该域名已被注册，查看其",
+      "profileHomepage": "个人主页",
+      "unavailable": "该名字已被预留，若你可以证明你是该名字/商标/品牌的拥有者，请通过 Twitter/Discord 联系我们。",
+      "noName": "你还没有 Chia 域名，请搜索去获取。"
+    }
+  },
+  "connect": {
+    "ui": {
+      "label": {
+        "connectWithPawket": "连接钱包",
+        "enterPassword": "输入密码来连接站点",
+        "trust": "确保你信任该连接站点",
+        "selectAccount": "选择一个账户",
+        "loadingBalance": "加载金额",
+        "allowSiteTo": "允许此站点：",
+        "viewInfo": "访问你的账户地址、金额、DID和交易记录",
+        "requestTranx": "请求允许交易",
+        "gettingData": "从Pawket获取信息",
+        "noWallet": "无Pawket钱包",
+        "noWalletInfo": "你没有在Pawket上创建钱包",
+        "initializing": "正在等待指令"
+      },
+      "button": {
+        "next": "下一步",
+        "connect": "连接",
+        "setUp": "创建钱包"
+      }
+    },
+    "messages": {
+      "success": "成功!",
+      "invalidCall": "无效调用:",
+      "noAppName": "请指定一个APP名称!",
+      "offerAccepted": "Offer已被接收!",
+      "invalidData": "签名失败: 无效输入信息",
+      "unknownDid": "签名失败: 未找到指定DID",
+      "unknownNetwork": "未找到指定网络",
+      "unknownAddress": "签名失败: 未找到指定地址",
+      "sendCompleted": "交易已提交!",
+      "catAdded": "CAT已添加!",
+      "cancelled": "已取消",
+      "incorrectPassword": "密码不正确.",
+      "initialMessageNotReceive": "未收到指令，请再试一次！",
+      "invalidMakeOfferParameterNumber": "目前Pawket只支持1对1的Offer生成！"
+    }
+  },
+  "splitCoin": {
+    "ui": {
+      "title": "拆分硬币",
+      "confirmation": {
+        "confirmText": "确定要拆分硬币吗？<br>请务必再次检查你的交易内容。",
+        "label": {
+          "spliting": "拆分",
+          "into": "成",
+          "coins": "硬币"
+        }
+      }
+    }
+  },
+  "swap": {
+    "ui": {
+      "title": "兑换",
+      "dropdownPlaceholder": "选择一个代币开始兑换",
+      "label": {
+        "amountFrom": "从（估值）",
+        "amountTo": "到（估值）"
+      },
+      "noCatSelected": "请从下拉框中选择一个CAT开始兑换",
+      "brief": {
+        "priceImpact": "价格浮动",
+        "liquidityFee": "流动性费",
+        "devFee": "服务费"
+      },
+      "noSwappableCat": "您没有可以进行兑换的CAT，可进行兑换的CAT如下：",
+      "summary": {
+        "notification": "确定要提交吗？<br/>请务必再次检查你的兑换内容。",
+        "from": "从",
+        "to": "到",
+        "txfee": "交易费",
+        "devfee": "服务费",
+        "total": "总计"
+      },
+      "button": {
+        "back": "返回",
+        "confirm": "确认",
+        "continueWithNoInfo": "请先检查兑换信息",
+        "continueWithNoWarning": "继续",
+        "continueWithWarning": "确定当前价格浮动并继续",
+        "continueWithGreatWarning": "确定当前价格浮动并继续"
+      },
+      "footer": {
+        "attributingPrefix": "本服务由 ",
+        "linkUrl": "https://v2.tibetswap.io/",
+        "linkName": "TibetSwap",
+        "attributingSuffix": " 提供，完全独立于Pawket。"
+      }
+    }
+  }
+}

@@ -10,6 +10,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
+  YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
   webArtifactName: chia-wallet
   extArtifactName: chia-wallet-ext
   mixchArtifactName: chia-mixch
@@ -35,17 +36,26 @@ stages:
         versionSpec: '16.x'
       displayName: 'Install Node.js'
 
+    - task: Cache@2
+      inputs:
+        key: 'yarn | "$(Agent.OS)" | yarn.lock'
+        restoreKeys: |
+          yarn | "$(Agent.OS)"
+          yarn
+        path: $(YARN_CACHE_FOLDER)
+      displayName: Cache Yarn packages
+
     - task: CmdLine@2
       inputs:
         workingDirectory: '$(Build.SourcesDirectory)'
-        script: 'yarn'
+        script: 'yarn --frozen-lockfile'
       displayName: 'yarn'
 
     - task: CmdLine@2
       inputs:
         workingDirectory: '$(Build.SourcesDirectory)'
         script: |
-          sed -i 's/0.0.0.0/$(versionNumber)/' .env.production
+          sed -i 's/0.0.0.0/$(versionNumber)/' ui/.env.production
       displayName: 'set version'
 
     - task: CmdLine@2

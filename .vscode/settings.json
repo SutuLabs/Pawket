@@ -1,26 +1,12 @@
 {
   "eslint.enable": true,
-  "eslint.packageManager": "yarn",
   "eslint.validate": [
     "vue",
     "ts"
   ],
-  "vetur.validation.template": false,
-  "vetur.validation.script": true,
-  "vetur.validation.style": false,
-  "typescript.validate.enable": true,
-  "javascript.validate.enable": true,
   "prettier.printWidth": 130,
-  "vetur.format.defaultFormatter.ts": "vscode-typescript",
-  "vetur.format.defaultFormatter.html": "prettier",
-  "vetur.format.defaultFormatter.js": "vscode-typescript",
-  "vetur.format.defaultFormatterOptions": {
-    "prettier": {
-      "printWidth": 130
-    }
-  },
   "[typescript]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[vue]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -35,9 +21,10 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[javascript]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "files.associations": {
-    "*.clvm": "lisp"
+    "*.clvm": "lisp",
+    "**/test/**/*.test.data.ts": "plaintext",
   }
 }
