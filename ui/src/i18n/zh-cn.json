@@ -176,7 +176,8 @@
           "batchMintNft": "批量发行 NFT",
           "verify": "信息验证",
           "encryptMessage": "加密消息",
-          "decryptMessage": "解密消息"
+          "decryptMessage": "解密消息",
+          "inscribe": "铭刻"
         },
         "button": {
           "donate": "捐赠",
@@ -190,7 +191,8 @@
           "batchMintNft": "批量发行 NFT",
           "verify": "信息验证",
           "encryptMessage": "加密消息",
-          "decryptMessage": "解密消息"
+          "decryptMessage": "解密消息",
+          "inscribe": "铭刻"
         },
         "iosTitle": "工具箱"
       }
@@ -1710,6 +1712,54 @@
         "linkName": "TibetSwap",
         "attributingSuffix": " 提供，完全独立于Pawket。"
       }
+    }
+  },
+  "inscription": {
+    "ui": {
+      "title": {
+        "inscribe": "铭刻"
+      },
+      "tab": {
+        "mint": "铸造",
+        "transfer": "转移",
+        "deploy": "部署",
+        "custom": "自定义"
+      },
+      "label": {
+        "tick": "币种",
+        "amount": "数量",
+        "repeatMint": "重复铸造次数",
+        "total": "发行总量",
+        "limit": "单次铸造上限",
+        "unlock": "解锁高度（相对）",
+        "receiverAddress": "接收地址"
+      },
+      "placeholder": {
+        "tick": "输入四位代币代码，例如ordi"
+      },
+      "button": {
+        "max": "MAX"
+      },
+      "summary": {
+        "notification": "确定要提交吗？<br/>请务必再次检查你的交易内容。"
+      },
+      "messages": {
+        "failedToSign": "",
+        "onlyOneFile": "",
+        "wrongFileType": ""
+      }
+    },
+    "messages": {
+      "error": {
+        "ADDRESS_NOT_MATCH_NETWORK": "所填写地址与当前网络不符，请填写正确的地址。",
+        "COIN_NOT_EXIST": "{symbol}不存在!"
+      }
+    },
+    "sample": {
+      "address": "",
+      "coin": "",
+      "amount": "",
+      "memo": ""
     }
   }
 }

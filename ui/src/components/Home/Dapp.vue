@@ -48,6 +48,16 @@
         </b-tooltip>
       </div>
       <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.inscribe')" position="is-right">
+          <a href="javascript:void(0)" @click="$router.push('/home/inscribe')" class="has-text-link">
+            <div class="has-text-centered">
+              <b-icon icon="pencil-box-outline" size="is-medium"></b-icon>
+              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.inscribe") }}</p>
+            </div>
+          </a>
+        </b-tooltip>
+      </div>
+      <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.batchSend')" position="is-right">
           <a href="javascript:void(0)" @click="$router.push('/home/batch-send')" class="has-text-link">
             <div class="has-text-centered">
@@ -203,6 +213,9 @@ export default class Dapp extends Vue {
       case "/home/proxy":
         this.showProxy();
         break;
+      case "/home/inscribe":
+        this.openInscription();
+        break;
       case "/home/batch-send":
         this.openBatchSend();
         break;
@@ -307,6 +320,21 @@ export default class Dapp extends Vue {
       canCancel: ["escape", "outside"],
       trapFocus: true,
       props: { mode: "OFFLINE_CLIENT", account: this.account },
+    });
+  }
+
+  async openInscription(): Promise<void> {
+    this.checkObserveMode();
+    this.$buefy.modal.open({
+      parent: this,
+      component: (await import("@/components/Inscription/Inscription.vue")).default,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      fullScreen: isMobile(),
+      props: {
+        account: this.account,
+      },
     });
   }
 

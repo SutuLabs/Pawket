@@ -176,7 +176,8 @@
           "batchMintNft": "Batch Mint",
           "verify": "Verify Message",
           "encryptMessage": "Encrypt Message",
-          "decryptMessage": "Decrypt Message"
+          "decryptMessage": "Decrypt Message",
+          "inscribe": "Inscribe"
         },
         "button": {
           "donate": "Donate",
@@ -190,7 +191,8 @@
           "batchMintNft": "Batch Mint",
           "verify": "Verify Message",
           "encryptMessage": "Encrypt Message",
-          "decryptMessage": "Decrypt Message"
+          "decryptMessage": "Decrypt Message",
+          "inscribe": "Inscribe"
         },
         "iosTitle": "Tools"
       }
@@ -1710,6 +1712,54 @@
         "linkName": "TibetSwap",
         "attributingSuffix": " and is entirely independent from Pawket."
       }
+    }
+  },
+  "inscription": {
+    "ui": {
+      "title": {
+        "inscribe": "Inscribe"
+      },
+      "tab": {
+        "mint": "Mint",
+        "transfer": "Transfer",
+        "deploy": "Deploy",
+        "custom": "Custom"
+      },
+      "label": {
+        "tick": "Tick",
+        "amount": "Amount",
+        "repeatMint": "Repeat Mint",
+        "total": "Total Supply",
+        "limit": "Limit Per Mint",
+        "unlock": "Unlock Height (Relative)",
+        "receiverAddress": "Receiver Address"
+      },
+      "placeholder": {
+        "tick": "4 characters like \"ordi\""
+      },
+      "button": {
+        "max": "Max"
+      },
+      "summary": {
+        "notification": "Are you sure to inscribe?<br/>Please review your transaction."
+      },
+      "messages": {
+        "failedToSign": "",
+        "onlyOneFile": "",
+        "wrongFileType": ""
+      }
+    },
+    "messages": {
+      "error": {
+        "ADDRESS_NOT_MATCH_NETWORK": "The filled address does not match the current network. Please fill in a valid address.",
+        "COIN_NOT_EXIST": "The {symbol} coin does not exist!"
+      }
+    },
+    "sample": {
+      "address": "",
+      "coin": "",
+      "amount": "",
+      "memo": ""
     }
   }
 }

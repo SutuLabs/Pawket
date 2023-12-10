@@ -78,6 +78,10 @@ const routes: Array<RouteConfig> = [
         component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
       },
       {
+        path: "inscribe",
+        component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
+      },
+      {
         path: "batch-send",
         component: () => import(/* webpackChunkName: "home" */ "@/components/Cat/CatPanel.vue"),
       },
