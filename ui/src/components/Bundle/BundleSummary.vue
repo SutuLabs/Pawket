@@ -55,10 +55,15 @@
                     {{ $t("bundleSummary.ui.detail.itemTo") }}
                   </span>
                   <span v-if="coin.account" :title="coin.address" class="is-underlined">{{ coin.account }}</span>
+                  <span v-else-if="coin.known" :title="coin.address" class="has-text-weight-bold has-text-info">
+                    {{ coin.known }}
+                  </span>
                   <span v-else :title="coin.address">
                     {{ nameOmit(coin.address) }}
                   </span>
-                  <span v-if="coin.hint" :title="$t('bundleSummary.ui.detail.span.hint')">({{ coin.hint }})</span>
+                  <span v-if="coin.hint" :title="$t('bundleSummary.ui.detail.span.hint') + (coin.hintRaw || '')"
+                    >({{ coin.hint }})</span
+                  >
                   <span v-if="coin.memo" :title="$t('bundleSummary.ui.detail.span.memo')">[{{ coin.memo }}]</span>
                 </li>
               </ul>
@@ -91,6 +96,7 @@ import BundleText from "@/components/Bundle/BundelText.vue";
 import { xchPrefix, xchSymbol } from "@/store/modules/network";
 import { sexpAssemble } from "../../../../lib-chia/services/coin/analyzer";
 import { nameOmit } from "@/filters/nameConversion";
+import { hex2ascSingle } from "../../../../lib-chia/services/coin/singleton";
 
 interface CoinType {
   amount: bigint;
@@ -98,13 +104,19 @@ interface CoinType {
   address: string;
   account?: string;
   hint?: string;
+  hintRaw?: string;
   memo?: string;
+  known?: string;
   others?: string[];
 }
 
 interface TotalCoinType {
   [unit: string]: bigint;
 }
+
+const knownAddress: Record<string, string> = {
+  "0xd19c05a54dacbf2b40ff4843534c47976de90246c3fc42ac1f42ea81b434b8ea": "Pawket Service Address",
+};
 
 @Component({
   components: {
@@ -224,8 +236,10 @@ export default class BundleSummary extends Vue {
             : !rawArgs
             ? [] //
             : [getArgMsg(rawArgs)];
+        const hex = getFirstLevelArgMsg(_.args.at(0));
         return {
-          address: puzzle.getAddressFromPuzzleHash(getFirstLevelArgMsg(_.args.at(0)), xchPrefix()),
+          hex,
+          address: puzzle.getAddressFromPuzzleHash(hex, xchPrefix()),
           amount: getNumber(getFirstLevelArgMsg(_.args.at(1))),
           args,
         };
@@ -233,8 +247,10 @@ export default class BundleSummary extends Vue {
       .map((_) => ({
         address: _.address,
         account: addDict[_.address],
+        known: knownAddress[_.hex],
         amount: _.amount,
         hint: this.tryGetHintAddress(_.args.at(0)),
+        hintRaw: _.args.at(0),
         memo: _.args.at(1),
         others: _.args.slice(2),
       }));
@@ -252,6 +268,8 @@ export default class BundleSummary extends Vue {
   tryGetHintAddress(hex: string | undefined): string | undefined {
     if (!hex) return hex;
     if (!hex.startsWith("0x")) return hex;
+    if (hex.length > 66) return hex2ascSingle(unprefix0x(hex));
+    if (hex.length != 66) return hex;
 
     return puzzle.getAddressFromPuzzleHash(unprefix0x(hex), xchPrefix());
   }

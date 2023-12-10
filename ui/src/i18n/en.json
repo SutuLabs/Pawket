@@ -594,7 +594,7 @@
         "title": "Details",
         "itemTo": "to",
         "span": {
-          "hint": "Hint(Corresponding Address)",
+          "hint": "Hint:",
           "memo": "Memo"
         }
       }

@@ -316,6 +316,7 @@ export default class Inscription extends Vue {
   // readonly deployFee = 100000000000n;
   // readonly transferFee = 1000000000n;
   // readonly mintFee = 1000000000n;
+  readonly serviceAddress: Hex0x = "0xd19c05a54dacbf2b40ff4843534c47976de90246c3fc42ac1f42ea81b434b8ea";
 
   calculateAmount(): bigint {
     if (this.panel == "deploy") {
@@ -356,10 +357,9 @@ export default class Inscription extends Vue {
 
       const amount = this.calculateAmount();
 
-      let tgt_hex: Hex0x = "()";
+      const tgt_hex = this.serviceAddress;
       let change_hex: Hex0x = "()";
       try {
-        tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.signAddress));
         change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
       } catch (err) {
         Notification.open({
