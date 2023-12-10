@@ -36,6 +36,7 @@
               :max="MAX_REPEAT"
               :min="1"
               controls-alignment="left"
+              type="is-warning"
             />
             <p class="control right_slider">
               <b-slider v-model="repeat" indicator :tooltip="false" :max="MAX_REPEAT" :min="1" format="raw"></b-slider>
@@ -117,6 +118,46 @@
         <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
           <span v-html="$sanitize($tc('inscription.ui.summary.notification'))"></span>
         </b-notification>
+
+        <template v-if="summary">
+          <div class="has-text-weight-bold px-5">
+            <span class="is-size-6">{{ $t("inscription.ui.summary.memo") }}</span>
+            <!-- <span class="is-pulled-right">
+              {{ summary.memo }}
+            </span> -->
+            <b-notification type="is-info is-light" :closable="false">
+              {{ summary.memo }}
+            </b-notification>
+          </div>
+          <div v-if="summary.type == 'mint'" class="has-text-weight-bold px-5">
+            <span class="is-size-6">{{ $t("inscription.ui.summary.repeat") }}</span>
+            <span class="is-pulled-right">
+              {{ summary.repeat }}
+            </span>
+          </div>
+          <div class="py-2"></div>
+          <div class="has-text-weight-bold px-5">
+            <span class="is-size-6 has-text-grey">{{ $t("inscription.ui.summary.netfee") }}</span>
+            <span class="is-size-6 is-pulled-right has-text-grey">
+              {{ demojo(summary.netFee) }}
+            </span>
+          </div>
+          <div class="has-text-weight-bold px-5">
+            <span class="is-size-6 has-text-grey">{{ $t("inscription.ui.summary.devfee") }}</span>
+            <span class="is-size-6 is-pulled-right has-text-grey">
+              {{ demojo(summary.devFee) }}
+            </span>
+          </div>
+          <hr />
+          <div class="has-text-weight-bold px-5">
+            <span class="is-size-5">{{ $t("inscription.ui.summary.total") }}</span>
+            <span class="is-pulled-right is-size-5 has-text-primary">
+              {{ demojo(summary.totalFee) }}
+            </span>
+          </div>
+        </template>
+
+        <hr />
         <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
       </template>
     </section>
@@ -150,24 +191,24 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
-import { AccountEntity } from "../../../../lib-chia/models/account";
+import { AccountEntity, OneTokenInfo } from "../../../../lib-chia/models/account";
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { TokenPuzzleDetail } from "../../../../lib-chia/services/crypto/receive";
 import { signSpendBundle, SpendBundle } from "../../../../lib-chia/services/spendbundle";
 import puzzle from "../../../../lib-chia/services/crypto/puzzle";
-import { Hex, prefix0x } from "../../../../lib-chia/services/coin/condition";
+import { Hex, Hex0x, prefix0x } from "../../../../lib-chia/services/coin/condition";
 import transfer, { SymbolCoins, TransferTarget } from "../../../../lib-chia/services/transfer/transfer";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
 import { submitBundle } from "@/services/view/bundleAction";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
-import { csvToArray } from "../../../../lib-chia/services/util/csv";
 import { networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
 import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
 import TopBar from "../Common/TopBar.vue";
 import AddressField from "@/components/Common/AddressField.vue";
 import store from "@/store";
+import { demojo } from "@/filters/unitConversion";
 
 type PanelType = "mint" | "transfer" | "deploy" | "custom";
 
@@ -193,13 +234,26 @@ export default class Inscription extends Vue {
   public dragfile: File[] = [];
   public isDragging = false;
   public transitioning = false;
-  public amount = 0;
-  public tick = "";
+  public amount = 1;
+  public tick = "TODO";
   public panel: PanelType = "mint";
   public repeat = 1;
   public limit = 1;
   public total = 21000000;
   public unlock = 3000;
+
+  public summary: {
+    memo: string;
+    type: PanelType;
+    repeat: number;
+    devFee: bigint;
+    netFee: bigint;
+    totalFee: bigint;
+  } | null = null;
+
+  public validAddress = true;
+  public address = "";
+  public signAddress = "";
 
   public readonly MAX_REPEAT = 300;
 
@@ -207,6 +261,7 @@ export default class Inscription extends Vue {
 
   mounted(): void {
     this.loadCoins();
+    this.address = this.account.firstAddress ?? "";
   }
 
   get path(): string {
@@ -255,6 +310,37 @@ export default class Inscription extends Vue {
     this.status = "Loaded";
   }
 
+  readonly deployFee = 20n;
+  readonly transferFee = 10n;
+  readonly mintFee = 3n;
+  // readonly deployFee = 100000000000n;
+  // readonly transferFee = 1000000000n;
+  // readonly mintFee = 1000000000n;
+
+  calculateAmount(): bigint {
+    if (this.panel == "deploy") {
+      return this.deployFee;
+    } else if (this.panel == "mint") {
+      return this.mintFee * BigInt(this.repeat);
+    } else if (this.panel == "transfer") {
+      return this.transferFee;
+    } else {
+      throw Error("not support");
+    }
+  }
+
+  calculateMemo(): string {
+    if (this.panel == "deploy") {
+      return `{"p":"xrc-20","op":"deploy","tick":"${this.tick}","max":"${this.total}","lock":"${this.unlock}","lim":"${this.limit}"}`;
+    } else if (this.panel == "mint") {
+      return `{"p":"xrc-20","op":"mint","tick":"${this.tick}","amt":"${this.amount}"}`;
+    } else if (this.panel == "transfer") {
+      return `{"p":"xrc-20","op":"transfer","tick":"${this.tick}","amt":"${this.amount}"}`;
+    } else {
+      throw Error("not support");
+    }
+  }
+
   async sign(): Promise<void> {
     this.submitting = true;
     try {
@@ -268,50 +354,55 @@ export default class Inscription extends Vue {
         return;
       }
 
-      const inputs = csvToArray(this.csv);
-      const tgts: TransferTarget[] = [];
-      const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
+      const amount = this.calculateAmount();
 
-      for (let i = 0; i < inputs.length; i++) {
-        const line = inputs[i];
-
-        const address = line[0];
-        if (!address.startsWith(xchPrefix())) {
-          Notification.open({
-            message: this.$tc("inscription.messages.error.ADDRESS_NOT_MATCH_NETWORK", 1, { address }),
-            type: "is-danger",
-            duration: 5000,
-          });
-          this.submitting = false;
-          return;
-        }
-        const symbol = line[1];
-        if (this.availcoins[symbol] == undefined) {
-          Notification.open({
-            message: this.$tc("inscription.messages.error.COIN_NOT_EXIST", 0, { symbol: symbol }),
-            type: "is-danger",
-            duration: 5000,
-          });
-          this.submitting = false;
-          return;
-        }
-        const amount = BigInt(line[2]);
-        const memo = line[3];
-        // there is error in checking this regular expression
-        // eslint-disable-next-line no-useless-escape
-        const std_memo = memo.replace(/[&/\\#,+()$~%.'":*?<>{}\[\] ]/g, "_");
-        const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(address));
-
-        tgts.push({ address: tgt_hex, amount, symbol, memos: [tgt_hex, std_memo] });
+      let tgt_hex: Hex0x = "()";
+      let change_hex: Hex0x = "()";
+      try {
+        tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.signAddress));
+        change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
+      } catch (err) {
+        Notification.open({
+          message: this.$tc("send.messages.error.INVALID_ADDRESS"),
+          type: "is-danger",
+          duration: 5000,
+        });
+        this.validAddress = false;
+        this.submitting = false;
+        return;
       }
 
+      if (!this.signAddress.startsWith(xchPrefix())) {
+        Notification.open({
+          message: this.$tc("send.messages.error.ADDRESS_NOT_MATCH_NETWORK"),
+          type: "is-danger",
+          duration: 5000,
+        });
+        this.validAddress = false;
+        this.submitting = false;
+        return;
+      }
+
+      const memo = this.calculateMemo().replaceAll('"', "'");
+      const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: xchSymbol(), memos: [memo] }];
       const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
-      const observers = await getAssetsRequestObserver(this.account);
+      const observers = this.requests.length ? this.requests : await getAssetsRequestObserver(this.account);
       const ubundle = await transfer.generateSpendBundleIncludingCat(plan, observers, [], networkContext());
-      this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());
       if (this.account.type == "PublicKey") {
+        this.bundle = await signSpendBundle(ubundle, [], networkContext());
         await this.offlineSignBundle();
+      } else {
+        this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());
       }
+
+      this.summary = {
+        memo,
+        netFee: BigInt(this.fee),
+        devFee: amount,
+        totalFee: amount + BigInt(this.fee),
+        type: this.panel,
+        repeat: this.panel == "mint" ? this.repeat : 1,
+      };
     } catch (error) {
       Notification.open({
         message: this.$tc("inscription.ui.messages.failedToSign") + error,
@@ -326,6 +417,9 @@ export default class Inscription extends Vue {
 
   async submit(): Promise<void> {
     if (!this.bundle) return;
+
+    // TODO: encrypt the bundle with public key
+
     submitBundle(this.bundle, this.account, (_) => (this.submitting = _), this.close);
   }
 
@@ -415,10 +509,6 @@ export default class Inscription extends Vue {
     });
   }
 
-  public validAddress = true;
-  public address = "";
-  public signAddress = "";
-
   updateEffectiveAddress(value: string): void {
     this.signAddress = value;
   }
@@ -426,6 +516,10 @@ export default class Inscription extends Vue {
   updateAddress(value: string): void {
     this.address = value;
     this.validAddress = true;
+  }
+
+  demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null): string {
+    return demojo(mojo, token);
   }
 }
 </script>

@@ -324,7 +324,6 @@ export default class Dapp extends Vue {
   }
 
   async openInscription(): Promise<void> {
-    this.checkObserveMode();
     this.$buefy.modal.open({
       parent: this,
       component: (await import("@/components/Inscription/Inscription.vue")).default,

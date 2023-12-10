@@ -1741,7 +1741,12 @@
         "max": "Max"
       },
       "summary": {
-        "notification": "Are you sure to inscribe?<br/>Please review your transaction."
+        "notification": "Are you sure to inscribe?<br/>Please review your transaction.",
+        "memo": "Inscription",
+        "repeat": "Repeat times",
+        "netfee": "Network Fee",
+        "devfee": "Service Fee",
+        "total": "Total"
       },
       "messages": {
         "failedToSign": "",

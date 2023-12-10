@@ -1741,7 +1741,12 @@
         "max": "MAX"
       },
       "summary": {
-        "notification": "确定要提交吗？<br/>请务必再次检查你的交易内容。"
+        "notification": "确定要提交吗？<br/>请务必再次检查你的交易内容。",
+        "memo": "铭文",
+        "repeat": "重复次数",
+        "netfee": "网络费",
+        "devfee": "服务费",
+        "total": "总计"
       },
       "messages": {
         "failedToSign": "",
