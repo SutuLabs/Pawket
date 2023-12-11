@@ -52,34 +52,16 @@ const transferInscription = `{'p':'xchs','op':'transfer','tick':'${tick}','amt':
 const hint = prefix0x(sha256(Buffer.from(`{'p':'xchs','tick':'${tick}'}`)));
 const service_fee = 1000n;
 
-test("inscription: deploy with fee 0", async () => deploy(0n));
-test("inscription: deploy with fee 10", async () => deploy(10n));
+test("inscription: deploy with fee 0", async () => deployOrTransfer(0n, deployInscription));
+test("inscription: deploy with fee 10", async () => deployOrTransfer(10n, deployInscription));
 
-async function deploy(fee: bigint): Promise<void> {
+test("inscription: transfer with fee 0", async () => deployOrTransfer(0n, transferInscription));
+test("inscription: transfer with fee 10", async () => deployOrTransfer(10n, transferInscription));
+
+async function deployOrTransfer(fee: bigint, memo: string): Promise<void> {
   const account = getTestAccount("55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f");
   const tokenPuzzles = await getAccountAddressDetails(account, [], {}, net.prefix, net.symbol, undefined, "cat_v2");
 
-  const memo = deployInscription;
-  const tgts: TransferTarget[] = [
-    { address: target_hex, amount: 1n, symbol: net.symbol, memos: [hint, memo] },
-    { address: service_hex, amount: service_fee, symbol: net.symbol, memos: [] },
-  ];
-  const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, BigInt(fee), net.symbol);
-
-  const ubundle = await transfer.generateSpendBundleWithoutCat(plan, tokenPuzzles, [], net);
-  const bundle = await signSpendBundle(ubundle, tokenPuzzles, net.chainId);
-  await assertSpendbundle(bundle, net.chainId);
-  expect(bundle).toMatchSnapshot("spendbundle");
-}
-
-test("inscription: transfer with fee 0", async () => transf(0n));
-test("inscription: transfer with fee 10", async () => transf(10n));
-
-async function transf(fee: bigint): Promise<void> {
-  const account = getTestAccount("55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f");
-  const tokenPuzzles = await getAccountAddressDetails(account, [], {}, net.prefix, net.symbol, undefined, "cat_v2");
-
-  const memo = transferInscription;
   const tgts: TransferTarget[] = [
     { address: target_hex, amount: 1n, symbol: net.symbol, memos: [hint, memo] },
     { address: service_hex, amount: service_fee, symbol: net.symbol, memos: [] },
