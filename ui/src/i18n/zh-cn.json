@@ -1753,9 +1753,6 @@
         "wrongFileType": ""
       }
     },
-    "messages": {
-      "error": {}
-    },
     "sample": {
       "address": "",
       "coin": "",
