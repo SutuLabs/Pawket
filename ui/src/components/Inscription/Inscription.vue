@@ -56,12 +56,6 @@
           </b-field>
         </b-field>
 
-        <b-field v-if="panel == 'deploy' && debugMode" :label="$t('inscription.ui.label.unlock')">
-          <b-field>
-            <b-numberinput v-model="unlock" expanded controls-position="compact" controls-alignment="right" />
-          </b-field>
-        </b-field>
-
         <!-- Custom -->
         <template v-if="panel == 'custom'">
           <span class="label">
@@ -240,7 +234,6 @@ export default class Inscription extends Vue {
   public repeat = 1;
   public limit = 1;
   public total = 21000000;
-  public unlock = 3000;
 
   public summary: {
     memo: string;
@@ -332,7 +325,7 @@ export default class Inscription extends Vue {
 
   calculateMemo(): string {
     if (this.panel == "deploy") {
-      return `{"p":"xrc-20","op":"deploy","tick":"${this.tick}","max":"${this.total}","lock":"${this.unlock}","lim":"${this.limit}"}`;
+      return `{"p":"xrc-20","op":"deploy","tick":"${this.tick}","max":"${this.total}","lim":"${this.limit}"}`;
     } else if (this.panel == "mint") {
       return `{"p":"xrc-20","op":"mint","tick":"${this.tick}","amt":"${this.amount}"}`;
     } else if (this.panel == "transfer") {
