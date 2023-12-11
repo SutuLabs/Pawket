@@ -203,6 +203,7 @@ import TopBar from "../Common/TopBar.vue";
 import AddressField from "@/components/Common/AddressField.vue";
 import store from "@/store";
 import { demojo } from "@/filters/unitConversion";
+import { sha256 } from "../../../../lib-chia/services/offer/bundler";
 
 type PanelType = "mint" | "transfer" | "deploy" | "custom";
 
@@ -325,11 +326,11 @@ export default class Inscription extends Vue {
 
   calculateMemo(): string {
     if (this.panel == "deploy") {
-      return `{"p":"xrc-20","op":"deploy","tick":"${this.tick}","max":"${this.total}","lim":"${this.limit}"}`;
+      return `{'p':'xchs','op':'deploy','tick':'${this.tick}','max':'${this.total}','lim':'${this.limit}'}`;
     } else if (this.panel == "mint") {
-      return `{"p":"xrc-20","op":"mint","tick":"${this.tick}","amt":"${this.amount}"}`;
+      return `{'p':'xchs','op':'mint','tick':'${this.tick}','amt':'${this.amount}'}`;
     } else if (this.panel == "transfer") {
-      return `{"p":"xrc-20","op":"transfer","tick":"${this.tick}","amt":"${this.amount}"}`;
+      return `{'p':'xchs','op':'transfer','tick':'${this.tick}','amt':'${this.amount}'}`;
     } else {
       throw Error("not support");
     }
@@ -376,8 +377,9 @@ export default class Inscription extends Vue {
         return;
       }
 
-      const memo = this.calculateMemo().replaceAll('"', "'");
-      const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: xchSymbol(), memos: [memo] }];
+      const hint = prefix0x(sha256(Buffer.from(`{'p':'xchs','tick':'${this.tick}'}`)));
+      const memo = this.calculateMemo();
+      const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: xchSymbol(), memos: [hint, memo] }];
       const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
       const observers = this.requests.length ? this.requests : await getAssetsRequestObserver(this.account);
       const ubundle = await transfer.generateSpendBundleIncludingCat(plan, observers, [], networkContext());
@@ -410,9 +412,6 @@ export default class Inscription extends Vue {
 
   async submit(): Promise<void> {
     if (!this.bundle) return;
-
-    // TODO: encrypt the bundle with public key
-
     submitBundle(this.bundle, this.account, (_) => (this.submitting = _), this.close);
   }
 

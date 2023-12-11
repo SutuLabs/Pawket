@@ -64,7 +64,9 @@
                   <span v-if="coin.hint" :title="$t('bundleSummary.ui.detail.span.hint') + (coin.hintRaw || '')"
                     >({{ coin.hint }})</span
                   >
-                  <span v-if="coin.memo" :title="$t('bundleSummary.ui.detail.span.memo')">[{{ coin.memo }}]</span>
+                  <span v-if="coin.memo" :title="$t('bundleSummary.ui.detail.span.memo') + (coin.memoRaw || '')"
+                    >[{{ coin.memo }}]</span
+                  >
                 </li>
               </ul>
             </b-field>
@@ -106,6 +108,7 @@ interface CoinType {
   hint?: string;
   hintRaw?: string;
   memo?: string;
+  memoRaw?: string;
   known?: string;
   others?: string[];
 }
@@ -251,7 +254,8 @@ export default class BundleSummary extends Vue {
         amount: _.amount,
         hint: this.tryGetHintAddress(_.args.at(0)),
         hintRaw: _.args.at(0),
-        memo: _.args.at(1),
+        memo: this.tryGetHintAddress(_.args.at(1)),
+        memoRaw: _.args.at(1),
         others: _.args.slice(2),
       }));
     return coins;
