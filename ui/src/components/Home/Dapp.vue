@@ -7,6 +7,16 @@
       </p>
     </a>
     <div v-if="displayDapp" class="columns is-mobile is-multiline mt-2">
+      <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.inscribe')" position="is-right">
+          <a href="javascript:void(0)" @click="$router.push('/home/inscribe')" class="has-text-link">
+            <div class="has-text-centered">
+              <b-icon icon="pencil-box-outline" size="is-medium"></b-icon>
+              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.inscribe") }}</p>
+            </div>
+          </a>
+        </b-tooltip>
+      </div>
       <div v-if="!isIos" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.donate')" position="is-right">
           <a href="javascript:void(0)" @click="openDonation()" class="has-text-link">
@@ -43,16 +53,6 @@
             <div class="has-text-centered">
               <b-icon icon="email-send-outline" size="is-medium"></b-icon>
               <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.makeOffer") }}</p>
-            </div>
-          </a>
-        </b-tooltip>
-      </div>
-      <div class="column px-1 is-1-desktop is-3-mobile has-text-centered">
-        <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.inscribe')" position="is-right">
-          <a href="javascript:void(0)" @click="$router.push('/home/inscribe')" class="has-text-link">
-            <div class="has-text-centered">
-              <b-icon icon="pencil-box-outline" size="is-medium"></b-icon>
-              <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.inscribe") }}</p>
             </div>
           </a>
         </b-tooltip>
