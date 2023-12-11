@@ -242,14 +242,23 @@ export async function getBootstrapSpendBundle(
   requests: TokenPuzzleObserver[],
   count: number,
   net: NetworkContext,
-  privateKey: string | undefined = undefined
+  privateKey: string | undefined = undefined,
+  initialMemos: string[][] | undefined = undefined,
+  bootstrapMemos: string[][] | undefined = undefined,
+  extraTargets: TransferTarget[] | undefined = undefined
 ): Promise<PartialSpendBundle | UnsignedSpendBundle> {
   const amount = 1n; // always 1 mojo for 1 NFT
   const baseSymbol = net.symbol;
+  if (initialMemos != undefined && initialMemos.length != count)
+    throw new Error(`count [${count}] is not equal to initialMemos count [${initialMemos.length}]`);
+  if (bootstrapMemos != undefined && bootstrapMemos.length != count)
+    throw new Error(`count [${count}] is not equal to bootstrapMemos count [${bootstrapMemos.length}]`);
+  extraTargets = extraTargets ?? [];
 
   if (count == 1) {
-    const bootstrapTgts: TransferTarget[] = [{ address: target_hex, amount, symbol: baseSymbol }];
-    const bootstrapSpendPlan = transfer.generateSpendPlan(availcoins, bootstrapTgts, change_hex, fee, baseSymbol);
+    const bootstrapTgts: TransferTarget[] = [{ address: target_hex, amount, symbol: baseSymbol, memos: initialMemos?.[0] }];
+    const tgts = bootstrapTgts.concat(extraTargets);
+    const bootstrapSpendPlan = transfer.generateSpendPlan(availcoins, tgts, change_hex, fee, baseSymbol);
     const bootstrapSpendBundle = await transfer.generateSpendBundleWithoutCat(bootstrapSpendPlan, requests, [], net);
     return bootstrapSpendBundle;
   } else {
@@ -263,8 +272,9 @@ export async function getBootstrapSpendBundle(
     // initboot coin == initial bootstrap coin
     const initbootTgts: TransferTarget[] = ps
       .slice(0, count)
-      .map((puz) => ({ address: prefix0x(puz.hash), amount, symbol: baseSymbol }));
-    const initbootSpendPlan = transfer.generateSpendPlan(availcoins, initbootTgts, change_hex, fee, baseSymbol);
+      .map((puz, i) => ({ address: prefix0x(puz.hash), amount, symbol: baseSymbol, memos: initialMemos?.[i] }));
+    const tgts = initbootTgts.concat(extraTargets);
+    const initbootSpendPlan = transfer.generateSpendPlan(availcoins, tgts, change_hex, fee, baseSymbol);
     const initbootSpendBundle = await transfer.generateSpendBundleWithoutCat(initbootSpendPlan, requests, [], net);
 
     let spendBundle = initbootSpendBundle;
@@ -273,7 +283,9 @@ export async function getBootstrapSpendBundle(
       const tgt = initbootSpendPlan[baseSymbol].targets[i];
       const onlycoin: SymbolCoins = {};
       onlycoin[baseSymbol] = [{ puzzle_hash: tgt.address, amount: tgt.amount, parent_coin_info: parent }];
-      const bootstrapTgts: TransferTarget[] = [{ address: prefix0x(target_hex), amount, symbol: baseSymbol }];
+      const bootstrapTgts: TransferTarget[] = [
+        { address: prefix0x(target_hex), amount, symbol: baseSymbol, memos: bootstrapMemos?.[i] },
+      ];
       const bootstrapSpendPlan = transfer.generateSpendPlan(onlycoin, bootstrapTgts, change_hex, 0n, baseSymbol);
       const bootstrapUnsignedSpendBundle = await transfer.generateSpendBundleWithoutCat(bootstrapSpendPlan, puzzles, [], net);
       const bootstrapSpendBundle = await signSpendBundle(bootstrapUnsignedSpendBundle, puzzles, net.chainId);
