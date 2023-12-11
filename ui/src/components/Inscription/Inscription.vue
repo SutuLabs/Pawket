@@ -23,7 +23,14 @@
             <!-- <p class="control">
                     <b-button :label="$t('inscription.ui.button.max')" />
                   </p> -->
-            <b-numberinput v-model="amount" expanded controls-position="compact" controls-alignment="right" />
+            <b-numberinput
+              v-model="amount"
+              :max="Number.MAX_SAFE_INTEGER"
+              :min="1"
+              expanded
+              controls-position="compact"
+              controls-alignment="right"
+            />
           </b-field>
         </b-field>
 
@@ -46,13 +53,27 @@
 
         <b-field v-if="panel == 'deploy'" :label="$t('inscription.ui.label.total')">
           <b-field>
-            <b-numberinput v-model="total" expanded controls-position="compact" controls-alignment="right" />
+            <b-numberinput
+              v-model="total"
+              :max="Number.MAX_SAFE_INTEGER"
+              :min="1"
+              expanded
+              controls-position="compact"
+              controls-alignment="right"
+            />
           </b-field>
         </b-field>
 
         <b-field v-if="panel == 'deploy'" :label="$t('inscription.ui.label.limit')">
           <b-field>
-            <b-numberinput v-model="limit" expanded controls-position="compact" controls-alignment="right" />
+            <b-numberinput
+              v-model="limit"
+              :max="Number.MAX_SAFE_INTEGER"
+              :min="1"
+              expanded
+              controls-position="compact"
+              controls-alignment="right"
+            />
           </b-field>
         </b-field>
 
@@ -254,7 +275,7 @@ export default class Inscription extends Vue {
   public address = "";
   public signAddress = "";
 
-  public readonly MAX_REPEAT = 300;
+  public readonly MAX_REPEAT = 25;
 
   public requests: TokenPuzzleDetail[] = [];
 
