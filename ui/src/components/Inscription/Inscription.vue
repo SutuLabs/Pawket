@@ -11,7 +11,7 @@
             :label="$t('inscription.ui.tab.transfer')"
           ></b-tab-item>
           <b-tab-item value="deploy" icon="sprout-outline" :label="$t('inscription.ui.tab.deploy')"></b-tab-item>
-          <b-tab-item value="custom" icon="cogs" :label="$t('inscription.ui.tab.custom')" :visible="debugMode"></b-tab-item>
+          <b-tab-item value="custom" icon="cogs" :label="$t('inscription.ui.tab.custom')" :visible="false"></b-tab-item>
         </b-tabs>
 
         <b-field v-if="panel == 'mint' || panel == 'transfer' || panel == 'deploy'" :label="$t('inscription.ui.label.tick')">
@@ -127,6 +127,9 @@
             <span class="is-size-6">{{ $t("inscription.ui.summary.repeat") }}</span>
             <span class="is-pulled-right">
               {{ summary.repeat }}
+              (
+              {{ demojo(summary.repeat) }}
+              )
             </span>
           </div>
           <div class="py-2"></div>
@@ -146,7 +149,7 @@
           <div class="has-text-weight-bold px-5">
             <span class="is-size-5">{{ $t("inscription.ui.summary.total") }}</span>
             <span class="is-pulled-right is-size-5 has-text-primary">
-              {{ demojo(summary.totalFee) }}
+              {{ demojo(summary.total) }}
             </span>
           </div>
         </template>
@@ -189,7 +192,7 @@ import { AccountEntity, OneTokenInfo } from "../../../../lib-chia/models/account
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { TokenPuzzleDetail } from "../../../../lib-chia/services/crypto/receive";
-import { signSpendBundle, SpendBundle } from "../../../../lib-chia/services/spendbundle";
+import { signSpendBundle, SpendBundle, UnsignedSpendBundle } from "../../../../lib-chia/services/spendbundle";
 import puzzle from "../../../../lib-chia/services/crypto/puzzle";
 import { Hex, Hex0x, prefix0x } from "../../../../lib-chia/services/coin/condition";
 import transfer, { SymbolCoins, TransferTarget } from "../../../../lib-chia/services/transfer/transfer";
@@ -204,6 +207,7 @@ import AddressField from "@/components/Common/AddressField.vue";
 import store from "@/store";
 import { demojo } from "@/filters/unitConversion";
 import { sha256 } from "../../../../lib-chia/services/offer/bundler";
+import { getBootstrapSpendBundle } from "../../../../lib-chia/services/coin/nft";
 
 type PanelType = "mint" | "transfer" | "deploy" | "custom";
 
@@ -230,7 +234,7 @@ export default class Inscription extends Vue {
   public isDragging = false;
   public transitioning = false;
   public amount = 1;
-  public tick = "TODO";
+  public tick = "";
   public panel: PanelType = "mint";
   public repeat = 1;
   public limit = 1;
@@ -243,6 +247,7 @@ export default class Inscription extends Vue {
     devFee: bigint;
     netFee: bigint;
     totalFee: bigint;
+    total: bigint;
   } | null = null;
 
   public validAddress = true;
@@ -304,13 +309,13 @@ export default class Inscription extends Vue {
     this.status = "Loaded";
   }
 
-  readonly deployFee = 20n;
-  readonly transferFee = 10n;
-  readonly mintFee = 3n;
-  // readonly deployFee = 100000000000n;
-  // readonly transferFee = 1000000000n;
-  // readonly mintFee = 1000000000n;
-  readonly serviceAddress: Hex0x = "0xd19c05a54dacbf2b40ff4843534c47976de90246c3fc42ac1f42ea81b434b8ea";
+  // readonly deployFee = 20n;
+  // readonly transferFee = 10n;
+  // readonly mintFee = 3n;
+  readonly deployFee = 100000000000n;
+  readonly transferFee = 10000000000n;
+  readonly mintFee = 1000000000n;
+  readonly service_hex: Hex0x = "0xd19c05a54dacbf2b40ff4843534c47976de90246c3fc42ac1f42ea81b434b8ea";
 
   calculateAmount(): bigint {
     if (this.panel == "deploy") {
@@ -350,10 +355,12 @@ export default class Inscription extends Vue {
       }
 
       const amount = this.calculateAmount();
+      const repeat = this.panel == "mint" ? this.repeat : 1;
 
-      const tgt_hex = this.serviceAddress;
+      let tgt_hex: Hex0x = "()";
       let change_hex: Hex0x = "()";
       try {
+        tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.signAddress));
         change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
       } catch (err) {
         Notification.open({
@@ -379,10 +386,29 @@ export default class Inscription extends Vue {
 
       const hint = prefix0x(sha256(Buffer.from(`{'p':'xchs','tick':'${this.tick}'}`)));
       const memo = this.calculateMemo();
-      const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: xchSymbol(), memos: [hint, memo] }];
-      const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
       const observers = this.requests.length ? this.requests : await getAssetsRequestObserver(this.account);
-      const ubundle = await transfer.generateSpendBundleIncludingCat(plan, observers, [], networkContext());
+      const fee = BigInt(this.fee);
+
+      let ubundle: UnsignedSpendBundle;
+      if (this.panel == "deploy" || this.panel == "transfer") {
+        const tgts: TransferTarget[] = [
+          { address: tgt_hex, amount: 1n, symbol: xchSymbol(), memos: [hint, memo] },
+          { address: this.service_hex, amount: amount, symbol: xchSymbol(), memos: [] },
+        ];
+        const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, fee, xchSymbol());
+        ubundle = await transfer.generateSpendBundleWithoutCat(plan, observers, [], networkContext());
+      } else if (this.panel == "mint") {
+        const ms = Array(repeat).fill([hint, memo]);
+        const init = repeat == 1 ? [[hint, memo]] : undefined;
+        const etgts: TransferTarget[] = [{ address: this.service_hex, amount, symbol: xchSymbol(), memos: [] }];
+
+        const net = networkContext();
+        const ac = this.availcoins;
+        ubundle = await getBootstrapSpendBundle(tgt_hex, change_hex, fee, ac, observers, repeat, net, undefined, init, ms, etgts);
+      } else {
+        throw Error("not support");
+      }
+
       if (this.account.type == "PublicKey") {
         this.bundle = await signSpendBundle(ubundle, [], networkContext());
         await this.offlineSignBundle();
@@ -392,11 +418,12 @@ export default class Inscription extends Vue {
 
       this.summary = {
         memo,
-        netFee: BigInt(this.fee),
+        netFee: fee,
         devFee: amount,
-        totalFee: amount + BigInt(this.fee),
+        totalFee: amount + fee,
+        total: amount + fee + BigInt(repeat),
         type: this.panel,
-        repeat: this.panel == "mint" ? this.repeat : 1,
+        repeat,
       };
     } catch (error) {
       Notification.open({
