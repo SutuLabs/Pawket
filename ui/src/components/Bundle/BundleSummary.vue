@@ -118,7 +118,8 @@ interface TotalCoinType {
 }
 
 const knownAddress: Record<string, string> = {
-  "0xd19c05a54dacbf2b40ff4843534c47976de90246c3fc42ac1f42ea81b434b8ea": "Pawket Service Address",
+  "0xd19c05a54dacbf2b40ff4843534c47976de90246c3fc42ac1f42ea81b434b8ea": "pawket.xch",
+  "0xe8022865bd618645ba1f20f1205ddd02207f93a2cfec6241e66f47d12fcbdfea": "unimojo.xch",
 };
 
 @Component({
