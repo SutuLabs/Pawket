@@ -333,9 +333,9 @@ export default class Inscription extends Vue {
   // readonly deployFee = 20n;
   // readonly transferFee = 10n;
   // readonly mintFee = 3n;
-  readonly deployFee = 100000000000n;
-  readonly transferFee = 10000000000n;
-  readonly mintFee = 1000000000n;
+  readonly deployFee = 50000000000n;
+  readonly transferFee = 0n;
+  readonly mintFee = 50000000n;
   readonly service_hex: Hex0x = "0xe8022865bd618645ba1f20f1205ddd02207f93a2cfec6241e66f47d12fcbdfea";
 
   calculateAmount(): bigint {
@@ -412,16 +412,16 @@ export default class Inscription extends Vue {
 
       let ubundle: UnsignedSpendBundle;
       if (this.panel == "deploy" || this.panel == "transfer") {
-        const tgts: TransferTarget[] = [
-          { address: tgt_hex, amount: 1n, symbol: xchSymbol(), memos: [hint, memo] },
-          { address: this.service_hex, amount: amount, symbol: xchSymbol(), memos: [] },
-        ];
+        const tgts: TransferTarget[] = [{ address: tgt_hex, amount: 1n, symbol: xchSymbol(), memos: [hint, memo] }];
+        if (amount > 0n) tgts.push({ address: this.service_hex, amount: amount, symbol: xchSymbol(), memos: [] });
+
         const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, fee, xchSymbol());
         ubundle = await transfer.generateSpendBundleWithoutCat(plan, observers, [], networkContext());
       } else if (this.panel == "mint") {
         const ms = Array(repeat).fill([hint, memo]);
         const init = repeat == 1 ? [[hint, memo]] : undefined;
-        const etgts: TransferTarget[] = [{ address: this.service_hex, amount, symbol: xchSymbol(), memos: [] }];
+        const etgts: TransferTarget[] =
+          amount > 0n ? [{ address: this.service_hex, amount, symbol: xchSymbol(), memos: [] }] : [];
 
         const net = networkContext();
         const ac = this.availcoins;
