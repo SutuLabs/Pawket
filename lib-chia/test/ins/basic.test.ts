@@ -8,7 +8,7 @@ import { getAccountAddressDetails } from "../../services/util/account";
 import { NetworkContext } from "../../services/coin/coinUtility";
 
 import { assertSpendbundle } from "../../services/spendbundle/validator";
-import { signSpendBundle } from "../../services/spendbundle";
+import { signSpendBundle, UnsignedSpendBundle } from "../../services/spendbundle";
 import { prefix0x } from "../../services/coin/condition";
 import { sha256 } from "../../services/offer/bundler";
 
@@ -75,22 +75,36 @@ async function deployOrTransfer(fee: bigint, memo: string): Promise<void> {
 }
 
 test.each([
-  [0n, 1],
-  [88n, 8],
-  [10n, 1],
-  [123n, 12],
-])("inscription: mint with fee %p and count %p", async (fee: bigint, count: number) => {
+  ["proxy", 0n, 1],
+  ["proxy", 88n, 8],
+  ["proxy", 10n, 1],
+  ["proxy", 123n, 12],
+  ["direct", 0n, 1],
+  ["direct", 88n, 8],
+  ["direct", 10n, 1],
+  ["direct", 123n, 12],
+])("inscription: mint by %p with fee %p and count %p", async (type: string, fee: bigint, count: number) => {
   const account = getTestAccount("55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f");
   const tokenPuzzles = await getAccountAddressDetails(account, [], {}, net.prefix, net.symbol, undefined, "cat_v2");
 
   const memo = mintInscription;
-  const sk = "00186eae4cd4a3ec609ca1a8c1cda8467e3cb7cbbbf91a523d12d31129d5f8d7";
-  const ms = Array(count).fill([hint, memo]);
-  const init = count == 1 ? [[hint, memo]] : undefined;
-  const etgts: TransferTarget[] = [{ address: service_hex, amount: service_fee, symbol: net.symbol, memos: [] }];
+  const tgts: TransferTarget[] = [{ address: service_hex, amount: service_fee, symbol: net.symbol, memos: [] }];
 
-  const tp = tokenPuzzles;
-  const ubundle = await getBootstrapSpendBundle(target_hex, change_hex, fee, availcoins, tp, count, net, sk, init, ms, etgts);
+  let ubundle: UnsignedSpendBundle;
+  if (type == "proxy") {
+    const tp = tokenPuzzles;
+    const sk = "00186eae4cd4a3ec609ca1a8c1cda8467e3cb7cbbbf91a523d12d31129d5f8d7";
+    const ms = Array(count).fill([hint, memo]);
+    const init = count == 1 ? [[hint, memo]] : undefined;
+    ubundle = await getBootstrapSpendBundle(target_hex, change_hex, fee, availcoins, tp, count, net, sk, init, ms, tgts);
+  } else {
+    for (let i = 0; i < count; i++) {
+      tgts.push({ address: target_hex, amount: BigInt(i + 1), symbol: net.symbol, memos: [hint, memo] });
+    }
+    const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, BigInt(fee), net.symbol);
+    ubundle = await transfer.generateSpendBundleWithoutCat(plan, tokenPuzzles, [], net);
+  }
+
   const bundle = await signSpendBundle(ubundle, tokenPuzzles, net.chainId);
   await assertSpendbundle(bundle, net.chainId);
   expect(bundle).toMatchSnapshot("spendbundle");
