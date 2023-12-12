@@ -148,10 +148,11 @@
             <span class="is-size-6">{{ $t("inscription.ui.summary.repeat") }}</span>
             <span class="is-pulled-right">
               {{ summary.repeat }}
-              (
-              {{ demojo(summary.repeat) }}
-              )
             </span>
+          </div>
+          <div v-if="summary.type == 'mint'" class="has-text-weight-bold px-5">
+            <span class="is-size-6">{{ $t("inscription.ui.summary.cargo") }}</span>
+            <span class="is-pulled-right"> {{ summary.repeatMojo }} mojos </span>
           </div>
           <div class="py-2"></div>
           <div class="has-text-weight-bold px-5">
@@ -170,7 +171,7 @@
           <div class="has-text-weight-bold px-5">
             <span class="is-size-5">{{ $t("inscription.ui.summary.total") }}</span>
             <span class="is-pulled-right is-size-5 has-text-primary">
-              {{ demojo(summary.total) }}
+              {{ demojo(summary.totalFee) }}
             </span>
           </div>
         </template>
@@ -269,6 +270,7 @@ export default class Inscription extends Vue {
     netFee: bigint;
     totalFee: bigint;
     total: bigint;
+    repeatMojo: bigint;
   } | null = null;
 
   public validAddress = true;
@@ -276,6 +278,7 @@ export default class Inscription extends Vue {
   public signAddress = "";
 
   public readonly MAX_REPEAT = 25;
+  private mintType: "direct" | "proxy" = "direct";
 
   public requests: TokenPuzzleDetail[] = [];
 
@@ -411,6 +414,7 @@ export default class Inscription extends Vue {
       const fee = BigInt(this.fee);
 
       let ubundle: UnsignedSpendBundle;
+      let repeatMojo = 1n;
       if (this.panel == "deploy" || this.panel == "transfer") {
         const tgts: TransferTarget[] = [{ address: tgt_hex, amount: 1n, symbol: xchSymbol(), memos: [hint, memo] }];
         if (amount > 0n) tgts.push({ address: this.service_hex, amount: amount, symbol: xchSymbol(), memos: [] });
@@ -418,14 +422,28 @@ export default class Inscription extends Vue {
         const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, fee, xchSymbol());
         ubundle = await transfer.generateSpendBundleWithoutCat(plan, observers, [], networkContext());
       } else if (this.panel == "mint") {
-        const ms = Array(repeat).fill([hint, memo]);
-        const init = repeat == 1 ? [[hint, memo]] : undefined;
-        const etgts: TransferTarget[] =
-          amount > 0n ? [{ address: this.service_hex, amount, symbol: xchSymbol(), memos: [] }] : [];
-
+        const tgts: TransferTarget[] = amount > 0n ? [{ address: this.service_hex, amount, symbol: xchSymbol(), memos: [] }] : [];
         const net = networkContext();
-        const ac = this.availcoins;
-        ubundle = await getBootstrapSpendBundle(tgt_hex, change_hex, fee, ac, observers, repeat, net, undefined, init, ms, etgts);
+
+        if (this.mintType == "proxy") {
+          const ms = Array(repeat).fill([hint, memo]);
+          const init = repeat == 1 ? [[hint, memo]] : undefined;
+
+          const ac = this.availcoins;
+          const ob = observers;
+          ubundle = await getBootstrapSpendBundle(tgt_hex, change_hex, fee, ac, ob, repeat, net, undefined, init, ms, tgts);
+          repeatMojo = BigInt(repeat);
+        } else {
+          repeatMojo = 0n;
+          for (let i = 0; i < repeat; i++) {
+            const amt = BigInt(i + 1);
+            tgts.push({ address: tgt_hex, amount: amt, symbol: net.symbol, memos: [hint, memo] });
+            repeatMojo += amt;
+          }
+
+          const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(fee), net.symbol);
+          ubundle = await transfer.generateSpendBundleWithoutCat(plan, observers, [], net);
+        }
       } else {
         throw Error("not support");
       }
@@ -442,9 +460,10 @@ export default class Inscription extends Vue {
         netFee: fee,
         devFee: amount,
         totalFee: amount + fee,
-        total: amount + fee + BigInt(repeat),
+        total: amount + fee + repeatMojo,
         type: this.panel,
         repeat,
+        repeatMojo,
       };
     } catch (error) {
       Notification.open({

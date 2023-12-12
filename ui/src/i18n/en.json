@@ -1745,7 +1745,8 @@
         "repeat": "Repeat times",
         "netfee": "Network Fee",
         "devfee": "Service Fee",
-        "total": "Total"
+        "total": "Total",
+        "cargo": "Cargo coins"
       },
       "messages": {
         "failedToSign": "",

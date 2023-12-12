@@ -1745,7 +1745,8 @@
         "repeat": "重复次数",
         "netfee": "网络费",
         "devfee": "服务费",
-        "total": "总计"
+        "total": "总计",
+        "cargo": "载荷硬币"
       },
       "messages": {
         "failedToSign": "",
