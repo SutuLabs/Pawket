@@ -9,6 +9,8 @@ import bcase5 from "./cases/block_case5.json";
 import bcase6 from "./cases/block_case6.json";
 import bcase7 from "./cases/block_case7.json";
 import bcase8 from "./cases/block_case8.json";
+import bcase9 from "./cases/block_case9.json";
+import bcase10 from "./cases/block_case10.json";
 import pcase1 from "./cases/puzzle_case1.json";
 import txcase1 from "./cases/tx_case1.json";
 
@@ -27,6 +29,8 @@ describe("Parsing API test", () => {
   test("Block Parsing Case 6", () => testCase("/parse_block", bcase6));
   test("Block Parsing Case 7", () => testCase("/parse_block", bcase7));
   test("Block Parsing Case 8", () => testCase("/parse_block", bcase8));
+  test("Block Parsing Case 9", () => testCase("/parse_block", bcase9));
+  test("Block Parsing Case 10", () => testCase("/parse_block", bcase10));
 
   test("Puzzle Parsing Case 1", () => testCase("/parse_puzzle", pcase1));
   test.each(

@@ -10,6 +10,7 @@ import puzzle, { ConditionEntity } from "../crypto/puzzle";
 import { analyzeCatCoin } from "./cat";
 import { analyzeDidCoin } from "./did";
 import { analyzeNftCoin } from "./nft";
+import { analyzeP2Coin } from "./p2";
 import { OriginCoin } from "../spendbundle";
 
 export interface SimplePuzzle {
@@ -155,17 +156,20 @@ export async function analyzeCoin(
   coin: OriginCoin,
   solution_hex: string
 ): Promise<string | undefined> {
-  const analysis = mods.startsWith("cat_v1(")
-    ? await analyzeCatCoin(uncPuzzle)
-    : mods.startsWith("cat_v2(")
-    ? await analyzeCatCoin(uncPuzzle)
-    : mods.startsWith("singleton_top_layer_v1_1(did_innerpuz(")
-    ? await analyzeDidCoin(uncPuzzle, undefined, coin, solution_hex)
-    : mods.startsWith(
-        "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),"
-      )
-    ? await analyzeNftCoin(uncPuzzle, undefined, coin, solution_hex)
-    : undefined;
+  const analysis =
+    mods == "p2_delegated_puzzle_or_hidden_puzzle()"
+      ? await analyzeP2Coin(uncPuzzle, solution_hex, coin)
+      : mods.startsWith("cat_v1(")
+      ? await analyzeCatCoin(uncPuzzle)
+      : mods.startsWith("cat_v2(")
+      ? await analyzeCatCoin(uncPuzzle)
+      : mods.startsWith("singleton_top_layer_v1_1(did_innerpuz(")
+      ? await analyzeDidCoin(uncPuzzle, undefined, coin, solution_hex)
+      : mods.startsWith(
+          "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),"
+        )
+      ? await analyzeNftCoin(uncPuzzle, undefined, coin, solution_hex)
+      : undefined;
 
   return analysis ? JSON.stringify(analysis) : undefined;
 }
