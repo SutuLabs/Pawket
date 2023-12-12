@@ -4,7 +4,7 @@
       <b-numberinput
         controls-alignment="left"
         controls-position="compact"
-        max="1000000000"
+        :max="MAX_FEE"
         min="0"
         v-model="fee"
         :exponential="true"
@@ -45,11 +45,12 @@ export default class FeeSelector extends Vue {
   @Prop() value!: number;
   public fee = 0;
   public feeType: FeeType = "Custom";
+  public MAX_FEE = 100000000000;
   public fees: { [type in FeeType]: number } = {
     Custom: 0,
-    Low: 5,
-    Medium: 100,
-    High: 1000,
+    Low: 1000,
+    Medium: 10000000,
+    High: 10000000000,
   };
 
   @Watch("value")
