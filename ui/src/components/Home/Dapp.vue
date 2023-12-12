@@ -17,11 +17,11 @@
           </a>
         </b-tooltip>
       </div>
-      <div v-if="!isIos" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
+      <div v-if="!isIos && debugMode" class="column px-1 is-1-desktop is-3-mobile has-text-centered">
         <b-tooltip :label="$t('accountDetail.ui.dApps.tooltip.donate')" position="is-right">
           <a href="javascript:void(0)" @click="openDonation()" class="has-text-link">
             <div class="has-text-centered">
-              <b-icon icon="hand-heart-outline" size="is-medium"></b-icon>
+              <b-icon icon="hand-heart-outline" size="is-medium" type="is-grey"></b-icon>
               <p class="is-size-7">{{ $t("accountDetail.ui.dApps.button.donate") }}</p>
             </div>
           </a>
