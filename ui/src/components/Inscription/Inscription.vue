@@ -27,7 +27,11 @@
           </b-field>
         </b-field>
 
-        <b-field v-if="panel == 'mint'" :label="$t('inscription.ui.label.repeatMint')">
+        <b-field
+          v-if="panel == 'mint' && debugMode && enableSpecialOffer"
+          :label="$t('inscription.ui.label.repeatMint')"
+          custom-class="has-text-grey"
+        >
           <b-field>
             <b-numberinput
               v-model="repeat"
@@ -272,6 +276,7 @@ export default class Inscription extends Vue {
 
   public readonly MAX_REPEAT = 25;
   private mintType: "direct" | "proxy" = "direct";
+  public enableSpecialOffer = false;
 
   public requests: TokenPuzzleDetail[] = [];
 
@@ -287,6 +292,11 @@ export default class Inscription extends Vue {
   @Watch("path")
   onPathChange(): void {
     this.close();
+  }
+
+  @Watch("amount")
+  onAmountChange(new_value: number): void {
+    if (new_value == 1024 && this.tick == "hiya") this.enableSpecialOffer = true;
   }
 
   @Emit("close")
