@@ -274,7 +274,7 @@ export default class Inscription extends Vue {
   public address = "";
   public signAddress = "";
 
-  public readonly MAX_REPEAT = 25;
+  public MAX_REPEAT = 25;
   private mintType: "direct" | "proxy" = "direct";
   public enableSpecialOffer = false;
 
@@ -297,6 +297,7 @@ export default class Inscription extends Vue {
   @Watch("amount")
   onAmountChange(new_value: number): void {
     if (new_value == 1024 && this.tick == "hiya") this.enableSpecialOffer = true;
+    if (new_value == 8192 && this.tick == "hiya") this.MAX_REPEAT = 500;
   }
 
   @Emit("close")
