@@ -23,14 +23,7 @@
             <!-- <p class="control">
                     <b-button :label="$t('inscription.ui.button.max')" />
                   </p> -->
-            <b-numberinput
-              v-model="amount"
-              :max="Number.MAX_SAFE_INTEGER"
-              :min="1"
-              expanded
-              controls-position="compact"
-              controls-alignment="right"
-            />
+            <b-input v-model="amount" type="number" :max="Number.MAX_SAFE_INTEGER" :min="1" expanded />
           </b-field>
         </b-field>
 
@@ -338,7 +331,7 @@ export default class Inscription extends Vue {
   // readonly mintFee = 3n;
   readonly deployFee = 50000000000n;
   readonly transferFee = 0n;
-  readonly mintFee = 50000000n;
+  readonly mintFee = 500000000n;
   readonly service_hex: Hex0x = "0xe8022865bd618645ba1f20f1205ddd02207f93a2cfec6241e66f47d12fcbdfea";
 
   calculateAmount(): bigint {

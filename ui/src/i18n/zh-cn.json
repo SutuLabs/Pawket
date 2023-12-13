@@ -263,7 +263,7 @@
       "label": {
         "amount": "金额",
         "memo": "备注",
-        "fee": "交易费"
+        "fee": "网络费"
       },
       "button": {
         "submit": "提交",
@@ -1734,7 +1734,7 @@
         "receiverAddress": "接收地址"
       },
       "placeholder": {
-        "tick": "输入四位代币代码，例如ordi"
+        "tick": "输入四位代币代码，例如xchs"
       },
       "button": {
         "max": "MAX"

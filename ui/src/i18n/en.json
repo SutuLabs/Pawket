@@ -263,7 +263,7 @@
       "label": {
         "amount": "Amount",
         "memo": "Memo",
-        "fee": "Fee"
+        "fee": "Network Fee"
       },
       "button": {
         "submit": "Submit",
@@ -1734,7 +1734,7 @@
         "receiverAddress": "Receiver Address"
       },
       "placeholder": {
-        "tick": "4 characters like \"ordi\""
+        "tick": "4 characters like \"xchs\""
       },
       "button": {
         "max": "Max"

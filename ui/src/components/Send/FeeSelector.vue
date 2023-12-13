@@ -50,7 +50,7 @@ export default class FeeSelector extends Vue {
     Custom: 0,
     Low: 1000,
     Medium: 10000000,
-    High: 10000000000,
+    High: 1000000000,
   };
 
   @Watch("value")
