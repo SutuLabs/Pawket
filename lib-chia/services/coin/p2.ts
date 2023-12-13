@@ -18,7 +18,8 @@ export interface P2CoinWithMemo extends P2CoinInfo {
 }
 
 export interface P2InscriptionCoin extends P2CoinInfo {
-  meta: InscriptionEntity;
+  raw: string;
+  meta?: InscriptionEntity;
 }
 
 export interface InscriptionEntity {
@@ -105,11 +106,33 @@ export async function getCoinMemos(
 
 export async function convertToInscriptionCoins(coins: P2CoinWithMemo[]): Promise<P2InscriptionCoin[]> {
   const result: P2InscriptionCoin[] = [];
+
+  function getXchsMeta(obj: InscriptionParseEntity): InscriptionEntity | undefined {
+    if (obj.p != "xchs") return undefined;
+    if (obj.tick?.length != 4) return undefined;
+    if (obj.op != "mint" && obj.op != "transfer" && obj.op != "deploy") return undefined;
+    const p = obj.p;
+    const op = obj.op;
+    const tick = obj.tick;
+    const amt = parseInt(obj.amt ?? "");
+    if ((obj.op == "mint" || obj.op == "transfer") && isNaN(amt)) return undefined;
+    const max = parseInt(obj.max ?? "");
+    if (obj.op == "deploy" && isNaN(max)) return undefined;
+    const lim = parseInt(obj.lim ?? "");
+    if (obj.op == "deploy" && isNaN(lim)) return undefined;
+    if (max > Number.MAX_SAFE_INTEGER) return undefined;
+    if (lim > Number.MAX_SAFE_INTEGER) return undefined;
+
+    if (obj.op == "mint" || obj.op == "transfer") return { p, op, tick, amt };
+    else return { p, op, tick, max, lim };
+  }
+
   for (let i = 0; i < coins.length; i++) {
     const coin = coins[i];
     if (coin.memos.length != 2) continue;
     const hint = coin.memos[0];
-    const json = coin.memos[1].replaceAll("'", '"');
+    const raw = coin.memos[1];
+    const json = raw.replaceAll("'", '"');
     let obj: InscriptionParseEntity;
     try {
       obj = JSON.parse(json) as InscriptionParseEntity;
@@ -117,40 +140,21 @@ export async function convertToInscriptionCoins(coins: P2CoinWithMemo[]): Promis
       continue; // parsing failed then skip this coin
     }
 
-    if (obj.p != "xchs") continue;
+    if (!obj.p) continue;
+    if (!obj.tick) continue;
     const protocol = obj.p;
-    if (obj.op != "mint" && obj.op != "transfer" && obj.op != "deploy") continue;
-    if (obj.tick?.length != 4) continue;
-
-    const amt = parseInt(obj.amt ?? "");
-    if ((obj.op == "mint" || obj.op == "transfer") && isNaN(amt)) continue;
-    const max = parseInt(obj.max ?? "");
-    if (obj.op == "deploy" && isNaN(max)) continue;
-    const lim = parseInt(obj.lim ?? "");
-    if (obj.op == "deploy" && isNaN(lim)) continue;
-    if (max > Number.MAX_SAFE_INTEGER) continue;
-    if (lim > Number.MAX_SAFE_INTEGER) continue;
-
     const expectHint = prefix0x(sha256(Buffer.from(`{'p':'${protocol}','tick':'${obj.tick}'}`)));
     if (hint != expectHint) continue;
+    const meta = getXchsMeta(obj);
 
-    const entity: P2InscriptionCoin = {
+    result.push({
       coinId: coin.coinId,
       to: coin.to,
       from: coin.from,
       parent: coin.parent,
-      meta: {
-        p: protocol,
-        op: obj.op,
-        tick: obj.tick,
-      },
-    };
-    if (obj.op == "mint" || obj.op == "transfer") entity.meta.amt = amt;
-    else {
-      entity.meta.max = max;
-      entity.meta.lim = lim;
-    }
-    result.push(entity);
+      raw,
+      meta,
+    });
   }
 
   return result;
