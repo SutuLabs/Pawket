@@ -1746,7 +1746,8 @@
         "netfee": "网络费",
         "devfee": "服务费",
         "total": "总计",
-        "cargo": "载荷硬币"
+        "cargo": "载荷硬币",
+        "repeatUnit": "mojo(s)"
       },
       "messages": {
         "failedToSign": "",

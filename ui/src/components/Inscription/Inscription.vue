@@ -149,7 +149,7 @@
           </div>
           <div v-if="summary.type == 'mint'" class="has-text-weight-bold px-5">
             <span class="is-size-6">{{ $t("inscription.ui.summary.cargo") }}</span>
-            <span class="is-pulled-right"> {{ summary.repeatMojo }} mojos </span>
+            <span class="is-pulled-right"> {{ summary.repeatMojo }} {{ $t("inscription.ui.summary.repeatUnit") }} </span>
           </div>
           <div class="py-2"></div>
           <div class="has-text-weight-bold px-5">
