@@ -141,7 +141,7 @@
               {{ summary.memo }}
             </b-notification>
           </div>
-          <div v-if="summary.type == 'mint'" class="has-text-weight-bold px-5">
+          <div v-if="summary.type == 'mint' && summary.repeat > 1" class="has-text-weight-bold px-5">
             <span class="is-size-6">{{ $t("inscription.ui.summary.repeat") }}</span>
             <span class="is-pulled-right">
               {{ summary.repeat }}
