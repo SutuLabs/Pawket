@@ -412,7 +412,7 @@ export default class Inscription extends Vue {
         return;
       }
 
-      const hint = prefix0x(sha256(Buffer.from(`{'p':'xchs','tick':'${this.tick}'}`)));
+      // const hint = prefix0x(sha256(Buffer.from(`{'p':'xchs','tick':'${this.tick}'}`)));
       const memo = this.calculateMemo();
       const observers = this.requests.length ? this.requests : await getAssetsRequestObserver(this.account);
       const fee = BigInt(this.fee);
@@ -420,7 +420,7 @@ export default class Inscription extends Vue {
       let ubundle: UnsignedSpendBundle;
       let repeatMojo = 1n;
       if (this.panel == "deploy" || this.panel == "transfer") {
-        const tgts: TransferTarget[] = [{ address: tgt_hex, amount: 1n, symbol: xchSymbol(), memos: [hint, memo] }];
+        const tgts: TransferTarget[] = [{ address: tgt_hex, amount: 1n, symbol: xchSymbol(), memos: [memo] }];
         if (amount > 0n) tgts.push({ address: this.service_hex, amount: amount, symbol: xchSymbol(), memos: [] });
 
         const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, fee, xchSymbol());
@@ -430,8 +430,8 @@ export default class Inscription extends Vue {
         const net = networkContext();
 
         if (this.mintType == "proxy") {
-          const ms = Array(repeat).fill([hint, memo]);
-          const init = repeat == 1 ? [[hint, memo]] : undefined;
+          const ms = Array(repeat).fill([memo]);
+          const init = repeat == 1 ? [[memo]] : undefined;
 
           const ac = this.availcoins;
           const ob = observers;
@@ -441,7 +441,7 @@ export default class Inscription extends Vue {
           repeatMojo = 0n;
           for (let i = 0; i < repeat; i++) {
             const amt = BigInt(i + 1);
-            tgts.push({ address: tgt_hex, amount: amt, symbol: net.symbol, memos: [hint, memo] });
+            tgts.push({ address: tgt_hex, amount: amt, symbol: net.symbol, memos: [memo] });
             repeatMojo += amt;
           }
 

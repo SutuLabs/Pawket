@@ -85,8 +85,9 @@ export async function getCoinMemos(
       else if (thirdArg.constructor === Uint8Array) memos = [getFirstLevelArgMsg(thirdArg)];
       else {
         const typedThirdArg: ConditionArgs[] = thirdArg as ConditionArgs[];
-        memos = typedThirdArg.map((_: ConditionArgs) => getFirstLevelArgMsg(_));
-        memos[1] = hex2ascSingle(unprefix0x(memos[1])) ?? "";
+        memos = typedThirdArg
+          .map((_: ConditionArgs) => getFirstLevelArgMsg(_))
+          .map((_: string) => (_.length == 66 ? _ : hex2ascSingle(unprefix0x(_)) ?? ""));
       }
       const nextcoin_puzhash = prefix0x(getFirstLevelArgMsg(coin.args.at(0)) ?? "()");
       const amount = getNumber(getFirstLevelArgMsg(coin.args.at(1)) ?? "0");
@@ -129,9 +130,8 @@ export async function convertToInscriptionCoins(coins: P2CoinWithMemo[]): Promis
 
   for (let i = 0; i < coins.length; i++) {
     const coin = coins[i];
-    if (coin.memos.length != 2) continue;
-    const hint = coin.memos[0];
-    const raw = coin.memos[1];
+    if (coin.memos.length != 1) continue;
+    const raw = coin.memos[0];
     const json = raw.replaceAll("'", '"');
     let obj: InscriptionParseEntity;
     try {
@@ -142,9 +142,6 @@ export async function convertToInscriptionCoins(coins: P2CoinWithMemo[]): Promis
 
     if (!obj.p) continue;
     if (!obj.tick) continue;
-    const protocol = obj.p;
-    const expectHint = prefix0x(sha256(Buffer.from(`{'p':'${protocol}','tick':'${obj.tick}'}`)));
-    if (hint != expectHint) continue;
     const meta = getXchsMeta(obj);
 
     result.push({

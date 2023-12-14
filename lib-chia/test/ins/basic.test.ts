@@ -49,7 +49,7 @@ beforeAll(async () => {
 const deployInscription = `{'p':'xchs','op':'deploy','tick':'${tick}','max':'21000000','lim':'1000'}`;
 const mintInscription = `{'p':'xchs','op':'mint','tick':'${tick}','amt':'1000'}`;
 const transferInscription = `{'p':'xchs','op':'transfer','tick':'${tick}','amt':'888'}`;
-const hint = prefix0x(sha256(Buffer.from(`{'p':'xchs','tick':'${tick}'}`)));
+// const hint = prefix0x(sha256(Buffer.from(`{'p':'xchs','tick':'${tick}'}`)));
 const service_fee = 1000n;
 
 test("inscription: deploy with fee 0", async () => deployOrTransfer(0n, deployInscription));
@@ -63,7 +63,7 @@ async function deployOrTransfer(fee: bigint, memo: string): Promise<void> {
   const tokenPuzzles = await getAccountAddressDetails(account, [], {}, net.prefix, net.symbol, undefined, "cat_v2");
 
   const tgts: TransferTarget[] = [
-    { address: target_hex, amount: 1n, symbol: net.symbol, memos: [hint, memo] },
+    { address: target_hex, amount: 1n, symbol: net.symbol, memos: [memo] },
     { address: service_hex, amount: service_fee, symbol: net.symbol, memos: [] },
   ];
   const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, BigInt(fee), net.symbol);
@@ -94,12 +94,12 @@ test.each([
   if (type == "proxy") {
     const tp = tokenPuzzles;
     const sk = "00186eae4cd4a3ec609ca1a8c1cda8467e3cb7cbbbf91a523d12d31129d5f8d7";
-    const ms = Array(count).fill([hint, memo]);
-    const init = count == 1 ? [[hint, memo]] : undefined;
+    const ms = Array(count).fill([memo]);
+    const init = count == 1 ? [[memo]] : undefined;
     ubundle = await getBootstrapSpendBundle(target_hex, change_hex, fee, availcoins, tp, count, net, sk, init, ms, tgts);
   } else {
     for (let i = 0; i < count; i++) {
-      tgts.push({ address: target_hex, amount: BigInt(i + 1), symbol: net.symbol, memos: [hint, memo] });
+      tgts.push({ address: target_hex, amount: BigInt(i + 1), symbol: net.symbol, memos: [memo] });
     }
     const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, BigInt(fee), net.symbol);
     ubundle = await transfer.generateSpendBundleWithoutCat(plan, tokenPuzzles, [], net);
