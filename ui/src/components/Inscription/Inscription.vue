@@ -252,7 +252,7 @@ export default class Inscription extends Vue {
   public dragfile: File[] = [];
   public isDragging = false;
   public transitioning = false;
-  public amount = 1;
+  public amount = 1000;
   public tick = "";
   public panel: PanelType = "mint";
   public repeat = 1;
@@ -274,7 +274,7 @@ export default class Inscription extends Vue {
   public address = "";
   public signAddress = "";
 
-  public MAX_REPEAT = 25;
+  public MAX_REPEAT = 500;
   private mintType: "direct" | "proxy" = "direct";
   public enableSpecialOffer = false;
 
