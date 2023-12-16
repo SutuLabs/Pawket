@@ -27,11 +27,7 @@
           </b-field>
         </b-field>
 
-        <b-field
-          v-if="panel == 'mint' && debugMode && enableSpecialOffer"
-          :label="$t('inscription.ui.label.repeatMint')"
-          custom-class="has-text-grey"
-        >
+        <b-field v-if="panel == 'mint'" :label="$t('inscription.ui.label.repeatMint')" custom-class="has-text-grey">
           <b-field>
             <b-numberinput
               v-model="repeat"
@@ -274,9 +270,8 @@ export default class Inscription extends Vue {
   public address = "";
   public signAddress = "";
 
-  public MAX_REPEAT = 500;
+  public MAX_REPEAT = 25;
   private mintType: "direct" | "proxy" = "direct";
-  public enableSpecialOffer = false;
 
   public requests: TokenPuzzleDetail[] = [];
 
@@ -296,7 +291,6 @@ export default class Inscription extends Vue {
 
   @Watch("amount")
   onAmountChange(new_value: number): void {
-    if (new_value == 1024 && this.tick == "hiya") this.enableSpecialOffer = true;
     if (new_value == 8192 && this.tick == "hiya") this.MAX_REPEAT = 500;
   }
 
@@ -346,10 +340,24 @@ export default class Inscription extends Vue {
   readonly service_hex: Hex0x = "0xe8022865bd618645ba1f20f1205ddd02207f93a2cfec6241e66f47d12fcbdfea";
 
   calculateAmount(): bigint {
+    const repeat = this.repeat;
+    const mintDiscounts = [
+      { max: 5, fee: BigInt(Number(this.mintFee) * 1.0) },
+      { max: 10, fee: BigInt(Number(this.mintFee) * 1.0) },
+      { max: 15, fee: BigInt(Number(this.mintFee) * 0.9) },
+      { max: 20, fee: BigInt(Number(this.mintFee) * 0.9) },
+      { max: 25, fee: BigInt(Number(this.mintFee) * 0.8) },
+      { max: 100, fee: BigInt(Number(this.mintFee) * 0.8) },
+    ];
     if (this.panel == "deploy") {
       return this.deployFee;
     } else if (this.panel == "mint") {
-      return this.mintFee * BigInt(this.repeat);
+      for (let i = 0; i < mintDiscounts.length; i++) {
+        const discount = mintDiscounts[i];
+        if (repeat <= discount.max) return discount.fee * BigInt(repeat);
+      }
+
+      return this.mintFee * BigInt(repeat);
     } else if (this.panel == "transfer") {
       return this.transferFee;
     } else {
@@ -412,7 +420,7 @@ export default class Inscription extends Vue {
         return;
       }
 
-      // const hint = prefix0x(sha256(Buffer.from(`{'p':'xchs','tick':'${this.tick}'}`)));
+      const _hint = prefix0x(sha256(Buffer.from(`{'p':'xchs','tick':'${this.tick}'}`)));
       const memo = this.calculateMemo();
       const observers = this.requests.length ? this.requests : await getAssetsRequestObserver(this.account);
       const fee = BigInt(this.fee);
