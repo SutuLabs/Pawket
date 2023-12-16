@@ -2,6 +2,7 @@ import { GetExchangeRateResponse } from "../../../../lib-chia/models/api";
 import { rpcUrl } from "@/store/modules/network";
 
 export async function getExchangeRate(from: string, to: string): Promise<GetExchangeRateResponse | null> {
+  to = to == "USDT" ? "USD" : to;
   try {
     const resp = await fetch(rpcUrl() + "misc/prices", {
       method: "GET",
