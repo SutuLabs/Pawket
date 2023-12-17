@@ -1753,6 +1753,10 @@
         "failedToSign": "",
         "onlyOneFile": "",
         "wrongFileType": ""
+      },
+      "comment": {
+        "repeatMoreThan25": "重复次数过多可能导致余额刷新减慢并增加网络负载。",
+        "repeatMoreThan1": "重复次数过多可能导致余额刷新减慢。"
       }
     },
     "sample": {

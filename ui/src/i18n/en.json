@@ -1753,6 +1753,10 @@
         "failedToSign": "",
         "onlyOneFile": "",
         "wrongFileType": ""
+      },
+      "comment": {
+        "repeatMoreThan25": "Higher repeat count may slow balance refresh and increase network load.",
+        "repeatMoreThan1": "Higher repeat count may slow balance refresh."
       }
     },
     "sample": {

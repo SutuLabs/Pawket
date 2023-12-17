@@ -27,7 +27,16 @@
           </b-field>
         </b-field>
 
-        <b-field v-if="panel == 'mint'" :label="$t('inscription.ui.label.repeatMint')" custom-class="has-text-grey">
+        <b-field v-if="panel == 'mint'">
+          <template #label>
+            {{ $t("inscription.ui.label.repeatMint") }}
+            <span v-if="repeat > 25" class="has-text-danger">
+              {{ $t("inscription.ui.comment.repeatMoreThan25") }}
+            </span>
+            <span v-else-if="repeat > 1" class="has-text-warning">
+              {{ $t("inscription.ui.comment.repeatMoreThan1") }}
+            </span>
+          </template>
           <b-field>
             <b-numberinput
               v-model="repeat"
@@ -39,7 +48,15 @@
               type="is-warning"
             />
             <p class="control right_slider">
-              <b-slider v-model="repeat" indicator :tooltip="false" :max="MAX_REPEAT" :min="1" format="raw"></b-slider>
+              <b-slider
+                v-model="repeat"
+                indicator
+                :tooltip="false"
+                :max="MAX_REPEAT"
+                :min="1"
+                format="raw"
+                :type="repeat == 1 ? 'is-success' : repeat > 25 ? 'is-danger' : 'is-warning'"
+              ></b-slider>
             </p>
           </b-field>
         </b-field>
@@ -270,7 +287,7 @@ export default class Inscription extends Vue {
   public address = "";
   public signAddress = "";
 
-  public MAX_REPEAT = 25;
+  public MAX_REPEAT = 50;
   private mintType: "direct" | "proxy" = "direct";
 
   public requests: TokenPuzzleDetail[] = [];
