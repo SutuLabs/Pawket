@@ -26,7 +26,8 @@
       "saved": "Saved.",
       "added": "Added.",
       "noResult": "No result.",
-      "uploadSuccess": "Uploaded."
+      "uploadSuccess": "Uploaded.",
+      "failed": "Failed to retrieve information, please close and try again."
     }
   },
   "app": {
@@ -1731,7 +1732,8 @@
         "repeatMint": "Repeat Mint",
         "total": "Total Supply",
         "limit": "Limit Per Mint",
-        "receiverAddress": "Receiver Address"
+        "receiverAddress": "Receiver Address",
+        "from": "From"
       },
       "placeholder": {
         "tick": "4 characters like \"xchs\""
@@ -1757,6 +1759,9 @@
       "comment": {
         "repeatMoreThan25": "Higher repeat count may slow balance refresh and increase network load.",
         "repeatMoreThan1": "Higher repeat count may slow balance refresh."
+      },
+      "help": {
+        "from": "Can't find the desired send address? Try transfering 1 mojo to it."
       }
     },
     "sample": {

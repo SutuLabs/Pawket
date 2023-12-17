@@ -27,6 +27,20 @@
           </b-field>
         </b-field>
 
+        <b-field v-if="panel == 'transfer'">
+          <template #label>
+            {{ $t("inscription.ui.label.from") }}
+            <b-tooltip :label="$t('inscription.ui.help.from')" position="is-right">
+              <b-icon size="is-small" icon="help-circle-outline"></b-icon>
+            </b-tooltip>
+          </template>
+          <b-field>
+            <b-select v-model="from" expanded :loading="status == 'Loading'">
+              <option v-for="f in froms" :value="f" :key="f">{{ f }}</option>
+            </b-select>
+          </b-field>
+        </b-field>
+
         <b-field v-if="panel == 'mint'">
           <template #label>
             {{ $t("inscription.ui.label.repeatMint") }}
@@ -213,6 +227,7 @@
           :disabled="submitting"
         ></b-button>
       </div>
+      <span class="has-text-danger" v-if="status == 'Failed'">{{ $t("common.message.failed") }}</span>
     </footer>
     <b-loading :is-full-page="false" v-model="submitting"></b-loading>
   </div>
@@ -224,7 +239,7 @@ import { AccountEntity, OneTokenInfo } from "../../../../lib-chia/models/account
 import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { TokenPuzzleDetail } from "../../../../lib-chia/services/crypto/receive";
-import { signSpendBundle, SpendBundle, UnsignedSpendBundle } from "../../../../lib-chia/services/spendbundle";
+import { signSpendBundle, SpendBundle, UnsignedSpendBundle, combineSpendBundle } from "../../../../lib-chia/services/spendbundle";
 import puzzle from "../../../../lib-chia/services/crypto/puzzle";
 import { Hex, Hex0x, prefix0x } from "../../../../lib-chia/services/coin/condition";
 import transfer, { SymbolCoins, TransferTarget } from "../../../../lib-chia/services/transfer/transfer";
@@ -259,7 +274,7 @@ export default class Inscription extends Vue {
   public fee = 0;
   public bundle: SpendBundle | null = null;
   public availcoins: SymbolCoins | null = null;
-  public status: "Loading" | "Loaded" = "Loading";
+  public status: "Loading" | "Loaded" | "Failed" = "Loading";
   public csv = "";
   public file: File | null = null;
   public dragfile: File[] = [];
@@ -271,6 +286,7 @@ export default class Inscription extends Vue {
   public repeat = 1;
   public limit = 1;
   public total = 21000000;
+  public from = "";
 
   public summary: {
     memo: string;
@@ -337,15 +353,32 @@ export default class Inscription extends Vue {
     this.bundle = null;
     this.status = "Loading";
 
-    if (!this.requests || this.requests.length == 0) {
-      this.requests = await getAssetsRequestDetail(this.account);
-    }
+    try {
+      if (!this.requests || this.requests.length == 0) {
+        this.requests = await getAssetsRequestDetail(this.account);
+      }
 
-    if (!this.availcoins) {
-      this.availcoins = await getAvailableCoins(this.account);
-    }
+      if (!this.availcoins) {
+        this.availcoins = await getAvailableCoins(this.account);
+        const ph = this.availcoins[xchSymbol()].at(0)?.puzzle_hash;
+        this.from = ph ? puzzle.getAddressFromPuzzleHash(ph, xchPrefix()) : "";
+      }
 
-    this.status = "Loaded";
+      this.status = "Loaded";
+    } catch (err) {
+      console.warn("failed to load coins", err);
+      this.status = "Failed";
+    }
+  }
+
+  get availablePuzzleHash(): string[] {
+    if (!this.availcoins) return [];
+    const phs = this.availcoins[xchSymbol()].map((_) => _.puzzle_hash).filter((item, i, arr) => arr.indexOf(item) === i);
+    return phs;
+  }
+
+  get froms(): string[] {
+    return puzzle.getAddressesFromPuzzleHash(this.availablePuzzleHash, xchPrefix());
   }
 
   // readonly deployFee = 20n;
@@ -444,12 +477,29 @@ export default class Inscription extends Vue {
 
       let ubundle: UnsignedSpendBundle;
       let repeatMojo = 1n;
-      if (this.panel == "deploy" || this.panel == "transfer") {
+      if (this.panel == "deploy") {
         const tgts: TransferTarget[] = [{ address: tgt_hex, amount: 1n, symbol: xchSymbol(), memos: [memo] }];
         if (amount > 0n) tgts.push({ address: this.service_hex, amount: amount, symbol: xchSymbol(), memos: [] });
 
         const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, fee, xchSymbol());
         ubundle = await transfer.generateSpendBundleWithoutCat(plan, observers, [], networkContext());
+      } else if (this.panel == "transfer") {
+        const tgts: TransferTarget[] = [{ address: tgt_hex, amount: 1n, symbol: xchSymbol(), memos: [memo] }];
+
+        const coinsForPayload = this.filterXchCoinsByAddress(this.availcoins, (_) => _ == this.from);
+        const payloadTotal = coinsForPayload[xchSymbol()].reduce((pv, cv) => pv + cv.amount, 0n);
+        if (amount > 0n) tgts.push({ address: this.service_hex, amount: amount, symbol: xchSymbol(), memos: [] });
+        if (payloadTotal >= fee + tgts.reduce((pv, cv) => pv + cv.amount, 0n)) {
+          const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, fee, xchSymbol());
+          ubundle = await transfer.generateSpendBundleWithoutCat(plan, observers, [], networkContext());
+        } else {
+          const coinsForFee = this.filterXchCoinsByAddress(this.availcoins, (_) => _ != this.from);
+          const planForPayload = transfer.generateSpendPlan(coinsForPayload, [tgts[0]], change_hex, 0n, xchSymbol());
+          const planForFee = transfer.generateSpendPlan(coinsForFee, [tgts[1]], change_hex, fee, xchSymbol());
+          const ubundleForPayload = await transfer.generateSpendBundleWithoutCat(planForPayload, observers, [], networkContext());
+          const ubundleForFee = await transfer.generateSpendBundleWithoutCat(planForFee, observers, [], networkContext());
+          ubundle = combineSpendBundle(ubundleForPayload, ubundleForFee);
+        }
       } else if (this.panel == "mint") {
         const tgts: TransferTarget[] = amount > 0n ? [{ address: this.service_hex, amount, symbol: xchSymbol(), memos: [] }] : [];
         const net = networkContext();
@@ -504,6 +554,13 @@ export default class Inscription extends Vue {
       this.submitting = false;
     }
     this.submitting = false;
+  }
+
+  filterXchCoinsByAddress(coins: SymbolCoins, predicate: (address: string) => boolean): SymbolCoins {
+    return {
+      ...coins,
+      [xchSymbol()]: coins[xchSymbol()].filter((_) => predicate(puzzle.getAddressFromPuzzleHash(_.puzzle_hash, xchPrefix()))),
+    };
   }
 
   async submit(): Promise<void> {

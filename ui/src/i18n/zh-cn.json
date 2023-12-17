@@ -26,7 +26,8 @@
       "saved": "已保存",
       "added": "已添加",
       "noResult": "结果为空",
-      "uploadSuccess": "已上传"
+      "uploadSuccess": "已上传",
+      "failed": "获取信息失败，请关闭窗口重试"
     }
   },
   "app": {
@@ -1731,7 +1732,8 @@
         "repeatMint": "重复铸造次数",
         "total": "发行总量",
         "limit": "单次铸造上限",
-        "receiverAddress": "接收地址"
+        "receiverAddress": "接收地址",
+        "from": "发送地址"
       },
       "placeholder": {
         "tick": "输入四位代币代码，例如xchs"
@@ -1757,6 +1759,9 @@
       "comment": {
         "repeatMoreThan25": "重复次数过多可能导致余额刷新减慢并增加网络负载。",
         "repeatMoreThan1": "重复次数过多可能导致余额刷新减慢。"
+      },
+      "help": {
+        "from": "找不到所需的发送地址？尝试向其发送 1 mojo。"
       }
     },
     "sample": {
