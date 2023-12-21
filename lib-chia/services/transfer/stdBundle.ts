@@ -20,7 +20,7 @@ class StdBundle {
     );
     const getPuzDetail = (hash: string) => {
       const puz = puzzleDict[hash];
-      if (!puz) throw new Error("cannot find puzzle");
+      if (!puz) throw new Error("cannot find puzzle, you probably select wrong account or mismatch sender address");
       return puz;
     };
 
