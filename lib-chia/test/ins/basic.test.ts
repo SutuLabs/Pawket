@@ -1,4 +1,4 @@
-import { getTestAccount } from "../utility";
+import { getTestAccount, getTestAccountWithPuzzles } from "../utility";
 import transfer, { SymbolCoins, TransferTarget } from "../../services/transfer/transfer";
 import { getBootstrapSpendBundle } from "../../services/coin/nft";
 import { GetParentPuzzleResponse } from "../../models/api";
@@ -8,9 +8,10 @@ import { getAccountAddressDetails } from "../../services/util/account";
 import { NetworkContext } from "../../services/coin/coinUtility";
 
 import { assertSpendbundle } from "../../services/spendbundle/validator";
-import { signSpendBundle, UnsignedSpendBundle } from "../../services/spendbundle";
-import { prefix0x } from "../../services/coin/condition";
-import { sha256 } from "../../services/offer/bundler";
+import { combineSpendBundle, signSpendBundle, UnsignedSpendBundle } from "../../services/spendbundle";
+import { Hex0x, prefix0x } from "../../services/coin/condition";
+import puzzle from "../../services/crypto/puzzle";
+import { analyzeP2Coin } from "../../services/coin/p2";
 
 const net: NetworkContext = {
   prefix: "xch",
@@ -37,9 +38,9 @@ const availcoins: SymbolCoins = {
     },
   ],
 };
-const target_hex = "0xb5a2ec2aa0138555d55007acb0eed8a1ddd2baabb4d2e4a92417f8394afb1285";
-const change_hex = "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155";
-const service_hex = "0xd19c05a54dacbf2b40ff4843534c47976de90246c3fc42ac1f42ea81b434b8ea";
+const target_hex: Hex0x = "0xb5a2ec2aa0138555d55007acb0eed8a1ddd2baabb4d2e4a92417f8394afb1285";
+const change_hex: Hex0x = "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155";
+const service_hex: Hex0x = "0xd19c05a54dacbf2b40ff4843534c47976de90246c3fc42ac1f42ea81b434b8ea";
 const tick = "TODO";
 
 beforeAll(async () => {
@@ -49,7 +50,6 @@ beforeAll(async () => {
 const deployInscription = `{'p':'xchs','op':'deploy','tick':'${tick}','max':'21000000','lim':'1000'}`;
 const mintInscription = `{'p':'xchs','op':'mint','tick':'${tick}','amt':'1000'}`;
 const transferInscription = `{'p':'xchs','op':'transfer','tick':'${tick}','amt':'888'}`;
-// const hint = prefix0x(sha256(Buffer.from(`{'p':'xchs','tick':'${tick}'}`)));
 const service_fee = 1000n;
 
 test("inscription: deploy with fee 0", async () => deployOrTransfer(0n, deployInscription));
@@ -83,9 +83,11 @@ test.each([
   ["direct", 88n, 8],
   ["direct", 10n, 1],
   ["direct", 123n, 12],
+  ["combine", 88n, 8],
+  ["combine", 123n, 12],
 ])("inscription: mint by %p with fee %p and count %p", async (type: string, fee: bigint, count: number) => {
-  const account = getTestAccount("55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f");
-  const tokenPuzzles = await getAccountAddressDetails(account, [], {}, net.prefix, net.symbol, undefined, "cat_v2");
+  const account = await getTestAccountWithPuzzles("55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f");
+  const tokenPuzzles = account.addressPuzzles;
 
   const memo = mintInscription;
   const tgts: TransferTarget[] = [{ address: service_hex, amount: service_fee, symbol: net.symbol, memos: [] }];
@@ -97,12 +99,40 @@ test.each([
     const ms = Array(count).fill([memo]);
     const init = count == 1 ? [[memo]] : undefined;
     ubundle = await getBootstrapSpendBundle(target_hex, change_hex, fee, availcoins, tp, count, net, sk, init, ms, tgts);
-  } else {
+  } else if (type == "direct") {
     for (let i = 0; i < count; i++) {
       tgts.push({ address: target_hex, amount: BigInt(i + 1), symbol: net.symbol, memos: [memo] });
     }
     const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, BigInt(fee), net.symbol);
     ubundle = await transfer.generateSpendBundleWithoutCat(plan, tokenPuzzles, [], net);
+  } else {
+    expect(count).toBeGreaterThan(1);
+    // target address must be this account owned address
+    const target_hex = prefix0x(puzzle.getPuzzleHashFromAddress(account.firstAddress));
+    let repeatMojo = 0n;
+    for (let i = 0; i < count; i++) {
+      const amt = BigInt(i + 1);
+      tgts.push({ address: target_hex, amount: amt, symbol: net.symbol, memos: [memo] });
+      repeatMojo += amt;
+    }
+    const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, BigInt(fee), net.symbol);
+    const transferBundle = await transfer.generateSpendBundleWithoutCat(plan, tokenPuzzles, [], net);
+
+    const coin = transferBundle.coin_spends[transferBundle.coin_spends.length - 1];
+    const analysis = await analyzeP2Coin(coin.puzzle_reveal, coin.solution, coin.coin);
+    expect(analysis).toMatchSnapshot("analysis");
+
+    if (analysis.coins.length != count) fail();
+    const gatherCoins: SymbolCoins = {
+      [net.symbol]: analysis.coins.map((_) => ({ parent_coin_info: _.parent, puzzle_hash: _.to, amount: _.amount })),
+    };
+
+    const gatherTgt = { address: target_hex, amount: repeatMojo, symbol: net.symbol, memos: [] };
+    const gatherPlan = transfer.generateSpendPlan(gatherCoins, [gatherTgt], change_hex, 0n, net.symbol);
+
+    const gatherBundle = await transfer.generateSpendBundleWithoutCat(gatherPlan, tokenPuzzles, [], net);
+
+    ubundle = combineSpendBundle(transferBundle, gatherBundle);
   }
 
   const bundle = await signSpendBundle(ubundle, tokenPuzzles, net.chainId);

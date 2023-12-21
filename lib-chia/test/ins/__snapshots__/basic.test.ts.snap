@@ -34,6 +34,514 @@ Object {
 }
 `;
 
+exports[`inscription: mint by "combine" with fee 88n and count 8: analysis 1`] = `
+Object {
+  "coins": Array [
+    Object {
+      "amount": 1n,
+      "coinId": "0x1f4fcc72639d9d2db9c732f50b630a94dd1a48f15415f51f4b0216bb673a3f21",
+      "from": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      "meta": Object {
+        "amt": 1000,
+        "op": "mint",
+        "p": "xchs",
+        "tick": "TODO",
+      },
+      "parent": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+      "raw": "{'p':'xchs','op':'mint','tick':'TODO','amt':'1000'}",
+      "to": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+    },
+    Object {
+      "amount": 2n,
+      "coinId": "0xc1ae31805dfedff4f68de5737c7f89a2aeed4322d9d0b9bb15ae997b9ff243ff",
+      "from": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      "meta": Object {
+        "amt": 1000,
+        "op": "mint",
+        "p": "xchs",
+        "tick": "TODO",
+      },
+      "parent": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+      "raw": "{'p':'xchs','op':'mint','tick':'TODO','amt':'1000'}",
+      "to": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+    },
+    Object {
+      "amount": 3n,
+      "coinId": "0x4a84d3928221584ea8598e08b34dbed8b8046ac6ed075bfe894313d3229e805d",
+      "from": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      "meta": Object {
+        "amt": 1000,
+        "op": "mint",
+        "p": "xchs",
+        "tick": "TODO",
+      },
+      "parent": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+      "raw": "{'p':'xchs','op':'mint','tick':'TODO','amt':'1000'}",
+      "to": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+    },
+    Object {
+      "amount": 4n,
+      "coinId": "0xd091b61c7e2fac01d40a56857d36fc3ab686eb7f042f83094f7aa5120baa859b",
+      "from": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      "meta": Object {
+        "amt": 1000,
+        "op": "mint",
+        "p": "xchs",
+        "tick": "TODO",
+      },
+      "parent": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+      "raw": "{'p':'xchs','op':'mint','tick':'TODO','amt':'1000'}",
+      "to": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+    },
+    Object {
+      "amount": 5n,
+      "coinId": "0xb70ff4b8b7f3569ccf9c27d15d107c86cd238b939f8988b259e497643cbac669",
+      "from": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      "meta": Object {
+        "amt": 1000,
+        "op": "mint",
+        "p": "xchs",
+        "tick": "TODO",
+      },
+      "parent": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+      "raw": "{'p':'xchs','op':'mint','tick':'TODO','amt':'1000'}",
+      "to": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+    },
+    Object {
+      "amount": 6n,
+      "coinId": "0x88896575be4bae940d5a022eaf2ae216a1a176739dfaaf05c452fb1f9e18830e",
+      "from": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      "meta": Object {
+        "amt": 1000,
+        "op": "mint",
+        "p": "xchs",
+        "tick": "TODO",
+      },
+      "parent": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+      "raw": "{'p':'xchs','op':'mint','tick':'TODO','amt':'1000'}",
+      "to": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+    },
+    Object {
+      "amount": 7n,
+      "coinId": "0x7a8413e70a42e6d52336081534b5d67522bca08d5d5061e91a0a6bedac925a9f",
+      "from": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      "meta": Object {
+        "amt": 1000,
+        "op": "mint",
+        "p": "xchs",
+        "tick": "TODO",
+      },
+      "parent": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+      "raw": "{'p':'xchs','op':'mint','tick':'TODO','amt':'1000'}",
+      "to": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+    },
+    Object {
+      "amount": 8n,
+      "coinId": "0xa254cc5c319387a02d9beb1771321c533844882f2e4a5ff787b43bff313af275",
+      "from": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      "meta": Object {
+        "amt": 1000,
+        "op": "mint",
+        "p": "xchs",
+        "tick": "TODO",
+      },
+      "parent": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+      "raw": "{'p':'xchs','op':'mint','tick':'TODO','amt':'1000'}",
+      "to": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+    },
+  ],
+}
+`;
+
+exports[`inscription: mint by "combine" with fee 88n and count 8: spendbundle 1`] = `
+Object {
+  "aggregated_signature": "0xb1e479ac5599c0592bb800a8a9feafb6da962f764db4c2536a8fa45f1b432df03b2badd37a3d371788a28ad98e0d8ca50695090b0147909197f2b6fe0fc213a8611334d78ec51aa9dbf97f4ddd873cfe3e7eaa33ae8541ebee11d4667c25e593",
+  "coin_spends": Array [
+    Object {
+      "coin": Object {
+        "amount": 4998999984n,
+        "parent_coin_info": "0xf3b7d6d4bdd80b99c539f7ca900288f5dc2ac8fb23559656e981761e90b2fe71",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff33ffa0d19c05a54dacbf2b40ff4843534c47976de90246c3fc42ac1f42ea81b434b8eaff8203e880ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff01ffffb37b2770273a2778636873272c276f70273a276d696e74272c277469636b273a27544f444f272c27616d74273a2731303030277d8080ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff02ffffb37b2770273a2778636873272c276f70273a276d696e74272c277469636b273a27544f444f272c27616d74273a2731303030277d8080ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff03ffffb37b2770273a2778636873272c276f70273a276d696e74272c277469636b273a27544f444f272c27616d74273a2731303030277d8080ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff04ffffb37b2770273a2778636873272c276f70273a276d696e74272c277469636b273a27544f444f272c27616d74273a2731303030277d8080ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff05ffffb37b2770273a2778636873272c276f70273a276d696e74272c277469636b273a27544f444f272c27616d74273a2731303030277d8080ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff06ffffb37b2770273a2778636873272c276f70273a276d696e74272c277469636b273a27544f444f272c27616d74273a2731303030277d8080ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff07ffffb37b2770273a2778636873272c276f70273a276d696e74272c277469636b273a27544f444f272c27616d74273a2731303030277d8080ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff08ffffb37b2770273a2778636873272c276f70273a276d696e74272c277469636b273a27544f444f272c27616d74273a2731303030277d8080ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff850129f6ab4c8080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 1n,
+        "parent_coin_info": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff3cffa0926f5e527a859218de481d3776cf8fd460306adb84126268a858730a399364f780ffff3dffa004dbfcfae8e1842b260c49193da480f2098f58ac692a9044710744d2e1ba5de78080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 2n,
+        "parent_coin_info": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff3cffa076486c5a7025a4b0b359f7374de242d152b8a3d82d0df3fa59688611e91310e180ffff3dffa03d12d63b356de731af862745e8623c5ddb095c83404d356c1fc8a899e4b151018080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 3n,
+        "parent_coin_info": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff3cffa03f1af3dea596b85ecc13969a49ad883fed0f723bb5344408f709ddff327914ea80ffff3dffa0bb62b9d2e9266f707cecb3ea516f4240b428a8ce23a73fedbdfaebc1df4d0f428080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 4n,
+        "parent_coin_info": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff3cffa0588d66bf0e9135bdbf64981559e713190446c7c006739c3d18079b9eb3b9852980ffff3dffa0e2be513d4f4442eb357072aeea10d65f6f54f6dfa29e0c067a1180ce6237e0788080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 5n,
+        "parent_coin_info": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff3cffa00ebebe56d201e23ddb4c63bb682cae982e99a5879f670f54b77c5be7cc42442780ffff3dffa04126085797667e282eb732d7f1954c2b15b246de1f476cde43fe2ae91834a5e78080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 6n,
+        "parent_coin_info": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff3cffa00614b5865f45950e9dfeb4df62274f291ccdb7424f2b48b19293667e6a3eed3b80ffff3dffa075652c6955b62f4fbdbac757144ce44bd0544c2b6d297e9a1781d02b2c25a9f88080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 7n,
+        "parent_coin_info": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff3cffa02e5e2e7dd6d00c5f6039c0feb54054558fa5c7c347ed85e4ac3f2e770676ceae80ffff3dffa0bef8b54a1255e85461f009ca8fdd6eb130c35af409d85bf22956a12335b113048080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 8n,
+        "parent_coin_info": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff2480ffff3cffa02ca87c3450b806150bddc61ad0853745b1dbd6748f9ae8365c4f575dc899a23b80ffff3dffa063f575ad662319e0b77100f500e243a93f7d3cb9fbbca64b92a4b11b07d694248080ff8080",
+    },
+  ],
+}
+`;
+
+exports[`inscription: mint by "combine" with fee 123n and count 12: analysis 1`] = `
+Object {
+  "coins": Array [
+    Object {
+      "amount": 1n,
+      "coinId": "0x1f4fcc72639d9d2db9c732f50b630a94dd1a48f15415f51f4b0216bb673a3f21",
+      "from": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      "meta": Object {
+        "amt": 1000,
+        "op": "mint",
+        "p": "xchs",
+        "tick": "TODO",
+      },
+      "parent": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+      "raw": "{'p':'xchs','op':'mint','tick':'TODO','amt':'1000'}",
+      "to": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+    },
+    Object {
+      "amount": 2n,
+      "coinId": "0xc1ae31805dfedff4f68de5737c7f89a2aeed4322d9d0b9bb15ae997b9ff243ff",
+      "from": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      "meta": Object {
+        "amt": 1000,
+        "op": "mint",
+        "p": "xchs",
+        "tick": "TODO",
+      },
+      "parent": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+      "raw": "{'p':'xchs','op':'mint','tick':'TODO','amt':'1000'}",
+      "to": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+    },
+    Object {
+      "amount": 3n,
+      "coinId": "0x4a84d3928221584ea8598e08b34dbed8b8046ac6ed075bfe894313d3229e805d",
+      "from": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      "meta": Object {
+        "amt": 1000,
+        "op": "mint",
+        "p": "xchs",
+        "tick": "TODO",
+      },
+      "parent": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+      "raw": "{'p':'xchs','op':'mint','tick':'TODO','amt':'1000'}",
+      "to": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+    },
+    Object {
+      "amount": 4n,
+      "coinId": "0xd091b61c7e2fac01d40a56857d36fc3ab686eb7f042f83094f7aa5120baa859b",
+      "from": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      "meta": Object {
+        "amt": 1000,
+        "op": "mint",
+        "p": "xchs",
+        "tick": "TODO",
+      },
+      "parent": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+      "raw": "{'p':'xchs','op':'mint','tick':'TODO','amt':'1000'}",
+      "to": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+    },
+    Object {
+      "amount": 5n,
+      "coinId": "0xb70ff4b8b7f3569ccf9c27d15d107c86cd238b939f8988b259e497643cbac669",
+      "from": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      "meta": Object {
+        "amt": 1000,
+        "op": "mint",
+        "p": "xchs",
+        "tick": "TODO",
+      },
+      "parent": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+      "raw": "{'p':'xchs','op':'mint','tick':'TODO','amt':'1000'}",
+      "to": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+    },
+    Object {
+      "amount": 6n,
+      "coinId": "0x88896575be4bae940d5a022eaf2ae216a1a176739dfaaf05c452fb1f9e18830e",
+      "from": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      "meta": Object {
+        "amt": 1000,
+        "op": "mint",
+        "p": "xchs",
+        "tick": "TODO",
+      },
+      "parent": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+      "raw": "{'p':'xchs','op':'mint','tick':'TODO','amt':'1000'}",
+      "to": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+    },
+    Object {
+      "amount": 7n,
+      "coinId": "0x7a8413e70a42e6d52336081534b5d67522bca08d5d5061e91a0a6bedac925a9f",
+      "from": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      "meta": Object {
+        "amt": 1000,
+        "op": "mint",
+        "p": "xchs",
+        "tick": "TODO",
+      },
+      "parent": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+      "raw": "{'p':'xchs','op':'mint','tick':'TODO','amt':'1000'}",
+      "to": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+    },
+    Object {
+      "amount": 8n,
+      "coinId": "0xa254cc5c319387a02d9beb1771321c533844882f2e4a5ff787b43bff313af275",
+      "from": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      "meta": Object {
+        "amt": 1000,
+        "op": "mint",
+        "p": "xchs",
+        "tick": "TODO",
+      },
+      "parent": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+      "raw": "{'p':'xchs','op':'mint','tick':'TODO','amt':'1000'}",
+      "to": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+    },
+    Object {
+      "amount": 9n,
+      "coinId": "0x394e1c0d7bb5cecb8f1e6fde9d29faffffbeb82ff51e141f7fed7f51227e6c17",
+      "from": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      "meta": Object {
+        "amt": 1000,
+        "op": "mint",
+        "p": "xchs",
+        "tick": "TODO",
+      },
+      "parent": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+      "raw": "{'p':'xchs','op':'mint','tick':'TODO','amt':'1000'}",
+      "to": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+    },
+    Object {
+      "amount": 10n,
+      "coinId": "0x8c3ccda4feaa3d15d56a0b494c6eab7a2bb5c5a61bacfa7246dbc27d9576e174",
+      "from": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      "meta": Object {
+        "amt": 1000,
+        "op": "mint",
+        "p": "xchs",
+        "tick": "TODO",
+      },
+      "parent": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+      "raw": "{'p':'xchs','op':'mint','tick':'TODO','amt':'1000'}",
+      "to": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+    },
+    Object {
+      "amount": 11n,
+      "coinId": "0x82a3a499d5c2c0c883cb9968232c1835dc06114cd74cca7d9ea780c25131d5f5",
+      "from": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      "meta": Object {
+        "amt": 1000,
+        "op": "mint",
+        "p": "xchs",
+        "tick": "TODO",
+      },
+      "parent": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+      "raw": "{'p':'xchs','op':'mint','tick':'TODO','amt':'1000'}",
+      "to": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+    },
+    Object {
+      "amount": 12n,
+      "coinId": "0xfbf59f7253230aaa632fc30a130c67f893cf9934331ac8d03c2db4534d81293c",
+      "from": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      "meta": Object {
+        "amt": 1000,
+        "op": "mint",
+        "p": "xchs",
+        "tick": "TODO",
+      },
+      "parent": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+      "raw": "{'p':'xchs','op':'mint','tick':'TODO','amt':'1000'}",
+      "to": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+    },
+  ],
+}
+`;
+
+exports[`inscription: mint by "combine" with fee 123n and count 12: spendbundle 1`] = `
+Object {
+  "aggregated_signature": "0x8caf4cb52350e75a138a61d47eca8db71b0796f1db787cf58165025a6a6ab2020707c974063a513eabf014c594b923a20b975500891bb7bfd5458d87598ec2ff4007aaafdb9c9f429d80f862df190879bf22346482972c918d08bf4c57e73e98",
+  "coin_spends": Array [
+    Object {
+      "coin": Object {
+        "amount": 4998999984n,
+        "parent_coin_info": "0xf3b7d6d4bdd80b99c539f7ca900288f5dc2ac8fb23559656e981761e90b2fe71",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff33ffa0d19c05a54dacbf2b40ff4843534c47976de90246c3fc42ac1f42ea81b434b8eaff8203e880ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff01ffffb37b2770273a2778636873272c276f70273a276d696e74272c277469636b273a27544f444f272c27616d74273a2731303030277d8080ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff02ffffb37b2770273a2778636873272c276f70273a276d696e74272c277469636b273a27544f444f272c27616d74273a2731303030277d8080ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff03ffffb37b2770273a2778636873272c276f70273a276d696e74272c277469636b273a27544f444f272c27616d74273a2731303030277d8080ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff04ffffb37b2770273a2778636873272c276f70273a276d696e74272c277469636b273a27544f444f272c27616d74273a2731303030277d8080ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff05ffffb37b2770273a2778636873272c276f70273a276d696e74272c277469636b273a27544f444f272c27616d74273a2731303030277d8080ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff06ffffb37b2770273a2778636873272c276f70273a276d696e74272c277469636b273a27544f444f272c27616d74273a2731303030277d8080ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff07ffffb37b2770273a2778636873272c276f70273a276d696e74272c277469636b273a27544f444f272c27616d74273a2731303030277d8080ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff08ffffb37b2770273a2778636873272c276f70273a276d696e74272c277469636b273a27544f444f272c27616d74273a2731303030277d8080ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff09ffffb37b2770273a2778636873272c276f70273a276d696e74272c277469636b273a27544f444f272c27616d74273a2731303030277d8080ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff0affffb37b2770273a2778636873272c276f70273a276d696e74272c277469636b273a27544f444f272c27616d74273a2731303030277d8080ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff0bffffb37b2770273a2778636873272c276f70273a276d696e74272c277469636b273a27544f444f272c27616d74273a2731303030277d8080ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff0cffffb37b2770273a2778636873272c276f70273a276d696e74272c277469636b273a27544f444f272c27616d74273a2731303030277d8080ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff850129f6aaff8080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 1n,
+        "parent_coin_info": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff3cffa0926f5e527a859218de481d3776cf8fd460306adb84126268a858730a399364f780ffff3dffa0509f1d0f8036727969ea3c18e6548195497fba7357351a07097005c514bb88f38080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 2n,
+        "parent_coin_info": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff3cffa076486c5a7025a4b0b359f7374de242d152b8a3d82d0df3fa59688611e91310e180ffff3dffa03d12d63b356de731af862745e8623c5ddb095c83404d356c1fc8a899e4b151018080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 3n,
+        "parent_coin_info": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff3cffa03f1af3dea596b85ecc13969a49ad883fed0f723bb5344408f709ddff327914ea80ffff3dffa0bb62b9d2e9266f707cecb3ea516f4240b428a8ce23a73fedbdfaebc1df4d0f428080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 4n,
+        "parent_coin_info": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff3cffa0588d66bf0e9135bdbf64981559e713190446c7c006739c3d18079b9eb3b9852980ffff3dffa0e2be513d4f4442eb357072aeea10d65f6f54f6dfa29e0c067a1180ce6237e0788080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 5n,
+        "parent_coin_info": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff3cffa00ebebe56d201e23ddb4c63bb682cae982e99a5879f670f54b77c5be7cc42442780ffff3dffa04126085797667e282eb732d7f1954c2b15b246de1f476cde43fe2ae91834a5e78080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 6n,
+        "parent_coin_info": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff3cffa00614b5865f45950e9dfeb4df62274f291ccdb7424f2b48b19293667e6a3eed3b80ffff3dffa075652c6955b62f4fbdbac757144ce44bd0544c2b6d297e9a1781d02b2c25a9f88080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 7n,
+        "parent_coin_info": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff3cffa02e5e2e7dd6d00c5f6039c0feb54054558fa5c7c347ed85e4ac3f2e770676ceae80ffff3dffa0bef8b54a1255e85461f009ca8fdd6eb130c35af409d85bf22956a12335b113048080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 8n,
+        "parent_coin_info": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff3cffa09a3aea081471071c02ab8b19ceb337050a3107c1d19fe7f89c252a0c7aa114f980ffff3dffa063f575ad662319e0b77100f500e243a93f7d3cb9fbbca64b92a4b11b07d694248080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 9n,
+        "parent_coin_info": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff3cffa0bb6d56e7c1037fe2e629407b5387b156947b98c364435b6d646b7badf5f5f5be80ffff3dffa0f25c98b0a7ce586524bc8cf985840439f07672f17651e6190d49f82ea36ad8478080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 10n,
+        "parent_coin_info": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff3cffa077ef33d90dd6297de29a1acd9bba84eceefcbac475721b4d7bf86a2750b7f96880ffff3dffa078591909cb3f47eb620c80d93c9845bae8dd2d6395a3f4ed5363c99fd484de618080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 11n,
+        "parent_coin_info": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff3cffa0b2effee216799d1be6a2ba4d7f85ea1b4cb0bcc592ed2595064bff5f080ab3c880ffff3dffa02f403b4a7f1e0b86abae111b4661fc89e8fa9c19c4ff31b54a9ba8c41b3c4e218080ff8080",
+    },
+    Object {
+      "coin": Object {
+        "amount": 12n,
+        "parent_coin_info": "0xa9b4b921264b687b2aad31c208da1a4d38e7aa36135aa892ea366f20ea0d0a5c",
+        "puzzle_hash": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a0ea9df64dd859d6d7e648fec94b35ee0512670e68c0a83c520948dc164d817d39c402002db1cf716caa1335022c8338ff018080",
+      "solution": "0xff80ffff01ffff33ffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff4e80ffff3cffa03326308322ad8a9be2e1a3929ece0aef6549fdcc7498d059186654ca81aa4fd980ffff3dffa031ad0a8ed1bb62987619c0cdd963b50129012d6ff70744b41a3b767b833973098080ff8080",
+    },
+  ],
+}
+`;
+
 exports[`inscription: mint by "direct" with fee 0n and count 1: spendbundle 1`] = `
 Object {
   "aggregated_signature": "0x86841092b2fb3af7d22bf557b4c7be3431d48ccd89eeb56d38c47987efa9b5a8259e69488c8175219fe53275e7a7a6cc157a36708b38fc0146c50ed1beb432b34574480cf73ba46cfa920424598872363708b5097fe56c9e36bfc2d0586b58d1",
