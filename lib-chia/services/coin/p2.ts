@@ -5,13 +5,13 @@ import { ConditionOpcode } from "./opcode";
 import { OriginCoin } from "../spendbundle";
 import { getCoinName0x } from "./coinUtility";
 import { hex2ascSingle } from "./singleton";
-import { sha256 } from "../offer/bundler";
 
 export interface P2CoinInfo {
   coinId: Hex0x;
   from: Hex0x;
   to: Hex0x;
   parent: Hex0x;
+  amount: bigint;
 }
 export interface P2CoinWithMemo extends P2CoinInfo {
   memos: string[];
@@ -92,7 +92,7 @@ export async function getCoinMemos(
       const nextcoin_puzhash = prefix0x(getFirstLevelArgMsg(coin.args.at(0)) ?? "()");
       const amount = getNumber(getFirstLevelArgMsg(coin.args.at(1)) ?? "0");
       const nextCoinName = getCoinName0x({ parent_coin_info: thisCoinName, amount, puzzle_hash: nextcoin_puzhash });
-      ret.push({ coinId: nextCoinName, memos, from: thisPuzzleHash, to: nextcoin_puzhash, parent: thisCoinName });
+      ret.push({ coinId: nextCoinName, memos, from: thisPuzzleHash, to: nextcoin_puzhash, parent: thisCoinName, amount });
     }
 
     return ret;
@@ -149,6 +149,7 @@ export async function convertToInscriptionCoins(coins: P2CoinWithMemo[]): Promis
       to: coin.to,
       from: coin.from,
       parent: coin.parent,
+      amount: coin.amount,
       raw,
       meta,
     });
