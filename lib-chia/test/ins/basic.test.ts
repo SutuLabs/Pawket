@@ -12,6 +12,7 @@ import { combineSpendBundle, signSpendBundle, UnsignedSpendBundle } from "../../
 import { Hex0x, prefix0x } from "../../services/coin/condition";
 import puzzle from "../../services/crypto/puzzle";
 import { analyzeP2Coin } from "../../services/coin/p2";
+import { InscriptionMintMode, inscribeMintSpendBundle } from "../../services/coin/inscription";
 
 const net: NetworkContext = {
   prefix: "xch",
@@ -85,55 +86,30 @@ test.each([
   ["direct", 123n, 12],
   ["combine", 88n, 8],
   ["combine", 123n, 12],
-])("inscription: mint by %p with fee %p and count %p", async (type: string, fee: bigint, count: number) => {
+])("inscription: mint by %p with fee %p and count %p", async (mode: string, fee: bigint, count: number) => {
   const account = await getTestAccountWithPuzzles("55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f");
   const tokenPuzzles = account.addressPuzzles;
+  const target_hex = prefix0x(puzzle.getPuzzleHashFromAddress(account.firstAddress));
 
   const memo = mintInscription;
-  const tgts: TransferTarget[] = [{ address: service_hex, amount: service_fee, symbol: net.symbol, memos: [] }];
+  const sk = "00186eae4cd4a3ec609ca1a8c1cda8467e3cb7cbbbf91a523d12d31129d5f8d7";
 
-  let ubundle: UnsignedSpendBundle;
-  if (type == "proxy") {
-    const tp = tokenPuzzles;
-    const sk = "00186eae4cd4a3ec609ca1a8c1cda8467e3cb7cbbbf91a523d12d31129d5f8d7";
-    const ms = Array(count).fill([memo]);
-    const init = count == 1 ? [[memo]] : undefined;
-    ubundle = await getBootstrapSpendBundle(target_hex, change_hex, fee, availcoins, tp, count, net, sk, init, ms, tgts);
-  } else if (type == "direct") {
-    for (let i = 0; i < count; i++) {
-      tgts.push({ address: target_hex, amount: BigInt(i + 1), symbol: net.symbol, memos: [memo] });
-    }
-    const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, BigInt(fee), net.symbol);
-    ubundle = await transfer.generateSpendBundleWithoutCat(plan, tokenPuzzles, [], net);
-  } else {
-    expect(count).toBeGreaterThan(1);
-    // target address must be this account owned address
-    const target_hex = prefix0x(puzzle.getPuzzleHashFromAddress(account.firstAddress));
-    let repeatMojo = 0n;
-    for (let i = 0; i < count; i++) {
-      const amt = BigInt(i + 1);
-      tgts.push({ address: target_hex, amount: amt, symbol: net.symbol, memos: [memo] });
-      repeatMojo += amt;
-    }
-    const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, BigInt(fee), net.symbol);
-    const transferBundle = await transfer.generateSpendBundleWithoutCat(plan, tokenPuzzles, [], net);
+  const { repeatMojo, bundle: ubundle } = await inscribeMintSpendBundle(
+    mode as InscriptionMintMode,
+    target_hex,
+    change_hex,
+    availcoins,
+    service_hex,
+    service_fee,
+    fee,
+    count,
+    memo,
+    tokenPuzzles,
+    net,
+    sk
+  );
 
-    const coin = transferBundle.coin_spends[transferBundle.coin_spends.length - 1];
-    const analysis = await analyzeP2Coin(coin.puzzle_reveal, coin.solution, coin.coin);
-    expect(analysis).toMatchSnapshot("analysis");
-
-    if (analysis.coins.length != count) fail();
-    const gatherCoins: SymbolCoins = {
-      [net.symbol]: analysis.coins.map((_) => ({ parent_coin_info: _.parent, puzzle_hash: _.to, amount: _.amount })),
-    };
-
-    const gatherTgt = { address: target_hex, amount: repeatMojo, symbol: net.symbol, memos: [] };
-    const gatherPlan = transfer.generateSpendPlan(gatherCoins, [gatherTgt], change_hex, 0n, net.symbol);
-
-    const gatherBundle = await transfer.generateSpendBundleWithoutCat(gatherPlan, tokenPuzzles, [], net);
-
-    ubundle = combineSpendBundle(transferBundle, gatherBundle);
-  }
+  expect(repeatMojo).toMatchSnapshot("repeat");
 
   const bundle = await signSpendBundle(ubundle, tokenPuzzles, net.chainId);
   await assertSpendbundle(bundle, net.chainId);
