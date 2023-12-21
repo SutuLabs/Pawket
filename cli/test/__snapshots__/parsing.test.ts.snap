@@ -10756,7 +10756,7 @@ exports[`Parsing API test Block Parsing Case 11: response 1`] = `
 Array [
   Object {
     "amount": "392303",
-    "analysis": "{\\"coins\\":[{\\"coinId\\":\\"0xaa848400cb64898a59105746098f59ff8ff403b677ffa5f5c28d3c8cca80d3bd\\",\\"to\\":\\"0x20c2755ec70535afc8a2b0408d47c30d47a1ce1232ccd3379030c3a51363e2b2\\",\\"from\\":\\"0x6e084a26a7e3f4f51c65878aaad9938a1f92e5ce20e67071f579a095c2e9d5d0\\",\\"parent\\":\\"0x427e1b7017bc3c34c7c409db65e042f226a876338ee7e53f2d1b8832b21915d9\\",\\"raw\\":\\"{'p':'xchs','op':'mint','tick':'test','amt':'15'}\\",\\"meta\\":{\\"p\\":\\"xchs\\",\\"op\\":\\"mint\\",\\"tick\\":\\"test\\",\\"amt\\":15}}]}",
+    "analysis": "{\\"coins\\":[{\\"coinId\\":\\"0xaa848400cb64898a59105746098f59ff8ff403b677ffa5f5c28d3c8cca80d3bd\\",\\"to\\":\\"0x20c2755ec70535afc8a2b0408d47c30d47a1ce1232ccd3379030c3a51363e2b2\\",\\"from\\":\\"0x6e084a26a7e3f4f51c65878aaad9938a1f92e5ce20e67071f579a095c2e9d5d0\\",\\"parent\\":\\"0x427e1b7017bc3c34c7c409db65e042f226a876338ee7e53f2d1b8832b21915d9\\",\\"amount\\":\\"3\\",\\"raw\\":\\"{'p':'xchs','op':'mint','tick':'test','amt':'15'}\\",\\"meta\\":{\\"p\\":\\"xchs\\",\\"op\\":\\"mint\\",\\"tick\\":\\"test\\",\\"amt\\":15}}]}",
     "coin_name": "0x427e1b7017bc3c34c7c409db65e042f226a876338ee7e53f2d1b8832b21915d9",
     "mods": "p2_delegated_puzzle_or_hidden_puzzle()",
     "parent": "0x0dd130454a834446e2986f7afa0ee76dd2dc29d2defbdc9eb1ce57115024e6af",
