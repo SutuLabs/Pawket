@@ -55,6 +55,7 @@ export function getTestAccount(privateKey: string): AccountEntity {
 
 export async function getTestAccountWithPuzzles(privateKey: string): Promise<AccountEntity> {
   const maxId = 4;
+  const addressPuzzles = await receive.getAssetsRequestDetail(privateKey, 0, maxId, [], {}, "xch", "XCH", "cat_v2");
   return {
     addressRetrievalCount: maxId,
     key: {
@@ -69,7 +70,8 @@ export async function getTestAccountWithPuzzles(privateKey: string): Promise<Acc
     dids: [],
     extraInfo: {},
     allCats: [],
-    addressPuzzles: await receive.getAssetsRequestDetail(privateKey, 0, maxId, [], {}, "xch", "XCH", "cat_v2"),
+    addressPuzzles,
+    firstAddress: addressPuzzles.at(0)?.puzzles.at(0)?.address,
     addressGenerated: maxId,
   };
 }
