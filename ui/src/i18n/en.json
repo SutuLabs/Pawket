@@ -1754,14 +1754,27 @@
       "messages": {
         "failedToSign": "",
         "onlyOneFile": "",
-        "wrongFileType": ""
+        "wrongFileType": "",
+        "error": {
+          "TICK_WRONG_LENGTH": "Tick length must be equal to 4."
+        }
       },
       "comment": {
         "repeatMoreThan25": "Higher repeat count may slow balance refresh and increase network load.",
-        "repeatMoreThan1": "Higher repeat count may slow balance refresh."
+        "repeatMoreThan1": "Higher repeat count may slow balance refresh.",
+        "repeatMoreThan150WithWrap": "Higher repeat count may slow down signing and network submission.",
+        "repeatMoreThan20WithWrap": "Higher repeat count may slow down network submission.",
+        "repeatDefaultWithWrap": "When the repetition count is 1, coin merging will not occur.",
+        "repeatDefault": "Repeat in single spendbundle saves effort and network fees.",
+        "repeatMoreThan1WithWrap": "Repeat in single spendbundle saves effort and network fees.",
+        "receiverAddressDisabledWhenWrapRepeat": "When merging coin, the receiving address must be this account."
       },
       "help": {
-        "from": "Can't find the desired send address? Try transfering 1 mojo to it."
+        "from": "Can't find the desired send address? Try transfering 1 mojo to it.",
+        "wrapRepeat": "Coin merging avoids slowdown balance refresh and increase spendable balance."
+      },
+      "switch": {
+        "wrapRepeat": "Merge Coins"
       }
     },
     "sample": {

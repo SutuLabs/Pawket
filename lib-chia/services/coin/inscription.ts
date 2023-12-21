@@ -44,7 +44,7 @@ export async function inscribeMintSpendBundle(
     const plan = transfer.generateSpendPlan(availcoins, tgts, change_hex, BigInt(net_fee), net.symbol);
     ubundle = await transfer.generateSpendBundleWithoutCat(plan, observers, [], net);
   } else {
-    expect(repeat).toBeGreaterThan(1);
+    if (repeat <= 1) throw new Error("repeat must greater than 1");
     repeatMojo = 0n;
     for (let i = 0; i < repeat; i++) {
       const amt = BigInt(i + 1);

@@ -30,7 +30,7 @@
         <b-field v-if="panel == 'transfer'">
           <template #label>
             {{ $t("inscription.ui.label.from") }}
-            <b-tooltip :label="$t('inscription.ui.help.from')" position="is-right">
+            <b-tooltip :label="$t('inscription.ui.help.from')" position="is-right" multilined>
               <b-icon size="is-small" icon="help-circle-outline"></b-icon>
             </b-tooltip>
           </template>
@@ -43,20 +43,51 @@
 
         <b-field v-if="panel == 'mint'">
           <template #label>
-            {{ $t("inscription.ui.label.repeatMint") }}
-            <span v-if="repeat > 25" class="has-text-danger">
-              {{ $t("inscription.ui.comment.repeatMoreThan25") }}
-            </span>
-            <span v-else-if="repeat > 1" class="has-text-warning">
-              {{ $t("inscription.ui.comment.repeatMoreThan1") }}
-            </span>
+            <div class="is-flex is-justify-content-space-between">
+              {{ $t("inscription.ui.label.repeatMint") }}
+              <span>
+                <b-tooltip :label="$t('inscription.ui.help.wrapRepeat')" position="is-left" class="mx-2" multilined>
+                  <b-icon size="is-small" icon="help-circle-outline"></b-icon>
+                </b-tooltip>
+                <b-switch v-model="wrapRepeats" size="is-small">
+                  {{ $t("inscription.ui.switch.wrapRepeat") }}
+                </b-switch>
+              </span>
+            </div>
+          </template>
+          <template #message>
+            <template v-if="wrapRepeats">
+              <span v-if="repeat > 150" class="has-text-danger has-text-weight-normal is-size-7">
+                {{ $t("inscription.ui.comment.repeatMoreThan150WithWrap") }}
+              </span>
+              <span v-else-if="repeat > 20" class="has-text-warning-dark has-text-weight-normal is-size-7">
+                {{ $t("inscription.ui.comment.repeatMoreThan20WithWrap") }}
+              </span>
+              <span v-else-if="repeat > 1" class="has-text-weight-normal is-size-7">
+                {{ $t("inscription.ui.comment.repeatMoreThan1WithWrap") }}
+              </span>
+              <span v-else class="has-text-weight-normal is-size-7">
+                {{ $t("inscription.ui.comment.repeatDefaultWithWrap") }}
+              </span>
+            </template>
+            <template v-else>
+              <span v-if="repeat > 25" class="has-text-danger has-text-weight-normal is-size-7">
+                {{ $t("inscription.ui.comment.repeatMoreThan25") }}
+              </span>
+              <span v-else-if="repeat > 1" class="has-text-warning-dark has-text-weight-normal is-size-7">
+                {{ $t("inscription.ui.comment.repeatMoreThan1") }}
+              </span>
+              <span v-else class="has-text-weight-normal is-size-7">
+                {{ $t("inscription.ui.comment.repeatDefault") }}
+              </span>
+            </template>
           </template>
           <b-field>
             <b-numberinput
               v-model="repeat"
               expanded
               controls-position="compact"
-              :max="MAX_REPEAT"
+              :max="wrapRepeats ? MAX_WRAP_REPEAT : MAX_REPEAT"
               :min="1"
               controls-alignment="left"
               type="is-warning"
@@ -66,10 +97,20 @@
                 v-model="repeat"
                 indicator
                 :tooltip="false"
-                :max="MAX_REPEAT"
+                :max="wrapRepeats ? MAX_WRAP_REPEAT : MAX_REPEAT"
                 :min="1"
                 format="raw"
-                :type="repeat == 1 ? 'is-success' : repeat > 25 ? 'is-danger' : 'is-warning'"
+                :type="
+                  wrapRepeats
+                    ? repeat > 20
+                      ? 'is-warning'
+                      : 'is-success'
+                    : repeat == 1
+                    ? 'is-success'
+                    : repeat > 25
+                    ? 'is-danger'
+                    : 'is-warning'
+                "
               ></b-slider>
             </p>
           </b-field>
@@ -142,7 +183,20 @@
           </b-field>
         </template>
 
+        <template v-if="panel == 'mint' && wrapRepeats">
+          <b-field>
+            <template #label>
+              {{ $t("inscription.ui.label.receiverAddress") }}
+              <span class="has-text-info has-text-weight-normal is-size-7">
+                {{ $t("inscription.ui.comment.receiverAddressDisabledWhenWrapRepeat") }}
+              </span>
+            </template>
+            <b-input v-model="account.firstAddress" expanded disabled />
+          </b-field>
+        </template>
+
         <address-field
+          v-show="panel != 'mint' || !wrapRepeats"
           :inputAddress="address"
           :validAddress="validAddress"
           :label="$t('inscription.ui.label.receiverAddress')"
@@ -254,7 +308,7 @@ import AddressField from "@/components/Common/AddressField.vue";
 import store from "@/store";
 import { demojo } from "@/filters/unitConversion";
 import { sha256 } from "../../../../lib-chia/services/offer/bundler";
-import { getBootstrapSpendBundle } from "../../../../lib-chia/services/coin/nft";
+import { inscribeMintSpendBundle } from "../../../../lib-chia/services/coin/inscription";
 
 type PanelType = "mint" | "transfer" | "deploy" | "custom";
 
@@ -280,6 +334,7 @@ export default class Inscription extends Vue {
   public dragfile: File[] = [];
   public isDragging = false;
   public transitioning = false;
+  public wrapRepeats = false;
   public amount = 1000;
   public tick = "";
   public panel: PanelType = "mint";
@@ -304,7 +359,7 @@ export default class Inscription extends Vue {
   public signAddress = "";
 
   public MAX_REPEAT = 50;
-  private mintType: "direct" | "proxy" = "direct";
+  public MAX_WRAP_REPEAT = 200;
 
   public requests: TokenPuzzleDetail[] = [];
 
@@ -387,6 +442,7 @@ export default class Inscription extends Vue {
   readonly deployFee = 50000000000n;
   readonly transferFee = 500000000n;
   readonly mintFee = 500000000n;
+  readonly mergingFee = 10000000000n;
   readonly service_hex: Hex0x = "0xe8022865bd618645ba1f20f1205ddd02207f93a2cfec6241e66f47d12fcbdfea";
 
   calculateAmount(): bigint {
@@ -398,16 +454,19 @@ export default class Inscription extends Vue {
       { max: 20, fee: BigInt(Number(this.mintFee) * 0.9) },
       { max: 25, fee: BigInt(Number(this.mintFee) * 0.8) },
       { max: 100, fee: BigInt(Number(this.mintFee) * 0.8) },
+      { max: 200, fee: BigInt(Number(this.mintFee) * 0.8) },
+      { max: 1000, fee: BigInt(Number(this.mintFee) * 0.8) },
     ];
     if (this.panel == "deploy") {
       return this.deployFee;
     } else if (this.panel == "mint") {
+      const wrapFee = repeat == 1 || !this.wrapRepeats ? 0n : this.mergingFee;
       for (let i = 0; i < mintDiscounts.length; i++) {
         const discount = mintDiscounts[i];
-        if (repeat <= discount.max) return discount.fee * BigInt(repeat);
+        if (repeat <= discount.max) return discount.fee * BigInt(repeat) + wrapFee;
       }
 
-      return this.mintFee * BigInt(repeat);
+      return this.mintFee * BigInt(repeat) + wrapFee;
     } else if (this.panel == "transfer") {
       return this.transferFee;
     } else {
@@ -448,6 +507,8 @@ export default class Inscription extends Vue {
       try {
         tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.signAddress));
         change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
+
+        if (this.wrapRepeats && this.panel == "mint") tgt_hex = change_hex;
       } catch (err) {
         Notification.open({
           message: this.$tc("send.messages.error.INVALID_ADDRESS"),
@@ -462,6 +523,17 @@ export default class Inscription extends Vue {
       if (!this.signAddress.startsWith(xchPrefix())) {
         Notification.open({
           message: this.$tc("send.messages.error.ADDRESS_NOT_MATCH_NETWORK"),
+          type: "is-danger",
+          duration: 5000,
+        });
+        this.validAddress = false;
+        this.submitting = false;
+        return;
+      }
+
+      if (this.tick.length != 4) {
+        Notification.open({
+          message: this.$tc("inscription.ui.messages.error.TICK_WRONG_LENGTH"),
           type: "is-danger",
           duration: 5000,
         });
@@ -501,28 +573,21 @@ export default class Inscription extends Vue {
           ubundle = combineSpendBundle(ubundleForPayload, ubundleForFee);
         }
       } else if (this.panel == "mint") {
-        const tgts: TransferTarget[] = amount > 0n ? [{ address: this.service_hex, amount, symbol: xchSymbol(), memos: [] }] : [];
-        const net = networkContext();
-
-        if (this.mintType == "proxy") {
-          const ms = Array(repeat).fill([memo]);
-          const init = repeat == 1 ? [[memo]] : undefined;
-
-          const ac = this.availcoins;
-          const ob = observers;
-          ubundle = await getBootstrapSpendBundle(tgt_hex, change_hex, fee, ac, ob, repeat, net, undefined, init, ms, tgts);
-          repeatMojo = BigInt(repeat);
-        } else {
-          repeatMojo = 0n;
-          for (let i = 0; i < repeat; i++) {
-            const amt = BigInt(i + 1);
-            tgts.push({ address: tgt_hex, amount: amt, symbol: net.symbol, memos: [memo] });
-            repeatMojo += amt;
-          }
-
-          const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(fee), net.symbol);
-          ubundle = await transfer.generateSpendBundleWithoutCat(plan, observers, [], net);
-        }
+        const ret = await inscribeMintSpendBundle(
+          repeat > 1 ? (this.wrapRepeats ? "combine" : "direct") : "direct",
+          tgt_hex,
+          change_hex,
+          this.availcoins,
+          this.service_hex,
+          amount,
+          fee,
+          repeat,
+          memo,
+          observers,
+          networkContext()
+        );
+        ubundle = ret.bundle;
+        repeatMojo = BigInt(ret.repeatMojo);
       } else {
         throw Error("not support");
       }
