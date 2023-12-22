@@ -488,6 +488,7 @@ export default class Inscription extends Vue {
 
   async sign(): Promise<void> {
     this.submitting = true;
+    await new Promise((resolve) => setTimeout(resolve, 50));
     try {
       if (!this.account.firstAddress) {
         this.submitting = false;
