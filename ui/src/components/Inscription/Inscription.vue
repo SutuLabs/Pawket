@@ -307,7 +307,6 @@ import TopBar from "../Common/TopBar.vue";
 import AddressField from "@/components/Common/AddressField.vue";
 import store from "@/store";
 import { demojo } from "@/filters/unitConversion";
-import { sha256 } from "../../../../lib-chia/services/offer/bundler";
 import { inscribeMintSpendBundle } from "../../../../lib-chia/services/coin/inscription";
 
 type PanelType = "mint" | "transfer" | "deploy" | "custom";
@@ -445,7 +444,7 @@ export default class Inscription extends Vue {
   readonly mergingFee = 10000000000n;
   readonly service_hex: Hex0x = "0xe8022865bd618645ba1f20f1205ddd02207f93a2cfec6241e66f47d12fcbdfea";
 
-  calculateAmount(): bigint {
+  calculateServiceFee(): bigint {
     const repeat = this.repeat;
     const mintDiscounts = [
       { max: 5, fee: BigInt(Number(this.mintFee) * 1.0) },
@@ -500,8 +499,9 @@ export default class Inscription extends Vue {
         return;
       }
 
-      const amount = this.calculateAmount();
+      const serviceFee = this.calculateServiceFee();
       const repeat = this.panel == "mint" ? this.repeat : 1;
+      const net = networkContext();
 
       let tgt_hex: Hex0x = "()";
       let change_hex: Hex0x = "()";
@@ -543,7 +543,6 @@ export default class Inscription extends Vue {
         return;
       }
 
-      const _hint = prefix0x(sha256(Buffer.from(`{'p':'xchs','tick':'${this.tick}'}`)));
       const memo = this.calculateMemo();
       const observers = this.requests.length ? this.requests : await getAssetsRequestObserver(this.account);
       const fee = BigInt(this.fee);
@@ -552,25 +551,25 @@ export default class Inscription extends Vue {
       let repeatMojo = 1n;
       if (this.panel == "deploy") {
         const tgts: TransferTarget[] = [{ address: tgt_hex, amount: 1n, symbol: xchSymbol(), memos: [memo] }];
-        if (amount > 0n) tgts.push({ address: this.service_hex, amount: amount, symbol: xchSymbol(), memos: [] });
+        if (serviceFee > 0n) tgts.push({ address: this.service_hex, amount: serviceFee, symbol: xchSymbol(), memos: [] });
 
         const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, fee, xchSymbol());
-        ubundle = await transfer.generateSpendBundleWithoutCat(plan, observers, [], networkContext());
+        ubundle = await transfer.generateSpendBundleWithoutCat(plan, observers, [], net);
       } else if (this.panel == "transfer") {
         const tgts: TransferTarget[] = [{ address: tgt_hex, amount: 1n, symbol: xchSymbol(), memos: [memo] }];
 
         const coinsForPayload = this.filterXchCoinsByAddress(this.availcoins, (_) => _ == this.from);
         const payloadTotal = coinsForPayload[xchSymbol()].reduce((pv, cv) => pv + cv.amount, 0n);
-        if (amount > 0n) tgts.push({ address: this.service_hex, amount: amount, symbol: xchSymbol(), memos: [] });
+        if (serviceFee > 0n) tgts.push({ address: this.service_hex, amount: serviceFee, symbol: xchSymbol(), memos: [] });
         if (payloadTotal >= fee + tgts.reduce((pv, cv) => pv + cv.amount, 0n)) {
           const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, fee, xchSymbol());
-          ubundle = await transfer.generateSpendBundleWithoutCat(plan, observers, [], networkContext());
+          ubundle = await transfer.generateSpendBundleWithoutCat(plan, observers, [], net);
         } else {
           const coinsForFee = this.filterXchCoinsByAddress(this.availcoins, (_) => _ != this.from);
           const planForPayload = transfer.generateSpendPlan(coinsForPayload, [tgts[0]], change_hex, 0n, xchSymbol());
           const planForFee = transfer.generateSpendPlan(coinsForFee, [tgts[1]], change_hex, fee, xchSymbol());
-          const ubundleForPayload = await transfer.generateSpendBundleWithoutCat(planForPayload, observers, [], networkContext());
-          const ubundleForFee = await transfer.generateSpendBundleWithoutCat(planForFee, observers, [], networkContext());
+          const ubundleForPayload = await transfer.generateSpendBundleWithoutCat(planForPayload, observers, [], net);
+          const ubundleForFee = await transfer.generateSpendBundleWithoutCat(planForFee, observers, [], net);
           ubundle = combineSpendBundle(ubundleForPayload, ubundleForFee);
         }
       } else if (this.panel == "mint") {
@@ -580,12 +579,12 @@ export default class Inscription extends Vue {
           change_hex,
           this.availcoins,
           this.service_hex,
-          amount,
+          serviceFee,
           fee,
           repeat,
           memo,
           observers,
-          networkContext()
+          net
         );
         ubundle = ret.bundle;
         repeatMojo = BigInt(ret.repeatMojo);
@@ -603,9 +602,9 @@ export default class Inscription extends Vue {
       this.summary = {
         memo,
         netFee: fee,
-        devFee: amount,
-        totalFee: amount + fee,
-        total: amount + fee + repeatMojo,
+        devFee: serviceFee,
+        totalFee: serviceFee + fee,
+        total: serviceFee + fee + repeatMojo,
         type: this.panel,
         repeat,
         repeatMojo,
