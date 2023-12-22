@@ -441,7 +441,7 @@ export default class Inscription extends Vue {
   readonly deployFee = 50000000000n;
   readonly transferFee = 500000000n;
   readonly mintFee = 500000000n;
-  readonly mergingFee = 10000000000n;
+  readonly mergingFee = 15000000000n;
   readonly service_hex: Hex0x = "0xe8022865bd618645ba1f20f1205ddd02207f93a2cfec6241e66f47d12fcbdfea";
 
   calculateServiceFee(): bigint {
