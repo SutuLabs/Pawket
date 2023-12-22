@@ -310,6 +310,15 @@ import { demojo } from "@/filters/unitConversion";
 import { inscribeMintSpendBundle } from "../../../../lib-chia/services/coin/inscription";
 
 type PanelType = "mint" | "transfer" | "deploy" | "custom";
+interface TemporaryStorage {
+  tick?: string;
+  amount?: number;
+  merge?: boolean;
+  repeat?: number;
+  receiver?: string;
+  netfee?: number;
+}
+const InscriptionTemporaryStorageKey = "InscriptionTemporaryStorage";
 
 @Component({
   components: {
@@ -365,6 +374,7 @@ export default class Inscription extends Vue {
   mounted(): void {
     this.loadCoins();
     this.address = this.account.firstAddress ?? "";
+    this.loadSession();
   }
 
   get path(): string {
@@ -609,6 +619,7 @@ export default class Inscription extends Vue {
         repeat,
         repeatMojo,
       };
+      this.storeSession();
     } catch (error) {
       Notification.open({
         message: this.$tc("inscription.ui.messages.failedToSign") + error,
@@ -730,6 +741,34 @@ export default class Inscription extends Vue {
 
   demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null): string {
     return demojo(mojo, token);
+  }
+
+  loadSession(): void {
+    try {
+      const s = sessionStorage.getItem(InscriptionTemporaryStorageKey);
+      if (!s) return;
+      const o = JSON.parse(s) as TemporaryStorage;
+      if (o.merge !== undefined) this.mergeRepeats = o.merge;
+      if (o.repeat) this.repeat = o.repeat;
+      if (o.amount) this.amount = o.amount;
+      if (o.netfee) this.fee = o.netfee;
+      if (o.receiver) this.address = o.receiver;
+      if (o.tick) this.tick = o.tick;
+    } catch (err) {
+      console.warn("error load session", err);
+    }
+  }
+
+  storeSession(): void {
+    const o: TemporaryStorage = {
+      merge: this.mergeRepeats,
+      repeat: this.repeat,
+      amount: this.amount,
+      netfee: this.fee,
+      receiver: this.address,
+      tick: this.tick,
+    };
+    sessionStorage.setItem(InscriptionTemporaryStorageKey, JSON.stringify(o));
   }
 }
 </script>
