@@ -1762,19 +1762,19 @@
       "comment": {
         "repeatMoreThan25": "重复次数过多可能导致余额刷新减慢并增加网络负载。",
         "repeatMoreThan1": "重复次数过多可能导致余额刷新减慢。",
-        "repeatMoreThan150WithWrap": "重复次数过多可能导致签名速度慢且网络提交速度慢",
-        "repeatMoreThan20WithWrap": "重复次数过多可能导致网络提交速度慢",
-        "repeatDefaultWithWrap": "重复次数为1时，不会进行硬币合并",
+        "repeatMoreThan150WithMerge": "重复次数过多可能导致签名速度慢且网络提交速度慢",
+        "repeatMoreThan20WithMerge": "重复次数过多可能导致网络提交速度慢",
+        "repeatDefaultWithMerge": "重复次数为1时，不会进行硬币合并",
         "repeatDefault": "通过在一笔交易中重复多次可以节省工作量和网络费",
-        "repeatMoreThan1WithWrap": "通过在一笔交易中重复多次可以节省工作量和网络费",
-        "receiverAddressDisabledWhenWrapRepeat": "当进行硬币合并时，接收地址必须是本账户"
+        "repeatMoreThan1WithMerge": "通过在一笔交易中重复多次可以节省工作量和网络费",
+        "receiverAddressDisabledWhenMergeRepeat": "当进行硬币合并时，接收地址必须是本账户"
       },
       "help": {
         "from": "找不到所需的发送地址？尝试向其发送 1 mojo。",
-        "wrapRepeat": "合并硬币可以避免钱包硬币太多刷新减慢的问题"
+        "mergeRepeat": "合并硬币可以避免钱包硬币太多刷新减慢的问题"
       },
       "switch": {
-        "wrapRepeat": "合并硬币"
+        "mergeRepeat": "合并硬币"
       }
     },
     "sample": {

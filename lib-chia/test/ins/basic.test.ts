@@ -80,8 +80,8 @@ test.each([
   ["direct", 88n, 8],
   ["direct", 10n, 1],
   ["direct", 123n, 12],
-  ["combine", 88n, 8],
-  ["combine", 123n, 12],
+  ["merge", 88n, 8],
+  ["merge", 123n, 12],
 ])("inscription: mint by %p with fee %p and count %p", async (mode: string, fee: bigint, count: number) => {
   const account = await getTestAccountWithPuzzles("55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f");
   const tokenPuzzles = account.addressPuzzles;

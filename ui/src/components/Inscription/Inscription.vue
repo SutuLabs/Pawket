@@ -46,28 +46,28 @@
             <div class="is-flex is-justify-content-space-between">
               {{ $t("inscription.ui.label.repeatMint") }}
               <span>
-                <b-tooltip :label="$t('inscription.ui.help.wrapRepeat')" position="is-left" class="mx-2" multilined>
+                <b-tooltip :label="$t('inscription.ui.help.mergeRepeat')" position="is-left" class="mx-2" multilined>
                   <b-icon size="is-small" icon="help-circle-outline"></b-icon>
                 </b-tooltip>
-                <b-switch v-model="wrapRepeats" size="is-small">
-                  {{ $t("inscription.ui.switch.wrapRepeat") }}
+                <b-switch v-model="mergeRepeats" size="is-small">
+                  {{ $t("inscription.ui.switch.mergeRepeat") }}
                 </b-switch>
               </span>
             </div>
           </template>
           <template #message>
-            <template v-if="wrapRepeats">
+            <template v-if="mergeRepeats">
               <span v-if="repeat > 150" class="has-text-danger has-text-weight-normal is-size-7">
-                {{ $t("inscription.ui.comment.repeatMoreThan150WithWrap") }}
+                {{ $t("inscription.ui.comment.repeatMoreThan150WithMerge") }}
               </span>
               <span v-else-if="repeat > 20" class="has-text-warning-dark has-text-weight-normal is-size-7">
-                {{ $t("inscription.ui.comment.repeatMoreThan20WithWrap") }}
+                {{ $t("inscription.ui.comment.repeatMoreThan20WithMerge") }}
               </span>
               <span v-else-if="repeat > 1" class="has-text-weight-normal is-size-7">
-                {{ $t("inscription.ui.comment.repeatMoreThan1WithWrap") }}
+                {{ $t("inscription.ui.comment.repeatMoreThan1WithMerge") }}
               </span>
               <span v-else class="has-text-weight-normal is-size-7">
-                {{ $t("inscription.ui.comment.repeatDefaultWithWrap") }}
+                {{ $t("inscription.ui.comment.repeatDefaultWithMerge") }}
               </span>
             </template>
             <template v-else>
@@ -87,7 +87,7 @@
               v-model="repeat"
               expanded
               controls-position="compact"
-              :max="wrapRepeats ? MAX_WRAP_REPEAT : MAX_REPEAT"
+              :max="mergeRepeats ? MAX_MERGE_REPEAT : MAX_REPEAT"
               :min="1"
               controls-alignment="left"
               type="is-warning"
@@ -97,11 +97,11 @@
                 v-model="repeat"
                 indicator
                 :tooltip="false"
-                :max="wrapRepeats ? MAX_WRAP_REPEAT : MAX_REPEAT"
+                :max="mergeRepeats ? MAX_MERGE_REPEAT : MAX_REPEAT"
                 :min="1"
                 format="raw"
                 :type="
-                  wrapRepeats
+                  mergeRepeats
                     ? repeat > 20
                       ? 'is-warning'
                       : 'is-success'
@@ -183,12 +183,12 @@
           </b-field>
         </template>
 
-        <template v-if="panel == 'mint' && wrapRepeats">
+        <template v-if="panel == 'mint' && mergeRepeats">
           <b-field>
             <template #label>
               {{ $t("inscription.ui.label.receiverAddress") }}
               <span class="has-text-info has-text-weight-normal is-size-7">
-                {{ $t("inscription.ui.comment.receiverAddressDisabledWhenWrapRepeat") }}
+                {{ $t("inscription.ui.comment.receiverAddressDisabledWhenMergeRepeat") }}
               </span>
             </template>
             <b-input v-model="account.firstAddress" expanded disabled />
@@ -196,7 +196,7 @@
         </template>
 
         <address-field
-          v-show="panel != 'mint' || !wrapRepeats"
+          v-show="panel != 'mint' || !mergeRepeats"
           :inputAddress="address"
           :validAddress="validAddress"
           :label="$t('inscription.ui.label.receiverAddress')"
@@ -333,7 +333,7 @@ export default class Inscription extends Vue {
   public dragfile: File[] = [];
   public isDragging = false;
   public transitioning = false;
-  public wrapRepeats = false;
+  public mergeRepeats = false;
   public amount = 1000;
   public tick = "";
   public panel: PanelType = "mint";
@@ -358,7 +358,7 @@ export default class Inscription extends Vue {
   public signAddress = "";
 
   public MAX_REPEAT = 50;
-  public MAX_WRAP_REPEAT = 200;
+  public MAX_MERGE_REPEAT = 200;
 
   public requests: TokenPuzzleDetail[] = [];
 
@@ -459,13 +459,13 @@ export default class Inscription extends Vue {
     if (this.panel == "deploy") {
       return this.deployFee;
     } else if (this.panel == "mint") {
-      const wrapFee = repeat == 1 || !this.wrapRepeats ? 0n : this.mergingFee;
+      const mergeFee = repeat == 1 || !this.mergeRepeats ? 0n : this.mergingFee;
       for (let i = 0; i < mintDiscounts.length; i++) {
         const discount = mintDiscounts[i];
-        if (repeat <= discount.max) return discount.fee * BigInt(repeat) + wrapFee;
+        if (repeat <= discount.max) return discount.fee * BigInt(repeat) + mergeFee;
       }
 
-      return this.mintFee * BigInt(repeat) + wrapFee;
+      return this.mintFee * BigInt(repeat) + mergeFee;
     } else if (this.panel == "transfer") {
       return this.transferFee;
     } else {
@@ -509,7 +509,7 @@ export default class Inscription extends Vue {
         tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.signAddress));
         change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
 
-        if (this.wrapRepeats && this.panel == "mint") tgt_hex = change_hex;
+        if (this.mergeRepeats && this.panel == "mint") tgt_hex = change_hex;
       } catch (err) {
         Notification.open({
           message: this.$tc("send.messages.error.INVALID_ADDRESS"),
@@ -574,7 +574,7 @@ export default class Inscription extends Vue {
         }
       } else if (this.panel == "mint") {
         const ret = await inscribeMintSpendBundle(
-          repeat > 1 ? (this.wrapRepeats ? "combine" : "direct") : "direct",
+          repeat > 1 ? (this.mergeRepeats ? "merge" : "direct") : "direct",
           tgt_hex,
           change_hex,
           this.availcoins,

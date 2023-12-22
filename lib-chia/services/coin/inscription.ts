@@ -6,7 +6,7 @@ import { Hex0x } from "./condition";
 import { getBootstrapSpendBundle } from "./nft";
 import { analyzeP2Coin } from "./p2";
 
-export type InscriptionMintMode = "direct" | "combine" | "proxy";
+export type InscriptionMintMode = "direct" | "merge" | "proxy";
 
 export async function inscribeMintSpendBundle(
   mode: InscriptionMintMode,
