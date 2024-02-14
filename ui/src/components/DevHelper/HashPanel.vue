@@ -23,6 +23,12 @@
       </p>
       <b-input v-model="prefix" type="text" @input="changeHash()" placeholder="prefix"></b-input>
     </b-field>
+    <b-field label="Batch">
+      <template #message>
+        <pre>{{ batch_hash_converted }}</pre>
+      </template>
+      <b-input v-model="batch_hash" @input="changeBatchHash()" type="textarea"> </b-input>
+    </b-field>
   </div>
 </template>
 
@@ -42,6 +48,8 @@ export default class HashPanel extends Vue {
   public origin_address = "";
   public hash_address = "";
   public origin_hash = "";
+  public batch_hash = "";
+  public batch_hash_converted = "";
   public prefix = xchPrefix();
 
   changeAddress(): void {
@@ -49,6 +57,16 @@ export default class HashPanel extends Vue {
   }
   changeHash(): void {
     this.hash_address = puzzle.getAddressFromPuzzleHash(this.origin_hash, this.prefix);
+  }
+  changeBatchHash(): void {
+    let s = "";
+    const arr = this.batch_hash.split("\n").map((_) => _.trim());
+    for (let i = 0; i < arr.length; i++) {
+      const hash = arr[i];
+      const addr = hash.length != 64 ? hash : puzzle.getAddressFromPuzzleHash(hash, this.prefix);
+      s += addr + "\n";
+    }
+    this.batch_hash_converted = s;
   }
 }
 </script>
