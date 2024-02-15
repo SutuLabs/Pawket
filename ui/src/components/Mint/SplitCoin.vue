@@ -69,19 +69,11 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { TokenPuzzleDetail } from "../../../../lib-chia/services/crypto/receive";
 import store from "@/store";
-import {
-  getMessagesToSign,
-  MessagesToSign,
-  OriginCoin,
-  PartialSpendBundle,
-  signSpendBundle,
-  SpendBundle,
-  UnsignedSpendBundle,
-} from "../../../../lib-chia/services/spendbundle";
+import { getMessagesToSign, OriginCoin, signSpendBundle, SpendBundle } from "../../../../lib-chia/services/spendbundle";
 import bigDecimal from "js-big-decimal";
 import { SymbolCoins } from "../../../../lib-chia/services/transfer/transfer";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
-import { debugBundle, submitBundle } from "@/services/view/bundleAction";
+import { debugBundle, offlineSignBundle, submitBundle } from "@/services/view/bundleAction";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import BundleSummary from "@/components/Bundle/BundleSummary.vue";
 import SendSummary from "@/components/Send/SendSummary.vue";
@@ -93,7 +85,7 @@ import AddressField from "@/components/Common/AddressField.vue";
 import Confirmation from "../Common/Confirmation.vue";
 import { getBootstrapSpendBundle } from "../../../../lib-chia/services/coin/nft";
 import puzzle from "../../../../lib-chia/services/crypto/puzzle";
-import { Hex, prefix0x } from "../../../../lib-chia/services/coin/condition";
+import { prefix0x } from "../../../../lib-chia/services/coin/condition";
 import { getCoinName0x } from "../../../../lib-chia/services/coin/coinUtility";
 import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
 
@@ -356,7 +348,9 @@ export default class SplitCoin extends Vue {
       this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());
       if (this.account.type == "PublicKey") {
         const msgs = await getMessagesToSign(ubundle, observers, networkContext().chainId);
-        await this.offlineSignBundle(ubundle, msgs);
+        await offlineSignBundle(this, ubundle, msgs, (sig) => {
+          if (this.bundle) this.bundle.aggregated_signature = sig;
+        });
       }
     } catch (error) {
       Notification.open({
@@ -392,25 +386,6 @@ export default class SplitCoin extends Vue {
   async copy(text: string): Promise<void> {
     await store.dispatch("copy", text);
     this.copied = true;
-  }
-
-  async offlineSignBundle(
-    bundle: SpendBundle | PartialSpendBundle | UnsignedSpendBundle,
-    messagesToSign: MessagesToSign
-  ): Promise<void> {
-    this.$buefy.modal.open({
-      parent: this,
-      component: (await import("@/components/Offline/OfflineSpendBundleQr.vue")).default,
-      hasModalCard: true,
-      trapFocus: true,
-      canCancel: [""],
-      props: { bundle, messagesToSign, mode: "ONLINE_CLIENT" },
-      events: {
-        signature: (sig: Hex): void => {
-          if (this.bundle) this.bundle.aggregated_signature = prefix0x(sig);
-        },
-      },
-    });
   }
 }
 </script>

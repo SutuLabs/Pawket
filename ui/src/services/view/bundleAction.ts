@@ -1,12 +1,13 @@
 import { tc } from "@/i18n/i18n";
 import { ApiResponse } from "../../../../lib-chia/models/api";
-import { SpendBundle } from "../../../../lib-chia/services/spendbundle";
+import { MessagesToSign, PartialSpendBundle, SpendBundle, UnsignedSpendBundle } from "../../../../lib-chia/services/spendbundle";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { ModalProgrammatic as Modal } from "buefy";
 import DevHelper from "@/components/DevHelper/DevHelper.vue";
 import { chainId, rpcUrl } from "@/store/modules/network";
 import { lockCoins } from "../../../../lib-chia/services/coin/coinUtility";
 import { AccountEntity } from "../../../../lib-chia/models/account";
+import { Hex, Hex0x, prefix0x } from "../../../../lib-chia/services/coin/condition";
 
 export async function submitBundle(
   bundle: SpendBundle,
@@ -83,5 +84,26 @@ export function debugBundle(parent: Vue, bundle: SpendBundle): void {
     hasModalCard: true,
     trapFocus: true,
     props: { inputBundleText: getBundleJson(bundle) },
+  });
+}
+
+export async function offlineSignBundle(
+  parent: Vue,
+  bundle: SpendBundle | PartialSpendBundle | UnsignedSpendBundle,
+  messagesToSign: MessagesToSign,
+  signedCallback: (sig: Hex0x) => void
+): Promise<void> {
+  Modal.open({
+    parent,
+    component: (await import("@/components/Offline/OfflineSpendBundleQr.vue")).default,
+    hasModalCard: true,
+    trapFocus: true,
+    canCancel: [""],
+    props: { bundle, messagesToSign, mode: "ONLINE_CLIENT" },
+    events: {
+      signature: (sig: Hex): void => {
+        signedCallback(prefix0x(sig));
+      },
+    },
   });
 }

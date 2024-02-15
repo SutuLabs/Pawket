@@ -78,13 +78,13 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { TokenPuzzleDetail } from "../../../../lib-chia/services/crypto/receive";
 import store from "@/store";
-import { signSpendBundle, SpendBundle } from "../../../../lib-chia/services/spendbundle";
+import { getMessagesToSign, signSpendBundle, SpendBundle } from "../../../../lib-chia/services/spendbundle";
 import puzzle from "../../../../lib-chia/services/crypto/puzzle";
 import bigDecimal from "js-big-decimal";
-import { Hex, Hex0x, prefix0x } from "../../../../lib-chia/services/coin/condition";
+import { Hex0x, prefix0x } from "../../../../lib-chia/services/coin/condition";
 import transfer, { SymbolCoins, TransferTarget } from "../../../../lib-chia/services/transfer/transfer";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
-import { debugBundle, submitBundle } from "@/services/view/bundleAction";
+import { debugBundle, offlineSignBundle, submitBundle } from "@/services/view/bundleAction";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import OfflineSendShowBundle from "@/components/Offline/OfflineSendShowBundle.vue";
 import { CurrencyType } from "@/services/exchange/currencyType";
@@ -377,11 +377,13 @@ export default class Send extends Vue {
       const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
       const observers = this.requests.length ? this.requests : await getAssetsRequestObserver(this.account);
       const ubundle = await transfer.generateSpendBundleIncludingCat(plan, observers, [], networkContext());
+
+      this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());
       if (this.account.type == "PublicKey") {
-        this.bundle = await signSpendBundle(ubundle, [], networkContext());
-        await this.offlineSignBundle();
-      } else {
-        this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());
+        const msgs = await getMessagesToSign(ubundle, observers, networkContext().chainId);
+        await offlineSignBundle(this, ubundle, msgs, (sig) => {
+          if (this.bundle) this.bundle.aggregated_signature = sig;
+        });
       }
     } catch (error) {
       Notification.open({
@@ -446,22 +448,6 @@ export default class Send extends Vue {
   changeFee(): void {
     this.reset();
     if (this.selectMax) this.setMax();
-  }
-
-  async offlineSignBundle(): Promise<void> {
-    this.$buefy.modal.open({
-      parent: this,
-      component: (await import("@/components/Offline/OfflineSpendBundleQr.vue")).default,
-      hasModalCard: true,
-      trapFocus: true,
-      canCancel: [""],
-      props: { bundle: this.bundle, mode: "ONLINE_CLIENT" },
-      events: {
-        signature: (sig: Hex): void => {
-          if (this.bundle) this.bundle.aggregated_signature = prefix0x(sig);
-        },
-      },
-    });
   }
 
   showSend(): void {
