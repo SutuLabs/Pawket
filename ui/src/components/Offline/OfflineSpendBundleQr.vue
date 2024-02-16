@@ -22,8 +22,16 @@
             </b-slider>
           </b-field>
 
+          <b-field :label="$t('offline.client.scan.denseField')">
+            <b-slider v-model="dense" :min="150" :max="1000" aria-label="Dense" :tooltip="false" @change="updateAndRefresh()">
+              <template v-for="val in [150, 300, 500, 800, 1000]">
+                <b-slider-tick :value="val" :key="val">{{ val }}</b-slider-tick>
+              </template>
+            </b-slider>
+          </b-field>
+
           <b-field v-if="unsafeQrcodes.length > 0">
-            <b-switch v-model="isUnsafe" type="is-danger">
+            <b-switch v-model="isUnsafe" type="is-info">
               {{ $t("offline.client.text.unsafeMode") }}
             </b-switch>
           </b-field>
@@ -82,6 +90,9 @@ import TopBar from "../Common/TopBar.vue";
 import { encode, decode } from "@msgpack/msgpack";
 import utility from "../../../../lib-chia/services/crypto/utility";
 import { prefix0x } from "../../../../lib-chia/services/coin/condition";
+import { NotificationProgrammatic as Notification } from "buefy";
+import pako from "pako";
+import base85 from "base85";
 
 export interface CompactMessagesToSign {
   messages: CompactMessageToSign[];
@@ -95,6 +106,7 @@ export interface CompactMessageToSign {
 }
 
 const MTSPrefix = "MTS";
+const MTSPrefixV2 = "MT2";
 
 @Component({
   components: {
@@ -127,18 +139,27 @@ export default class OfflineSpendBundleQr extends Vue {
   isUnsafe = false;
   safeQrcodes: string[] = [];
   unsafeQrcodes: string[] = [];
+  dense = 300;
 
   get path(): string {
     return this.$route.path;
   }
 
-  @Watch("bundle")
-  async onBundleChange(): Promise<void> {
+  async updateQrs(): Promise<void> {
     this.safeQrcodes = this.bundle ? await this.splitBundle(this.bundle) : [];
     this.unsafeQrcodes = this.messagesToSign ? await this.splitMessagesToSign(this.messagesToSign) : [];
+  }
 
-    this.isUnsafe = this.unsafeQrcodes.length > 0 && this.safeQrcodes.length > 5;
-    this.onIsUnsafeChange();
+  @Watch("bundle")
+  async onBundleChange(): Promise<void> {
+    this.updateAndRefresh(true);
+  }
+
+  async updateAndRefresh(changeDefault = false): Promise<void> {
+    await this.updateQrs();
+
+    if (changeDefault) this.isUnsafe = this.unsafeQrcodes.length > 0 && this.safeQrcodes.length > 5;
+    await this.onIsUnsafeChange();
   }
 
   @Watch("isUnsafe")
@@ -160,7 +181,7 @@ export default class OfflineSpendBundleQr extends Vue {
     return this.splitString(bstr);
   }
 
-  splitString(bstr: string, maxLength = 200): string[] {
+  splitString(bstr: string, maxLength = this.dense): string[] {
     const total = Math.ceil(bstr.length / maxLength);
     const partLength = Math.ceil(bstr.length / total);
     const list: string[] = [];
@@ -174,6 +195,17 @@ export default class OfflineSpendBundleQr extends Vue {
     return list;
   }
 
+  /*
+    example compression ratio:
+    - scenario: send to 1 address with 100 coins
+    - for spendbundle: 17181
+    - for sign-only(unsafe mode)
+      - origin: 14655
+      - pako: 7010
+      - encoding:
+        - base64: 9351
+        - base85: 8770
+  */
   async splitMessagesToSign(mts: MessagesToSign): Promise<string[]> {
     const compact: CompactMessagesToSign = {
       chainId: utility.fromHexString(mts.chainId),
@@ -183,8 +215,9 @@ export default class OfflineSpendBundleQr extends Vue {
         coinname: utility.fromHexString(_.coinname),
       })),
     };
-    const encoded = encode(compact);
-    const bstr = MTSPrefix + Buffer.from(encoded).toString("base64");
+    const origin = encode(compact);
+    const encoded = pako.deflate(origin, { level: 9 });
+    const bstr = MTSPrefixV2 + base85.encode(Buffer.from(encoded), "ascii85");
     return this.splitString(bstr);
   }
 
@@ -240,20 +273,20 @@ export default class OfflineSpendBundleQr extends Vue {
         const total = arr.at(1);
         if (total === undefined || index === undefined) {
           console.warn("decoding wrong qr", arr, result);
-          return;
+          throw new Error("decoding wrong qr");
         }
         this.receiveTotal = total;
-        this.received++;
         this.receives[index] = result.slice(4);
+        this.received = Object.keys(this.receives).length;
 
-        if (Object.keys(this.receives).length == this.receiveTotal) {
+        if (this.received == this.receiveTotal) {
           this.cameraStatus = "off";
           let b = "";
           for (let i = 0; i < this.receiveTotal; i++) {
             const r = this.receives[i];
             if (!r) {
               console.warn("failed to join result", result);
-              return;
+              throw new Error("failed to join result");
             }
 
             b += r;
@@ -264,12 +297,17 @@ export default class OfflineSpendBundleQr extends Vue {
       }
     } catch (err) {
       console.warn("error when decoding", err);
+      Notification.open({
+        message: this.$tc("offline.client.scan.ui.message.generalDecodingError", undefined, { error: err }),
+        type: "is-danger",
+      });
     }
   }
 
   async processCombinedMessageFromOnlineClient(b: string): Promise<void> {
     const requests = await getAssetsRequestDetail(this.account);
     if (b.startsWith(MTSPrefix)) {
+      // obsolete this branch after several versions --2024-02-16
       const arr = new Uint8Array(Buffer.from(b.slice(MTSPrefix.length), "base64"));
       const decoded = decode(arr) as CompactMessagesToSign;
       const msgs: MessagesToSign = {
@@ -282,10 +320,27 @@ export default class OfflineSpendBundleQr extends Vue {
       };
       const sig = await signMessages(msgs, requests);
       this.qrcodes = [sig];
-    } else {
+    } else if (b.startsWith(MTSPrefixV2)) {
+      const buff = base85.decode(b.slice(MTSPrefixV2.length), "ascii85");
+      if (!buff) throw new Error("cannot decode as base85");
+
+      const decoded = decode(pako.inflate(new Uint8Array(buff))) as CompactMessagesToSign;
+      const msgs: MessagesToSign = {
+        chainId: utility.toHexString(decoded.chainId),
+        messages: decoded.messages.map((_) => ({
+          message: utility.toHexString(_.message),
+          coinname: utility.toHexString(_.coinname),
+          publicKey: utility.toHexString(_.publicKey),
+        })),
+      };
+      const sig = await signMessages(msgs, requests);
+      this.qrcodes = [sig];
+    } else if (b.startsWith("bundle1")) {
       this.receiveBundle = await decodeOffer(b);
       const bundle = await signSpendBundle(this.receiveBundle, requests, networkContext());
       this.qrcodes = [bundle.aggregated_signature];
+    } else {
+      throw new Error(`Unknown message, leading string: ${b.substring(0, 50)}...`);
     }
   }
 

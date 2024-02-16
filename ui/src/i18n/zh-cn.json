@@ -473,14 +473,20 @@
     "client": {
       "text": {
         "qrcodesStatus": "{index} / {total}",
-        "unsafeMode": "精简模式",
+        "unsafeMode": "信任模式",
         "status": "已扫描: {fragment} / {total} fragment(s)."
       },
       "scan": {
         "title": "离线签名",
         "numberField": "签名信息",
         "numberMessage": "请使用刚刚发起交易的在线设备扫描该二维码。",
-        "scrollDown": "下滑页面，扫描离线设备上的二维码，以获取签名信息。"
+        "scrollDown": "下滑页面，扫描离线设备上的二维码，以获取签名信息。",
+        "denseField": "密度",
+        "ui": {
+          "message": {
+            "generalDecodingError": "解析时发生错误：{error}"
+          }
+        }
       },
       "show": {
         "hint": "用离线代理扫描该二维码来发送交易",

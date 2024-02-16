@@ -473,14 +473,20 @@
     "client": {
       "text": {
         "qrcodesStatus": "{index} / {total}",
-        "unsafeMode": "Unsafe Mode",
+        "unsafeMode": "Trust Mode",
         "status": "Scanned: {fragment} / {total} fragment(s)."
       },
       "scan": {
         "title": "Offline Sign",
         "numberField": "Signed Message",
         "numberMessage": "Please scan this QR code with the online device that just initiated the transaction.",
-        "scrollDown": "Scroll down the page, and scan the QR code on the offline device to get the signed message."
+        "scrollDown": "Scroll down the page, and scan the QR code on the offline device to get the signed message.",
+        "denseField": "Dense",
+        "ui": {
+          "message": {
+            "generalDecodingError": "Error when decoding: {error}"
+          }
+        }
       },
       "show": {
         "hint": "Use Proxy to scan QR to send your transaction.",
