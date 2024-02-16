@@ -77,7 +77,7 @@ export default class OfferPanel extends Vue {
 
   async updateOffer(): Promise<void> {
     this.bundle = null;
-    this.bundle = await decodeOffer(this.offerText);
+    this.bundle = await decodeOffer(this.offerText.trim());
     this.summary = null;
     this.summary = await getOfferSummary(this.bundle);
     this.save();
