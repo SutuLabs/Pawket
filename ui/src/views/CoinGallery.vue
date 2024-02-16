@@ -19,7 +19,7 @@
             </header>
             <div class="card-content">
               <figure class="image">
-                <a v-if="item.bundle" href="javascript:void(0)" @click="item.bundle && inspect(item.bundle)">
+                <a v-if="item.bundle || item.offer" href="javascript:void(0)" @click="inspect(item)">
                   <img :src="item.image" alt="screenshot" />
                 </a>
                 <img v-else :src="item.image" alt="screenshot" />
@@ -29,8 +29,8 @@
               <a
                 href="javascript:void(0)"
                 class="card-footer-item"
-                :disabled="!item.bundle"
-                @click="item.bundle && inspect(item.bundle)"
+                :disabled="!item.bundle && !item.offer"
+                @click="inspect(item)"
               >
                 <b-icon icon="magnify" custom-size="mdi-18px"></b-icon>
                 Inspect
@@ -69,6 +69,7 @@ interface GalleryItem {
   description?: string;
   image?: string;
   bundle?: string;
+  offer?: string;
   code?: string;
 }
 
@@ -97,7 +98,12 @@ export default class CoinGallery extends Vue {
     this.gallery = (await resp.json()) as GalleryEntity;
   }
 
-  async inspect(path: string): Promise<void> {
+  async inspect(item: GalleryItem): Promise<void> {
+    if (item.bundle) this.inspectBundle(item.bundle);
+    if (item.offer) this.inspectOffer(item.offer);
+  }
+
+  async inspectBundle(path: string): Promise<void> {
     const resp = await fetch(path, { method: "GET" });
     if (resp.status != 200) {
       console.warn("error when getting item: " + resp.status);
@@ -108,6 +114,12 @@ export default class CoinGallery extends Vue {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const inspector = this.$refs.inspector as any;
     if (inspector.inspect) inspector.inspect(json);
+  }
+
+  async inspectOffer(offer: string): Promise<void> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const inspector = this.$refs.inspector as any;
+    if (inspector.inspect) inspector.inspect(offer);
   }
 
   async showCode(path: string): Promise<void> {
