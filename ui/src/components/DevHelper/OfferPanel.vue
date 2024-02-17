@@ -9,19 +9,19 @@
           <li>{{ sumkey }}</li>
           <li class="pt-1" v-for="(ent, idx) in arr" :key="idx">
             <b-taglist attached>
-              <b-tag v-if="ent.cat_target" type="is-info" :title="ent.id">CAT {{ ent.id.slice(0, 7) + "..." }}</b-tag>
-              <b-tag v-else-if="ent.nft_target" type="is-info" :title="getNftName(ent.id)">{{
+              <b-tag v-if="ent.type == 'cat'" type="is-info" :title="ent.id">CAT {{ ent.id.slice(0, 7) + "..." }}</b-tag>
+              <b-tag v-else-if="ent.type == 'nft'" type="is-info" :title="getNftName(ent.id)">{{
                 getNftName(ent.id).slice(0, 20) + "..."
               }}</b-tag>
               <b-tag v-else type="is-info">{{ xchSymbol }}</b-tag>
 
-              <b-tag type="" v-if="ent.nft_target">{{ ent.royalty / 100 }}%</b-tag>
+              <b-tag type="" v-if="ent.type == 'nft'">{{ ent.nftanalysis.tradePricePercentage / 100 }}%</b-tag>
               <b-tag type="" v-else>{{ ent.amount }}</b-tag>
               <b-tag type="is-info is-light" :title="ent.target">{{ getAddress(ent.target).slice(0, 7) + "..." }}</b-tag>
-              <b-tag type="is-info is-light" v-if="ent.nft_uri">
-                <a :href="ent.nft_uri" target="_blank">
-                  <b-tooltip :label="ent.nft_uri" multilined class="break-string" position="is-left">
-                    <img :src="ent.nft_uri" class="nft-image" />
+              <b-tag type="is-info is-light" v-if="ent.type == 'nft'">
+                <a :href="ent.nftanalysis.metadata.imageUri" target="_blank">
+                  <b-tooltip :label="ent.nftanalysis.metadata.imageUri" multilined class="break-string" position="is-left">
+                    <img :src="ent.nftanalysis.metadata.imageUri" class="nft-image" />
                   </b-tooltip>
                 </a>
               </b-tag>
