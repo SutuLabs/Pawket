@@ -354,8 +354,6 @@ Object {
 }
 `;
 
-exports[`Create CNS Offer And Accept 2: empty address binding: royalty_amount 1`] = `10n`;
-
 exports[`Create CNS Offer And Accept 2: empty address binding: summary 1`] = `
 Object {
   "offered": Array [
@@ -883,8 +881,6 @@ Object {
   "settlementModName": "settlement_payments_v1",
 }
 `;
-
-exports[`Create CNS Offer And Accept: royalty_amount 1`] = `10n`;
 
 exports[`Create CNS Offer And Accept: summary 1`] = `
 Object {

@@ -184,21 +184,15 @@ async function testMintCnsAndOffer(fee: bigint, metadata: CnsMetadataValues, tgt
   if (!analysis) fail("failed to get analysis from summary");
   expect(analysis).toMatchSnapshot("cns analysis");
 
-  const royalty_amount = (revSummary.offered[0].amount * BigInt(analysis.tradePricePercentage)) / BigInt(10000);
-  expect(royalty_amount).toMatchSnapshot("royalty_amount");
   const offplangen = await generateOfferPlan(
     revSummary.offered,
     change_hex,
     availcoinsForTaker,
     fee,
     xchSymbol(),
-    royalty_amount
+    price,
+    analysis
   );
-  offplangen.push({
-    type: "royalty",
-    totalamount: price,
-    nft: analysis,
-  } as OfferPlanForRoyalty);
   expect(offplangen).toMatchSnapshot("offplangen");
   const reqs = convertOfferToRequest(revSummary.requested);
   const utakerBundle = await generateNftOffer(offplangen, reqs, tokenPuzzles, net, nonce);

@@ -661,6 +661,7 @@ export default class TakeOffer extends Vue {
           0n,
           xchSymbol(),
           0n,
+          undefined,
           [],
           this.summary.settlementModName
         );
@@ -696,23 +697,17 @@ export default class TakeOffer extends Vue {
         const nft = revSummary.requested[0].type == "nft" && revSummary.requested[0].nft_detail;
         if (!nft) throw new Error("Cannot find NFT");
 
-        // royalty_amount = uint64(offered_amount * royalty_percentage / 10000)
-        const royalty_amount = (revSummary.offered[0].amount * BigInt(nft.analysis.tradePricePercentage)) / BigInt(10000);
         const offplan = await generateOfferPlan(
           revSummary.offered,
           change_hex,
           this.availcoins,
           fee,
           xchSymbol(),
-          royalty_amount,
+          revSummary.offered[0].amount,
+          nft.analysis,
           [],
           this.summary.settlementModName
         );
-        offplan.push({
-          type: "royalty",
-          totalamount: revSummary.offered[0].amount,
-          nft: nft.analysis,
-        } as OfferPlanForRoyalty);
         const observers = await getAssetsRequestObserver(this.account);
         const utakerBundle = await generateNftOffer(
           offplan,

@@ -91,8 +91,6 @@ test("create and accept nft offer for xch", async () => {
       type: "nft",
       id: "74cc7e5904310477bae6e250910da9fee0e604b93d73a180cbd052d12f56769a",
       amount: 0n,
-      royalty: 800,
-      nft_uri: "https://guggero.github.io/cryptography-toolkit/images/fork-me-on-github-ribbon.png",
       target: "0xunimportant",
       nftanalysis: nft.analysis,
       coin: {
@@ -148,15 +146,7 @@ test("create and accept nft offer for xch", async () => {
   const fee = 0n;
   expect(fee).toMatchSnapshot("fee");
 
-  // royalty_amount = uint64(offered_amount * royalty_percentage / 10000)
-  const royalty_amount = (revSummary.offered[0].amount * BigInt(nft.analysis.tradePricePercentage)) / BigInt(10000);
-  expect(royalty_amount).toMatchSnapshot("royalty_amount");
-  const offplangen = await generateOfferPlan(revSummary.offered, change_hex, availcoins, fee, tnet.symbol, royalty_amount);
-  offplangen.push({
-    type: "royalty",
-    totalamount: price,
-    nft: nft.analysis,
-  } as OfferPlanForRoyalty);
+  const offplangen = await generateOfferPlan(revSummary.offered, change_hex, availcoins, fee, tnet.symbol, price, nft.analysis);
   expect(offplangen).toMatchSnapshot("offplangen");
   const utakerBundle = await generateNftOffer(offplangen, convertOfferToRequest(revSummary.requested), tokenPuzzles, tnet, nonce);
   const takerBundle = await signSpendBundle(utakerBundle, tokenPuzzles, tnet.chainId);
@@ -252,24 +242,17 @@ async function acceptOffer(fee: bigint, offerText: string) {
   const nft = await analyzeNftCoin(puzzle_reveal, undefined, coin.coin, solution);
   if (!nft) fail();
 
-  // royalty_amount = uint64(offered_amount * royalty_percentage / 10000)
-  const royalty_amount = (revSummary.offered[0].amount * BigInt(nft.tradePricePercentage)) / BigInt(10000);
-  expect(royalty_amount).toMatchSnapshot("royalty_amount");
   const offplangen = await generateOfferPlan(
     revSummary.offered,
     change_hex,
     availcoins,
     fee,
     net.symbol,
-    royalty_amount,
+    revSummary.offered[0].amount,
+    nft,
     [],
     revSummary.settlementModName
   );
-  offplangen.push({
-    type: "royalty",
-    totalamount: revSummary.offered[0].amount,
-    nft: nft,
-  } as OfferPlanForRoyalty);
   expect(offplangen).toMatchSnapshot("offplangen");
   const utakerBundle = await generateNftOffer(
     offplangen,

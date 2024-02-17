@@ -15,6 +15,7 @@ import { getCoinName, getCoinName0x, NetworkContext } from "../coin/coinUtility"
 import { Instance } from "../util/instance";
 import { generateTransferNftBundle, getTransferNftPuzzle, getTransferNftSolution } from "../coin/nft";
 import crypto from "../crypto/isoCrypto";
+import { NftCoinAnalysisResult } from "../../models/nft";
 
 export async function generateOffer(
   offered: OfferPlan[],
@@ -170,14 +171,16 @@ export async function generateOfferPlan(
   availcoins: SymbolCoins,
   fee: bigint,
   tokenSymbol: string,
-  royaltyFee: bigint | undefined = undefined,
+  totalAmount: bigint | undefined = undefined,
+  nft: NftCoinAnalysisResult | undefined = undefined,
   extraTargets: TransferTarget[] = [],
   settlementModName: "settlement_payments" | "settlement_payments_v1" = "settlement_payments_v1",
-  compatibleForceMemoAlwaysIncludeSettlement = true
+  compatibleForceMemoAlwaysIncludeSettlement = true,
 ): Promise<OfferPlan[]> {
   const plans: OfferPlan[] = [];
-
   const settlement_tgt = prefix0x(modshash[settlementModName]);
+  const royaltyFee = !totalAmount || !nft ? undefined : (totalAmount * BigInt(nft.tradePricePercentage)) / BigInt(10000);
+
   for (let i = 0; i < offered.length; i++) {
     const off = offered[i];
 
@@ -217,8 +220,10 @@ export async function generateOfferPlan(
     }
 
     if (off.type == "cat") plans.push({ type: "cat", id: off.id, plan: plan[keys[0]] });
-    else if (off.type == "xch") plans.push({ type: "xch", plan: plan[keys[0]] });
-    else if (off.type == "nft") {
+    else if (off.type == "xch") {
+      plans.push({ type: "xch", plan: plan[keys[0]] });
+      if (totalAmount && nft) plans.push({ type: "royalty", totalamount: totalAmount, nft });
+    } else if (off.type == "nft") {
       if (!off.coin) throw new Error("coin must not empty in the offer plan");
       plans.push({
         type: "nft",
@@ -460,7 +465,7 @@ export async function generateNftOffer(
     }
   }
 
-  if (puz_anno_ids.length != 1) throw new Error(`unexpected puzzle annocement message number: ${puz_anno_ids.length}`);
+  // if (puz_anno_ids.length != 1) throw new Error(`unexpected puzzle annocement message number: ${puz_anno_ids.length}`);
 
   // console.log("generating offered");
   // genreate offered

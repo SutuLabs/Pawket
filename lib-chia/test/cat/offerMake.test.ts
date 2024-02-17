@@ -111,6 +111,7 @@ async function makeOfferTest(offs: OfferEntity[], reqs: OfferEntity[], fee = 0n)
     fee,
     xchSymbol(),
     undefined,
+    undefined,
     [],
     "settlement_payments_v1",
     false

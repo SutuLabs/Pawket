@@ -89,6 +89,7 @@ test("Take Offer Xch For CAT", async () => {
     0n,
     xchSymbol(),
     undefined,
+    undefined,
     [],
     revSummary.settlementModName
   );
@@ -222,6 +223,7 @@ async function testOffer(offerText: string, fee = 0n): Promise<void> {
     availcoins,
     0n,
     xchSymbol(),
+    undefined,
     undefined,
     [],
     summary.settlementModName
