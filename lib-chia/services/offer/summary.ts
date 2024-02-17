@@ -12,7 +12,7 @@ import { CannotParsePuzzle, getModsPath, sexpAssemble, SimplePuzzle, simplifyPuz
 import { parseMetadata } from "../coin/singleton";
 import { analyzeNftCoin, getNftMetadataInfo, getScalarString } from "../coin/nft";
 import { NftDetail } from "../crypto/receive";
-import { NftCoinAnalysisResult } from "@/models/nft";
+import { NftCoinAnalysisResult } from "../../models/nft";
 
 export async function getOfferSummary(bundle: UnsignedSpendBundle | SpendBundle): Promise<OfferSummary> {
   const ocs = getOfferedCoins(bundle);
@@ -68,7 +68,6 @@ export async function getOfferSummary(bundle: UnsignedSpendBundle | SpendBundle)
     let assetId = "";
     let nftId = "";
     let royalty = -1;
-    let imageUri = "";
     if (type == "request") {
       if (modsdict[puzzle_reveal] == "settlement_payments") {
         result = await puzzle.calcPuzzleResult(modsprog["settlement_payments"], solution);
@@ -76,14 +75,14 @@ export async function getOfferSummary(bundle: UnsignedSpendBundle | SpendBundle)
         result = await puzzle.calcPuzzleResult(modsprog["settlement_payments_v1"], solution);
       } else {
         assetId = await tryGetAssetId(puzzle_reveal);
-        if (!assetId) [nftId, royalty, imageUri] = await tryGetNftIdAndRoyaltyAndImage(puzzle_reveal);
+        if (!assetId) [nftId, royalty] = await tryGetNftIdAndRoyaltyAndImage(puzzle_reveal);
         // the result executed by settlement_payments_v1 or settlement_payments is same
         result = await puzzle.calcPuzzleResult(modsprog["settlement_payments_v1"], solution);
       }
     } else if (type == "offer") {
       result = await puzzle.calcPuzzleResult(puzzle_reveal, solution);
       assetId = await tryGetAssetId(puzzle_reveal);
-      if (!assetId) [nftId, royalty, imageUri] = await tryGetNftIdAndRoyaltyAndImage(puzzle_reveal);
+      if (!assetId) [nftId, royalty] = await tryGetNftIdAndRoyaltyAndImage(puzzle_reveal);
     } else {
       throw new Error("not implement");
     }
@@ -129,8 +128,6 @@ export async function getOfferSummary(bundle: UnsignedSpendBundle | SpendBundle)
             nft_target: wraptgt,
             nft_detail,
             nftanalysis: analysis,
-            royalty,
-            nft_uri: imageUri,
             coin,
           });
         } else {
@@ -279,8 +276,6 @@ export interface OfferEntityForNft extends OfferEntityBase {
   nft_target?: Hex0x;
   nft_detail?: NftDetail;
   nftanalysis: NftCoinAnalysisResult;
-  royalty: number;
-  nft_uri: string;
 }
 
 export interface OfferEntityBase {

@@ -303,7 +303,6 @@ Object {
         },
       },
       "nft_target": "0x686574181f6402d3b97b479a2dd620210b4aadf2aac00a61fddb47fcc1682713",
-      "nft_uri": "https://aws1.discourse-cdn.com/business4/uploads/chia/original/1X/682754dfb596e0b4ec08dc23442cc5a9192418e3.png",
       "nftanalysis": Object {
         "cnsAddress": "0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
         "cnsBindings": Object {
@@ -347,7 +346,6 @@ Object {
         "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
         "tradePricePercentage": 500,
       },
-      "royalty": 500,
       "target": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
       "type": "nft",
     },
@@ -430,7 +428,6 @@ Object {
         },
       },
       "nft_target": "0x686574181f6402d3b97b479a2dd620210b4aadf2aac00a61fddb47fcc1682713",
-      "nft_uri": "https://aws1.discourse-cdn.com/business4/uploads/chia/original/1X/682754dfb596e0b4ec08dc23442cc5a9192418e3.png",
       "nftanalysis": Object {
         "cnsAddress": "0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
         "cnsBindings": Object {
@@ -474,7 +471,6 @@ Object {
         "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
         "tradePricePercentage": 500,
       },
-      "royalty": 500,
       "target": "0xcfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7",
       "type": "nft",
     },
@@ -837,7 +833,6 @@ Object {
         },
       },
       "nft_target": "0x9a1bf074b10ab11ccb947dbded79abbc958831700701c3b983b1b7a041ee74d1",
-      "nft_uri": "https://aws1.discourse-cdn.com/business4/uploads/chia/original/1X/682754dfb596e0b4ec08dc23442cc5a9192418e3.png",
       "nftanalysis": Object {
         "cnsAddress": "0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
         "cnsBindings": Object {
@@ -881,7 +876,6 @@ Object {
         "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
         "tradePricePercentage": 500,
       },
-      "royalty": 500,
       "target": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
       "type": "nft",
     },
@@ -964,7 +958,6 @@ Object {
         },
       },
       "nft_target": "0x9a1bf074b10ab11ccb947dbded79abbc958831700701c3b983b1b7a041ee74d1",
-      "nft_uri": "https://aws1.discourse-cdn.com/business4/uploads/chia/original/1X/682754dfb596e0b4ec08dc23442cc5a9192418e3.png",
       "nftanalysis": Object {
         "cnsAddress": "0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
         "cnsBindings": Object {
@@ -1008,7 +1001,6 @@ Object {
         "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
         "tradePricePercentage": 500,
       },
-      "royalty": 500,
       "target": "0xcfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7",
       "type": "nft",
     },

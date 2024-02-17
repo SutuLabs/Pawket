@@ -58,14 +58,14 @@
       <template v-if="step == 'Confirmation'">
         <b-field v-if="summary" :label="$t('offer.make.ui.panel.information')">
           <template #message>
-            <ul v-for="(arr, sumkey) in summary" :key="sumkey" :class="sumkey">
+            <ul v-for="(arr, sumkey) in { offered: summary.offered, requested: summary.requested }" :key="sumkey" :class="sumkey">
               <li>{{ sumkey }}</li>
               <li class="pt-1" v-for="(ent, idx) in arr" :key="idx">
                 <b-taglist attached>
-                  <b-tag v-if="ent.id && cats[ent.id]" type="is-info" :title="cats[ent.id] + '(' + ent.id + ')'">{{
+                  <b-tag v-if="ent.type == 'cat' && cats[ent.id]" type="is-info" :title="cats[ent.id] + '(' + ent.id + ')'">{{
                     cats[ent.id]
                   }}</b-tag>
-                  <b-tag v-else-if="ent.id" type="is-info" :title="ent.id"
+                  <b-tag v-else-if="ent.type == 'cat'" type="is-info" :title="ent.id"
                     >{{ $t("offer.symbol.Cat") }} {{ ent.id.slice(0, 7) + "..." }}</b-tag
                   >
                   <b-tag v-else type="is-info">{{ xchSymbol }}</b-tag>

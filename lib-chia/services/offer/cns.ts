@@ -88,8 +88,6 @@ export async function generateMintCnsOffer(
       type: "nft",
       id: analysis.launcherId,
       amount: 0n,
-      royalty: analysis.tradePricePercentage,
-      nft_uri: "something unimportant",
       target: "0xunimportant",
       nftanalysis: analysis,
       coin: { coin: nextCoin, puzzle_reveal: "0xumimportant", solution: "0xumimportant" },

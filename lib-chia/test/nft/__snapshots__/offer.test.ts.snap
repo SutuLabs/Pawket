@@ -217,7 +217,6 @@ Object {
         },
       },
       "nft_target": "0x6b8dfe2c996487f339972f043d3ab045b126e7c10671a2fd3dd57e685e4c98a3",
-      "nft_uri": "https://ipfs.io/ipfs/QmboByeviEH5oBEoRMnMVXAVbS3mvMamoBWs3jCiH111VV?filename=p8.png",
       "nftanalysis": Object {
         "coin": Object {
           "amount": 1n,
@@ -250,7 +249,6 @@ Object {
         "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
         "tradePricePercentage": 0,
       },
-      "royalty": 0,
       "target": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
       "type": "nft",
     },
@@ -322,7 +320,6 @@ Object {
         },
       },
       "nft_target": "0x6b8dfe2c996487f339972f043d3ab045b126e7c10671a2fd3dd57e685e4c98a3",
-      "nft_uri": "https://ipfs.io/ipfs/QmboByeviEH5oBEoRMnMVXAVbS3mvMamoBWs3jCiH111VV?filename=p8.png",
       "nftanalysis": Object {
         "coin": Object {
           "amount": 1n,
@@ -355,7 +352,6 @@ Object {
         "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
         "tradePricePercentage": 0,
       },
-      "royalty": 0,
       "target": "0xcfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7",
       "type": "nft",
     },
@@ -638,7 +634,6 @@ Object {
         },
       },
       "nft_target": "0x17875847b43fdbe5d091233fd8dfe47e8ce3eea927d1f6c855273110a15e97dc",
-      "nft_uri": "https://ipfs.io/ipfs/Qmf4AyDewBSyAAqjy52CN9sW86Wx33pxGLsX4PaSVdJMvG",
       "nftanalysis": Object {
         "coin": Object {
           "amount": 1n,
@@ -671,7 +666,6 @@ Object {
         "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
         "tradePricePercentage": 0,
       },
-      "royalty": 0,
       "target": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
       "type": "nft",
     },
@@ -743,7 +737,6 @@ Object {
         },
       },
       "nft_target": "0x17875847b43fdbe5d091233fd8dfe47e8ce3eea927d1f6c855273110a15e97dc",
-      "nft_uri": "https://ipfs.io/ipfs/Qmf4AyDewBSyAAqjy52CN9sW86Wx33pxGLsX4PaSVdJMvG",
       "nftanalysis": Object {
         "coin": Object {
           "amount": 1n,
@@ -776,7 +769,6 @@ Object {
         "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
         "tradePricePercentage": 0,
       },
-      "royalty": 0,
       "target": "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79",
       "type": "nft",
     },
@@ -1080,7 +1072,6 @@ Object {
         },
       },
       "nft_target": "0xf6da8ba34bac21c0147f1ee2c89e4f6b5a14c9273c87e267a0cdc0140ed3bf80",
-      "nft_uri": "https://nftstorage.link/ipfs/bafybeiabph2jrzrugcw77f2t2rxr5k265kmxma346kd6xdt2x7d2exbuh4/Mojo%20Farmer%20Voucher%2035.png",
       "nftanalysis": Object {
         "coin": Object {
           "amount": 1n,
@@ -1119,7 +1110,6 @@ Object {
         "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
         "tradePricePercentage": 0,
       },
-      "royalty": 0,
       "target": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
       "type": "nft",
     },
@@ -1197,7 +1187,6 @@ Object {
         },
       },
       "nft_target": "0xf6da8ba34bac21c0147f1ee2c89e4f6b5a14c9273c87e267a0cdc0140ed3bf80",
-      "nft_uri": "https://nftstorage.link/ipfs/bafybeiabph2jrzrugcw77f2t2rxr5k265kmxma346kd6xdt2x7d2exbuh4/Mojo%20Farmer%20Voucher%2035.png",
       "nftanalysis": Object {
         "coin": Object {
           "amount": 1n,
@@ -1236,7 +1225,6 @@ Object {
         "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
         "tradePricePercentage": 0,
       },
-      "royalty": 0,
       "target": "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79",
       "type": "nft",
     },
@@ -1568,7 +1556,6 @@ Object {
         },
       },
       "nft_target": "0x8298175dd1c82eaef1672db861030720d1b754ceca38958fd716f274e86d3734",
-      "nft_uri": "https://dweb.link/ipfs/QmXFYJ1gaiTgjTAqgJJi4Dn6PKfQrDEBu2gzz1o1AtZrAy?filename=wahaha.xch.jpg",
       "nftanalysis": Object {
         "coin": Object {
           "amount": 1n,
@@ -1603,7 +1590,6 @@ Object {
         "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
         "tradePricePercentage": 500,
       },
-      "royalty": 500,
       "target": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
       "type": "nft",
     },
@@ -1677,7 +1663,6 @@ Object {
         },
       },
       "nft_target": "0x8298175dd1c82eaef1672db861030720d1b754ceca38958fd716f274e86d3734",
-      "nft_uri": "https://dweb.link/ipfs/QmXFYJ1gaiTgjTAqgJJi4Dn6PKfQrDEBu2gzz1o1AtZrAy?filename=wahaha.xch.jpg",
       "nftanalysis": Object {
         "coin": Object {
           "amount": 1n,
@@ -1712,7 +1697,6 @@ Object {
         "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
         "tradePricePercentage": 500,
       },
-      "royalty": 500,
       "target": "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79",
       "type": "nft",
     },
@@ -2044,7 +2028,6 @@ Object {
         },
       },
       "nft_target": "0x8298175dd1c82eaef1672db861030720d1b754ceca38958fd716f274e86d3734",
-      "nft_uri": "https://dweb.link/ipfs/QmXFYJ1gaiTgjTAqgJJi4Dn6PKfQrDEBu2gzz1o1AtZrAy?filename=wahaha.xch.jpg",
       "nftanalysis": Object {
         "coin": Object {
           "amount": 1n,
@@ -2079,7 +2062,6 @@ Object {
         "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
         "tradePricePercentage": 500,
       },
-      "royalty": 500,
       "target": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
       "type": "nft",
     },
@@ -2153,7 +2135,6 @@ Object {
         },
       },
       "nft_target": "0x8298175dd1c82eaef1672db861030720d1b754ceca38958fd716f274e86d3734",
-      "nft_uri": "https://dweb.link/ipfs/QmXFYJ1gaiTgjTAqgJJi4Dn6PKfQrDEBu2gzz1o1AtZrAy?filename=wahaha.xch.jpg",
       "nftanalysis": Object {
         "coin": Object {
           "amount": 1n,
@@ -2188,7 +2169,6 @@ Object {
         "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
         "tradePricePercentage": 500,
       },
-      "royalty": 500,
       "target": "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79",
       "type": "nft",
     },
@@ -2335,7 +2315,6 @@ Object {
         },
       },
       "nft_target": "0xbf499562c02162dfa6160851cd16b62cbf5b6dcb4e46b8313edc7f8934d19c64",
-      "nft_uri": "https://nftstorage.link/ipfs/bafybeib5jjqg5k6rhyck2mcgjixne6p2v4jrvlr72voaukk3rt5ugnblju/009J.png",
       "nftanalysis": Object {
         "coin": Object {
           "amount": 1n,
@@ -2368,7 +2347,6 @@ Object {
         "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
         "tradePricePercentage": 460,
       },
-      "royalty": 460,
       "target": "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79",
       "type": "nft",
     },
@@ -2671,7 +2649,6 @@ Object {
         },
       },
       "nft_target": "0x6880b06561eb641bee0e868616ca14b3b0a8f400b98462373855f9322a6a3f0d",
-      "nft_uri": "https://guggero.github.io/cryptography-toolkit/images/fork-me-on-github-ribbon.png",
       "nftanalysis": Object {
         "coin": Object {
           "amount": 1n,
@@ -2704,7 +2681,6 @@ Object {
         "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
         "tradePricePercentage": 800,
       },
-      "royalty": 800,
       "target": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
       "type": "nft",
     },
@@ -2776,7 +2752,6 @@ Object {
         },
       },
       "nft_target": "0x6880b06561eb641bee0e868616ca14b3b0a8f400b98462373855f9322a6a3f0d",
-      "nft_uri": "https://guggero.github.io/cryptography-toolkit/images/fork-me-on-github-ribbon.png",
       "nftanalysis": Object {
         "coin": Object {
           "amount": 1n,
@@ -2809,7 +2784,6 @@ Object {
         "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
         "tradePricePercentage": 800,
       },
-      "royalty": 800,
       "target": "0xcfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7",
       "type": "nft",
     },

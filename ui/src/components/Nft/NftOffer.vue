@@ -82,6 +82,7 @@ import { NftDetail, TokenPuzzleDetail } from "../../../../lib-chia/services/cryp
 import DevHelper from "@/components/DevHelper/DevHelper.vue";
 import { NotificationProgrammatic as Notification } from "buefy";
 import {
+  convertOfferToRequest,
   getOfferEntities,
   getOfferSummary,
   OfferEntity,
@@ -179,10 +180,11 @@ export default class NftOffer extends Vue {
       const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
       const offs: OfferEntity[] = [
         {
+          type: "nft",
           id: puzzle.getPuzzleHashFromAddress(this.nft.address),
           amount: 0n,
-          royalty: this.nft.analysis.tradePricePercentage,
-          nft_uri: this.nft.metadata.uri,
+          nftanalysis: this.nft.analysis,
+          target: "0xunimportant",
         },
       ];
       const reqs: OfferEntity[] = getOfferEntities(this.requests, change_hex, {}, xchSymbol());
@@ -195,7 +197,7 @@ export default class NftOffer extends Vue {
       // console.log("const availcoins=" + JSON.stringify(this.availcoins, null, 2) + ";");
       const offplan = await generateOfferPlan(offs, change_hex, this.availcoins, 0n, xchSymbol());
       const observers = await getAssetsRequestObserver(this.account);
-      const ubundle = await generateNftOffer(offplan, this.nft.analysis, this.nft.coin, reqs, observers, networkContext());
+      const ubundle = await generateNftOffer(offplan, convertOfferToRequest(reqs), observers, networkContext());
       const bundle = await signSpendBundle(ubundle, this.tokenPuzzles, networkContext());
       this.bundle = bundle;
       this.offerText = await encodeOffer(bundle, 6);

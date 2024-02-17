@@ -51,7 +51,7 @@
                   <li class="pt-1" v-for="(ent, idx) in arr" :key="idx">
                     <div class="column">
                       <b-taglist attached class="mb-0">
-                        <template v-if="ent.id && ent.nft_target">
+                        <template v-if="ent.type == 'nft'">
                           <b-tooltip multilined :label="getNftName(ent.id)" position="is-top" style="word-break: break-all">
                             <b-tag
                               type="is-info"
@@ -67,7 +67,7 @@
                             ></a>
                           </b-tooltip>
                         </template>
-                        <template v-else-if="ent.id">
+                        <template v-else-if="ent.type == 'cat'">
                           <b-tag v-if="ent.id && cats[ent.id]" type="is-info" :title="cats[ent.id] + ' (' + ent.id + ')'">{{
                             cats[ent.id]
                           }}</b-tag>
@@ -85,24 +85,24 @@
                           <b-tag type="is-info" :title="$t('offer.symbol.hint.XCH')">{{ xchSymbol }}</b-tag>
                         </template>
 
-                        <b-tag v-if="!ent.nft_target" class="" :title="ent.amount + ' mojos'">{{
-                          demojo(ent.amount, tokenInfo[cats[ent.id]])
+                        <b-tag v-if="ent.type == 'cat' || ent.type == 'xch'" class="" :title="ent.amount + ' mojos'">{{
+                          demojo(ent.amount, ent.type == "xch" ? null : tokenInfo[cats[ent.id]])
                         }}</b-tag>
 
                         <b-tag v-if="sumkey == 'requested'" type="is-info is-light" :title="getAddress(ent.target)">
                           <key-box :value="getAddress(ent.target)" :showValue="true"></key-box>
                         </b-tag>
                       </b-taglist>
-                      <a v-if="ent.id && !ent.nft_target && !cats[ent.id]" @click="ManageCats(ent.id)">
+                      <a v-if="ent.type == 'cat' && !cats[ent.id]" @click="ManageCats(ent.id)">
                         <span v-if="ent.id && !cats[ent.id]" class="pl-1 pt-0 is-size-8 has-text-danger is-inline-block">
                           {{ $t("offer.take.information.addCat") }}
                         </span>
                       </a>
                     </div>
-                    <div v-if="ent.nft_uri" class="column is-flex">
-                      <a :href="ent.nft_uri" target="_blank">
-                        <b-tooltip :label="ent.nft_uri" multilined class="break-string" position="is-top">
-                          <img :src="ent.nft_uri" class="nft-image" />
+                    <div v-if="ent.type == 'nft'" class="column is-flex">
+                      <a :href="ent.nftanalysis.metadata.imageUri" target="_blank">
+                        <b-tooltip :label="ent.nftanalysis.metadata.imageUri" multilined class="break-string" position="is-top">
+                          <img :src="ent.nftanalysis.metadata.imageUri" class="nft-image" />
                         </b-tooltip>
                       </a>
                       <div class="ml-3" v-if="ent.nft_detail && 'cnsName' in ent.nft_detail.analysis">
@@ -157,18 +157,18 @@
             <span class="is-size-6">{{ $t("offer.take.ui.label.offer") }}</span>
             <span class="is-size-6 is-pulled-right">
               <ul v-for="(ent, idx) in summary.requested" :key="idx">
-                <li v-if="ent.id && ent.nft_target">
+                <li v-if="ent.type == 'nft'">
                   <p class="has-text-right">{{ shorten(getNftName(ent.id)) }}</p>
-                  <img :src="ent.nft_uri" class="summary-nft is-pulled-right" />
+                  <img :src="ent.nftanalysis.metadata.imageUri" class="summary-nft is-pulled-right" />
                 </li>
-                <li v-else-if="ent.id">
+                <li v-else-if="ent.type == 'cat'">
                   <span v-if="ent.id && cats[ent.id]" type="is-info" :title="cats[ent.id] + ' (' + ent.id + ')'">{{
                     demojo(ent.amount, tokenInfo[cats[ent.id]])
                   }}</span>
                   <span v-else-if="ent.id">{{ demojo(ent.amount, null, 12, ent.id.slice(0, 4)) }}</span>
                 </li>
                 <li v-else>
-                  {{ demojo(ent.amount, tokenInfo[cats[ent.id]]) }}
+                  {{ demojo(ent.amount, null) }}
                 </li>
               </ul>
             </span>
@@ -177,18 +177,18 @@
             <span class="is-size-6">{{ $t("offer.take.ui.label.receive") }}</span>
             <span class="is-size-6 is-pulled-right">
               <ul v-for="(ent, idx) in summary.offered" :key="idx">
-                <li v-if="ent.id && ent.nft_target">
+                <li v-if="ent.type == 'nft'">
                   <p class="has-text-right">{{ shorten(getNftName(ent.id)) }}</p>
-                  <img :src="ent.nft_uri" class="summary-nft is-pulled-right" />
+                  <img :src="ent.nftanalysis.metadata.imageUri" class="summary-nft is-pulled-right" />
                 </li>
-                <li v-else-if="ent.id">
+                <li v-else-if="ent.type == 'cat'">
                   <span v-if="ent.id && cats[ent.id]" type="is-info" :title="cats[ent.id] + ' (' + ent.id + ')'">{{
                     demojo(ent.amount, tokenInfo[cats[ent.id]])
                   }}</span>
                   <span v-else-if="ent.id">{{ demojo(ent.amount, null, 12, ent.id.slice(0, 4)) }} </span>
                 </li>
                 <li v-else>
-                  {{ demojo(ent.amount, tokenInfo[cats[ent.id]]) }}
+                  {{ demojo(ent.amount, null) }}
                 </li>
               </ul>
             </span>
@@ -268,7 +268,12 @@ import { AccountEntity, CustomCat, OneTokenInfo, TokenInfo } from "../../../../l
 import { demojo } from "@/filters/unitConversion";
 import { SymbolCoins } from "../../../../lib-chia/services/transfer/transfer";
 import { TokenPuzzleDetail } from "../../../../lib-chia/services/crypto/receive";
-import { getOfferSummary, OfferSummary } from "../../../../lib-chia/services/offer/summary";
+import {
+  convertOfferToRequest,
+  getOfferSummary,
+  OfferPlanForRoyalty,
+  OfferSummary,
+} from "../../../../lib-chia/services/offer/summary";
 import { decodeOffer } from "../../../../lib-chia/services/offer/encoding";
 import { NotificationProgrammatic as Notification } from "buefy";
 import {
@@ -424,9 +429,9 @@ export default class TakeOffer extends Vue {
     let catAmount: string[] = [];
     if (!this.summary) return demojo(this.fee);
     for (let req of this.summary.requested) {
-      if (req.id && req.nft_target) {
+      if (req.type == "nft") {
         nftAmount++;
-      } else if (req.id) {
+      } else if (req.type == "cat") {
         if (this.cats[req.id]) catAmount.push(demojo(req.amount, this.tokenInfo[this.cats[req.id]]));
         else catAmount.push(demojo(req.amount, null, 12, req.id.slice(0, 4)));
       } else {
@@ -450,6 +455,7 @@ export default class TakeOffer extends Vue {
   get tradePricePercentage(): number {
     const s = this.summary;
     if (!s) return 0;
+    if (s.offered[0].type != "nft") return -1;
     return (s.offered[0].nft_detail?.analysis.tradePricePercentage ?? 0) / 100;
   }
 
@@ -460,6 +466,7 @@ export default class TakeOffer extends Vue {
   get royaltyAddress(): Hex0x {
     const s = this.summary;
     if (!s) return "()";
+    if (s.offered[0].type != "nft") return "()";
     return s.offered[0].nft_detail?.analysis.royaltyAddress ?? "()";
   }
 
@@ -577,7 +584,11 @@ export default class TakeOffer extends Vue {
           autoClose: true,
         });
 
-      if (this.summary.offered[0].nft_detail && "cnsName" in this.summary.offered[0].nft_detail.analysis)
+      if (
+        this.summary.offered[0].type == "nft" &&
+        this.summary.offered[0].nft_detail &&
+        "cnsName" in this.summary.offered[0].nft_detail.analysis
+      )
         await this.verifyCns(
           (this.summary.offered[0].nft_detail?.analysis as CnsCoinAnalysisResult).cnsName,
           this.summary.offered[0].nft_detail.analysis.coin.parent_coin_info
@@ -593,11 +604,13 @@ export default class TakeOffer extends Vue {
   }
 
   get isNftOffer(): boolean {
-    return !!this.summary && (this.summary.requested.some((_) => _.nft_target) || this.summary.offered.some((_) => _.nft_target));
+    return (
+      !!this.summary && (this.summary.requested.some((_) => _.type == "nft") || this.summary.offered.some((_) => _.type == "nft"))
+    );
   }
 
   get isOfferNftOffer(): boolean {
-    return !!this.summary && this.summary.offered.some((_) => _.nft_target);
+    return !!this.summary && this.summary.offered.some((_) => _.type == "nft");
   }
 
   async loadCoins(): Promise<void> {
@@ -612,7 +625,8 @@ export default class TakeOffer extends Vue {
 
   get royaltyAmount(): bigint {
     const s = this.summary;
-    if (!s) return -1n;
+    if (!s) throw new Error("No Summary");
+    if (s.offered[0].type != "nft") throw new Error("Not NFT Offer");
     const royalty_amount =
       (s.requested[0].amount * BigInt(s.offered[0].nft_detail?.analysis.tradePricePercentage ?? 0)) / BigInt(10000);
     return royalty_amount;
@@ -679,7 +693,7 @@ export default class TakeOffer extends Vue {
       } else {
         const revSummary = getReversePlan(this.summary, change_hex, this.cats);
         const fee = BigInt(this.fee);
-        const nft = revSummary.requested[0].nft_detail;
+        const nft = revSummary.requested[0].type == "nft" && revSummary.requested[0].nft_detail;
         if (!nft) throw new Error("Cannot find NFT");
 
         // royalty_amount = uint64(offered_amount * royalty_percentage / 10000)
@@ -694,12 +708,15 @@ export default class TakeOffer extends Vue {
           [],
           this.summary.settlementModName
         );
+        offplan.push({
+          type: "royalty",
+          totalamount: revSummary.offered[0].amount,
+          nft: nft.analysis,
+        } as OfferPlanForRoyalty);
         const observers = await getAssetsRequestObserver(this.account);
         const utakerBundle = await generateNftOffer(
           offplan,
-          nft.analysis,
-          undefined,
-          revSummary.requested,
+          convertOfferToRequest(revSummary.requested),
           observers,
           networkContext(),
           null,
