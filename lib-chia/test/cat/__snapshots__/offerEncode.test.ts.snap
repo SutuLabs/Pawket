@@ -42,17 +42,13 @@ Object {
         "solution": "0xffff80ffff01ffff33ffa0bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79ff831466a8ffffa0bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f798080ffff3fffa001e4b6a719f9695cf8a1e0ef1ef8e10b075dbd2654bb920a065e5d8e243047918080ff8080ffffa0aa35c292b82e914b1f36eeabc70debc03cb4ede76e7b14aebca6dbcfeebe33fbffa06fff1390007dc6f96dcd1a63bcc1fd3d015a0167e71ed8a8a339c59e96a22030ff840226d3b880ffa0115c07f6185aef2c58ea7377c102d91bb2876f451c640822d704e766d745453dffffa016f79de5eb9f31ce2ec65b67c7c6a8d5d44ec8ef35dd6ecbc9c6c9ab37b5e7f1ffa0d8d5f15deb6861bb977d76f26b8db6cabc1a21c8fd5ff7ec8e7703c256ee285fff831466a880ffffa016f79de5eb9f31ce2ec65b67c7c6a8d5d44ec8ef35dd6ecbc9c6c9ab37b5e7f1ffa020af116d1d301f87791841cf1461c774e8ef44094e9ef4d3b1c5d5427628b3f1ff831466a880ff80ff8080",
       },
       "id": "0x44a1d78b820f6404de3cc45b34932178f9ac8f3d9114db279f657ca83fa751b7",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "target": "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79",
+      "type": "cat",
     },
   ],
   "requested": Array [
     Object {
       "amount": 100000000000n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 0n,
@@ -62,12 +58,8 @@ Object {
         "puzzle_reveal": "0xff02ffff01ff02ff0affff04ff02ffff04ff03ff80808080ffff04ffff01ffff333effff02ffff03ff05ffff01ff04ffff04ff0cffff04ffff02ff1effff04ff02ffff04ff09ff80808080ff808080ffff02ff16ffff04ff02ffff04ff19ffff04ffff02ff0affff04ff02ffff04ff0dff80808080ff808080808080ff8080ff0180ffff02ffff03ff05ffff01ff04ffff04ff08ff0980ffff02ff16ffff04ff02ffff04ff0dffff04ff0bff808080808080ffff010b80ff0180ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff1effff04ff02ffff04ff09ff80808080ffff02ff1effff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080",
         "solution": "0xffffa033e6b7efb2fa91742b9a4dc36fc96dc1255ced7fe78ffff469bd24aacefa913bffffa0f1c3875cc0f8cd4926d8a9423a244c30af5b7dfa7a25c947c570634423ca2157ff85174876e800ff80808080",
       },
-      "id": "",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "target": "0xf1c3875cc0f8cd4926d8a9423a244c30af5b7dfa7a25c947c570634423ca2157",
+      "type": "xch",
     },
   ],
   "settlementModName": "settlement_payments",

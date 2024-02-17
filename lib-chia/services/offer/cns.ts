@@ -2,13 +2,13 @@ import { UnsignedSpendBundle, combineSpendBundle, OriginCoin } from "../spendbun
 import { SymbolCoins } from "../transfer/transfer";
 import { analyzeNftCoin, generateMintNftBundle } from "../coin/nft";
 import puzzle from "../crypto/puzzle";
-import { CnsMetadataValues } from "../../models/nft";
+import { CnsMetadataValues, NftCoinAnalysisResult } from "../../models/nft";
 import { getCoinName0x, NetworkContext } from "../coin/coinUtility";
 import receive, { TokenPuzzleDetail } from "../crypto/receive";
 import { generateOfferPlan, generateNftOffer } from "./bundler";
 import { prefix0x } from "../coin/condition";
 import { GetParentPuzzleResponse } from "../../models/api";
-import { OfferEntity } from "./summary";
+import { OfferEntity, OfferPlanForRoyalty, RequestType } from "./summary";
 import utility from "../crypto/utility";
 import { Instance } from "../util/instance";
 
@@ -24,17 +24,18 @@ export async function generateMintCnsOffer(
   tradePricePercentage: number,
   net: NetworkContext,
   nonceHex: string | null = null,
-  privateKey: string | undefined = undefined
+  privateKey: string | undefined = undefined,
+  legacyNft: NftCoinAnalysisResult | undefined = undefined
 ): Promise<UnsignedSpendBundle> {
   if (!metadata.expiry) throw new Error("Expiry date is mandatory for CNS.");
   if (!metadata.name) throw new Error("Name is mandatory for CNS.");
 
   const target_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(changeAddress));
-  const reqs = [
+  const reqs: RequestType[] = [
     {
+      type: "token",
       id: "",
-      symbol: net.symbol,
       amount: price,
       target: target_hex,
     },
@@ -84,10 +85,14 @@ export async function generateMintCnsOffer(
 
   const offs: OfferEntity[] = [
     {
+      type: "nft",
       id: analysis.launcherId,
       amount: 0n,
       royalty: analysis.tradePricePercentage,
       nft_uri: "something unimportant",
+      target: "0xunimportant",
+      nftanalysis: analysis,
+      coin: { coin: nextCoin, puzzle_reveal: "0xumimportant", solution: "0xumimportant" },
     },
   ];
 
@@ -98,7 +103,7 @@ export async function generateMintCnsOffer(
     if (resp) return resp;
     return await legacyApiCall(parentCoinId);
   };
-  const offerBundle = await generateNftOffer(offplan, analysis, nextCoin, reqs, requests, net, nonceHex);
+  const offerBundle = await generateNftOffer(offplan, reqs, requests, net, nonceHex);
 
   const offerCombineBundle = combineSpendBundle(spendBundle, offerBundle);
   return offerCombineBundle;

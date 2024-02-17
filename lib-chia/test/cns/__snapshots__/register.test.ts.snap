@@ -133,7 +133,6 @@ exports[`Create CNS Offer And Accept 2: empty address binding: offer text 1`] = 
 exports[`Create CNS Offer And Accept 2: empty address binding: offplangen 1`] = `
 Array [
   Object {
-    "id": "",
     "plan": Object {
       "coins": Array [
         Object {
@@ -164,6 +163,54 @@ Array [
         },
       ],
     },
+    "type": "xch",
+  },
+  Object {
+    "nft": Object {
+      "cnsAddress": "0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      "cnsBindings": Object {
+        "address": "0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "cnsExpiry": "1667232000",
+      "cnsName": "longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglon.xch",
+      "coin": Object {
+        "amount": 1n,
+        "parent_coin_info": "0x115cba6ae6823a76e552a8ebacd4f96a4a5b8ee1a61e79c1fc4cbe4cd8da7639",
+        "puzzle_hash": "0x4dde3f37f5f8d376a555ea83e50aef1ae0a2a6ba602118f9b58111516a7b3149",
+      },
+      "didOwner": "",
+      "hintPuzzle": "0x4dde3f37f5f8d376a555ea83e50aef1ae0a2a6ba602118f9b58111516a7b3149",
+      "launcherId": "0x9471316ecb9b8e0b92a00da7859dcfcd39b38c9de2236920acc46969732f25bf",
+      "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+      "metadata": Object {
+        "bindings": Object {
+          "address": "0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+        },
+        "expiry": "1667232000",
+        "imageHash": "76a1900b6931f7bf5f07ab310733270838b040385f285423f49e2f5518867335",
+        "imageUri": "https://aws1.discourse-cdn.com/business4/uploads/chia/original/1X/682754dfb596e0b4ec08dc23442cc5a9192418e3.png",
+        "licenseHash": "2267456bd2cef8ebc2f22a42947b068bc3b138284a587feda2edfe07a3577f50",
+        "licenseUri": "https://bafybeigzcazxeu7epmm4vtkuadrvysv74lbzzbl2evphtae6k57yhgynp4.ipfs.nftstorage.link/license.pdf",
+        "metadataHash": "44475cb971933e4545efad1337f3d68bc53523d987412df233f3b905ed1c5b3f",
+        "metadataUri": "https://ufzyuv55yicm3ev56cstqbmaayrkudmmjueyrd3nkolafxbe.arweave.net/oX--OKV73CBM2-SvfClOAWABiKqDYxNCYiPbVOWAtwk",
+        "name": "longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglon.xch",
+        "serialNumber": "21",
+        "serialTotal": "63",
+      },
+      "metadataUpdaterPuzzleHash": "0x20ea3991407203334e6a705517f4cba83f7987353d883f0938633ce7e1740fad",
+      "nextCoinName": "0x2e43fcbaad1c54ef9d1739a72c656064287067aab2c01bd4dace15d3e1112852",
+      "nftOwnershipModHash": "0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
+      "nftStateModHash": "0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
+      "p2InnerPuzzle": "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xb635696e29145a8587db885de2caff2d79013f29ad271679a08a6da78fedefd3dcffadce9dba1675a5fcda58d31d46f7) 1))",
+      "p2Owner": "cfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7",
+      "previousOwner": "()",
+      "rawMetadata": "((117 \\"https://aws1.discourse-cdn.com/business4/uploads/chia/original/1X/682754dfb596e0b4ec08dc23442cc5a9192418e3.png\\") (104 . 0x76a1900b6931f7bf5f07ab310733270838b040385f285423f49e2f5518867335) (28021 \\"https://ufzyuv55yicm3ev56cstqbmaayrkudmmjueyrd3nkolafxbe.arweave.net/oX--OKV73CBM2-SvfClOAWABiKqDYxNCYiPbVOWAtwk\\") (28008 . 0x44475cb971933e4545efad1337f3d68bc53523d987412df233f3b905ed1c5b3f) (27765 \\"https://bafybeigzcazxeu7epmm4vtkuadrvysv74lbzzbl2evphtae6k57yhgynp4.ipfs.nftstorage.link/license.pdf\\") (27752 . 0x2267456bd2cef8ebc2f22a42947b068bc3b138284a587feda2edfe07a3577f50) (29550 . 33) (29556 . 99) (25976 . 0x635ff100) (28269 . \\"longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglon.xch\\") (25188 (24932 . 0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155)))",
+      "royaltyAddress": "0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10",
+      "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
+      "tradePricePercentage": 500,
+    },
+    "totalamount": 200n,
+    "type": "royalty",
   },
 ]
 `;
@@ -173,7 +220,6 @@ Object {
   "offered": Array [
     Object {
       "amount": 200n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 0n,
@@ -183,19 +229,13 @@ Object {
         "puzzle_reveal": "0xff02ffff01ff02ff0affff04ff02ffff04ff03ff80808080ffff04ffff01ffff333effff02ffff03ff05ffff01ff04ffff04ff0cffff04ffff02ff1effff04ff02ffff04ff09ff80808080ff808080ffff02ff16ffff04ff02ffff04ff19ffff04ffff02ff0affff04ff02ffff04ff0dff80808080ff808080808080ff8080ff0180ffff02ffff03ff05ffff01ff02ffff03ffff15ff29ff8080ffff01ff04ffff04ff08ff0980ffff02ff16ffff04ff02ffff04ff0dffff04ff0bff808080808080ffff01ff088080ff0180ffff010b80ff0180ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff1effff04ff02ffff04ff09ff80808080ffff02ff1effff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080",
         "solution": "0xffffa0626f9cf141deefc2e77a56a4ef99996259e840dc4020eda31408cdd442a770d1ffffa05662b49a357db4f05c2c141452b72fb91e7ec286e9b47d6c287210c63ae5cd3eff8200c8ffffa05662b49a357db4f05c2c141452b72fb91e7ec286e9b47d6c287210c63ae5cd3e80808080",
       },
-      "id": "",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
-      "symbol": undefined,
       "target": "0x5662b49a357db4f05c2c141452b72fb91e7ec286e9b47d6c287210c63ae5cd3e",
+      "type": "xch",
     },
   ],
   "requested": Array [
     Object {
       "amount": 1n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 1n,
@@ -264,9 +304,52 @@ Object {
       },
       "nft_target": "0x686574181f6402d3b97b479a2dd620210b4aadf2aac00a61fddb47fcc1682713",
       "nft_uri": "https://aws1.discourse-cdn.com/business4/uploads/chia/original/1X/682754dfb596e0b4ec08dc23442cc5a9192418e3.png",
+      "nftanalysis": Object {
+        "cnsAddress": "0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+        "cnsBindings": Object {
+          "address": "0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+        },
+        "cnsExpiry": "1667232000",
+        "cnsName": "longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglon.xch",
+        "coin": Object {
+          "amount": 1n,
+          "parent_coin_info": "0x115cba6ae6823a76e552a8ebacd4f96a4a5b8ee1a61e79c1fc4cbe4cd8da7639",
+          "puzzle_hash": "0x4dde3f37f5f8d376a555ea83e50aef1ae0a2a6ba602118f9b58111516a7b3149",
+        },
+        "didOwner": "",
+        "hintPuzzle": "0x4dde3f37f5f8d376a555ea83e50aef1ae0a2a6ba602118f9b58111516a7b3149",
+        "launcherId": "0x9471316ecb9b8e0b92a00da7859dcfcd39b38c9de2236920acc46969732f25bf",
+        "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+        "metadata": Object {
+          "bindings": Object {
+            "address": "0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+          },
+          "expiry": "1667232000",
+          "imageHash": "76a1900b6931f7bf5f07ab310733270838b040385f285423f49e2f5518867335",
+          "imageUri": "https://aws1.discourse-cdn.com/business4/uploads/chia/original/1X/682754dfb596e0b4ec08dc23442cc5a9192418e3.png",
+          "licenseHash": "2267456bd2cef8ebc2f22a42947b068bc3b138284a587feda2edfe07a3577f50",
+          "licenseUri": "https://bafybeigzcazxeu7epmm4vtkuadrvysv74lbzzbl2evphtae6k57yhgynp4.ipfs.nftstorage.link/license.pdf",
+          "metadataHash": "44475cb971933e4545efad1337f3d68bc53523d987412df233f3b905ed1c5b3f",
+          "metadataUri": "https://ufzyuv55yicm3ev56cstqbmaayrkudmmjueyrd3nkolafxbe.arweave.net/oX--OKV73CBM2-SvfClOAWABiKqDYxNCYiPbVOWAtwk",
+          "name": "longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglon.xch",
+          "serialNumber": "21",
+          "serialTotal": "63",
+        },
+        "metadataUpdaterPuzzleHash": "0x20ea3991407203334e6a705517f4cba83f7987353d883f0938633ce7e1740fad",
+        "nextCoinName": "0x2e43fcbaad1c54ef9d1739a72c656064287067aab2c01bd4dace15d3e1112852",
+        "nftOwnershipModHash": "0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
+        "nftStateModHash": "0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
+        "p2InnerPuzzle": "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xb635696e29145a8587db885de2caff2d79013f29ad271679a08a6da78fedefd3dcffadce9dba1675a5fcda58d31d46f7) 1))",
+        "p2Owner": "cfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7",
+        "previousOwner": "()",
+        "rawMetadata": "((117 \\"https://aws1.discourse-cdn.com/business4/uploads/chia/original/1X/682754dfb596e0b4ec08dc23442cc5a9192418e3.png\\") (104 . 0x76a1900b6931f7bf5f07ab310733270838b040385f285423f49e2f5518867335) (28021 \\"https://ufzyuv55yicm3ev56cstqbmaayrkudmmjueyrd3nkolafxbe.arweave.net/oX--OKV73CBM2-SvfClOAWABiKqDYxNCYiPbVOWAtwk\\") (28008 . 0x44475cb971933e4545efad1337f3d68bc53523d987412df233f3b905ed1c5b3f) (27765 \\"https://bafybeigzcazxeu7epmm4vtkuadrvysv74lbzzbl2evphtae6k57yhgynp4.ipfs.nftstorage.link/license.pdf\\") (27752 . 0x2267456bd2cef8ebc2f22a42947b068bc3b138284a587feda2edfe07a3577f50) (29550 . 33) (29556 . 99) (25976 . 0x635ff100) (28269 . \\"longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglon.xch\\") (25188 (24932 . 0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155)))",
+        "royaltyAddress": "0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10",
+        "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
+        "tradePricePercentage": 500,
+      },
       "royalty": 500,
-      "symbol": undefined,
       "target": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      "type": "nft",
     },
   ],
   "settlementModName": "settlement_payments_v1",
@@ -280,7 +363,6 @@ Object {
   "offered": Array [
     Object {
       "amount": 1n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 1n,
@@ -349,14 +431,57 @@ Object {
       },
       "nft_target": "0x686574181f6402d3b97b479a2dd620210b4aadf2aac00a61fddb47fcc1682713",
       "nft_uri": "https://aws1.discourse-cdn.com/business4/uploads/chia/original/1X/682754dfb596e0b4ec08dc23442cc5a9192418e3.png",
+      "nftanalysis": Object {
+        "cnsAddress": "0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+        "cnsBindings": Object {
+          "address": "0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+        },
+        "cnsExpiry": "1667232000",
+        "cnsName": "longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglon.xch",
+        "coin": Object {
+          "amount": 1n,
+          "parent_coin_info": "0x115cba6ae6823a76e552a8ebacd4f96a4a5b8ee1a61e79c1fc4cbe4cd8da7639",
+          "puzzle_hash": "0x4dde3f37f5f8d376a555ea83e50aef1ae0a2a6ba602118f9b58111516a7b3149",
+        },
+        "didOwner": "",
+        "hintPuzzle": "0x4dde3f37f5f8d376a555ea83e50aef1ae0a2a6ba602118f9b58111516a7b3149",
+        "launcherId": "0x9471316ecb9b8e0b92a00da7859dcfcd39b38c9de2236920acc46969732f25bf",
+        "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+        "metadata": Object {
+          "bindings": Object {
+            "address": "0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+          },
+          "expiry": "1667232000",
+          "imageHash": "76a1900b6931f7bf5f07ab310733270838b040385f285423f49e2f5518867335",
+          "imageUri": "https://aws1.discourse-cdn.com/business4/uploads/chia/original/1X/682754dfb596e0b4ec08dc23442cc5a9192418e3.png",
+          "licenseHash": "2267456bd2cef8ebc2f22a42947b068bc3b138284a587feda2edfe07a3577f50",
+          "licenseUri": "https://bafybeigzcazxeu7epmm4vtkuadrvysv74lbzzbl2evphtae6k57yhgynp4.ipfs.nftstorage.link/license.pdf",
+          "metadataHash": "44475cb971933e4545efad1337f3d68bc53523d987412df233f3b905ed1c5b3f",
+          "metadataUri": "https://ufzyuv55yicm3ev56cstqbmaayrkudmmjueyrd3nkolafxbe.arweave.net/oX--OKV73CBM2-SvfClOAWABiKqDYxNCYiPbVOWAtwk",
+          "name": "longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglon.xch",
+          "serialNumber": "21",
+          "serialTotal": "63",
+        },
+        "metadataUpdaterPuzzleHash": "0x20ea3991407203334e6a705517f4cba83f7987353d883f0938633ce7e1740fad",
+        "nextCoinName": "0x2e43fcbaad1c54ef9d1739a72c656064287067aab2c01bd4dace15d3e1112852",
+        "nftOwnershipModHash": "0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
+        "nftStateModHash": "0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
+        "p2InnerPuzzle": "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xb635696e29145a8587db885de2caff2d79013f29ad271679a08a6da78fedefd3dcffadce9dba1675a5fcda58d31d46f7) 1))",
+        "p2Owner": "cfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7",
+        "previousOwner": "()",
+        "rawMetadata": "((117 \\"https://aws1.discourse-cdn.com/business4/uploads/chia/original/1X/682754dfb596e0b4ec08dc23442cc5a9192418e3.png\\") (104 . 0x76a1900b6931f7bf5f07ab310733270838b040385f285423f49e2f5518867335) (28021 \\"https://ufzyuv55yicm3ev56cstqbmaayrkudmmjueyrd3nkolafxbe.arweave.net/oX--OKV73CBM2-SvfClOAWABiKqDYxNCYiPbVOWAtwk\\") (28008 . 0x44475cb971933e4545efad1337f3d68bc53523d987412df233f3b905ed1c5b3f) (27765 \\"https://bafybeigzcazxeu7epmm4vtkuadrvysv74lbzzbl2evphtae6k57yhgynp4.ipfs.nftstorage.link/license.pdf\\") (27752 . 0x2267456bd2cef8ebc2f22a42947b068bc3b138284a587feda2edfe07a3577f50) (29550 . 33) (29556 . 99) (25976 . 0x635ff100) (28269 . \\"longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglon.xch\\") (25188 (24932 . 0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155)))",
+        "royaltyAddress": "0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10",
+        "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
+        "tradePricePercentage": 500,
+      },
       "royalty": 500,
       "target": "0xcfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7",
+      "type": "nft",
     },
   ],
   "requested": Array [
     Object {
       "amount": 200n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 0n,
@@ -366,12 +491,8 @@ Object {
         "puzzle_reveal": "0xff02ffff01ff02ff0affff04ff02ffff04ff03ff80808080ffff04ffff01ffff333effff02ffff03ff05ffff01ff04ffff04ff0cffff04ffff02ff1effff04ff02ffff04ff09ff80808080ff808080ffff02ff16ffff04ff02ffff04ff19ffff04ffff02ff0affff04ff02ffff04ff0dff80808080ff808080808080ff8080ff0180ffff02ffff03ff05ffff01ff02ffff03ffff15ff29ff8080ffff01ff04ffff04ff08ff0980ffff02ff16ffff04ff02ffff04ff0dffff04ff0bff808080808080ffff01ff088080ff0180ffff010b80ff0180ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff1effff04ff02ffff04ff09ff80808080ffff02ff1effff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080",
         "solution": "0xffffa0626f9cf141deefc2e77a56a4ef99996259e840dc4020eda31408cdd442a770d1ffffa05662b49a357db4f05c2c141452b72fb91e7ec286e9b47d6c287210c63ae5cd3eff8200c8ffffa05662b49a357db4f05c2c141452b72fb91e7ec286e9b47d6c287210c63ae5cd3e80808080",
       },
-      "id": "",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "target": "0x5662b49a357db4f05c2c141452b72fb91e7ec286e9b47d6c287210c63ae5cd3e",
+      "type": "xch",
     },
   ],
   "settlementModName": "settlement_payments_v1",
@@ -546,7 +667,6 @@ exports[`Create CNS Offer And Accept: offer text 1`] = `"offer1qqr83wcuu2ryhmve0
 exports[`Create CNS Offer And Accept: offplangen 1`] = `
 Array [
   Object {
-    "id": "",
     "plan": Object {
       "coins": Array [
         Object {
@@ -577,6 +697,54 @@ Array [
         },
       ],
     },
+    "type": "xch",
+  },
+  Object {
+    "nft": Object {
+      "cnsAddress": "0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      "cnsBindings": Object {
+        "address": "0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      },
+      "cnsExpiry": "1667232000",
+      "cnsName": "hiya.xch",
+      "coin": Object {
+        "amount": 1n,
+        "parent_coin_info": "0x2efdbfc90557b520ec3e179e8ce0af874be3a4e0811aff96d5d24a46a90b8a7e",
+        "puzzle_hash": "0x1f7bf70daff904d00e7caed4226fafbb32667cf3296da7dd5fca9da7ec931308",
+      },
+      "didOwner": "",
+      "hintPuzzle": "0x1f7bf70daff904d00e7caed4226fafbb32667cf3296da7dd5fca9da7ec931308",
+      "launcherId": "0x9471316ecb9b8e0b92a00da7859dcfcd39b38c9de2236920acc46969732f25bf",
+      "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+      "metadata": Object {
+        "bindings": Object {
+          "address": "0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+        },
+        "expiry": "1667232000",
+        "imageHash": "76a1900b6931f7bf5f07ab310733270838b040385f285423f49e2f5518867335",
+        "imageUri": "https://aws1.discourse-cdn.com/business4/uploads/chia/original/1X/682754dfb596e0b4ec08dc23442cc5a9192418e3.png",
+        "licenseHash": "2267456bd2cef8ebc2f22a42947b068bc3b138284a587feda2edfe07a3577f50",
+        "licenseUri": "https://bafybeigzcazxeu7epmm4vtkuadrvysv74lbzzbl2evphtae6k57yhgynp4.ipfs.nftstorage.link/license.pdf",
+        "metadataHash": "44475cb971933e4545efad1337f3d68bc53523d987412df233f3b905ed1c5b3f",
+        "metadataUri": "https://ufzyuv55yicm3ev56cstqbmaayrkudmmjueyrd3nkolafxbe.arweave.net/oX--OKV73CBM2-SvfClOAWABiKqDYxNCYiPbVOWAtwk",
+        "name": "hiya.xch",
+        "serialNumber": "21",
+        "serialTotal": "63",
+      },
+      "metadataUpdaterPuzzleHash": "0x20ea3991407203334e6a705517f4cba83f7987353d883f0938633ce7e1740fad",
+      "nextCoinName": "0x73d25ce5177a46ff6368112fd9a557fdde2e9eb8707aab9efc59492ac7c56747",
+      "nftOwnershipModHash": "0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
+      "nftStateModHash": "0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
+      "p2InnerPuzzle": "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xb635696e29145a8587db885de2caff2d79013f29ad271679a08a6da78fedefd3dcffadce9dba1675a5fcda58d31d46f7) 1))",
+      "p2Owner": "cfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7",
+      "previousOwner": "()",
+      "rawMetadata": "((117 \\"https://aws1.discourse-cdn.com/business4/uploads/chia/original/1X/682754dfb596e0b4ec08dc23442cc5a9192418e3.png\\") (104 . 0x76a1900b6931f7bf5f07ab310733270838b040385f285423f49e2f5518867335) (28021 \\"https://ufzyuv55yicm3ev56cstqbmaayrkudmmjueyrd3nkolafxbe.arweave.net/oX--OKV73CBM2-SvfClOAWABiKqDYxNCYiPbVOWAtwk\\") (28008 . 0x44475cb971933e4545efad1337f3d68bc53523d987412df233f3b905ed1c5b3f) (27765 \\"https://bafybeigzcazxeu7epmm4vtkuadrvysv74lbzzbl2evphtae6k57yhgynp4.ipfs.nftstorage.link/license.pdf\\") (27752 . 0x2267456bd2cef8ebc2f22a42947b068bc3b138284a587feda2edfe07a3577f50) (29550 . 33) (29556 . 99) (25976 . 0x635ff100) (28269 . \\"hiya.xch\\") (25188 (24932 . 0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155)))",
+      "royaltyAddress": "0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10",
+      "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
+      "tradePricePercentage": 500,
+    },
+    "totalamount": 200n,
+    "type": "royalty",
   },
 ]
 `;
@@ -586,7 +754,6 @@ Object {
   "offered": Array [
     Object {
       "amount": 200n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 0n,
@@ -596,19 +763,13 @@ Object {
         "puzzle_reveal": "0xff02ffff01ff02ff0affff04ff02ffff04ff03ff80808080ffff04ffff01ffff333effff02ffff03ff05ffff01ff04ffff04ff0cffff04ffff02ff1effff04ff02ffff04ff09ff80808080ff808080ffff02ff16ffff04ff02ffff04ff19ffff04ffff02ff0affff04ff02ffff04ff0dff80808080ff808080808080ff8080ff0180ffff02ffff03ff05ffff01ff02ffff03ffff15ff29ff8080ffff01ff04ffff04ff08ff0980ffff02ff16ffff04ff02ffff04ff0dffff04ff0bff808080808080ffff01ff088080ff0180ffff010b80ff0180ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff1effff04ff02ffff04ff09ff80808080ffff02ff1effff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080",
         "solution": "0xffffa0626f9cf141deefc2e77a56a4ef99996259e840dc4020eda31408cdd442a770d1ffffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff8200c8ffffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc115580808080",
       },
-      "id": "",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
-      "symbol": undefined,
       "target": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      "type": "xch",
     },
   ],
   "requested": Array [
     Object {
       "amount": 1n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 1n,
@@ -677,9 +838,52 @@ Object {
       },
       "nft_target": "0x9a1bf074b10ab11ccb947dbded79abbc958831700701c3b983b1b7a041ee74d1",
       "nft_uri": "https://aws1.discourse-cdn.com/business4/uploads/chia/original/1X/682754dfb596e0b4ec08dc23442cc5a9192418e3.png",
+      "nftanalysis": Object {
+        "cnsAddress": "0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+        "cnsBindings": Object {
+          "address": "0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+        },
+        "cnsExpiry": "1667232000",
+        "cnsName": "hiya.xch",
+        "coin": Object {
+          "amount": 1n,
+          "parent_coin_info": "0x2efdbfc90557b520ec3e179e8ce0af874be3a4e0811aff96d5d24a46a90b8a7e",
+          "puzzle_hash": "0x1f7bf70daff904d00e7caed4226fafbb32667cf3296da7dd5fca9da7ec931308",
+        },
+        "didOwner": "",
+        "hintPuzzle": "0x1f7bf70daff904d00e7caed4226fafbb32667cf3296da7dd5fca9da7ec931308",
+        "launcherId": "0x9471316ecb9b8e0b92a00da7859dcfcd39b38c9de2236920acc46969732f25bf",
+        "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+        "metadata": Object {
+          "bindings": Object {
+            "address": "0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+          },
+          "expiry": "1667232000",
+          "imageHash": "76a1900b6931f7bf5f07ab310733270838b040385f285423f49e2f5518867335",
+          "imageUri": "https://aws1.discourse-cdn.com/business4/uploads/chia/original/1X/682754dfb596e0b4ec08dc23442cc5a9192418e3.png",
+          "licenseHash": "2267456bd2cef8ebc2f22a42947b068bc3b138284a587feda2edfe07a3577f50",
+          "licenseUri": "https://bafybeigzcazxeu7epmm4vtkuadrvysv74lbzzbl2evphtae6k57yhgynp4.ipfs.nftstorage.link/license.pdf",
+          "metadataHash": "44475cb971933e4545efad1337f3d68bc53523d987412df233f3b905ed1c5b3f",
+          "metadataUri": "https://ufzyuv55yicm3ev56cstqbmaayrkudmmjueyrd3nkolafxbe.arweave.net/oX--OKV73CBM2-SvfClOAWABiKqDYxNCYiPbVOWAtwk",
+          "name": "hiya.xch",
+          "serialNumber": "21",
+          "serialTotal": "63",
+        },
+        "metadataUpdaterPuzzleHash": "0x20ea3991407203334e6a705517f4cba83f7987353d883f0938633ce7e1740fad",
+        "nextCoinName": "0x73d25ce5177a46ff6368112fd9a557fdde2e9eb8707aab9efc59492ac7c56747",
+        "nftOwnershipModHash": "0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
+        "nftStateModHash": "0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
+        "p2InnerPuzzle": "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xb635696e29145a8587db885de2caff2d79013f29ad271679a08a6da78fedefd3dcffadce9dba1675a5fcda58d31d46f7) 1))",
+        "p2Owner": "cfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7",
+        "previousOwner": "()",
+        "rawMetadata": "((117 \\"https://aws1.discourse-cdn.com/business4/uploads/chia/original/1X/682754dfb596e0b4ec08dc23442cc5a9192418e3.png\\") (104 . 0x76a1900b6931f7bf5f07ab310733270838b040385f285423f49e2f5518867335) (28021 \\"https://ufzyuv55yicm3ev56cstqbmaayrkudmmjueyrd3nkolafxbe.arweave.net/oX--OKV73CBM2-SvfClOAWABiKqDYxNCYiPbVOWAtwk\\") (28008 . 0x44475cb971933e4545efad1337f3d68bc53523d987412df233f3b905ed1c5b3f) (27765 \\"https://bafybeigzcazxeu7epmm4vtkuadrvysv74lbzzbl2evphtae6k57yhgynp4.ipfs.nftstorage.link/license.pdf\\") (27752 . 0x2267456bd2cef8ebc2f22a42947b068bc3b138284a587feda2edfe07a3577f50) (29550 . 33) (29556 . 99) (25976 . 0x635ff100) (28269 . \\"hiya.xch\\") (25188 (24932 . 0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155)))",
+        "royaltyAddress": "0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10",
+        "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
+        "tradePricePercentage": 500,
+      },
       "royalty": 500,
-      "symbol": undefined,
       "target": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      "type": "nft",
     },
   ],
   "settlementModName": "settlement_payments_v1",
@@ -693,7 +897,6 @@ Object {
   "offered": Array [
     Object {
       "amount": 1n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 1n,
@@ -762,14 +965,57 @@ Object {
       },
       "nft_target": "0x9a1bf074b10ab11ccb947dbded79abbc958831700701c3b983b1b7a041ee74d1",
       "nft_uri": "https://aws1.discourse-cdn.com/business4/uploads/chia/original/1X/682754dfb596e0b4ec08dc23442cc5a9192418e3.png",
+      "nftanalysis": Object {
+        "cnsAddress": "0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+        "cnsBindings": Object {
+          "address": "0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+        },
+        "cnsExpiry": "1667232000",
+        "cnsName": "hiya.xch",
+        "coin": Object {
+          "amount": 1n,
+          "parent_coin_info": "0x2efdbfc90557b520ec3e179e8ce0af874be3a4e0811aff96d5d24a46a90b8a7e",
+          "puzzle_hash": "0x1f7bf70daff904d00e7caed4226fafbb32667cf3296da7dd5fca9da7ec931308",
+        },
+        "didOwner": "",
+        "hintPuzzle": "0x1f7bf70daff904d00e7caed4226fafbb32667cf3296da7dd5fca9da7ec931308",
+        "launcherId": "0x9471316ecb9b8e0b92a00da7859dcfcd39b38c9de2236920acc46969732f25bf",
+        "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+        "metadata": Object {
+          "bindings": Object {
+            "address": "0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+          },
+          "expiry": "1667232000",
+          "imageHash": "76a1900b6931f7bf5f07ab310733270838b040385f285423f49e2f5518867335",
+          "imageUri": "https://aws1.discourse-cdn.com/business4/uploads/chia/original/1X/682754dfb596e0b4ec08dc23442cc5a9192418e3.png",
+          "licenseHash": "2267456bd2cef8ebc2f22a42947b068bc3b138284a587feda2edfe07a3577f50",
+          "licenseUri": "https://bafybeigzcazxeu7epmm4vtkuadrvysv74lbzzbl2evphtae6k57yhgynp4.ipfs.nftstorage.link/license.pdf",
+          "metadataHash": "44475cb971933e4545efad1337f3d68bc53523d987412df233f3b905ed1c5b3f",
+          "metadataUri": "https://ufzyuv55yicm3ev56cstqbmaayrkudmmjueyrd3nkolafxbe.arweave.net/oX--OKV73CBM2-SvfClOAWABiKqDYxNCYiPbVOWAtwk",
+          "name": "hiya.xch",
+          "serialNumber": "21",
+          "serialTotal": "63",
+        },
+        "metadataUpdaterPuzzleHash": "0x20ea3991407203334e6a705517f4cba83f7987353d883f0938633ce7e1740fad",
+        "nextCoinName": "0x73d25ce5177a46ff6368112fd9a557fdde2e9eb8707aab9efc59492ac7c56747",
+        "nftOwnershipModHash": "0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
+        "nftStateModHash": "0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
+        "p2InnerPuzzle": "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xb635696e29145a8587db885de2caff2d79013f29ad271679a08a6da78fedefd3dcffadce9dba1675a5fcda58d31d46f7) 1))",
+        "p2Owner": "cfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7",
+        "previousOwner": "()",
+        "rawMetadata": "((117 \\"https://aws1.discourse-cdn.com/business4/uploads/chia/original/1X/682754dfb596e0b4ec08dc23442cc5a9192418e3.png\\") (104 . 0x76a1900b6931f7bf5f07ab310733270838b040385f285423f49e2f5518867335) (28021 \\"https://ufzyuv55yicm3ev56cstqbmaayrkudmmjueyrd3nkolafxbe.arweave.net/oX--OKV73CBM2-SvfClOAWABiKqDYxNCYiPbVOWAtwk\\") (28008 . 0x44475cb971933e4545efad1337f3d68bc53523d987412df233f3b905ed1c5b3f) (27765 \\"https://bafybeigzcazxeu7epmm4vtkuadrvysv74lbzzbl2evphtae6k57yhgynp4.ipfs.nftstorage.link/license.pdf\\") (27752 . 0x2267456bd2cef8ebc2f22a42947b068bc3b138284a587feda2edfe07a3577f50) (29550 . 33) (29556 . 99) (25976 . 0x635ff100) (28269 . \\"hiya.xch\\") (25188 (24932 . 0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155)))",
+        "royaltyAddress": "0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10",
+        "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
+        "tradePricePercentage": 500,
+      },
       "royalty": 500,
       "target": "0xcfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7",
+      "type": "nft",
     },
   ],
   "requested": Array [
     Object {
       "amount": 200n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 0n,
@@ -779,12 +1025,8 @@ Object {
         "puzzle_reveal": "0xff02ffff01ff02ff0affff04ff02ffff04ff03ff80808080ffff04ffff01ffff333effff02ffff03ff05ffff01ff04ffff04ff0cffff04ffff02ff1effff04ff02ffff04ff09ff80808080ff808080ffff02ff16ffff04ff02ffff04ff19ffff04ffff02ff0affff04ff02ffff04ff0dff80808080ff808080808080ff8080ff0180ffff02ffff03ff05ffff01ff02ffff03ffff15ff29ff8080ffff01ff04ffff04ff08ff0980ffff02ff16ffff04ff02ffff04ff0dffff04ff0bff808080808080ffff01ff088080ff0180ffff010b80ff0180ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff1effff04ff02ffff04ff09ff80808080ffff02ff1effff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080",
         "solution": "0xffffa0626f9cf141deefc2e77a56a4ef99996259e840dc4020eda31408cdd442a770d1ffffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155ff8200c8ffffa00eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc115580808080",
       },
-      "id": "",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "target": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
+      "type": "xch",
     },
   ],
   "settlementModName": "settlement_payments_v1",

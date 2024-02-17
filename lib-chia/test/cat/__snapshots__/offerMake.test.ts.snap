@@ -112,6 +112,7 @@ Array [
         },
       ],
     },
+    "type": "cat",
   },
 ]
 `;
@@ -123,6 +124,7 @@ Array [
     "id": "6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b",
     "symbol": "BSH",
     "target": "()",
+    "type": "cat",
   },
 ]
 `;
@@ -131,9 +133,9 @@ exports[`Make Offer BSH -> XCH: reqs 1`] = `
 Array [
   Object {
     "amount": 100000000000n,
-    "id": "",
     "symbol": "XCH",
     "target": "0x907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96",
+    "type": "xch",
   },
 ]
 `;
@@ -169,7 +171,6 @@ exports[`Make Offer XCH -> BSH: offer 1`] = `"offer1qqr83wcuu2rykcmqvpsxygqq4ma8
 exports[`Make Offer XCH -> BSH: offplan 1`] = `
 Array [
   Object {
-    "id": "",
     "plan": Object {
       "coins": Array [
         Object {
@@ -192,6 +193,7 @@ Array [
         },
       ],
     },
+    "type": "xch",
   },
 ]
 `;
@@ -200,9 +202,9 @@ exports[`Make Offer XCH -> BSH: offs 1`] = `
 Array [
   Object {
     "amount": 100000000000n,
-    "id": "",
     "symbol": "XCH",
     "target": "()",
+    "type": "xch",
   },
 ]
 `;
@@ -214,6 +216,7 @@ Array [
     "id": "6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b",
     "symbol": "BSH",
     "target": "0x907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96",
+    "type": "cat",
   },
 ]
 `;

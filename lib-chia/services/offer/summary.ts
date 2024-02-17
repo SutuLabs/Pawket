@@ -1,4 +1,4 @@
-import { CoinSpend, SpendBundle, UnsignedSpendBundle } from "../spendbundle";
+import { CoinSpend, OriginCoin, SpendBundle, UnsignedSpendBundle } from "../spendbundle";
 import { Bytes, SExp, Tuple } from "clvm";
 import { getNumber, Hex0x, prefix0x, unprefix0x } from "../coin/condition";
 import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
@@ -12,6 +12,7 @@ import { CannotParsePuzzle, getModsPath, sexpAssemble, SimplePuzzle, simplifyPuz
 import { parseMetadata } from "../coin/singleton";
 import { analyzeNftCoin, getNftMetadataInfo, getScalarString } from "../coin/nft";
 import { NftDetail } from "../crypto/receive";
+import { NftCoinAnalysisResult } from "@/models/nft";
 
 export async function getOfferSummary(bundle: UnsignedSpendBundle | SpendBundle): Promise<OfferSummary> {
   const ocs = getOfferedCoins(bundle);
@@ -94,32 +95,52 @@ export async function getOfferSummary(bundle: UnsignedSpendBundle | SpendBundle)
         const tgt = prefix0x(
           Bytes.from((cond.args[2] && cond.args[2]?.length > 0 ? cond.args[2][0] : cond.args[0]) as Uint8Array).hex()
         );
-        const id = assetId ? assetId : nftId;
-        const wraptgt = id ? prefix0x(Bytes.from(cond.args[0] as Uint8Array).hex()) : undefined;
-        const analysis = await analyzeNftCoin(coin.puzzle_reveal, coin.coin.puzzle_hash, coin.coin, coin.solution);
-        const nft_detail: NftDetail | undefined = !analysis
-          ? undefined
-          : {
-              metadata: {
-                uri: getScalarString(analysis.metadata.imageUri) ?? "",
-                hash: analysis.metadata.imageHash ?? "",
-              },
-              hintPuzzle: coin.coin.puzzle_hash,
-              coin: coin.coin,
-              address: puzzle.getAddressFromPuzzleHash(analysis.launcherId, "nft"),
-              analysis,
-            };
-        entities.push({
-          id,
-          amount: getNumber(prefix0x(Bytes.from(cond.args[1] as Uint8Array).hex())),
-          target: tgt,
-          cat_target: assetId ? wraptgt : undefined,
-          nft_target: nftId ? wraptgt : undefined,
-          nft_detail,
-          royalty: nftId && royalty != -1 ? royalty : undefined,
-          nft_uri: imageUri,
-          coin,
-        });
+
+        const amount = getNumber(prefix0x(Bytes.from(cond.args[1] as Uint8Array).hex()));
+        const wraptgt = prefix0x(Bytes.from(cond.args[0] as Uint8Array).hex());
+        if (assetId) {
+          entities.push({
+            type: "cat",
+            id: assetId,
+            amount,
+            target: tgt,
+            cat_target: wraptgt,
+            coin,
+          });
+        } else if (nftId) {
+          if (royalty == -1) throw new Error("royalty must be set");
+          const analysis = await analyzeNftCoin(coin.puzzle_reveal, coin.coin.puzzle_hash, coin.coin, coin.solution);
+          if (!analysis) throw new Error("failed to analyze the nft coin");
+          const nft_detail: NftDetail = {
+            metadata: {
+              uri: getScalarString(analysis.metadata.imageUri) ?? "",
+              hash: analysis.metadata.imageHash ?? "",
+            },
+            hintPuzzle: coin.coin.puzzle_hash,
+            coin: coin.coin,
+            address: puzzle.getAddressFromPuzzleHash(analysis.launcherId, "nft"),
+            analysis,
+          };
+          entities.push({
+            type: "nft",
+            id: nftId,
+            amount,
+            target: tgt,
+            nft_target: wraptgt,
+            nft_detail,
+            nftanalysis: analysis,
+            royalty,
+            nft_uri: imageUri,
+            coin,
+          });
+        } else {
+          entities.push({
+            type: "xch",
+            amount,
+            target: tgt,
+            coin,
+          });
+        }
       }
     }
 
@@ -176,12 +197,57 @@ export function getOfferEntities(
   xchSymbol: string,
   amountIsMojoBased = false
 ): OfferEntity[] {
-  return ents.map((_) => ({
-    id: _.token == xchSymbol ? "" : catIds[_.token],
-    symbol: _.token,
-    amount: amountIsMojoBased ? BigInt(_.amount) : getAmount(_.token, _.amount, xchSymbol),
-    target: target,
-  }));
+  return ents.map((_) => {
+    const amount = amountIsMojoBased ? BigInt(_.amount) : getAmount(_.token, _.amount, xchSymbol);
+
+    return _.token == xchSymbol
+      ? ({
+          type: "xch",
+          amount,
+          symbol: _.token,
+          target,
+        } as OfferEntityForXch)
+      : ({
+          type: "cat",
+          id: catIds[_.token],
+          symbol: _.token,
+          amount,
+          target,
+        } as OfferEntityForCat);
+  });
+}
+
+export function convertOfferToRequest(offers: OfferEntity[]): RequestType[] {
+  const reqs: RequestType[] = [];
+
+  for (let i = 0; i < offers.length; i++) {
+    const off = offers[i];
+    if (off.type == "xch") {
+      reqs.push({
+        type: "token",
+        id: "",
+        amount: off.amount,
+        target: off.target,
+      });
+    } else if (off.type == "cat") {
+      reqs.push({
+        type: "token",
+        id: off.id,
+        amount: off.amount,
+        target: off.target,
+      });
+    } else if (off.type == "nft") {
+      reqs.push({
+        type: "nft",
+        id: off.id,
+        amount: off.amount,
+        target: off.target,
+        nft: off.nftanalysis,
+      });
+    }
+  }
+
+  return reqs;
 }
 
 function getAmount(symbol: string, amount: string, xchSymbol: string): bigint {
@@ -194,22 +260,80 @@ export interface UncurriedPuzzle {
   args: string[];
 }
 
-export interface OfferEntity {
+export type OfferEntity = OfferEntityForXch | OfferEntityForCat | OfferEntityForNft;
+
+export interface OfferEntityForXch extends OfferEntityBase {
+  type: "xch";
+}
+
+export interface OfferEntityForCat extends OfferEntityBase {
+  type: "cat";
   symbol?: string;
   id: string;
-  amount: bigint;
-  target?: Hex0x;
   cat_target?: Hex0x;
+}
+
+export interface OfferEntityForNft extends OfferEntityBase {
+  type: "nft";
+  id: string;
   nft_target?: Hex0x;
   nft_detail?: NftDetail;
-  royalty?: number;
-  nft_uri?: string;
+  nftanalysis: NftCoinAnalysisResult;
+  royalty: number;
+  nft_uri: string;
+}
+
+export interface OfferEntityBase {
+  target: Hex0x;
+  amount: bigint;
   coin?: CoinSpend;
 }
 
-export interface OfferPlan {
+export type RequestType = RequestForToken | RequestForNft;
+
+export interface RequestForToken {
+  type: "token";
+  id: string; // asset id or empty for XCH
+  amount: bigint;
+  target: Hex0x;
+}
+
+export interface RequestForNft {
+  type: "nft";
+  id: string;
+  target: Hex0x;
+  amount: bigint;
+  nft: NftCoinAnalysisResult;
+}
+
+export type OfferPlan = OfferPlanForXch | OfferPlanForCat | OfferPlanForNft | OfferPlanForRoyalty;
+
+export interface OfferPlanForNft {
+  type: "nft";
+  id: string;
+  nftcoin: OriginCoin;
+  nftanalysis: NftCoinAnalysisResult;
+}
+
+export interface OfferPlanForCat {
+  type: "cat";
   id: string;
   plan: TokenSpendPlan;
+}
+
+export interface OfferPlanForXch {
+  type: "xch";
+  plan: TokenSpendPlan;
+}
+
+export interface OfferPlanForRoyalty {
+  type: "royalty";
+  totalamount: bigint;
+  nft: {
+    launcherId: string;
+    royaltyAddress: Hex0x;
+    tradePricePercentage: number;
+  };
 }
 
 export interface OfferSummary {

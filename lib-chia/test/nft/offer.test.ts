@@ -1,7 +1,13 @@
 import { GetParentPuzzleResponse } from "../../models/api";
 import { getTestAccount } from "../utility";
 import { decodeOffer, encodeOffer } from "../../services/offer/encoding";
-import { getOfferSummary, OfferEntity } from "../../services/offer/summary";
+import {
+  convertOfferToRequest,
+  getOfferSummary,
+  OfferEntity,
+  OfferPlanForRoyalty,
+  RequestType,
+} from "../../services/offer/summary";
 import { Instance } from "../../services/util/instance";
 import { getAccountAddressDetails } from "../../services/util/account";
 import { combineOfferSpendBundle, generateNftOffer, generateOfferPlan, getReversePlan } from "../../services/offer/bundler";
@@ -82,17 +88,26 @@ test("create and accept nft offer for xch", async () => {
   };
   const offs: OfferEntity[] = [
     {
+      type: "nft",
       id: "74cc7e5904310477bae6e250910da9fee0e604b93d73a180cbd052d12f56769a",
       amount: 0n,
       royalty: 800,
       nft_uri: "https://guggero.github.io/cryptography-toolkit/images/fork-me-on-github-ribbon.png",
+      target: "0xunimportant",
+      nftanalysis: nft.analysis,
+      coin: {
+        coin: nft.coin,
+        puzzle_reveal: "0x",
+        solution: "0x",
+      },
     },
   ];
-  const reqs: OfferEntity[] = [
+  const price = 200n;
+  const reqs: RequestType[] = [
     {
+      type: "token",
       id: "",
-      symbol: "TXCH",
-      amount: 200n,
+      amount: price,
       target: "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
     },
   ];
@@ -117,7 +132,7 @@ test("create and accept nft offer for xch", async () => {
 
   const offplan = await generateOfferPlan(offs, change_hex, availcoins, 0n, tnet.symbol);
   expect(offplan).toMatchSnapshot("offplan");
-  const ubundle = await generateNftOffer(offplan, nft.analysis, nft.coin, reqs, tokenPuzzles, tnet, nonce);
+  const ubundle = await generateNftOffer(offplan, reqs, tokenPuzzles, tnet, nonce);
   const bundle = await signSpendBundle(ubundle, tokenPuzzles, tnet.chainId);
   expect(bundle).toMatchSnapshot("bundle");
   const offerText = await encodeOffer(bundle, 6);
@@ -137,16 +152,13 @@ test("create and accept nft offer for xch", async () => {
   const royalty_amount = (revSummary.offered[0].amount * BigInt(nft.analysis.tradePricePercentage)) / BigInt(10000);
   expect(royalty_amount).toMatchSnapshot("royalty_amount");
   const offplangen = await generateOfferPlan(revSummary.offered, change_hex, availcoins, fee, tnet.symbol, royalty_amount);
+  offplangen.push({
+    type: "royalty",
+    totalamount: price,
+    nft: nft.analysis,
+  } as OfferPlanForRoyalty);
   expect(offplangen).toMatchSnapshot("offplangen");
-  const utakerBundle = await generateNftOffer(
-    offplangen,
-    nft.analysis,
-    undefined,
-    revSummary.requested,
-    tokenPuzzles,
-    tnet,
-    nonce
-  );
+  const utakerBundle = await generateNftOffer(offplangen, convertOfferToRequest(revSummary.requested), tokenPuzzles, tnet, nonce);
   const takerBundle = await signSpendBundle(utakerBundle, tokenPuzzles, tnet.chainId);
   expect(takerBundle).toMatchSnapshot("takerBundle");
   const combined = await combineOfferSpendBundle([makerBundle, takerBundle]);
@@ -253,12 +265,15 @@ async function acceptOffer(fee: bigint, offerText: string) {
     [],
     revSummary.settlementModName
   );
+  offplangen.push({
+    type: "royalty",
+    totalamount: revSummary.offered[0].amount,
+    nft: nft,
+  } as OfferPlanForRoyalty);
   expect(offplangen).toMatchSnapshot("offplangen");
   const utakerBundle = await generateNftOffer(
     offplangen,
-    nft,
-    undefined,
-    revSummary.requested,
+    convertOfferToRequest(revSummary.requested),
     tokenPuzzles,
     net,
     nonce,

@@ -104,7 +104,17 @@ test("Make Offer BSH -> XCH", async () => {
 });
 
 async function makeOfferTest(offs: OfferEntity[], reqs: OfferEntity[], fee = 0n) {
-  const offplan = await generateOfferPlan(offs, change_hex, availcoins, fee, xchSymbol());
+  const offplan = await generateOfferPlan(
+    offs,
+    change_hex,
+    availcoins,
+    fee,
+    xchSymbol(),
+    undefined,
+    [],
+    "settlement_payments_v1",
+    false
+  );
   expect(offplan).toMatchSnapshot("offplan");
   const ubundle = await generateOffer(offplan, reqs, tokenPuzzles, net, nonce);
   const bundle = await signSpendBundle(ubundle, tokenPuzzles, net.chainId);
@@ -118,7 +128,7 @@ async function makeOfferTest(offs: OfferEntity[], reqs: OfferEntity[], fee = 0n)
 test("Make Offer 1", async () => {
   const offplan: OfferPlan[] = [
     {
-      id: "",
+      type: "xch",
       plan: {
         coins: [
           {
@@ -144,6 +154,7 @@ test("Make Offer 1", async () => {
   ];
   const reqs: OfferEntity[] = [
     {
+      type: "cat",
       id: "0x6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b",
       symbol: "BSH",
       amount: 11n,
@@ -165,6 +176,7 @@ test("Make Offer 1", async () => {
 test("Make Offer 2", async () => {
   const offplan: OfferPlan[] = [
     {
+      type: "cat",
       id: "0x6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b",
       plan: {
         coins: [
@@ -192,8 +204,7 @@ test("Make Offer 2", async () => {
   ];
   const reqs: OfferEntity[] = [
     {
-      id: "",
-      symbol: xchSymbol(),
+      type: "xch",
       amount: 5n,
       target: "0x907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96",
     },

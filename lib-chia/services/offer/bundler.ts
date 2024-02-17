@@ -7,13 +7,12 @@ import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { TokenPuzzleDetail, TokenPuzzleObserver } from "../crypto/receive";
 import catBundle from "../transfer/catBundle";
 import stdBundle from "../transfer/stdBundle";
-import { getOfferSummary, OfferEntity, OfferPlan, OfferSummary } from "./summary";
+import { getOfferSummary, OfferEntity, OfferPlan, OfferSummary, RequestType } from "./summary";
 import { GetParentPuzzleResponse } from "../../models/api";
 import { assemble, curry, disassemble } from "clvm_tools";
 import { modshash, modshex0x, modsprog } from "../coin/mods";
 import { getCoinName, getCoinName0x, NetworkContext } from "../coin/coinUtility";
 import { Instance } from "../util/instance";
-import { NftCoinAnalysisResult } from "../../models/nft";
 import { generateTransferNftBundle, getTransferNftPuzzle, getTransferNftSolution } from "../coin/nft";
 import crypto from "../crypto/isoCrypto";
 
@@ -58,8 +57,7 @@ export async function generateOffer(
   // generate requested
   for (let i = 0; i < requested.length; i++) {
     const req = requested[i];
-    if (!req.id) {
-      // XCH
+    if (req.type == "xch") {
       const coin: OriginCoin = {
         parent_coin_info: "0x0000000000000000000000000000000000000000000000000000000000000000",
         puzzle_hash: settlement_tgt,
@@ -87,7 +85,7 @@ export async function generateOffer(
       const solution = prefix0x(await puzzle.encodePuzzle(solution_text));
 
       spends.push({ coin, solution, puzzle_reveal });
-    } else {
+    } else if (req.type == "cat") {
       if (!req.symbol) throw new Error("symbol cannot be empty.");
 
       const assetId = req.id;
@@ -123,6 +121,9 @@ export async function generateOffer(
       const solution = prefix0x(await puzzle.encodePuzzle(solution_text));
 
       spends.push({ coin, solution, puzzle_reveal });
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      throw new Error(`unsupported request type: ${(req as any).type}`);
     }
   }
 
@@ -141,8 +142,8 @@ export async function generateOffer(
   for (let i = 0; i < offered.length; i++) {
     const off = offered[i];
     const conds = getPuzzleAnnoConditions();
-    if (off.id) {
-      //CAT
+    if (off.type != "cat" && off.type != "xch") throw new Error("only token type is allowed in generating `token` offer plan");
+    if (off.type == "cat") {
       spends.push(...(await catBundle.generateCoinSpends(off.plan, puzzleCopy, conds, net.api)));
     } else {
       spends.push(...(await stdBundle.generateCoinSpends(off.plan, puzzleCopy, conds)));
@@ -171,19 +172,27 @@ export async function generateOfferPlan(
   tokenSymbol: string,
   royaltyFee: bigint | undefined = undefined,
   extraTargets: TransferTarget[] = [],
-  settlementModName: "settlement_payments" | "settlement_payments_v1" = "settlement_payments_v1"
+  settlementModName: "settlement_payments" | "settlement_payments_v1" = "settlement_payments_v1",
+  compatibleForceMemoAlwaysIncludeSettlement = true
 ): Promise<OfferPlan[]> {
   const plans: OfferPlan[] = [];
 
+  const settlement_tgt = prefix0x(modshash[settlementModName]);
   for (let i = 0; i < offered.length; i++) {
     const off = offered[i];
 
-    const settlement_tgt = prefix0x(modshash[settlementModName]);
+    const symbol = off.type == "cat" ? off.symbol ?? tokenSymbol : tokenSymbol;
+    if (off.type == "cat" && !off.symbol) throw new Error("symbol is empty in OfferEntityForCat");
     const tgt: TransferTarget = {
       address: settlement_tgt,
       amount: off.amount,
-      symbol: off.symbol ?? tokenSymbol,
-      memos: off.symbol == tokenSymbol ? undefined : [settlement_tgt],
+      symbol: symbol,
+      memos:
+        off.type == "cat" || off.type == "nft"
+          ? [settlement_tgt]
+          : compatibleForceMemoAlwaysIncludeSettlement
+          ? [settlement_tgt]
+          : undefined,
     };
 
     const royaltyTgt: TransferTarget = {
@@ -207,8 +216,17 @@ export async function generateOfferPlan(
       throw new Error(`spend plan must be less than 1, currently are ${keys.length}: ${keys.join(", ")}`);
     }
 
-    const offplan = { id: off.id, plan: plan[keys[0]] };
-    plans.push(offplan);
+    if (off.type == "cat") plans.push({ type: "cat", id: off.id, plan: plan[keys[0]] });
+    else if (off.type == "xch") plans.push({ type: "xch", plan: plan[keys[0]] });
+    else if (off.type == "nft") {
+      if (!off.coin) throw new Error("coin must not empty in the offer plan");
+      plans.push({
+        type: "nft",
+        id: off.id,
+        nftcoin: off.coin.coin,
+        nftanalysis: off.nftanalysis,
+      });
+    }
   }
 
   return plans;
@@ -216,8 +234,10 @@ export async function generateOfferPlan(
 
 export function getReversePlan(summary: OfferSummary, change_hex: string, cats: { [id: string]: string }): OfferSummary {
   return {
-    offered: summary.requested.map((_) => Object.assign({}, _, { symbol: cats[_.id] })),
-    requested: summary.offered.map((_) => Object.assign({}, _, { target: change_hex, symbol: cats[_.id] })),
+    offered: summary.requested.map((_) => Object.assign({}, _, _.type == "cat" ? { symbol: cats[_.id] } : {})),
+    requested: summary.offered.map((_) =>
+      Object.assign({}, _, { target: change_hex }, _.type == "cat" ? { symbol: cats[_.id] } : {})
+    ),
     settlementModName: summary.settlementModName,
   };
 }
@@ -271,19 +291,11 @@ export async function combineOfferSpendBundle(
     const offcs = offcss[0].coin;
     if (!offcs?.coin) throw new Error("unknown offer coin");
 
-    let cat_target: Hex0x | undefined = undefined;
-
-    if (req.id) {
-      const sumoffs = summaries[(i + 1) % summaries.length].offered;
-      if (!(sumoffs.length == 1 || (sumoffs.length > 1 && sumoffs.every((_) => _.cat_target == sumoffs[0].cat_target))))
-        throw new Error("unexpected length of summary offers");
-      cat_target = sumoffs[0].cat_target;
-    }
     reqcs.coin.parent_coin_info = getCoinName0x(offcs.coin);
     reqcs.coin.amount = req.amount;
 
-    if (req.id && req.nft_target) {
-      // generate nft solution
+    // generate solution
+    if (req.type == "nft") {
       const localPuzzleApiCall = async function (): Promise<GetParentPuzzleResponse> {
         return {
           parentCoinId: "",
@@ -297,9 +309,19 @@ export async function combineOfferSpendBundle(
       const lsolr = lsol.substring(1, lsol.length - 1);
       const solution = await getTransferNftSolution(proof, lsolr);
       reqcs.solution = prefix0x(await puzzle.encodePuzzle(solution));
-    } else if (req.id) {
-      // generate cat solution
+    } else if (req.type == "cat") {
       const inner_puzzle = await puzzle.disassemblePuzzle(reqcs.solution);
+
+      if (
+        offcss[0].type != "cat" ||
+        !(
+          offcss.length == 1 ||
+          (offcss.length > 1 &&
+            offcss.every((_) => _.type == "cat" && offcss[0].type == "cat" && _.cat_target == offcss[0].cat_target))
+        )
+      )
+        throw new Error("unexpected length of summary offers");
+      const cat_target = offcss[0].cat_target;
       if (!cat_target) throw new Error("cat target should be parsed");
       const offnewcoin: OriginCoin = {
         parent_coin_info: getCoinName0x(offcs.coin),
@@ -338,9 +360,7 @@ export async function combineOfferSpendBundle(
 
 export async function generateNftOffer(
   offered: OfferPlan[],
-  nft: NftCoinAnalysisResult,
-  nftcoin: OriginCoin | undefined,
-  requested: OfferEntity[],
+  requested: RequestType[],
   puzzles: TokenPuzzleObserver[],
   net: NetworkContext,
   nonceHex: string | null = null,
@@ -387,8 +407,7 @@ export async function generateNftOffer(
   // generate requested
   for (let i = 0; i < requested.length; i++) {
     const req = requested[i];
-    if (!req.id) {
-      // XCH
+    if (req.type == "token") {
       const coin: OriginCoin = {
         parent_coin_info: "0x0000000000000000000000000000000000000000000000000000000000000000",
         puzzle_hash: settlement_tgt,
@@ -405,8 +424,8 @@ export async function generateNftOffer(
       const solution = prefix0x(await puzzle.encodePuzzle(solution_text));
 
       spends.push({ coin, solution, puzzle_reveal });
-    } else {
-      const nftPuzzle = await getTransferNftPuzzle(nft, modsprog[settlementModName]);
+    } else if (req.type == "nft") {
+      const nftPuzzle = await getTransferNftPuzzle(req.nft, modsprog[settlementModName]);
       const nftPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(nftPuzzle));
 
       const coin: OriginCoin = {
@@ -435,6 +454,9 @@ export async function generateNftOffer(
 
       const sp = { coin, solution, puzzle_reveal };
       spends.push(sp);
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      throw new Error(`unsupported offer type: ${(req as any).type}`);
     }
   }
 
@@ -454,43 +476,43 @@ export async function generateNftOffer(
   for (let i = 0; i < offered.length; i++) {
     const off = offered[i];
     const conds = getPuzzleAnnoConditions();
-    if (off.id) {
-      //NFT
-      if (nftcoin) {
-        const spbundle: UnsignedSpendBundle = await generateTransferNftBundle(
-          puzzle.getAddressFromPuzzleHash(settlement_tgt, net.symbol),
-          puzzle.getAddressFromPuzzleHash("0x0000000000000000000000000000000000000000000000000000000000000000", net.symbol),
-          0n,
-          nftcoin,
-          nft,
-          {},
-          puzzles,
-          net,
-          undefined,
-          conds
-        );
-        puzzleCopy
-          .filter((_) => _.symbol == net.symbol)[0]
-          .puzzles.push({
-            synPubKey: "()",
-            puzzle: "()",
-            hash: nftcoin.puzzle_hash,
-            address: "",
-          });
-        spends.push(...spbundle.coin_spends);
-      }
-    } else {
+    if (off.type == "nft") {
+      const spbundle: UnsignedSpendBundle = await generateTransferNftBundle(
+        puzzle.getAddressFromPuzzleHash(settlement_tgt, net.symbol),
+        puzzle.getAddressFromPuzzleHash("0x0000000000000000000000000000000000000000000000000000000000000000", net.symbol),
+        0n,
+        off.nftcoin,
+        off.nftanalysis,
+        {},
+        puzzles,
+        net,
+        undefined,
+        conds
+      );
+      puzzleCopy
+        .filter((_) => _.symbol == net.symbol)[0]
+        .puzzles.push({
+          synPubKey: "()",
+          puzzle: "()",
+          hash: off.nftcoin.puzzle_hash,
+          address: "",
+        });
+      spends.push(...spbundle.coin_spends);
+    } else if (off.type == "xch") {
       const sp = await stdBundle.generateCoinSpends(off.plan, puzzleCopy, conds);
       spends.push(...sp);
-      // create royalty coin
-      const parent = getCoinName0x(sp[sp.length - 1].coin);
+    } else if (off.type == "royalty") {
+      // only taker bundle for NFT offer need this royalty offer
+      if (i == 0 || offered[i - 1].type != "xch") throw new Error(`before 'royalty' type must be 'xch' type`);
+      // create royalty coin based on last token offer plan
+      const parent = getCoinName0x(spends[spends.length - 1].coin);
       // royalty_amount = uint64(offered_amount * royalty_percentage / 10000)
-      const amount = (off.plan.targets[0].amount * BigInt(nft.tradePricePercentage)) / BigInt(10000);
+      const amount = (off.totalamount * BigInt(off.nft.tradePricePercentage)) / BigInt(10000);
       // original settlement_payments implementation always has one zero royalty coin if applicable,
       // but settlement_payments_v1 don't have this zero royalty coin
       if (amount > 0 || settlementModName == "settlement_payments") {
-        const solution_text = `((${prefix0x(nft.launcherId)} (${prefix0x(nft.royaltyAddress)} ${amount} (${prefix0x(
-          nft.royaltyAddress
+        const solution_text = `((${prefix0x(off.nft.launcherId)} (${prefix0x(off.nft.royaltyAddress)} ${amount} (${prefix0x(
+          off.nft.royaltyAddress
         )}))))`;
         const solution = prefix0x(await puzzle.encodePuzzle(solution_text));
         const roysp: CoinSpend = {
@@ -504,6 +526,9 @@ export async function generateNftOffer(
         };
         spends.push(roysp);
       }
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      throw new Error(`unsupported offer type: ${(off as any).type}`);
     }
   }
 

@@ -11,7 +11,7 @@ import { cnsMetadata, knownCoins } from "./cns.test.data";
 import { CoinSpend, signSpendBundle } from "../../services/spendbundle";
 import { combineOfferSpendBundle, generateNftOffer, generateOfferPlan, getReversePlan } from "../../services/offer/bundler";
 import { decodeOffer, encodeOffer } from "../../services/offer/encoding";
-import { getOfferSummary } from "../../services/offer/summary";
+import { convertOfferToRequest, getOfferSummary, OfferPlanForRoyalty } from "../../services/offer/summary";
 import { generateMintCnsOffer } from "../../services/offer/cns";
 import { NetworkContext } from "../../services/coin/coinUtility";
 import { Hex, prefix0x } from "../../services/coin/condition";
@@ -148,10 +148,11 @@ async function testMintCnsAndOffer(fee: bigint, metadata: CnsMetadataValues, tgt
   const royaltyAddressHex = "7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10";
   const tradePricePercentage = 500;
 
+  const price = 200n;
   const uofferBundle = await generateMintCnsOffer(
     targetAddress,
     changeAddress,
-    200n,
+    price,
     0n,
     metadata,
     availcoinsForMaker,
@@ -179,7 +180,7 @@ async function testMintCnsAndOffer(fee: bigint, metadata: CnsMetadataValues, tgt
   const revSummary = getReversePlan(summary, change_hex, {});
   expect(revSummary).toMatchSnapshot("revSummary");
   expect(fee).toMatchSnapshot("fee");
-  const analysis = summary.offered[0].nft_detail?.analysis;
+  const analysis = summary.offered[0].type == "nft" && summary.offered[0].nftanalysis;
   if (!analysis) fail("failed to get analysis from summary");
   expect(analysis).toMatchSnapshot("cns analysis");
 
@@ -193,8 +194,14 @@ async function testMintCnsAndOffer(fee: bigint, metadata: CnsMetadataValues, tgt
     xchSymbol(),
     royalty_amount
   );
+  offplangen.push({
+    type: "royalty",
+    totalamount: price,
+    nft: analysis,
+  } as OfferPlanForRoyalty);
   expect(offplangen).toMatchSnapshot("offplangen");
-  const utakerBundle = await generateNftOffer(offplangen, analysis, undefined, revSummary.requested, tokenPuzzles, net, nonce);
+  const reqs = convertOfferToRequest(revSummary.requested);
+  const utakerBundle = await generateNftOffer(offplangen, reqs, tokenPuzzles, net, nonce);
   const takerBundle = await signSpendBundle(utakerBundle, tokenPuzzles, net.chainId);
   expect(takerBundle).toMatchSnapshot("takerBundle");
   const bundle = await combineOfferSpendBundle([makerBundle, takerBundle]);

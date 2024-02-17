@@ -53,7 +53,6 @@ Object {
 exports[`Take Offer CAT For Xch: offer plan 1`] = `
 Array [
   Object {
-    "id": "",
     "plan": Object {
       "coins": Array [
         Object {
@@ -78,6 +77,7 @@ Array [
         },
       ],
     },
+    "type": "xch",
   },
 ]
 `;
@@ -87,7 +87,6 @@ Object {
   "offered": Array [
     Object {
       "amount": 5n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 0n,
@@ -97,13 +96,8 @@ Object {
         "puzzle_reveal": "0xff02ffff01ff02ff0affff04ff02ffff04ff03ff80808080ffff04ffff01ffff333effff02ffff03ff05ffff01ff04ffff04ff0cffff04ffff02ff1effff04ff02ffff04ff09ff80808080ff808080ffff02ff16ffff04ff02ffff04ff19ffff04ffff02ff0affff04ff02ffff04ff0dff80808080ff808080808080ff8080ff0180ffff02ffff03ff05ffff01ff04ffff04ff08ff0980ffff02ff16ffff04ff02ffff04ff0dffff04ff0bff808080808080ffff010b80ff0180ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff1effff04ff02ffff04ff09ff80808080ffff02ff1effff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080",
         "solution": "0xffffa0e76d0366e5986d68e27b623a56d9ee8bcbe1b90ead68d4e8e90a98b0829b1a85ffffa03eb239190ce59b4af1e461291b9185cea62d6072fd3718051a530fd8a8218bc0ff05ff80808080",
       },
-      "id": "",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
-      "symbol": undefined,
       "target": "0x3eb239190ce59b4af1e461291b9185cea62d6072fd3718051a530fd8a8218bc0",
+      "type": "xch",
     },
   ],
   "requested": Array [
@@ -120,12 +114,9 @@ Object {
         "solution": "0xffff80ffff01ffff33ffa0bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79ff8201f4ffffa0bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f798080ffff33ffa03eb239190ce59b4af1e461291b9185cea62d6072fd3718051a530fd8a8218bc0ff8223be80ffff3fffa082c7a277ebf1faea1691e427946a9df0ed2b96d79274a5081185378076bb31d38080ff8080ffffa0ac77ced4412947525b5e0ab543494a0aef03932abb7074ee83b282f0ee62d7b2ffa03eb239190ce59b4af1e461291b9185cea62d6072fd3718051a530fd8a8218bc0ff82264880ffa07778f21c853677d0e6cd0bc3c2541e515357278bf53b6d3ea5ac5e1622849961ffffa028356b8f4a0ac835cf4911031bf5226b165c867b8014705eade25ccfc8447105ffa09a3e78995734c97d37e7d497098203117a19cefef1bbfe276bc7903f5e279e1dff8225b280ffffa028356b8f4a0ac835cf4911031bf5226b165c867b8014705eade25ccfc8447105ffa03eb239190ce59b4af1e461291b9185cea62d6072fd3718051a530fd8a8218bc0ff8225b280ff80ff8080",
       },
       "id": "0x6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "symbol": "BSH",
       "target": "0xb379a659194799dfa9171f7770f6935b1644fe48fd6fb596d5df0ac2abff2bda",
+      "type": "cat",
     },
   ],
   "settlementModName": "settlement_payments",
@@ -148,17 +139,13 @@ Object {
         "solution": "0xffff80ffff01ffff33ffa0bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79ff8201f4ffffa0bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f798080ffff33ffa03eb239190ce59b4af1e461291b9185cea62d6072fd3718051a530fd8a8218bc0ff8223be80ffff3fffa082c7a277ebf1faea1691e427946a9df0ed2b96d79274a5081185378076bb31d38080ff8080ffffa0ac77ced4412947525b5e0ab543494a0aef03932abb7074ee83b282f0ee62d7b2ffa03eb239190ce59b4af1e461291b9185cea62d6072fd3718051a530fd8a8218bc0ff82264880ffa07778f21c853677d0e6cd0bc3c2541e515357278bf53b6d3ea5ac5e1622849961ffffa028356b8f4a0ac835cf4911031bf5226b165c867b8014705eade25ccfc8447105ffa09a3e78995734c97d37e7d497098203117a19cefef1bbfe276bc7903f5e279e1dff8225b280ffffa028356b8f4a0ac835cf4911031bf5226b165c867b8014705eade25ccfc8447105ffa03eb239190ce59b4af1e461291b9185cea62d6072fd3718051a530fd8a8218bc0ff8225b280ff80ff8080",
       },
       "id": "0x6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "target": "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79",
+      "type": "cat",
     },
   ],
   "requested": Array [
     Object {
       "amount": 5n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 0n,
@@ -168,12 +155,8 @@ Object {
         "puzzle_reveal": "0xff02ffff01ff02ff0affff04ff02ffff04ff03ff80808080ffff04ffff01ffff333effff02ffff03ff05ffff01ff04ffff04ff0cffff04ffff02ff1effff04ff02ffff04ff09ff80808080ff808080ffff02ff16ffff04ff02ffff04ff19ffff04ffff02ff0affff04ff02ffff04ff0dff80808080ff808080808080ff8080ff0180ffff02ffff03ff05ffff01ff04ffff04ff08ff0980ffff02ff16ffff04ff02ffff04ff0dffff04ff0bff808080808080ffff010b80ff0180ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff1effff04ff02ffff04ff09ff80808080ffff02ff1effff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080",
         "solution": "0xffffa0e76d0366e5986d68e27b623a56d9ee8bcbe1b90ead68d4e8e90a98b0829b1a85ffffa03eb239190ce59b4af1e461291b9185cea62d6072fd3718051a530fd8a8218bc0ff05ff80808080",
       },
-      "id": "",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "target": "0x3eb239190ce59b4af1e461291b9185cea62d6072fd3718051a530fd8a8218bc0",
+      "type": "xch",
     },
   ],
   "settlementModName": "settlement_payments",
@@ -284,6 +267,7 @@ Array [
         },
       ],
     },
+    "type": "cat",
   },
 ]
 `;
@@ -304,18 +288,14 @@ Object {
         "solution": "0xffffa0b5ba0f1060974e9357f0ec3e199d956cae68f73945584e63fe87d8155dd619bdffffa0907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96ff0bffffa0907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac9680808080",
       },
       "id": "0x6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "symbol": "BSH",
       "target": "0x907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96",
+      "type": "cat",
     },
   ],
   "requested": Array [
     Object {
       "amount": 9n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 15n,
@@ -325,13 +305,8 @@ Object {
         "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0b7c28887d666be1a8d1a22148cfbf829520687b84c997d6ab40804fdd2e5ce066a78457121a467ce444a9a387e8d02b5ff018080",
         "solution": "0xff80ffff01ffff33ffa0bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79ff0980ffff33ffa0907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96ff0680ffff3fffa0ab5afefc2d293b5c1c5f124335a86dd0548d47ae2d3a807552835d0be21e9ef08080ff8080",
       },
-      "id": "",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
-      "symbol": undefined,
       "target": "0x907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96",
+      "type": "xch",
     },
   ],
   "settlementModName": "settlement_payments",
@@ -343,7 +318,6 @@ Object {
   "offered": Array [
     Object {
       "amount": 9n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 15n,
@@ -353,12 +327,8 @@ Object {
         "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0b7c28887d666be1a8d1a22148cfbf829520687b84c997d6ab40804fdd2e5ce066a78457121a467ce444a9a387e8d02b5ff018080",
         "solution": "0xff80ffff01ffff33ffa0bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79ff0980ffff33ffa0907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96ff0680ffff3fffa0ab5afefc2d293b5c1c5f124335a86dd0548d47ae2d3a807552835d0be21e9ef08080ff8080",
       },
-      "id": "",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "target": "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79",
+      "type": "xch",
     },
   ],
   "requested": Array [
@@ -375,11 +345,8 @@ Object {
         "solution": "0xffffa0b5ba0f1060974e9357f0ec3e199d956cae68f73945584e63fe87d8155dd619bdffffa0907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96ff0bffffa0907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac9680808080",
       },
       "id": "0x6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "target": "0x907ecc36e25ede9466dc1db20f86d8678b4a518a4351b552fb19be20fc6aac96",
+      "type": "cat",
     },
   ],
   "settlementModName": "settlement_payments",
@@ -492,7 +459,6 @@ Object {
 exports[`Take Offer with fee in original offer with fee 0n included: offer plan 1`] = `
 Array [
   Object {
-    "id": "",
     "plan": Object {
       "coins": Array [
         Object {
@@ -517,6 +483,7 @@ Array [
         },
       ],
     },
+    "type": "xch",
   },
 ]
 `;
@@ -526,7 +493,6 @@ Object {
   "offered": Array [
     Object {
       "amount": 10000n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 0n,
@@ -536,13 +502,8 @@ Object {
         "puzzle_reveal": "0xff02ffff01ff02ff0affff04ff02ffff04ff03ff80808080ffff04ffff01ffff333effff02ffff03ff05ffff01ff04ffff04ff0cffff04ffff02ff1effff04ff02ffff04ff09ff80808080ff808080ffff02ff16ffff04ff02ffff04ff19ffff04ffff02ff0affff04ff02ffff04ff0dff80808080ff808080808080ff8080ff0180ffff02ffff03ff05ffff01ff04ffff04ff08ff0980ffff02ff16ffff04ff02ffff04ff0dffff04ff0bff808080808080ffff010b80ff0180ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff1effff04ff02ffff04ff09ff80808080ffff02ff1effff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080",
         "solution": "0xffffa02b7df20b86bad845cc235d6bcc46f81f95d69064f56c004d7d8e5c7cb74ae53effffa0ce3e0d584cb82b33f1074280f46373bb0527cf3dd123dd8e79702aa2c3c916edff822710ff80808080",
       },
-      "id": "",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
-      "symbol": undefined,
       "target": "0xce3e0d584cb82b33f1074280f46373bb0527cf3dd123dd8e79702aa2c3c916ed",
+      "type": "xch",
     },
   ],
   "requested": Array [
@@ -559,12 +520,9 @@ Object {
         "solution": "0xffff80ffff01ffff33ffa0bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79ff822710ffffa0bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f798080ffff3cffa0cd1589de274bbaf85fca90571e235994ef6611a210aaf1c787384b150b5c71b580ffff3fffa0191fe40a63c4aa57225231ed689010ebe8bd948d91237b37e098c75242d04c648080ff8080ffffa046cbd124796cc8d4f884945862a98557d6411c8d44856fb4b5f41dccedbdf743ffa0bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79ff82271080ffa0b55349fd10e3ac6d0396b9f130ef7e75f1ad1068cd9042470acd9d94d2e57779ffffa04605234179e1e218981e4f17889db29b1e13a94ffaa9f5f2575ab94b7bf83776ffa02382ab069844dd776464ef7666dd4fe9131ee23dba8cfdaf7b25c4d4d98c70ffff82271080ffffa04605234179e1e218981e4f17889db29b1e13a94ffaa9f5f2575ab94b7bf83776ffa07eddb6c424762b7a1008db41b4b9a60f48cce2215e0e303f56b3a66ce8da9598ff82271080ff80ff8080",
       },
       "id": "0xa628c1c2c6fcb74d53746157e438e108eab5c0bb3e5c80ff9b1910b3e4832913",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "symbol": "CAT",
       "target": "0xb379a659194799dfa9171f7770f6935b1644fe48fd6fb596d5df0ac2abff2bda",
+      "type": "cat",
     },
   ],
   "settlementModName": "settlement_payments",
@@ -587,17 +545,13 @@ Object {
         "solution": "0xffff80ffff01ffff33ffa0bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79ff822710ffffa0bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f798080ffff3cffa0cd1589de274bbaf85fca90571e235994ef6611a210aaf1c787384b150b5c71b580ffff3fffa0191fe40a63c4aa57225231ed689010ebe8bd948d91237b37e098c75242d04c648080ff8080ffffa046cbd124796cc8d4f884945862a98557d6411c8d44856fb4b5f41dccedbdf743ffa0bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79ff82271080ffa0b55349fd10e3ac6d0396b9f130ef7e75f1ad1068cd9042470acd9d94d2e57779ffffa04605234179e1e218981e4f17889db29b1e13a94ffaa9f5f2575ab94b7bf83776ffa02382ab069844dd776464ef7666dd4fe9131ee23dba8cfdaf7b25c4d4d98c70ffff82271080ffffa04605234179e1e218981e4f17889db29b1e13a94ffaa9f5f2575ab94b7bf83776ffa07eddb6c424762b7a1008db41b4b9a60f48cce2215e0e303f56b3a66ce8da9598ff82271080ff80ff8080",
       },
       "id": "0xa628c1c2c6fcb74d53746157e438e108eab5c0bb3e5c80ff9b1910b3e4832913",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "target": "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79",
+      "type": "cat",
     },
   ],
   "requested": Array [
     Object {
       "amount": 10000n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 0n,
@@ -607,12 +561,8 @@ Object {
         "puzzle_reveal": "0xff02ffff01ff02ff0affff04ff02ffff04ff03ff80808080ffff04ffff01ffff333effff02ffff03ff05ffff01ff04ffff04ff0cffff04ffff02ff1effff04ff02ffff04ff09ff80808080ff808080ffff02ff16ffff04ff02ffff04ff19ffff04ffff02ff0affff04ff02ffff04ff0dff80808080ff808080808080ff8080ff0180ffff02ffff03ff05ffff01ff04ffff04ff08ff0980ffff02ff16ffff04ff02ffff04ff0dffff04ff0bff808080808080ffff010b80ff0180ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff1effff04ff02ffff04ff09ff80808080ffff02ff1effff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080",
         "solution": "0xffffa02b7df20b86bad845cc235d6bcc46f81f95d69064f56c004d7d8e5c7cb74ae53effffa0ce3e0d584cb82b33f1074280f46373bb0527cf3dd123dd8e79702aa2c3c916edff822710ff80808080",
       },
-      "id": "",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "target": "0xce3e0d584cb82b33f1074280f46373bb0527cf3dd123dd8e79702aa2c3c916ed",
+      "type": "xch",
     },
   ],
   "settlementModName": "settlement_payments",
@@ -732,6 +682,7 @@ Array [
         },
       ],
     },
+    "type": "cat",
   },
 ]
 `;
@@ -752,18 +703,14 @@ Object {
         "solution": "0xffffa025605c128d4aaf5845e675ba7a6d357761c2463d9209b9e4d56b7833f2c0290bffffa031a236662e6be2487d95ebded52ebe2fd2e00e54aff9fc122353de666c25a156ff8307a120ffffa031a236662e6be2487d95ebded52ebe2fd2e00e54aff9fc122353de666c25a15680808080",
       },
       "id": "0xdb1a9020d48d9d4ad22631b66ab4b9ebd3637ef7758ad38881348c5d24c38f20",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "symbol": "CAT",
       "target": "0x31a236662e6be2487d95ebded52ebe2fd2e00e54aff9fc122353de666c25a156",
+      "type": "cat",
     },
   ],
   "requested": Array [
     Object {
       "amount": 900000000000n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 800000000000n,
@@ -773,13 +720,8 @@ Object {
         "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a1f6fc804a014dc09fa127703df8c2967193116c5b43ffd71d476744a2c6805806968bf9ee8320930c9062bdb295a828ff018080",
         "solution": "0xff80ffff01ffff33ffa0bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79ff8600d18c2e280080ffff3cffa057bac3c996df27b0d7579a4216fd45adc82703b0fb211613d2662e34fe4cb53080ffff3fffa0ae3d9c356531114fc031a3f16e03f2d3e738b6c19fd389aeffb173c70eeb8f328080ff8080",
       },
-      "id": "",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
-      "symbol": undefined,
       "target": "0xb379a659194799dfa9171f7770f6935b1644fe48fd6fb596d5df0ac2abff2bda",
+      "type": "xch",
     },
   ],
   "settlementModName": "settlement_payments",
@@ -791,7 +733,6 @@ Object {
   "offered": Array [
     Object {
       "amount": 900000000000n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 800000000000n,
@@ -801,12 +742,8 @@ Object {
         "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a1f6fc804a014dc09fa127703df8c2967193116c5b43ffd71d476744a2c6805806968bf9ee8320930c9062bdb295a828ff018080",
         "solution": "0xff80ffff01ffff33ffa0bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79ff8600d18c2e280080ffff3cffa057bac3c996df27b0d7579a4216fd45adc82703b0fb211613d2662e34fe4cb53080ffff3fffa0ae3d9c356531114fc031a3f16e03f2d3e738b6c19fd389aeffb173c70eeb8f328080ff8080",
       },
-      "id": "",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "target": "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79",
+      "type": "xch",
     },
   ],
   "requested": Array [
@@ -823,11 +760,8 @@ Object {
         "solution": "0xffffa025605c128d4aaf5845e675ba7a6d357761c2463d9209b9e4d56b7833f2c0290bffffa031a236662e6be2487d95ebded52ebe2fd2e00e54aff9fc122353de666c25a156ff8307a120ffffa031a236662e6be2487d95ebded52ebe2fd2e00e54aff9fc122353de666c25a15680808080",
       },
       "id": "0xdb1a9020d48d9d4ad22631b66ab4b9ebd3637ef7758ad38881348c5d24c38f20",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "target": "0x31a236662e6be2487d95ebded52ebe2fd2e00e54aff9fc122353de666c25a156",
+      "type": "cat",
     },
   ],
   "settlementModName": "settlement_payments",
@@ -956,6 +890,7 @@ Array [
         },
       ],
     },
+    "type": "cat",
   },
 ]
 `;
@@ -976,18 +911,14 @@ Object {
         "solution": "0xffffa025605c128d4aaf5845e675ba7a6d357761c2463d9209b9e4d56b7833f2c0290bffffa031a236662e6be2487d95ebded52ebe2fd2e00e54aff9fc122353de666c25a156ff8307a120ffffa031a236662e6be2487d95ebded52ebe2fd2e00e54aff9fc122353de666c25a15680808080",
       },
       "id": "0xdb1a9020d48d9d4ad22631b66ab4b9ebd3637ef7758ad38881348c5d24c38f20",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "symbol": "CAT",
       "target": "0x31a236662e6be2487d95ebded52ebe2fd2e00e54aff9fc122353de666c25a156",
+      "type": "cat",
     },
   ],
   "requested": Array [
     Object {
       "amount": 900000000000n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 800000000000n,
@@ -997,13 +928,8 @@ Object {
         "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a1f6fc804a014dc09fa127703df8c2967193116c5b43ffd71d476744a2c6805806968bf9ee8320930c9062bdb295a828ff018080",
         "solution": "0xff80ffff01ffff33ffa0bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79ff8600d18c2e280080ffff3cffa057bac3c996df27b0d7579a4216fd45adc82703b0fb211613d2662e34fe4cb53080ffff3fffa0ae3d9c356531114fc031a3f16e03f2d3e738b6c19fd389aeffb173c70eeb8f328080ff8080",
       },
-      "id": "",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
-      "symbol": undefined,
       "target": "0xb379a659194799dfa9171f7770f6935b1644fe48fd6fb596d5df0ac2abff2bda",
+      "type": "xch",
     },
   ],
   "settlementModName": "settlement_payments",
@@ -1015,7 +941,6 @@ Object {
   "offered": Array [
     Object {
       "amount": 900000000000n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 800000000000n,
@@ -1025,12 +950,8 @@ Object {
         "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b0a1f6fc804a014dc09fa127703df8c2967193116c5b43ffd71d476744a2c6805806968bf9ee8320930c9062bdb295a828ff018080",
         "solution": "0xff80ffff01ffff33ffa0bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79ff8600d18c2e280080ffff3cffa057bac3c996df27b0d7579a4216fd45adc82703b0fb211613d2662e34fe4cb53080ffff3fffa0ae3d9c356531114fc031a3f16e03f2d3e738b6c19fd389aeffb173c70eeb8f328080ff8080",
       },
-      "id": "",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "target": "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79",
+      "type": "xch",
     },
   ],
   "requested": Array [
@@ -1047,11 +968,8 @@ Object {
         "solution": "0xffffa025605c128d4aaf5845e675ba7a6d357761c2463d9209b9e4d56b7833f2c0290bffffa031a236662e6be2487d95ebded52ebe2fd2e00e54aff9fc122353de666c25a156ff8307a120ffffa031a236662e6be2487d95ebded52ebe2fd2e00e54aff9fc122353de666c25a15680808080",
       },
       "id": "0xdb1a9020d48d9d4ad22631b66ab4b9ebd3637ef7758ad38881348c5d24c38f20",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "target": "0x31a236662e6be2487d95ebded52ebe2fd2e00e54aff9fc122353de666c25a156",
+      "type": "cat",
     },
   ],
   "settlementModName": "settlement_payments",
@@ -1180,6 +1098,7 @@ Array [
         },
       ],
     },
+    "type": "cat",
   },
 ]
 `;
@@ -1200,18 +1119,14 @@ Object {
         "solution": "0xffffa0ce2b5bcf4022e138ad2306df91b6cb0518bafc294d03218375f0c4770dc27030ffffa033347bbfeb044e52224515cee3d1d1edbb001548fc4f5954774c42140dbb647dff822710ffffa033347bbfeb044e52224515cee3d1d1edbb001548fc4f5954774c42140dbb647d80808080",
       },
       "id": "0x6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "symbol": "CAT",
       "target": "0x33347bbfeb044e52224515cee3d1d1edbb001548fc4f5954774c42140dbb647d",
+      "type": "cat",
     },
   ],
   "requested": Array [
     Object {
       "amount": 100000n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 399998n,
@@ -1221,13 +1136,8 @@ Object {
         "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b083c540d58e3960a6f9e662afc9af724a328d9335c03a4e5a4514219a594cc12e24962882d83442454bf99ab1e98d50faff018080",
         "solution": "0xff80ffff01ffff33ffa0bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79ff830186a080ffff33ffa033347bbfeb044e52224515cee3d1d1edbb001548fc4f5954774c42140dbb647dff830493de80ffff3fffa075e706f06cbc1fe058aaef22deff8e2fb6bfef6be029bfa996e499aaffec7d478080ff8080",
       },
-      "id": "",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
-      "symbol": undefined,
       "target": "0xb379a659194799dfa9171f7770f6935b1644fe48fd6fb596d5df0ac2abff2bda",
+      "type": "xch",
     },
   ],
   "settlementModName": "settlement_payments",
@@ -1239,7 +1149,6 @@ Object {
   "offered": Array [
     Object {
       "amount": 100000n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 399998n,
@@ -1249,12 +1158,8 @@ Object {
         "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b083c540d58e3960a6f9e662afc9af724a328d9335c03a4e5a4514219a594cc12e24962882d83442454bf99ab1e98d50faff018080",
         "solution": "0xff80ffff01ffff33ffa0bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79ff830186a080ffff33ffa033347bbfeb044e52224515cee3d1d1edbb001548fc4f5954774c42140dbb647dff830493de80ffff3fffa075e706f06cbc1fe058aaef22deff8e2fb6bfef6be029bfa996e499aaffec7d478080ff8080",
       },
-      "id": "",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "target": "0xbae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79",
+      "type": "xch",
     },
   ],
   "requested": Array [
@@ -1271,11 +1176,8 @@ Object {
         "solution": "0xffffa0ce2b5bcf4022e138ad2306df91b6cb0518bafc294d03218375f0c4770dc27030ffffa033347bbfeb044e52224515cee3d1d1edbb001548fc4f5954774c42140dbb647dff822710ffffa033347bbfeb044e52224515cee3d1d1edbb001548fc4f5954774c42140dbb647d80808080",
       },
       "id": "0x6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "target": "0x33347bbfeb044e52224515cee3d1d1edbb001548fc4f5954774c42140dbb647d",
+      "type": "cat",
     },
   ],
   "settlementModName": "settlement_payments",
@@ -1429,7 +1331,6 @@ Object {
 exports[`Test offer XCH->CAT in version 6: offer plan 1`] = `
 Array [
   Object {
-    "id": "",
     "plan": Object {
       "coins": Array [
         Object {
@@ -1454,6 +1355,7 @@ Array [
         },
       ],
     },
+    "type": "xch",
   },
 ]
 `;
@@ -1461,7 +1363,6 @@ Array [
 exports[`Test offer XCH->CAT in version 6: offer plan 2`] = `
 Array [
   Object {
-    "id": "",
     "plan": Object {
       "coins": Array [
         Object {
@@ -1486,6 +1387,7 @@ Array [
         },
       ],
     },
+    "type": "xch",
   },
 ]
 `;
@@ -1495,7 +1397,6 @@ Object {
   "offered": Array [
     Object {
       "amount": 10000n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 0n,
@@ -1505,13 +1406,8 @@ Object {
         "puzzle_reveal": "0xff02ffff01ff02ff0affff04ff02ffff04ff03ff80808080ffff04ffff01ffff333effff02ffff03ff05ffff01ff04ffff04ff0cffff04ffff02ff1effff04ff02ffff04ff09ff80808080ff808080ffff02ff16ffff04ff02ffff04ff19ffff04ffff02ff0affff04ff02ffff04ff0dff80808080ff808080808080ff8080ff0180ffff02ffff03ff05ffff01ff02ffff03ffff15ff29ff8080ffff01ff04ffff04ff08ff0980ffff02ff16ffff04ff02ffff04ff0dffff04ff0bff808080808080ffff01ff088080ff0180ffff010b80ff0180ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff1effff04ff02ffff04ff09ff80808080ffff02ff1effff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080",
         "solution": "0xffffa0079dc1fab543e6b050aa32b6a0ae671d259e61c31b161309c316b8deb1974a08ffffa020ad64294c855e9e4d0a7dab613eb3d7d4e1bee2717f7c3a6595aacd02be78cfff822710ff80808080",
       },
-      "id": "",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
-      "symbol": undefined,
       "target": "0x20ad64294c855e9e4d0a7dab613eb3d7d4e1bee2717f7c3a6595aacd02be78cf",
+      "type": "xch",
     },
   ],
   "requested": Array [
@@ -1528,12 +1424,9 @@ Object {
         "solution": "0xffff80ffff01ffff33ffa0cfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7ff822710ffffa0cfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e78080ffff33ffa00df7a024419e3f26b81dd0315c3206cb6ee962c1718f11c332f3eadae195f935ff83015f9080ffff3cffa06bcc918a816c91d47d7c6bf85d00b8747fcf812ec5d3fbe8abab78a90f2f435380ffff3fffa06ccc9022911a9f058846f97cf8c00ec7dcb8049fed38523ae876be0cdd50534a8080ff8080ffffa05008bd07264d8b297245c896531d5b1b884fe5ea182c9d4be30ebe16d83f3e27ffa07eddb6c424762b7a1008db41b4b9a60f48cce2215e0e303f56b3a66ce8da9598ff830be26280ffa0bc4ffcd607993a507fb86c36daf9ad1dec991d72aaa445b54c83a9faf3d9c695ffffa0e5dc1c2a5e56e72dfc4afc0108fa75df21caa4d1e51dff740fc805b104f47cf3ffa06e88db2712f5204aada36dbe767d9c28e669af6fbb1134e49a5fdfee35dc4ac8ff830186a080ffffa0e5dc1c2a5e56e72dfc4afc0108fa75df21caa4d1e51dff740fc805b104f47cf3ffa0f8dc7f36e240b746cec0b4b03150b02ea6335f30788869e39bcdb9d4cbd043b8ff830186a080ff80ff8080",
       },
       "id": "0x04273deed70b0fd9df58259f6a9c3a1e89b2bc80c3ea83cb9d60152845b5e90b",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "symbol": "CAT",
       "target": "0xb379a659194799dfa9171f7770f6935b1644fe48fd6fb596d5df0ac2abff2bda",
+      "type": "cat",
     },
   ],
   "settlementModName": "settlement_payments_v1",
@@ -1545,7 +1438,6 @@ Object {
   "offered": Array [
     Object {
       "amount": 10000n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 0n,
@@ -1555,13 +1447,8 @@ Object {
         "puzzle_reveal": "0xff02ffff01ff02ff0affff04ff02ffff04ff03ff80808080ffff04ffff01ffff333effff02ffff03ff05ffff01ff04ffff04ff0cffff04ffff02ff1effff04ff02ffff04ff09ff80808080ff808080ffff02ff16ffff04ff02ffff04ff19ffff04ffff02ff0affff04ff02ffff04ff0dff80808080ff808080808080ff8080ff0180ffff02ffff03ff05ffff01ff02ffff03ffff15ff29ff8080ffff01ff04ffff04ff08ff0980ffff02ff16ffff04ff02ffff04ff0dffff04ff0bff808080808080ffff01ff088080ff0180ffff010b80ff0180ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff1effff04ff02ffff04ff09ff80808080ffff02ff1effff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080",
         "solution": "0xffffa0079dc1fab543e6b050aa32b6a0ae671d259e61c31b161309c316b8deb1974a08ffffa020ad64294c855e9e4d0a7dab613eb3d7d4e1bee2717f7c3a6595aacd02be78cfff822710ff80808080",
       },
-      "id": "",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
-      "symbol": undefined,
       "target": "0x20ad64294c855e9e4d0a7dab613eb3d7d4e1bee2717f7c3a6595aacd02be78cf",
+      "type": "xch",
     },
   ],
   "requested": Array [
@@ -1578,12 +1465,9 @@ Object {
         "solution": "0xffff80ffff01ffff33ffa0cfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7ff822710ffffa0cfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e78080ffff33ffa00df7a024419e3f26b81dd0315c3206cb6ee962c1718f11c332f3eadae195f935ff83015f9080ffff3cffa06bcc918a816c91d47d7c6bf85d00b8747fcf812ec5d3fbe8abab78a90f2f435380ffff3fffa06ccc9022911a9f058846f97cf8c00ec7dcb8049fed38523ae876be0cdd50534a8080ff8080ffffa05008bd07264d8b297245c896531d5b1b884fe5ea182c9d4be30ebe16d83f3e27ffa07eddb6c424762b7a1008db41b4b9a60f48cce2215e0e303f56b3a66ce8da9598ff830be26280ffa0bc4ffcd607993a507fb86c36daf9ad1dec991d72aaa445b54c83a9faf3d9c695ffffa0e5dc1c2a5e56e72dfc4afc0108fa75df21caa4d1e51dff740fc805b104f47cf3ffa06e88db2712f5204aada36dbe767d9c28e669af6fbb1134e49a5fdfee35dc4ac8ff830186a080ffffa0e5dc1c2a5e56e72dfc4afc0108fa75df21caa4d1e51dff740fc805b104f47cf3ffa0f8dc7f36e240b746cec0b4b03150b02ea6335f30788869e39bcdb9d4cbd043b8ff830186a080ff80ff8080",
       },
       "id": "0x04273deed70b0fd9df58259f6a9c3a1e89b2bc80c3ea83cb9d60152845b5e90b",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "symbol": "CAT",
       "target": "0xb379a659194799dfa9171f7770f6935b1644fe48fd6fb596d5df0ac2abff2bda",
+      "type": "cat",
     },
   ],
   "settlementModName": "settlement_payments_v1",
@@ -1606,17 +1490,13 @@ Object {
         "solution": "0xffff80ffff01ffff33ffa0cfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7ff822710ffffa0cfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e78080ffff33ffa00df7a024419e3f26b81dd0315c3206cb6ee962c1718f11c332f3eadae195f935ff83015f9080ffff3cffa06bcc918a816c91d47d7c6bf85d00b8747fcf812ec5d3fbe8abab78a90f2f435380ffff3fffa06ccc9022911a9f058846f97cf8c00ec7dcb8049fed38523ae876be0cdd50534a8080ff8080ffffa05008bd07264d8b297245c896531d5b1b884fe5ea182c9d4be30ebe16d83f3e27ffa07eddb6c424762b7a1008db41b4b9a60f48cce2215e0e303f56b3a66ce8da9598ff830be26280ffa0bc4ffcd607993a507fb86c36daf9ad1dec991d72aaa445b54c83a9faf3d9c695ffffa0e5dc1c2a5e56e72dfc4afc0108fa75df21caa4d1e51dff740fc805b104f47cf3ffa06e88db2712f5204aada36dbe767d9c28e669af6fbb1134e49a5fdfee35dc4ac8ff830186a080ffffa0e5dc1c2a5e56e72dfc4afc0108fa75df21caa4d1e51dff740fc805b104f47cf3ffa0f8dc7f36e240b746cec0b4b03150b02ea6335f30788869e39bcdb9d4cbd043b8ff830186a080ff80ff8080",
       },
       "id": "0x04273deed70b0fd9df58259f6a9c3a1e89b2bc80c3ea83cb9d60152845b5e90b",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "target": "0xcfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7",
+      "type": "cat",
     },
   ],
   "requested": Array [
     Object {
       "amount": 10000n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 0n,
@@ -1626,12 +1506,8 @@ Object {
         "puzzle_reveal": "0xff02ffff01ff02ff0affff04ff02ffff04ff03ff80808080ffff04ffff01ffff333effff02ffff03ff05ffff01ff04ffff04ff0cffff04ffff02ff1effff04ff02ffff04ff09ff80808080ff808080ffff02ff16ffff04ff02ffff04ff19ffff04ffff02ff0affff04ff02ffff04ff0dff80808080ff808080808080ff8080ff0180ffff02ffff03ff05ffff01ff02ffff03ffff15ff29ff8080ffff01ff04ffff04ff08ff0980ffff02ff16ffff04ff02ffff04ff0dffff04ff0bff808080808080ffff01ff088080ff0180ffff010b80ff0180ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff1effff04ff02ffff04ff09ff80808080ffff02ff1effff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080",
         "solution": "0xffffa0079dc1fab543e6b050aa32b6a0ae671d259e61c31b161309c316b8deb1974a08ffffa020ad64294c855e9e4d0a7dab613eb3d7d4e1bee2717f7c3a6595aacd02be78cfff822710ff80808080",
       },
-      "id": "",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "target": "0x20ad64294c855e9e4d0a7dab613eb3d7d4e1bee2717f7c3a6595aacd02be78cf",
+      "type": "xch",
     },
   ],
   "settlementModName": "settlement_payments_v1",
@@ -1654,17 +1530,13 @@ Object {
         "solution": "0xffff80ffff01ffff33ffa0cfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7ff822710ffffa0cfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e78080ffff33ffa00df7a024419e3f26b81dd0315c3206cb6ee962c1718f11c332f3eadae195f935ff83015f9080ffff3cffa06bcc918a816c91d47d7c6bf85d00b8747fcf812ec5d3fbe8abab78a90f2f435380ffff3fffa06ccc9022911a9f058846f97cf8c00ec7dcb8049fed38523ae876be0cdd50534a8080ff8080ffffa05008bd07264d8b297245c896531d5b1b884fe5ea182c9d4be30ebe16d83f3e27ffa07eddb6c424762b7a1008db41b4b9a60f48cce2215e0e303f56b3a66ce8da9598ff830be26280ffa0bc4ffcd607993a507fb86c36daf9ad1dec991d72aaa445b54c83a9faf3d9c695ffffa0e5dc1c2a5e56e72dfc4afc0108fa75df21caa4d1e51dff740fc805b104f47cf3ffa06e88db2712f5204aada36dbe767d9c28e669af6fbb1134e49a5fdfee35dc4ac8ff830186a080ffffa0e5dc1c2a5e56e72dfc4afc0108fa75df21caa4d1e51dff740fc805b104f47cf3ffa0f8dc7f36e240b746cec0b4b03150b02ea6335f30788869e39bcdb9d4cbd043b8ff830186a080ff80ff8080",
       },
       "id": "0x04273deed70b0fd9df58259f6a9c3a1e89b2bc80c3ea83cb9d60152845b5e90b",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "target": "0xcfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7",
+      "type": "cat",
     },
   ],
   "requested": Array [
     Object {
       "amount": 10000n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 0n,
@@ -1674,12 +1546,8 @@ Object {
         "puzzle_reveal": "0xff02ffff01ff02ff0affff04ff02ffff04ff03ff80808080ffff04ffff01ffff333effff02ffff03ff05ffff01ff04ffff04ff0cffff04ffff02ff1effff04ff02ffff04ff09ff80808080ff808080ffff02ff16ffff04ff02ffff04ff19ffff04ffff02ff0affff04ff02ffff04ff0dff80808080ff808080808080ff8080ff0180ffff02ffff03ff05ffff01ff02ffff03ffff15ff29ff8080ffff01ff04ffff04ff08ff0980ffff02ff16ffff04ff02ffff04ff0dffff04ff0bff808080808080ffff01ff088080ff0180ffff010b80ff0180ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff1effff04ff02ffff04ff09ff80808080ffff02ff1effff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080",
         "solution": "0xffffa0079dc1fab543e6b050aa32b6a0ae671d259e61c31b161309c316b8deb1974a08ffffa020ad64294c855e9e4d0a7dab613eb3d7d4e1bee2717f7c3a6595aacd02be78cfff822710ff80808080",
       },
-      "id": "",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "target": "0x20ad64294c855e9e4d0a7dab613eb3d7d4e1bee2717f7c3a6595aacd02be78cf",
+      "type": "xch",
     },
   ],
   "settlementModName": "settlement_payments_v1",
@@ -1884,6 +1752,7 @@ Array [
         },
       ],
     },
+    "type": "cat",
   },
 ]
 `;
@@ -1916,6 +1785,7 @@ Array [
         },
       ],
     },
+    "type": "cat",
   },
 ]
 `;
@@ -1936,18 +1806,14 @@ Object {
         "solution": "0xffffa0a509c25bed858871863ea4d4f33ef534bdcb926416d85fe4cc9979f8c39caaccffffa088a7778479b50180175ecf9de897c3691b620fea4a0ff0a0cbb7ba139bea0f17ff8300c350ffffa088a7778479b50180175ecf9de897c3691b620fea4a0ff0a0cbb7ba139bea0f1780808080",
       },
       "id": "0x6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "symbol": "CAT",
       "target": "0x88a7778479b50180175ecf9de897c3691b620fea4a0ff0a0cbb7ba139bea0f17",
+      "type": "cat",
     },
   ],
   "requested": Array [
     Object {
       "amount": 100000n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 100000n,
@@ -1957,13 +1823,8 @@ Object {
         "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b08f5ea5edda6f9f263eb8bbfe32303a15141bc0f6898aebcbf8a976ae408a12361e74f7349df727b3cbebfe726001aa57ff018080",
         "solution": "0xff80ffff01ffff33ffa0cfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7ff830186a080ffff3cffa0c4bf7c604011b39d4ce1475b42287539c591c917dc47a47c3d8e4e9ede73e7d580ffff3fffa03c2748f8130601d94339be6a7c78cf063ed2a15c20fc2096e0713d8165058dfe8080ff8080",
       },
-      "id": "",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
-      "symbol": undefined,
       "target": "0xb379a659194799dfa9171f7770f6935b1644fe48fd6fb596d5df0ac2abff2bda",
+      "type": "xch",
     },
   ],
   "settlementModName": "settlement_payments_v1",
@@ -1986,18 +1847,14 @@ Object {
         "solution": "0xffffa0a509c25bed858871863ea4d4f33ef534bdcb926416d85fe4cc9979f8c39caaccffffa088a7778479b50180175ecf9de897c3691b620fea4a0ff0a0cbb7ba139bea0f17ff8300c350ffffa088a7778479b50180175ecf9de897c3691b620fea4a0ff0a0cbb7ba139bea0f1780808080",
       },
       "id": "0x6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "symbol": "CAT",
       "target": "0x88a7778479b50180175ecf9de897c3691b620fea4a0ff0a0cbb7ba139bea0f17",
+      "type": "cat",
     },
   ],
   "requested": Array [
     Object {
       "amount": 100000n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 100000n,
@@ -2007,13 +1864,8 @@ Object {
         "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b08f5ea5edda6f9f263eb8bbfe32303a15141bc0f6898aebcbf8a976ae408a12361e74f7349df727b3cbebfe726001aa57ff018080",
         "solution": "0xff80ffff01ffff33ffa0cfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7ff830186a080ffff3cffa0c4bf7c604011b39d4ce1475b42287539c591c917dc47a47c3d8e4e9ede73e7d580ffff3fffa03c2748f8130601d94339be6a7c78cf063ed2a15c20fc2096e0713d8165058dfe8080ff8080",
       },
-      "id": "",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
-      "symbol": undefined,
       "target": "0xb379a659194799dfa9171f7770f6935b1644fe48fd6fb596d5df0ac2abff2bda",
+      "type": "xch",
     },
   ],
   "settlementModName": "settlement_payments_v1",
@@ -2025,7 +1877,6 @@ Object {
   "offered": Array [
     Object {
       "amount": 100000n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 100000n,
@@ -2035,12 +1886,8 @@ Object {
         "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b08f5ea5edda6f9f263eb8bbfe32303a15141bc0f6898aebcbf8a976ae408a12361e74f7349df727b3cbebfe726001aa57ff018080",
         "solution": "0xff80ffff01ffff33ffa0cfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7ff830186a080ffff3cffa0c4bf7c604011b39d4ce1475b42287539c591c917dc47a47c3d8e4e9ede73e7d580ffff3fffa03c2748f8130601d94339be6a7c78cf063ed2a15c20fc2096e0713d8165058dfe8080ff8080",
       },
-      "id": "",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "target": "0xcfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7",
+      "type": "xch",
     },
   ],
   "requested": Array [
@@ -2057,11 +1904,8 @@ Object {
         "solution": "0xffffa0a509c25bed858871863ea4d4f33ef534bdcb926416d85fe4cc9979f8c39caaccffffa088a7778479b50180175ecf9de897c3691b620fea4a0ff0a0cbb7ba139bea0f17ff8300c350ffffa088a7778479b50180175ecf9de897c3691b620fea4a0ff0a0cbb7ba139bea0f1780808080",
       },
       "id": "0x6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "target": "0x88a7778479b50180175ecf9de897c3691b620fea4a0ff0a0cbb7ba139bea0f17",
+      "type": "cat",
     },
   ],
   "settlementModName": "settlement_payments_v1",
@@ -2073,7 +1917,6 @@ Object {
   "offered": Array [
     Object {
       "amount": 100000n,
-      "cat_target": undefined,
       "coin": Object {
         "coin": Object {
           "amount": 100000n,
@@ -2083,12 +1926,8 @@ Object {
         "puzzle_reveal": "0xff02ffff01ff02ffff01ff02ffff03ff0bffff01ff02ffff03ffff09ff05ffff1dff0bffff1effff0bff0bffff02ff06ffff04ff02ffff04ff17ff8080808080808080ffff01ff02ff17ff2f80ffff01ff088080ff0180ffff01ff04ffff04ff04ffff04ff05ffff04ffff02ff06ffff04ff02ffff04ff17ff80808080ff80808080ffff02ff17ff2f808080ff0180ffff04ffff01ff32ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff06ffff04ff02ffff04ff09ff80808080ffff02ff06ffff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080ffff04ffff01b08f5ea5edda6f9f263eb8bbfe32303a15141bc0f6898aebcbf8a976ae408a12361e74f7349df727b3cbebfe726001aa57ff018080",
         "solution": "0xff80ffff01ffff33ffa0cfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7ff830186a080ffff3cffa0c4bf7c604011b39d4ce1475b42287539c591c917dc47a47c3d8e4e9ede73e7d580ffff3fffa03c2748f8130601d94339be6a7c78cf063ed2a15c20fc2096e0713d8165058dfe8080ff8080",
       },
-      "id": "",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "target": "0xcfbfdeed5c4ca2de3d0bf520b9cb4bb7743a359bd2e6a188d19ce7dffc21d3e7",
+      "type": "xch",
     },
   ],
   "requested": Array [
@@ -2105,11 +1944,8 @@ Object {
         "solution": "0xffffa0a509c25bed858871863ea4d4f33ef534bdcb926416d85fe4cc9979f8c39caaccffffa088a7778479b50180175ecf9de897c3691b620fea4a0ff0a0cbb7ba139bea0f17ff8300c350ffffa088a7778479b50180175ecf9de897c3691b620fea4a0ff0a0cbb7ba139bea0f1780808080",
       },
       "id": "0x6e1815ee33e943676ee437a42b7d239c0d0826902480e4c3781fee4b327e1b6b",
-      "nft_detail": undefined,
-      "nft_target": undefined,
-      "nft_uri": "",
-      "royalty": undefined,
       "target": "0x88a7778479b50180175ecf9de897c3691b620fea4a0ff0a0cbb7ba139bea0f17",
+      "type": "cat",
     },
   ],
   "settlementModName": "settlement_payments_v1",
