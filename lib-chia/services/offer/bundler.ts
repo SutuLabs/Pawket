@@ -175,7 +175,7 @@ export async function generateOfferPlan(
   nft: NftCoinAnalysisResult | undefined = undefined,
   extraTargets: TransferTarget[] = [],
   settlementModName: "settlement_payments" | "settlement_payments_v1" = "settlement_payments_v1",
-  compatibleForceMemoAlwaysIncludeSettlement = true,
+  compatibleForceMemoAlwaysIncludeSettlement = true
 ): Promise<OfferPlan[]> {
   const plans: OfferPlan[] = [];
   const settlement_tgt = prefix0x(modshash[settlementModName]);
@@ -277,7 +277,7 @@ export async function combineOfferSpendBundle(
         ),
       }
   );
-  const summaries = await Promise.all(spendbundlesCopy.map((_) => getOfferSummary(_)));
+  const summaries = await Promise.all(spendbundlesCopy.map((_) => getOfferSummary(_, true)));
   for (let i = 0; i < summaries.length; i++) {
     const summary = summaries[i];
 

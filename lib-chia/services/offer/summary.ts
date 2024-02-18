@@ -13,8 +13,29 @@ import { parseMetadata } from "../coin/singleton";
 import { analyzeNftCoin, getNftMetadataInfo, getScalarString } from "../coin/nft";
 import { NftDetail } from "../crypto/receive";
 import { NftCoinAnalysisResult } from "../../models/nft";
+import { getCoinName0x } from "../coin/coinUtility";
 
-export async function getOfferSummary(bundle: UnsignedSpendBundle | SpendBundle): Promise<OfferSummary> {
+// sideEffect is used to allow the side effect to the originBundle, which is compatible with the original function
+export async function getOfferSummary(
+  originBundle: UnsignedSpendBundle | SpendBundle,
+  sideEffect = false
+): Promise<OfferSummary> {
+  const bundle = sideEffect
+    ? originBundle
+    : new UnsignedSpendBundle(
+        originBundle.coin_spends.map(
+          (csp) =>
+            <CoinSpend>{
+              coin: <OriginCoin>{
+                amount: csp.coin.amount,
+                parent_coin_info: csp.coin.parent_coin_info,
+                puzzle_hash: csp.coin.puzzle_hash,
+              },
+              puzzle_reveal: csp.puzzle_reveal,
+              solution: csp.solution,
+            }
+        )
+      );
   const ocs = getOfferedCoins(bundle);
   const rcs = getRequestedCoins(bundle);
   const requested: OfferEntity[] = [];
