@@ -295,6 +295,7 @@ import {
 import { sha256 } from "../../../../lib-chia/services/offer/bundler";
 import { parseBlock, parseCoinWithConds, sexpAssemble } from "../../../../lib-chia/services/coin/analyzer";
 import { ConditionOpcode } from "../../../../lib-chia/services/coin/opcode";
+import { NotificationProgrammatic as Notification } from "buefy";
 
 export interface CoinAnnouncementMessage {
   coinName: Hex0x;
@@ -370,6 +371,8 @@ export default class BundlePanel extends Vue {
       if (this.bundleText.startsWith("bundle1")) {
         this.bundle = await decodeOffer(this.bundleText);
         this.bundleText = JSON.stringify(this.bundle);
+      } else if (this.bundleText.trim() == "") {
+        this.bundle = null;
       } else {
         this.bundle = JSON.parse(this.bundleText.replace(/'/g, '"'));
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -397,6 +400,11 @@ export default class BundlePanel extends Vue {
       }
     } catch (error) {
       this.bundle = null;
+      Notification.open({
+        message: "Invalid Bundle",
+        type: "is-danger",
+        autoClose: false,
+      });
     }
 
     this.puzzleAnnoCreates = [];
