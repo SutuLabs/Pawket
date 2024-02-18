@@ -180,7 +180,7 @@ Object {
             "puzzle_hash": "0xf464978c42ea8ab982994616e3991b5003e1f54cb68f4e8d6dbdb57fc926b9c9",
           },
           "didOwner": "",
-          "hintPuzzle": "0xf464978c42ea8ab982994616e3991b5003e1f54cb68f4e8d6dbdb57fc926b9c9",
+          "hintPuzzle": "0x03db77f7c4f7fbf5284705eb051ff6e9366b619aef0bf2ddc9a819e8e2c0f3bb",
           "launcherId": "0x8c51f3c141e2d72d0c9f180a2b4bd0116240b0015a54a05bb4af2a44be2e0078",
           "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
           "metadata": Object {
@@ -210,7 +210,7 @@ Object {
           "parent_coin_info": "0xd09d28a9032e3e9b98fd69d02d160c6c36971b318f3ae77f65d40a2e16e8744c",
           "puzzle_hash": "0xf464978c42ea8ab982994616e3991b5003e1f54cb68f4e8d6dbdb57fc926b9c9",
         },
-        "hintPuzzle": "0xf464978c42ea8ab982994616e3991b5003e1f54cb68f4e8d6dbdb57fc926b9c9",
+        "hintPuzzle": "0x03db77f7c4f7fbf5284705eb051ff6e9366b619aef0bf2ddc9a819e8e2c0f3bb",
         "metadata": Object {
           "hash": "141cc03fdf2fc2dde42fe235e10cd5378b1169d14be7072f05942da872affbd1",
           "uri": "https://ipfs.io/ipfs/QmboByeviEH5oBEoRMnMVXAVbS3mvMamoBWs3jCiH111VV?filename=p8.png",
@@ -224,7 +224,7 @@ Object {
           "puzzle_hash": "0xf464978c42ea8ab982994616e3991b5003e1f54cb68f4e8d6dbdb57fc926b9c9",
         },
         "didOwner": "",
-        "hintPuzzle": "0xf464978c42ea8ab982994616e3991b5003e1f54cb68f4e8d6dbdb57fc926b9c9",
+        "hintPuzzle": "0x03db77f7c4f7fbf5284705eb051ff6e9366b619aef0bf2ddc9a819e8e2c0f3bb",
         "launcherId": "0x8c51f3c141e2d72d0c9f180a2b4bd0116240b0015a54a05bb4af2a44be2e0078",
         "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
         "metadata": Object {
@@ -281,7 +281,7 @@ Object {
             "puzzle_hash": "0xf464978c42ea8ab982994616e3991b5003e1f54cb68f4e8d6dbdb57fc926b9c9",
           },
           "didOwner": "",
-          "hintPuzzle": "0xf464978c42ea8ab982994616e3991b5003e1f54cb68f4e8d6dbdb57fc926b9c9",
+          "hintPuzzle": "0x03db77f7c4f7fbf5284705eb051ff6e9366b619aef0bf2ddc9a819e8e2c0f3bb",
           "launcherId": "0x8c51f3c141e2d72d0c9f180a2b4bd0116240b0015a54a05bb4af2a44be2e0078",
           "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
           "metadata": Object {
@@ -311,7 +311,7 @@ Object {
           "parent_coin_info": "0xd09d28a9032e3e9b98fd69d02d160c6c36971b318f3ae77f65d40a2e16e8744c",
           "puzzle_hash": "0xf464978c42ea8ab982994616e3991b5003e1f54cb68f4e8d6dbdb57fc926b9c9",
         },
-        "hintPuzzle": "0xf464978c42ea8ab982994616e3991b5003e1f54cb68f4e8d6dbdb57fc926b9c9",
+        "hintPuzzle": "0x03db77f7c4f7fbf5284705eb051ff6e9366b619aef0bf2ddc9a819e8e2c0f3bb",
         "metadata": Object {
           "hash": "141cc03fdf2fc2dde42fe235e10cd5378b1169d14be7072f05942da872affbd1",
           "uri": "https://ipfs.io/ipfs/QmboByeviEH5oBEoRMnMVXAVbS3mvMamoBWs3jCiH111VV?filename=p8.png",
@@ -325,7 +325,7 @@ Object {
           "puzzle_hash": "0xf464978c42ea8ab982994616e3991b5003e1f54cb68f4e8d6dbdb57fc926b9c9",
         },
         "didOwner": "",
-        "hintPuzzle": "0xf464978c42ea8ab982994616e3991b5003e1f54cb68f4e8d6dbdb57fc926b9c9",
+        "hintPuzzle": "0x03db77f7c4f7fbf5284705eb051ff6e9366b619aef0bf2ddc9a819e8e2c0f3bb",
         "launcherId": "0x8c51f3c141e2d72d0c9f180a2b4bd0116240b0015a54a05bb4af2a44be2e0078",
         "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
         "metadata": Object {
@@ -595,7 +595,7 @@ Object {
             "puzzle_hash": "0xb70fe0df1e17f47bc77af721d634d919459e9a9512cd1ddb9156641d6ece50a3",
           },
           "didOwner": "",
-          "hintPuzzle": "0xb70fe0df1e17f47bc77af721d634d919459e9a9512cd1ddb9156641d6ece50a3",
+          "hintPuzzle": "0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10",
           "launcherId": "0x4d15d2d5b1b4eb51a0e18de671b701a47b7f6163035ab5c0a8b9fd3960c2c630",
           "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
           "metadata": Object {
@@ -625,7 +625,7 @@ Object {
           "parent_coin_info": "0xec51abdb2d0a46b7070e0d4bb10387a5893b668e235a8fd5a77af9581028c58b",
           "puzzle_hash": "0xb70fe0df1e17f47bc77af721d634d919459e9a9512cd1ddb9156641d6ece50a3",
         },
-        "hintPuzzle": "0xb70fe0df1e17f47bc77af721d634d919459e9a9512cd1ddb9156641d6ece50a3",
+        "hintPuzzle": "0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10",
         "metadata": Object {
           "hash": "21abefc9338c4d94a7d29c4c4d91ebd12b34549053e4d0bef8d9a052f6836b7c",
           "uri": "https://ipfs.io/ipfs/Qmf4AyDewBSyAAqjy52CN9sW86Wx33pxGLsX4PaSVdJMvG",
@@ -639,7 +639,7 @@ Object {
           "puzzle_hash": "0xb70fe0df1e17f47bc77af721d634d919459e9a9512cd1ddb9156641d6ece50a3",
         },
         "didOwner": "",
-        "hintPuzzle": "0xb70fe0df1e17f47bc77af721d634d919459e9a9512cd1ddb9156641d6ece50a3",
+        "hintPuzzle": "0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10",
         "launcherId": "0x4d15d2d5b1b4eb51a0e18de671b701a47b7f6163035ab5c0a8b9fd3960c2c630",
         "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
         "metadata": Object {
@@ -696,7 +696,7 @@ Object {
             "puzzle_hash": "0xb70fe0df1e17f47bc77af721d634d919459e9a9512cd1ddb9156641d6ece50a3",
           },
           "didOwner": "",
-          "hintPuzzle": "0xb70fe0df1e17f47bc77af721d634d919459e9a9512cd1ddb9156641d6ece50a3",
+          "hintPuzzle": "0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10",
           "launcherId": "0x4d15d2d5b1b4eb51a0e18de671b701a47b7f6163035ab5c0a8b9fd3960c2c630",
           "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
           "metadata": Object {
@@ -726,7 +726,7 @@ Object {
           "parent_coin_info": "0xec51abdb2d0a46b7070e0d4bb10387a5893b668e235a8fd5a77af9581028c58b",
           "puzzle_hash": "0xb70fe0df1e17f47bc77af721d634d919459e9a9512cd1ddb9156641d6ece50a3",
         },
-        "hintPuzzle": "0xb70fe0df1e17f47bc77af721d634d919459e9a9512cd1ddb9156641d6ece50a3",
+        "hintPuzzle": "0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10",
         "metadata": Object {
           "hash": "21abefc9338c4d94a7d29c4c4d91ebd12b34549053e4d0bef8d9a052f6836b7c",
           "uri": "https://ipfs.io/ipfs/Qmf4AyDewBSyAAqjy52CN9sW86Wx33pxGLsX4PaSVdJMvG",
@@ -740,7 +740,7 @@ Object {
           "puzzle_hash": "0xb70fe0df1e17f47bc77af721d634d919459e9a9512cd1ddb9156641d6ece50a3",
         },
         "didOwner": "",
-        "hintPuzzle": "0xb70fe0df1e17f47bc77af721d634d919459e9a9512cd1ddb9156641d6ece50a3",
+        "hintPuzzle": "0x7ed1a136bdb4016e62922e690b897e85ee1970f1caf63c1cbe27e4e32f776d10",
         "launcherId": "0x4d15d2d5b1b4eb51a0e18de671b701a47b7f6163035ab5c0a8b9fd3960c2c630",
         "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
         "metadata": Object {
@@ -1025,7 +1025,7 @@ Object {
             "puzzle_hash": "0x0ad22b09f811d99b920ac0c21592617260b6a2e4f60375c397ec9b4f89d08ca6",
           },
           "didOwner": "",
-          "hintPuzzle": "0x0ad22b09f811d99b920ac0c21592617260b6a2e4f60375c397ec9b4f89d08ca6",
+          "hintPuzzle": "0x2a6493ad82090a9dcf28f6664e6641bd0ff4dd89c9a6578dcd6cd303121952d5",
           "launcherId": "0x16fd0843ed16e73eb04c7e2cc3194c6ea6593bbf92cf41c723b36c679c8642ac",
           "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
           "metadata": Object {
@@ -1061,7 +1061,7 @@ Object {
           "parent_coin_info": "0x0f10d5f1be3796e820081ad6246ba7c63b75a1fb8ac84481b1ab11f7350c2f35",
           "puzzle_hash": "0x0ad22b09f811d99b920ac0c21592617260b6a2e4f60375c397ec9b4f89d08ca6",
         },
-        "hintPuzzle": "0x0ad22b09f811d99b920ac0c21592617260b6a2e4f60375c397ec9b4f89d08ca6",
+        "hintPuzzle": "0x2a6493ad82090a9dcf28f6664e6641bd0ff4dd89c9a6578dcd6cd303121952d5",
         "metadata": Object {
           "hash": "acd37f1a8735a637212c15972d4bfa9b93621c44520b8494a2722a69d9d3dbda",
           "uri": "https://nftstorage.link/ipfs/bafybeiabph2jrzrugcw77f2t2rxr5k265kmxma346kd6xdt2x7d2exbuh4/Mojo%20Farmer%20Voucher%2035.png",
@@ -1075,7 +1075,7 @@ Object {
           "puzzle_hash": "0x0ad22b09f811d99b920ac0c21592617260b6a2e4f60375c397ec9b4f89d08ca6",
         },
         "didOwner": "",
-        "hintPuzzle": "0x0ad22b09f811d99b920ac0c21592617260b6a2e4f60375c397ec9b4f89d08ca6",
+        "hintPuzzle": "0x2a6493ad82090a9dcf28f6664e6641bd0ff4dd89c9a6578dcd6cd303121952d5",
         "launcherId": "0x16fd0843ed16e73eb04c7e2cc3194c6ea6593bbf92cf41c723b36c679c8642ac",
         "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
         "metadata": Object {
@@ -1138,7 +1138,7 @@ Object {
             "puzzle_hash": "0x0ad22b09f811d99b920ac0c21592617260b6a2e4f60375c397ec9b4f89d08ca6",
           },
           "didOwner": "",
-          "hintPuzzle": "0x0ad22b09f811d99b920ac0c21592617260b6a2e4f60375c397ec9b4f89d08ca6",
+          "hintPuzzle": "0x2a6493ad82090a9dcf28f6664e6641bd0ff4dd89c9a6578dcd6cd303121952d5",
           "launcherId": "0x16fd0843ed16e73eb04c7e2cc3194c6ea6593bbf92cf41c723b36c679c8642ac",
           "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
           "metadata": Object {
@@ -1174,7 +1174,7 @@ Object {
           "parent_coin_info": "0x0f10d5f1be3796e820081ad6246ba7c63b75a1fb8ac84481b1ab11f7350c2f35",
           "puzzle_hash": "0x0ad22b09f811d99b920ac0c21592617260b6a2e4f60375c397ec9b4f89d08ca6",
         },
-        "hintPuzzle": "0x0ad22b09f811d99b920ac0c21592617260b6a2e4f60375c397ec9b4f89d08ca6",
+        "hintPuzzle": "0x2a6493ad82090a9dcf28f6664e6641bd0ff4dd89c9a6578dcd6cd303121952d5",
         "metadata": Object {
           "hash": "acd37f1a8735a637212c15972d4bfa9b93621c44520b8494a2722a69d9d3dbda",
           "uri": "https://nftstorage.link/ipfs/bafybeiabph2jrzrugcw77f2t2rxr5k265kmxma346kd6xdt2x7d2exbuh4/Mojo%20Farmer%20Voucher%2035.png",
@@ -1188,7 +1188,7 @@ Object {
           "puzzle_hash": "0x0ad22b09f811d99b920ac0c21592617260b6a2e4f60375c397ec9b4f89d08ca6",
         },
         "didOwner": "",
-        "hintPuzzle": "0x0ad22b09f811d99b920ac0c21592617260b6a2e4f60375c397ec9b4f89d08ca6",
+        "hintPuzzle": "0x2a6493ad82090a9dcf28f6664e6641bd0ff4dd89c9a6578dcd6cd303121952d5",
         "launcherId": "0x16fd0843ed16e73eb04c7e2cc3194c6ea6593bbf92cf41c723b36c679c8642ac",
         "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
         "metadata": Object {
@@ -1511,7 +1511,7 @@ Object {
             "puzzle_hash": "0x185621ab2a3f05b2870862d65b7e986d48e2c0568571aa938772902d3a96b8dd",
           },
           "didOwner": "",
-          "hintPuzzle": "0x185621ab2a3f05b2870862d65b7e986d48e2c0568571aa938772902d3a96b8dd",
+          "hintPuzzle": "0x7eddb6c424762b7a1008db41b4b9a60f48cce2215e0e303f56b3a66ce8da9598",
           "launcherId": "0x9d30cfe5bb94111725f97bede1793f0d63cf642c88d271543ab560dc2eb75360",
           "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
           "metadata": Object {
@@ -1543,7 +1543,7 @@ Object {
           "parent_coin_info": "0xb9423a8dbfd8fbb77353212b986d56bc599ca7d3dd059030f5390d617e96510b",
           "puzzle_hash": "0x185621ab2a3f05b2870862d65b7e986d48e2c0568571aa938772902d3a96b8dd",
         },
-        "hintPuzzle": "0x185621ab2a3f05b2870862d65b7e986d48e2c0568571aa938772902d3a96b8dd",
+        "hintPuzzle": "0x7eddb6c424762b7a1008db41b4b9a60f48cce2215e0e303f56b3a66ce8da9598",
         "metadata": Object {
           "hash": "63076e67883937ab64a08c2fea11c84bca5f3e639b4def3bcadf92d79e609a3c",
           "uri": "https://dweb.link/ipfs/QmXFYJ1gaiTgjTAqgJJi4Dn6PKfQrDEBu2gzz1o1AtZrAy?filename=wahaha.xch.jpg",
@@ -1557,7 +1557,7 @@ Object {
           "puzzle_hash": "0x185621ab2a3f05b2870862d65b7e986d48e2c0568571aa938772902d3a96b8dd",
         },
         "didOwner": "",
-        "hintPuzzle": "0x185621ab2a3f05b2870862d65b7e986d48e2c0568571aa938772902d3a96b8dd",
+        "hintPuzzle": "0x7eddb6c424762b7a1008db41b4b9a60f48cce2215e0e303f56b3a66ce8da9598",
         "launcherId": "0x9d30cfe5bb94111725f97bede1793f0d63cf642c88d271543ab560dc2eb75360",
         "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
         "metadata": Object {
@@ -1616,7 +1616,7 @@ Object {
             "puzzle_hash": "0x185621ab2a3f05b2870862d65b7e986d48e2c0568571aa938772902d3a96b8dd",
           },
           "didOwner": "",
-          "hintPuzzle": "0x185621ab2a3f05b2870862d65b7e986d48e2c0568571aa938772902d3a96b8dd",
+          "hintPuzzle": "0x7eddb6c424762b7a1008db41b4b9a60f48cce2215e0e303f56b3a66ce8da9598",
           "launcherId": "0x9d30cfe5bb94111725f97bede1793f0d63cf642c88d271543ab560dc2eb75360",
           "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
           "metadata": Object {
@@ -1648,7 +1648,7 @@ Object {
           "parent_coin_info": "0xb9423a8dbfd8fbb77353212b986d56bc599ca7d3dd059030f5390d617e96510b",
           "puzzle_hash": "0x185621ab2a3f05b2870862d65b7e986d48e2c0568571aa938772902d3a96b8dd",
         },
-        "hintPuzzle": "0x185621ab2a3f05b2870862d65b7e986d48e2c0568571aa938772902d3a96b8dd",
+        "hintPuzzle": "0x7eddb6c424762b7a1008db41b4b9a60f48cce2215e0e303f56b3a66ce8da9598",
         "metadata": Object {
           "hash": "63076e67883937ab64a08c2fea11c84bca5f3e639b4def3bcadf92d79e609a3c",
           "uri": "https://dweb.link/ipfs/QmXFYJ1gaiTgjTAqgJJi4Dn6PKfQrDEBu2gzz1o1AtZrAy?filename=wahaha.xch.jpg",
@@ -1662,7 +1662,7 @@ Object {
           "puzzle_hash": "0x185621ab2a3f05b2870862d65b7e986d48e2c0568571aa938772902d3a96b8dd",
         },
         "didOwner": "",
-        "hintPuzzle": "0x185621ab2a3f05b2870862d65b7e986d48e2c0568571aa938772902d3a96b8dd",
+        "hintPuzzle": "0x7eddb6c424762b7a1008db41b4b9a60f48cce2215e0e303f56b3a66ce8da9598",
         "launcherId": "0x9d30cfe5bb94111725f97bede1793f0d63cf642c88d271543ab560dc2eb75360",
         "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
         "metadata": Object {
@@ -1981,7 +1981,7 @@ Object {
             "puzzle_hash": "0x185621ab2a3f05b2870862d65b7e986d48e2c0568571aa938772902d3a96b8dd",
           },
           "didOwner": "",
-          "hintPuzzle": "0x185621ab2a3f05b2870862d65b7e986d48e2c0568571aa938772902d3a96b8dd",
+          "hintPuzzle": "0x7eddb6c424762b7a1008db41b4b9a60f48cce2215e0e303f56b3a66ce8da9598",
           "launcherId": "0x9d30cfe5bb94111725f97bede1793f0d63cf642c88d271543ab560dc2eb75360",
           "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
           "metadata": Object {
@@ -2013,7 +2013,7 @@ Object {
           "parent_coin_info": "0xb9423a8dbfd8fbb77353212b986d56bc599ca7d3dd059030f5390d617e96510b",
           "puzzle_hash": "0x185621ab2a3f05b2870862d65b7e986d48e2c0568571aa938772902d3a96b8dd",
         },
-        "hintPuzzle": "0x185621ab2a3f05b2870862d65b7e986d48e2c0568571aa938772902d3a96b8dd",
+        "hintPuzzle": "0x7eddb6c424762b7a1008db41b4b9a60f48cce2215e0e303f56b3a66ce8da9598",
         "metadata": Object {
           "hash": "63076e67883937ab64a08c2fea11c84bca5f3e639b4def3bcadf92d79e609a3c",
           "uri": "https://dweb.link/ipfs/QmXFYJ1gaiTgjTAqgJJi4Dn6PKfQrDEBu2gzz1o1AtZrAy?filename=wahaha.xch.jpg",
@@ -2027,7 +2027,7 @@ Object {
           "puzzle_hash": "0x185621ab2a3f05b2870862d65b7e986d48e2c0568571aa938772902d3a96b8dd",
         },
         "didOwner": "",
-        "hintPuzzle": "0x185621ab2a3f05b2870862d65b7e986d48e2c0568571aa938772902d3a96b8dd",
+        "hintPuzzle": "0x7eddb6c424762b7a1008db41b4b9a60f48cce2215e0e303f56b3a66ce8da9598",
         "launcherId": "0x9d30cfe5bb94111725f97bede1793f0d63cf642c88d271543ab560dc2eb75360",
         "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
         "metadata": Object {
@@ -2086,7 +2086,7 @@ Object {
             "puzzle_hash": "0x185621ab2a3f05b2870862d65b7e986d48e2c0568571aa938772902d3a96b8dd",
           },
           "didOwner": "",
-          "hintPuzzle": "0x185621ab2a3f05b2870862d65b7e986d48e2c0568571aa938772902d3a96b8dd",
+          "hintPuzzle": "0x7eddb6c424762b7a1008db41b4b9a60f48cce2215e0e303f56b3a66ce8da9598",
           "launcherId": "0x9d30cfe5bb94111725f97bede1793f0d63cf642c88d271543ab560dc2eb75360",
           "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
           "metadata": Object {
@@ -2118,7 +2118,7 @@ Object {
           "parent_coin_info": "0xb9423a8dbfd8fbb77353212b986d56bc599ca7d3dd059030f5390d617e96510b",
           "puzzle_hash": "0x185621ab2a3f05b2870862d65b7e986d48e2c0568571aa938772902d3a96b8dd",
         },
-        "hintPuzzle": "0x185621ab2a3f05b2870862d65b7e986d48e2c0568571aa938772902d3a96b8dd",
+        "hintPuzzle": "0x7eddb6c424762b7a1008db41b4b9a60f48cce2215e0e303f56b3a66ce8da9598",
         "metadata": Object {
           "hash": "63076e67883937ab64a08c2fea11c84bca5f3e639b4def3bcadf92d79e609a3c",
           "uri": "https://dweb.link/ipfs/QmXFYJ1gaiTgjTAqgJJi4Dn6PKfQrDEBu2gzz1o1AtZrAy?filename=wahaha.xch.jpg",
@@ -2132,7 +2132,7 @@ Object {
           "puzzle_hash": "0x185621ab2a3f05b2870862d65b7e986d48e2c0568571aa938772902d3a96b8dd",
         },
         "didOwner": "",
-        "hintPuzzle": "0x185621ab2a3f05b2870862d65b7e986d48e2c0568571aa938772902d3a96b8dd",
+        "hintPuzzle": "0x7eddb6c424762b7a1008db41b4b9a60f48cce2215e0e303f56b3a66ce8da9598",
         "launcherId": "0x9d30cfe5bb94111725f97bede1793f0d63cf642c88d271543ab560dc2eb75360",
         "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
         "metadata": Object {
@@ -2268,7 +2268,7 @@ Object {
             "puzzle_hash": "0x4784d032061c04a66cf4ab01064171e4a13ebac57ee30017a6efb9190e68b4ac",
           },
           "didOwner": "",
-          "hintPuzzle": "0x4784d032061c04a66cf4ab01064171e4a13ebac57ee30017a6efb9190e68b4ac",
+          "hintPuzzle": "0xe6ffceade82c98da8bcc89a666c52dc02c7532f47035452b7de9d166155f880b",
           "launcherId": "0x2eb573c8d3ac88fb6f392298e679fed2b3885f0c8a7bd57479865b2f9dfc3fab",
           "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
           "metadata": Object {
@@ -2298,7 +2298,7 @@ Object {
           "parent_coin_info": "0x65371424569b9594ae5fafaea14bd3cb8e684ab63f407952bf55905d61bdc63e",
           "puzzle_hash": "0x4784d032061c04a66cf4ab01064171e4a13ebac57ee30017a6efb9190e68b4ac",
         },
-        "hintPuzzle": "0x4784d032061c04a66cf4ab01064171e4a13ebac57ee30017a6efb9190e68b4ac",
+        "hintPuzzle": "0xe6ffceade82c98da8bcc89a666c52dc02c7532f47035452b7de9d166155f880b",
         "metadata": Object {
           "hash": "e33c2fc826d6c3f27352242f8df96b6f84bb983faf9dc4c2f863b71ee7f7560e",
           "uri": "https://nftstorage.link/ipfs/bafybeib5jjqg5k6rhyck2mcgjixne6p2v4jrvlr72voaukk3rt5ugnblju/009J.png",
@@ -2312,7 +2312,7 @@ Object {
           "puzzle_hash": "0x4784d032061c04a66cf4ab01064171e4a13ebac57ee30017a6efb9190e68b4ac",
         },
         "didOwner": "",
-        "hintPuzzle": "0x4784d032061c04a66cf4ab01064171e4a13ebac57ee30017a6efb9190e68b4ac",
+        "hintPuzzle": "0xe6ffceade82c98da8bcc89a666c52dc02c7532f47035452b7de9d166155f880b",
         "launcherId": "0x2eb573c8d3ac88fb6f392298e679fed2b3885f0c8a7bd57479865b2f9dfc3fab",
         "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
         "metadata": Object {
@@ -2602,7 +2602,7 @@ Object {
             "puzzle_hash": "0x311524ea04195c124d0fa3cebc7c7118b99eaa2553284d7be4820cc52f6ce1c9",
           },
           "didOwner": "",
-          "hintPuzzle": "0x311524ea04195c124d0fa3cebc7c7118b99eaa2553284d7be4820cc52f6ce1c9",
+          "hintPuzzle": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
           "launcherId": "0x74cc7e5904310477bae6e250910da9fee0e604b93d73a180cbd052d12f56769a",
           "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
           "metadata": Object {
@@ -2632,7 +2632,7 @@ Object {
           "parent_coin_info": "0x81f9e36a5e45fe43b590eedb39db8fba322077885d9044d31378219ec988e8a0",
           "puzzle_hash": "0x311524ea04195c124d0fa3cebc7c7118b99eaa2553284d7be4820cc52f6ce1c9",
         },
-        "hintPuzzle": "0x311524ea04195c124d0fa3cebc7c7118b99eaa2553284d7be4820cc52f6ce1c9",
+        "hintPuzzle": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
         "metadata": Object {
           "hash": "e62bcdc91903b07b7b86f1af11c5fdd9c3b545bfff90515976f9e8d67c91eb0f",
           "uri": "https://guggero.github.io/cryptography-toolkit/images/fork-me-on-github-ribbon.png",
@@ -2646,7 +2646,7 @@ Object {
           "puzzle_hash": "0x311524ea04195c124d0fa3cebc7c7118b99eaa2553284d7be4820cc52f6ce1c9",
         },
         "didOwner": "",
-        "hintPuzzle": "0x311524ea04195c124d0fa3cebc7c7118b99eaa2553284d7be4820cc52f6ce1c9",
+        "hintPuzzle": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
         "launcherId": "0x74cc7e5904310477bae6e250910da9fee0e604b93d73a180cbd052d12f56769a",
         "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
         "metadata": Object {
@@ -2703,7 +2703,7 @@ Object {
             "puzzle_hash": "0x311524ea04195c124d0fa3cebc7c7118b99eaa2553284d7be4820cc52f6ce1c9",
           },
           "didOwner": "",
-          "hintPuzzle": "0x311524ea04195c124d0fa3cebc7c7118b99eaa2553284d7be4820cc52f6ce1c9",
+          "hintPuzzle": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
           "launcherId": "0x74cc7e5904310477bae6e250910da9fee0e604b93d73a180cbd052d12f56769a",
           "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
           "metadata": Object {
@@ -2733,7 +2733,7 @@ Object {
           "parent_coin_info": "0x81f9e36a5e45fe43b590eedb39db8fba322077885d9044d31378219ec988e8a0",
           "puzzle_hash": "0x311524ea04195c124d0fa3cebc7c7118b99eaa2553284d7be4820cc52f6ce1c9",
         },
-        "hintPuzzle": "0x311524ea04195c124d0fa3cebc7c7118b99eaa2553284d7be4820cc52f6ce1c9",
+        "hintPuzzle": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
         "metadata": Object {
           "hash": "e62bcdc91903b07b7b86f1af11c5fdd9c3b545bfff90515976f9e8d67c91eb0f",
           "uri": "https://guggero.github.io/cryptography-toolkit/images/fork-me-on-github-ribbon.png",
@@ -2747,7 +2747,7 @@ Object {
           "puzzle_hash": "0x311524ea04195c124d0fa3cebc7c7118b99eaa2553284d7be4820cc52f6ce1c9",
         },
         "didOwner": "",
-        "hintPuzzle": "0x311524ea04195c124d0fa3cebc7c7118b99eaa2553284d7be4820cc52f6ce1c9",
+        "hintPuzzle": "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155",
         "launcherId": "0x74cc7e5904310477bae6e250910da9fee0e604b93d73a180cbd052d12f56769a",
         "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
         "metadata": Object {

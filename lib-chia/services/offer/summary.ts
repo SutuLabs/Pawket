@@ -108,14 +108,14 @@ export async function getOfferSummary(bundle: UnsignedSpendBundle | SpendBundle)
           });
         } else if (nftId) {
           if (royalty == -1) throw new Error("royalty must be set");
-          const analysis = await analyzeNftCoin(coin.puzzle_reveal, coin.coin.puzzle_hash, coin.coin, coin.solution);
+          const analysis = await analyzeNftCoin(coin.puzzle_reveal, undefined, coin.coin, coin.solution);
           if (!analysis) throw new Error("failed to analyze the nft coin");
           const nft_detail: NftDetail = {
             metadata: {
               uri: getScalarString(analysis.metadata.imageUri) ?? "",
               hash: analysis.metadata.imageHash ?? "",
             },
-            hintPuzzle: coin.coin.puzzle_hash,
+            hintPuzzle: analysis.hintPuzzle,
             coin: coin.coin,
             address: puzzle.getAddressFromPuzzleHash(analysis.launcherId, "nft"),
             analysis,
