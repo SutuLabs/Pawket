@@ -1,6 +1,6 @@
 import { CoinSpend, OriginCoin, SpendBundle, UnsignedSpendBundle } from "../spendbundle";
 import { Bytes, SExp, Tuple } from "clvm";
-import { getNumber, Hex0x, prefix0x, unprefix0x } from "../coin/condition";
+import { getArgMsg, getFirstLevelArgMsg, getNumber, Hex0x, prefix0x, unprefix0x } from "../coin/condition";
 import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
 import puzzle from "../crypto/puzzle";
 import { modsdict, modshash, modshashdict, modsprog } from "../coin/mods";
@@ -167,11 +167,15 @@ export async function getOfferSummary(
 
   for (let i = 0; i < ocs.length; i++) {
     const coin = ocs[i];
-    offered.push(
-      ...(await getCoinEntities(coin, "offer")).filter(
-        (_) => _.target == modshash["settlement_payments"] || _.target == modshash["settlement_payments_v1"]
-      )
-    );
+    try {
+      offered.push(
+        ...(await getCoinEntities(coin, "offer")).filter(
+          (_) => _.target == modshash["settlement_payments"] || _.target == modshash["settlement_payments_v1"]
+        )
+      );
+    } catch (e) {
+      throw new Error(`failed to parse #${i} offer coin ${getCoinName0x(coin.coin)} of [${JSON.stringify(coin)}]: ${e}`);
+    }
   }
 
   for (let i = 0; i < rcs.length; i++) {
@@ -268,9 +272,55 @@ export function convertOfferToRequest(offers: OfferEntity[]): RequestType[] {
   return reqs;
 }
 
+export async function getNextCoinInfoOfOfferSummary(
+  originBundle: UnsignedSpendBundle | SpendBundle
+): Promise<OfferSummaryNextCoinInfo> {
+  const summary = await getOfferSummary(originBundle);
+  const ret: OfferSummaryNextCoinInfo = { offered: [] };
+
+  async function convert(ent: OfferEntity): Promise<OfferSummaryNextCoinInfoEntity> {
+    if (!ent.coin) throw new Error("coin is not found in offer entity");
+    const result = await puzzle.executePuzzleHex(ent.coin.puzzle_reveal, ent.coin.solution);
+    const coins: OriginCoin[] = result.conditions
+      .filter((_) => _.code == ConditionOpcode.CREATE_COIN)
+      .map((_) => {
+        if (!ent.coin) throw new Error("coin is not found in offer entity");
+        const hex = getFirstLevelArgMsg(_.args.at(0));
+        return {
+          puzzle_hash: prefix0x(hex),
+          amount: getNumber(getFirstLevelArgMsg(_.args.at(1))),
+          parent_coin_info: getCoinName0x(ent.coin.coin),
+        };
+      });
+
+    return {
+      type: ent.type,
+      thisCoin: ent.coin.coin,
+      nextCoins: coins,
+    };
+  }
+
+  for (let i = 0; i < summary.offered.length; i++) {
+    const off = summary.offered[i];
+    ret.offered.push(await convert(off));
+  }
+
+  return ret;
+}
+
 function getAmount(symbol: string, amount: string, xchSymbol: string): bigint {
   const decimal = symbol == xchSymbol ? 12 : 3;
   return BigInt(bigDecimal.multiply(amount, Math.pow(10, decimal)));
+}
+
+export interface OfferSummaryNextCoinInfo {
+  offered: OfferSummaryNextCoinInfoEntity[];
+}
+
+export interface OfferSummaryNextCoinInfoEntity {
+  type: "xch" | "cat" | "nft";
+  thisCoin: OriginCoin;
+  nextCoins: OriginCoin[];
 }
 
 export interface UncurriedPuzzle {

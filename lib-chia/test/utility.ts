@@ -1,4 +1,4 @@
-import { OriginCoin, SpendBundle } from "../services/spendbundle";
+import { OriginCoin, SpendBundle, UnsignedSpendBundle } from "../services/spendbundle";
 import { AccountEntity } from "../models/account";
 import { GetParentPuzzleResponse } from "../models/api";
 import receive from "../services/crypto/receive";

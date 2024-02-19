@@ -8,7 +8,7 @@ import receive, { TokenPuzzleDetail } from "../crypto/receive";
 import { generateOfferPlan, generateNftOffer } from "./bundler";
 import { prefix0x } from "../coin/condition";
 import { GetParentPuzzleResponse } from "../../models/api";
-import { OfferEntity, OfferPlanForRoyalty, RequestType } from "./summary";
+import { OfferEntity, RequestType } from "./summary";
 import utility from "../crypto/utility";
 import { Instance } from "../util/instance";
 
@@ -32,14 +32,6 @@ export async function generateMintCnsOffer(
 
   const target_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(changeAddress));
-  const reqs: RequestType[] = [
-    {
-      type: "token",
-      id: "",
-      amount: price,
-      target: target_hex,
-    },
-  ];
 
   // generate temporary intermediate address
   const BLS = Instance.BLS;
@@ -101,6 +93,22 @@ export async function generateMintCnsOffer(
     if (resp) return resp;
     return await legacyApiCall(parentCoinId);
   };
+  const reqs: RequestType[] = [
+    {
+      type: "token",
+      id: "",
+      amount: price,
+      target: target_hex,
+    },
+  ];
+  if (legacyNft)
+    reqs.push({
+      type: "nft",
+      id: legacyNft.launcherId,
+      nft: legacyNft,
+      amount: 1n,
+      target: "0x000000000000000000000000000000000000000000000000000000000000dead", // burn
+    });
   const offerBundle = await generateNftOffer(offplan, reqs, requests, net, nonceHex);
 
   const offerCombineBundle = combineSpendBundle(spendBundle, offerBundle);
