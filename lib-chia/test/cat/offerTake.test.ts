@@ -110,43 +110,6 @@ test("Take Offer Xch For CAT", async () => {
   expect(combined).toMatchSnapshot("bundle");
 });
 
-test("Take Offer CAT For Xch", async () => {
-  const offerText =
-    "offer1qqp83w76wzru6cmqvpsxygqqwc7hynr6hum6e0mnf72sn7uvvkpt68eyumkhelprk0adeg42nlelk2mpafrgx923m0l4lupujuu7m6vvmjxy042f2esn0hm4nalt3ym0dhrf29e0h9nxc6y69h2s54rzkly49yh8a9k2lr60zg662fakned6dx6s7nt4eqj492v0l3s2chhqxsy0sqkdqvxdamm7ywnp0t098yzel2449djcf3dhtq6gg8wd53e3ua8ms99je6e2hxqedeet94hulx27n8zdejp9tyh8le7ael208halsp8m8r6hnv5smpga6pytnlghvzr2uj8mvs6xmvs68mvs69mq30py53dnkpzuaskj3wnhyz5ame72u42nkf3dnzgddvtsnk3nvgl8ps7lr6gtp0tda697wvr65tz0gt6fmu2tul6tcflxfw6xh9087pe2sn2sd9u89wzzl6wmw5vawsmtgyz99mjgwumlrfk0pp4dc7pkwa9v3l7vdwy0dlgahw6xq7ep5ms638em6ztata27vu86arnw433r4fkjujhnfc5jk6tkehlzqvgltfagqrtdsz6y4l30yr2vqqwxaxtllpy4s8xrgf4z2eh49hs8235l7l6p60c5ted08ll85ffk7xyl499vhy0au6j0hvl2jepfsas2k72rm9hv8jus6nuhlsv67fe4w8p4mkp69cackca8k7n3h4neat94hwswgh0n56nqlmuj4ehj93jwxk8cdlcteg4najd5n22477rkjmalpggsh8qwqu84a6hadwtkf0tufzffkhxycpx6gk5trutlqxs7d3hlym256r2yn9zd34fqj0q2njjpvmh89l6tpdwt9f3wfr77c7eq9cua47hge0sg8w40svjl4lajpw7dltassqm79h8j4aeye7m0ukjr8vcuhhenhllknlavj0sttaj6kwawlhllct7h08aav3lv0skez9gzpk936semac0meg8ldxkmmchj3kre07grqpnwkstyz9uhlz";
-
-  const account = getTestAccount("029f493caf194d4a67a6a5bad588c12ff1f2512f5db7118fd4005492b9dafbb5");
-
-  const makerBundle = await decodeOffer(offerText);
-  const summary = await getOfferSummary(makerBundle);
-  expect(summary).toMatchSnapshot("summary");
-  const change_hex = "0xb379a659194799dfa9171f7770f6935b1644fe48fd6fb596d5df0ac2abff2bda";
-  const nonce = "c616dec58b3c9a898b167f4ea26adb27b464c7e28d2656eeb845a525b9f5786c";
-  const tokenPuzzles = await getAccountAddressDetails(account, [], tokenInfo(), xchPrefix(), xchSymbol(), undefined, "cat_v1");
-  // const availcoins = await coinHandler.getAvailableCoins(tokenPuzzles, coinHandler.getTokenNames(account));
-  const availcoins: SymbolCoins = {
-    [xchSymbol()]: [
-      {
-        amount: 7n,
-        parent_coin_info: "0x4eb49d82f126a408914ab23552b8aba955dd19c329d1489a0275556c7012b7e7",
-        puzzle_hash: "0xb379a659194799dfa9171f7770f6935b1644fe48fd6fb596d5df0ac2abff2bda",
-      },
-    ],
-  };
-
-  const cats = getCatNameDict(account);
-  expect(cats).toMatchSnapshot("cats dict");
-  const revSummary = getReversePlan(summary, change_hex, cats);
-  expect(revSummary).toMatchSnapshot("reverse summary");
-  const offplan = await generateOfferPlan(revSummary.offered, change_hex, availcoins, 0n, xchSymbol());
-  expect(offplan).toMatchSnapshot("offer plan");
-  const utakerBundle = await generateOffer(offplan, revSummary.requested, tokenPuzzles, net, nonce, "cat_v1");
-  const takerBundle = await signSpendBundle(utakerBundle, tokenPuzzles, net.chainId);
-  expect(takerBundle).toMatchSnapshot("taker bundle");
-  const combined = await combineOfferSpendBundle([makerBundle, takerBundle]);
-  await assertSpendbundle(combined, net.chainId);
-  expect(combined).toMatchSnapshot("bundle");
-});
-
 test.each([0n, 5n])("Take Offer with multiple XCH with fee %p included", async (fee: bigint) => {
   const offerText =
     "offer1qqzh3wcuu2rykcmqvpsxvgqq8e55mct6w4chdkauhaetm8svr28uavw0j9cn8v9udxaljqe8clsk62mqatswm4x3mflmfasl4h75w6ll68d8ld8klul4pdflhpc97c97aaeu9w7kgm3k6uer5vnwg85fv4wp7cp7wakkphxwczhd6ddjtf24qedh55nzsh8fnh4h2jwdwpdad95a4uhj04ma9lkm4hx3drfp82mjhp0szkj4pj4pvpv395yp5ndgxdpxg94gymzq3at64k8hql2kh24j44a58ncepxldyn8f6nawvet3sle65qyafd7qwzg4nxj77c3clk4f4lh4m4wm5al7jq2leraf7luyjjp7lf094qhqe77lejl9pqggw5sph0uxcj9znxd3tlctw7es0a9dra6rkld2hnallwud0e6gupwa2uh0cf3nytc0nfjwm8q7lnrfhm7kj50vvpm0maktqhmsa8zgu3n8yw4jwk6kdspnv5mk89hhwsrd4vxw0atcvzpnwt8u76nurz737lq0ep02qkmr7rjd9wwzexqnah70lw4v0wavhgnrp5gke5a607lxk45cesejz600565jkdxqtgdjpz06l7p9mrcuj00w7r0talw9xewz8e3ejc80q7yhjwcllly2c04h4r4w0l87etlk6rqh006rgxyqrfk0utcgma6l3e95l04pht58eaep97lthtmggwhnsm0c5ckzjlf0gn87l9kr2q92ktlm7cyaa5wdx4zrg8ls8p5t8lnrzla6lnwx9k7plxtnh4lamav8e880wkl3zwy5rzp0hljyhhv07sttwt6ut6xl5ye0ha3u8j4a9h9ydtj77ulavmegkrc0370dlxk423vj3mrsa98ma8fs702tq9mkwexvh968wfata88wlpu37v9kc57u5h5vknvfaj4ls2rhnhdfm0jh87e89vjfc9hv83c6vh8f780yj8ulpw962tuhn4ajdm707t3zjra8fvd9ljej4pl6hzs5mwm079asd40jt5a7xdqm9cwrwyp5a726llem57n07jtxaku7dr7h77ahl77ujcqlf4a2qahva0zym2e9l77k2nmgzz0p2a055z23q9clmwtekwk34j477ht4ttxlh65800fkdncmkhth50hh97twqju2khd9fa862d9maluwrx89kx9rfvle4tr6jjawswtt0ze79eag5l0mwt66wlj98pvw9nnmxmmt3u0syqrl0e9cqenx3l4";

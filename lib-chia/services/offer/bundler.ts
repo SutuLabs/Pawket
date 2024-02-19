@@ -11,11 +11,12 @@ import { getNextCoinInfoOfOfferSummary, getOfferSummary, OfferEntity, OfferPlan,
 import { GetParentPuzzleResponse } from "../../models/api";
 import { assemble, curry, disassemble } from "clvm_tools";
 import { modshash, modshex0x, modsprog } from "../coin/mods";
-import { getCoinName, getCoinName0x, NetworkContext } from "../coin/coinUtility";
+import { getCoinName0x, NetworkContext } from "../coin/coinUtility";
 import { Instance } from "../util/instance";
 import { generateTransferNftBundle, getTransferNftPuzzle, getTransferNftSolution } from "../coin/nft";
 import crypto from "../crypto/isoCrypto";
 import { NftCoinAnalysisResult } from "../../models/nft";
+import { prepareBigIntStringify } from "../../test/utility";
 
 export async function generateOffer(
   offered: OfferPlan[],
@@ -279,123 +280,59 @@ export async function combineOfferSpendBundle(
   );
   const sumNexts = await Promise.all(spendbundlesCopy.map((_) => getNextCoinInfoOfOfferSummary(_)));
   const summaries = await Promise.all(spendbundlesCopy.map((_) => getOfferSummary(_, true)));
-  if (summaries[0].requested.length != 1 || summaries[1].requested.length != 1) {
-    // new logic for better compatibility and especially handling the nft + xch -> nft
-    // fulfill the request with the offer from other summaries by modify solution
-    for (let i = 0; i < summaries.length; i++) {
-      const summary = summaries[i];
-      const offcss = summaries
-        .map((_, j) => ({ summary: summaries[j], next: sumNexts[j] }))
-        .filter((_, j) => j != i)
-        .map((_) => _.summary.offered.map((o, k) => ({ entity: o, info: _.next.offered[k] })))
-        .flatMap((_) => _);
+  // new logic for better compatibility and especially handling the nft + xch -> nft
+  // fulfill the request with the offer from other summaries by modify solution
+  for (let i = 0; i < summaries.length; i++) {
+    const summary = summaries[i];
+    const offcss = summaries
+      .map((_, j) => ({ summary: summaries[j], next: sumNexts[j] }))
+      .filter((_, j) => j != i)
+      .map((_) => _.summary.offered.map((o, k) => ({ entity: o, info: _.next.offered[k] })))
+      .flatMap((_) => _);
 
-      for (let j = 0; j < summary.requested.length; j++) {
-        const req = summary.requested[j];
-        const reqcs = req.coin;
-        if (!reqcs?.coin) throw new Error("unknown request coin");
-
-        // find the right offer coinspend by this request, and made them the parent-child relationship
-        // req coin's parent should be 0x0000...0 while req coin's puzzle_hash should be the `settlement_payments`
-        // off coin should created the coin with `puzzle_hash` be the `settlement_payments`
-        // req coin's puzzle_hash should equal to one of off coin's creation
-        // off/req coins type should be the same
-        // set `parent_coin_info` to the off coin's coin name
-        const filterOffcs = offcss.filter(
-          (_) =>
-            _.entity.type == req.type &&
-            _.entity.coin &&
-            _.entity.amount == req.amount &&
-            _.info.nextCoins.find((_) => _.puzzle_hash == req.coin?.coin.puzzle_hash)
-        );
-        if (filterOffcs.length != 1) {
-          console.log("filterOffcs", JSON.stringify(filterOffcs));
-          console.log("offcss", JSON.stringify(offcss));
-          console.log("req", JSON.stringify(req));
-          throw new Error("unexpected length of filtered offer coin spends");
-        }
-        const offcs = filterOffcs[0].entity.coin;
-        const offc = filterOffcs[0];
-        if (!offcs) throw new Error("find null offer coin");
-
-        reqcs.coin.parent_coin_info = getCoinName0x(offcs.coin);
-        reqcs.coin.amount = req.amount;
-        const localPuzzleApiCall = async function (): Promise<GetParentPuzzleResponse> {
-          return {
-            parentCoinId: "",
-            amount: Number(offcs.coin.amount),
-            parentParentCoinId: offcs.coin.parent_coin_info,
-            puzzleReveal: offcs.puzzle_reveal,
-          };
-        };
-
-        if (offc.entity.type != req.type) throw new Error("off type should equal to req type");
-        // generate solution
-        if (req.type == "nft") {
-          const proof = await catBundle.getLineageProof(getCoinName0x(offcs.coin), localPuzzleApiCall, 2);
-          const lsol = await puzzle.disassemblePuzzle(reqcs.solution);
-          const lsolr = lsol.substring(1, lsol.length - 1);
-          const solution = await getTransferNftSolution(proof, lsolr);
-          reqcs.solution = prefix0x(await puzzle.encodePuzzle(solution));
-        } else if (req.type == "cat") {
-          const inner_puzzle = await puzzle.disassemblePuzzle(reqcs.solution);
-
-          const cat_target = offc.entity.type == "cat" ? offc.entity.cat_target : "";
-          if (!cat_target) throw new Error("cat target should be parsed");
-
-          const offnewcoin: OriginCoin = {
-            parent_coin_info: getCoinName0x(offcs.coin),
-            amount: req.amount,
-            puzzle_hash: cat_target,
-          };
-
-          const proof = await catBundle.getLineageProof(getCoinName0x(offcs.coin), localPuzzleApiCall);
-          const solution = catBundle.getCatPuzzleSolution(
-            inner_puzzle,
-            offnewcoin,
-            offnewcoin,
-            offnewcoin,
-            settlement_tgt,
-            0n,
-            proof
-          );
-          reqcs.solution = prefix0x(await puzzle.encodePuzzle(solution));
-        }
-      }
-    }
-  } else {
-    // compatibility logic
-    for (let i = 0; i < summaries.length; i++) {
-      const summary = summaries[i];
-
-      if (summary.requested.length != 1) throw new Error("unexpected length of request");
-      const req = summary.requested[0];
+    for (let j = 0; j < summary.requested.length; j++) {
+      const req = summary.requested[j];
       const reqcs = req.coin;
       if (!reqcs?.coin) throw new Error("unknown request coin");
-      const offcss = summaries[(i + 1) % summaries.length].offered;
-      if (
-        !(
-          offcss.length == 1 ||
-          (offcss.length > 1 && offcss.every((_) => getCoinName(_.coin?.coin) == getCoinName(offcss[0].coin?.coin)))
-        )
-      )
-        throw new Error("unexpected length of offer coin spends");
-      const offcs = offcss[0].coin;
-      if (!offcs?.coin) throw new Error("unknown offer coin");
+
+      // find the right offer coinspend by this request, and made them the parent-child relationship
+      // req coin's parent should be 0x0000...0 while req coin's puzzle_hash should be the `settlement_payments`
+      // off coin should created the coin with `puzzle_hash` be the `settlement_payments`
+      // req coin's puzzle_hash should equal to one of off coin's creation
+      // off/req coins type should be the same
+      // set `parent_coin_info` to the off coin's coin name
+      const filterOffcs = offcss.filter(
+        (_) =>
+          _.entity.type == req.type &&
+          _.entity.coin &&
+          _.entity.amount == req.amount &&
+          _.info.nextCoins.find((_) => _.puzzle_hash == req.coin?.coin.puzzle_hash)
+      );
+      if (filterOffcs.length != 1) {
+        prepareBigIntStringify();
+        console.log("filterOffcs", JSON.stringify(filterOffcs));
+        console.log("offcss", JSON.stringify(offcss));
+        console.log("req", JSON.stringify(req));
+        throw new Error("cannot filter out the right offer coin spend for the request");
+      }
+      const offcs = filterOffcs[0].entity.coin;
+      const offc = filterOffcs[0];
+      if (!offcs) throw new Error("find null offer coin");
 
       reqcs.coin.parent_coin_info = getCoinName0x(offcs.coin);
       reqcs.coin.amount = req.amount;
+      const localPuzzleApiCall = async function (): Promise<GetParentPuzzleResponse> {
+        return {
+          parentCoinId: "",
+          amount: Number(offcs.coin.amount),
+          parentParentCoinId: offcs.coin.parent_coin_info,
+          puzzleReveal: offcs.puzzle_reveal,
+        };
+      };
 
+      if (offc.entity.type != req.type) throw new Error("off type should equal to req type");
       // generate solution
       if (req.type == "nft") {
-        const localPuzzleApiCall = async function (): Promise<GetParentPuzzleResponse> {
-          return {
-            parentCoinId: "",
-            amount: Number(offcs.coin.amount),
-            parentParentCoinId: offcs.coin.parent_coin_info,
-            puzzleReveal: offcs.puzzle_reveal,
-          };
-        };
         const proof = await catBundle.getLineageProof(getCoinName0x(offcs.coin), localPuzzleApiCall, 2);
         const lsol = await puzzle.disassemblePuzzle(reqcs.solution);
         const lsolr = lsol.substring(1, lsol.length - 1);
@@ -404,31 +341,15 @@ export async function combineOfferSpendBundle(
       } else if (req.type == "cat") {
         const inner_puzzle = await puzzle.disassemblePuzzle(reqcs.solution);
 
-        if (
-          offcss[0].type != "cat" ||
-          !(
-            offcss.length == 1 ||
-            (offcss.length > 1 &&
-              offcss.every((_) => _.type == "cat" && offcss[0].type == "cat" && _.cat_target == offcss[0].cat_target))
-          )
-        )
-          throw new Error("unexpected length of summary offers");
-        const cat_target = offcss[0].cat_target;
+        const cat_target = offc.entity.type == "cat" ? offc.entity.cat_target : "";
         if (!cat_target) throw new Error("cat target should be parsed");
+
         const offnewcoin: OriginCoin = {
           parent_coin_info: getCoinName0x(offcs.coin),
           amount: req.amount,
           puzzle_hash: cat_target,
         };
 
-        const localPuzzleApiCall = async function (): Promise<GetParentPuzzleResponse> {
-          return {
-            parentCoinId: "",
-            amount: Number(offcs.coin.amount),
-            parentParentCoinId: offcs.coin.parent_coin_info,
-            puzzleReveal: offcs.puzzle_reveal,
-          };
-        };
         const proof = await catBundle.getLineageProof(getCoinName0x(offcs.coin), localPuzzleApiCall);
         const solution = catBundle.getCatPuzzleSolution(
           inner_puzzle,
