@@ -105,9 +105,9 @@
                           <img :src="ent.nftanalysis.metadata.imageUri" class="nft-image" />
                         </b-tooltip>
                       </a>
-                      <div class="ml-3" v-if="ent.nft_detail && 'cnsName' in ent.nft_detail.analysis">
+                      <div class="ml-3" v-if="ent.type == 'nft' && 'cnsName' in ent.nftanalysis">
                         <p class="is-size-6 has-text-weight-bold">
-                          {{ ent.nft_detail.analysis.cnsName }}
+                          {{ ent.nftanalysis.cnsName }}
                           <b-tooltip :label="$t('offer.take.ui.tooltip.verifiedCns')" v-if="verifiedCns == true">
                             <i class="mdi mdi-check-decagram has-text-success"></i>
                           </b-tooltip>
@@ -268,12 +268,7 @@ import { AccountEntity, CustomCat, OneTokenInfo, TokenInfo } from "../../../../l
 import { demojo } from "@/filters/unitConversion";
 import { SymbolCoins } from "../../../../lib-chia/services/transfer/transfer";
 import { TokenPuzzleDetail } from "../../../../lib-chia/services/crypto/receive";
-import {
-  convertOfferToRequest,
-  getOfferSummary,
-  OfferPlanForRoyalty,
-  OfferSummary,
-} from "../../../../lib-chia/services/offer/summary";
+import { convertOfferToRequest, getOfferSummary, OfferSummary } from "../../../../lib-chia/services/offer/summary";
 import { decodeOffer } from "../../../../lib-chia/services/offer/encoding";
 import { NotificationProgrammatic as Notification } from "buefy";
 import {
@@ -456,7 +451,7 @@ export default class TakeOffer extends Vue {
     const s = this.summary;
     if (!s) return 0;
     if (s.offered[0].type != "nft") return -1;
-    return (s.offered[0].nft_detail?.analysis.tradePricePercentage ?? 0) / 100;
+    return (s.offered[0].nftanalysis.tradePricePercentage ?? 0) / 100;
   }
 
   get observeMode(): boolean {
@@ -467,7 +462,7 @@ export default class TakeOffer extends Vue {
     const s = this.summary;
     if (!s) return "()";
     if (s.offered[0].type != "nft") return "()";
-    return s.offered[0].nft_detail?.analysis.royaltyAddress ?? "()";
+    return s.offered[0].nftanalysis.royaltyAddress ?? "()";
   }
 
   get total(): string {
@@ -584,14 +579,10 @@ export default class TakeOffer extends Vue {
           autoClose: true,
         });
 
-      if (
-        this.summary.offered[0].type == "nft" &&
-        this.summary.offered[0].nft_detail &&
-        "cnsName" in this.summary.offered[0].nft_detail.analysis
-      )
+      if (this.summary.offered[0].type == "nft" && "cnsName" in this.summary.offered[0].nftanalysis)
         await this.verifyCns(
-          (this.summary.offered[0].nft_detail?.analysis as CnsCoinAnalysisResult).cnsName,
-          this.summary.offered[0].nft_detail.analysis.coin.parent_coin_info
+          (this.summary.offered[0].nftanalysis as CnsCoinAnalysisResult).cnsName,
+          this.summary.offered[0].nftanalysis.coin.parent_coin_info
         );
     } catch (err) {
       this.parseError = "error";
@@ -627,8 +618,7 @@ export default class TakeOffer extends Vue {
     const s = this.summary;
     if (!s) throw new Error("No Summary");
     if (s.offered[0].type != "nft") throw new Error("Not NFT Offer");
-    const royalty_amount =
-      (s.requested[0].amount * BigInt(s.offered[0].nft_detail?.analysis.tradePricePercentage ?? 0)) / BigInt(10000);
+    const royalty_amount = (s.requested[0].amount * BigInt(s.offered[0].nftanalysis.tradePricePercentage ?? 0)) / BigInt(10000);
     return royalty_amount;
   }
 
@@ -694,7 +684,7 @@ export default class TakeOffer extends Vue {
       } else {
         const revSummary = getReversePlan(this.summary, change_hex, this.cats);
         const fee = BigInt(this.fee);
-        const nft = revSummary.requested[0].type == "nft" && revSummary.requested[0].nft_detail;
+        const nft = revSummary.requested[0].type == "nft" && revSummary.requested[0].nftanalysis;
         if (!nft) throw new Error("Cannot find NFT");
 
         const offplan = await generateOfferPlan(
@@ -704,7 +694,7 @@ export default class TakeOffer extends Vue {
           fee,
           xchSymbol(),
           revSummary.offered[0].amount,
-          nft.analysis,
+          nft,
           [],
           this.summary.settlementModName
         );

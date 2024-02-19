@@ -1,6 +1,6 @@
 import { CoinSpend, OriginCoin, SpendBundle, UnsignedSpendBundle } from "../spendbundle";
 import { Bytes, SExp, Tuple } from "clvm";
-import { getArgMsg, getFirstLevelArgMsg, getNumber, Hex0x, prefix0x, unprefix0x } from "../coin/condition";
+import { getFirstLevelArgMsg, getNumber, Hex0x, prefix0x, unprefix0x } from "../coin/condition";
 import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
 import puzzle from "../crypto/puzzle";
 import { modsdict, modshash, modshashdict, modsprog } from "../coin/mods";
@@ -11,8 +11,7 @@ import bigDecimal from "js-big-decimal";
 import { CannotParsePuzzle, getModsPath, sexpAssemble, SimplePuzzle, simplifyPuzzle } from "../coin/analyzer";
 import { parseMetadata } from "../coin/singleton";
 import { analyzeNftCoin, getNftMetadataInfo, getScalarString } from "../coin/nft";
-import { NftDetail } from "../crypto/receive";
-import { NftCoinAnalysisResult } from "../../models/nft";
+import { CnsCoinAnalysisResult, NftCoinAnalysisResult } from "../../models/nft";
 import { getCoinName0x } from "../coin/coinUtility";
 
 // sideEffect is used to allow the side effect to the originBundle, which is compatible with the original function
@@ -131,23 +130,12 @@ export async function getOfferSummary(
           if (royalty == -1) throw new Error("royalty must be set");
           const analysis = await analyzeNftCoin(coin.puzzle_reveal, undefined, coin.coin, coin.solution);
           if (!analysis) throw new Error("failed to analyze the nft coin");
-          const nft_detail: NftDetail = {
-            metadata: {
-              uri: getScalarString(analysis.metadata.imageUri) ?? "",
-              hash: analysis.metadata.imageHash ?? "",
-            },
-            hintPuzzle: analysis.hintPuzzle,
-            coin: coin.coin,
-            address: puzzle.getAddressFromPuzzleHash(analysis.launcherId, "nft"),
-            analysis,
-          };
           entities.push({
             type: "nft",
             id: nftId,
             amount,
             target: tgt,
             nft_target: wraptgt,
-            nft_detail,
             nftanalysis: analysis,
             coin,
           });
@@ -345,8 +333,7 @@ export interface OfferEntityForNft extends OfferEntityBase {
   type: "nft";
   id: string;
   nft_target?: Hex0x;
-  nft_detail?: NftDetail;
-  nftanalysis: NftCoinAnalysisResult;
+  nftanalysis: NftCoinAnalysisResult | CnsCoinAnalysisResult;
 }
 
 export interface OfferEntityBase {
