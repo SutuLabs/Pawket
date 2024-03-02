@@ -100,18 +100,6 @@ async function testMintCnsAndOffer(fee: bigint, metadata: CnsMetadataValues, tgt
     knownCoins.push(
       ...[
         {
-          parentCoinId: cs[0].coin.parent_coin_info,
-          parentParentCoinId: "0x1111111111111111111111111111111111111111111111111111111111111111",
-          amount: Number(cs[0].coin.amount),
-          puzzleReveal: cs[0].puzzle_reveal,
-        },
-        {
-          parentCoinId: cs[1].coin.parent_coin_info,
-          parentParentCoinId: getCoinName0x(cs[0].coin),
-          amount: Number(cs[1].coin.amount),
-          puzzleReveal: cs[1].puzzle_reveal,
-        },
-        {
           parentCoinId: cs[2].coin.parent_coin_info,
           parentParentCoinId: getCoinName0x(cs[1].coin),
           amount: Number(cs[2].coin.amount),
