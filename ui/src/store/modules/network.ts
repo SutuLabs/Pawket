@@ -38,7 +38,7 @@ export function ensureAddress(address: string | undefined): string {
   return puzzle.getAddressFromPuzzleHash(puzzle.getPuzzleHashFromAddress(address), xchPrefix());
 }
 export function isDefaultNetwork(name: string): boolean {
-  return name == "mainnet" || name == "testnet10";
+  return name == "mainnet" || name == "testnet11";
 }
 
 export interface NetworkDetail {
@@ -87,14 +87,14 @@ store.registerModule<INetworkState>("network", {
           },
         },
       },
-      testnet10: {
-        name: "testnet10",
+      testnet11: {
+        name: "testnet11",
         rpcUrl: process.env.VUE_APP_API_URL_TESTNET ?? "",
         prefix: "txch",
         symbol: "TXCH",
-        chainId: "ae83525ba8d1dd3f09b277de18ca3e43fc0af20d20c4b3e92ef2a48bd291ccb2",
-        explorerUrl: "https://www.spacescan.io/txch10/address/",
-        spaceScanUrl: "https://www.spacescan.io/txch10/nft/",
+        chainId: "37a90eb5185a9c4439a91ddc98bbadce7b4feba060d50116a067de66bf236615",
+        explorerUrl: "https://www.spacescan.io/txch11/address/",
+        spaceScanUrl: "https://www.spacescan.io/txch11/nft/",
         tokenInfo: {
           TXCH: {
             symbol: "TXCH",

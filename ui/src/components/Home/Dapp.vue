@@ -186,7 +186,7 @@ export default class Dapp extends Vue {
   }
 
   get testnet(): boolean {
-    return store.state.network.networkId == "testnet10";
+    return store.state.network.networkId == "testnet11";
   }
 
   get observeMode(): boolean {

@@ -87,7 +87,7 @@ export default class NetworkSelector extends Vue {
     if (this.offline && greyOnOffline) {
       color = "has-text-danger";
     } else {
-      if (networkId == "testnet10") color = "has-text-info";
+      if (networkId == "testnet11") color = "has-text-info";
       if (networkId == "mainnet") color = "has-text-primary";
     }
     return `icon is-small ${color}`;

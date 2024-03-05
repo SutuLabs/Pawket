@@ -15,7 +15,7 @@
             <b-button
               :class="{
                 'has-text-primary': !offline && networkId == 'mainnet',
-                'has-text-info': !offline && networkId == 'testnet10',
+                'has-text-info': !offline && networkId == 'testnet11',
                 'has-text-grey': offline,
                 'is-pulled-right': true,
                 'border-less': true,
@@ -309,7 +309,7 @@ export default class AccountDetail extends Vue {
   }
 
   get testnet(): boolean {
-    return store.state.network.networkId == "testnet10";
+    return store.state.network.networkId == "testnet11";
   }
 
   get currency(): CurrencyType {

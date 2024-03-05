@@ -6,7 +6,7 @@
           <b-button
             :class="{
               'has-text-primary': networkId == 'mainnet',
-              'has-text-info': networkId == 'testnet10',
+              'has-text-info': networkId == 'testnet11',
               'border-less': true,
             }"
             icon-left="brightness-1"
