@@ -18,19 +18,22 @@ class DebugApi {
         }),
       });
 
-      const responseClone = response.clone();
-      caches.open("debug").then((cache) => {
-        cache.put(key, responseClone);
-      });
+      if (response.status == 200) {
+        const responseClone = response.clone();
+        caches.open("debug").then((cache) => {
+          cache.put(key, responseClone);
+        });
+      }
     }
 
     const presp = (await response.json()) as GetCoinSolutionResponse;
     const cs = presp.coinSpends?.at(0);
     if (!cs) {
-      caches.open("debug").then((cache) => {
-        cache.delete(key);
-      });
+      caches.open("debug").then((cache) => cache.delete(key));
       throw new Error("abnormal response");
+    }
+    if (!cs.solution || !cs.puzzle_reveal) {
+      caches.open("debug").then((cache) => cache.delete(key));
     }
     return cs;
   }
@@ -50,10 +53,12 @@ class DebugApi {
         }),
       });
 
-      const responseClone = response.clone();
-      caches.open("debug").then((cache) => {
-        cache.put(key, responseClone);
-      });
+      if (response.status == 200) {
+        const responseClone = response.clone();
+        caches.open("debug").then((cache) => {
+          cache.put(key, responseClone);
+        });
+      }
     }
 
     const presp = (await response.json()) as GetBlockResponse;
