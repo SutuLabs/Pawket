@@ -5,7 +5,7 @@
   "author": "SutuLabs",
   "scripts": {
     "dev": "nodemon server.ts",
-    "build": "ncc build server.ts -o ../dist/cli && cp ../node_modules/clvm/browser/blsjs.wasm ../dist/cli",
+    "build": "ncc build server.ts -o dist/cli && cp ../node_modules/clvm/browser/blsjs.wasm dist/cli",
     "build:docker": "yarn build && docker build -f Dockerfile -t wizicer/coin-processor:latest .",
     "start": "cross-env MAX_THREAD=0 ts-node server.ts",
     "importmods": "ts-node importmods.ts",
