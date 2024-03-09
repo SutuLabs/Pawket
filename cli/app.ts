@@ -2,7 +2,7 @@ import "dotenv/config";
 import express from "express";
 import { Instance } from "../lib-chia/services/util/instance";
 import fetch from "cross-fetch";
-import { parseBlockFunc, parsePuzzleFunc, parseTxFunc } from "./route/parse";
+import { parseBlockFunc, parsePuzzleFunc, parseTxFunc, parseTxsFunc } from "./route/parse";
 import { getBatchSendFunc } from "./route/send";
 import { getCreateCnsOfferFunc } from "./route/cns";
 import { puzzleFunc } from "./route/puzzle";
@@ -26,6 +26,7 @@ Instance.init().then(() => {
   app.post("/parse_block", parseBlockFunc);
   app.post("/parse_puzzle", parsePuzzleFunc);
   app.post("/analyze_tx", parseTxFunc);
+  app.post("/analyze_txs", parseTxsFunc);
 
   app.post("/batch_send", getBatchSendFunc({ defaultRpcUrl }));
   app.post("/cns_offer", getCreateCnsOfferFunc({ defaultRpcUrl }));

@@ -12,6 +12,7 @@ import {
 } from "../../lib-chia/services/coin/analyzer";
 import { Hex0x } from "../../lib-chia/services/coin/condition";
 import puzzle from "../../lib-chia/services/crypto/puzzle";
+import { getCoinName0x } from "../../lib-chia/services/coin/coinUtility";
 
 interface ParseBlockRequest {
   ref_list?: string[];
@@ -23,12 +24,16 @@ interface ParsePuzzleRequest {
 }
 
 interface AnalyzeTxRequest {
-  coin_name: string;
   puzzle: string;
   solution: string;
   amount: number;
   coin_parent: string;
   puzzle_hash: string;
+}
+
+interface AnalyzeTxsRequest {
+  txs: AnalyzeTxRequest[];
+  include_puzzle_solution?: boolean;
 }
 
 export async function parseBlockFunc(req: express.Request, res: express.Response): Promise<void> {
@@ -84,7 +89,7 @@ export async function parseTxFunc(req: express.Request, res: express.Response): 
 
     res.send(
       JSON.stringify({
-        coin_name: r.coin_name,
+        coin_name: getCoinName0x(coin),
         parsed_puzzle: decPuzzle,
         mods,
         analysis: analysis,
@@ -96,4 +101,44 @@ export async function parseTxFunc(req: express.Request, res: express.Response): 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     res.status(500).send(JSON.stringify({ success: false, error: (<any>err).message }));
   }
+}
+
+export async function parseTxsFunc(req: express.Request, res: express.Response): Promise<void> {
+  const atreq = req.body as AnalyzeTxsRequest;
+  if (!atreq || !Array.isArray(atreq.txs)) {
+    res.status(400).send(JSON.stringify({ success: false, error: "invalid request" }));
+    return;
+  }
+  const array = [];
+
+  for (const r of atreq.txs) {
+    try {
+      const coin = { amount: BigInt(r.amount), parent_coin_info: r.coin_parent as Hex0x, puzzle_hash: r.puzzle_hash as Hex0x };
+
+      const uncPuzzle = await uncurryPuzzle(sexpAssemble(r.puzzle), r.puzzle);
+      const decPuzzle = convertUncurriedPuzzle(uncPuzzle);
+      const mods = getModsPath(decPuzzle);
+      const analysis = await analyzeCoin(mods, uncPuzzle, coin, r.solution);
+      const obj = {
+        coin_name: getCoinName0x(coin),
+        parsed_puzzle: decPuzzle,
+        mods,
+        analysis: analysis,
+      };
+      if (atreq.include_puzzle_solution) {
+        Object.assign(obj, {
+          puzzle: r.puzzle,
+          solution: r.solution,
+        });
+      }
+      array.push(obj);
+    } catch (err) {
+      console.warn(err);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const msg = `error item: ${JSON.stringify(r ?? "")}, message: ${(<any>err).message}`;
+      console.log(msg);
+      res.status(500).send(JSON.stringify({ success: false, error: msg }));
+    }
+  }
+  res.send(JSON.stringify(array));
 }
