@@ -14,7 +14,14 @@
       <b-tabs position="is-centered" v-model="addressType" expanded @input="changeAddressType">
         <b-tab-item :label="$t('explorerLink.ui.label.observer')" icon="eye-check" value="Observed">
           <div class="has-text-centered">
-            <qrcode-vue :value="externalExplorerPrefix + address" size="200" class="qrcode" style="width: 220px"></qrcode-vue>
+            <div @click="fullAddress = !fullAddress">
+              <qrcode-vue
+                :value="fullAddress ? externalExplorerPrefix + address : address"
+                size="200"
+                class="qrcode"
+                style="width: 220px"
+              ></qrcode-vue>
+            </div>
             <key-box icon="checkbox-multiple-blank-outline" :value="address" :showValue="true"></key-box>
             <b-tooltip :label="$t('explorerLink.ui.tooltip.blockchainExplorer')">
               <a target="_blank" :href="externalExplorerPrefix + address">
@@ -30,7 +37,14 @@
           v-if="account.type != 'PublicKey'"
         >
           <div class="has-text-centered">
-            <qrcode-vue :value="externalExplorerPrefix + address" size="200" class="qrcode" style="width: 220px"></qrcode-vue>
+            <div @click="fullAddress = !fullAddress">
+              <qrcode-vue
+                :value="fullAddress ? externalExplorerPrefix + address : address"
+                size="200"
+                class="qrcode"
+                style="width: 220px"
+              ></qrcode-vue>
+            </div>
             <key-box icon="checkbox-multiple-blank-outline" :value="address" :showValue="true"></key-box>
             <b-tooltip :label="$t('explorerLink.ui.tooltip.blockchainExplorer')">
               <a target="_blank" :href="externalExplorerPrefix + address">
@@ -100,6 +114,7 @@ export default class ExplorerLink extends Vue {
   public address = "";
   public addressType: AddressType = "Observed";
   public cnsNames: reverseResolveAnswer[] = [];
+  public fullAddress = true;
 
   get externalExplorerPrefix(): string {
     return store.state.network.network.explorerUrl;

@@ -35,13 +35,13 @@ export async function initCameraHandleError(
 export function decodeAddress(prefix: string, qrcode: string): string | null {
   const p = prefix;
   //eslint-disable-next-line
-  const reg = new RegExp("/([^/]*)$");
+  const reg = new RegExp(`${p}1[0-9a-z]{58}`);
   const r = qrcode.match(reg);
-  if (!r || r.length != 2) return null;
-  const rr = r[1];
-  if (rr.startsWith(p)) {
-    return rr;
-  }
-
-  return null;
+  if (!r) return null;
+  return r[0];
 }
+
+// test cases:
+// console.log(decodeAddress("xch", "xch1u6dmdmzzu8aapmmax03et0u7secnwlgywcvzg05xdqkwqamlqkxstnhvcp"));
+// console.log(decodeAddress("txch", "txch1756uj7eypj9ehmd2923nx5tv6egsyctzw4un4lz734x83gnm759q6lu024"));
+// console.log(decodeAddress("xch", "https://www.spacescan.io/xch/xch19tq8q0tkm2660mfpjqv9y94j7fcdfpx860a9ymskeulafk9d653qu8wkyk"));

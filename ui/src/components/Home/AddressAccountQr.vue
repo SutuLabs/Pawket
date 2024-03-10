@@ -3,7 +3,14 @@
     <top-bar :title="$t('explorerLink.ui.title.link')" @close="close()" :showClose="true"></top-bar>
     <section class="modal-card-body">
       <div class="has-text-centered">
-        <qrcode-vue :value="externalExplorerPrefix + address" size="200" class="qrcode" style="width: 220px"></qrcode-vue>
+        <div @click="fullAddress = !fullAddress">
+          <qrcode-vue
+            :value="fullAddress ? externalExplorerPrefix + address : address"
+            size="200"
+            class="qrcode"
+            style="width: 220px"
+          ></qrcode-vue>
+        </div>
         <key-box icon="checkbox-multiple-blank-outline" :value="address" :showValue="true"></key-box>
         <b-tooltip :label="$t('explorerLink.ui.tooltip.blockchainExplorer')">
           <a target="_blank" :href="externalExplorerPrefix + address">
@@ -34,6 +41,7 @@ import { ensureAddress } from "@/store/modules/network";
 export default class AddressAccountQr extends Vue {
   @Prop() public account!: AccountEntity;
   public address = "";
+  public fullAddress = true;
 
   get externalExplorerPrefix(): string {
     return store.state.network.network.explorerUrl;
