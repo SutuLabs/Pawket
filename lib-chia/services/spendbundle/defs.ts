@@ -2,6 +2,10 @@ import { Bytes } from "clvm";
 import { Hex0x, prefix0x } from "../coin/condition";
 import { Instance } from "../util/instance";
 
+export interface HintOriginCoin extends OriginCoin {
+  hint: Hex0x;
+}
+
 export interface OriginCoin {
   amount: bigint;
   parent_coin_info: Hex0x;

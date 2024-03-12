@@ -1,4 +1,4 @@
-import puzzle, { ExecuteResult, PlaintextPuzzle, PuzzleObserver } from "../crypto/puzzle";
+import puzzle, { ConditionArgs, ExecuteResult, PlaintextPuzzle, PuzzleObserver } from "../crypto/puzzle";
 import { TokenPuzzleObserver } from "../crypto/receive";
 import { curryMod } from "../offer/bundler";
 import { getFirstLevelArgMsg, getNumber, Hex0x, prefix0x } from "./condition";
@@ -7,6 +7,7 @@ import { Bytes, SExp, Tuple } from "clvm";
 import { assemble } from "clvm_tools/clvm_tools/binutils";
 import { ConditionOpcode } from "./opcode";
 import { getCoinName0x } from "./coinUtility";
+import { HintOriginCoin } from "../spendbundle";
 
 export type SingletonStructList = [Bytes, [Bytes, Bytes]];
 
@@ -97,25 +98,42 @@ export async function getNextCoinName0x(
   solution_hex: string,
   thisCoinName: Hex0x
 ): Promise<string | undefined> {
+  const coins = await getNextSingletonCoins(puzzle_hex, solution_hex, thisCoinName);
+  if (!coins || coins.length == 0) return undefined;
+  return getCoinName0x(coins[0]);
+}
+
+export async function getNextSingletonCoins(
+  puzzle_hex: string,
+  solution_hex: string,
+  thisCoinName: Hex0x
+): Promise<HintOriginCoin[]> {
   let result: ExecuteResult;
   try {
     result = await puzzle.executePuzzleHex(puzzle_hex, solution_hex);
   } catch (err) {
-    return undefined; // when puzzle is settlement hint in offer, it is invalid to execute, just ignore
+    return []; // when puzzle is settlement hint in offer, it is invalid to execute, just ignore
   }
 
   try {
-    const coinCond = result.conditions
-      .filter((_) => _.code == ConditionOpcode.CREATE_COIN && getNumber(getFirstLevelArgMsg(_.args.at(1)) ?? "0") % 2n == 1n)
-      .at(0);
-    if (!coinCond) return undefined;
-    const nextcoin_puzhash = prefix0x(getFirstLevelArgMsg(coinCond.args.at(0)) ?? "()");
-    const amount = getNumber(getFirstLevelArgMsg(coinCond.args.at(1)) ?? "0");
-    const nextCoinName = getCoinName0x({ parent_coin_info: thisCoinName, amount, puzzle_hash: nextcoin_puzhash });
-    return nextCoinName;
+    if (!result.conditions || result.conditions.length == 0) return [];
+    const coins: HintOriginCoin[] = [];
+    const coinConds = result.conditions.filter(
+      (_) => _.code == ConditionOpcode.CREATE_COIN && getNumber(getFirstLevelArgMsg(_.args.at(1)) ?? "0") % 2n == 1n
+    );
+    for (let i = 0; i < coinConds.length; i++) {
+      const coinCond = coinConds[i];
+      const nextcoin_puzhash = prefix0x(getFirstLevelArgMsg(coinCond.args.at(0)) ?? "()");
+      const amount = getNumber(getFirstLevelArgMsg(coinCond.args.at(1)) ?? "0");
+      const hint = prefix0x(Bytes.from((coinCond.args.at(2) as ConditionArgs[]).at(0) as Uint8Array).hex());
+      coins.push({ hint, parent_coin_info: thisCoinName, amount, puzzle_hash: nextcoin_puzhash });
+    }
+
+    return coins;
   } catch (err) {
     if (process.env.NODE_ENV !== "production") {
       throw new Error("failed to get next coin name: " + err);
     }
+    return [];
   }
 }
