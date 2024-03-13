@@ -375,7 +375,7 @@ export default class BundlePanel extends Vue {
   async updateBundle(): Promise<void> {
     try {
       if (this.bundleText.startsWith("bundle1")) {
-        this.bundle = await decodeOffer(this.bundleText);
+        this.bundle = await decodeOffer(this.bundleText, true);
         this.bundleText = JSON.stringify(this.bundle);
       } else if (this.bundleText.trim() == "") {
         this.bundle = null;

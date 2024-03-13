@@ -28,7 +28,7 @@ function getDictForVersion(ver: number) {
   return b;
 }
 
-export async function decodeOffer(offerText: string): Promise<SpendBundleDecoded> {
+export async function decodeOffer(offerText: string, includeMetadata = false): Promise<SpendBundleDecoded | SpendBundle> {
   const offer_compressed = bech32m.decodeToBytes(offerText).bytes;
   const buff = Buffer.from(offer_compressed);
 
@@ -78,14 +78,19 @@ export async function decodeOffer(offerText: string): Promise<SpendBundleDecoded
   const sig = Bytes.from(d.slice(pos, pos + 96)).hex();
   pos += 96;
 
-  const bundle: SpendBundleDecoded = {
+  if (includeMetadata) {
+    return <SpendBundleDecoded>{
+      aggregated_signature: prefix0x(sig),
+      coin_spends: spends,
+      offer: offerText,
+      version: ver,
+    };
+  }
+
+  return <SpendBundle>{
     aggregated_signature: prefix0x(sig),
     coin_spends: spends,
-    offer: offerText,
-    version: ver,
   };
-
-  return bundle;
 }
 
 export async function encodeOffer(bundle: SpendBundle, ver: number | undefined = undefined, prefix = "offer"): Promise<string> {
