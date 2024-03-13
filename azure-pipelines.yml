@@ -91,7 +91,7 @@ stages:
     - task: CmdLine@2
       inputs:
         workingDirectory: '$(Build.SourcesDirectory)'
-        script: 'echo $(versionNumber)>$(Build.SourcesDirectory)/dist/cli/version.txt'
+        script: 'echo $(versionNumber)>$(Build.SourcesDirectory)/cli/dist/cli/version.txt'
       displayName: 'write version file(cli)'
 
     - task: PublishBuildArtifacts@1
@@ -114,7 +114,7 @@ stages:
 
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: '$(Build.SourcesDirectory)/dist/cli'
+        PathtoPublish: '$(Build.SourcesDirectory)/cli/dist/cli'
         ArtifactName: '$(cliArtifactName)'
         publishLocation: 'Container'
 
