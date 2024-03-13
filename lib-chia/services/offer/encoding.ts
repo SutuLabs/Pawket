@@ -1,4 +1,4 @@
-import { CoinSpend, OriginCoin, SpendBundle } from "../spendbundle";
+import { CoinSpend, OriginCoin, SpendBundle, SpendBundleDecoded } from "../spendbundle";
 import { bech32m } from "@scure/base";
 import zlib from "zlib";
 import { Buffer } from "buffer";
@@ -28,7 +28,7 @@ function getDictForVersion(ver: number) {
   return b;
 }
 
-export async function decodeOffer(offerText: string): Promise<SpendBundle> {
+export async function decodeOffer(offerText: string): Promise<SpendBundleDecoded> {
   const offer_compressed = bech32m.decodeToBytes(offerText).bytes;
   const buff = Buffer.from(offer_compressed);
 
@@ -78,9 +78,11 @@ export async function decodeOffer(offerText: string): Promise<SpendBundle> {
   const sig = Bytes.from(d.slice(pos, pos + 96)).hex();
   pos += 96;
 
-  const bundle: SpendBundle = {
+  const bundle: SpendBundleDecoded = {
     aggregated_signature: prefix0x(sig),
     coin_spends: spends,
+    offer: offerText,
+    version: ver,
   };
 
   return bundle;

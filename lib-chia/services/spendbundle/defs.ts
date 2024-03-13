@@ -21,6 +21,11 @@ export interface CoinSpend {
   timestamp?: number;
 }
 
+export interface SpendBundleDecoded extends SpendBundle {
+  version: number;
+  offer: string;
+}
+
 export interface SpendBundle {
   aggregated_signature: Hex0x;
   coin_spends: CoinSpend[];

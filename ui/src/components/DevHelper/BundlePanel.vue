@@ -49,7 +49,12 @@
                   'Coin Name': used_coin_name,
                   'Coin Address': used_coin_tgt_address,
                   'Coin PuzHash': bundle.coin_spends[selectedCoin].coin.puzzle_hash,
-                }
+                },
+                'version' in bundle
+                  ? {
+                      Version: bundle.version,
+                    }
+                  : {}
               )"
               :key="key"
             >
@@ -291,6 +296,7 @@ import {
   CoinSpend,
   OriginCoin,
   SpendBundle,
+  SpendBundleDecoded,
 } from "../../../../lib-chia/services/spendbundle";
 import { sha256 } from "../../../../lib-chia/services/offer/bundler";
 import { parseBlock, parseCoinWithConds, sexpAssemble } from "../../../../lib-chia/services/coin/analyzer";
@@ -320,7 +326,7 @@ export default class BundlePanel extends Vue {
   public solution_result = "";
   public selectedCoin = -1;
   public solution_results: ConditionEntity[] = [];
-  public bundle: SpendBundle | null = null;
+  public bundle: SpendBundle | SpendBundleDecoded | null = null;
   public autoCalculation = false;
   public solution_executor: "NORMAL" | "SETTLEMENT" | "ERROR" = "NORMAL";
 
