@@ -310,9 +310,9 @@ export async function combineOfferSpendBundle(
       );
       if (filterOffcs.length != 1) {
         prepareBigIntStringify();
-        console.log("filterOffcs", JSON.stringify(filterOffcs));
-        console.log("offcss", JSON.stringify(offcss));
-        console.log("req", JSON.stringify(req));
+        console.log("filterOffcs", JSON.parse(JSON.stringify(filterOffcs)));
+        console.log("offcss", JSON.parse(JSON.stringify(offcss)));
+        console.log("req", JSON.parse(JSON.stringify(req)));
         throw new Error("cannot filter out the right offer coin spend for the request");
       }
       const offcs = filterOffcs[0].entity.coin;
