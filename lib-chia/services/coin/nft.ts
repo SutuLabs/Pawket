@@ -6,7 +6,7 @@ import {
   signSpendBundle,
   UnsignedSpendBundle,
 } from "../spendbundle";
-import puzzle, { PlaintextPuzzle } from "../crypto/puzzle";
+import puzzle, { PlaintextPuzzle, PuzzleObserver } from "../crypto/puzzle";
 import receive, { TokenPuzzleObserver } from "../crypto/receive";
 import { curryMod } from "../offer/bundler";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
@@ -26,7 +26,7 @@ import catBundle, { LineageProof } from "../transfer/catBundle";
 import { getCoinName0x, NetworkContext } from "./coinUtility";
 import {
   constructSingletonTopLayerPuzzle,
-  getNextCoinName0x,
+  getNextSingletonCoins,
   getPuzzleDetail,
   hex2asc,
   hex2ascSingle,
@@ -311,14 +311,17 @@ export async function generateTransferNftBundle(
 ): Promise<UnsignedSpendBundle> {
   const tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(targetAddress));
   const change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(changeAddress));
-  const inner_p2_puzzle = getPuzzleDetail(analysis.hintPuzzle, requests);
+  const next_inner_p2_puzzle: PuzzleObserver = getPuzzleDetail(
+    !analysis.nextCoin?.hint ? analysis.hintPuzzle : analysis.nextCoin.hint,
+    requests
+  );
   const proof = await catBundle.getLineageProof(nftCoin.parent_coin_info, net.api, 2);
 
   const nftInnerSolution = didAnalysis
     ? await getTransferNftByDidInnerSolution(tgt_hex, prefix0x(didAnalysis.launcherId), prefix0x(didAnalysis.didInnerPuzzleHash))
     : await getTransferNftInnerSolution(tgt_hex, nftTransferAdditionalConditions);
   const nftSolution = await getTransferNftSolution(proof, nftInnerSolution);
-  const nftPuzzle = await getTransferNftPuzzle(analysis, inner_p2_puzzle.puzzle);
+  const nftPuzzle = await getTransferNftPuzzle(analysis, next_inner_p2_puzzle.puzzle);
 
   const nftPuzzleHash = prefix0x(await puzzle.getPuzzleHashFromPuzzle(nftPuzzle));
   if (nftPuzzleHash != nftCoin.puzzle_hash) {
@@ -392,7 +395,8 @@ export async function analyzeNftCoin(
   puz: string | (UncurriedPuzzle | CannotParsePuzzle),
   hintPuzzle: string | undefined,
   coin: OriginCoin,
-  solution_hex: string
+  solution_hex: string,
+  resultIncludeNextCoin = false
 ): Promise<NftCoinAnalysisResult | CnsCoinAnalysisResult | null> {
   const parsed_puzzle = typeof puz === "string" ? await uncurryPuzzle(sexpAssemble(puz)) : puz;
 
@@ -476,7 +480,9 @@ export async function analyzeNftCoin(
       ? await getOwnerFromSolutionForSettlementInnerPuzzle(solsexp)
       : await getOwnerFromSolutionForP2InnerPuzzle(solsexp);
 
-  const nextCoinName = await getNextCoinName0x(parsed_puzzle.hex, solution_hex, getCoinName0x(coin));
+  const nextCoins = await getNextSingletonCoins(parsed_puzzle.hex, solution_hex, getCoinName0x(coin));
+  const nextCoin = !nextCoins || nextCoins.length == 0 ? undefined : nextCoins[0];
+  const nextCoinName = !nextCoin ? undefined : getCoinName0x(nextCoin);
 
   if (
     !metadata ||
@@ -507,10 +513,12 @@ export async function analyzeNftCoin(
     tradePricePercentage,
     hintPuzzle: prefix0x(hintPuzzle),
     nextCoinName,
+    nextCoin: resultIncludeNextCoin ? nextCoin : undefined,
     coin,
     updaterInSolution,
   };
   if (!obj.updaterInSolution) delete obj.updaterInSolution;
+  if (!obj.nextCoin) delete obj.nextCoin;
 
   if ("expiry" in metadata && metadata.expiry && metadata.name) {
     const cnsobj = Object.assign(

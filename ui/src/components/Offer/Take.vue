@@ -268,7 +268,12 @@ import { AccountEntity, CustomCat, OneTokenInfo, TokenInfo } from "../../../../l
 import { demojo } from "@/filters/unitConversion";
 import { SymbolCoins } from "../../../../lib-chia/services/transfer/transfer";
 import { TokenPuzzleDetail } from "../../../../lib-chia/services/crypto/receive";
-import { convertOfferToRequest, getOfferSummary, OfferSummary } from "../../../../lib-chia/services/offer/summary";
+import {
+  convertOfferToRequest,
+  getOfferSummary,
+  OfferEntityForNft,
+  OfferSummary,
+} from "../../../../lib-chia/services/offer/summary";
 import { decodeOffer } from "../../../../lib-chia/services/offer/encoding";
 import { NotificationProgrammatic as Notification } from "buefy";
 import {
@@ -285,17 +290,18 @@ import { debugBundle, submitBundle } from "@/services/view/bundleAction";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import ManageCats from "@/components/Cat/ManageCats.vue";
 import OfflineSendShowBundle from "@/components/Offline/OfflineSendShowBundle.vue";
-import { networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
+import { networkContext, rpcUrl, xchPrefix, xchSymbol } from "@/store/modules/network";
 import bigDecimal from "js-big-decimal";
 import { shorten } from "@/filters/addressConversion";
 import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
 import TopBar from "../Common/TopBar.vue";
-import { constructPureFeeSpendBundle } from "../../../../lib-chia/services/coin/nft";
+import { analyzeNftCoin, constructPureFeeSpendBundle } from "../../../../lib-chia/services/coin/nft";
 import BundleSummary from "../Bundle/BundleSummary.vue";
 import { resolveName } from "@/services/api/resolveName";
-import { CnsCoinAnalysisResult } from "../../../../lib-chia/models/nft";
+import { CnsCoinAnalysisResult, NftCoinAnalysisResult } from "../../../../lib-chia/models/nft";
 import { unprefix0x } from "../../../../lib-chia/services/coin/condition";
 import TailDb, { TailInfo } from "@/services/api/tailDb";
+import debug from "../../../../lib-chia/services/api/debug";
 
 @Component({
   components: {
@@ -584,7 +590,11 @@ export default class TakeOffer extends Vue {
           (this.summary.offered[0].nftanalysis as CnsCoinAnalysisResult).cnsName,
           this.summary.offered[0].nftanalysis.coin.parent_coin_info
         );
+
+      if (this.summary.offered.some((_) => _.type == "nft") || this.summary.requested.some((_) => _.type == "nft"))
+        await store.dispatch("refreshNfts");
     } catch (err) {
+      console.warn(err);
       this.parseError = "error";
       this.makerBundle = null;
       this.summary = null;
@@ -682,39 +692,109 @@ export default class TakeOffer extends Vue {
           await this.offlineSignBundle();
         }
       } else {
-        const revSummary = getReversePlan(this.summary, change_hex, this.cats);
-        const fee = BigInt(this.fee);
-        const nft = revSummary.requested[0].type == "nft" && revSummary.requested[0].nftanalysis;
-        if (!nft) throw new Error("Cannot find NFT");
+        if (
+          this.summary.requested.length == 2 &&
+          this.summary.requested[0].type == "xch" &&
+          this.summary.requested[1].type == "nft" &&
+          this.summary.offered.length == 1 &&
+          this.summary.offered[0].type == "nft"
+        ) {
+          // cns renew
+          const price = this.summary.requested[0].amount;
 
-        const offplan = await generateOfferPlan(
-          revSummary.offered,
-          change_hex,
-          this.availcoins,
-          fee,
-          xchSymbol(),
-          revSummary.offered[0].amount,
-          nft,
-          [],
-          this.summary.settlementModName
-        );
-        const observers = await getAssetsRequestObserver(this.account);
-        const utakerBundle = await generateNftOffer(
-          offplan,
-          convertOfferToRequest(revSummary.requested),
-          observers,
-          networkContext(),
-          null,
-          this.summary.settlementModName
-        );
-        const takerBundle = await signSpendBundle(utakerBundle, this.tokenPuzzles, networkContext());
-        const combined = await combineOfferSpendBundle([this.makerBundle, takerBundle], this.summary.settlementModName);
-        // for creating unit test
-        // console.log("const change_hex=", change_hex, ";");
-        // console.log("const bundle=", JSON.stringify(combined, null, 2), ";");
-        this.bundle = combined;
-        if (this.account.type == "PublicKey") {
-          await this.offlineSignBundle();
+          // TODO: should get nft by puzzle hash, but this information is lacking in the analysis
+          // const _getNft = (puzzleHash: Hex0x) => {
+          //   for (let nft of this.account.nfts ?? []) {
+          //     if (nft.analysis.metaPuzzleHash == puzzleHash) {
+          //       return nft;
+          //     }
+          //   }
+          // };
+          const getNftByCns = (analysis: CnsCoinAnalysisResult | NftCoinAnalysisResult) => {
+            if (!("cnsName" in analysis)) return null;
+            for (let nft of this.account.nfts ?? []) {
+              if ("cnsName" in nft.analysis && nft.analysis.cnsName == analysis.cnsName) {
+                return nft;
+              }
+            }
+          };
+          const localNft = getNftByCns(this.summary.requested[1].nftanalysis);
+          if (!localNft) throw new Error("Cannot find the requested NFT in this account");
+
+          const legacyNftcs = await debug.getCoinSolution(localNft.coin.parent_coin_info, rpcUrl());
+          if (!legacyNftcs.puzzle_reveal || !legacyNftcs.solution)
+            throw new Error("Cannot get requested NFT solution and puzzle");
+          const legacyNft = await analyzeNftCoin(legacyNftcs.puzzle_reveal, "", legacyNftcs.coin, legacyNftcs.solution, true);
+          if (!legacyNft) throw new Error("Cannot properly analyze the NFT");
+
+          const fee = BigInt(this.fee);
+          const summary = this.summary;
+          const revSummary = getReversePlan(summary, change_hex, {});
+          const analysis = summary.offered[0].type == "nft" && summary.offered[0].nftanalysis;
+          const takerRevSumOffered = [...revSummary.offered];
+          const takerNftOffer: OfferEntityForNft = takerRevSumOffered.find((_) => _.type == "nft") as OfferEntityForNft;
+          takerNftOffer.nftanalysis = legacyNft;
+          if (!takerNftOffer.coin) throw new Error("Found empty NFT coin record");
+          takerNftOffer.coin.coin = legacyNft.coin;
+
+          // change NFT to the taker's holding NFT instead of the maker's settlement-payment NFT
+          const offplangen = await generateOfferPlan(
+            takerRevSumOffered,
+            change_hex,
+            this.availcoins,
+            fee,
+            xchSymbol(),
+            price,
+            analysis ? analysis : undefined,
+            []
+          );
+          offplangen[2].type == "nft" && (offplangen[2].nftcoin = localNft.coin);
+
+          const net = networkContext();
+          const reqs = convertOfferToRequest(revSummary.requested);
+          const utakerBundle = await generateNftOffer(offplangen, reqs, this.tokenPuzzles, net);
+          const takerBundle = await signSpendBundle(utakerBundle, this.tokenPuzzles, net.chainId);
+          const combined = await combineOfferSpendBundle([this.makerBundle, takerBundle]);
+          this.bundle = combined;
+          if (this.account.type == "PublicKey") {
+            await this.offlineSignBundle();
+          }
+        } else {
+          // standard nft offer
+          const revSummary = getReversePlan(this.summary, change_hex, this.cats);
+          const fee = BigInt(this.fee);
+          const nft = revSummary.requested[0].type == "nft" && revSummary.requested[0].nftanalysis;
+          if (!nft) throw new Error("Cannot find NFT");
+
+          const offplan = await generateOfferPlan(
+            revSummary.offered,
+            change_hex,
+            this.availcoins,
+            fee,
+            xchSymbol(),
+            revSummary.offered[0].amount,
+            nft,
+            [],
+            this.summary.settlementModName
+          );
+          const observers = await getAssetsRequestObserver(this.account);
+          const utakerBundle = await generateNftOffer(
+            offplan,
+            convertOfferToRequest(revSummary.requested),
+            observers,
+            networkContext(),
+            null,
+            this.summary.settlementModName
+          );
+          const takerBundle = await signSpendBundle(utakerBundle, this.tokenPuzzles, networkContext());
+          const combined = await combineOfferSpendBundle([this.makerBundle, takerBundle], this.summary.settlementModName);
+          // for creating unit test
+          // console.log("const change_hex=", change_hex, ";");
+          // console.log("const bundle=", JSON.stringify(combined, null, 2), ";");
+          this.bundle = combined;
+          if (this.account.type == "PublicKey") {
+            await this.offlineSignBundle();
+          }
         }
       }
       this.step = "Confirmation";

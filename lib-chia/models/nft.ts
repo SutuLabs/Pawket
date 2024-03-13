@@ -1,5 +1,5 @@
 import { Hex0x } from "../services/coin/condition";
-import { OriginCoin } from "../services/spendbundle";
+import { HintOriginCoin, OriginCoin } from "../services/spendbundle";
 
 export interface NftItemAttribute {
   trait_type: string;
@@ -60,6 +60,7 @@ export interface NftCoinAnalysisResult {
   metadata: NftMetadataValues;
   coin: OriginCoin;
   nextCoinName?: string;
+  nextCoin?: HintOriginCoin;
   updaterInSolution?: boolean;
 }
 
