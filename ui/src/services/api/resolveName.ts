@@ -11,21 +11,31 @@ export interface StandardResolveQuery {
   type: string;
 }
 export interface StandardResolveAnswer {
-  name: string;
+  name?: string;
   type?: string;
   time_to_live?: number;
   data?: string;
   proof_coin_name?: string;
   proof_coin_spent_index?: number;
   nft_coin_name?: string;
-  status: "Found" | "NotFound" | "Failure";
+  expiry?: number;
+  status: "Found";
 }
 
-export type resolveType = "address" | "did" | "publicKey" | "text" | "name";
+export type resolveType = "address" | "did" | "publicKey" | "text" | "name" | "whois";
 
-export async function resolveName(name: string, resType: resolveType = "address"): Promise<StandardResolveAnswer> {
+export interface ResolveFailureAnswer {
+  name: string;
+  status: "NotFound" | "Failure";
+}
+
+export async function resolveName(
+  name: string,
+  resType: resolveType = "address"
+): Promise<StandardResolveAnswer | ResolveFailureAnswer> {
   try {
     const query = resType == "address" ? name.toLowerCase() : name;
+
     const resp = await fetch(rpcUrl() + "Name/resolve", {
       method: "POST",
       headers: {
@@ -37,11 +47,11 @@ export async function resolveName(name: string, resType: resolveType = "address"
       }),
     });
     const qresp = (await resp.json()) as StandardResolveQueryResponse;
-    const answer = qresp.answers?.at(0);
+    const answer = qresp.answers ? qresp.answers[0] : null;
     if (answer) answer.status = "Found";
-    return answer || { status: "NotFound", name: name };
+    return answer || { status: "NotFound", name };
   } catch (error) {
     console.warn(error);
-    return { status: "Failure", name: name };
+    return { status: "Failure", name };
   }
 }

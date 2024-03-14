@@ -73,7 +73,7 @@ import store from "@/store/index";
 import TopBar from "@/components/Common/TopBar.vue";
 import { prefix0x } from "../../../../../lib-chia/services/coin/condition";
 import KeyBox from "@/components/Common/KeyBox.vue";
-import { resolveName, StandardResolveAnswer } from "@/services/api/resolveName";
+import { ResolveFailureAnswer, resolveName, StandardResolveAnswer } from "@/services/api/resolveName";
 
 @Component({ components: { TopBar, KeyBox } })
 export default class AddByPublicKey extends Vue {
@@ -87,7 +87,7 @@ export default class AddByPublicKey extends Vue {
   public submitting = false;
   public isLegalAddress = true;
   public loading = false;
-  public resolveAnswer: StandardResolveAnswer | null = null;
+  public resolveAnswer: StandardResolveAnswer | ResolveFailureAnswer | null = null;
 
   close(): void {
     this.$emit("close");

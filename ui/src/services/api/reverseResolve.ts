@@ -1,5 +1,5 @@
 import { rpcUrl } from "@/store/modules/network";
-import { StandardResolveAnswer, StandardResolveQuery, StandardResolveQueryResponse } from "./resolveName";
+import { ResolveFailureAnswer, StandardResolveAnswer, StandardResolveQuery, StandardResolveQueryResponse } from "./resolveName";
 import UniStorage from "../../../../lib-chia/services/storage";
 
 const ttl = 1000 * 60 * 60 * 24;
@@ -27,7 +27,7 @@ export async function getCnsName(addresses: string[]): Promise<reverseResolveAns
   if (unresolved.length) {
     const answers = await reverseResolve(unresolved);
     for (const ans of answers) {
-      if (ans.name && ans.name.endsWith(".xch") && ans.data) {
+      if (ans.status == "Found" && ans.name && ans.name.endsWith(".xch") && ans.data) {
         const idx = unresolved.findIndex((u) => u == ans.data);
         if (idx > -1) unresolved.splice(idx, 1);
         res.push({ address: ans.data, cns: ans.name, status: "Found" });
@@ -42,7 +42,7 @@ export async function getCnsName(addresses: string[]): Promise<reverseResolveAns
   return res.concat(notFoundRes);
 }
 
-export async function reverseResolve(addresses: string[]): Promise<StandardResolveAnswer[]> {
+export async function reverseResolve(addresses: string[]): Promise<(StandardResolveAnswer | ResolveFailureAnswer)[]> {
   try {
     const query = addresses.map((address) => <StandardResolveQuery>{ name: address, type: "name" });
     const resp = await fetch(rpcUrl() + "Name/resolve", {
@@ -62,6 +62,6 @@ export async function reverseResolve(addresses: string[]): Promise<StandardResol
     return answer;
   } catch (error) {
     console.warn(error);
-    return addresses.map((address) => <StandardResolveAnswer>{ status: "Failure", name: address });
+    return addresses.map((address) => <ResolveFailureAnswer>{ status: "Failure", name: address });
   }
 }

@@ -3,7 +3,10 @@
     <div :class="{ box: !isMobile }">
       <div class="mt-10">
         <img src="@/assets/cns.jpg" class="image is-96x96" style="margin: auto" />
-        <p class="has-text-centered is-size-3 pb-4 has-text-color-cns has-text-weight-bold">{{ $t("cns.title") }}</p>
+        <p class="has-text-centered is-size-3 pb-4 has-text-color-cns has-text-weight-bold">
+          {{ $t("cns.title") }}
+          <span v-if="isTestnet" class="mb-3 is-size-7 has-text-weight-normal">testnet</span>
+        </p>
       </div>
       <div class="is-flex is-justify-content-center px-3">
         <div class="control has-icons-left search-bar">
@@ -28,119 +31,128 @@
       <div v-if="showDetail && !isResolving" class="is-flex is-justify-content-center mt-4 mx-4">
         <div class="column is-11" v-if="resolveAns">
           <span class="is-size-5 has-text-white mb-4">{{ $t("cns.label.result") }}</span>
-          <div class="card mt-4" v-if="name.length < 6">
+          <div class="card mt-4">
             <header class="card-header">
-              <p class="card-header-title break-all">{{ name.toLocaleLowerCase() }}.xch</p>
-            </header>
-            <div class="card-content" v-if="name.length < 6">
-              <div class="content">
-                <p>
-                  <span class="is-size-5 has-text-weight-bold">{{ name.toLocaleLowerCase() }}.xch </span
-                  ><span class="has-text-warning"
-                    ><i class="mdi mdi-dots-horizontal-circle mdi-18px"></i>{{ $t("cns.label.notOpenYet") }}</span
-                  >
-                </p>
-                {{ $t("cns.message.notOpen") }}
-              </div>
-            </div>
-          </div>
-          <div class="card mt-4" v-else-if="resolveAns.status == 'Found'">
-            <header class="card-header">
-              <p class="card-header-title break-all">
-                <a
-                  class="has-text-link is-size-5 break-all"
-                  :href="`https://${name.toLocaleLowerCase()}.xch.cool`"
-                  target="_blank"
-                  >{{ name }}.xch<i class="mdi mdi-open-in-new"></i
+              <p v-if="resolveAns.status == 'Found'" class="card-header-title break-all">
+                <a class="has-text-link is-size-5 break-all" :href="cnsUrl" target="_blank"
+                  >{{ cnsName }}<i class="mdi mdi-open-in-new"></i
                 ></a>
               </p>
+              <p v-else class="card-header-title break-all">{{ cnsName }}</p>
             </header>
             <div class="card-content">
               <div class="content">
                 <p>
-                  <span class="is-size-5 has-text-weight-bold">{{ name.toLocaleLowerCase() }}.xch </span
-                  ><span class="has-text-info"
+                  <span class="is-size-5 has-text-weight-bold">{{ cnsName }}</span>
+                  <span v-if="price.code == 'TooShort'" class="has-text-warning"
+                    ><i class="mdi mdi-dots-horizontal-circle mdi-18px"></i>{{ $t("cns.label.notOpenYet") }}</span
+                  >
+                  <span v-else-if="resolveAns.status == 'Found'" class="has-text-info"
                     ><i class="mdi mdi-arrow-right-bold-circle mdi-18px"></i>{{ $t("cns.label.registered") }}</span
                   >
-                </p>
-                {{ $t("cns.message.registered") }}
-                <a class="has-text-link" :href="`https://${name.toLocaleLowerCase()}.xch.cool`" target="_blank"
-                  >{{ $t("cns.message.profileHomepage") }}<i class="mdi mdi-open-in-new"></i></a
-                >.
-              </div>
-            </div>
-          </div>
-          <div class="card mt-4" v-else-if="resolveAns.status == 'NotFound' && price.price > 0">
-            <header class="card-header">
-              <p class="card-header-title break-all">{{ name.toLocaleLowerCase() }}.xch</p>
-            </header>
-            <div class="card-content">
-              <div class="content">
-                <p>
-                  <span class="is-size-5 has-text-weight-bold break-all">{{ name.toLocaleLowerCase() }}.xch </span
-                  ><span class="has-text-success"
+                  <span v-else-if="resolveAns.status == 'NotFound' && price.price > 0" class="has-text-success"
                     ><i class="mdi mdi-check-circle mdi-18px"></i>{{ $t("cns.label.available") }}</span
                   >
-                </p>
-                <p>
-                  <span class="is-size-6 has-text-grey">{{ $t("cns.label.registrationPeriod") }}</span
-                  ><span class="is-pulled-right">{{ $t("cns.label.oneYear") }}</span>
-                </p>
-                <p>
-                  <span class="is-size-6 has-text-grey">{{ $t("cns.label.registrationFee") }}</span
-                  ><span class="is-pulled-right">{{ price.registrationFee / 1000000000000 }} XCH</span>
-                </p>
-                <p>
-                  <span class="is-size-6 has-text-grey">{{ $t("cns.label.annualFee") }}</span
-                  ><span class="is-pulled-right">{{ price.annualFee / 1000000000000 }} XCH</span>
-                </p>
-                <p>
-                  <span class="is-size-6 has-text-grey">{{ $t("cns.label.royaltyPercentage") }}</span
-                  ><span class="is-pulled-right">{{ price.royaltyPercentage / 100 }} %</span>
-                </p>
-                <p>
-                  <span class="is-size-6 has-text-grey">{{ $t("cns.label.total") }}</span
-                  ><span class="is-pulled-right"
-                    >{{ (price.price * (10000 + price.royaltyPercentage)) / 10000000000000000 }} XCH</span
-                  >
-                </p>
-              </div>
-              <div class="has-text-right">
-                <button class="button is-cns" @click="showModal = true">{{ $t("cns.button.register") }}</button>
-              </div>
-            </div>
-          </div>
-          <div class="card mt-4" v-else-if="resolveAns.status == 'Failure'">
-            <header class="card-header">
-              <p class="card-header-title break-all">{{ name.toLocaleLowerCase() }}.xch</p>
-            </header>
-            <div class="card-content">
-              <div class="content">
-                <p>
-                  <span class="is-size-5 has-text-weight-bold break-all">{{ name.toLocaleLowerCase() }}.xch </span
-                  ><span class="has-text-danger"
+                  <span v-else-if="resolveAns.status == 'Failure'" class="has-text-danger"
                     ><i class="mdi mdi-alert-circle mdi-18px"></i>{{ $t("cns.label.networkIssue") }}</span
                   >
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="card mt-4" v-else>
-            <header class="card-header">
-              <p class="card-header-title break-all">{{ name.toLocaleLowerCase() }}.xch</p>
-            </header>
-            <div class="card-content">
-              <div class="content">
-                <p>
-                  <span class="is-size-5 has-text-weight-bold break-all">{{ name.toLocaleLowerCase() }}.xch </span
-                  ><span class="has-text-danger"
+                  <span v-else class="has-text-danger"
                     ><i class="mdi mdi-close-circle mdi-18px"></i>{{ $t("cns.label.unavailable") }}</span
                   >
                 </p>
-                <span class="has-text-danger" v-if="price.code && price.code == 'NameUnavailable'">{{
-                  $t("cns.message.unavailable")
-                }}</span>
-                <span class="has-text-danger" v-else>{{ price.reason }}</span>
+
+                <p v-if="price.code == 'TooShort'">
+                  {{ $t("cns.message.notOpen", { minLength }) }}
+                </p>
+
+                <template v-else-if="resolveAns.status == 'Found'">
+                  {{ $t("cns.message.registered") }}
+                  <a class="has-text-link" :href="cnsUrl" target="_blank"
+                    >{{ $t("cns.message.profileHomepage") }}<i class="mdi mdi-open-in-new"></i></a
+                  >.
+                  <br />
+                  <ul class="mb-6">
+                    <li v-if="resolveAns.expiry">
+                      {{ $t("cns.label.ExpiryDate") }} {{ new Date(resolveAns.expiry * 1000).toLocaleDateString() }}
+                    </li>
+                    <li v-if="resolveAns.expiry">{{ $t("cns.label.Status") }} {{ getStatus(resolveAns.expiry) }}</li>
+                  </ul>
+                  <div v-if="!(price.price > 0)" class="field is-horizontal">
+                    <div class="field-body">
+                      <div class="field has-addons">
+                        <p class="control is-expanded has-icons-left">
+                          <input class="input" type="number" min="1" max="99" v-model="regYear" />
+                          <span class="icon is-small is-left">
+                            <i class="mdi mdi-calendar"></i>
+                          </span>
+                        </p>
+                        <div class="control">
+                          <a class="button is-static"> {{ $t("cns.label.years") }} </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="control ml-1">
+                      <button class="button is-link" @click="getPrice()">{{ $t("cns.button.renew") }}</button>
+                    </div>
+                  </div>
+                </template>
+                <template v-else>
+                  <span class="has-text-danger" v-if="price.code && price.code == 'NameUnavailable'">{{
+                    $t("cns.message.unavailable")
+                  }}</span>
+                  <span class="has-text-danger" v-else>{{ price.reason }}</span>
+                </template>
+                <template v-if="price.price > 0">
+                  <p class="my-5">
+                    <span class="is-size-6 has-text-grey">{{ $t("cns.label.registrationPeriod") }}</span>
+                    <span class="is-pulled-right">
+                      <div class="field-body">
+                        <div class="field has-addons">
+                          <p class="control is-expanded has-icons-left">
+                            <input class="input is-small" type="number" min="1" max="99" v-model="regYear" @change="getPrice()" />
+                            <span class="icon is-small is-left">
+                              <i class="mdi mdi-calendar"></i>
+                            </span>
+                          </p>
+                          <div class="control">
+                            <a class="button is-static is-small"> {{ $t("cns.label.years") }} </a>
+                          </div>
+                        </div>
+                      </div>
+                    </span>
+                  </p>
+                  <p>
+                    <span class="is-size-6 has-text-grey">{{ $t("cns.label.registrationFee") }}</span
+                    ><span class="is-pulled-right">{{ price.registrationFee / 1000000000000 }} {{ unit }}</span>
+                  </p>
+                  <p>
+                    <span class="is-size-6 has-text-grey">{{ $t("cns.label.annualFee") }}</span
+                    ><span class="is-pulled-right">{{ price.annualFee / 1000000000000 }} {{ unit }}</span>
+                  </p>
+                  <p>
+                    <span class="is-size-6 has-text-grey">{{ $t("cns.label.royaltyPercentage") }}</span
+                    ><span class="is-pulled-right">{{ price.royaltyPercentage / 100 }} %</span>
+                  </p>
+                  <p>
+                    <span class="is-size-6 has-text-grey">{{ $t("cns.label.total") }}</span
+                    ><span class="is-pulled-right"
+                      >{{ (price.price * (10000 + price.royaltyPercentage)) / 10000000000000000 }} {{ unit }}</span
+                    >
+                  </p>
+
+                  <div class="has-text-right">
+                    <button
+                      class="button is-cns"
+                      @click="
+                        showFill = false;
+                        showModal = true;
+                      "
+                    >
+                      <span v-if="renew">{{ $t("cns.button.renew") }}</span>
+                      <span v-else>{{ $t("cns.button.register") }}</span>
+                    </button>
+                  </div>
+                </template>
               </div>
             </div>
           </div>
@@ -163,9 +175,7 @@
                 />
                 <img class="nft-image is-clickable cover" v-else src="@/assets/nft-no-image.png" @click="viewCnsDetail(cns)" />
                 <p class="nft-name has-background-white-ter pt-2 pl-3 is-hidden-mobile">
-                  <span class="is-inline-block truncate">{{
-                    extraInfo[cns.address].metadata ? extraInfo[cns.address].metadata.name : ""
-                  }}</span>
+                  <span class="is-inline-block truncate">{{ getCnsName(cns.address) }}</span>
                   <span class="is-pulled-right">
                     <b-dropdown aria-role="list" class="is-pulled-right" :mobile-modal="false" position="is-bottom-left">
                       <template #trigger>
@@ -201,20 +211,34 @@
           <div class="field">
             <label class="label">{{ $t("cns.label.name") }}</label>
             <div class="control">
-              <input class="input" type="text" disabled :value="name.toLowerCase() + '.xch'" />
+              <input class="input" type="text" disabled :value="cnsName" />
             </div>
           </div>
-          <address-field :inputAddress="address" @updateAddress="updateAddress" :label="$t('cns.label.address')"></address-field>
+          <div class="field">
+            <label class="label">{{ $t("cns.label.address") }}</label>
+            <button v-if="!showFill" class="button is-text" @click="showFill = true">
+              {{ $t("cns.message.clickToBindAddress") }}
+            </button>
+            <div v-else class="control">
+              <p class="is-size-7 has-text-grey">{{ $t("cns.message.autoBoundHint") }}</p>
+              <address-field :inputAddress="address" @updateAddress="updateAddress" label=" "></address-field>
+            </div>
+          </div>
         </section>
         <footer class="modal-card-foot is-block">
           <button class="button" @click="showModal = false">{{ $t("cns.button.cancel") }}</button>
-          <button
-            :class="{ button: true, 'is-primary': true, 'is-pulled-right': true, 'is-loading': registering }"
-            @keyup.enter="register()"
-            @click="register()"
-          >
-            {{ $t("cns.button.register") }}
-          </button>
+          <div class="is-pulled-right">
+            <span v-if="registering" class="has-text-color-cns is-size-7 has-text-right">
+              {{ $t("cns.message.generating") }}
+            </span>
+            <button
+              :class="{ button: true, 'is-primary': true, 'is-pulled-right': true, 'is-loading': registering }"
+              @keyup.enter="register()"
+              @click="register()"
+            >
+              {{ $t("cns.button.register") }}
+            </button>
+          </div>
         </footer>
       </div>
     </div>
@@ -223,8 +247,7 @@
 
 <script lang="ts">
 import { getPrice, Price, register } from "../../../lib-chia/services/api/cns-register";
-import { resolveName, StandardResolveAnswer } from "@/services/api/resolveName";
-import { bech32m } from "@scure/base";
+import { ResolveFailureAnswer, resolveName, StandardResolveAnswer } from "@/services/api/resolveName";
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { NotificationProgrammatic as Notification } from "buefy";
 import AddressField from "@/components/Common/AddressField.vue";
@@ -240,6 +263,7 @@ import utility from "../../../lib-chia/services/crypto/utility";
 import { unprefix0x } from "../../../lib-chia/services/coin/condition";
 import NftDetailPanel from "@/components/Nft/NftDetailPanel.vue";
 import TopBar from "@/components/Common/TopBar.vue";
+import { chainId } from "@/store/modules/network";
 
 @Component({
   components: {
@@ -249,20 +273,23 @@ import TopBar from "@/components/Common/TopBar.vue";
 })
 export default class Cns extends Vue {
   public name = "";
-  public resolveAns: StandardResolveAnswer | null = null;
+  public resolveAns: StandardResolveAnswer | ResolveFailureAnswer | null = null;
   public isResolving = false;
   public showDetail = false;
-  public ownerAddress = "";
   public errorMsg = "";
   public showModal = false;
   public address = "";
   public period = 1;
-  public price: Price = { price: -1, annualFee: -1, royaltyPercentage: -1, registrationFee: -1 };
+  public price: Price = { name: "", price: -1, annualFee: -1, royaltyPercentage: -1, registrationFee: -1 };
   public registerErrMsg = "";
   public offer = "";
   public registering = false;
   public showMyCns = false;
   public isLoading = false;
+  public regYear = 1;
+  public showFill = false;
+  public showRanking = false;
+  public minLength = 6;
 
   get path(): string {
     return this.$route.path;
@@ -300,6 +327,26 @@ export default class Cns extends Vue {
     return this.account.extraInfo ?? {};
   }
 
+  get isTestnet(): boolean {
+    return window.location.host != process.env.VUE_APP_MAINNET_HOST;
+  }
+
+  get unit(): string {
+    return this.isTestnet ? "TXCH" : "XCH";
+  }
+
+  get renew(): boolean {
+    return this.resolveAns?.status == "Found";
+  }
+
+  get cnsName(): string {
+    return `${this.name.toLocaleLowerCase()}.xch`;
+  }
+
+  get cnsUrl(): string {
+    return `https://${this.cnsName}.cool`;
+  }
+
   async showCns(): Promise<void> {
     if (this.showMyCns) {
       this.showMyCns = false;
@@ -309,6 +356,10 @@ export default class Cns extends Vue {
       await store.dispatch("refreshNfts");
       this.isLoading = false;
     }
+  }
+
+  getCnsName(address: string): string {
+    return this.extraInfo?.[address]?.metadata?.name ?? "";
   }
 
   viewCnsDetail(nft: NftDetail): void {
@@ -371,12 +422,8 @@ export default class Cns extends Vue {
     this.isResolving = true;
     this.name = this.name.replace(/\s/g, "");
     this.name = this.name.split(".")[0];
-    this.resolveAns = await resolveName(`${this.name}.xch`);
+    this.resolveAns = await resolveName(`${this.name}.xch`, "whois");
     if (this.resolveAns.status != "Failure") {
-      this.ownerAddress = bech32m.encode(
-        "xch",
-        bech32m.toWords(this.fromHexString((this.resolveAns as StandardResolveAnswer).data ?? ""))
-      );
       if (this.resolveAns.status == "NotFound") await this.getPrice();
     }
 
@@ -385,12 +432,12 @@ export default class Cns extends Vue {
   }
 
   async getPrice(): Promise<void> {
-    this.price = await getPrice(`${this.name}.xch`);
+    this.price = await getPrice(`${this.name}.xch`, this.regYear, this.renew, chainId());
   }
 
   async register(): Promise<void> {
     this.registering = true;
-    const res = await register(`${this.name}.xch`, this.address);
+    const res = await register(`${this.name}.xch`, this.regYear, this.renew, chainId(), this.address);
     if (res?.success) {
       this.offer = res.offer ?? "";
       this.address = "";
@@ -431,7 +478,7 @@ export default class Cns extends Vue {
   reset(): void {
     this.resolveAns = null;
     this.showDetail = false;
-    this.price = { price: -1, annualFee: -1, royaltyPercentage: -1, registrationFee: -1 };
+    this.price = { name: "", price: -1, annualFee: -1, royaltyPercentage: -1, registrationFee: -1 };
     this.errorMsg = "";
     this.address = "";
   }
@@ -457,6 +504,19 @@ export default class Cns extends Vue {
     const reg = hexString.match(/.{1,2}/g);
     if (!reg) return new Uint8Array();
     return new Uint8Array(reg.map((byte) => parseInt(byte, 16)));
+  }
+
+  getStatus(expiry: number): string {
+    const expsec = expiry * 1000;
+
+    const now = new Date().getTime();
+    if (expsec > now) return "OK";
+
+    // Temporarily extend expiry to 2024-03-14
+    // UTC: Mar 14 2024 00:00:00
+    if (now < 1710374400000) return "Extended";
+    if (expsec < now + 90 * 24 * 60 * 60 * 1000) return "Grace Period";
+    return "Releasing";
   }
 }
 </script>

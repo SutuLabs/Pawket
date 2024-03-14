@@ -1602,7 +1602,8 @@
       "search": "Search",
       "loading": "Loading",
       "register": "Register",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "renew": "Renew"
     },
     "label": {
       "notOpenYet": "Not Open Yet",
@@ -1619,15 +1620,20 @@
       "myNames": "My Names",
       "register": "Register {cnsName}.xch",
       "name": "Name",
-      "oneYear": "1 Year",
-      "address": "Address(Optional)"
+      "address": "Address(Optional)",
+      "ExpiryDate": "Expiry Date:",
+      "Status": "Status:",
+      "years": "year(s)"
     },
     "message": {
-      "notOpen": " During the trial operation period of CNS, only names with 6 or more characters can be registered for the time being. In the future, the registration of all names will be gradually opened. Stay tuned!",
+      "notOpen": " During the trial operation period of CNS, only names with {minLength} or more characters can be registered for the time being. In the future, the registration of all names will be gradually opened. Stay tuned!",
       "registered": "This name has been registered. Go to view",
       "profileHomepage": "Profile Homepage",
       "unavailable": "This name is reserved. If you can prove that you are the owner of the name/trademark/brand, please contact us via Twitter/Discord.",
-      "noName": "No Chia Domain Name Here. Search to Get One."
+      "noName": "No Chia Domain Name Here. Search to Get One.",
+      "clickToBindAddress": "Click here to specify your bound address, unaffected by owner changes.",
+      "generating": "Please wait a moment while the offer is being generated.",
+      "autoBoundHint": "If not filled, the owner address will be bound by default."
     }
   },
   "connect": {

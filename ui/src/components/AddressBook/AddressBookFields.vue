@@ -43,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import { resolveName, StandardResolveAnswer } from "@/services/api/resolveName";
+import { ResolveFailureAnswer, resolveName, StandardResolveAnswer } from "@/services/api/resolveName";
 import { getCnsName, reverseResolveAnswer } from "@/services/api/reverseResolve";
 import puzzle from "../../../../lib-chia/services/crypto/puzzle";
 import { CoinSpend } from "../../../../lib-chia/services/spendbundle";
@@ -64,7 +64,7 @@ export default class AddressBookField extends Vue {
   public isLegalAddress = true;
   public isResolving = false;
   public errorMessage = "";
-  public resolveAnswer: StandardResolveAnswer | null = null;
+  public resolveAnswer: StandardResolveAnswer | ResolveFailureAnswer | null = null;
   public cnsResolve: reverseResolveAnswer | null = null;
   public proofCoin: CoinSpend | null = null;
   public cnsName = "";

@@ -1602,7 +1602,8 @@
       "search": "搜索",
       "loading": "加载中",
       "register": "注册",
-      "cancel": "取消"
+      "cancel": "取消",
+      "renew": "续费"
     },
     "label": {
       "notOpenYet": "尚未开放",
@@ -1618,16 +1619,21 @@
       "networkIssue": "网络问题",
       "myNames": "我的域名",
       "name": "域名",
-      "oneYear": "1 年",
       "register": "注册 {cnsName}.xch",
-      "address": "绑定地址(选填)"
+      "address": "绑定地址(选填)",
+      "ExpiryDate": "到期时间:",
+      "Status": "状态:",
+      "years": "年"
     },
     "message": {
-      "notOpen": "CNS 目前在试运营期间，暂时只开放 6 位及以上字符的名字注册。未来会逐步开放所有名字的注册。敬请期待！",
+      "notOpen": "CNS 目前在试运营期间，暂时只开放 {minLength} 位及以上字符的名字注册。未来会逐步开放所有名字的注册。敬请期待！",
       "registered": "该域名已被注册，查看其",
       "profileHomepage": "个人主页",
       "unavailable": "该名字已被预留，若你可以证明你是该名字/商标/品牌的拥有者，请通过 Twitter/Discord 联系我们。",
-      "noName": "你还没有 Chia 域名，请搜索去获取。"
+      "noName": "你还没有 Chia 域名，请搜索去获取。",
+      "clickToBindAddress": "点击此处指定绑定地址，绑定后，地址不再受CNS所有者更改而影响。",
+      "generating": "正在生成Offer，请稍等。",
+      "autoBoundHint": "如果不填写，绑定地址将默认为CNS所有者地址。"
     }
   },
   "connect": {

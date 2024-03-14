@@ -90,7 +90,7 @@ import debug from "../../../../lib-chia/services/api/debug";
 import { CoinSpend } from "../../../../lib-chia/services/spendbundle";
 import { analyzeNftCoin, getScalarString } from "../../../../lib-chia/services/coin/nft";
 import { decodeAddress } from "@/services/view/camera";
-import { resolveName, StandardResolveAnswer } from "@/services/api/resolveName";
+import { ResolveFailureAnswer, resolveName, StandardResolveAnswer } from "@/services/api/resolveName";
 import { getCnsName, reverseResolveAnswer } from "@/services/api/reverseResolve";
 import { tc } from "@/i18n/i18n";
 
@@ -109,7 +109,7 @@ export default class AddressField extends Vue {
   public address = "";
   public cnsUrl = "";
   public contacts: Contact[] = [];
-  public resolveAnswer: StandardResolveAnswer | null = null;
+  public resolveAnswer: StandardResolveAnswer | ResolveFailureAnswer | null = null;
   public cnsResolve: reverseResolveAnswer | null = null;
   public proofCoin: CoinSpend | null = null;
   public onChainConfirmationStatus: "None" | "Confirming" | "Confirmed" | "Wrong" = "None";
