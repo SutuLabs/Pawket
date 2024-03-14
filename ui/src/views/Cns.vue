@@ -236,7 +236,8 @@
               @keyup.enter="register()"
               @click="register()"
             >
-              {{ $t("cns.button.register") }}
+              <span v-if="renew">{{ $t("cns.button.renew") }}</span>
+              <span v-else>{{ $t("cns.button.register") }}</span>
             </button>
           </div>
         </footer>
