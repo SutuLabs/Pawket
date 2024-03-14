@@ -329,7 +329,7 @@ export default class Cns extends Vue {
   }
 
   get isTestnet(): boolean {
-    return window.location.host != process.env.VUE_APP_MAINNET_HOST;
+    return chainId() == "37a90eb5185a9c4439a91ddc98bbadce7b4feba060d50116a067de66bf236615";
   }
 
   get unit(): string {
