@@ -185,6 +185,11 @@ export default class NftOffer extends Vue {
           amount: 0n,
           nftanalysis: this.nft.analysis,
           target: "0xunimportant",
+          coin: {
+            puzzle_reveal: "()",
+            solution: "()",
+            coin: this.nft.coin,
+          },
         },
       ];
       const reqs: OfferEntity[] = getOfferEntities(this.requests, change_hex, {}, xchSymbol());
