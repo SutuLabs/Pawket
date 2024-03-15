@@ -627,7 +627,7 @@ export default class TakeOffer extends Vue {
   get royaltyAmount(): bigint {
     const s = this.summary;
     if (!s) throw new Error("No Summary");
-    if (s.offered[0].type != "nft") throw new Error("Not NFT Offer");
+    if (s.offered[0].type != "nft") return 0n;
     const royalty_amount = (s.requested[0].amount * BigInt(s.offered[0].nftanalysis.tradePricePercentage ?? 0)) / BigInt(10000);
     return royalty_amount;
   }
