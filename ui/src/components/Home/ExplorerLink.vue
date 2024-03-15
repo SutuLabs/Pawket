@@ -136,8 +136,10 @@ export default class ExplorerLink extends Vue {
     if (this.maxAddress == value) return;
     if (value && value < 13) {
       this.account.addressRetrievalCount = value;
+      store.dispatch("persistent").then(() => {
+        notifyPrimary(this.$tc("common.message.saved"));
+      });
       store.dispatch("refreshAddress");
-      notifyPrimary(this.$tc("common.message.saved"));
     }
   }
 
