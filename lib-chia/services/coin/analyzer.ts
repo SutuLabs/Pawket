@@ -168,7 +168,7 @@ export async function analyzeCoin(
       : mods.startsWith(
           "singleton_top_layer_v1_1(nft_state_layer(nft_ownership_layer(nft_ownership_transfer_program_one_way_claim_with_royalties(),"
         )
-      ? await analyzeNftCoin(uncPuzzle, undefined, coin, solution_hex)
+      ? await analyzeNftCoin(uncPuzzle, undefined, coin, solution_hex, true)
       : undefined;
 
   return analysis ? JSON.stringify(analysis) : undefined;
