@@ -78,7 +78,7 @@ async function generateCnsSpendBundle(
   r.prefix = r.prefix || "xch";
   r.symbol = r.symbol || "XCH";
   const rpcUrl = r.rpcUrl || defaultRpcUrl;
-  if (r.metadata.bindings.address?.startsWith("xch1"))
+  if (r.metadata.bindings.address?.startsWith(r.prefix + "1"))
     r.metadata.bindings.address = puzzle.getPuzzleHashFromAddress(r.metadata.bindings.address);
 
   let legacyNft: NftCoinAnalysisResult | undefined;
