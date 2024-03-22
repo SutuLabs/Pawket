@@ -372,7 +372,7 @@ export default class Send extends Vue {
       }
       // there is error in checking this regular expression
       // eslint-disable-next-line no-useless-escape
-      const memo = this.memo.replace(/[&/\\#,+()$~%.'":*?<>{}\[\] ]/g, "_");
+      const memo = this.memo.replace(/[&/\\#,+()$~%'"*?<>{}\[\] ]/g, "_");
       const tgts: TransferTarget[] = [{ address: tgt_hex, amount, symbol: this.selectedToken, memos: [tgt_hex, memo] }];
       const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, BigInt(this.fee), xchSymbol());
       const observers = this.requests.length ? this.requests : await getAssetsRequestObserver(this.account);
