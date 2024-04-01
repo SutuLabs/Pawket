@@ -8,7 +8,7 @@
             <div class="mr-4 py-1">#{{ index + 1 }}</div>
             <div class="mr-4">
               <span class="image is-32x32">
-                <img class="is-rounded" :src="iconUrlPrefix + cat.id + '.jpg'" />
+                <img class="is-rounded" :src="iconUrlPrefix + cat.id + '.webp'" />
               </span>
             </div>
             <div class="py-1 has-text-grey-dark is-size-6">
