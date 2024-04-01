@@ -476,7 +476,8 @@ export async function analyzeNftCoin(
     throw new Error("abnormal, SINGLETON_STRUCT is different in top_layer and ownership_transfer");
 
   const { didOwner, p2Owner, updaterInSolution } =
-    "mod" in p2InnerPuzzle_parsed && p2InnerPuzzle_parsed.mod == "settlement_payments"
+    "mod" in p2InnerPuzzle_parsed &&
+    (p2InnerPuzzle_parsed.mod == "settlement_payments" || p2InnerPuzzle_parsed.mod == "settlement_payments_v1")
       ? await getOwnerFromSolutionForSettlementInnerPuzzle(solsexp)
       : await getOwnerFromSolutionForP2InnerPuzzle(solsexp);
 
