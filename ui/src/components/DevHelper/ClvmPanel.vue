@@ -50,7 +50,7 @@ export default class ClvmPanel extends Vue {
   public readonly modsdict = modsdict;
 
   async updateCl(): Promise<void> {
-    if (this.origin_cl.startsWith("0x") || this.origin_cl.startsWith("ff") || this.origin_cl.indexOf(" ") == -1) {
+    if (this.origin_cl.startsWith("0x") || this.origin_cl.startsWith("ff") || this.origin_cl.indexOf("\n") == -1) {
       this.cl_type = "hex";
       this.translated_cl = await puzzle.disassemblePuzzle(unprefix0x(this.origin_cl));
       this.cl_extra = "";
