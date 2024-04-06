@@ -744,10 +744,10 @@ function constructCnsBindingString(metadata: CnsBindingValues): string {
   const md =
     "(" +
     [
-      metadata.address !== undefined ? `${toNumber(mkeys.address)} . ${prefix0x(metadata.address)}` : undefined,
-      metadata.did !== undefined ? `${toNumber(mkeys.did)} . ${prefix0x(metadata.did)}` : undefined,
-      metadata.publicKey !== undefined ? `${toNumber(mkeys.publicKey)} . ${prefix0x(metadata.publicKey)}` : undefined,
-      metadata.text !== undefined ? `${toNumber(mkeys.text)} . "${metadata.text}"` : undefined,
+      metadata.address ? `${toNumber(mkeys.address)} . ${prefix0x(metadata.address)}` : undefined,
+      metadata.did ? `${toNumber(mkeys.did)} . ${prefix0x(metadata.did)}` : undefined,
+      metadata.publicKey ? `${toNumber(mkeys.publicKey)} . ${prefix0x(metadata.publicKey)}` : undefined,
+      metadata.text ? `${toNumber(mkeys.text)} . "${metadata.text}"` : undefined,
       ...Object.keys(cloned).map((_) => (cloned[_] ? `"${_}" . "${cloned[_]}"` : undefined)),
     ]
       .filter((_) => _)
