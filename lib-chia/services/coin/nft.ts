@@ -605,11 +605,12 @@ export async function getUpdateNftInnerSolution(
   tgt_hex = prefix0x(tgt_hex);
   const val = typeof value !== "string" ? constructCnsBindingString(value) : value.startsWith("0x") ? value : `"${value}"`;
   const mkeys = getNftMetadataKeys();
+  const newval = val == "()" ? `(${toNumber(mkeys.empty)} . 0x00)` : val;
 
   // `-24` is the update metadata magic condition
   const nftSolution = `() (q (-24 ${metadataUpdater} (${toNumber(
     mkeys[key]
-  )} . ${val})) (51 ${tgt_hex} ${amount} (${tgt_hex}))) ()`;
+  )} . ${newval})) (51 ${tgt_hex} ${amount} (${tgt_hex}))) ()`;
   return nftSolution;
 }
 
@@ -732,6 +733,7 @@ function constructCnsBindingString(metadata: CnsBindingValues): string {
   delete cloned.did;
   delete cloned.publicKey;
   delete cloned.text;
+  delete cloned.empty;
 
   // emit warnings when extra binding fields exist, which is not good practise
   if (Object.keys(cloned).length > 0)
@@ -742,10 +744,10 @@ function constructCnsBindingString(metadata: CnsBindingValues): string {
   const md =
     "(" +
     [
-      metadata.address ? `${toNumber(mkeys.address)} . ${prefix0x(metadata.address)}` : undefined,
-      metadata.did ? `${toNumber(mkeys.did)} . ${prefix0x(metadata.did)}` : undefined,
-      metadata.publicKey ? `${toNumber(mkeys.publicKey)} . ${prefix0x(metadata.publicKey)}` : undefined,
-      metadata.text ? `${toNumber(mkeys.text)} . "${metadata.text}"` : undefined,
+      metadata.address !== undefined ? `${toNumber(mkeys.address)} . ${prefix0x(metadata.address)}` : undefined,
+      metadata.did !== undefined ? `${toNumber(mkeys.did)} . ${prefix0x(metadata.did)}` : undefined,
+      metadata.publicKey !== undefined ? `${toNumber(mkeys.publicKey)} . ${prefix0x(metadata.publicKey)}` : undefined,
+      metadata.text !== undefined ? `${toNumber(mkeys.text)} . "${metadata.text}"` : undefined,
       ...Object.keys(cloned).map((_) => (cloned[_] ? `"${_}" . "${cloned[_]}"` : undefined)),
     ]
       .filter((_) => _)
@@ -889,6 +891,8 @@ function getNftMetadataKeys(): NftMetadataKeys & CnsMetadataKeys & CnsBindingKey
     did: getHex("id"),
     publicKey: getHex("pk"),
     text: getHex("tt"),
+
+    empty: getHex("em"), // appear when binding fields are all empty, to avoid chialisp auto optimized the code to no update happen
   };
 }
 
@@ -921,7 +925,7 @@ export function getNftMetadataInfo(parsed: ParsedMetadata): MetadataValues {
 
 export function getCnsBindingsInfo(metalist: string | string[] | undefined): CnsBindingValues | undefined {
   if (metalist === undefined) return undefined;
-  if (!Array.isArray(metalist)) throw new Error("CNS binding input abnormal format.");
+  if (!Array.isArray(metalist)) throw new Error(`CNS binding input abnormal format: ${metalist}`);
   const mkeys = getNftMetadataKeys();
 
   const parsed: ParsedMetadata = {};
@@ -938,6 +942,7 @@ export function getCnsBindingsInfo(metalist: string | string[] | undefined): Cns
     did: getScalar(parsed[mkeys.did]),
     publicKey: getScalar(parsed[mkeys.publicKey]),
     text: hex2ascSingle(parsed[mkeys.text]),
+    empty: getScalar(parsed[mkeys.empty]),
   };
 
   // assign extra unknown binding fields
@@ -946,6 +951,7 @@ export function getCnsBindingsInfo(metalist: string | string[] | undefined): Cns
   delete cloned[mkeys.did];
   delete cloned[mkeys.publicKey];
   delete cloned[mkeys.text];
+  delete cloned[mkeys.empty];
 
   for (const key in cloned) {
     if (Object.prototype.hasOwnProperty.call(cloned, key)) {

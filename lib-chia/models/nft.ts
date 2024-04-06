@@ -115,7 +115,7 @@ export interface CnsBindingValues {
 
 export type CnsDataKey = NftDataKey | "expiry" | "address" | "name" | "bindings";
 export type CnsUpdatableDataKey = NftUpdatableDataKey | "bindings";
-export type CnsBindingKey = "did" | "address" | "publicKey" | "text";
+export type CnsBindingKey = "did" | "address" | "publicKey" | "text" | "empty";
 export type CnsBindingKeys = { [key in CnsBindingKey]: string };
 
 export type CnsMetadataKeys = { [key in CnsDataKey]: string };

@@ -14,6 +14,7 @@ import { OriginCoin, signSpendBundle } from "../../services/spendbundle";
 import { CnsBindingValues, CnsCoinAnalysisResult } from "../../models/nft";
 import { expiryDate, mintOneCns } from "./functions";
 import { AccountEntity } from "../../models/account";
+import { unprefix0x } from "../../services/coin/condition";
 
 const net: NetworkContext = {
   prefix: "xch",
@@ -100,6 +101,18 @@ export async function testUpdateCns(
   if (finalAnalysis == null) fail("null finalAnalysis");
   expect(finalAnalysis).toMatchSnapshot("finalAnalysis");
 
+  function expectBindingField(field: "address" | "did" | "publicKey" | "text") {
+    if (!("bindings" in finalAnalysis.metadata)) return;
+    if (updateBindings[field] !== undefined || finalAnalysis.metadata.bindings[field] !== undefined)
+      expect(finalAnalysis.metadata.bindings[field]).toBe(unprefix0x(updateBindings[field]));
+  }
+  if ("bindings" in finalAnalysis.metadata) {
+    expectBindingField("address");
+    expectBindingField("did");
+    expectBindingField("publicKey");
+    expectBindingField("text");
+  }
+
   const spendBundle = await signSpendBundle(ubundle, tokenPuzzles, net.chainId);
   await assertSpendbundle(spendBundle, net.chainId);
   expect(spendBundle).toMatchSnapshot("spendbundle");
@@ -150,6 +163,15 @@ describe("Update CNS from one address", () => {
   test("1: to another address", async () => {
     const md: CnsBindingValues = {
       address: "0xf3b7d6d4bdd80b99c539f7ca900288f5dc2ac8fb23559656e981761e90b2fe71",
+    };
+    if (!initData) fail("not init");
+    const [account, nextCoin, analysis] = initData;
+    await testUpdateCns(0n, account, nextCoin, analysis, md);
+  });
+
+  test("2: to empty", async () => {
+    const md: CnsBindingValues = {
+      address: undefined,
     };
     if (!initData) fail("not init");
     const [account, nextCoin, analysis] = initData;

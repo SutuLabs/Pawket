@@ -217,12 +217,18 @@ export default class EditCnsBindings extends Vue {
         const address_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.address));
         md.address = address_hex;
       } else {
-        md.address = "";
+        md.address = undefined;
       }
 
-      md.did = this.did;
-      md.publicKey = this.publicKey;
-      md.text = this.text;
+      if (this.did) {
+        const did_hex = this.did.startsWith("0x") ? this.did : prefix0x(puzzle.getPuzzleHashFromAddress(this.did));
+        md.did = did_hex;
+      } else {
+        md.did = undefined;
+      }
+
+      md.publicKey = this.publicKey ? this.publicKey : undefined;
+      md.text = this.text ? this.text : undefined;
 
       const observers = await getAssetsRequestObserver(this.account);
       const ubundle = await generateUpdatedNftBundle(
