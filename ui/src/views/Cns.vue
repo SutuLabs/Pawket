@@ -521,9 +521,9 @@ export default class Cns extends Vue {
     const now = new Date().getTime();
     if (expsec > now) return "OK";
 
-    // Temporarily extend expiry to 2024-04-15
-    // UTC: Apr 15 2024 00:00:00
-    if (now < 1713139200000) return "Extended";
+    // Temporarily extend expiry to 2024-06-17
+    // UTC: Jun 17 2024 00:00:00
+    if (now < 1718582400000) return "Extended";
     if (expsec < now + 90 * 24 * 60 * 60 * 1000) return "Grace Period";
     return "Releasing";
   }
