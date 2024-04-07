@@ -290,7 +290,10 @@ export default class Cns extends Vue {
   public regYear = 1;
   public showFill = false;
   public showRanking = false;
-  public minLength = 6;
+
+  get minLength(): string {
+    return this.price.arguments?.[0] ?? "6";
+  }
 
   get path(): string {
     return this.$route.path;

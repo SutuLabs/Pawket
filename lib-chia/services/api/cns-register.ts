@@ -14,6 +14,7 @@ export interface PriceResponse {
   success: boolean;
   reason?: string;
   code?: string;
+  arguments?: string[];
 }
 
 export interface Price {
@@ -24,6 +25,7 @@ export interface Price {
   registrationFee: number;
   reason?: string;
   code?: string;
+  arguments?: string[];
 }
 
 export interface RegisterResponse {
@@ -71,6 +73,7 @@ export async function getPrice(name: string, year: number, renew: boolean, chain
       royaltyPercentage: -1,
       reason: qresp.reason,
       code: qresp.code,
+      arguments: qresp.arguments,
     };
   } catch (error) {
     console.warn(error);
