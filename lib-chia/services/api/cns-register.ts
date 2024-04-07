@@ -9,6 +9,7 @@ export interface PriceResponse {
   name: string;
   price?: number;
   annualFee?: number;
+  regYear?: number;
   registrationFee?: number;
   royaltyPercentage?: number;
   success: boolean;
@@ -22,6 +23,7 @@ export interface Price {
   price: number;
   royaltyPercentage: number;
   annualFee: number;
+  regYear: number;
   registrationFee: number;
   reason?: string;
   code?: string;
@@ -62,6 +64,7 @@ export async function getPrice(name: string, year: number, renew: boolean, chain
         name: qresp.name ?? "",
         price: qresp.price ?? -1,
         annualFee: qresp.annualFee ?? -1,
+        regYear: qresp.regYear ?? -1,
         registrationFee: qresp.registrationFee ?? -1,
         royaltyPercentage: qresp.royaltyPercentage ?? -1,
       };
@@ -69,6 +72,7 @@ export async function getPrice(name: string, year: number, renew: boolean, chain
       name: "",
       price: -1,
       annualFee: -1,
+      regYear: -1,
       registrationFee: -1,
       royaltyPercentage: -1,
       reason: qresp.reason,
@@ -77,7 +81,7 @@ export async function getPrice(name: string, year: number, renew: boolean, chain
     };
   } catch (error) {
     console.warn(error);
-    return { name: "", price: -1, annualFee: -1, registrationFee: -1, royaltyPercentage: -1 };
+    return { name: "", price: -1, annualFee: -1, regYear: -1, registrationFee: -1, royaltyPercentage: -1 };
   }
 }
 
