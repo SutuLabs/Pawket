@@ -436,6 +436,8 @@ export default class Cns extends Vue {
   }
 
   async getPrice(): Promise<void> {
+    if (this.regYear > 99) this.regYear = 99;
+    if (this.regYear < 1) this.regYear = 1;
     this.price = await getPrice(`${this.name}.xch`, this.regYear, this.renew, chainId());
   }
 
