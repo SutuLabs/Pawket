@@ -2,7 +2,7 @@ const royaltyAddress = process.env.VUE_APP_ROYALTY_ADDRESS ?? "";
 function getBaseUrl(chainId: string) {
   return chainId == "37a90eb5185a9c4439a91ddc98bbadce7b4feba060d50116a067de66bf236615"
     ? process.env.VUE_APP_API_TESTNET_CNS_URL ?? "https://testnet.cns.api.pawket.app/"
-    : process.env.VUE_APP_API_CNS_URL ?? "https://cns.api.pawket.app/api/";
+    : process.env.VUE_APP_API_CNS_URL ?? "https://cns.api.pawket.app/";
 }
 
 export interface PriceResponse {
