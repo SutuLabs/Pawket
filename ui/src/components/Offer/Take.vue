@@ -396,10 +396,10 @@ export default class TakeOffer extends Vue {
     this.close();
   }
 
-  async verifyCns(cnsName: string, coinName: Hex0x): Promise<void> {
+  async verifyCns(cnsName: string, coinName: Hex0x, type: "xchfornft" | "renew"): Promise<void> {
     this.verifiedCns = null;
     const res = await resolveName(cnsName);
-    if (res.status == "Found") {
+    if (res.status == "Found" && type == "xchfornft") {
       this.verifiedCns = true;
       if (res.proof_coin_name == coinName) this.verifiedCns = true;
       else this.verifiedCns = false;
@@ -585,11 +585,14 @@ export default class TakeOffer extends Vue {
           autoClose: true,
         });
 
-      if (this.summary.offered[0].type == "nft" && "cnsName" in this.summary.offered[0].nftanalysis)
+      if (this.summary.offered[0].type == "nft" && "cnsName" in this.summary.offered[0].nftanalysis) {
+        const isCnsRequested = this.summary.requested[1].type == "nft" && "cnsName" in this.summary.requested[1].nftanalysis;
         await this.verifyCns(
           (this.summary.offered[0].nftanalysis as CnsCoinAnalysisResult).cnsName,
-          this.summary.offered[0].nftanalysis.coin.parent_coin_info
+          this.summary.offered[0].nftanalysis.coin.parent_coin_info,
+          isCnsRequested ? "renew" : "xchfornft"
         );
+      }
 
       if (this.summary.offered.some((_) => _.type == "nft") || this.summary.requested.some((_) => _.type == "nft"))
         await store.dispatch("refreshNfts");
