@@ -586,7 +586,7 @@ export default class TakeOffer extends Vue {
         });
 
       if (this.summary.offered[0].type == "nft" && "cnsName" in this.summary.offered[0].nftanalysis) {
-        const isCnsRequested = this.summary.requested[1].type == "nft" && "cnsName" in this.summary.requested[1].nftanalysis;
+        const isCnsRequested = this.summary.requested?.[1]?.type == "nft" && "cnsName" in this.summary.requested[1].nftanalysis;
         await this.verifyCns(
           (this.summary.offered[0].nftanalysis as CnsCoinAnalysisResult).cnsName,
           this.summary.offered[0].nftanalysis.coin.parent_coin_info,
