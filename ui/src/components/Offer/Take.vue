@@ -110,9 +110,11 @@
                           {{ ent.nftanalysis.cnsName }}
                           <b-tooltip :label="$t('offer.take.ui.tooltip.verifiedCns')" v-if="verifiedCns == true">
                             <i class="mdi mdi-check-decagram has-text-success"></i>
+                            <span v-if="testnet" class="has-text-weight-normal has-text-grey">Testnet</span>
                           </b-tooltip>
                           <b-tooltip :label="$t('offer.take.ui.tooltip.unverifiedCns')" v-if="verifiedCns == false">
                             <i class="mdi mdi-alert-decagram has-text-danger"></i>
+                            <span v-if="testnet" class="has-text-weight-normal has-text-grey">Testnet</span>
                           </b-tooltip>
                         </p>
                       </div>
@@ -391,6 +393,10 @@ export default class TakeOffer extends Vue {
     return this.$route.path;
   }
 
+  get testnet(): boolean {
+    return store.state.network.networkId == "testnet11";
+  }
+
   @Watch("path")
   onPathChange(): void {
     this.close();
@@ -404,9 +410,10 @@ export default class TakeOffer extends Vue {
       if (res.proof_coin_name == coinName) this.verifiedCns = true;
       else this.verifiedCns = false;
     } else {
-      const idx = this.makerBundle?.coin_spends.findIndex(
-        (csp) => csp.coin.puzzle_hash == "0x13538ceef5c3308f88cf8838fc0bfde0d677bfa845c47d61fba7322a862f6b3f"
-      );
+      const ph = this.testnet
+        ? "0x4c4b3c755718237df6f5c918c5deab8b47907977f31509ef3487625dbeddec9f"
+        : "0x13538ceef5c3308f88cf8838fc0bfde0d677bfa845c47d61fba7322a862f6b3f";
+      const idx = this.makerBundle?.coin_spends.findIndex((csp) => csp.coin.puzzle_hash == ph);
       if (idx != undefined && idx > -1) this.verifiedCns = true;
       else this.verifiedCns = false;
     }
