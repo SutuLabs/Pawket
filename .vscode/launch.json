@@ -33,7 +33,7 @@
             ],
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen",
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/lib-chia",
             "port": 9229
           }
     ]

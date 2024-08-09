@@ -1,3 +1,0 @@
-test('Transfer CNS', async () => {
-  //
-});

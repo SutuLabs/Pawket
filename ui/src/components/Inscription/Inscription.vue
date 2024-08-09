@@ -1,0 +1,788 @@
+<template>
+  <div class="modal-card" @dragenter="dragenter" @dragleave="dragleave">
+    <top-bar :title="$t('inscription.ui.title.inscribe')" @close="close()" :showClose="true"></top-bar>
+    <section class="modal-card-body">
+      <template v-if="!bundle">
+        <b-tabs v-model="panel" position="is-centered" expanded class="no_content_panel">
+          <b-tab-item value="mint" icon="lead-pencil" :label="$t('inscription.ui.tab.mint')"></b-tab-item>
+          <b-tab-item
+            value="transfer"
+            icon="arrow-right-bold-circle-outline"
+            :label="$t('inscription.ui.tab.transfer')"
+          ></b-tab-item>
+          <b-tab-item value="deploy" icon="sprout-outline" :label="$t('inscription.ui.tab.deploy')"></b-tab-item>
+          <b-tab-item value="custom" icon="cogs" :label="$t('inscription.ui.tab.custom')" :visible="false"></b-tab-item>
+        </b-tabs>
+
+        <b-field v-if="panel == 'mint' || panel == 'transfer' || panel == 'deploy'" :label="$t('inscription.ui.label.tick')">
+          <b-input maxlength="4" v-model="tick" type="text" :placeholder="$t('inscription.ui.placeholder.tick')"></b-input>
+        </b-field>
+
+        <b-field v-if="panel == 'mint' || panel == 'transfer'" :label="$t('inscription.ui.label.amount')">
+          <b-field>
+            <!-- <p class="control">
+                    <b-button :label="$t('inscription.ui.button.max')" />
+                  </p> -->
+            <b-input v-model="amount" type="number" :max="Number.MAX_SAFE_INTEGER" :min="1" expanded />
+          </b-field>
+        </b-field>
+
+        <b-field v-if="panel == 'transfer'">
+          <template #label>
+            {{ $t("inscription.ui.label.from") }}
+            <b-tooltip :label="$t('inscription.ui.help.from')" position="is-right" multilined>
+              <b-icon size="is-small" icon="help-circle-outline"></b-icon>
+            </b-tooltip>
+          </template>
+          <b-field>
+            <b-select v-model="from" expanded :loading="status == 'Loading'">
+              <option v-for="f in froms" :value="f" :key="f">{{ f }}</option>
+            </b-select>
+          </b-field>
+        </b-field>
+
+        <b-field v-if="panel == 'mint'">
+          <template #label>
+            <div class="is-flex is-justify-content-space-between">
+              {{ $t("inscription.ui.label.repeatMint") }}
+              <span>
+                <b-tooltip :label="$t('inscription.ui.help.mergeRepeat')" position="is-left" class="mx-2" multilined>
+                  <b-icon size="is-small" icon="help-circle-outline"></b-icon>
+                </b-tooltip>
+                <b-switch v-model="mergeRepeats" size="is-small">
+                  {{ $t("inscription.ui.switch.mergeRepeat") }}
+                </b-switch>
+              </span>
+            </div>
+          </template>
+          <template #message>
+            <template v-if="mergeRepeats">
+              <span v-if="repeat > 150" class="has-text-danger has-text-weight-normal is-size-7">
+                {{ $t("inscription.ui.comment.repeatMoreThan150WithMerge") }}
+              </span>
+              <span v-else-if="repeat > 20" class="has-text-warning-dark has-text-weight-normal is-size-7">
+                {{ $t("inscription.ui.comment.repeatMoreThan20WithMerge") }}
+              </span>
+              <span v-else-if="repeat > 1" class="has-text-weight-normal is-size-7">
+                {{ $t("inscription.ui.comment.repeatMoreThan1WithMerge") }}
+              </span>
+              <span v-else class="has-text-weight-normal is-size-7">
+                {{ $t("inscription.ui.comment.repeatDefaultWithMerge") }}
+              </span>
+            </template>
+            <template v-else>
+              <span v-if="repeat > 25" class="has-text-danger has-text-weight-normal is-size-7">
+                {{ $t("inscription.ui.comment.repeatMoreThan25") }}
+              </span>
+              <span v-else-if="repeat > 1" class="has-text-warning-dark has-text-weight-normal is-size-7">
+                {{ $t("inscription.ui.comment.repeatMoreThan1") }}
+              </span>
+              <span v-else class="has-text-weight-normal is-size-7">
+                {{ $t("inscription.ui.comment.repeatDefault") }}
+              </span>
+            </template>
+          </template>
+          <b-field>
+            <b-numberinput
+              v-model="repeat"
+              expanded
+              controls-position="compact"
+              :max="mergeRepeats ? MAX_MERGE_REPEAT : MAX_REPEAT"
+              :min="1"
+              controls-alignment="left"
+              type="is-warning"
+            />
+            <p class="control right_slider">
+              <b-slider
+                v-model="repeat"
+                indicator
+                :tooltip="false"
+                :max="mergeRepeats ? MAX_MERGE_REPEAT : MAX_REPEAT"
+                :min="1"
+                format="raw"
+                :type="
+                  mergeRepeats
+                    ? repeat > 20
+                      ? 'is-warning'
+                      : 'is-success'
+                    : repeat == 1
+                    ? 'is-success'
+                    : repeat > 25
+                    ? 'is-danger'
+                    : 'is-warning'
+                "
+              ></b-slider>
+            </p>
+          </b-field>
+        </b-field>
+
+        <b-field v-if="panel == 'deploy'" :label="$t('inscription.ui.label.total')">
+          <b-field>
+            <b-numberinput
+              v-model="total"
+              :max="Number.MAX_SAFE_INTEGER"
+              :min="1"
+              expanded
+              controls-position="compact"
+              controls-alignment="right"
+            />
+          </b-field>
+        </b-field>
+
+        <b-field v-if="panel == 'deploy'" :label="$t('inscription.ui.label.limit')">
+          <b-field>
+            <b-numberinput
+              v-model="limit"
+              :max="Number.MAX_SAFE_INTEGER"
+              :min="1"
+              expanded
+              controls-position="compact"
+              controls-alignment="right"
+            />
+          </b-field>
+        </b-field>
+
+        <!-- Custom -->
+        <template v-if="panel == 'custom'">
+          <span class="label">
+            <b-tooltip :label="$t('batchSend.ui.tooltip.upload')" position="is-right">
+              <b-upload v-model="file" accept=".csv" class="file-label" @input="afterUploadCsv">
+                <b-tag icon="tray-arrow-up" size="is-small">{{ $t("batchSend.ui.button.upload") }}</b-tag>
+              </b-upload>
+            </b-tooltip>
+            <b-tooltip :label="$t('batchSend.ui.tooltip.help')" position="is-bottom" multilined>
+              <b-icon icon="help-circle" size="is-small"> </b-icon>
+            </b-tooltip>
+            <a @click="fillSample"
+              ><span class="is-size-7 is-underlined">{{ $t("batchSend.ui.field.csv.fillSample") }}</span></a
+            >
+            <span class="is-size-7">{{ $t("batchSend.ui.field.csv.or") }}</span>
+            <a :href="csvSampleUri" :download="$t('batchSend.ui.field.csv.sampleName') + '.csv'"
+              ><span class="is-size-7 is-underlined">{{ $t("batchSend.ui.field.csv.downloadSample") }}</span></a
+            >
+          </span>
+          <b-field>
+            <b-input type="textarea" v-model="csv" v-show="!isDragging" required ref="csv"></b-input>
+          </b-field>
+          <b-field v-show="isDragging">
+            <b-upload v-model="dragfile" drag-drop expanded multiple @input="afterDragged">
+              <section class="section">
+                <div class="content has-text-centered">
+                  <p>
+                    <b-icon icon="upload" size="is-large"> </b-icon>
+                  </p>
+                  <p>{{ $t("batchSend.ui.field.csv.drag") }}</p>
+                </div>
+              </section>
+            </b-upload>
+          </b-field>
+          <b-field>
+            <b-tag v-if="file" icon="paperclip" size="is-small" closable aria-close-label="Close tag" @close="deleteFile">
+              {{ file.name }}
+            </b-tag>
+          </b-field>
+        </template>
+
+        <template v-if="panel == 'mint' && mergeRepeats">
+          <b-field>
+            <template #label>
+              {{ $t("inscription.ui.label.receiverAddress") }}
+              <span class="has-text-info has-text-weight-normal is-size-7">
+                {{ $t("inscription.ui.comment.receiverAddressDisabledWhenMergeRepeat") }}
+              </span>
+            </template>
+            <b-input v-model="account.firstAddress" expanded disabled />
+          </b-field>
+        </template>
+
+        <address-field
+          v-show="panel != 'mint' || !mergeRepeats"
+          :inputAddress="address"
+          :validAddress="validAddress"
+          :label="$t('inscription.ui.label.receiverAddress')"
+          :addressEditable="true"
+          @updateAddress="updateAddress"
+          @updateEffectiveAddress="updateEffectiveAddress"
+        ></address-field>
+
+        <fee-selector v-model="fee"></fee-selector>
+      </template>
+      <template v-if="bundle">
+        <b-notification type="is-info is-light" has-icon icon="head-question-outline" :closable="false">
+          <span v-html="$sanitize($tc('inscription.ui.summary.notification'))"></span>
+        </b-notification>
+
+        <template v-if="summary">
+          <div class="has-text-weight-bold px-5">
+            <span class="is-size-6">{{ $t("inscription.ui.summary.memo") }}</span>
+            <!-- <span class="is-pulled-right">
+              {{ summary.memo }}
+            </span> -->
+            <b-notification type="is-info is-light" :closable="false">
+              {{ summary.memo }}
+            </b-notification>
+          </div>
+          <div v-if="summary.type == 'mint' && summary.repeat > 1" class="has-text-weight-bold px-5">
+            <span class="is-size-6">{{ $t("inscription.ui.summary.repeat") }}</span>
+            <span class="is-pulled-right">
+              {{ summary.repeat }}
+            </span>
+          </div>
+          <div v-if="summary.type == 'mint'" class="has-text-weight-bold px-5">
+            <span class="is-size-6">{{ $t("inscription.ui.summary.cargo") }}</span>
+            <span class="is-pulled-right"> {{ summary.repeatMojo }} {{ $t("inscription.ui.summary.repeatUnit") }} </span>
+          </div>
+          <div class="py-2"></div>
+          <div class="has-text-weight-bold px-5">
+            <span class="is-size-6 has-text-grey">{{ $t("inscription.ui.summary.netfee") }}</span>
+            <span class="is-size-6 is-pulled-right has-text-grey">
+              {{ demojo(summary.netFee) }}
+            </span>
+          </div>
+          <div class="has-text-weight-bold px-5">
+            <span class="is-size-6 has-text-grey">{{ $t("inscription.ui.summary.devfee") }}</span>
+            <span class="is-size-6 is-pulled-right has-text-grey">
+              {{ demojo(summary.devFee) }}
+            </span>
+          </div>
+          <hr />
+          <div class="has-text-weight-bold px-5">
+            <span class="is-size-5">{{ $t("inscription.ui.summary.total") }}</span>
+            <span class="is-pulled-right is-size-5 has-text-primary">
+              {{ demojo(summary.totalFee) }}
+            </span>
+          </div>
+        </template>
+
+        <hr />
+        <bundle-summary :account="account" :bundle="bundle"></bundle-summary>
+      </template>
+    </section>
+    <footer class="modal-card-foot is-block">
+      <div>
+        <b-button v-if="!bundle" :label="$t('common.button.cancel')" class="is-pulled-left" @click="cancel()"></b-button>
+        <b-button v-if="bundle" :label="$t('common.button.back')" class="is-pulled-left" @click="cancel()"></b-button>
+        <b-button
+          :label="account.type == 'PublicKey' ? $t('common.button.generate') : $t('common.button.sign')"
+          v-if="!bundle"
+          type="is-primary"
+          @click="sign()"
+          :loading="submitting"
+          :disabled="status == 'Loading' || submitting"
+        ></b-button>
+      </div>
+      <div>
+        <b-button
+          :label="$t('common.button.submit')"
+          v-if="bundle"
+          type="is-primary"
+          class="is-pulled-right"
+          @click="submit()"
+          :disabled="submitting"
+        ></b-button>
+      </div>
+      <span class="has-text-danger" v-if="status == 'Failed'">{{ $t("common.message.failed") }}</span>
+    </footer>
+    <b-loading :is-full-page="false" v-model="submitting"></b-loading>
+  </div>
+</template>
+
+<script lang="ts">
+import { Component, Prop, Vue, Emit, Watch } from "vue-property-decorator";
+import { AccountEntity, OneTokenInfo } from "../../../../lib-chia/models/account";
+import KeyBox from "@/components/Common/KeyBox.vue";
+import { NotificationProgrammatic as Notification } from "buefy";
+import { TokenPuzzleDetail } from "../../../../lib-chia/services/crypto/receive";
+import { signSpendBundle, SpendBundle, UnsignedSpendBundle, combineSpendBundle } from "../../../../lib-chia/services/spendbundle";
+import puzzle from "../../../../lib-chia/services/crypto/puzzle";
+import { Hex, Hex0x, prefix0x } from "../../../../lib-chia/services/coin/condition";
+import transfer, { SymbolCoins, TransferTarget } from "../../../../lib-chia/services/transfer/transfer";
+import TokenAmountField from "@/components/Send/TokenAmountField.vue";
+import { submitBundle } from "@/services/view/bundleAction";
+import FeeSelector from "@/components/Send/FeeSelector.vue";
+import BundleSummary from "@/components/Bundle/BundleSummary.vue";
+import { networkContext, xchPrefix, xchSymbol } from "@/store/modules/network";
+import { getAssetsRequestDetail, getAssetsRequestObserver, getAvailableCoins } from "@/services/view/coinAction";
+import TopBar from "../Common/TopBar.vue";
+import AddressField from "@/components/Common/AddressField.vue";
+import store from "@/store";
+import { demojo } from "@/filters/unitConversion";
+import { inscribeMintSpendBundle } from "../../../../lib-chia/services/coin/inscription";
+
+type PanelType = "mint" | "transfer" | "deploy" | "custom";
+interface TemporaryStorage {
+  tick?: string;
+  amount?: number;
+  merge?: boolean;
+  repeat?: number;
+  receiver?: string;
+  netfee?: number;
+}
+const InscriptionTemporaryStorageKey = "InscriptionTemporaryStorage";
+
+@Component({
+  components: {
+    KeyBox,
+    FeeSelector,
+    TokenAmountField,
+    BundleSummary,
+    TopBar,
+    AddressField,
+  },
+})
+export default class Inscription extends Vue {
+  @Prop() public account!: AccountEntity;
+  public submitting = false;
+  public fee = 0;
+  public bundle: SpendBundle | null = null;
+  public availcoins: SymbolCoins | null = null;
+  public status: "Loading" | "Loaded" | "Failed" = "Loading";
+  public csv = "";
+  public file: File | null = null;
+  public dragfile: File[] = [];
+  public isDragging = false;
+  public transitioning = false;
+  public mergeRepeats = false;
+  public amount = 1000;
+  public tick = "";
+  public panel: PanelType = "mint";
+  public repeat = 1;
+  public limit = 1;
+  public total = 21000000;
+  public from = "";
+
+  public summary: {
+    memo: string;
+    type: PanelType;
+    repeat: number;
+    devFee: bigint;
+    netFee: bigint;
+    totalFee: bigint;
+    total: bigint;
+    repeatMojo: bigint;
+  } | null = null;
+
+  public validAddress = true;
+  public address = "";
+  public signAddress = "";
+
+  public MAX_REPEAT = 50;
+  public MAX_MERGE_REPEAT = 200;
+
+  public requests: TokenPuzzleDetail[] = [];
+
+  mounted(): void {
+    this.loadCoins();
+    this.address = this.account.firstAddress ?? "";
+    this.loadSession();
+  }
+
+  get path(): string {
+    return this.$route.path;
+  }
+
+  @Watch("path")
+  onPathChange(): void {
+    this.close();
+  }
+
+  @Watch("amount")
+  onAmountChange(new_value: number): void {
+    if (new_value == 8192 && this.tick == "hiya") this.MAX_REPEAT = 500;
+  }
+
+  @Emit("close")
+  close(): void {
+    if (this.path.endsWith("inscribe")) this.$router.back();
+    return;
+  }
+
+  reset(): void {
+    this.bundle = null;
+  }
+
+  cancel(): void {
+    if (this.bundle) {
+      this.reset();
+    } else {
+      this.close();
+    }
+  }
+
+  get debugMode(): boolean {
+    return store.state.app.debug;
+  }
+
+  async loadCoins(): Promise<void> {
+    this.bundle = null;
+    this.status = "Loading";
+
+    try {
+      if (!this.requests || this.requests.length == 0) {
+        this.requests = await getAssetsRequestDetail(this.account);
+      }
+
+      if (!this.availcoins) {
+        this.availcoins = await getAvailableCoins(this.account);
+        const ph = this.availcoins[xchSymbol()].at(0)?.puzzle_hash;
+        this.from = ph ? puzzle.getAddressFromPuzzleHash(ph, xchPrefix()) : "";
+      }
+
+      this.status = "Loaded";
+    } catch (err) {
+      console.warn("failed to load coins", err);
+      this.status = "Failed";
+    }
+  }
+
+  get availablePuzzleHash(): string[] {
+    if (!this.availcoins) return [];
+    const phs = this.availcoins[xchSymbol()].map((_) => _.puzzle_hash).filter((item, i, arr) => arr.indexOf(item) === i);
+    return phs;
+  }
+
+  get froms(): string[] {
+    return puzzle.getAddressesFromPuzzleHash(this.availablePuzzleHash, xchPrefix());
+  }
+
+  // readonly deployFee = 20n;
+  // readonly transferFee = 10n;
+  // readonly mintFee = 3n;
+  readonly deployFee = 50000000000n;
+  readonly transferFee = 500000000n;
+  readonly mintFee = 500000000n;
+  readonly mergingFee = 15000000000n;
+  readonly service_hex: Hex0x = "0xe8022865bd618645ba1f20f1205ddd02207f93a2cfec6241e66f47d12fcbdfea";
+
+  calculateServiceFee(): bigint {
+    const repeat = this.repeat;
+    const mintDiscounts = [
+      { max: 5, fee: BigInt(Number(this.mintFee) * 1.0) },
+      { max: 10, fee: BigInt(Number(this.mintFee) * 1.0) },
+      { max: 15, fee: BigInt(Number(this.mintFee) * 0.9) },
+      { max: 20, fee: BigInt(Number(this.mintFee) * 0.9) },
+      { max: 25, fee: BigInt(Number(this.mintFee) * 0.8) },
+      { max: 100, fee: BigInt(Number(this.mintFee) * 0.8) },
+      { max: 200, fee: BigInt(Number(this.mintFee) * 0.8) },
+      { max: 1000, fee: BigInt(Number(this.mintFee) * 0.8) },
+    ];
+    if (this.panel == "deploy") {
+      return this.deployFee;
+    } else if (this.panel == "mint") {
+      const mergeFee = repeat == 1 || !this.mergeRepeats ? 0n : this.mergingFee;
+      for (let i = 0; i < mintDiscounts.length; i++) {
+        const discount = mintDiscounts[i];
+        if (repeat <= discount.max) return discount.fee * BigInt(repeat) + mergeFee;
+      }
+
+      return this.mintFee * BigInt(repeat) + mergeFee;
+    } else if (this.panel == "transfer") {
+      return this.transferFee;
+    } else {
+      throw Error("not support");
+    }
+  }
+
+  calculateMemo(): string {
+    if (this.panel == "deploy") {
+      return `{'p':'xchs','op':'deploy','tick':'${this.tick}','max':'${this.total}','lim':'${this.limit}'}`;
+    } else if (this.panel == "mint") {
+      return `{'p':'xchs','op':'mint','tick':'${this.tick}','amt':'${this.amount}'}`;
+    } else if (this.panel == "transfer") {
+      return `{'p':'xchs','op':'transfer','tick':'${this.tick}','amt':'${this.amount}'}`;
+    } else {
+      throw Error("not support");
+    }
+  }
+
+  async sign(): Promise<void> {
+    this.submitting = true;
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    try {
+      if (!this.account.firstAddress) {
+        this.submitting = false;
+        return;
+      }
+
+      if (this.availcoins == null) {
+        this.submitting = false;
+        return;
+      }
+
+      const serviceFee = this.calculateServiceFee();
+      const repeat = this.panel == "mint" ? this.repeat : 1;
+      const net = networkContext();
+
+      let tgt_hex: Hex0x = "()";
+      let change_hex: Hex0x = "()";
+      try {
+        tgt_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.signAddress));
+        change_hex = prefix0x(puzzle.getPuzzleHashFromAddress(this.account.firstAddress));
+
+        if (this.mergeRepeats && this.panel == "mint") tgt_hex = change_hex;
+      } catch (err) {
+        Notification.open({
+          message: this.$tc("send.messages.error.INVALID_ADDRESS"),
+          type: "is-danger",
+          duration: 5000,
+        });
+        this.validAddress = false;
+        this.submitting = false;
+        return;
+      }
+
+      if (!this.signAddress.startsWith(xchPrefix())) {
+        Notification.open({
+          message: this.$tc("send.messages.error.ADDRESS_NOT_MATCH_NETWORK"),
+          type: "is-danger",
+          duration: 5000,
+        });
+        this.validAddress = false;
+        this.submitting = false;
+        return;
+      }
+
+      if (this.tick.length != 4) {
+        Notification.open({
+          message: this.$tc("inscription.ui.messages.error.TICK_WRONG_LENGTH"),
+          type: "is-danger",
+          duration: 5000,
+        });
+        this.validAddress = false;
+        this.submitting = false;
+        return;
+      }
+
+      const memo = this.calculateMemo();
+      const observers = this.requests.length ? this.requests : await getAssetsRequestObserver(this.account);
+      const fee = BigInt(this.fee);
+
+      let ubundle: UnsignedSpendBundle;
+      let repeatMojo = 1n;
+      if (this.panel == "deploy") {
+        const tgts: TransferTarget[] = [{ address: tgt_hex, amount: 1n, symbol: xchSymbol(), memos: [memo] }];
+        if (serviceFee > 0n) tgts.push({ address: this.service_hex, amount: serviceFee, symbol: xchSymbol(), memos: [] });
+
+        const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, fee, xchSymbol());
+        ubundle = await transfer.generateSpendBundleWithoutCat(plan, observers, [], net);
+      } else if (this.panel == "transfer") {
+        const tgts: TransferTarget[] = [{ address: tgt_hex, amount: 1n, symbol: xchSymbol(), memos: [memo] }];
+
+        const coinsForPayload = this.filterXchCoinsByAddress(this.availcoins, (_) => _ == this.from);
+        const payloadTotal = coinsForPayload[xchSymbol()].reduce((pv, cv) => pv + cv.amount, 0n);
+        if (serviceFee > 0n) tgts.push({ address: this.service_hex, amount: serviceFee, symbol: xchSymbol(), memos: [] });
+        if (payloadTotal >= fee + tgts.reduce((pv, cv) => pv + cv.amount, 0n)) {
+          const plan = transfer.generateSpendPlan(this.availcoins, tgts, change_hex, fee, xchSymbol());
+          ubundle = await transfer.generateSpendBundleWithoutCat(plan, observers, [], net);
+        } else {
+          const coinsForFee = this.filterXchCoinsByAddress(this.availcoins, (_) => _ != this.from);
+          const planForPayload = transfer.generateSpendPlan(coinsForPayload, [tgts[0]], change_hex, 0n, xchSymbol());
+          const planForFee = transfer.generateSpendPlan(coinsForFee, [tgts[1]], change_hex, fee, xchSymbol());
+          const ubundleForPayload = await transfer.generateSpendBundleWithoutCat(planForPayload, observers, [], net);
+          const ubundleForFee = await transfer.generateSpendBundleWithoutCat(planForFee, observers, [], net);
+          ubundle = combineSpendBundle(ubundleForPayload, ubundleForFee);
+        }
+      } else if (this.panel == "mint") {
+        const ret = await inscribeMintSpendBundle(
+          repeat > 1 ? (this.mergeRepeats ? "merge" : "direct") : "direct",
+          tgt_hex,
+          change_hex,
+          this.availcoins,
+          this.service_hex,
+          serviceFee,
+          fee,
+          repeat,
+          memo,
+          observers,
+          net
+        );
+        ubundle = ret.bundle;
+        repeatMojo = BigInt(ret.repeatMojo);
+      } else {
+        throw Error("not support");
+      }
+
+      if (this.account.type == "PublicKey") {
+        this.bundle = await signSpendBundle(ubundle, [], networkContext());
+        await this.offlineSignBundle();
+      } else {
+        this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());
+      }
+
+      this.summary = {
+        memo,
+        netFee: fee,
+        devFee: serviceFee,
+        totalFee: serviceFee + fee,
+        total: serviceFee + fee + repeatMojo,
+        type: this.panel,
+        repeat,
+        repeatMojo,
+      };
+      this.storeSession();
+    } catch (error) {
+      Notification.open({
+        message: this.$tc("inscription.ui.messages.failedToSign") + error,
+        type: "is-danger",
+        autoClose: false,
+      });
+      console.warn(error);
+      this.submitting = false;
+    }
+    this.submitting = false;
+  }
+
+  filterXchCoinsByAddress(coins: SymbolCoins, predicate: (address: string) => boolean): SymbolCoins {
+    return {
+      ...coins,
+      [xchSymbol()]: coins[xchSymbol()].filter((_) => predicate(puzzle.getAddressFromPuzzleHash(_.puzzle_hash, xchPrefix()))),
+    };
+  }
+
+  async submit(): Promise<void> {
+    if (!this.bundle) return;
+    submitBundle(this.bundle, this.account, (_) => (this.submitting = _), this.close);
+  }
+
+  get csvSampleUri(): string {
+    const address = puzzle.getAddressFromPuzzleHash(
+      "d19c05a54dacbf2b40ff4843534c47976de90246c3fc42ac1f42ea81b434b8ea",
+      xchPrefix()
+    );
+    const dataPrefix = "data:text/csv;charset=utf-8";
+    const fields = `${this.$tc("inscription.sample.address")},${this.$tc("inscription.sample.coin")},${this.$tc(
+      "inscription.sample.amount"
+    )},${this.$tc("inscription.sample.memo")}\n`;
+    const content = `${dataPrefix},${fields}${address},BSH,150,hello_memo\n${address},${xchSymbol()},150,`;
+    return encodeURI(content);
+  }
+
+  fillSample(): void {
+    const address = puzzle.getAddressFromPuzzleHash(
+      "d19c05a54dacbf2b40ff4843534c47976de90246c3fc42ac1f42ea81b434b8ea",
+      xchPrefix()
+    );
+    this.csv = `${address},BSH,150,hello_memo\n${address},${xchSymbol()},150,`;
+  }
+
+  async afterUploadCsv(f: File): Promise<void> {
+    this.isDragging = false;
+    const csvText = await f.text();
+    const idx = csvText.search("\n");
+    this.csv = csvText.substring(idx + 1);
+  }
+
+  deleteFile(): void {
+    this.file = null;
+    this.csv = "";
+  }
+
+  dragenter(event: Event): void {
+    event.preventDefault();
+    this.isDragging = true;
+    this.transitioning = true;
+    setTimeout(() => (this.transitioning = false), 1);
+  }
+
+  dragleave(event: Event): void {
+    event.preventDefault();
+    if (!this.transitioning) this.isDragging = false;
+  }
+
+  afterDragged(f: File[]): void {
+    this.isDragging = false;
+    if (f.length > 1) {
+      Notification.open({
+        message: this.$tc("inscription.ui.messages.onlyOneFile"),
+        type: "is-danger",
+        autoClose: false,
+      });
+      this.dragfile = [];
+      return;
+    }
+    if (f[0].type !== "text/csv") {
+      Notification.open({
+        message: this.$tc("inscription.ui.messages.wrongFileType"),
+        type: "is-danger",
+        autoClose: false,
+      });
+      this.dragfile = [];
+      return;
+    }
+    this.file = f[0];
+    this.afterUploadCsv(f[0]);
+    this.dragfile = [];
+  }
+
+  async offlineSignBundle(): Promise<void> {
+    this.$buefy.modal.open({
+      parent: this,
+      component: (await import("@/components/Offline/OfflineSpendBundleQr.vue")).default,
+      hasModalCard: true,
+      trapFocus: true,
+      canCancel: [""],
+      props: { bundle: this.bundle, mode: "ONLINE_CLIENT" },
+      events: {
+        signature: (sig: Hex): void => {
+          if (this.bundle) this.bundle.aggregated_signature = prefix0x(sig);
+        },
+      },
+    });
+  }
+
+  updateEffectiveAddress(value: string): void {
+    this.signAddress = value;
+  }
+
+  updateAddress(value: string): void {
+    this.address = value;
+    this.validAddress = true;
+  }
+
+  demojo(mojo: null | number | bigint, token: OneTokenInfo | null = null): string {
+    return demojo(mojo, token);
+  }
+
+  loadSession(): void {
+    try {
+      const s = sessionStorage.getItem(InscriptionTemporaryStorageKey);
+      if (!s) return;
+      const o = JSON.parse(s) as TemporaryStorage;
+      if (o.merge !== undefined) this.mergeRepeats = o.merge;
+      if (o.repeat) this.repeat = o.repeat;
+      if (o.amount) this.amount = o.amount;
+      if (o.netfee) this.fee = o.netfee;
+      if (o.receiver) this.address = o.receiver;
+      if (o.tick) this.tick = o.tick;
+    } catch (err) {
+      console.warn("error load session", err);
+    }
+  }
+
+  storeSession(): void {
+    const o: TemporaryStorage = {
+      merge: this.mergeRepeats,
+      repeat: this.repeat,
+      amount: this.amount,
+      netfee: this.fee,
+      receiver: this.address,
+      tick: this.tick,
+    };
+    sessionStorage.setItem(InscriptionTemporaryStorageKey, JSON.stringify(o));
+  }
+}
+</script>
+
+<style scoped lang="scss">
+.field ::v-deep textarea {
+  font-size: 0.9em;
+}
+.right_slider {
+  min-width: 180px;
+  margin: 0 30px;
+}
+
+.no_content_panel {
+  margin-bottom: 0;
+}
+</style>
