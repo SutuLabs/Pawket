@@ -60,6 +60,13 @@ class Utility {
     return sk;
   }
 
+  async getPublicKey(publicKey: Uint8Array): Promise<G1Element> {
+    const BLS = Instance.BLS;
+    if (!BLS) throw new Error("BLS not initialized");
+    const pk = BLS.G1Element.from_bytes(publicKey);
+    return pk;
+  }
+
   public async purehash(data: string | ArrayBuffer): Promise<Uint8Array> {
     if (typeof data === "string") {
       const enc = new TextEncoder();

@@ -76,6 +76,31 @@ export async function getTestAccountWithPuzzles(privateKey: string): Promise<Acc
   };
 }
 
+export async function getObserverTestAccountWithPuzzles(pubKey: Hex0x): Promise<AccountEntity> {
+  const maxId = 4;
+  const observePuzzles = await receive.getAssetsRequestObserver(pubKey, 0, maxId, [], {}, "xch", "XCH", "cat_v2");
+  return {
+    addressRetrievalCount: maxId,
+    key: {
+      privateKey: "",
+      publicKey: pubKey,
+      fingerprint: 0,
+      compatibleMnemonic: "",
+    },
+    name: "",
+    type: "Legacy",
+    tokens: {},
+    nfts: [],
+    dids: [],
+    extraInfo: {},
+    allCats: [],
+    addressPuzzles: [],
+    observePuzzles,
+    firstAddress: observePuzzles.at(0)?.puzzles.at(0)?.address,
+    addressGenerated: maxId,
+  };
+}
+
 export async function noNeedGetProof(): Promise<GetParentPuzzleResponse> {
   throw new Error("unexpected, program declared it does not need proof");
 }

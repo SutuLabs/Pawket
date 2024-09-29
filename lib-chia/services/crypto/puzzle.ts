@@ -37,6 +37,7 @@ export interface PuzzleDetail extends PuzzleObserver {
 export interface PuzzleObserver extends PuzzleAddress {
   puzzle: PlaintextPuzzle;
   synPubKey: Hex0x;
+  pubKey?: Hex0x;
 }
 
 export interface PuzzleAddress {
@@ -289,6 +290,7 @@ class PuzzleMaker {
       const address = this.getAddressFromPuzzleHash(hash, prefix);
       details.push({
         synPubKey: prefix0x(synpubkey),
+        pubKey: prefix0x(pubkey),
         hash: hash,
         puzzle: puzzle,
         address,
