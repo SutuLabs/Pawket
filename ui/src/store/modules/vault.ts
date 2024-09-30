@@ -135,6 +135,14 @@ store.registerModule<IVaultState>("vault", {
           Vue.set(account, "firstAddress", await puzzle.getAddress(firstWalletAddressPubkey, xchPrefix()));
           continue;
         }
+        if (account.type == "2-2Keys") {
+          if (account.key.publicKeys?.length != 2 || !account.key.publicKey || !account.puzzleHash) {
+            console.warn(`Found malformat 'MPC' account [${account.name}]`);
+            continue;
+          }
+          Vue.set(account, "firstAddress", puzzle.getAddressFromPuzzleHash(account.puzzleHash, xchPrefix()));
+          continue;
+        }
 
         const privkey = utility.fromHexString(account.key.privateKey);
         const derive = await utility.derive(privkey, false);

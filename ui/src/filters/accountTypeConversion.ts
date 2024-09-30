@@ -8,6 +8,7 @@ export function accountTypeConverter(accountType: AccountType): string {
   if (accountType == "Address") convertedType = tc("accountManagement.ui.label.address");
   if (accountType == "Legacy") convertedType = tc("accountManagement.ui.label.imported");
   if (accountType == "PublicKey") convertedType = tc("accountManagement.ui.label.publicKey");
+  if (accountType == "2-2Keys") convertedType = tc("accountManagement.ui.label.2_2Keys");
   return convertedType;
 }
 

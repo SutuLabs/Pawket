@@ -49,7 +49,7 @@ export async function getAccountPuzzleObservers(
   if (typeof maxId !== "number" || maxId <= 0) DEFAULT_ADDRESS_RETRIEVAL_COUNT;
 
   if (account.addressGenerated == maxId) {
-    return account.type == "PublicKey" ? account.observePuzzles ?? [] : account.addressPuzzles;
+    return account.type == "PublicKey" || account.type == "2-2Keys" ? account.observePuzzles ?? [] : account.addressPuzzles;
   }
 
   if (account.type == "PublicKey") {
@@ -65,6 +65,19 @@ export async function getAccountPuzzleObservers(
       catModName
     );
     account.addressGenerated = maxId;
+    return account.observePuzzles;
+  } else if (account.type == "2-2Keys") {
+    if (!account.key.publicKey || !account.key.publicKeys)
+      throw new Error("public key cannot empty for pk account to get account addresses.");
+    account.observePuzzles = await receive.getAssetsRequestObserverNonDerive(
+      account.key.publicKey,
+      cats,
+      tokenInfo,
+      prefix,
+      symbol,
+      catModName
+    );
+    account.addressGenerated = 1;
     return account.observePuzzles;
   } else {
     if (!account.key.privateKey) throw new Error("Private key cannot empty for non-pk account to get account addresses.");

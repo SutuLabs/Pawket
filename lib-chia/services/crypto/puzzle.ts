@@ -305,6 +305,49 @@ class PuzzleMaker {
     return details;
   }
 
+  public async getPuzzleObserversNonDerive(pubKey: Hex0x, prefix: string): Promise<PuzzleObserver[]> {
+    return await this.getPuzzleObserversNonDeriveInner(pubKey, async (spk) => this.getPuzzle(spk), prefix);
+  }
+
+  public async getCatPuzzleObserversNonDerive(
+    pubKey: Hex0x,
+    assetId: string,
+    prefix: string,
+    catModName: "cat_v1" | "cat_v2"
+  ): Promise<PuzzleObserver[]> {
+    return await this.getPuzzleObserversNonDeriveInner(
+      pubKey,
+      async (spk) => this.getCatPuzzle(spk, assetId, catModName),
+      prefix
+    );
+  }
+
+  private async getPuzzleObserversNonDeriveInner(
+    publicKey: Hex0x,
+    getPuzzle: (pubkey: Hex0x) => Promise<string>,
+    prefix: string
+  ): Promise<PuzzleObserver[]> {
+    const details: PuzzleObserver[] = [];
+    const add = async (pubkey: Hex0x) => {
+      const synpubkey = await this.getSyntheticKey(pubkey);
+      const puzzle = await getPuzzle(synpubkey);
+      const hash = await this.getPuzzleHashFromPuzzle(puzzle);
+      const address = this.getAddressFromPuzzleHash(hash, prefix);
+      details.push({
+        synPubKey: prefix0x(synpubkey),
+        pubKey: prefix0x(pubkey),
+        hash: hash,
+        puzzle: puzzle,
+        address,
+        type: "MPC",
+      });
+    };
+
+    await add(publicKey);
+
+    return details;
+  }
+
   public getPrivateKeyFromHex(sk_hex: string): PrivateKey {
     const privateKey = utility.fromHexString(sk_hex);
     const BLS = Instance.BLS;

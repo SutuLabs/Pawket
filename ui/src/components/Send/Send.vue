@@ -301,13 +301,14 @@ export default class Send extends Vue {
     this.maxStatus = "Loading";
 
     if (!this.requests || this.requests.length == 0) {
-      this.requests = this.account.type == "PublicKey" ? [] : await getAssetsRequestDetail(this.account);
+      this.requests =
+        this.account.type == "PublicKey" || this.account.type == "2-2Keys" ? [] : await getAssetsRequestDetail(this.account);
     }
 
     if (!this.availcoins) {
       try {
         this.availcoins =
-          this.account.type == "PublicKey"
+          this.account.type == "PublicKey" || this.account.type == "2-2Keys"
             ? await getAvailableCoins(this.account)
             : await getAvailableCoinsWithRequests(this.account, this.requests);
       } catch (err) {
@@ -379,7 +380,7 @@ export default class Send extends Vue {
       const ubundle = await transfer.generateSpendBundleIncludingCat(plan, observers, [], networkContext());
 
       this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());
-      if (this.account.type == "PublicKey") {
+      if (this.account.type == "PublicKey" || this.account.type == "2-2Keys") {
         const msgs = await getMessagesToSign(ubundle, observers, networkContext().chainId);
         await offlineSignBundle(this, ubundle, msgs, (sig) => {
           if (this.bundle) this.bundle.aggregated_signature = sig;

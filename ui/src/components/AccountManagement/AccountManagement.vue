@@ -40,6 +40,9 @@
             <b-tag v-if="account.type == 'PublicKey'" rounded class="has-background-grey-lighter">{{
               $t("accountManagement.ui.label.publicKey")
             }}</b-tag>
+            <b-tag v-if="account.type == '2-2Keys'" rounded class="has-background-grey-lighter">{{
+              $t("accountManagement.ui.label.2_2Keys")
+            }}</b-tag>
           </div>
           <div class="column py-1">
             <span @click.stop="showDetail(idx)"
@@ -81,6 +84,14 @@
           <span class="mx-2">{{ $t("accountManagement.ui.button.addByPublicKey") }}</span>
         </b-tooltip>
       </a>
+      <a v-if="experimentMode" href="javascript:void(0)" class="panel-block" @click="addByMpcKeys()">
+        <b-tooltip :label="$t('accountManagement.ui.tooltip.addByMpcKeys')" multilined size="is-small">
+          <span class="panel-icon">
+            <b-icon icon="plus-thick"></b-icon>
+          </span>
+          <span class="mx-2">{{ $t("accountManagement.ui.button.addByMpcKeys") }}</span>
+        </b-tooltip>
+      </a>
       <a href="javascript:void(0)" class="panel-block" @click="addByLegacy()">
         <b-tooltip :label="$t('accountManagement.ui.tooltip.addByLegacy')" multilined size="is-small">
           <span class="panel-icon">
@@ -114,6 +125,7 @@ import AddByMnemonic from "./AddAccount/AddByMnemonic.vue";
 import AddBySerial from "./AddAccount/AddBySerial.vue";
 import AddByPassword from "./AddAccount/AddByPassword.vue";
 import AddByPublicKey from "./AddAccount/AddByPublicKey.vue";
+import AddByMpcKeys from "./AddAccount/AddByMpcKeys.vue";
 import { isMobile } from "@/services/view/responsive";
 import { sortable } from "@/directives/sortable";
 
@@ -337,6 +349,17 @@ export default class AccountManagement extends Vue {
     this.$buefy.modal.open({
       parent: this,
       component: AddByPublicKey,
+      hasModalCard: true,
+      fullScreen: isMobile(),
+      trapFocus: true,
+      canCancel: [""],
+    });
+  }
+
+  async addByMpcKeys(): Promise<void> {
+    this.$buefy.modal.open({
+      parent: this,
+      component: AddByMpcKeys,
       hasModalCard: true,
       fullScreen: isMobile(),
       trapFocus: true,

@@ -11,6 +11,7 @@ export interface AccountKey {
   fingerprint: number;
   privateKey?: string;
   publicKey?: Hex0x;
+  publicKeys?: Hex0x[];
 }
 
 class AccountHelper {

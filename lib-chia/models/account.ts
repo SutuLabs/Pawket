@@ -4,7 +4,7 @@ import { DidDetail, NftDetail, TokenPuzzleDetail, TokenPuzzleObserver } from "..
 import { DonwloadedNftCollection } from "./nft";
 import { CoinRecord } from "./wallet";
 
-export type AccountType = "Serial" | "Password" | "Legacy" | "Address" | "PublicKey";
+export type AccountType = "Serial" | "Password" | "Legacy" | "Address" | "PublicKey" | "2-2Keys";
 
 export interface AccountTokenAddress {
   address: string;

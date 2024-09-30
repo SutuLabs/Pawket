@@ -9,10 +9,15 @@
             <b-icon icon="help-circle" size="is-small"> </b-icon>
           </b-tooltip>
         </template>
-        <b-slider v-model="maxAddress" :max="12" :min="1" indicator ticks lazy></b-slider>
+        <b-slider v-model="maxAddress" :max="12" :min="1" indicator ticks lazy :disabled="account.type == '2-2Keys'"></b-slider>
       </b-field>
       <b-tabs position="is-centered" v-model="addressType" expanded @input="changeAddressType">
-        <b-tab-item :label="$t('explorerLink.ui.label.observer')" icon="eye-check" value="Observed">
+        <b-tab-item
+          :label="$t('explorerLink.ui.label.observer')"
+          icon="eye-check"
+          value="Observed"
+          v-if="account.type != '2-2Keys'"
+        >
           <div class="has-text-centered">
             <div @click="fullAddress = !fullAddress">
               <qrcode-vue
@@ -34,8 +39,26 @@
           :label="$t('explorerLink.ui.label.nonObserver')"
           icon="security"
           value="Hardened"
-          v-if="account.type != 'PublicKey'"
+          v-if="account.type != 'PublicKey' && account.type != '2-2Keys'"
         >
+          <div class="has-text-centered">
+            <div @click="fullAddress = !fullAddress">
+              <qrcode-vue
+                :value="fullAddress ? externalExplorerPrefix + address : address"
+                size="200"
+                class="qrcode"
+                style="width: 220px"
+              ></qrcode-vue>
+            </div>
+            <key-box icon="checkbox-multiple-blank-outline" :value="address" :showValue="true"></key-box>
+            <b-tooltip :label="$t('explorerLink.ui.tooltip.blockchainExplorer')">
+              <a target="_blank" :href="externalExplorerPrefix + address">
+                <b-icon class="pl-4" icon="open-in-new" size="is-small"></b-icon>
+              </a>
+            </b-tooltip>
+          </div>
+        </b-tab-item>
+        <b-tab-item :label="$t('explorerLink.ui.label.mpc')" icon="check" value="MPC" v-if="account.type == '2-2Keys'">
           <div class="has-text-centered">
             <div @click="fullAddress = !fullAddress">
               <qrcode-vue
@@ -200,6 +223,7 @@ export default class ExplorerLink extends Vue {
   }
 
   async mounted(): Promise<void> {
+    this.addressType = this.account.type == "2-2Keys" ? "MPC" : "Observed";
     Vue.set(this, "address", this.addresses[0].address);
     await this.addressToCns();
   }

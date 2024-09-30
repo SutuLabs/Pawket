@@ -11,11 +11,12 @@ import {
 } from "../../../../lib-chia/services/util/account";
 import { convertToOriginCoin, getCompletedTransactions, unlockCoins } from "../../../../lib-chia/services/coin/coinUtility";
 import { OriginCoin } from "../../../../lib-chia/services/spendbundle";
-import { prefix0x } from "../../../../lib-chia/services/coin/condition";
+import { Hex, Hex0x, prefix0x } from "../../../../lib-chia/services/coin/condition";
 import { desktopNotify } from "@/services/notification/notification";
 import { tc } from "@/i18n/i18n";
 import puzzle from "../../../../lib-chia/services/crypto/puzzle";
 import { getScalarString } from "../../../../lib-chia/services/coin/nft";
+import utility from "../../../../lib-chia/services/crypto/utility";
 
 export function getAccountCats(account: AccountEntity): CustomCat[] {
   const cats = account.allCats?.filter((c) => convertToChainId(c.network) == chainId()) ?? [];
@@ -153,6 +154,28 @@ store.registerModule<IAccountState>("account", {
           "PublicKey",
           undefined,
           undefined
+        )
+      );
+      await dispatch("initWalletAddress");
+      await dispatch("persistent");
+    },
+    async createAccountByMpcKeys({ state, dispatch }, { name, publicKeys }: { name: string; publicKeys: (Hex | Hex0x)[] }) {
+      if (publicKeys?.length != 2) throw new Error("Only accept 2 public keys");
+      const pk1 = await utility.getPublicKey(utility.fromHexString(publicKeys[0]));
+      const pk2 = await utility.getPublicKey(utility.fromHexString(publicKeys[1]));
+      const aggpk = utility.toHexString(pk1.add(pk2).serialize());
+      const p2PuzzleHash = await puzzle.getPuzzleHash(aggpk);
+      state.accounts.push(
+        getAccountEntity(
+          {
+            fingerprint: account.getFingerprint(aggpk),
+            publicKey: prefix0x(aggpk),
+            publicKeys: publicKeys.map((_) => prefix0x(_)),
+          },
+          name,
+          "2-2Keys",
+          undefined,
+          p2PuzzleHash
         )
       );
       await dispatch("initWalletAddress");
@@ -385,6 +408,10 @@ export async function getAccountAddressDetails(
           maxId,
           "cat_v2"
         )
+      : account.type == "2-2Keys"
+      ? <TokenPuzzleAddress[]>[
+          { symbol: xchSymbol(), puzzles: [{ hash: account.puzzleHash, type: "MPC", address: account.firstAddress }] },
+        ]
       : await getAccountAddressDetailsExternal(
           account,
           getAccountCats(account),

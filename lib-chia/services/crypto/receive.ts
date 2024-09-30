@@ -133,6 +133,31 @@ class Receive {
     return tokens;
   }
 
+  async getAssetsRequestObserverNonDerive(
+    pk_hex: Hex0x,
+    customCats: CustomCat[],
+    tokenInfo: TokenInfo,
+    prefix: string,
+    symbol: string,
+    catModName: "cat_v1" | "cat_v2"
+  ): Promise<TokenPuzzleObserver[]> {
+    const xchToken = { symbol, puzzles: await puzzle.getPuzzleObserversNonDerive(pk_hex, prefix) };
+    const tokens: TokenPuzzleObserver[] = [xchToken];
+    const standardAssets = Object.values(tokenInfo)
+      .filter((_) => _.id)
+      .map((_) => ({ symbol: _.symbol, id: _.id ?? "" }));
+    const accountAssets = (customCats ?? []).map((_) => ({ symbol: _.name, id: _.id }));
+    const assets = standardAssets.concat(accountAssets);
+
+    for (let i = 0; i < assets.length; i++) {
+      const assetId = assets[i].id;
+      const ps = await puzzle.getCatPuzzleObserversNonDerive(pk_hex, assetId, prefix, catModName);
+      tokens.push(Object.assign({}, assets[i], { puzzles: ps }));
+    }
+
+    return tokens;
+  }
+
   async getCoinRecords(
     tokens: TokenPuzzleAddress[],
     includeSpentCoins: boolean,
