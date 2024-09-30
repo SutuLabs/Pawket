@@ -6,7 +6,7 @@ import utility from "./utility";
 import { assemble } from "clvm_tools/clvm_tools/binutils";
 import { Instance } from "../util/instance";
 import { modsdict } from "../coin/mods";
-import { Hex0x, prefix0x, unprefix0x } from "../coin/condition";
+import { Hex, Hex0x, prefix0x, unprefix0x } from "../coin/condition";
 import { SExp, TToJavascript } from "clvm";
 import { sexpAssemble } from "../coin/analyzer";
 
@@ -23,7 +23,7 @@ export interface ExecuteResult {
 
 export type PlaintextPuzzle = string;
 
-export type AddressType = "Observed" | "Hardened" | "Unknown";
+export type AddressType = "Observed" | "Hardened" | "MPC" | "Unknown";
 
 export interface PuzzlePrivateKey extends PuzzleAddress {
   privateKey: PrivateKey;
@@ -57,12 +57,12 @@ export const catClvmTreehash_v1 = "0x72dec062874cd4d3aab892a0906688a1ae412b01099
 export const catClvmTreehash_v2 = "0x37bef360ee858133b69d595a906dc45d01af50379dad515eb9518abb7c1d2a7a";
 
 class PuzzleMaker {
-  public getPuzzle(synPubkey: string): string {
+  public getPuzzle(synPubkey: Hex0x): string {
     const puzzle = `(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . ${synPubkey}) 1))`;
     return puzzle;
   }
 
-  public async getSyntheticKey(pubkey: string): Promise<string> {
+  public async getSyntheticKey(pubkey: Hex | Hex0x): Promise<Hex0x> {
     if (!pubkey.startsWith("0x")) pubkey = "0x" + pubkey;
     const hidden_puzzle_hash = "0x711d6c4e32c92e53179b199484cf8c897542bc57f2b22582799f9d657eec4699";
 
@@ -72,7 +72,7 @@ class PuzzleMaker {
     clvm_tools.go("brun", "(point_add 2 (pubkey_for_exp (sha256 2 5)))", `(${pubkey} ${hidden_puzzle_hash})`);
     const synPubkey = output[0];
 
-    return synPubkey;
+    return prefix0x(synPubkey);
   }
 
   public async getPuzzleHash(pubkey: string): Promise<string> {
@@ -81,7 +81,7 @@ class PuzzleMaker {
     return await this.getPuzzleHashFromPuzzle(puzzle);
   }
 
-  public async getPuzzleHashFromSyntheticKey(synPubkey: string): Promise<string> {
+  public async getPuzzleHashFromSyntheticKey(synPubkey: Hex0x): Promise<string> {
     const puzzle = this.getPuzzle(synPubkey);
     return await this.getPuzzleHashFromPuzzle(puzzle);
   }
@@ -210,7 +210,7 @@ class PuzzleMaker {
 
   private async getPuzzleDetailsInner(
     privateKey: Uint8Array,
-    getPuzzle: (pubkey: string) => Promise<string>,
+    getPuzzle: (pubkey: Hex0x) => Promise<string>,
     startIndex: number,
     endIndex: number,
     prefix: string,
@@ -275,7 +275,7 @@ class PuzzleMaker {
 
   private async getPuzzleObserversInner(
     publicKey: Uint8Array,
-    getPuzzle: (pubkey: string) => Promise<string>,
+    getPuzzle: (pubkey: Hex0x) => Promise<string>,
     startIndex: number,
     endIndex: number,
     prefix: string
