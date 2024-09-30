@@ -107,3 +107,25 @@ export async function offlineSignBundle(
     },
   });
 }
+
+export async function groupSignBundle(
+  parent: Vue,
+  account: AccountEntity,
+  bundle: SpendBundle | PartialSpendBundle | UnsignedSpendBundle,
+  messagesToSign: MessagesToSign,
+  signedCallback: (sig: Hex0x) => void
+): Promise<void> {
+  Modal.open({
+    parent,
+    component: (await import("@/components/Group/GroupSigning.vue")).default,
+    hasModalCard: true,
+    trapFocus: true,
+    canCancel: [""],
+    props: { account, bundle, messagesToSign },
+    events: {
+      signature: (sig: Hex): void => {
+        signedCallback(prefix0x(sig));
+      },
+    },
+  });
+}

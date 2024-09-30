@@ -84,7 +84,7 @@ import bigDecimal from "js-big-decimal";
 import { Hex0x, prefix0x } from "../../../../lib-chia/services/coin/condition";
 import transfer, { SymbolCoins, TransferTarget } from "../../../../lib-chia/services/transfer/transfer";
 import TokenAmountField from "@/components/Send/TokenAmountField.vue";
-import { debugBundle, offlineSignBundle, submitBundle } from "@/services/view/bundleAction";
+import { debugBundle, groupSignBundle, offlineSignBundle, submitBundle } from "@/services/view/bundleAction";
 import FeeSelector from "@/components/Send/FeeSelector.vue";
 import OfflineSendShowBundle from "@/components/Offline/OfflineSendShowBundle.vue";
 import { CurrencyType } from "@/services/exchange/currencyType";
@@ -382,9 +382,15 @@ export default class Send extends Vue {
       this.bundle = await signSpendBundle(ubundle, this.requests, networkContext());
       if (this.account.type == "PublicKey" || this.account.type == "2-2Keys") {
         const msgs = await getMessagesToSign(ubundle, observers, networkContext().chainId);
-        await offlineSignBundle(this, ubundle, msgs, (sig) => {
-          if (this.bundle) this.bundle.aggregated_signature = sig;
-        });
+        if (this.account.type == "PublicKey") {
+          await offlineSignBundle(this, ubundle, msgs, (sig) => {
+            if (this.bundle) this.bundle.aggregated_signature = sig;
+          });
+        } else if (this.account.type == "2-2Keys") {
+          await groupSignBundle(this, this.account, ubundle, msgs, (sig) => {
+            if (this.bundle) this.bundle.aggregated_signature = sig;
+          });
+        }
       }
     } catch (error) {
       Notification.open({

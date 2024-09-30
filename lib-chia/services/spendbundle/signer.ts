@@ -144,14 +144,17 @@ export async function combineSpendBundleSignature(
 
 export async function signMessagesForAggregateKey(
   { messages, chainId }: MessagesToSign,
-  aggPk: G1Element,
+  aggPk: Hex0x | G1Element,
   // puzzles: TokenPuzzlePrivateKey[],
-  sk: PrivateKey,
+  sk: Hex0x | PrivateKey,
   isSignSyntheticKey = false
 ): Promise<Hex0x> {
   const BLS = Instance.BLS;
   if (!BLS) throw new Error("BLS not initialized");
   const AGG_SIG_ME_ADDITIONAL_DATA = utility.fromHexString(chainId);
+
+  if (typeof aggPk === "string") aggPk = await utility.getPublicKey(utility.fromHexString(aggPk));
+  if (typeof sk === "string") sk = await utility.getPrivateKey(utility.fromHexString(sk));
 
   // const puzzleDict: { [key: string]: PuzzlePrivateKey } = Object.assign(
   //   {},
@@ -187,14 +190,14 @@ export async function signMessagesForAggregateKey(
     const synthetic_pk_hex = Bytes.from(synpk.serialize()).hex();
     if (pk_hex != synthetic_pk_hex) throw new Error("wrong args due to pk != synthetic_pk");
 
-      console.log("signing msg", utility.toHexString(msg));
+    console.log("signing msg", utility.toHexString(msg));
     if (isSignSyntheticKey) {
       console.log("sign with synthetic key", utility.toHexString(synsk.serialize()));
       const sig = BLS.AugSchemeMPL.sign_prepend(synsk, msg, synpk);
       sigs.push(sig);
     }
 
-      console.log("sign with secret key", utility.toHexString(sk.serialize()));
+    console.log("sign with secret key", utility.toHexString(sk.serialize()));
     const sig = BLS.AugSchemeMPL.sign_prepend(sk, msg, synpk);
     sigs.push(sig);
   }
