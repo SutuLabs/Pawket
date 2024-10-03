@@ -28,7 +28,7 @@
             {{ errorMessages[index] }}
           </template>
           <p class="control">
-            <span v-if="signatures[index]">{{ $t("addByAddress.ui.label.signed") }}</span>
+            <span v-if="signatures[index]">{{ $t("groupSigning.ui.label.signed") }}</span>
             <template v-else>
               <b-button @click="scanQrCode(index)">
                 <b-icon icon="qrcode"></b-icon>

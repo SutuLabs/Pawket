@@ -248,7 +248,8 @@
         "sign": "Sign",
         "link": "Explorer",
         "observer": "Observer",
-        "nonObserver": "Non-Observer"
+        "nonObserver": "Non-Observer",
+        "mpc": "MultiSig"
       },
       "tooltip": {
         "blockchainExplorer": "View on Block Explorer",
@@ -1032,7 +1033,8 @@
         "imported": "Imported",
         "passPhrase": "Passphrase",
         "publicKey": "PublicKey",
-        "unknown": "Unknown"
+        "unknown": "Unknown",
+        "2_2Keys": "MultiSig"
       },
       "button": {
         "addBySerial": "Add by Serial",
@@ -1040,7 +1042,8 @@
         "addByLegacy": "Import Chia Official Wallet（24-word）",
         "addByMnemonic": "Import Nucle/Goby Wallet（12-word）",
         "addByAddress": "Add by Address(Observation Mode)",
-        "addByPublicKey": "Add by PublicKey"
+        "addByPublicKey": "Add by PublicKey",
+        "addByMpcKeys": "Add MultiSig Wallet"
       },
       "tooltip": {
         "addBySerial": "Derived serial accounts are created in order.",
@@ -1048,7 +1051,8 @@
         "addByLegacy": "Import Chia official wallet.",
         "addByMnemonic": "Import Nucle/Goby wallet.",
         "addByAddress": "Read-only is supported in this mode.",
-        "addByPublicKey": "Add the public key of the offline wallet to help to initiate and complete transactions."
+        "addByPublicKey": "Add the public key of the offline wallet to help to initiate and complete transactions.",
+        "addByMpcKeys": "Add MultiSig Wallet, allows multiple accounts to control one wallet."
       },
       "modal": {
         "addByLegacy": "Import Chia Official Wallet",
@@ -1794,6 +1798,21 @@
       "coin": "",
       "amount": "",
       "memo": ""
+    }
+  },
+  "groupSigning": {
+    "ui": {
+      "title": "Group Signing",
+      "label": {
+        "aggregatedPublicKey": "Aggregated Public Key",
+        "explanation": "This is the aggregated public key from all participants. Each participant will sign the transaction with their private key, and the signatures will be aggregated to form the final signature.",
+        "publicKey": "Public Key",
+        "signed": "Signed"
+      },
+      "button": {
+        "back": "Back",
+        "submit": "Aggregate"
+      }
     }
   }
 }
