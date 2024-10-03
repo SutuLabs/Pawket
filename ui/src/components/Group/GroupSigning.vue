@@ -33,7 +33,7 @@
               <b-button @click="scanQrCode(index)">
                 <b-icon icon="qrcode"></b-icon>
               </b-button>
-              <b-button @click="signByEncryptedMessage(index)">
+              <b-button v-if="false" @click="signByEncryptedMessage(index)">
                 <b-icon icon="message-text-lock-outline"></b-icon>
               </b-button>
             </template>
@@ -63,8 +63,9 @@ import {
 } from "../../../../lib-chia/services/spendbundle";
 import { AccountEntity } from "../../../../lib-chia/models/account";
 import { offlineSignBundle } from "@/services/view/bundleAction";
-import { getAssetsRequestDetail } from "@/services/view/coinAction";
 import utility from "../../../../lib-chia/services/crypto/utility";
+import { EMPTY_SIGNATURE } from "../../../../lib-chia/services/coin/consts";
+import { notifyDanger } from "@/services/notification/notification";
 
 @Component({ components: { TopBar, KeyBox } })
 export default class GroupSigning extends Vue {
@@ -95,9 +96,20 @@ export default class GroupSigning extends Vue {
 
   async scanQrCode(index: number): Promise<void> {
     if (!this.bundle || !this.messagesToSign) return;
-    await offlineSignBundle(this, this.bundle, this.messagesToSign, (sig) => {
-      this.signatures[index] = sig;
-    });
+    const aggpk = this.account.key.publicKey;
+    await offlineSignBundle(
+      this,
+      this.bundle,
+      this.messagesToSign,
+      (sig) => {
+        if (sig == EMPTY_SIGNATURE) {
+          notifyDanger(this.$tc("groupSigning.ui.error.emptySignature"));
+          return;
+        }
+        Vue.set(this.signatures, index, sig);
+      },
+      aggpk
+    );
   }
 
   async signByEncryptedMessage(_index: number): Promise<void> {
@@ -128,7 +140,8 @@ export default class GroupSigning extends Vue {
       const pubkey = utility.toHexString(sk.get_g1().serialize());
       const index = publicKeys.findIndex((key) => pubkey === key);
       if (!this.signatures[index] && index > -1) {
-        const requests = await getAssetsRequestDetail(acc);
+        // const requests = await getAssetsRequestDetail(acc);
+        console.log("aggpk", aggpk);
         const sig = await signMessagesForAggregateKey(this.messagesToSign, aggpk, sk, !this.syntheticKeySigned);
         this.syntheticKeySigned = true;
         Vue.set(this.signatures, index, sig);

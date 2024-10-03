@@ -8,6 +8,14 @@ export function notifyPrimary(msg: string): void {
   });
 }
 
+export function notifyDanger(msg: string): void {
+  NotificationProgrammatic.open({
+    message: msg,
+    type: "is-danger",
+    closable: false,
+  });
+}
+
 export function desktopNotify(title: string, body: string): void {
   if (!("Notification" in window)) {
     console.warn("This browser does not support desktop notification");

@@ -91,7 +91,8 @@ export async function offlineSignBundle(
   parent: Vue,
   bundle: SpendBundle | PartialSpendBundle | UnsignedSpendBundle,
   messagesToSign: MessagesToSign,
-  signedCallback: (sig: Hex0x) => void
+  signedCallback: (sig: Hex0x) => void,
+  aggregatePublicKey?: Hex0x
 ): Promise<void> {
   Modal.open({
     parent,
@@ -99,7 +100,7 @@ export async function offlineSignBundle(
     hasModalCard: true,
     trapFocus: true,
     canCancel: [""],
-    props: { bundle, messagesToSign, mode: "ONLINE_CLIENT" },
+    props: { bundle, messagesToSign, mode: "ONLINE_CLIENT", aggregatePublicKey },
     events: {
       signature: (sig: Hex): void => {
         signedCallback(prefix0x(sig));

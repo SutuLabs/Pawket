@@ -25,7 +25,11 @@ export async function signSpendBundle(
   const bundle: UnsignedSpendBundle | SpendBundle = Array.isArray(ubundle) ? new UnsignedSpendBundle(ubundle) : ubundle;
   let agg_sig = await getSignaturesFromSpendBundle(bundle, puzzles, chainId, allSignCheck);
 
-  if ("aggregated_signature" in bundle && (bundle as SpendBundle).aggregated_signature)
+  if (
+    "aggregated_signature" in bundle &&
+    (bundle as SpendBundle).aggregated_signature &&
+    (bundle as SpendBundle).aggregated_signature.startsWith("0x")
+  )
     agg_sig = BLS.AugSchemeMPL.aggregate([
       agg_sig,
       BLS.G2Element.from_bytes(Bytes.from(unprefix0x((bundle as SpendBundle).aggregated_signature), "hex").raw()),
@@ -40,7 +44,7 @@ export async function signSpendBundle(
 async function getSignaturesFromSpendBundle(
   ubundle: UnsignedSpendBundle | SpendBundle | PartialSpendBundle,
   puzzles: TokenPuzzlePrivateKey[],
-  chainId: string,
+  chainId: Hex,
   allSignCheck = false
 ): Promise<G2Element> {
   const BLS = Instance.BLS;
@@ -83,7 +87,7 @@ async function signSolution(
   conds: ConditionEntity[],
   synthetic_sk: PrivateKey | undefined,
   coinname: Bytes,
-  chainId: string,
+  chainId: Hex,
   allSignCheck = false
 ): Promise<G2Element> {
   const AGG_SIG_ME_ADDITIONAL_DATA = Bytes.from(chainId, "hex");
@@ -140,6 +144,22 @@ export async function combineSpendBundleSignature(
     aggregated_signature: prefix0x(sig),
     coin_spends: bundle.coin_spends,
   };
+}
+
+export async function signMessagesWithKeys(
+  messagesToSign: MessagesToSign,
+  puzzles?: TokenPuzzlePrivateKey[],
+  aggPk?: Hex0x | G1Element,
+  sk?: Hex0x | PrivateKey,
+  isSignSyntheticKey = false
+): Promise<Hex0x> {
+  if (aggPk && sk) {
+    return signMessagesForAggregateKey(messagesToSign, aggPk, sk, isSignSyntheticKey);
+  } else if (puzzles) {
+    return signMessages(messagesToSign, puzzles);
+  } else {
+    throw new Error("Invalid keys provided. Either puzzles or aggPk and sk must be provided.");
+  }
 }
 
 export async function signMessagesForAggregateKey(
@@ -258,12 +278,13 @@ export async function getMessagesToSign(
   ubundle: SpendBundle | UnsignedSpendBundle | CoinSpend[],
   puzzles: TokenPuzzleObserver[],
   chainId: string | NetworkContext,
-  allSignCheck = false
+  allSignCheck = false,
+  ignoreSynPubKeyCheck = false
 ): Promise<MessagesToSign> {
   chainId = typeof chainId === "string" ? chainId : chainId.chainId;
 
   const bundle: UnsignedSpendBundle | SpendBundle = Array.isArray(ubundle) ? new UnsignedSpendBundle(ubundle) : ubundle;
-  const messages = await getMessagesToSignFilterByPuzzles(bundle, puzzles, allSignCheck);
+  const messages = await getMessagesToSignFilterByPuzzles(bundle, puzzles, allSignCheck, ignoreSynPubKeyCheck);
 
   return {
     chainId,
@@ -274,7 +295,8 @@ export async function getMessagesToSign(
 async function getMessagesToSignFilterByPuzzles(
   ubundle: UnsignedSpendBundle | SpendBundle | PartialSpendBundle,
   puzzles: TokenPuzzleObserver[],
-  allSignCheck = false
+  allSignCheck = false,
+  ignoreSynPubKeyCheck = false
 ): Promise<MessageToSign[]> {
   const puzzleDict: { [key: string]: PuzzleObserver } = Object.assign(
     {},
@@ -304,8 +326,12 @@ async function getMessagesToSignFilterByPuzzles(
 
     for (let j = 0; j < wmsgs.length; j++) {
       const msg = wmsgs[j];
-      const synPubKey = msg.publicKey;
+      if (ignoreSynPubKeyCheck) {
+        msgs.push(msg);
+        continue;
+      }
 
+      const synPubKey = msg.publicKey;
       const puz = !synPubKey ? undefined : getPuzDetail(synPubKey);
       if (!puz && allSignCheck) throw new Error(`cannot find puzzle by synthetic public key ${synPubKey}`);
       if (puz) msgs.push(msg);

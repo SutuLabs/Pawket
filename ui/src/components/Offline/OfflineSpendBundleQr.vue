@@ -77,8 +77,10 @@ import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from "vue-qrcode-reader";
 import { initCameraHandleError } from "@/services/view/camera";
 import {
   combineSpendBundleSignature,
+  getMessagesToSign,
   MessagesToSign,
   signMessages,
+  signMessagesWithKeys,
   signSpendBundle,
   SpendBundle,
 } from "../../../../lib-chia/services/spendbundle";
@@ -89,10 +91,13 @@ import { getAssetsRequestDetail } from "@/services/view/coinAction";
 import TopBar from "../Common/TopBar.vue";
 import { encode, decode } from "@msgpack/msgpack";
 import utility from "../../../../lib-chia/services/crypto/utility";
-import { prefix0x } from "../../../../lib-chia/services/coin/condition";
+import { Hex, Hex0x, prefix0x } from "../../../../lib-chia/services/coin/condition";
 import { NotificationProgrammatic as Notification } from "buefy";
 import pako from "pako";
 import base85 from "base85";
+import { EMPTY_SIGNATURE } from "../../../../lib-chia/services/coin/consts";
+import { notifyDanger } from "@/services/notification/notification";
+import { bech32m } from "@scure/base";
 
 export interface CompactMessagesToSign {
   messages: CompactMessageToSign[];
@@ -105,8 +110,22 @@ export interface CompactMessageToSign {
   publicKey: Uint8Array;
 }
 
+export enum CompactMessageType {
+  SpendBundle = 0,
+  MessagesOnly = 1,
+}
+
+export interface CompactMessagesV3 {
+  mode: CompactMessageType;
+  aggregatePublicKey?: Uint8Array;
+  bundle?: Uint8Array;
+  messages?: CompactMessageToSign[];
+  chainId: Uint8Array;
+}
+
 const MTSPrefix = "MTS";
 const MTSPrefixV2 = "MT2";
+const MTSPrefixV3 = "MT3";
 
 @Component({
   components: {
@@ -122,6 +141,7 @@ export default class OfflineSpendBundleQr extends Vue {
   @Prop({ default: xchPrefix() }) public prefix!: string;
   @Prop() public bundle!: SpendBundle | undefined;
   @Prop() public messagesToSign!: MessagesToSign | undefined;
+  @Prop() public aggregatePublicKey!: Hex0x;
   @Prop({ default: "OFFLINE_CLIENT" }) public mode!: "OFFLINE_CLIENT" | "ONLINE_CLIENT";
   @Prop() public account!: AccountEntity;
 
@@ -146,8 +166,17 @@ export default class OfflineSpendBundleQr extends Vue {
   }
 
   async updateQrs(): Promise<void> {
-    this.safeQrcodes = this.bundle ? await this.splitBundle(this.bundle) : [];
-    this.unsafeQrcodes = this.messagesToSign ? await this.splitMessagesToSign(this.messagesToSign) : [];
+    if (this.aggregatePublicKey) {
+      this.safeQrcodes = this.bundle
+        ? await this.splitBundleToSignV3(this.bundle, this.aggregatePublicKey, networkContext().chainId)
+        : [];
+      this.unsafeQrcodes = this.messagesToSign
+        ? await this.splitMessagesToSignV3(this.messagesToSign, this.aggregatePublicKey)
+        : [];
+    } else {
+      this.safeQrcodes = this.bundle ? await this.splitBundle(this.bundle) : [];
+      this.unsafeQrcodes = this.messagesToSign ? await this.splitMessagesToSign(this.messagesToSign) : [];
+    }
   }
 
   @Watch("bundle")
@@ -199,7 +228,7 @@ export default class OfflineSpendBundleQr extends Vue {
     example compression ratio:
     - scenario: send to 1 address with 100 coins
     - for spendbundle: 17181
-    - for sign-only(unsafe mode)
+    - for sign-only(unsafe mode/trust mode)
       - origin: 14655
       - pako: 7010
       - encoding:
@@ -218,6 +247,39 @@ export default class OfflineSpendBundleQr extends Vue {
     const origin = encode(compact);
     const encoded = pako.deflate(origin, { level: 9 });
     const bstr = MTSPrefixV2 + base85.encode(Buffer.from(encoded), "ascii85");
+    return this.splitString(bstr);
+  }
+
+  async splitMessagesToSignV3(mts: MessagesToSign, aggpk: Hex0x | undefined): Promise<string[]> {
+    const compact: CompactMessagesV3 = {
+      mode: CompactMessageType.MessagesOnly,
+      chainId: utility.fromHexString(mts.chainId),
+      aggregatePublicKey: utility.fromHexString(aggpk),
+      messages: mts.messages.map((_) => ({
+        message: utility.fromHexString(_.message),
+        publicKey: utility.fromHexString(_.publicKey),
+        coinname: utility.fromHexString(_.coinname),
+      })),
+    };
+    const origin = encode(compact);
+    const encoded = pako.deflate(origin, { level: 9 });
+    const bstr = MTSPrefixV3 + base85.encode(Buffer.from(encoded), "ascii85");
+    return this.splitString(bstr);
+  }
+
+  async splitBundleToSignV3(bundle: SpendBundle, aggpk: Hex0x | undefined, chainId: Hex): Promise<string[]> {
+    const bundle_str = await encodeOffer(bundle, 4, "bundle");
+    const bundle_buff = bech32m.decodeToBytes(bundle_str).bytes;
+    const compact: CompactMessagesV3 = {
+      mode: CompactMessageType.SpendBundle,
+      chainId: utility.fromHexString(chainId),
+      aggregatePublicKey: utility.fromHexString(aggpk),
+      bundle: bundle_buff,
+    };
+
+    const origin = encode(compact);
+    const encoded = pako.deflate(origin, { level: 9 });
+    const bstr = MTSPrefixV3 + base85.encode(Buffer.from(encoded), "ascii85");
     return this.splitString(bstr);
   }
 
@@ -319,6 +381,7 @@ export default class OfflineSpendBundleQr extends Vue {
         })),
       };
       const sig = await signMessages(msgs, requests);
+      if (!this.checkSignature(sig)) return;
       this.qrcodes = [sig];
     } else if (b.startsWith(MTSPrefixV2)) {
       const buff = base85.decode(b.slice(MTSPrefixV2.length), "ascii85");
@@ -334,10 +397,53 @@ export default class OfflineSpendBundleQr extends Vue {
         })),
       };
       const sig = await signMessages(msgs, requests);
+      if (!this.checkSignature(sig)) return;
       this.qrcodes = [sig];
+    } else if (b.startsWith(MTSPrefixV3)) {
+      const buff = base85.decode(b.slice(MTSPrefixV3.length), "ascii85");
+      if (!buff) throw new Error("cannot decode as base85");
+      const decoded = decode(pako.inflate(new Uint8Array(buff))) as CompactMessagesV3;
+      const chainId = utility.toHexString(decoded.chainId);
+      const aggpk = decoded.aggregatePublicKey ? prefix0x(utility.toHexString(decoded.aggregatePublicKey)) : undefined;
+      const sk: Hex0x | undefined = this.account.key.privateKey ? prefix0x(this.account.key.privateKey) : undefined;
+
+      if (decoded.mode == CompactMessageType.SpendBundle) {
+        const buff = decoded.bundle;
+        if (!buff) {
+          notifyDanger(this.$tc("offline.client.scan.ui.message.decodedBundleEmpty"));
+          return;
+        }
+
+        const encoded = bech32m.encode("bundle", bech32m.toWords(buff), false);
+        const receiveBundle = await decodeOffer(encoded);
+        const msgs = await getMessagesToSign(receiveBundle, requests, chainId, false, true);
+        const sig = await signMessagesWithKeys(msgs, requests, aggpk, sk, false);
+        if (!this.checkSignature(sig)) return;
+        this.qrcodes = [sig];
+      } else if (decoded.mode == CompactMessageType.MessagesOnly) {
+        if (!decoded.messages) {
+          notifyDanger(this.$tc("offline.client.scan.ui.message.decodedMessagesEmpty"));
+          return;
+        }
+        const msgs: MessagesToSign = {
+          chainId,
+          messages: decoded.messages.map((_) => ({
+            message: utility.toHexString(_.message),
+            coinname: utility.toHexString(_.coinname),
+            publicKey: utility.toHexString(_.publicKey),
+          })),
+        };
+        const sig = await signMessagesWithKeys(msgs, requests, aggpk, sk, false);
+        if (!this.checkSignature(sig)) return;
+        this.qrcodes = [sig];
+      } else {
+        notifyDanger(this.$tc("offline.client.scan.ui.message.unknownDecodedMessagesType"));
+        return;
+      }
     } else if (b.startsWith("bundle1")) {
       this.receiveBundle = await decodeOffer(b);
       const bundle = await signSpendBundle(this.receiveBundle, requests, networkContext());
+      if (!this.checkSignature(bundle.aggregated_signature)) return;
       this.qrcodes = [bundle.aggregated_signature];
     } else {
       throw new Error(`Unknown message, leading string: ${b.substring(0, 50)}...`);
@@ -349,6 +455,15 @@ export default class OfflineSpendBundleQr extends Vue {
     await initCameraHandleError(promise, async (err) => {
       this.error = err;
     });
+  }
+
+  checkSignature(sig: string | undefined): boolean {
+    if (!sig || sig == EMPTY_SIGNATURE) {
+      notifyDanger(this.$tc("offline.client.scan.ui.message.emptySignature"));
+      console.warn("empty signature");
+      return false;
+    }
+    return true;
   }
 }
 </script>
