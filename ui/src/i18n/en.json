@@ -483,7 +483,7 @@
         "numberField": "Signed Message",
         "numberMessage": "Please scan this QR code with the online device that just initiated the transaction.",
         "scrollDown": "Scroll down the page, and scan the QR code on the offline device to get the signed message.",
-        "denseField": "Dense",
+        "denseField": "Density",
         "ui": {
           "message": {
             "generalDecodingError": "Error when decoding: {error}",
