@@ -206,7 +206,8 @@
         "donate": "你正在向开发者捐赠",
         "observeMode": "观察模式下无法使用交互功能。",
         "offline": "离线模式",
-        "test": "注意：kitten.pawket.app 是一个测试站点，你可以在此体验一些未发布的新功能。"
+        "test": "注意：kitten.pawket.app 是一个测试站点，你可以在此体验一些未发布的新功能。",
+        "mpcMode": "多签账户无法使用该功能"
       }
     }
   },
@@ -485,7 +486,11 @@
         "denseField": "密度",
         "ui": {
           "message": {
-            "generalDecodingError": "解析时发生错误：{error}"
+            "generalDecodingError": "解析时发生错误：{error}",
+            "decodedBundleEmpty": "解码的数据包为空",
+            "decodedMessagesEmpty": "解码的消息为空",
+            "unknownDecodedMessagesType": "未知的解码消息类型",
+            "emptySignature": "未能成功签名"
           }
         }
       },
@@ -1812,6 +1817,9 @@
       "button": {
         "back": "返回",
         "submit": "聚合签名"
+      },
+      "error": {
+        "emptySignature": "获得的是空签名，请重试"
       }
     }
   }

@@ -206,7 +206,8 @@
         "donate": "You are donating to the developers.",
         "observeMode": "Interaction function disabled in Observe Mode",
         "offline": "Offline Mode",
-        "test": "Note: kitten.pawket.app is a test site where you can experience some unreleased new features."
+        "test": "Note: kitten.pawket.app is a test site where you can experience some unreleased new features.",
+        "mpcMode": "This function is not available for multi-signature accounts"
       }
     }
   },
@@ -485,7 +486,11 @@
         "denseField": "Dense",
         "ui": {
           "message": {
-            "generalDecodingError": "Error when decoding: {error}"
+            "generalDecodingError": "Error when decoding: {error}",
+            "decodedBundleEmpty": "Decoded bundle is empty",
+            "decodedMessagesEmpty": "Decoded messages are empty",
+            "unknownDecodedMessagesType": "Unknown decoded messages type",
+            "emptySignature": "Failed to sign."
           }
         }
       },
@@ -1812,6 +1817,9 @@
       "button": {
         "back": "Back",
         "submit": "Aggregate"
+      },
+      "error": {
+        "emptySignature": "The signature retrieved is empty, please try again."
       }
     }
   }

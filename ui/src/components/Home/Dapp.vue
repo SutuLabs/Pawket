@@ -274,7 +274,7 @@ export default class Dapp extends Vue {
   checkMpcMode(): void {
     if (this.mpcMode) {
       Notification.open({
-        message: this.$tc("accountDetail.message.notification.MpcMode"),
+        message: this.$tc("accountDetail.message.notification.mpcMode"),
         type: "is-warning",
       });
       throw new Error("Interaction function disabled in MPC Mode");
