@@ -193,6 +193,10 @@ export default class Dapp extends Vue {
     return this.account.type == "Address";
   }
 
+  get mpcMode(): boolean {
+    return this.account.type == "2-2Keys";
+  }
+
   get path(): string {
     return this.$route.path;
   }
@@ -267,6 +271,16 @@ export default class Dapp extends Vue {
     }
   }
 
+  checkMpcMode(): void {
+    if (this.mpcMode) {
+      Notification.open({
+        message: this.$tc("accountDetail.message.notification.MpcMode"),
+        type: "is-warning",
+      });
+      throw new Error("Interaction function disabled in MPC Mode");
+    }
+  }
+
   openDonation(): void {
     this.checkObserveMode();
     this.$buefy.modal.open({
@@ -311,6 +325,7 @@ export default class Dapp extends Vue {
   }
 
   async showProxy(): Promise<void> {
+    this.checkMpcMode();
     this.$buefy.modal.open({
       parent: this,
       component: (await import("@/components/Offline/OfflineSpendBundleQr.vue")).default,
