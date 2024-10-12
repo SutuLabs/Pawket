@@ -90,6 +90,10 @@ export default class GroupSigning extends Vue {
     if (!this.bundle) return;
 
     const bundle = await combineSpendBundleSignature(this.bundle, [this.signatures[0], this.signatures[1]]);
+    if (!bundle.aggregated_signature || bundle.aggregated_signature == EMPTY_SIGNATURE) {
+      notifyDanger("Failed to aggregate"); // almost impossible, so don't do i18n
+      return;
+    }
     this.$emit("signature", bundle.aggregated_signature);
     this.close();
   }
