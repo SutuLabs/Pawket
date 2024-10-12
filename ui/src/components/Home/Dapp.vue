@@ -283,6 +283,7 @@ export default class Dapp extends Vue {
 
   openDonation(): void {
     this.checkObserveMode();
+    this.checkMpcMode();
     this.$buefy.modal.open({
       parent: this,
       component: Donate,
@@ -295,6 +296,7 @@ export default class Dapp extends Vue {
 
   openTakeOffer(): void {
     this.checkObserveMode();
+    this.checkMpcMode();
     this.$buefy.modal.open({
       parent: this,
       component: TakeOffer,
@@ -311,6 +313,7 @@ export default class Dapp extends Vue {
 
   openMakeOffer(): void {
     this.checkObserveMode();
+    this.checkMpcMode();
     this.$buefy.modal.open({
       parent: this,
       component: MakeOffer,
@@ -339,6 +342,8 @@ export default class Dapp extends Vue {
   }
 
   async openInscription(): Promise<void> {
+    this.checkObserveMode();
+    this.checkMpcMode();
     this.$buefy.modal.open({
       parent: this,
       component: (await import("@/components/Inscription/Inscription.vue")).default,
@@ -354,6 +359,7 @@ export default class Dapp extends Vue {
 
   openBatchSend(): void {
     this.checkObserveMode();
+    this.checkMpcMode();
     this.$buefy.modal.open({
       parent: this,
       component: BatchSend,
@@ -369,6 +375,7 @@ export default class Dapp extends Vue {
 
   openMintCat(): void {
     this.checkObserveMode();
+    this.checkMpcMode();
     this.$buefy.modal.open({
       parent: this,
       component: MintCat,
@@ -385,6 +392,7 @@ export default class Dapp extends Vue {
 
   openMintNft(): void {
     this.checkObserveMode();
+    this.checkMpcMode();
     this.$buefy.modal.open({
       parent: this,
       component: MintNft,
@@ -400,6 +408,7 @@ export default class Dapp extends Vue {
 
   openBatchMintNft(): void {
     this.checkObserveMode();
+    this.checkMpcMode();
     this.$buefy.modal.open({
       parent: this,
       component: BatchMintNft,
@@ -415,6 +424,7 @@ export default class Dapp extends Vue {
 
   openVerifyMessage(): void {
     this.checkObserveMode();
+    this.checkMpcMode();
     this.$buefy.modal.open({
       parent: this,
       component: VerifyMessage,
@@ -430,6 +440,7 @@ export default class Dapp extends Vue {
 
   openEncryptMessage(): void {
     this.checkObserveMode();
+    this.checkMpcMode();
     this.$buefy.modal.open({
       parent: this,
       component: EncryptMessage,
@@ -445,6 +456,7 @@ export default class Dapp extends Vue {
 
   openDecryptMessage(): void {
     this.checkObserveMode();
+    this.checkMpcMode();
     this.$buefy.modal.open({
       parent: this,
       component: DecryptMessage,
@@ -460,6 +472,7 @@ export default class Dapp extends Vue {
 
   openSplitCoin(): void {
     this.checkObserveMode();
+    this.checkMpcMode();
     this.$buefy.modal.open({
       parent: this,
       component: SplitCoin,
@@ -475,6 +488,7 @@ export default class Dapp extends Vue {
 
   openScanAssets(): void {
     this.checkObserveMode();
+    this.checkMpcMode();
     this.$buefy.modal.open({
       parent: this,
       component: ScanAssets,
