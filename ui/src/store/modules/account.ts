@@ -411,6 +411,16 @@ export async function getAccountAddressDetails(
       : account.type == "2-2Keys"
       ? <TokenPuzzleAddress[]>[
           { symbol: xchSymbol(), puzzles: [{ hash: account.puzzleHash, type: "MPC", address: account.firstAddress }] },
+          ...(await Promise.all(
+            getAccountCats(account)
+              .map(async (cat) => {
+                if (!account.key?.publicKey) return undefined;
+                const hash = await puzzle.getCatPuzzleHash(account.key.publicKey, cat.id, "cat_v2");
+                const address = puzzle.getAddressFromPuzzleHash(hash, xchPrefix());
+                return { id: cat.id, symbol: cat.name, puzzles: [{ hash, type: "MPC", address }] };
+              })
+              .filter((cat) => !!cat)
+          )),
         ]
       : await getAccountAddressDetailsExternal(
           account,
