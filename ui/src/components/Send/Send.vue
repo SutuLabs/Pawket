@@ -384,11 +384,11 @@ export default class Send extends Vue {
         const msgs = await getMessagesToSign(ubundle, observers, networkContext().chainId);
         if (this.account.type == "PublicKey") {
           await offlineSignBundle(this, ubundle, msgs, (sig) => {
-            if (this.bundle) this.bundle.aggregated_signature = sig;
+            if (this.bundle) this.bundle = { aggregated_signature: sig, coin_spends: this.bundle.coin_spends };
           });
         } else if (this.account.type == "2-2Keys") {
           await groupSignBundle(this, this.account, ubundle, msgs, (sig) => {
-            if (this.bundle) this.bundle.aggregated_signature = sig;
+            if (this.bundle) this.bundle = { aggregated_signature: sig, coin_spends: this.bundle.coin_spends };
           });
         }
       }
