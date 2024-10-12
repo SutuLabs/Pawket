@@ -4,7 +4,7 @@ import pako from "pako";
 
 class DebugApi {
   public async getCoinSolution(coinId: string, rpcUrl: string, isForce = false): Promise<CoinSpend> {
-    const key = `getCoinSolution-${coinId}`;
+    const key = `${rpcUrl}-getCoinSolution-${coinId}`;
     let response = await caches.match(key);
     if (response === undefined || isForce) {
       response = await fetch(rpcUrl + "Wallet/get-coin-solution", {
@@ -46,7 +46,7 @@ class DebugApi {
   }
 
   public async getBlock(index: number, rpcUrl: string, isForce = false): Promise<GetBlockResponse> {
-    const key = `getBlock-${index}`;
+    const key = `${rpcUrl}-getBlock-${index}`;
     let response = await caches.match(key);
     if (response === undefined || isForce) {
       response = await fetch(rpcUrl + "Wallet/get-block", {
