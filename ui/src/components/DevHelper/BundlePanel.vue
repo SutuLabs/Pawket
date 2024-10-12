@@ -172,7 +172,11 @@
           </b-button>
         </template>
         <template #message>
-          <h3 v-if="mgraphGenerated">Fee: {{ fee }}</h3>
+          <h3 v-if="mgraphGenerated">
+            Fee:
+            <span v-if="fee < 0" :title="fee">Uncertain</span>
+            <span v-else>{{ fee }}</span>
+          </h3>
           <AnnouncementList
             :annoAsserted="puzzleAnnoAsserted"
             :annoCreates="puzzleAnnoCreates"
