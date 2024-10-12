@@ -31,7 +31,7 @@
       </template>
     </b-field>
     <template v-if="bundle">
-      <bundle-panel :inputBundleText="bundleText"></bundle-panel>
+      <bundle-panel :inputBundleText="bundleText" :showExportOffer="false"></bundle-panel>
     </template>
   </div>
 </template>

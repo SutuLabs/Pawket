@@ -4,7 +4,9 @@
       <template #label>
         Bundle
         <key-box icon="checkbox-multiple-blank-outline" :value="bundleText" tooltip="Copy"></key-box>
-        <b-button size="is-small" class="is-pulled-right" @click="exportOffer()">Copy Bundle as Offer</b-button>
+        <b-button v-if="showExportOffer" size="is-small" class="is-pulled-right" @click="exportOffer()"
+          >Copy Bundle as Offer</b-button
+        >
       </template>
       <b-input type="textarea" v-model="bundleText" @input="updateBundle()"></b-input>
     </b-field>
@@ -323,6 +325,7 @@ export interface CoinAnnouncementMessage {
 })
 export default class BundlePanel extends Vue {
   @Prop() public inputBundleText!: string;
+  @Prop({ default: true }) public showExportOffer!: boolean;
   public bundleText = "";
   public used_coin_name: Hex0x = "()";
   public used_coin_tgt_address = "";
