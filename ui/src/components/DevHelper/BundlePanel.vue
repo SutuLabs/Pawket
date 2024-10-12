@@ -4,6 +4,7 @@
       <template #label>
         Bundle
         <key-box icon="checkbox-multiple-blank-outline" :value="bundleText" tooltip="Copy"></key-box>
+        <b-button size="is-small" class="is-pulled-right" @click="exportOffer()">Copy Bundle as Offer</b-button>
       </template>
       <b-input type="textarea" v-model="bundleText" @input="updateBundle()"></b-input>
     </b-field>
@@ -284,7 +285,7 @@ import {
 import { modsdict, modsprog } from "../../../../lib-chia/services/coin/mods";
 import UncurryPuzzle from "@/components/DevHelper/UncurryPuzzle.vue";
 import AnnouncementList from "@/components/DevHelper/AnnouncementList.vue";
-import { decodeOffer } from "../../../../lib-chia/services/offer/encoding";
+import { decodeOffer, encodeOffer } from "../../../../lib-chia/services/offer/encoding";
 import { chainId, rpcUrl, xchPrefix } from "@/store/modules/network";
 import { getCoinName, getCoinName0x } from "../../../../lib-chia/services/coin/coinUtility";
 import debug from "../../../../lib-chia/services/api/debug";
@@ -306,6 +307,7 @@ import { sha256 } from "../../../../lib-chia/services/offer/bundler";
 import { parseBlock, parseCoinWithConds, sexpAssemble } from "../../../../lib-chia/services/coin/analyzer";
 import { ConditionOpcode } from "../../../../lib-chia/services/coin/opcode";
 import { NotificationProgrammatic as Notification } from "buefy";
+import store from "@/store";
 
 export interface CoinAnnouncementMessage {
   coinName: Hex0x;
@@ -771,6 +773,12 @@ export default class BundlePanel extends Vue {
         })),
     };
     this.bundle = bundle;
+  }
+
+  public async exportOffer(): Promise<void> {
+    if (!this.bundle) return;
+    const offer = await encodeOffer(this.bundle, undefined, "offer");
+    store.dispatch("copy", offer);
   }
 }
 </script>

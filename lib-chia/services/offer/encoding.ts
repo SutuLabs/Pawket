@@ -104,7 +104,7 @@ export async function encodeOffer(bundle: SpendBundle, ver: number | undefined =
     const coin = cs.coin;
     chunks.push(Buffer.from(Bytes.from(coin.parent_coin_info, "hex").raw()));
     chunks.push(Buffer.from(Bytes.from(coin.puzzle_hash, "hex").raw()));
-    chunks.push(getUint64Buffer(coin.amount));
+    chunks.push(getUint64Buffer(BigInt(coin.amount)));
 
     chunks.push(
       Buffer.from(
