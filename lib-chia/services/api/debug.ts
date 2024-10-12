@@ -26,7 +26,14 @@ class DebugApi {
       }
     }
 
+    if (response.status != 200) {
+      throw new Error(`unexpected response code ${response.status}`);
+    }
+
     const presp = (await response.json()) as GetCoinSolutionResponse;
+    if (!presp.coinSpends || presp.coinSpends.length == 0) {
+      throw new Error("empty response");
+    }
     const cs = presp.coinSpends?.at(0);
     if (!cs) {
       caches.open("debug").then((cache) => cache.delete(key));

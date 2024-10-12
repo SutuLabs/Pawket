@@ -91,7 +91,16 @@ export default class CoinPanel extends Vue {
 
     this.coinSpend = null;
     this.coinSearchList = [];
-    this.coinSpend = await debug.getCoinSolution(coinId, rpcUrl());
+    try {
+      this.coinSpend = await debug.getCoinSolution(coinId, rpcUrl());
+    } catch (err) {
+      Notification.open({
+        message: `Search failed: ${err}`,
+        type: "is-danger",
+      });
+      return;
+    }
+
     if (!this.coinSpend) {
       Notification.open({
         message: `Search failed`,
