@@ -173,9 +173,7 @@
         <template #label>
           Overall Check
           <b-button tag="a" size="is-small" @click="check()"> Check </b-button>
-          <b-button tag="a" size="is-small" v-if="bundle.coin_spends.length == 1" @click="reverse()">
-            Reverse Engineer Spendbundle
-          </b-button>
+          <b-button tag="a" size="is-small" v-if="reversePossible" @click="reverse()"> Reverse Engineer Spendbundle </b-button>
         </template>
         <template #message>
           <h3 v-if="mgraphGenerated">
@@ -712,6 +710,14 @@ export default class BundlePanel extends Vue {
       console.warn("mermaid failure definition:", graphDefinition);
       throw error;
     }
+  }
+
+  public get reversePossible(): boolean {
+    if (this.bundle?.coin_spends.length != 1) return false;
+    const index = this.bundle?.coin_spends[0].spent_index;
+    const thisCoin = this.bundle?.coin_spends[0].coin;
+    if (!index || !thisCoin) return false;
+    return true;
   }
 
   public async reverse(): Promise<void> {
