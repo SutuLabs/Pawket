@@ -416,7 +416,7 @@ export default class BundlePanel extends Vue {
     } catch (error) {
       this.bundle = null;
       Notification.open({
-        message: "Invalid Bundle",
+        message: `Invalid Bundle: ${error}`,
         type: "is-danger",
         autoClose: false,
       });
