@@ -439,6 +439,7 @@ export default class BundlePanel extends Vue {
     this.sigVerified = "None";
     this.fee = 0n;
     this.mgraphGenerated = false;
+    this.selectedCoin = -1;
 
     await this.changeCoin(0);
     this.saveBundle();
