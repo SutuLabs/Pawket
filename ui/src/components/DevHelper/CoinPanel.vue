@@ -24,12 +24,7 @@
       <b-field v-if="false" label="Result">
         <b-input type="textarea" disabled :value="JSON.stringify(coinSpend, null, 4)"></b-input>
       </b-field>
-      <bundle-panel
-        :inputBundleText="bundleText"
-        @coinname="find"
-        :showExportOffer="false"
-        :showSubmitBundle="false"
-      ></bundle-panel>
+      <bundle-panel :inputBundleText="bundleText" @coinname="find"></bundle-panel>
     </template>
   </div>
 </template>

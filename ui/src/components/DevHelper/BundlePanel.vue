@@ -327,8 +327,8 @@ export interface CoinAnnouncementMessage {
 })
 export default class BundlePanel extends Vue {
   @Prop() public inputBundleText!: string;
-  @Prop({ default: true }) public showExportOffer!: boolean;
-  @Prop({ default: true }) public showSubmitBundle!: boolean;
+  @Prop({ default: false }) public showExportOffer!: boolean;
+  @Prop({ default: false }) public showSubmitBundle!: boolean;
   public bundleText = "";
   public used_coin_name: Hex0x = "()";
   public used_coin_tgt_address = "";
