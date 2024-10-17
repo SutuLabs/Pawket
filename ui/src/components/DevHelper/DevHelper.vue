@@ -13,7 +13,7 @@
           <clvm-panel></clvm-panel>
         </b-tab-item>
         <b-tab-item label="Bundle">
-          <bundle-panel :input-bundle-text="inputBundleText"></bundle-panel>
+          <bundle-panel :input-bundle-text="inputBundleText" :showExportOffer="false" :showSubmitBundle="false"></bundle-panel>
         </b-tab-item>
         <b-tab-item label="Offer">
           <offer-panel :input-offer-text="inputOfferText"></offer-panel>
