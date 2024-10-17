@@ -39,6 +39,7 @@ const routes: Array<RouteConfig> = [
       {
         name: "Bundle",
         path: "bundle",
+        props: { showExportOffer: true, showSubmitBundle: true },
         component: () => import(/* webpackChunkName: "create" */ "../components/DevHelper/BundlePanel.vue"),
       },
       {

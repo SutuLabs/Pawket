@@ -3,7 +3,6 @@ import { ApiResponse } from "../../../../lib-chia/models/api";
 import { MessagesToSign, PartialSpendBundle, SpendBundle, UnsignedSpendBundle } from "../../../../lib-chia/services/spendbundle";
 import { NotificationProgrammatic as Notification } from "buefy";
 import { ModalProgrammatic as Modal } from "buefy";
-import DevHelper from "@/components/DevHelper/DevHelper.vue";
 import { chainId, rpcUrl } from "@/store/modules/network";
 import { lockCoins } from "../../../../lib-chia/services/coin/coinUtility";
 import { AccountEntity } from "../../../../lib-chia/models/account";
@@ -11,7 +10,7 @@ import { Hex, Hex0x, prefix0x } from "../../../../lib-chia/services/coin/conditi
 
 export async function submitBundle(
   bundle: SpendBundle,
-  account: AccountEntity,
+  account: AccountEntity | undefined,
   setSubmitting: (state: boolean) => void,
   success: () => void
 ): Promise<void> {
@@ -49,7 +48,9 @@ export async function submitBundle(
         type: "is-primary",
       });
       const txnTime = Date.now();
-      lockCoins(account, bundle.coin_spends, txnTime, chainId());
+      if (account) {
+        lockCoins(account, bundle.coin_spends, txnTime, chainId());
+      }
       success();
     } else {
       const err = typeof json.error === "string" ? json.error.match("error ([A-Z_]+)") : null;
@@ -77,10 +78,10 @@ function getBundleJson(bundle: SpendBundle): string {
   return JSON.stringify(bundle, null, 4);
 }
 
-export function debugBundle(parent: Vue, bundle: SpendBundle): void {
+export async function debugBundle(parent: Vue, bundle: SpendBundle): Promise<void> {
   Modal.open({
     parent: parent,
-    component: DevHelper,
+    component: (await import("@/components/DevHelper/DevHelper.vue")).default, // inline to avoid recursive component issue
     hasModalCard: true,
     trapFocus: true,
     props: { inputBundleText: getBundleJson(bundle) },
