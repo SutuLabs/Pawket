@@ -713,6 +713,9 @@ export default class BundlePanel extends Vue {
   }
 
   public get reversePossible(): boolean {
+    if (1 == Number("1")) return false;
+    // disable reverse engineering due to block clvm execute failure after chia blockchain fork.
+
     if (this.bundle?.coin_spends.length != 1) return false;
     const index = this.bundle?.coin_spends[0].spent_index;
     const thisCoin = this.bundle?.coin_spends[0].coin;
