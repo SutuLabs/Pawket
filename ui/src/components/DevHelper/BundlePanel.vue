@@ -4,9 +4,12 @@
       <template #label>
         Bundle
         <key-box icon="checkbox-multiple-blank-outline" :value="bundleText" tooltip="Copy"></key-box>
-        <b-button v-if="showExportOffer" size="is-small" class="is-pulled-right" @click="exportOffer()"
-          >Copy Bundle as Offer</b-button
-        >
+        <b-button v-if="showSubmitBundle && bundle" size="is-small" class="is-pulled-right" @click="submitBundle()">
+          Submit Bundle To Network
+        </b-button>
+        <b-button v-if="showExportOffer && bundle" size="is-small" class="is-pulled-right" @click="exportOffer()">
+          Copy Bundle as Offer
+        </b-button>
       </template>
       <b-input type="textarea" v-model="bundleText" @input="updateBundle()"></b-input>
     </b-field>
@@ -310,6 +313,7 @@ import { parseBlock, parseCoinWithConds, sexpAssemble } from "../../../../lib-ch
 import { ConditionOpcode } from "../../../../lib-chia/services/coin/opcode";
 import { NotificationProgrammatic as Notification } from "buefy";
 import store from "@/store";
+import { submitBundle } from "@/services/view/bundleAction";
 
 export interface CoinAnnouncementMessage {
   coinName: Hex0x;
@@ -326,6 +330,7 @@ export interface CoinAnnouncementMessage {
 export default class BundlePanel extends Vue {
   @Prop() public inputBundleText!: string;
   @Prop({ default: true }) public showExportOffer!: boolean;
+  @Prop({ default: true }) public showSubmitBundle!: boolean;
   public bundleText = "";
   public used_coin_name: Hex0x = "()";
   public used_coin_tgt_address = "";
@@ -338,6 +343,7 @@ export default class BundlePanel extends Vue {
   public bundle: SpendBundle | SpendBundleDecoded | null = null;
   public autoCalculation = false;
   public solution_executor: "NORMAL" | "SETTLEMENT" | "ERROR" = "NORMAL";
+  public submitting = false;
 
   public puzzleAnnoCreates: AnnouncementCoin[] = [];
   public puzzleAnnoAsserted: AnnouncementCoin[] = [];
@@ -782,6 +788,29 @@ export default class BundlePanel extends Vue {
     if (!this.bundle) return;
     const offer = await encodeOffer(this.bundle, undefined, "offer");
     store.dispatch("copy", offer);
+  }
+
+  public async submitBundle(): Promise<void> {
+    if (!this.bundle) return;
+    const bundle = this.bundle;
+
+    const net = store.state.network.networkId;
+    this.$buefy.dialog.confirm({
+      message: `You are about to <b>send</b> the bundle (transaction) to ${net}. Are you sure?`,
+      onConfirm: () => {
+        submitBundle(
+          bundle,
+          undefined,
+          (_) => (this.submitting = _),
+          () => {
+            this.submitting = false;
+          }
+        );
+      },
+      type: "is-danger",
+      hasIcon: true,
+      confirmText: "Send Transaction",
+    });
   }
 }
 </script>

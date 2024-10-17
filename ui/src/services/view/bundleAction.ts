@@ -11,7 +11,7 @@ import { Hex, Hex0x, prefix0x } from "../../../../lib-chia/services/coin/conditi
 
 export async function submitBundle(
   bundle: SpendBundle,
-  account: AccountEntity,
+  account: AccountEntity | undefined,
   setSubmitting: (state: boolean) => void,
   success: () => void
 ): Promise<void> {
@@ -49,7 +49,9 @@ export async function submitBundle(
         type: "is-primary",
       });
       const txnTime = Date.now();
-      lockCoins(account, bundle.coin_spends, txnTime, chainId());
+      if (account) {
+        lockCoins(account, bundle.coin_spends, txnTime, chainId());
+      }
       success();
     } else {
       const err = typeof json.error === "string" ? json.error.match("error ([A-Z_]+)") : null;
