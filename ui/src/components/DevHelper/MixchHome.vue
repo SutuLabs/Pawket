@@ -21,7 +21,8 @@
     </p>
     <h2>Tools</h2>
     <ul>
-      <li><router-link :to="{ name: 'Bech32m' }">Address ⇋ Hash Converter (bech32m)</router-link></li>
+      <li><router-link :to="{ name: 'Address' }">Address ⇋ Hash Converter (bech32m)</router-link></li>
+      <li><router-link :to="{ name: 'Name' }">Get coin Id/Name from properties</router-link></li>
       <li><router-link :to="{ name: 'CLVM' }">Chialisp → CLVM ⇋ Hex → Hash Converter</router-link></li>
       <li><router-link :to="{ name: 'Bundle' }">Spend Bundle Inspector</router-link></li>
       <li><router-link :to="{ name: 'Offer' }">Offer Inspector</router-link></li>
