@@ -95,7 +95,7 @@ export default class NetworkSelector extends Vue {
 
   addNetwork(): void {
     this.$buefy.modal.open({
-      parent: this.$parent,
+      parent: this.$parent as Vue,
       component: AddNetwork,
       hasModalCard: true,
       trapFocus: true,

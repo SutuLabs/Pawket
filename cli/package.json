@@ -25,7 +25,6 @@
     "core-js": "^3.6.5",
     "elliptic": "^6.5.4",
     "register-service-worker": "^1.7.1",
-    "sanitize-html": "^2.7.0",
     "sortablejs": "^1.14.0",
     "uuid": "^8.3.2",
     "whatwg-fetch": "^3.6.2"

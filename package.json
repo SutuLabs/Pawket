@@ -24,7 +24,7 @@
     "test": "yarn test:cli && yarn test:lib"
   },
   "devDependencies": {
-    "vue-i18n-extract": "^2.0.4"
+    "vue-i18n-extract": "^2.0.7"
   },
   "workspaces": [
     "ui",

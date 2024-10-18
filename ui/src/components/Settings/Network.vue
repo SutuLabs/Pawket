@@ -68,7 +68,7 @@ export default class Network extends Vue {
 
   addNetwork(): void {
     this.$buefy.modal.open({
-      parent: this.$parent,
+      parent: this.$parent as Vue,
       component: AddNetwork,
       hasModalCard: true,
       trapFocus: true,
@@ -81,7 +81,7 @@ export default class Network extends Vue {
     let mode = "Edit";
     if (this.isDefaultNetwork(network.name)) mode = "View";
     this.$buefy.modal.open({
-      parent: this.$parent,
+      parent: this.$parent as Vue,
       component: AddNetwork,
       hasModalCard: true,
       trapFocus: true,

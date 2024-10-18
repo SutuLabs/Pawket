@@ -1,5 +1,4 @@
-// utilize $tc to workaround vue-i18n-extract cannot recognize `callback(tc('key'))`
-import { tc as $tc } from "@/i18n/i18n";
+import { tc } from "@/i18n/i18n";
 
 export async function initCameraHandleError(
   promise: Promise<void>,
@@ -13,19 +12,19 @@ export async function initCameraHandleError(
       return;
     }
     if (error.name === "NotAllowedError") {
-      await errorCallback($tc("scanQrCode.message.error.NotAllowedError"));
+      await errorCallback(tc("scanQrCode.message.error.NotAllowedError"));
     } else if (error.name === "NotFoundError") {
-      await errorCallback($tc("scanQrCode.message.error.NotFoundError"));
+      await errorCallback(tc("scanQrCode.message.error.NotFoundError"));
     } else if (error.name === "NotSupportedError") {
-      await errorCallback($tc("scanQrCode.message.error.NotSupportedError"));
+      await errorCallback(tc("scanQrCode.message.error.NotSupportedError"));
     } else if (error.name === "NotReadableError") {
-      await errorCallback($tc("scanQrCode.message.error.NotReadableError"));
+      await errorCallback(tc("scanQrCode.message.error.NotReadableError"));
     } else if (error.name === "OverconstrainedError") {
-      await errorCallback($tc("scanQrCode.message.error.OverconstrainedError"));
+      await errorCallback(tc("scanQrCode.message.error.OverconstrainedError"));
     } else if (error.name === "StreamApiNotSupportedError") {
-      await errorCallback($tc("scanQrCode.message.error.StreamApiNotSupportedError"));
+      await errorCallback(tc("scanQrCode.message.error.StreamApiNotSupportedError"));
     } else if (error.name === "InsecureContextError") {
-      await errorCallback($tc("scanQrCode.message.error.InsecureContextError"));
+      await errorCallback(tc("scanQrCode.message.error.InsecureContextError"));
     } else {
       await errorCallback(`ERROR: Camera error (${error.name})`);
     }
