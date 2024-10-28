@@ -59,9 +59,23 @@ export default class Add extends Vue {
 
   async ready(): Promise<void> {
     this.isLoading = true;
-    await store.dispatch("importSeed", this.seedMnemonic);
-    this.$router.push("/home").catch(() => undefined);
-    this.isLoading = false;
+    try {
+      await store.dispatch("importSeed", this.seedMnemonic);
+      this.$router.push("/home").catch(() => undefined);
+    } catch (error) {
+      this.$buefy.notification.open({
+        message: `Error: ${error instanceof Error ? error.message : String(error)}`,
+        type: "is-danger",
+        duration: 3000,
+        position: "is-top-right",
+      });
+
+      setTimeout(() => {
+        location.reload();
+      }, 3000);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   back(): void {

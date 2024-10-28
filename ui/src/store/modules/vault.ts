@@ -92,6 +92,7 @@ store.registerModule<IVaultState>("vault", {
     async importSeed({ state, dispatch }, mnemonic: string) {
       const seedLen = mnemonic.trim().split(" ").length;
       if (seedLen != 12 && seedLen != 24) throw new Error("Only accept mnemonic with 12/24 words.");
+      if (state.seedMnemonic) throw new Error("Seed already imported.");
       state.seedMnemonic = mnemonic;
       await dispatch("persistent");
       await dispatch("createAccountBySerial", tc("default.accountName"));
