@@ -60,10 +60,6 @@
           <span class="mx-2">{{ $t("accountManagement.ui.button.addAccount") }}</span>
         </b-tooltip>
       </a>
-
-      <b-modal :active.sync="isAddAccountActive" has-modal-card trap-focus :destroy-on-hide="false" aria-role="dialog" aria-modal>
-        <add-account @close="isAddAccountActive = false"></add-account>
-      </b-modal>
     </div>
   </div>
 </template>
@@ -238,10 +234,15 @@ export default class AccountManagement extends Vue {
     notifyPrimary(this.$tc("accountManagement.message.notification.saved"));
   }
 
-  isAddAccountActive = false;
-
-  showAddAccount(): void {
-    this.isAddAccountActive = true;
+  async showAddAccount(): Promise<void> {
+    this.$buefy.modal.open({
+      parent: this,
+      component: AddAccount,
+      hasModalCard: true,
+      fullScreen: isMobile(),
+      canCancel: [""],
+      trapFocus: true,
+    });
   }
 }
 </script>
