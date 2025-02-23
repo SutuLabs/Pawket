@@ -91,6 +91,19 @@
               :validation-message="$t('addByPassword.ui.message.passwordRequired')"
             ></b-input>
           </b-field>
+          <b-field
+            :label="$t('addByPassword.ui.label.rePassword')"
+            :type="rePasswordError ? 'is-danger' : ''"
+            :message="rePasswordError"
+          >
+            <b-input
+              type="password"
+              v-model="rePassword"
+              password-reveal
+              required
+              :validation-message="$t('addByPassword.ui.message.rePasswordRequired')"
+            ></b-input>
+          </b-field>
         </template>
 
         <template v-else-if="selectedType === 'address'">
@@ -195,6 +208,9 @@ import { prefix0x } from "../../../../lib-chia/services/coin/condition";
 import { ResolveFailureAnswer, resolveName, StandardResolveAnswer } from "@/services/api/resolveName";
 import { NotificationProgrammatic as Notification } from "buefy";
 import puzzle from "../../../../lib-chia/services/crypto/puzzle";
+import { bech32m } from "@scure/base";
+import { Bytes } from "clvm";
+import account from "../../../../lib-chia/services/crypto/account";
 
 interface AvailableType {
   id: string;
@@ -226,6 +242,8 @@ export default class AddAccount extends Vue {
   // Type-specific fields
   public password = "";
   public passwordError = "";
+  public rePassword = "";
+  public rePasswordError = "";
   public address = "";
   public addressError = "";
   public publicKey = "";
@@ -387,6 +405,14 @@ export default class AddAccount extends Vue {
   async submit(): Promise<void> {
     if (!this.validateName()) return;
 
+    // Check for duplicate name
+    for (const acc of store.state.account.accounts) {
+      if (acc.name === this.name) {
+        this.nameError = this.$tc("addByAddress.ui.message.duplicateName");
+        return;
+      }
+    }
+
     this.submitting = true;
     try {
       switch (this.selectedType) {
@@ -398,12 +424,36 @@ export default class AddAccount extends Vue {
             this.passwordError = this.$tc("addByPassword.ui.message.passwordRequired");
             return;
           }
+          if (this.password !== this.rePassword) {
+            this.passwordError = this.$tc("addByPassword.ui.message.invalidPassword");
+            return;
+          }
+          var passwordAcc = await account.getAccount(store.state.vault.seedMnemonic, this.password);
+          var duplicatePassword = store.state.account.accounts.find((a) => a.key.fingerprint === passwordAcc.fingerprint);
+          if (duplicatePassword) {
+            this.$buefy.dialog.alert(
+              this.$tc("addByPassword.message.error.accountPasswordExists", undefined, { accName: duplicatePassword.name })
+            );
+            return;
+          }
           await store.dispatch("createAccountByPassword", { name: this.name, password: this.password });
           break;
         case "address":
           if (!this.address) {
             this.addressError = this.$tc("addByAddress.ui.message.addressRequired");
             return;
+          }
+          try {
+            Bytes.from(bech32m.decodeToBytes(this.address).bytes).hex();
+          } catch (error) {
+            this.addressError = this.$tc("addByAddress.ui.message.illegalAddress");
+            return;
+          }
+          for (const acc of store.state.account.accounts) {
+            if (acc.type === "Address" && acc.firstAddress === this.address) {
+              this.addressError = this.$tc("addByAddress.ui.message.duplicateAddress", undefined, { accName: acc.name });
+              return;
+            }
           }
           var puzzleHash = puzzle.getPuzzleHashFromAddress(this.address);
           await store.dispatch("createAccountByAddress", { name: this.name, puzzleHash });
@@ -412,6 +462,12 @@ export default class AddAccount extends Vue {
           if (!this.publicKey) {
             this.publicKeyError = this.$tc("addByPublicKey.ui.message.publicKeyRequired");
             return;
+          }
+          for (const acc of store.state.account.accounts) {
+            if (acc.type === "PublicKey" && acc.key.publicKey === prefix0x(this.publicKey)) {
+              this.publicKeyError = this.$tc("addByAddress.ui.message.duplicatePublicKey", undefined, { accName: acc.name });
+              return;
+            }
           }
           await store.dispatch("createAccountByPublicKey", { name: this.name, publicKey: prefix0x(this.publicKey) });
           break;
@@ -440,18 +496,15 @@ export default class AddAccount extends Vue {
           }
           break;
         case "legacy":
+        case "mnemonic":
           if (!this.mnemonic) {
             this.mnemonicError = this.$tc("addByMnemonic.ui.message.mnemonicRequired");
             return;
           }
-          await store.dispatch("createAccountByLegacyMnemonic", {
-            name: this.name,
-            legacyMnemonic: this.mnemonic,
-          });
-          break;
-        case "mnemonic":
-          if (!this.mnemonic) {
-            this.mnemonicError = this.$tc("addByMnemonic.ui.message.mnemonicRequired");
+          this.mnemonic = this.mnemonic.replace(/\s+/g, " ").trim();
+          var mnemonicAcc = await account.getAccount("", null, this.mnemonic);
+          if (store.state.account.accounts.find((a) => a.key.fingerprint === mnemonicAcc.fingerprint)) {
+            this.$buefy.dialog.alert(this.$tc("addByMnemonic.message.error.accountMnemonicExists"));
             return;
           }
           await store.dispatch("createAccountByLegacyMnemonic", {
