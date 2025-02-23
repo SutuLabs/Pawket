@@ -34,11 +34,11 @@
           </template>
 
           <div class="pl-5">
-            <article 
+            <article
               v-for="type in getTypesByCategory(category.id)"
               :key="type.id"
               class="media py-2 px-2 mt-2 has-background-white-bis"
-              style="cursor: pointer; border-radius: 4px;"
+              style="cursor: pointer; border-radius: 4px"
               @click="selectType(type)"
             >
               <figure class="media-left">
@@ -176,10 +176,11 @@
         @click="currentStep === 1 ? close() : currentStep--"
       ></b-button>
       <b-button
-        :label="currentStep === 1 ? $t('addAccount.ui.button.next') : $t('addAccount.ui.button.submit')"
+        v-if="currentStep === 2"
         type="is-primary"
-        :disabled="currentStep === 1 ? !selectedType : false"
-        @click="currentStep === 1 ? currentStep++ : submit()"
+        :label="$t('addAccount.ui.button.submit')"
+        @click="submit()"
+        :loading="submitting"
       ></b-button>
     </footer>
   </div>
@@ -193,6 +194,21 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import { prefix0x } from "../../../../lib-chia/services/coin/condition";
 import { ResolveFailureAnswer, resolveName, StandardResolveAnswer } from "@/services/api/resolveName";
 import { NotificationProgrammatic as Notification } from "buefy";
+
+interface AvailableType {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  category: string;
+}
+
+interface Category {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+}
 
 @Component({
   components: { TopBar, KeyBox },
@@ -232,40 +248,40 @@ export default class AddAccount extends Vue {
     });
   }
 
-  get availableTypes() {
-    const types = [
+  get availableTypes(): AvailableType[] {
+    const types: AvailableType[] = [
       {
         id: "serial",
-        name: this.$t("accountManagement.ui.button.addBySerial"),
-        description: this.$t("accountManagement.ui.tooltip.addBySerial"),
+        name: this.$tc("accountManagement.ui.button.addBySerial"),
+        description: this.$tc("accountManagement.ui.tooltip.addBySerial"),
         icon: "plus-thick",
         category: "new",
       },
       {
         id: "password",
-        name: this.$t("accountManagement.ui.button.addByPassword"),
-        description: this.$t("accountManagement.ui.tooltip.addByPassword"),
+        name: this.$tc("accountManagement.ui.button.addByPassword"),
+        description: this.$tc("accountManagement.ui.tooltip.addByPassword"),
         icon: "plus-thick",
         category: "new",
       },
       {
         id: "publicKey",
-        name: this.$t("accountManagement.ui.button.addByPublicKey"),
-        description: this.$t("accountManagement.ui.tooltip.addByPublicKey"),
+        name: this.$tc("accountManagement.ui.button.addByPublicKey"),
+        description: this.$tc("accountManagement.ui.tooltip.addByPublicKey"),
         icon: "plus-thick",
         category: "observation",
       },
       {
         id: "legacy",
-        name: this.$t("accountManagement.ui.button.addByLegacy"),
-        description: this.$t("accountManagement.ui.tooltip.addByLegacy"),
+        name: this.$tc("accountManagement.ui.button.addByLegacy"),
+        description: this.$tc("accountManagement.ui.tooltip.addByLegacy"),
         icon: "import",
         category: "import",
       },
       {
         id: "mnemonic",
-        name: this.$t("accountManagement.ui.button.addByMnemonic"),
-        description: this.$t("accountManagement.ui.tooltip.addByMnemonic"),
+        name: this.$tc("accountManagement.ui.button.addByMnemonic"),
+        description: this.$tc("accountManagement.ui.tooltip.addByMnemonic"),
         icon: "import",
         category: "import",
       },
@@ -273,8 +289,8 @@ export default class AddAccount extends Vue {
 
     types.push({
       id: "address",
-      name: this.$t("accountManagement.ui.button.addByAddress"),
-      description: this.$t("accountManagement.ui.tooltip.addByAddress"),
+      name: this.$tc("accountManagement.ui.button.addByAddress"),
+      description: this.$tc("accountManagement.ui.tooltip.addByAddress"),
       icon: "plus-thick",
       category: "observation",
     });
@@ -282,8 +298,8 @@ export default class AddAccount extends Vue {
     if (store.state.vault.experiment) {
       types.push({
         id: "mpcKeys",
-        name: this.$t("accountManagement.ui.button.addByMpcKeys"),
-        description: this.$t("accountManagement.ui.tooltip.addByMpcKeys"),
+        name: this.$tc("accountManagement.ui.button.addByMpcKeys"),
+        description: this.$tc("accountManagement.ui.tooltip.addByMpcKeys"),
         icon: "plus-thick",
         category: "experimental",
       });
@@ -292,36 +308,36 @@ export default class AddAccount extends Vue {
     return types;
   }
 
-  get categories() {
+  get categories(): Category[] {
     return [
       {
         id: "new",
-        name: this.$t("accountManagement.ui.button.addAccount"),
-        description: this.$t("accountManagement.ui.tooltip.addAccount"),
+        name: this.$tc("accountManagement.ui.button.addAccount"),
+        description: this.$tc("accountManagement.ui.tooltip.addAccount"),
         icon: "plus-thick",
       },
       {
         id: "import",
-        name: this.$t("accountManagement.ui.button.importAccount"),
-        description: this.$t("accountManagement.ui.tooltip.importAccount"),
+        name: this.$tc("accountManagement.ui.button.importAccount"),
+        description: this.$tc("accountManagement.ui.tooltip.importAccount"),
         icon: "import",
       },
       {
         id: "observation",
-        name: this.$t("accountManagement.ui.button.observationMode"),
-        description: this.$t("accountManagement.ui.tooltip.observationMode"),
+        name: this.$tc("accountManagement.ui.button.observationMode"),
+        description: this.$tc("accountManagement.ui.tooltip.observationMode"),
         icon: "eye",
       },
       {
         id: "experimental",
-        name: this.$t("accountManagement.ui.button.experimental"),
-        description: this.$t("accountManagement.ui.tooltip.experimental"),
+        name: this.$tc("accountManagement.ui.button.experimental"),
+        description: this.$tc("accountManagement.ui.tooltip.experimental"),
         icon: "flask",
       },
     ];
   }
 
-  getTypesByCategory(category: string) {
+  getTypesByCategory(category: string): AvailableType[] {
     return this.availableTypes.filter((type) => type.category === category);
   }
 
@@ -334,12 +350,19 @@ export default class AddAccount extends Vue {
     }
   }
 
-  selectType(type: any): void {
+  selectType(type: AvailableType): void {
     this.selectedType = type.id;
     if (this.selectedType === "serial") {
       const n = store.state.account.accounts.filter((a) => a.type === "Serial").length;
       this.name = this.$t("accountManagement.ui.value.defaultName", { n: (n + 1).toString() }) as string;
     }
+    this.currentStep++;
+    this.$nextTick(() => {
+      const accNameInput = this.$refs.name as HTMLInputElement | undefined;
+      if (accNameInput) {
+        accNameInput.focus();
+      }
+    });
   }
 
   close(): void {
@@ -439,9 +462,9 @@ export default class AddAccount extends Vue {
           break;
       }
       this.close();
-    } catch (error: any) {
+    } catch (error) {
       Notification.open({
-        message: error.message,
+        message: `Error: ${error instanceof Error ? error.message : String(error)}`,
         type: "is-danger",
       });
     } finally {
