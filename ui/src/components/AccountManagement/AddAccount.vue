@@ -107,14 +107,12 @@
         </template>
 
         <template v-else-if="selectedType === 'address'">
-          <b-field :label="$t('addByAddress.ui.label.address')" :type="addressError ? 'is-danger' : ''" :message="addressError">
-            <b-input
-              type="text"
-              v-model="address"
-              required
-              :validation-message="$t('addByAddress.ui.message.addressRequired')"
-            ></b-input>
-          </b-field>
+          <address-field
+            :inputAddress="address"
+            :validAddress="isLegalAddress"
+            @updateAddress="updateAddress"
+            :showAddressBook="false"
+          ></address-field>
         </template>
 
         <template v-else-if="selectedType === 'publicKey'">
@@ -124,11 +122,15 @@
             :message="publicKeyError"
           >
             <b-input
-              type="text"
               v-model="publicKey"
+              type="text"
               required
               :validation-message="$t('addByPublicKey.ui.message.publicKeyRequired')"
-            ></b-input>
+            >
+              <template #append>
+                <b-button icon-left="qrcode-scan" @click="scanQrCode('publicKey')"></b-button>
+              </template>
+            </b-input>
           </b-field>
         </template>
 
@@ -148,12 +150,13 @@
                 v-model="mpcPublicKeys[index]"
                 required
                 :validation-message="$t('addByMpcKeys.ui.message.publicKeyRequired')"
-              ></b-input>
+              >
+              </b-input>
               <p class="control">
                 <b-button
                   :label="$t('addByMpcKeys.ui.button.scanQrCode')"
                   type="is-primary"
-                  @click="scanQrCode(index)"
+                  @click="scanQrCode('mpcKeys', index)"
                 ></b-button>
               </p>
               <p v-if="!isLegalMpcAddresses[index]" class="help is-danger">
@@ -204,6 +207,7 @@ import { Component, Vue } from "vue-property-decorator";
 import store from "@/store/index";
 import TopBar from "@/components/Common/TopBar.vue";
 import KeyBox from "@/components/Common/KeyBox.vue";
+import AddressField from "@/components/Common/AddressField.vue";
 import { prefix0x } from "../../../../lib-chia/services/coin/condition";
 import { ResolveFailureAnswer, resolveName, StandardResolveAnswer } from "@/services/api/resolveName";
 import { NotificationProgrammatic as Notification } from "buefy";
@@ -228,7 +232,7 @@ interface Category {
 }
 
 @Component({
-  components: { TopBar, KeyBox },
+  components: { TopBar, KeyBox, AddressField },
 })
 export default class AddAccount extends Vue {
   public currentStep = 1;
@@ -259,6 +263,8 @@ export default class AddAccount extends Vue {
   public isLegalMpcAddresses: boolean[] = [true, true];
   public loading = false;
   public resolveAnswers: (StandardResolveAnswer | ResolveFailureAnswer | null)[] = [null, null];
+
+  public isLegalAddress = true;
 
   get resolvedMpcPublicKeys(): string[] {
     return this.resolveAnswers.map((answer) => {
@@ -536,7 +542,7 @@ export default class AddAccount extends Vue {
     }
   }
 
-  async scanQrCode(index: number): Promise<void> {
+  async scanQrCode(type: "address" | "publicKey" | "mpcKeys", index?: number): Promise<void> {
     this.$buefy.modal.open({
       parent: this,
       component: (await import("@/components/Common/ScanQrCode.vue")).default,
@@ -545,10 +551,28 @@ export default class AddAccount extends Vue {
       props: {},
       events: {
         scanned: (value: string): void => {
-          this.$set(this.mpcPublicKeys, index, value);
+          switch (type) {
+            case "address":
+              this.address = value;
+              break;
+            case "publicKey":
+              this.publicKey = value;
+              break;
+            case "mpcKeys":
+              if (index !== undefined) {
+                this.mpcPublicKeys[index] = value;
+              }
+              break;
+          }
         },
       },
     });
+  }
+
+  updateAddress(value: string): void {
+    this.address = value;
+    this.addressError = "";
+    this.isLegalAddress = true;
   }
 }
 </script>
