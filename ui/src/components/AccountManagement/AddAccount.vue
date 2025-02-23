@@ -194,6 +194,7 @@ import KeyBox from "@/components/Common/KeyBox.vue";
 import { prefix0x } from "../../../../lib-chia/services/coin/condition";
 import { ResolveFailureAnswer, resolveName, StandardResolveAnswer } from "@/services/api/resolveName";
 import { NotificationProgrammatic as Notification } from "buefy";
+import puzzle from "../../../../lib-chia/services/crypto/puzzle";
 
 interface AvailableType {
   id: string;
@@ -404,14 +405,15 @@ export default class AddAccount extends Vue {
             this.addressError = this.$tc("addByAddress.ui.message.addressRequired");
             return;
           }
-          await store.dispatch("createAccountByAddress", { name: this.name, address: this.address });
+          var puzzleHash = puzzle.getPuzzleHashFromAddress(this.address);
+          await store.dispatch("createAccountByAddress", { name: this.name, puzzleHash });
           break;
         case "publicKey":
           if (!this.publicKey) {
             this.publicKeyError = this.$tc("addByPublicKey.ui.message.publicKeyRequired");
             return;
           }
-          await store.dispatch("createAccountByPublicKey", { name: this.name, publicKey: this.publicKey });
+          await store.dispatch("createAccountByPublicKey", { name: this.name, publicKey: prefix0x(this.publicKey) });
           break;
         case "mpcKeys":
           if (!this.mpcPublicKeys.some((key) => key === "")) {
@@ -442,10 +444,9 @@ export default class AddAccount extends Vue {
             this.mnemonicError = this.$tc("addByMnemonic.ui.message.mnemonicRequired");
             return;
           }
-          await store.dispatch("createAccountByMnemonic", {
+          await store.dispatch("createAccountByLegacyMnemonic", {
             name: this.name,
-            mnemonic: this.mnemonic,
-            mnemonicLen: 24,
+            legacyMnemonic: this.mnemonic,
           });
           break;
         case "mnemonic":
@@ -453,10 +454,9 @@ export default class AddAccount extends Vue {
             this.mnemonicError = this.$tc("addByMnemonic.ui.message.mnemonicRequired");
             return;
           }
-          await store.dispatch("createAccountByMnemonic", {
+          await store.dispatch("createAccountByLegacyMnemonic", {
             name: this.name,
-            mnemonic: this.mnemonic,
-            mnemonicLen: 12,
+            legacyMnemonic: this.mnemonic,
           });
           break;
       }
