@@ -52,62 +52,18 @@
         </a>
       </div>
 
-      <a href="javascript:void(0)" class="panel-block" @click="addBySerial()">
-        <b-tooltip :label="$t('accountManagement.ui.tooltip.addBySerial')" position="is-right" multilined size="is-small">
+      <a href="javascript:void(0)" class="panel-block" @click="showAddAccount()">
+        <b-tooltip :label="$t('accountManagement.ui.tooltip.addAccount')" position="is-right" multilined size="is-small">
           <span class="panel-icon">
             <b-icon icon="plus-thick"></b-icon>
           </span>
-          <span class="mx-2">{{ $t("accountManagement.ui.button.addBySerial") }}</span>
+          <span class="mx-2">{{ $t("accountManagement.ui.button.addAccount") }}</span>
         </b-tooltip>
       </a>
-      <a href="javascript:void(0)" class="panel-block" @click="addByPassword()">
-        <b-tooltip :label="$t('accountManagement.ui.tooltip.addByPassword')" position="is-right" multilined size="is-small">
-          <span class="panel-icon">
-            <b-icon icon="plus-thick"></b-icon>
-          </span>
-          <span class="mx-2">{{ $t("accountManagement.ui.button.addByPassword") }}</span>
-        </b-tooltip>
-      </a>
-      <a v-if="debugMode" href="javascript:void(0)" class="panel-block" @click="addByAddress()">
-        <b-tooltip :label="$t('accountManagement.ui.tooltip.addByAddress')" multilined size="is-small">
-          <span class="panel-icon">
-            <b-icon icon="plus-thick"></b-icon>
-          </span>
-          <span class="mx-2">{{ $t("accountManagement.ui.button.addByAddress") }}</span>
-        </b-tooltip>
-      </a>
-      <a href="javascript:void(0)" class="panel-block" @click="addByPublicKey()">
-        <b-tooltip :label="$t('accountManagement.ui.tooltip.addByPublicKey')" multilined size="is-small">
-          <span class="panel-icon">
-            <b-icon icon="plus-thick"></b-icon>
-          </span>
-          <span class="mx-2">{{ $t("accountManagement.ui.button.addByPublicKey") }}</span>
-        </b-tooltip>
-      </a>
-      <a v-if="experimentMode" href="javascript:void(0)" class="panel-block" @click="addByMpcKeys()">
-        <b-tooltip :label="$t('accountManagement.ui.tooltip.addByMpcKeys')" multilined size="is-small">
-          <span class="panel-icon">
-            <b-icon icon="plus-thick"></b-icon>
-          </span>
-          <span class="mx-2">{{ $t("accountManagement.ui.button.addByMpcKeys") }}</span>
-        </b-tooltip>
-      </a>
-      <a href="javascript:void(0)" class="panel-block" @click="addByLegacy()">
-        <b-tooltip :label="$t('accountManagement.ui.tooltip.addByLegacy')" multilined size="is-small">
-          <span class="panel-icon">
-            <b-icon icon="import"></b-icon>
-          </span>
-          <span class="mx-2">{{ $t("accountManagement.ui.button.addByLegacy") }}</span>
-        </b-tooltip>
-      </a>
-      <a href="javascript:void(0)" class="panel-block" @click="addByMnemonic()">
-        <b-tooltip :label="$t('accountManagement.ui.tooltip.addByMnemonic')" multilined size="is-small">
-          <span class="panel-icon">
-            <b-icon icon="import"></b-icon>
-          </span>
-          <span class="mx-2">{{ $t("accountManagement.ui.button.addByMnemonic") }}</span>
-        </b-tooltip>
-      </a>
+
+      <b-modal :active.sync="isAddAccountActive" has-modal-card trap-focus :destroy-on-hide="false" aria-role="dialog" aria-modal>
+        <add-account @close="isAddAccountActive = false"></add-account>
+      </b-modal>
     </div>
   </div>
 </template>
@@ -120,20 +76,15 @@ import AccountInfo from "./AccountInfo.vue";
 import TopBar from "@/components/Common/TopBar.vue";
 import { notifyPrimary } from "@/services/notification/notification";
 import { NotificationProgrammatic as Notification } from "buefy";
-import AddByAddress from "./AddAccount/AddByAddress.vue";
-import AddByMnemonic from "./AddAccount/AddByMnemonic.vue";
-import AddBySerial from "./AddAccount/AddBySerial.vue";
-import AddByPassword from "./AddAccount/AddByPassword.vue";
-import AddByPublicKey from "./AddAccount/AddByPublicKey.vue";
-import AddByMpcKeys from "./AddAccount/AddByMpcKeys.vue";
-import { isMobile } from "@/services/view/responsive";
+import AddAccount from "./AddAccount.vue";
 import { sortable } from "@/directives/sortable";
+import { isMobile } from "@/services/view/responsive";
 
 @Component({
   directives: {
     sortable,
   },
-  components: { TopBar },
+  components: { TopBar, AddAccount },
 })
 export default class AccountManagement extends Vue {
   sortableOptions = {
@@ -287,84 +238,10 @@ export default class AccountManagement extends Vue {
     notifyPrimary(this.$tc("accountManagement.message.notification.saved"));
   }
 
-  async addByPassword(): Promise<void> {
-    this.$buefy.modal.open({
-      parent: this,
-      component: AddByPassword,
-      hasModalCard: true,
-      fullScreen: isMobile(),
-      canCancel: [""],
-      trapFocus: true,
-    });
-  }
+  isAddAccountActive = false;
 
-  addBySerial(): void {
-    this.$buefy.modal.open({
-      parent: this,
-      component: AddBySerial,
-      hasModalCard: true,
-      fullScreen: isMobile(),
-      canCancel: [""],
-      trapFocus: true,
-      props: { defaultName: this.$t("accountManagement.ui.value.defaultName", { n: this.accountNum }) },
-    });
-  }
-
-  async addByLegacy(): Promise<void> {
-    this.$buefy.modal.open({
-      parent: this,
-      component: AddByMnemonic,
-      hasModalCard: true,
-      trapFocus: true,
-      fullScreen: isMobile(),
-      canCancel: [""],
-      props: { title: this.$t("accountManagement.ui.modal.addByLegacy"), mnemonicLen: 24 },
-    });
-  }
-
-  async addByMnemonic(): Promise<void> {
-    this.$buefy.modal.open({
-      parent: this,
-      component: AddByMnemonic,
-      hasModalCard: true,
-      trapFocus: true,
-      fullScreen: isMobile(),
-      canCancel: [""],
-      props: { title: this.$t("accountManagement.ui.modal.addByMnemonic"), mnemonicLen: 12 },
-    });
-  }
-
-  async addByAddress(): Promise<void> {
-    this.$buefy.modal.open({
-      parent: this,
-      component: AddByAddress,
-      hasModalCard: true,
-      fullScreen: isMobile(),
-      trapFocus: true,
-      canCancel: [""],
-    });
-  }
-
-  async addByPublicKey(): Promise<void> {
-    this.$buefy.modal.open({
-      parent: this,
-      component: AddByPublicKey,
-      hasModalCard: true,
-      fullScreen: isMobile(),
-      trapFocus: true,
-      canCancel: [""],
-    });
-  }
-
-  async addByMpcKeys(): Promise<void> {
-    this.$buefy.modal.open({
-      parent: this,
-      component: AddByMpcKeys,
-      hasModalCard: true,
-      fullScreen: isMobile(),
-      trapFocus: true,
-      canCancel: [""],
-    });
+  showAddAccount(): void {
+    this.isAddAccountActive = true;
   }
 }
 </script>

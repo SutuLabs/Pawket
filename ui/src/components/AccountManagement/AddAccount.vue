@@ -1,0 +1,497 @@
+<template>
+  <div class="modal-card" style="width: auto; max-width: 960px">
+    <b-loading :is-full-page="true" v-model="submitting"></b-loading>
+    <top-bar :title="$t('addAccount.ui.title')" @close="close()" :showClose="true"></top-bar>
+
+    <section class="modal-card-body">
+      <!-- Step 1: Account Type Selection -->
+      <div v-if="currentStep === 1">
+        <b-collapse
+          v-for="category in categories"
+          :key="category.id"
+          class="mb-4"
+          animation="slide"
+          :open="category.id === 'new'"
+        >
+          <template #trigger="props">
+            <article class="media py-2" style="cursor: pointer">
+              <figure class="media-left">
+                <b-icon :icon="category.icon" size="is-medium"></b-icon>
+              </figure>
+              <div class="media-content">
+                <div class="content">
+                  <p class="mb-0">
+                    <strong class="is-5">{{ category.name }}</strong>
+                    <br />
+                    <small class="has-text-grey">{{ category.description }}</small>
+                  </p>
+                </div>
+              </div>
+              <div class="media-right">
+                <b-icon :icon="props.open ? 'chevron-up' : 'chevron-down'"></b-icon>
+              </div>
+            </article>
+          </template>
+
+          <div class="pl-5">
+            <article 
+              v-for="type in getTypesByCategory(category.id)"
+              :key="type.id"
+              class="media py-2 px-2 mt-2 has-background-white-bis"
+              style="cursor: pointer; border-radius: 4px;"
+              @click="selectType(type)"
+            >
+              <figure class="media-left">
+                <b-icon :icon="type.icon" size="is-medium"></b-icon>
+              </figure>
+              <div class="media-content">
+                <div class="content">
+                  <p class="mb-0">
+                    <strong class="is-6">{{ type.name }}</strong>
+                    <br />
+                    <small class="has-text-grey">{{ type.description }}</small>
+                  </p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </b-collapse>
+      </div>
+
+      <!-- Step 2: Account Creation Form -->
+      <div v-else-if="currentStep === 2">
+        <!-- Common Name Field -->
+        <b-field :label="$t('addAccount.ui.label.name')" :type="nameError ? 'is-danger' : ''" :message="nameError">
+          <b-input
+            ref="name"
+            v-model="name"
+            type="text"
+            required
+            maxlength="36"
+            :validation-message="$t('addAccount.ui.message.nameRequired')"
+          ></b-input>
+        </b-field>
+
+        <!-- Type-specific Fields -->
+        <template v-if="selectedType === 'serial'">
+          <!-- Serial type doesn't need additional fields -->
+        </template>
+
+        <template v-else-if="selectedType === 'password'">
+          <b-field
+            :label="$t('addByPassword.ui.label.password')"
+            :type="passwordError ? 'is-danger' : ''"
+            :message="passwordError"
+          >
+            <b-input
+              type="password"
+              v-model="password"
+              password-reveal
+              required
+              :validation-message="$t('addByPassword.ui.message.passwordRequired')"
+            ></b-input>
+          </b-field>
+        </template>
+
+        <template v-else-if="selectedType === 'address'">
+          <b-field :label="$t('addByAddress.ui.label.address')" :type="addressError ? 'is-danger' : ''" :message="addressError">
+            <b-input
+              type="text"
+              v-model="address"
+              required
+              :validation-message="$t('addByAddress.ui.message.addressRequired')"
+            ></b-input>
+          </b-field>
+        </template>
+
+        <template v-else-if="selectedType === 'publicKey'">
+          <b-field
+            :label="$t('addByPublicKey.ui.label.publicKey')"
+            :type="publicKeyError ? 'is-danger' : ''"
+            :message="publicKeyError"
+          >
+            <b-input
+              type="text"
+              v-model="publicKey"
+              required
+              :validation-message="$t('addByPublicKey.ui.message.publicKeyRequired')"
+            ></b-input>
+          </b-field>
+        </template>
+
+        <template v-else-if="selectedType === 'mpcKeys'">
+          <b-field :label="$t('addByMpcKeys.ui.label.mpcKeys')" :type="mpcKeysError ? 'is-danger' : ''" :message="mpcKeysError">
+            <b-input
+              type="text"
+              v-model="mpcKeys"
+              required
+              :validation-message="$t('addByMpcKeys.ui.message.mpcKeysRequired')"
+            ></b-input>
+          </b-field>
+          <div v-for="(publicKey, index) in mpcPublicKeys" :key="index">
+            <b-field :label="$t('addByMpcKeys.ui.label.publicKey') + ' ' + (index + 1)">
+              <b-input
+                type="text"
+                v-model="mpcPublicKeys[index]"
+                required
+                :validation-message="$t('addByMpcKeys.ui.message.publicKeyRequired')"
+              ></b-input>
+              <p class="control">
+                <b-button
+                  :label="$t('addByMpcKeys.ui.button.scanQrCode')"
+                  type="is-primary"
+                  @click="scanQrCode(index)"
+                ></b-button>
+              </p>
+              <p v-if="!isLegalMpcAddresses[index]" class="help is-danger">
+                {{ $t("addByMpcKeys.ui.message.illegalAddress") }}
+              </p>
+              <p v-if="mpcErrorMessages[index]" class="help is-danger">
+                {{ mpcErrorMessages[index] }}
+              </p>
+            </b-field>
+          </div>
+        </template>
+
+        <template v-else-if="selectedType === 'legacy' || selectedType === 'mnemonic'">
+          <b-field
+            :label="$t('addByMnemonic.ui.label.mnemonic')"
+            :type="mnemonicError ? 'is-danger' : ''"
+            :message="mnemonicError"
+          >
+            <b-input
+              type="textarea"
+              v-model="mnemonic"
+              required
+              :validation-message="$t('addByMnemonic.ui.message.mnemonicRequired')"
+            ></b-input>
+          </b-field>
+        </template>
+      </div>
+    </section>
+
+    <footer class="modal-card-foot is-justify-content-space-between">
+      <b-button
+        :label="currentStep === 1 ? $t('addAccount.ui.button.cancel') : $t('addAccount.ui.button.back')"
+        @click="currentStep === 1 ? close() : currentStep--"
+      ></b-button>
+      <b-button
+        :label="currentStep === 1 ? $t('addAccount.ui.button.next') : $t('addAccount.ui.button.submit')"
+        type="is-primary"
+        :disabled="currentStep === 1 ? !selectedType : false"
+        @click="currentStep === 1 ? currentStep++ : submit()"
+      ></b-button>
+    </footer>
+  </div>
+</template>
+
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import store from "@/store/index";
+import TopBar from "@/components/Common/TopBar.vue";
+import KeyBox from "@/components/Common/KeyBox.vue";
+import { prefix0x } from "../../../../lib-chia/services/coin/condition";
+import { ResolveFailureAnswer, resolveName, StandardResolveAnswer } from "@/services/api/resolveName";
+import { NotificationProgrammatic as Notification } from "buefy";
+
+@Component({
+  components: { TopBar, KeyBox },
+})
+export default class AddAccount extends Vue {
+  public currentStep = 1;
+  public selectedType = "";
+  public submitting = false;
+
+  // Common fields
+  public name = "";
+  public nameError = "";
+
+  // Type-specific fields
+  public password = "";
+  public passwordError = "";
+  public address = "";
+  public addressError = "";
+  public publicKey = "";
+  public publicKeyError = "";
+  public mpcKeys = "";
+  public mpcKeysError = "";
+  public mnemonic = "";
+  public mnemonicError = "";
+
+  // MPC Keys specific fields
+  public mpcPublicKeys: string[] = ["", ""];
+  public mpcErrorMessages: string[] = ["", ""];
+  public isLegalMpcAddresses: boolean[] = [true, true];
+  public loading = false;
+  public resolveAnswers: (StandardResolveAnswer | ResolveFailureAnswer | null)[] = [null, null];
+
+  get resolvedMpcPublicKeys(): string[] {
+    return this.resolveAnswers.map((answer) => {
+      if (answer?.status == "Found" && answer.data) return answer.data;
+      return "";
+    });
+  }
+
+  get availableTypes() {
+    const types = [
+      {
+        id: "serial",
+        name: this.$t("accountManagement.ui.button.addBySerial"),
+        description: this.$t("accountManagement.ui.tooltip.addBySerial"),
+        icon: "plus-thick",
+        category: "new",
+      },
+      {
+        id: "password",
+        name: this.$t("accountManagement.ui.button.addByPassword"),
+        description: this.$t("accountManagement.ui.tooltip.addByPassword"),
+        icon: "plus-thick",
+        category: "new",
+      },
+      {
+        id: "publicKey",
+        name: this.$t("accountManagement.ui.button.addByPublicKey"),
+        description: this.$t("accountManagement.ui.tooltip.addByPublicKey"),
+        icon: "plus-thick",
+        category: "observation",
+      },
+      {
+        id: "legacy",
+        name: this.$t("accountManagement.ui.button.addByLegacy"),
+        description: this.$t("accountManagement.ui.tooltip.addByLegacy"),
+        icon: "import",
+        category: "import",
+      },
+      {
+        id: "mnemonic",
+        name: this.$t("accountManagement.ui.button.addByMnemonic"),
+        description: this.$t("accountManagement.ui.tooltip.addByMnemonic"),
+        icon: "import",
+        category: "import",
+      },
+    ];
+
+    types.push({
+      id: "address",
+      name: this.$t("accountManagement.ui.button.addByAddress"),
+      description: this.$t("accountManagement.ui.tooltip.addByAddress"),
+      icon: "plus-thick",
+      category: "observation",
+    });
+
+    if (store.state.vault.experiment) {
+      types.push({
+        id: "mpcKeys",
+        name: this.$t("accountManagement.ui.button.addByMpcKeys"),
+        description: this.$t("accountManagement.ui.tooltip.addByMpcKeys"),
+        icon: "plus-thick",
+        category: "experimental",
+      });
+    }
+
+    return types;
+  }
+
+  get categories() {
+    return [
+      {
+        id: "new",
+        name: this.$t("accountManagement.ui.button.addAccount"),
+        description: this.$t("accountManagement.ui.tooltip.addAccount"),
+        icon: "plus-thick",
+      },
+      {
+        id: "import",
+        name: this.$t("accountManagement.ui.button.importAccount"),
+        description: this.$t("accountManagement.ui.tooltip.importAccount"),
+        icon: "import",
+      },
+      {
+        id: "observation",
+        name: this.$t("accountManagement.ui.button.observationMode"),
+        description: this.$t("accountManagement.ui.tooltip.observationMode"),
+        icon: "eye",
+      },
+      {
+        id: "experimental",
+        name: this.$t("accountManagement.ui.button.experimental"),
+        description: this.$t("accountManagement.ui.tooltip.experimental"),
+        icon: "flask",
+      },
+    ];
+  }
+
+  getTypesByCategory(category: string) {
+    return this.availableTypes.filter((type) => type.category === category);
+  }
+
+  mounted(): void {
+    if (this.currentStep === 2) {
+      const accNameInput = this.$refs.name as HTMLInputElement | undefined;
+      if (accNameInput) {
+        accNameInput.focus();
+      }
+    }
+  }
+
+  selectType(type: any): void {
+    this.selectedType = type.id;
+    if (this.selectedType === "serial") {
+      const n = store.state.account.accounts.filter((a) => a.type === "Serial").length;
+      this.name = this.$t("accountManagement.ui.value.defaultName", { n: (n + 1).toString() }) as string;
+    }
+  }
+
+  close(): void {
+    this.$emit("close");
+  }
+
+  validateName(): boolean {
+    this.nameError = "";
+    if (!this.name) {
+      this.nameError = this.$tc("addAccount.ui.message.nameRequired");
+      return false;
+    }
+    for (const acc of store.state.account.accounts) {
+      if (acc.name === this.name) {
+        this.nameError = this.$tc("addAccount.ui.message.duplicateName");
+        return false;
+      }
+    }
+    return true;
+  }
+
+  async submit(): Promise<void> {
+    if (!this.validateName()) return;
+
+    this.submitting = true;
+    try {
+      switch (this.selectedType) {
+        case "serial":
+          await store.dispatch("createAccountBySerial", this.name);
+          break;
+        case "password":
+          if (!this.password) {
+            this.passwordError = this.$tc("addByPassword.ui.message.passwordRequired");
+            return;
+          }
+          await store.dispatch("createAccountByPassword", { name: this.name, password: this.password });
+          break;
+        case "address":
+          if (!this.address) {
+            this.addressError = this.$tc("addByAddress.ui.message.addressRequired");
+            return;
+          }
+          await store.dispatch("createAccountByAddress", { name: this.name, address: this.address });
+          break;
+        case "publicKey":
+          if (!this.publicKey) {
+            this.publicKeyError = this.$tc("addByPublicKey.ui.message.publicKeyRequired");
+            return;
+          }
+          await store.dispatch("createAccountByPublicKey", { name: this.name, publicKey: this.publicKey });
+          break;
+        case "mpcKeys":
+          if (!this.mpcPublicKeys.some((key) => key === "")) {
+            let publicKeys = this.mpcPublicKeys.map((key, index) => {
+              if (this.resolvedMpcPublicKeys[index]) return this.resolvedMpcPublicKeys[index];
+              return prefix0x(key);
+            });
+
+            for (const acc of store.state.account.accounts) {
+              if (acc.type === "2-2Keys" && publicKeys.some((key) => acc.key.publicKey === prefix0x(key))) {
+                const index = publicKeys.findIndex((key) => acc.key.publicKey === prefix0x(key));
+                this.isLegalMpcAddresses[index] = false;
+                this.mpcErrorMessages[index] = this.$tc("addByAddress.ui.message.duplicatePublicKey", undefined, {
+                  accName: acc.name,
+                });
+                return;
+              }
+            }
+
+            await store.dispatch("createAccountByMpcKeys", { name: this.name, publicKeys: publicKeys });
+          } else {
+            this.mpcKeysError = this.$tc("addByMpcKeys.ui.message.mpcKeysRequired");
+            return;
+          }
+          break;
+        case "legacy":
+          if (!this.mnemonic) {
+            this.mnemonicError = this.$tc("addByMnemonic.ui.message.mnemonicRequired");
+            return;
+          }
+          await store.dispatch("createAccountByMnemonic", {
+            name: this.name,
+            mnemonic: this.mnemonic,
+            mnemonicLen: 24,
+          });
+          break;
+        case "mnemonic":
+          if (!this.mnemonic) {
+            this.mnemonicError = this.$tc("addByMnemonic.ui.message.mnemonicRequired");
+            return;
+          }
+          await store.dispatch("createAccountByMnemonic", {
+            name: this.name,
+            mnemonic: this.mnemonic,
+            mnemonicLen: 12,
+          });
+          break;
+      }
+      this.close();
+    } catch (error: any) {
+      Notification.open({
+        message: error.message,
+        type: "is-danger",
+      });
+    } finally {
+      this.submitting = false;
+    }
+  }
+
+  async resetMpc(index: number): Promise<void> {
+    if (this.mpcPublicKeys[index].match(/[a-zA-Z0-9-]{4,}\.xch$/)) {
+      this.loading = true;
+      this.resolveAnswers[index] = await resolveName(this.mpcPublicKeys[index], "publicKey");
+      this.loading = false;
+    } else {
+      this.mpcErrorMessages[index] = "";
+      this.isLegalMpcAddresses[index] = true;
+      this.resolveAnswers[index] = null;
+    }
+  }
+
+  async scanQrCode(index: number): Promise<void> {
+    this.$buefy.modal.open({
+      parent: this,
+      component: (await import("@/components/Common/ScanQrCode.vue")).default,
+      hasModalCard: true,
+      trapFocus: true,
+      props: {},
+      events: {
+        scanned: (value: string): void => {
+          this.$set(this.mpcPublicKeys, index, value);
+        },
+      },
+    });
+  }
+}
+</script>
+
+<style scoped>
+.account-type-box {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.account-type-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+}
+
+.account-type-box.is-selected {
+  border: 2px solid #00d1b2;
+  background-color: #f5fffd;
+}
+</style>
