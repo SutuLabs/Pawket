@@ -254,53 +254,52 @@ export default class AddAccount extends Vue {
         id: "serial",
         name: this.$tc("accountManagement.ui.button.addBySerial"),
         description: this.$tc("accountManagement.ui.tooltip.addBySerial"),
-        icon: "plus-thick",
+        icon: "wallet-plus",
         category: "new",
       },
       {
         id: "password",
         name: this.$tc("accountManagement.ui.button.addByPassword"),
         description: this.$tc("accountManagement.ui.tooltip.addByPassword"),
-        icon: "plus-thick",
+        icon: "key",
         category: "new",
       },
       {
         id: "publicKey",
         name: this.$tc("accountManagement.ui.button.addByPublicKey"),
         description: this.$tc("accountManagement.ui.tooltip.addByPublicKey"),
-        icon: "plus-thick",
+        icon: "key-variant",
         category: "observation",
       },
       {
         id: "legacy",
         name: this.$tc("accountManagement.ui.button.addByLegacy"),
         description: this.$tc("accountManagement.ui.tooltip.addByLegacy"),
-        icon: "import",
+        icon: "folder-download",
         category: "import",
       },
       {
         id: "mnemonic",
         name: this.$tc("accountManagement.ui.button.addByMnemonic"),
         description: this.$tc("accountManagement.ui.tooltip.addByMnemonic"),
-        icon: "import",
+        icon: "text-box",
         category: "import",
       },
+      {
+        id: "address",
+        name: this.$tc("accountManagement.ui.button.addByAddress"),
+        description: this.$tc("accountManagement.ui.tooltip.addByAddress"),
+        icon: "eye-outline",
+        category: "observation",
+      },
     ];
-
-    types.push({
-      id: "address",
-      name: this.$tc("accountManagement.ui.button.addByAddress"),
-      description: this.$tc("accountManagement.ui.tooltip.addByAddress"),
-      icon: "plus-thick",
-      category: "observation",
-    });
 
     if (store.state.vault.experiment) {
       types.push({
         id: "mpcKeys",
         name: this.$tc("accountManagement.ui.button.addByMpcKeys"),
         description: this.$tc("accountManagement.ui.tooltip.addByMpcKeys"),
-        icon: "plus-thick",
+        icon: "key-chain-variant",
         category: "experimental",
       });
     }
