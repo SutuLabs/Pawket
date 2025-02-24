@@ -544,7 +544,8 @@
         "illegalAddress": "地址不正确",
         "duplicateAddress": "地址重复: [{accName}]有相同地址。",
         "duplicateName": "账户名重复",
-        "duplicatePublicKey": "公钥重复： [{accName}]有相同公钥。"
+        "duplicatePublicKey": "公钥重复： [{accName}]有相同公钥。",
+        "addressRequired": "请输入地址"
       },
       "button": {
         "back": "返回",
@@ -563,7 +564,8 @@
       "message": {
         "nameRequired": "账户名不能为空",
         "passwordRequired": "密码不能为空",
-        "invalidPassword": "密码不一致"
+        "invalidPassword": "密码不一致",
+        "rePasswordRequired": "请确认密码"
       },
       "button": {
         "back": "返回",
@@ -1048,7 +1050,11 @@
         "addByMnemonic": "导入 Nucle/Goby 账户(12词)",
         "addByAddress": "新增地址账户（观察模式）",
         "addByPublicKey": "新增公钥账户",
-        "addByMpcKeys": "新增多签钱包"
+        "addByMpcKeys": "新增多签钱包",
+        "addAccount": "新建账户",
+        "importAccount": "导入账户",
+        "observationMode": "观察模式",
+        "experimental": "实验功能"
       },
       "tooltip": {
         "addBySerial": "按顺序创建派生的序列账户。",
@@ -1057,11 +1063,11 @@
         "addByMnemonic": "导入 Nucle/Goby 账户。",
         "addByAddress": "该模式下仅支持查看。",
         "addByPublicKey": "添加离线钱包的公钥，以帮助发起和完成交易。",
-        "addByMpcKeys": "添加多签钱包，允许用多个账户控制一个钱包"
-      },
-      "modal": {
-        "addByLegacy": "导入 Chia 客户端账户",
-        "addByMnemonic": "导入 Nucle/Goby 账户"
+        "addByMpcKeys": "添加多签钱包，允许用多个账户控制一个钱包",
+        "addAccount": "创建新账户",
+        "importAccount": "导入已有账户",
+        "observationMode": "以只读模式监控地址或公钥",
+        "experimental": "尝试实验性功能"
       },
       "value": {
         "defaultName": "账户{n}"
@@ -1461,6 +1467,9 @@
       "title": "添加公钥账户",
       "message": {
         "publicKeyRequired": "公钥不能为空。"
+      },
+      "label": {
+        "publicKey": "公钥"
       }
     }
   },
@@ -1820,6 +1829,39 @@
       },
       "error": {
         "emptySignature": "获得的是空签名，请重试"
+      }
+    }
+  },
+  "addAccount": {
+    "ui": {
+      "title": "添加账户",
+      "label": {
+        "name": "账户名称"
+      },
+      "message": {
+        "nameRequired": "请输入账户名称",
+        "duplicateName": "账户名称已存在"
+      },
+      "button": {
+        "cancel": "取消",
+        "back": "返回",
+        "submit": "确认"
+      }
+    }
+  },
+  "addByMpcKeys": {
+    "ui": {
+      "label": {
+        "mpcKeys": "MPC密钥",
+        "publicKey": "公钥"
+      },
+      "message": {
+        "mpcKeysRequired": "请输入MPC密钥",
+        "publicKeyRequired": "请输入公钥",
+        "illegalAddress": "地址格式无效"
+      },
+      "button": {
+        "scanQrCode": "扫描二维码"
       }
     }
   }

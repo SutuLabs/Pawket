@@ -544,7 +544,8 @@
         "illegalAddress": "Incorrect address.",
         "duplicateAddress": "Duplicate Address: [{accName}] has the same address.",
         "duplicateName": "Duplicate Name",
-        "duplicatePublicKey": "Duplicate PublicKey: [{accName}] has the same publicKey."
+        "duplicatePublicKey": "Duplicate PublicKey: [{accName}] has the same publicKey.",
+        "addressRequired": "Address is required"
       },
       "button": {
         "back": "Back",
@@ -563,7 +564,8 @@
       "message": {
         "nameRequired": "Account name is required.",
         "passwordRequired": "Passphrase is required.",
-        "invalidPassword": "Passphrase does not match."
+        "invalidPassword": "Passphrase does not match.",
+        "rePasswordRequired": "Please confirm your password"
       },
       "button": {
         "back": "Back",
@@ -1048,7 +1050,11 @@
         "addByMnemonic": "Import Nucle/Goby Wallet（12-word）",
         "addByAddress": "Add by Address(Observation Mode)",
         "addByPublicKey": "Add by PublicKey",
-        "addByMpcKeys": "Add MultiSig Wallet"
+        "addByMpcKeys": "Add MultiSig Wallet",
+        "addAccount": "New Account",
+        "importAccount": "Import Account",
+        "observationMode": "Observation Mode",
+        "experimental": "Experimental"
       },
       "tooltip": {
         "addBySerial": "Derived serial accounts are created in order.",
@@ -1057,11 +1063,11 @@
         "addByMnemonic": "Import Nucle/Goby wallet.",
         "addByAddress": "Read-only is supported in this mode.",
         "addByPublicKey": "Add the public key of the offline wallet to help to initiate and complete transactions.",
-        "addByMpcKeys": "Add MultiSig Wallet, allows multiple accounts to control one wallet."
-      },
-      "modal": {
-        "addByLegacy": "Import Chia Official Wallet",
-        "addByMnemonic": "Import Nucle/Goby Wallet"
+        "addByMpcKeys": "Add MultiSig Wallet, allows multiple accounts to control one wallet.",
+        "addAccount": "Create a new account",
+        "importAccount": "Import an existing account",
+        "observationMode": "Monitor addresses in read-only mode",
+        "experimental": "Try experimental features"
       },
       "value": {
         "defaultName": "Account{n}"
@@ -1461,6 +1467,9 @@
       "title": "Add Account by PublicKey",
       "message": {
         "publicKeyRequired": "PublicKey is required."
+      },
+      "label": {
+        "publicKey": "Public Key"
       }
     }
   },
@@ -1820,6 +1829,39 @@
       },
       "error": {
         "emptySignature": "The signature retrieved is empty, please try again."
+      }
+    }
+  },
+  "addAccount": {
+    "ui": {
+      "title": "Add Account",
+      "label": {
+        "name": "Account Name"
+      },
+      "message": {
+        "nameRequired": "Account name is required",
+        "duplicateName": "Account name already exists"
+      },
+      "button": {
+        "cancel": "Cancel",
+        "back": "Back",
+        "submit": "Submit"
+      }
+    }
+  },
+  "addByMpcKeys": {
+    "ui": {
+      "label": {
+        "mpcKeys": "MPC Keys",
+        "publicKey": "Public Key"
+      },
+      "message": {
+        "mpcKeysRequired": "MPC keys are required",
+        "publicKeyRequired": "Public key is required",
+        "illegalAddress": "Invalid address format"
+      },
+      "button": {
+        "scanQrCode": "Scan QR Code"
       }
     }
   }
