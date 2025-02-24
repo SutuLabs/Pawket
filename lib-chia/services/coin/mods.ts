@@ -14,6 +14,7 @@ import {
   clawbackPrimitiveModsHex,
   clawbackPrimitiveModsProg,
 } from "./clawbackPrimitiveMods";
+import { SlotMachineModName, slotMachineModsHash, slotMachineModsHex, slotMachineModsProg } from "./slotMachineMods";
 import { load } from "js-yaml";
 import { modsParametersYaml } from "./modsParametersYaml";
 
@@ -35,20 +36,37 @@ const allModsProg = Object.assign(
   otherModsProg,
   tibetModsProg,
   internalCustodyModsProg,
-  clawbackPrimitiveModsProg
+  clawbackPrimitiveModsProg,
+  slotMachineModsProg
 );
-const allModsHex = Object.assign({}, importModsHex, otherModsHex, tibetModsHex, internalCustodyModsHex, clawbackPrimitiveModsHex);
+const allModsHex = Object.assign(
+  {},
+  importModsHex,
+  otherModsHex,
+  tibetModsHex,
+  internalCustodyModsHex,
+  clawbackPrimitiveModsHex,
+  slotMachineModsHex
+);
 const allModsHash = Object.assign(
   {},
   importModsHash,
   otherModsHash,
   tibetModsHash,
   internalCustodyModsHash,
-  clawbackPrimitiveModsHash
+  clawbackPrimitiveModsHash,
+  slotMachineModsHash
 );
 const mods = Object.keys(allModsProg).map((_) => ({ name: _ as ModName }));
 
-export type ModName = ImportModName | OtherModName | TibetModName | InternalCustodyModName | ClawbackPrimitiveModName;
+export type ModName =
+  | ImportModName
+  | OtherModName
+  | TibetModName
+  | InternalCustodyModName
+  | ClawbackPrimitiveModName
+  | SlotMachineModName;
+
 export const modsdict: { [mod: string]: ModName } = mods.reduce(
   (acc, cur) => ({ ...acc, [allModsProg[cur.name]]: cur.name }),
   {}
