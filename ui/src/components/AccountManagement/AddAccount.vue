@@ -352,12 +352,16 @@ export default class AddAccount extends Vue {
         description: this.$tc("accountManagement.ui.tooltip.observationMode"),
         icon: "eye",
       },
-      {
-        id: "experimental",
-        name: this.$tc("accountManagement.ui.button.experimental"),
-        description: this.$tc("accountManagement.ui.tooltip.experimental"),
-        icon: "flask",
-      },
+      ...(store.state.vault.experiment
+        ? [
+            {
+              id: "experimental",
+              name: this.$tc("accountManagement.ui.button.experimental"),
+              description: this.$tc("accountManagement.ui.tooltip.experimental"),
+              icon: "flask",
+            },
+          ]
+        : []),
     ];
   }
 
