@@ -1,4 +1,4 @@
-export type OtherModName = "cat_v1" | "generator" | "nft_metadata_updater_cns";
+export type OtherModName = "cat_v1" | "generator" | "nft_metadata_updater_cns" | "settlement_payments";
 
 export const otherModsProg: { [name in OtherModName]: string } = {
   cat_v1:
@@ -7,6 +7,8 @@ export const otherModsProg: { [name in OtherModName]: string } = {
     "(a (q 2 5 (c 2 (c 19 ()))) (c (q 2 (q 5 (a 62 (c 2 (c 5 ())))) (c (q ((-1 . 127) -33 . -65) ((a (i (= 11 (q . -128)) (q 4 () (c 5 ())) (q 2 (i (>s 11 24) (q 2 26 (c 2 (c (a (i (>s 11 28) (q 2 (i (>s 11 20) (q 8) (q 4 (concat (logand (q . 31) 11) (substr 5 () (q . 1))) (c (substr 5 (q . 1)) ()))) 1) (q 4 (logand (q . 63) 11) (c 5 ()))) 1) ()))) (q 4 11 (c 5 ()))) 1)) 1) 4 (substr 21 () 9) (c (substr 21 9) ())) (c (c 5 19) (c 43 ())) (a 22 (c 2 (c 9 (c (a 62 (c 2 (c 21 ()))) ())))) 2 (i (= (substr 5 () (q . 1)) 16) (q 2 46 (c 2 (c (a 62 (c 2 (c (substr 5 (q . 1)) ()))) ()))) (q 2 18 (c 2 (c (substr 5 (q . 1)) (c (substr 5 () (q . 1)) ()))))) 1) 1)) 1))",
   nft_metadata_updater_cns:
     '(a (q 4 (c (a (i (all 39 55) (q 2 (i (any (= 39 (q . 25188))) (q 2 6 (c 2 (c 5 (c 39 (c 55 ()))))) (q 2 (i (any (= 39 (q . 28021)) (= 39 (q . 27765)) (= 39 (q . 117))) (q 2 4 (c 2 (c 5 (c 39 (q "new_url"))))) (q . 5)) 1)) 1) (q . 5)) 1) (c 11 ())) (q ())) (c (q (a (i 5 (q 2 (i (= 17 11) (q 4 (c 11 (c 23 25)) 13) (q 4 9 (a 4 (c 2 (c 13 (c 11 (c 23 ()))))))) 1) ()) 1) 2 (i 5 (q 2 (i (= 17 11) (q 4 (c 11 23) 13) (q 4 9 (a 6 (c 2 (c 13 (c 11 (c 23 ()))))))) 1) ()) 1) 1))',
+  settlement_payments:
+    "(a (q 2 10 (c 2 (c 3 ()))) (c (q (51 . 62) (a (i 5 (q 4 (c 12 (c (a 30 (c 2 (c 9 ()))) ())) (a 22 (c 2 (c 25 (c (a 10 (c 2 (c 13 ()))) ()))))) ()) 1) (a (i 5 (q 4 (c 8 9) (a 22 (c 2 (c 13 (c 11 ()))))) (q . 11)) 1) 2 (i (l 5) (q 11 (q . 2) (a 30 (c 2 (c 9 ()))) (a 30 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1))",
 };
 
 export const otherModsHex: { [name in OtherModName]: string } = {
@@ -16,10 +18,13 @@ export const otherModsHex: { [name in OtherModName]: string } = {
     "ff02ffff01ff02ff05ffff04ff02ffff04ff13ff80808080ffff04ffff01ff02ffff01ff05ffff02ff3effff04ff02ffff04ff05ff8080808080ffff04ffff01ffffff81ff7fff81df81bfffffff02ffff03ffff09ff0bffff01818080ffff01ff04ff80ffff04ff05ff808080ffff01ff02ffff03ffff0aff0bff1880ffff01ff02ff1affff04ff02ffff04ffff02ffff03ffff0aff0bff1c80ffff01ff02ffff03ffff0aff0bff1480ffff01ff0880ffff01ff04ffff0effff18ffff011fff0b80ffff0cff05ff80ffff01018080ffff04ffff0cff05ffff010180ff80808080ff0180ffff01ff04ffff18ffff013fff0b80ffff04ff05ff80808080ff0180ff80808080ffff01ff04ff0bffff04ff05ff80808080ff018080ff0180ff04ffff0cff15ff80ff0980ffff04ffff0cff15ff0980ff808080ffff04ffff04ff05ff1380ffff04ff2bff808080ffff02ff16ffff04ff02ffff04ff09ffff04ffff02ff3effff04ff02ffff04ff15ff80808080ff8080808080ff02ffff03ffff09ffff0cff05ff80ffff010180ff1080ffff01ff02ff2effff04ff02ffff04ffff02ff3effff04ff02ffff04ffff0cff05ffff010180ff80808080ff80808080ffff01ff02ff12ffff04ff02ffff04ffff0cff05ffff010180ffff04ffff0cff05ff80ffff010180ff808080808080ff0180ff018080ff018080",
   nft_metadata_updater_cns:
     "ff02ffff01ff04ffff04ffff02ffff03ffff22ff27ff3780ffff01ff02ffff03ffff21ffff09ff27ffff018262648080ffff01ff02ff06ffff04ff02ffff04ff05ffff04ff27ffff04ff37ff808080808080ffff01ff02ffff03ffff21ffff09ff27ffff01826d7580ffff09ff27ffff01826c7580ffff09ff27ffff01758080ffff01ff02ff04ffff04ff02ffff04ff05ffff04ff27ffff01ff876e65775f75726c8080808080ffff010580ff018080ff0180ffff010580ff0180ffff04ff0bff808080ffff01ff808080ffff04ffff01ffff02ffff03ff05ffff01ff02ffff03ffff09ff11ff0b80ffff01ff04ffff04ff0bffff04ff17ff198080ff0d80ffff01ff04ff09ffff02ff04ffff04ff02ffff04ff0dffff04ff0bffff04ff17ff8080808080808080ff0180ff8080ff0180ff02ffff03ff05ffff01ff02ffff03ffff09ff11ff0b80ffff01ff04ffff04ff0bff1780ff0d80ffff01ff04ff09ffff02ff06ffff04ff02ffff04ff0dffff04ff0bffff04ff17ff8080808080808080ff0180ff8080ff0180ff018080",
+  settlement_payments:
+    "ff02ffff01ff02ff0affff04ff02ffff04ff03ff80808080ffff04ffff01ffff333effff02ffff03ff05ffff01ff04ffff04ff0cffff04ffff02ff1effff04ff02ffff04ff09ff80808080ff808080ffff02ff16ffff04ff02ffff04ff19ffff04ffff02ff0affff04ff02ffff04ff0dff80808080ff808080808080ff8080ff0180ffff02ffff03ff05ffff01ff04ffff04ff08ff0980ffff02ff16ffff04ff02ffff04ff0dffff04ff0bff808080808080ffff010b80ff0180ff02ffff03ffff07ff0580ffff01ff0bffff0102ffff02ff1effff04ff02ffff04ff09ff80808080ffff02ff1effff04ff02ffff04ff0dff8080808080ffff01ff0bffff0101ff058080ff0180ff018080",
 };
 
 export const otherModsHash: { [name in OtherModName]: string } = {
   cat_v1: "72dec062874cd4d3aab892a0906688a1ae412b0109982e1797a170add88bdcdc",
   generator: "25ab4553b017b6cad8a3380c9c1acf9d32151e6fd79bae766556fb22eae78267",
   nft_metadata_updater_cns: "20ea3991407203334e6a705517f4cba83f7987353d883f0938633ce7e1740fad",
+  settlement_payments: "bae24162efbd568f89bc7a340798a6118df0189eb9e3f8697bcea27af99f8f79",
 };

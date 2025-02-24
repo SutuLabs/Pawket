@@ -51,7 +51,7 @@ export const ${camelName}sHash: { [name in ${typename}Name]: string } = ${JSON.s
     writeFileSync(`../lib-chia/services/coin/${camelName}s.ts`, content);
   };
 
-  await writeTypeFile(new Glob("../../../ref/chia-blockchain/chia/wallet/puzzles/*.clvm.hex", {}), "ImportMod", ".clvm.hex", {
+  await writeTypeFile(new Glob("../../../ref/chia_puzzles/puzzles/**/*.clsp.hex", {}), "ImportMod", ".clsp.hex", {
     settlement_payments: "settlement_payments_v1",
     settlement_payments_old: "settlement_payments",
   });
