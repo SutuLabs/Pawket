@@ -163,6 +163,26 @@
                   </b-tag>
                   {{ getCoinNameInternal(...sol.args) }}
                 </li>
+                <li v-if="sol.code == 66 || sol.code == 67">
+                  <b-tag type="is-primary is-light">Mode: </b-tag>
+                  <b-tooltip
+                    v-for="(mode, i) in Object.entries(getMessageMode(sol.args[0]))"
+                    :key="i"
+                    :label="mode[1].arguments"
+                    position="is-right"
+                  >
+                    <b-tag
+                      :type="
+                        (sol.code === 66 && mode[0] === 'send') || (sol.code === 67 && mode[0] === 'receive')
+                          ? 'is-info  ml-3'
+                          : 'if-info is-light ml-3'
+                      "
+                    >
+                      {{ mode[0] }}:
+                      {{ mode[1].mode }}
+                    </b-tag>
+                  </b-tooltip>
+                </li>
               </ul>
             </li>
           </ul>
@@ -319,6 +339,14 @@ export interface CoinAnnouncementMessage {
   message: string;
 }
 
+export type MessageMode = "coin" | "parent" | "puzzle" | "amount" | "parent-puzzle" | "parent-amount" | "puzzle-amount" | "none";
+
+export interface MessageModeInfo {
+  mode: MessageMode;
+  arguments: string;
+  bits: string;
+}
+
 @Component({
   components: {
     KeyBox,
@@ -385,6 +413,18 @@ export default class BundlePanel extends Vue {
   public readonly modsprog = modsprog;
 
   public readonly conditionsdict: { [id: number]: ConditionInfo } = conditionDict;
+
+  // ref: https://chialisp.com/conditions/#about-message-conditions-varargs-parameter
+  public messageModeInfo: { [id: number]: MessageModeInfo } = {
+    7: { mode: "coin" as MessageMode, arguments: "<coin ID>", bits: "111" },
+    4: { mode: "parent" as MessageMode, arguments: "<parent coin ID>", bits: "100" },
+    2: { mode: "puzzle" as MessageMode, arguments: "<puzzle hash>", bits: "010" },
+    1: { mode: "amount" as MessageMode, arguments: "<amount>", bits: "001" },
+    6: { mode: "parent-puzzle" as MessageMode, arguments: "<parent coin ID> <puzzle hash>", bits: "110" },
+    5: { mode: "parent-amount" as MessageMode, arguments: "<parent coin ID> <amount>", bits: "101" },
+    3: { mode: "puzzle-amount" as MessageMode, arguments: "<puzzle hash> <amount>", bits: "011" },
+    0: { mode: "none" as MessageMode, arguments: "Not used", bits: "000" },
+  };
 
   async updateBundle(): Promise<void> {
     try {
@@ -551,6 +591,16 @@ export default class BundlePanel extends Vue {
 
   public getNumber(arg: string | ConditionArgs): bigint {
     return getNumber(typeof arg === "string" ? arg : getFirstLevelArgMsg(arg));
+  }
+
+  public getMessageMode(arg: string | ConditionArgs): { send: MessageModeInfo; receive: MessageModeInfo } {
+    const number = Number(this.getNumber(arg));
+    const receiveBits = (number & 0b111000) >> 3;
+    const sendBits = number & 0b111;
+    return {
+      send: this.messageModeInfo[sendBits],
+      receive: this.messageModeInfo[receiveBits],
+    };
   }
 
   public getCoinNameInternal(...args: ConditionArgs[]): string {
