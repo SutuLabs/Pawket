@@ -146,10 +146,34 @@
                     :title="conditionsdict[sol.code].arguments[i].type"
                     >{{ conditionsdict[sol.code].arguments[i].name }}:</span
                   >
+                  <span v-else-if="sol.code == 66 || sol.code == 67" class="has-text-weight-bold" title="Bytes32"
+                    >{{ getMessageModeByCode(sol.args[0], sol.code).arguments[i - 2].name }}:</span
+                  >
                   {{ getArgMsg(arg) }}
                   <b-tag v-if="conditionsdict[sol.code].arguments[i]?.type == 'Unsigned Int'" type="is-info is-light">
                     = {{ getNumber(getArgMsg(arg)) }}
                   </b-tag>
+                  <span
+                    v-if="
+                      conditionsdict[sol.code].arguments[i]?.name == 'mode' &&
+                      conditionsdict[sol.code].arguments[i]?.type == 'Binary'
+                    "
+                  >
+                    <template v-for="(mode, i) in Object.entries(getMessageMode(sol.args[0])).reverse()">
+                      <b-tag
+                        :key="i"
+                        :type="
+                          (sol.code === 66 && mode[0] === 'receive') || (sol.code === 67 && mode[0] === 'send')
+                            ? 'is-info  ml-3'
+                            : 'if-info is-light ml-3'
+                        "
+                      >
+                        {{ mode[1].mode }}
+                        {{ mode[0] == "send" ? "receiver" : "sender" }}
+                      </b-tag>
+                      <span v-if="i === 0" :key="'arrow-' + i" class="pl-2">➡️</span>
+                    </template>
+                  </span>
                 </li>
                 <li v-if="sol.code == 60">
                   <b-tag type="is-primary is-light">annoID:</b-tag>
@@ -169,26 +193,6 @@
                     </b-tooltip>
                   </b-tag>
                   {{ getCoinNameInternal(...sol.args) }}
-                </li>
-                <li v-if="sol.code == 66 || sol.code == 67">
-                  <b-tag type="is-primary is-light">Mode: </b-tag>
-                  <b-tooltip
-                    v-for="(mode, i) in Object.entries(getMessageMode(sol.args[0]))"
-                    :key="i"
-                    :label="mode[1].arguments"
-                    position="is-right"
-                  >
-                    <b-tag
-                      :type="
-                        (sol.code === 66 && mode[0] === 'send') || (sol.code === 67 && mode[0] === 'receive')
-                          ? 'is-info  ml-3'
-                          : 'if-info is-light ml-3'
-                      "
-                    >
-                      {{ mode[0] }}:
-                      {{ mode[1].mode }}
-                    </b-tag>
-                  </b-tooltip>
                 </li>
               </ul>
             </li>
@@ -350,7 +354,7 @@ export type MessageMode = "coin" | "parent" | "puzzle" | "amount" | "parent-puzz
 
 export interface MessageModeInfo {
   mode: MessageMode;
-  arguments: string;
+  arguments: { name: string; type: string }[];
   bits: string;
 }
 
@@ -423,14 +427,35 @@ export default class BundlePanel extends Vue {
 
   // ref: https://chialisp.com/conditions/#about-message-conditions-varargs-parameter
   public messageModeInfo: { [id: number]: MessageModeInfo } = {
-    7: { mode: "coin" as MessageMode, arguments: "<coin ID>", bits: "111" },
-    4: { mode: "parent" as MessageMode, arguments: "<parent coin ID>", bits: "100" },
-    2: { mode: "puzzle" as MessageMode, arguments: "<puzzle hash>", bits: "010" },
-    1: { mode: "amount" as MessageMode, arguments: "<amount>", bits: "001" },
-    6: { mode: "parent-puzzle" as MessageMode, arguments: "<parent coin ID> <puzzle hash>", bits: "110" },
-    5: { mode: "parent-amount" as MessageMode, arguments: "<parent coin ID> <amount>", bits: "101" },
-    3: { mode: "puzzle-amount" as MessageMode, arguments: "<puzzle hash> <amount>", bits: "011" },
-    0: { mode: "none" as MessageMode, arguments: "Not used", bits: "000" },
+    7: { mode: "coin" as MessageMode, arguments: [{ name: "parent", type: "Bytes32" }], bits: "111" },
+    4: { mode: "parent" as MessageMode, arguments: [{ name: "parent", type: "Bytes32" }], bits: "100" },
+    2: { mode: "puzzle" as MessageMode, arguments: [{ name: "puzzle", type: "Bytes32" }], bits: "010" },
+    1: { mode: "amount" as MessageMode, arguments: [{ name: "amount", type: "Bytes32" }], bits: "001" },
+    6: {
+      mode: "parent-puzzle" as MessageMode,
+      arguments: [
+        { name: "parent", type: "Bytes32" },
+        { name: "puzzle", type: "Bytes32" },
+      ],
+      bits: "110",
+    },
+    5: {
+      mode: "parent-amount" as MessageMode,
+      arguments: [
+        { name: "parent", type: "Bytes32" },
+        { name: "amount", type: "Bytes32" },
+      ],
+      bits: "101",
+    },
+    3: {
+      mode: "puzzle-amount" as MessageMode,
+      arguments: [
+        { name: "puzzle", type: "Bytes32" },
+        { name: "amount", type: "Bytes32" },
+      ],
+      bits: "011",
+    },
+    0: { mode: "none" as MessageMode, arguments: [], bits: "000" },
   };
 
   async updateBundle(): Promise<void> {
@@ -608,6 +633,12 @@ export default class BundlePanel extends Vue {
       send: this.messageModeInfo[sendBits],
       receive: this.messageModeInfo[receiveBits],
     };
+  }
+
+  public getMessageModeByCode(arg: string | ConditionArgs, code: 66 | 67): MessageModeInfo {
+    const v = this.getMessageMode(arg);
+    if (code === 66) return v.send;
+    return v.receive;
   }
 
   public getCoinNameInternal(...args: ConditionArgs[]): string {
