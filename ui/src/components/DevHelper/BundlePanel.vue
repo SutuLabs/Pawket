@@ -139,7 +139,18 @@
                 </div>
               </b-tooltip>
               <ul v-if="sol.args.length > 0" class="args_list ellipsis-item">
-                <li v-for="(arg, i) in sol.args" :key="i" :title="getArgMsg(arg)">{{ getArgMsg(arg) }}</li>
+                <li v-for="(arg, i) in sol.args" :key="i">
+                  <span
+                    v-if="conditionsdict[sol.code].arguments[i]"
+                    class="has-text-weight-bold"
+                    :title="conditionsdict[sol.code].arguments[i].type"
+                    >{{ conditionsdict[sol.code].arguments[i].name }}:</span
+                  >
+                  {{ getArgMsg(arg) }}
+                  <b-tag v-if="conditionsdict[sol.code].arguments[i]?.type == 'Unsigned Int'" type="is-info is-light">
+                    = {{ getNumber(getArgMsg(arg)) }}
+                  </b-tag>
+                </li>
                 <li v-if="sol.code == 60">
                   <b-tag type="is-primary is-light">annoID:</b-tag>
                   {{ sha256(used_coin_name, sol.args[0]) }}
@@ -147,10 +158,6 @@
                 <li v-if="sol.code == 62">
                   <b-tag type="is-primary is-light">annoID:</b-tag>
                   {{ sha256(bundle.coin_spends[selectedCoin].coin.puzzle_hash, sol.args[0]) }}
-                </li>
-                <li v-if="sol.code == 51">
-                  <b-tag type="is-primary is-light">amount:</b-tag>
-                  {{ getNumber(sol.args[1]) }}
                 </li>
                 <li v-if="sol.code == 51">
                   <b-tag type="is-primary is-light"
