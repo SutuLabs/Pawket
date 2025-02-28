@@ -84,7 +84,7 @@ export function getFirstLevelArg(args: ConditionArgs): Uint8Array {
   return args;
 }
 
-export function getFirstLevelArgMsg(args: ConditionArgs): string {
+export function getFirstLevelArgMsg(args: ConditionArgs): Hex0x {
   return prefix0x(Bytes.from(getFirstLevelArg(args)).hex());
 }
 

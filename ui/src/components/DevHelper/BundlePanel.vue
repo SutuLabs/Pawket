@@ -153,27 +153,15 @@
                   <b-tag v-if="conditionsdict[sol.code].arguments[i]?.type == 'Unsigned Int'" type="is-info is-light">
                     = {{ getNumber(getArgMsg(arg)) }}
                   </b-tag>
-                  <span
+                  <MessageIndicator
                     v-if="
                       conditionsdict[sol.code].arguments[i]?.name == 'mode' &&
                       conditionsdict[sol.code].arguments[i]?.type == 'Binary'
                     "
+                    :code="sol.code"
+                    :mode="getNumber(getArgMsg(arg))"
                   >
-                    <template v-for="(mode, i) in Object.entries(getMessageMode(sol.args[0])).reverse()">
-                      <b-tag
-                        :key="i"
-                        :type="
-                          (sol.code === 66 && mode[0] === 'receive') || (sol.code === 67 && mode[0] === 'send')
-                            ? 'is-info  ml-3'
-                            : 'if-info is-light ml-3'
-                        "
-                      >
-                        {{ mode[1].mode }}
-                        {{ mode[0] == "send" ? "receiver" : "sender" }}
-                      </b-tag>
-                      <span v-if="i === 0" :key="'arrow-' + i" class="pl-2">➡️</span>
-                    </template>
-                  </span>
+                  </MessageIndicator>
                 </li>
                 <li v-if="sol.code == 60">
                   <b-tag type="is-primary is-light">annoID:</b-tag>
@@ -209,19 +197,28 @@
         <template #message>
           <h3 v-if="mgraphGenerated">
             Fee:
-            <span v-if="fee < 0" :title="fee">Uncertain</span>
+            <span v-if="fee < 0" :title="fee.toString()">Uncertain</span>
             <span v-else>{{ fee }}</span>
           </h3>
           <AnnouncementList
             :annoAsserted="puzzleAnnoAsserted"
             :annoCreates="puzzleAnnoCreates"
             title="Puzzle Announcement"
+            @changeCoin="changeCoin"
           ></AnnouncementList>
           <AnnouncementList
             :annoAsserted="coinAnnoAsserted"
             :annoCreates="coinAnnoCreates"
             title="Coin Announcement"
+            @changeCoin="changeCoin"
           ></AnnouncementList>
+          <MessageList
+            :coinSpends="bundle.coin_spends"
+            :messageSend="coinMessageSend"
+            :messageReceive="coinMessageReceive"
+            title="Coin Message"
+            @changeCoin="changeCoin"
+          ></MessageList>
 
           <h3 v-if="coinAvailability.length > 0">Coin Availability</h3>
           <ul v-if="coinAvailability.length > 0" class="args_list ellipsis-item">
@@ -319,6 +316,8 @@ import {
 import { modsdict, modsprog } from "../../../../lib-chia/services/coin/mods";
 import UncurryPuzzle from "@/components/DevHelper/UncurryPuzzle.vue";
 import AnnouncementList from "@/components/DevHelper/AnnouncementList.vue";
+import MessageList from "@/components/DevHelper/MessageList.vue";
+import MessageIndicator from "@/components/DevHelper/MessageIndicator.vue";
 import { decodeOffer, encodeOffer } from "../../../../lib-chia/services/offer/encoding";
 import { chainId, rpcUrl, xchPrefix } from "@/store/modules/network";
 import { getCoinName, getCoinName0x } from "../../../../lib-chia/services/coin/coinUtility";
@@ -336,6 +335,9 @@ import {
   OriginCoin,
   SpendBundle,
   SpendBundleDecoded,
+  MessageModeInfo,
+  getMessageMode,
+  MessageCoin,
 } from "../../../../lib-chia/services/spendbundle";
 import { sha256 } from "../../../../lib-chia/services/offer/bundler";
 import { parseBlock, parseCoinWithConds, sexpAssemble } from "../../../../lib-chia/services/coin/analyzer";
@@ -350,19 +352,13 @@ export interface CoinAnnouncementMessage {
   message: string;
 }
 
-export type MessageMode = "coin" | "parent" | "puzzle" | "amount" | "parent-puzzle" | "parent-amount" | "puzzle-amount" | "none";
-
-export interface MessageModeInfo {
-  mode: MessageMode;
-  arguments: { name: string; type: string }[];
-  bits: string;
-}
-
 @Component({
   components: {
     KeyBox,
     UncurryPuzzle,
     AnnouncementList,
+    MessageList,
+    MessageIndicator,
   },
 })
 export default class BundlePanel extends Vue {
@@ -387,6 +383,8 @@ export default class BundlePanel extends Vue {
   public puzzleAnnoAsserted: AnnouncementCoin[] = [];
   public coinAnnoCreates: AnnouncementCoin[] = [];
   public coinAnnoAsserted: AnnouncementCoin[] = [];
+  public coinMessageSend: MessageCoin[] = [];
+  public coinMessageReceive: MessageCoin[] = [];
   public coinAvailability: CoinAvailability[] = [];
   public coinMods: { coinIndex: number; mods: string }[] = [];
   public aggSigMessages: AggSigMessage[] = [];
@@ -424,39 +422,6 @@ export default class BundlePanel extends Vue {
   public readonly modsprog = modsprog;
 
   public readonly conditionsdict: { [id: number]: ConditionInfo } = conditionDict;
-
-  // ref: https://chialisp.com/conditions/#about-message-conditions-varargs-parameter
-  public messageModeInfo: { [id: number]: MessageModeInfo } = {
-    7: { mode: "coin" as MessageMode, arguments: [{ name: "parent", type: "Bytes32" }], bits: "111" },
-    4: { mode: "parent" as MessageMode, arguments: [{ name: "parent", type: "Bytes32" }], bits: "100" },
-    2: { mode: "puzzle" as MessageMode, arguments: [{ name: "puzzle", type: "Bytes32" }], bits: "010" },
-    1: { mode: "amount" as MessageMode, arguments: [{ name: "amount", type: "Bytes32" }], bits: "001" },
-    6: {
-      mode: "parent-puzzle" as MessageMode,
-      arguments: [
-        { name: "parent", type: "Bytes32" },
-        { name: "puzzle", type: "Bytes32" },
-      ],
-      bits: "110",
-    },
-    5: {
-      mode: "parent-amount" as MessageMode,
-      arguments: [
-        { name: "parent", type: "Bytes32" },
-        { name: "amount", type: "Bytes32" },
-      ],
-      bits: "101",
-    },
-    3: {
-      mode: "puzzle-amount" as MessageMode,
-      arguments: [
-        { name: "puzzle", type: "Bytes32" },
-        { name: "amount", type: "Bytes32" },
-      ],
-      bits: "011",
-    },
-    0: { mode: "none" as MessageMode, arguments: [], bits: "000" },
-  };
 
   async updateBundle(): Promise<void> {
     try {
@@ -503,6 +468,8 @@ export default class BundlePanel extends Vue {
     this.puzzleAnnoAsserted = [];
     this.coinAnnoCreates = [];
     this.coinAnnoAsserted = [];
+    this.coinMessageSend = [];
+    this.coinMessageReceive = [];
     this.coinAvailability = [];
     this.aggSigMessages = [];
     this.createdCoins = {};
@@ -625,18 +592,8 @@ export default class BundlePanel extends Vue {
     return getNumber(typeof arg === "string" ? arg : getFirstLevelArgMsg(arg));
   }
 
-  public getMessageMode(arg: string | ConditionArgs): { send: MessageModeInfo; receive: MessageModeInfo } {
-    const number = Number(this.getNumber(arg));
-    const receiveBits = (number & 0b111000) >> 3;
-    const sendBits = number & 0b111;
-    return {
-      send: this.messageModeInfo[sendBits],
-      receive: this.messageModeInfo[receiveBits],
-    };
-  }
-
   public getMessageModeByCode(arg: string | ConditionArgs, code: 66 | 67): MessageModeInfo {
-    const v = this.getMessageMode(arg);
+    const v = getMessageMode(arg);
     if (code === 66) return v.send;
     return v.receive;
   }
@@ -663,6 +620,8 @@ export default class BundlePanel extends Vue {
     Vue.set(this, "puzzleAnnoAsserted", result.puzzleAnnoAsserted);
     Vue.set(this, "coinAnnoCreates", result.coinAnnoCreates);
     Vue.set(this, "coinAnnoAsserted", result.coinAnnoAsserted);
+    Vue.set(this, "coinMessageSend", result.coinMessageSend);
+    Vue.set(this, "coinMessageReceive", result.coinMessageReceive);
     Vue.set(this, "coinAvailability", result.coinAvailability);
     Vue.set(this, "aggSigMessages", result.aggSigMessages);
     Vue.set(this, "coinMods", result.coinMods);

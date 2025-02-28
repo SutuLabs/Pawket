@@ -19,6 +19,11 @@ export class ConditionOpcode {
   public static CREATE_PUZZLE_ANNOUNCEMENT = 62;
   public static ASSERT_PUZZLE_ANNOUNCEMENT = 63;
 
+  public static ASSERT_CONCURRENT_SPEND = 64;
+  public static ASSERT_CONCURRENT_PUZZLE = 65;
+  public static SEND_MESSAGE = 66;
+  public static RECEIVE_MESSAGE = 67;
+
   // # the conditions below let coins inquire about themselves
 
   public static ASSERT_MY_COIN_ID = 70;

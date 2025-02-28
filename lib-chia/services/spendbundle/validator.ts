@@ -1,11 +1,11 @@
 import { SpendBundle } from "./defs";
 import { Bytes } from "clvm";
-import puzzle, { ExecuteResult } from "../crypto/puzzle";
+import puzzle, { ConditionArgs, ConditionEntity, ExecuteResult } from "../crypto/puzzle";
 import { sha256 } from "../offer/bundler";
 import { Instance } from "../util/instance";
 import { uncurryPuzzle, sexpAssemble, convertUncurriedPuzzle, getModsPath } from "../coin/analyzer";
 import { getCoinName0x } from "../coin/coinUtility";
-import { getFirstLevelArg, getFirstLevelArgMsg, getNumber, Hex, unprefix0x } from "../coin/condition";
+import { getFirstLevelArg, getFirstLevelArgMsg, getNumber, Hex, Hex0x, unprefix0x } from "../coin/condition";
 import { modshex } from "../coin/mods";
 import { ConditionOpcode } from "../coin/opcode";
 import { sha256tree } from "clvm_tools";
@@ -14,6 +14,56 @@ export interface AnnouncementCoin {
   coinIndex: number;
   message: string;
 }
+
+export type MessageMode = "coin" | "parent" | "puzzle" | "amount" | "parent-puzzle" | "parent-amount" | "puzzle-amount" | "none";
+
+export interface MessageCoin {
+  coinIndex: number;
+  mode: number;
+  message: Hex0x;
+  parent?: Hex0x;
+  puzzle?: Hex0x;
+  amount?: bigint;
+}
+
+export interface MessageModeInfo {
+  mode: MessageMode;
+  arguments: { name: string; type: string }[];
+  bits: string;
+}
+
+// ref: https://chialisp.com/conditions/#about-message-conditions-varargs-parameter
+export const messageModeInfo: { [id: number]: MessageModeInfo } = {
+  7: { mode: "coin" as MessageMode, arguments: [{ name: "parent", type: "Bytes32" }], bits: "111" },
+  4: { mode: "parent" as MessageMode, arguments: [{ name: "parent", type: "Bytes32" }], bits: "100" },
+  2: { mode: "puzzle" as MessageMode, arguments: [{ name: "puzzle", type: "Bytes32" }], bits: "010" },
+  1: { mode: "amount" as MessageMode, arguments: [{ name: "amount", type: "Bytes32" }], bits: "001" },
+  6: {
+    mode: "parent-puzzle" as MessageMode,
+    arguments: [
+      { name: "parent", type: "Bytes32" },
+      { name: "puzzle", type: "Bytes32" },
+    ],
+    bits: "110",
+  },
+  5: {
+    mode: "parent-amount" as MessageMode,
+    arguments: [
+      { name: "parent", type: "Bytes32" },
+      { name: "amount", type: "Bytes32" },
+    ],
+    bits: "101",
+  },
+  3: {
+    mode: "puzzle-amount" as MessageMode,
+    arguments: [
+      { name: "puzzle", type: "Bytes32" },
+      { name: "amount", type: "Bytes32" },
+    ],
+    bits: "011",
+  },
+  0: { mode: "none" as MessageMode, arguments: [], bits: "000" },
+};
 
 export interface CoinAvailability {
   coinName: string;
@@ -57,6 +107,9 @@ interface SpendBundleCheckResult {
   coinAnnoCreates: AnnouncementCoin[];
   coinAnnoAsserted: AnnouncementCoin[];
 
+  coinMessageSend: MessageCoin[];
+  coinMessageReceive: MessageCoin[];
+
   coinAvailability: CoinAvailability[];
   coinMods: CoinModsInfo[];
   aggSigMessages: AggSigMessage[];
@@ -78,6 +131,8 @@ export async function checkSpendBundle(
   const puzzleAnnoAsserted: AnnouncementCoin[] = [];
   const coinAnnoCreates: AnnouncementCoin[] = [];
   const coinAnnoAsserted: AnnouncementCoin[] = [];
+  const coinMessageSend: MessageCoin[] = [];
+  const coinMessageReceive: MessageCoin[] = [];
   const coinAvailability: CoinAvailability[] = [];
   const coinsForAvail: CoinAvailability[] = [];
   const newCoins: CoinIndexInfo[] = [];
@@ -124,6 +179,12 @@ export async function checkSpendBundle(
         ...result.conditions
           .filter((_) => _.code == ConditionOpcode.ASSERT_COIN_ANNOUNCEMENT)
           .map((_) => ({ coinIndex: i, message: getFirstLevelArgMsg(_.args.at(0)) }))
+      );
+      coinMessageSend.push(
+        ...result.conditions.filter((_) => _.code == ConditionOpcode.SEND_MESSAGE).map((_) => createMessageCoin(i, _))
+      );
+      coinMessageReceive.push(
+        ...result.conditions.filter((_) => _.code == ConditionOpcode.RECEIVE_MESSAGE).map((_) => createMessageCoin(i, _))
       );
 
       newCoins.push(
@@ -223,6 +284,8 @@ export async function checkSpendBundle(
     puzzleAnnoAsserted,
     coinAnnoCreates,
     coinAnnoAsserted,
+    coinMessageSend,
+    coinMessageReceive,
     coinAvailability,
     coinMods,
     aggSigMessages,
@@ -299,4 +362,29 @@ function checkCoinPuzzles(coinPuzzles: CoinPuzzleInfo[]) {
   if (abnormals.length > 0)
     throw new Error(`Some coin puzzles are not fulfilled:
   ${abnormals.map((_) => `${_.coinIndex}: ${_.puzzleHash}!=${_.puzzleRevealHash}`).join("\n  ")}`);
+}
+
+export function getMessageMode(arg: string | ConditionArgs): { send: MessageModeInfo; receive: MessageModeInfo; mode: number } {
+  const number = Number(getNumber(typeof arg === "string" ? arg : getFirstLevelArgMsg(arg)));
+  const receiveBits = (number & 0b111000) >> 3;
+  const sendBits = number & 0b111;
+  return {
+    send: messageModeInfo[sendBits],
+    receive: messageModeInfo[receiveBits],
+    mode: number,
+  };
+}
+
+function createMessageCoin(coinIndex: number, condition: ConditionEntity): MessageCoin {
+  const { send, receive, mode } = getMessageMode(condition.args[0]);
+  const selected = condition.code == ConditionOpcode.SEND_MESSAGE ? send : receive;
+  const mapping = Object.fromEntries(selected.arguments.map((x, i) => [x.name, i + 2]));
+  return {
+    coinIndex,
+    mode,
+    message: getFirstLevelArgMsg(condition.args[1]),
+    parent: mapping["parent"] ? getFirstLevelArgMsg(condition.args[mapping["parent"]]) : undefined,
+    puzzle: mapping["puzzle"] ? getFirstLevelArgMsg(condition.args[mapping["puzzle"]]) : undefined,
+    amount: mapping["amount"] ? getNumber(getFirstLevelArgMsg(condition.args[mapping["amount"]])) : undefined,
+  };
 }
