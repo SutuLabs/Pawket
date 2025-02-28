@@ -418,6 +418,10 @@ export default class BundlePanel extends Vue {
       key: "CP",
       description: "Coin Puzzle (Creation)",
     },
+    {
+      key: "MSG",
+      description: "MESSAGE",
+    },
   ];
   public readonly modsdict = modsdict;
   public readonly modsprog = modsprog;
@@ -658,6 +662,7 @@ export default class BundlePanel extends Vue {
   }
 
   public async renderMermaid(): Promise<void> {
+    if (!this.bundle) return;
     this.mgraphGenerated = true;
     await new Promise((resolve) => setTimeout(resolve, 50));
 
@@ -673,6 +678,8 @@ export default class BundlePanel extends Vue {
       this.puzzleAnnoAsserted,
       this.coinAnnoCreates,
       this.coinAnnoAsserted,
+      this.coinMessageSend,
+      this.coinMessageReceive,
       this.coinAvailability,
       this.createdCoins
     );

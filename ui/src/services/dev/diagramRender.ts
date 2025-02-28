@@ -1,4 +1,10 @@
-import { AggSigMessage, AnnouncementCoin, CoinAvailability, CoinIndexInfo } from "../../../../lib-chia/services/spendbundle";
+import {
+  AggSigMessage,
+  AnnouncementCoin,
+  CoinAvailability,
+  CoinIndexInfo,
+  MessageCoin,
+} from "../../../../lib-chia/services/spendbundle";
 
 export function gerMermaidDiagramDefinition(
   aggSigMessages: AggSigMessage[],
@@ -7,8 +13,10 @@ export function gerMermaidDiagramDefinition(
   puzzleAnnoAsserted: AnnouncementCoin[],
   coinAnnoCreates: AnnouncementCoin[],
   coinAnnoAsserted: AnnouncementCoin[],
+  coinMessageSend: MessageCoin[],
+  coinMessageReceive: MessageCoin[],
   coinAvailability: CoinAvailability[],
-  createdCoins: { [key: string]: CoinIndexInfo }
+  createdCoins: { [key: string]: CoinIndexInfo },
 ): string {
   let graphDefinition = "graph LR;";
   // graphDefinition += "SIG(SIG);";
@@ -74,6 +82,18 @@ export function gerMermaidDiagramDefinition(
       graphDefinition += `${ass.coinIndex} -- CA --> ${cre.coinIndex};`;
     } else {
       graphDefinition += `${ass.coinIndex} -- CA --> ?;`;
+    }
+  }
+
+  for (let i = 0; i < coinMessageReceive.length; i++) {
+    const receiver = coinMessageReceive[i];
+    for (let j = 0; j < receiver.opponents.length; j++) {
+      const sender = receiver.opponents[j];
+      if (sender) {
+        graphDefinition += `${receiver.coinIndex} -- MSG --> ${sender};`;
+      } else {
+        graphDefinition += `${receiver.coinIndex} -- MSG --> ?;`;
+      }
     }
   }
 

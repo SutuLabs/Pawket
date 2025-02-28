@@ -1,4 +1,4 @@
-import { SpendBundle } from "./defs";
+import { CoinSpend, SpendBundle } from "./defs";
 import { Bytes } from "clvm";
 import puzzle, { ConditionArgs, ConditionEntity, ExecuteResult } from "../crypto/puzzle";
 import { sha256 } from "../offer/bundler";
@@ -17,13 +17,17 @@ export interface AnnouncementCoin {
 
 export type MessageMode = "coin" | "parent" | "puzzle" | "amount" | "parent-puzzle" | "parent-amount" | "puzzle-amount" | "none";
 
-export interface MessageCoin {
+export interface MessageCoinBasic {
   coinIndex: number;
   mode: number;
   message: Hex0x;
   parent?: Hex0x;
   puzzle?: Hex0x;
   amount?: bigint;
+}
+
+export interface MessageCoin extends MessageCoinBasic {
+  opponents: number[];
 }
 
 export interface MessageModeInfo {
@@ -141,6 +145,8 @@ export async function checkSpendBundle(
   const createdCoins: { [key: string]: CoinIndexInfo } = {};
   const coinPuzzles: CoinPuzzleInfo[] = [];
 
+  const msgsend: MessageCoinBasic[] = [];
+  const msgrecv: MessageCoinBasic[] = [];
   try {
     for (let i = 0; i < bundle.coin_spends.length; i++) {
       const cs = bundle.coin_spends[i];
@@ -180,10 +186,10 @@ export async function checkSpendBundle(
           .filter((_) => _.code == ConditionOpcode.ASSERT_COIN_ANNOUNCEMENT)
           .map((_) => ({ coinIndex: i, message: getFirstLevelArgMsg(_.args.at(0)) }))
       );
-      coinMessageSend.push(
+      msgsend.push(
         ...result.conditions.filter((_) => _.code == ConditionOpcode.SEND_MESSAGE).map((_) => createMessageCoin(i, _))
       );
-      coinMessageReceive.push(
+      msgrecv.push(
         ...result.conditions.filter((_) => _.code == ConditionOpcode.RECEIVE_MESSAGE).map((_) => createMessageCoin(i, _))
       );
 
@@ -233,6 +239,10 @@ export async function checkSpendBundle(
         puzzleRevealHash: sha256tree(sexpAssemble(cs.puzzle_reveal)).hex(),
       });
     }
+
+    const { send, receive } = mixMessageCoins(msgsend, msgrecv, bundle.coin_spends);
+    coinMessageSend.push(...send);
+    coinMessageReceive.push(...receive);
 
     newCoins.forEach((c) => {
       createdCoins[c.coinName] = c;
@@ -375,7 +385,7 @@ export function getMessageMode(arg: string | ConditionArgs): { send: MessageMode
   };
 }
 
-function createMessageCoin(coinIndex: number, condition: ConditionEntity): MessageCoin {
+function createMessageCoin(coinIndex: number, condition: ConditionEntity): MessageCoinBasic {
   const { send, receive, mode } = getMessageMode(condition.args[0]);
   const selected = condition.code == ConditionOpcode.SEND_MESSAGE ? send : receive;
   const mapping = Object.fromEntries(selected.arguments.map((x, i) => [x.name, i + 2]));
@@ -386,5 +396,33 @@ function createMessageCoin(coinIndex: number, condition: ConditionEntity): Messa
     parent: mapping["parent"] ? getFirstLevelArgMsg(condition.args[mapping["parent"]]) : undefined,
     puzzle: mapping["puzzle"] ? getFirstLevelArgMsg(condition.args[mapping["puzzle"]]) : undefined,
     amount: mapping["amount"] ? getNumber(getFirstLevelArgMsg(condition.args[mapping["amount"]])) : undefined,
+  };
+}
+
+function mixMessageCoins(
+  sendIn: MessageCoinBasic[],
+  receiveIn: MessageCoinBasic[],
+  coins: CoinSpend[]
+): { send: MessageCoin[]; receive: MessageCoin[] } {
+  function processCoins(items: MessageCoinBasic[]): MessageCoin[] {
+    return items.map((item) => {
+      const opponents: number[] = [];
+      for (let i = 0; i < coins.length; i++) {
+        const c = coins[i];
+        if (
+          (item.puzzle === undefined || item.puzzle == c.coin.puzzle_hash) &&
+          (item.amount === undefined || item.amount == c.coin.amount) &&
+          (item.parent === undefined || item.parent == c.coin.parent_coin_info)
+        ) {
+          opponents.push(i);
+        }
+      }
+      return Object.assign({ opponents }, item);
+    });
+  }
+
+  return {
+    send: processCoins(sendIn),
+    receive: processCoins(receiveIn),
   };
 }

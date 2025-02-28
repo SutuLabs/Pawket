@@ -7,15 +7,12 @@
           {{ message.coinIndex }}
         </b-button>
 
-        <span v-for="(asserted, idx) in [messageReceive.filter((_) => _.message == message.message)[0]]" :key="idx">
-          <b-tag v-if="asserted" type="is-info is-light">➡️</b-tag>
-          <b-button v-if="asserted" tag="a" size="is-small" @click="changeCoin(asserted.coinIndex)">
-            {{ asserted.coinIndex }}
-          </b-button>
-        </span>
-        <b-tag v-if="messageReceive.findIndex((_) => _.message == message.message) == -1" type="is-warning is-light"
-          >No Assert</b-tag
-        >
+        <b-tag v-if="message.opponents.length > 0" type="is-info is-light">➡️</b-tag>
+        <b-button v-for="(cidx, idx) in message.opponents" :key="idx" tag="a" size="is-small" @click="changeCoin(cidx)">
+          {{ cidx }}
+        </b-button>
+
+        <b-tag v-if="message.opponents.length == 0" type="is-warning is-light">No Receiver</b-tag>
 
         <span class="mid-message">
           {{ message.message }}
