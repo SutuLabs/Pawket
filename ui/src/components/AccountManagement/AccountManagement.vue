@@ -52,13 +52,16 @@
         </a>
       </div>
 
-      <a href="javascript:void(0)" class="panel-block" @click="showAddAccount()">
-        <b-tooltip :label="$t('accountManagement.ui.tooltip.addAccount')" position="is-right" multilined size="is-small">
-          <span class="panel-icon">
-            <b-icon icon="plus-thick"></b-icon>
-          </span>
-          <span class="mx-2">{{ $t("accountManagement.ui.button.addAccount") }}</span>
-        </b-tooltip>
+      <a href="javascript:void(0)" class="panel-block list-item" @click="showAddAccount()">
+        <figure class="image is-32x32 prevent-select" style="margin: auto">
+          <b-icon icon="plus-thick"></b-icon>
+        </figure>
+        <div class="column is-flex my-0 py-0 prevent-select">
+          <div class="py-1">
+            <p class="is-size-6">{{ $t("accountManagement.ui.button.addAccount") }}</p>
+            <p class="is-size-7 has-text-grey">{{ $t("accountManagement.ui.tooltip.addAccount") }}</p>
+          </div>
+        </div>
       </a>
     </div>
   </div>
