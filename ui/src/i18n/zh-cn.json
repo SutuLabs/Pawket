@@ -511,7 +511,7 @@
     "ui": {
       "label": {
         "name": "账户名",
-        "mnemonic": "助记词 ({len}词)"
+        "mnemonic": "助记词 (12/24词)"
       },
       "message": {
         "nameRequired": "账户名不能为空",
@@ -1852,16 +1852,15 @@
   "addByMpcKeys": {
     "ui": {
       "label": {
-        "mpcKeys": "MPC密钥",
         "publicKey": "公钥"
       },
       "message": {
         "mpcKeysRequired": "请输入MPC密钥",
         "publicKeyRequired": "请输入公钥",
-        "illegalAddress": "地址格式无效"
-      },
-      "button": {
-        "scanQrCode": "扫描二维码"
+        "illegalAddress": "地址格式无效",
+        "publicKeyHint": "请确保各方的公钥是独立生成的，否则存在被伪造签名的风险！",
+        "publicKeyHintLinkUrl": "https://sutulabs.github.io/PawketWhitepaper/chia/multisig.html",
+        "publicKeyHintLinkText": "MPC密钥安全说明"
       }
     }
   }

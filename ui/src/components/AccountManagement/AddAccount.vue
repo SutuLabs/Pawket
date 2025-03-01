@@ -59,7 +59,7 @@
       </div>
 
       <!-- Step 2: Account Creation Form -->
-      <div v-else-if="currentStep === 2">
+      <div v-else-if="currentStep === 2" style="min-width: 300px; max-width: 500px">
         <!-- Common Name Field -->
         <b-field :label="$t('addAccount.ui.label.name')" :type="nameError ? 'is-danger' : ''" :message="nameError">
           <b-input
@@ -124,40 +124,30 @@
             <b-input
               v-model="publicKey"
               type="text"
+              expanded
               required
               :validation-message="$t('addByPublicKey.ui.message.publicKeyRequired')"
             >
-              <template #append>
-                <b-button icon-left="qrcode-scan" @click="scanQrCode('publicKey')"></b-button>
-              </template>
             </b-input>
+            <p class="control">
+              <b-button icon-left="scan-helper" @click="scanQrCode('publicKey')"></b-button>
+            </p>
           </b-field>
         </template>
 
         <template v-else-if="selectedType === 'mpcKeys'">
-          <b-field :label="$t('addByMpcKeys.ui.label.mpcKeys')" :type="mpcKeysError ? 'is-danger' : ''" :message="mpcKeysError">
-            <b-input
-              type="text"
-              v-model="mpcKeys"
-              required
-              :validation-message="$t('addByMpcKeys.ui.message.mpcKeysRequired')"
-            ></b-input>
-          </b-field>
           <div v-for="(publicKey, index) in mpcPublicKeys" :key="index">
             <b-field :label="$t('addByMpcKeys.ui.label.publicKey') + ' ' + (index + 1)">
               <b-input
                 type="text"
                 v-model="mpcPublicKeys[index]"
+                expanded
                 required
                 :validation-message="$t('addByMpcKeys.ui.message.publicKeyRequired')"
               >
               </b-input>
               <p class="control">
-                <b-button
-                  :label="$t('addByMpcKeys.ui.button.scanQrCode')"
-                  type="is-primary"
-                  @click="scanQrCode('mpcKeys', index)"
-                ></b-button>
+                <b-button icon-left="scan-helper" @click="scanQrCode('mpcKeys', index)"></b-button>
               </p>
               <p v-if="!isLegalMpcAddresses[index]" class="help is-danger">
                 {{ $t("addByMpcKeys.ui.message.illegalAddress") }}
@@ -167,6 +157,13 @@
               </p>
             </b-field>
           </div>
+          <p class="help is-danger">
+            {{ $t("addByMpcKeys.ui.message.publicKeyHint") }}
+            <br />
+            <a :href="$tc('addByMpcKeys.ui.message.publicKeyHintLinkUrl')" target="_blank">
+              {{ $t("addByMpcKeys.ui.message.publicKeyHintLinkText") }}
+            </a>
+          </p>
         </template>
 
         <template v-else-if="selectedType === 'legacy' || selectedType === 'mnemonic'">
@@ -252,7 +249,6 @@ export default class AddAccount extends Vue {
   public addressError = "";
   public publicKey = "";
   public publicKeyError = "";
-  public mpcKeys = "";
   public mpcKeysError = "";
   public mnemonic = "";
   public mnemonicError = "";
@@ -380,10 +376,18 @@ export default class AddAccount extends Vue {
 
   selectType(type: AvailableType): void {
     this.selectedType = type.id;
-    if (this.selectedType === "serial") {
-      const n = store.state.account.accounts.filter((a) => a.type === "Serial").length;
-      this.name = this.$t("accountManagement.ui.value.defaultName", { n: (n + 1).toString() }) as string;
-    }
+
+    // Find a unique account name
+    let n = 1;
+    let proposedName = "";
+
+    do {
+      proposedName = this.$t("accountManagement.ui.value.defaultName", { n: n.toString() }) as string;
+      n++;
+    } while (store.state.account.accounts.some((acc) => acc.name === proposedName));
+
+    this.name = proposedName;
+
     this.currentStep++;
     this.$nextTick(() => {
       const accNameInput = this.$refs.name as HTMLInputElement | undefined;

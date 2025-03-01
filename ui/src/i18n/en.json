@@ -511,7 +511,7 @@
     "ui": {
       "label": {
         "name": "Account Name",
-        "mnemonic": "{len} Mnemonic Words"
+        "mnemonic": "12/24 Mnemonic Words"
       },
       "message": {
         "nameRequired": "Account name is required.",
@@ -1852,16 +1852,15 @@
   "addByMpcKeys": {
     "ui": {
       "label": {
-        "mpcKeys": "MPC Keys",
         "publicKey": "Public Key"
       },
       "message": {
         "mpcKeysRequired": "MPC keys are required",
         "publicKeyRequired": "Public key is required",
-        "illegalAddress": "Invalid address format"
-      },
-      "button": {
-        "scanQrCode": "Scan QR Code"
+        "illegalAddress": "Invalid address format",
+        "publicKeyHint": "Please ensure each participant's public key is generated independently, which may lead to fake signature risks! (Rogue Public Key Attack)",
+        "publicKeyHintLinkUrl": "https://sutulabs.github.io/PawketWhitepaper/chia/multisig.html",
+        "publicKeyHintLinkText": "Review MPC Key Security"
       }
     }
   }
