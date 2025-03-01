@@ -568,7 +568,7 @@ export default class AddAccount extends Vue {
               break;
             case "mpcKeys":
               if (index !== undefined) {
-                this.mpcPublicKeys[index] = value;
+                this.$set(this.mpcPublicKeys, index, value);
               }
               break;
           }
