@@ -16,7 +16,7 @@ export function gerMermaidDiagramDefinition(
   coinMessageSend: MessageCoin[],
   coinMessageReceive: MessageCoin[],
   coinAvailability: CoinAvailability[],
-  createdCoins: { [key: string]: CoinIndexInfo },
+  createdCoins: { [key: string]: CoinIndexInfo }
 ): string {
   let graphDefinition = "graph LR;";
   // graphDefinition += "SIG(SIG);";
