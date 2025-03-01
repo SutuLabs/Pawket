@@ -7,7 +7,7 @@
           {{ message.coinIndex }}
         </b-button>
 
-        <b-tag v-if="message.opponents.length > 0" type="is-info is-light">➡️</b-tag>
+        <b-tag type="is-info is-light">➡️</b-tag>
         <b-button v-for="(cidx, idx) in message.opponents" :key="idx" tag="a" size="is-small" @click="changeCoin(cidx)">
           {{ cidx }}
         </b-button>
@@ -22,20 +22,19 @@
       </li>
     </ul>
     <ul v-if="messageReceive.length > 0" class="args_list ellipsis-item">
-      <li
-        v-for="(message, i) in messageReceive.filter((_) => !messageSend.some((p) => p.message == _.message))"
-        :key="i"
-        :title="message.message"
-      >
+      <li v-for="(message, i) in receiverWithoutSender" :key="i" :title="message.message">
+        <b-tag type="is-warning is-light">No Sender</b-tag>
+        <b-tag type="is-info is-light">➡️</b-tag>
+
         <b-button tag="a" size="is-small" @click="changeCoin(message.coinIndex)">
           {{ message.coinIndex }}
         </b-button>
 
-        <b-tag type="is-warning is-light">Not Created</b-tag>
-
         <span class="mid-message is-danger">
           {{ message.message }}
         </span>
+
+        <MessageIndicator :mode="message.mode"></MessageIndicator>
       </li>
     </ul>
   </div>
@@ -58,6 +57,10 @@ export default class MessageList extends Vue {
   @Prop() public messageReceive!: MessageCoin[];
   @Prop() public coinSpends!: CoinSpend[];
   @Prop() public title!: string;
+
+  get receiverWithoutSender(): MessageCoin[] {
+    return this.messageReceive.filter((_) => !this.messageSend.some((p) => p.opponents.findIndex((c) => c == _.coinIndex) > -1));
+  }
 
   changeCoin(id: number): void {
     this.$emit("changeCoin", id);
