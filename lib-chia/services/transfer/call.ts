@@ -12,6 +12,11 @@ export async function getLineageProofPuzzle(parentCoinId: string, baseUrl: strin
     }),
   });
 
+  if (!resp.ok) {
+    const errText = await resp.text();
+    throw new Error(`Failed to fetch lineage proof: ${resp.status} ${resp.statusText} — ${errText}`);
+  }
+
   const presp = (await resp.json()) as GetParentPuzzleResponse;
   return presp;
 }
