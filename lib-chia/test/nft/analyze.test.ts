@@ -8,6 +8,7 @@ import nftcoin4 from "../cases/nftcoin4.json";
 import nftcoin5 from "../cases/nftcoin5.json";
 import nftcoin8 from "../cases/nftcoin8.json";
 import nftcoin9 from "../cases/nftcoin9.json";
+import nftcoin10 from "../cases/nftcoin10.json";
 
 import cnscoin1 from "../cases/cnscoin1.json";
 
@@ -44,5 +45,8 @@ test("Analyze Nft 8", async () =>
 // first minted cns nft
 test("Analyze Nft 9", async () =>
   await testAnalyzeNftCoin(nftcoin9, "55bf9e6b0fda4c6657e243f97db8845b5a3b854667edd80f5e621a1ed9e648cc"));
+// random issue coin after some block (around 2025.8.12) that cannot be parsed.
+test("Analyze Nft 10", async () =>
+  await testAnalyzeNftCoin(nftcoin10, "0000000000000000000000000000000000000000000000000000000000000000"));
 // updated updater for cns nft: 0x018ef89d7d5680a23de5ad3b530ebf2461856962a49e2bd02e44ba9c19d4207c
 test("Analyze CNS NFT 1", async () => await testAnalyzeNftCoin(cnscoin1, ""));

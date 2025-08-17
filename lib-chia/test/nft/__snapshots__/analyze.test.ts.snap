@@ -302,3 +302,38 @@ Object {
   "tradePricePercentage": 500,
 }
 `;
+
+exports[`Analyze Nft 10: nft analysis result 1`] = `
+Object {
+  "coin": Object {
+    "amount": 1,
+    "parent_coin_info": "0x96370c0de2e02c619b6cfdc2230b5679aa66aef4d96e29efc2b5cf27ead4a4f8",
+    "puzzle_hash": "0xe405c608180ec115ac5c718a2ace258eafdf3c0ca41021bfbfe2f3447fdd0988",
+  },
+  "didOwner": "",
+  "hintPuzzle": "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "launcherId": "0x4f429f4f574a4dd33bb22cc8cb7f1bea1f32bc4aecbd1026ad26d4cf3d5a40e1",
+  "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+  "metadata": Object {
+    "imageHash": "d56abf48ce4b863b0f5b7b36e4d91a934642e1c9a0efc3c4d17dbd25415b3d12",
+    "imageUri": "https://can.seedsn.app/ipfs/bafybeifcwnuzmmdmqkgn4zjqojsbdysc2xwasdwbpgh3hxk7zhchxpjcoy/go4me-KhanLinteck-3.png",
+    "licenseHash": "ef21bf06abac4a813db3a5966b699a1d7a4f0f9c4f3b3615761c782901095095",
+    "licenseUri": "https://can.seedsn.app/ipfs/QmbEpMBDVNCLzbFEyN2Sdr7HWYcvkm7xroiqarC7QYyHEc/go4me-license.txt",
+    "metadataHash": "264c6fcf6947ee8fd2b608bd9c951819cd6fc0cc360948b729515280237fbf7e",
+    "metadataUri": "https://can.seedsn.app/ipfs/bafybeifcwnuzmmdmqkgn4zjqojsbdysc2xwasdwbpgh3hxk7zhchxpjcoy/go4me-KhanLinteck-3.json",
+    "serialNumber": "03",
+    "serialTotal": "01",
+  },
+  "metadataUpdaterPuzzleHash": "0xfe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b",
+  "nextCoinName": "0xbfa817e1435f8959f01c593b598b5ec7f45796e81ba613a3da3370865e10b333",
+  "nftOwnershipModHash": "0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
+  "nftStateModHash": "0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
+  "p2InnerPuzzle": "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xb5f5df3ac2b4f31d232f04c4ac742b0ff7ca4e061a54ce43a8b31b4eac50a4fb0153260f2f278ae973b9b268c7187936) 1))",
+  "p2Owner": "",
+  "previousOwner": "()",
+  "rawMetadata": "((117 \\"https://can.seedsn.app/ipfs/bafybeifcwnuzmmdmqkgn4zjqojsbdysc2xwasdwbpgh3hxk7zhchxpjcoy/go4me-KhanLinteck-3.png\\") (104 . 0xd56abf48ce4b863b0f5b7b36e4d91a934642e1c9a0efc3c4d17dbd25415b3d12) (28021 \\"https://can.seedsn.app/ipfs/bafybeifcwnuzmmdmqkgn4zjqojsbdysc2xwasdwbpgh3hxk7zhchxpjcoy/go4me-KhanLinteck-3.json\\") (28008 . 0x264c6fcf6947ee8fd2b608bd9c951819cd6fc0cc360948b729515280237fbf7e) (27765 \\"https://can.seedsn.app/ipfs/QmbEpMBDVNCLzbFEyN2Sdr7HWYcvkm7xroiqarC7QYyHEc/go4me-license.txt\\") (29550 . 3) (29556 . 1) (27752 . 0xef21bf06abac4a813db3a5966b699a1d7a4f0f9c4f3b3615761c782901095095))",
+  "royaltyAddress": "0x287c2a4da1e60fd768cf469ad36286952b38854eddf35692bf5d492b2d818ac0",
+  "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
+  "tradePricePercentage": 1000,
+}
+`;
