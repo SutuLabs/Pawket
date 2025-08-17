@@ -675,7 +675,7 @@ async function getOwnerFromSolutionForP2InnerPuzzle(sol: SExp): Promise<{
 async function getCalculatedMetadata(currentMetadata: Hex0x, updaterPuzzleHash: string, sol: SExp): Promise<SExp> {
   const updateSol = findByPath(sol, "rrfffrfrf");
   const magic = findByPath(updateSol, "f");
-  if (magic.as_int() != -24) return sexpAssemble(currentMetadata);
+  if (magic.as_bigint() != -24n) return sexpAssemble(currentMetadata);
   const prog = findByPath(updateSol, "rf").as_bin().hex();
   const argument = findByPath(updateSol, "rrf");
   const pars = SExp.to([sexpAssemble(currentMetadata), updaterPuzzleHash, argument])

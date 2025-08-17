@@ -337,3 +337,38 @@ Object {
   "tradePricePercentage": 1000,
 }
 `;
+
+exports[`Analyze Nft 11: nft analysis result 1`] = `
+Object {
+  "coin": Object {
+    "amount": 1,
+    "parent_coin_info": "0x850ef4cdc9d548e37b99ec90b15bb8cc5021bbc25cff02c79849eefa2e95f030",
+    "puzzle_hash": "0x284b45fbe3a85570b00f94a5c2766e5985d567191adf41b2a547851cf7ac1a83",
+  },
+  "didOwner": "()",
+  "hintPuzzle": "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "launcherId": "0x42deeb31bda7a9fbbef8f30cb8fd9d2c6e0bd4dc3e253d7deabb496340cc444c",
+  "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+  "metadata": Object {
+    "imageHash": "4947291acd9eb040a27bbd0d13ec4e0f7857102f4566f31e48e112cdd7b602d4",
+    "imageUri": "https://can.seedsn.app/ipfs/bafybeigmgaruxb5znpvi532w75af2qrnmlfeiotuix2q6uqeob62s6p4bu/go4me-Emmazee123-1.png",
+    "licenseHash": "ef21bf06abac4a813db3a5966b699a1d7a4f0f9c4f3b3615761c782901095095",
+    "licenseUri": "https://can.seedsn.app/ipfs/QmbEpMBDVNCLzbFEyN2Sdr7HWYcvkm7xroiqarC7QYyHEc/go4me-license.txt",
+    "metadataHash": "b11d8cc676c43b9e4a637f436f27c29efd35112c840615ebcf96042dfb21a9ea",
+    "metadataUri": "https://can.seedsn.app/ipfs/bafybeigmgaruxb5znpvi532w75af2qrnmlfeiotuix2q6uqeob62s6p4bu/go4me-Emmazee123-1.json",
+    "serialNumber": "01",
+    "serialTotal": "01",
+  },
+  "metadataUpdaterPuzzleHash": "0xfe8a4b4e27a2e29a4d3fc7ce9d527adbcaccbab6ada3903ccf3ba9a769d2d78b",
+  "nextCoinName": "0x34f8b9a3ab85ea930a6b05a687ad648c16fd82223a012812ffacbe1f11ceee6a",
+  "nftOwnershipModHash": "0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
+  "nftStateModHash": "0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
+  "p2InnerPuzzle": "(a (q 2 10 (c 2 (c 3 ()))) (c (q (51 . 62) (a (i 5 (q 4 (c 12 (c (a 30 (c 2 (c 9 ()))) ())) (a 22 (c 2 (c 25 (c (a 10 (c 2 (c 13 ()))) ()))))) ()) 1) (a (i 5 (q 2 (i (> 41 ()) (q 4 (c 8 9) (a 22 (c 2 (c 13 (c 11 ()))))) (q 8)) 1) (q . 11)) 1) 2 (i (l 5) (q 11 (q . 2) (a 30 (c 2 (c 9 ()))) (a 30 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1))",
+  "p2Owner": "320037e90452ff313fb9ff73ec19ce46db0bcc1509ccc85da5b3a835782627ed",
+  "previousOwner": "()",
+  "rawMetadata": "((117 \\"https://can.seedsn.app/ipfs/bafybeigmgaruxb5znpvi532w75af2qrnmlfeiotuix2q6uqeob62s6p4bu/go4me-Emmazee123-1.png\\") (104 . 0x4947291acd9eb040a27bbd0d13ec4e0f7857102f4566f31e48e112cdd7b602d4) (28021 \\"https://can.seedsn.app/ipfs/bafybeigmgaruxb5znpvi532w75af2qrnmlfeiotuix2q6uqeob62s6p4bu/go4me-Emmazee123-1.json\\") (28008 . 0xb11d8cc676c43b9e4a637f436f27c29efd35112c840615ebcf96042dfb21a9ea) (27765 \\"https://can.seedsn.app/ipfs/QmbEpMBDVNCLzbFEyN2Sdr7HWYcvkm7xroiqarC7QYyHEc/go4me-license.txt\\") (29550 . 1) (29556 . 1) (27752 . 0xef21bf06abac4a813db3a5966b699a1d7a4f0f9c4f3b3615761c782901095095))",
+  "royaltyAddress": "0x280eeb47927ff6bd3ac79ff91a6a29676bb9ccf61a36380e856920ab8aa7f674",
+  "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
+  "tradePricePercentage": 1000,
+}
+`;
