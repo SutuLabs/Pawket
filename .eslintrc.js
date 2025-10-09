@@ -17,6 +17,9 @@ module.exports = {
     parser: "@typescript-eslint/parser",
     ecmaVersion: 2020,
     sourceType: "module",
+    ecmaFeatures:{
+      experimentalDecorators: true
+    }
   },
   rules: {
     "no-console": "off",

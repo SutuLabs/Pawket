@@ -30,5 +30,8 @@
     "ui",
     "lib-chia",
     "cli"
-  ]
+  ],
+  "resolutions": {
+    "**/@achrinza/node-ipc": "npm:node-ipc@^10.1.0"
+  }
 }
