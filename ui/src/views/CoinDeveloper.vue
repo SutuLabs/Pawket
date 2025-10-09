@@ -178,7 +178,7 @@ export default class CoinDeveloper extends Vue {
   changeTab(newIndex: number): void {
     if (!this.editor) return;
 
-    var currentState = this.editor.saveViewState();
+    const currentState = this.editor.saveViewState();
 
     // var currentModel = this.editor.getModel();
     const file = this.editorData[this.selectedFileIndex];

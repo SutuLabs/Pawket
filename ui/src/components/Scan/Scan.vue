@@ -77,7 +77,7 @@ export default class Scan extends Vue {
   }
 
   mounted(): void {
-    var privkey = utility.fromHexString(this.account.key.privateKey);
+    const privkey = utility.fromHexString(this.account.key.privateKey);
     utility.getPrivateKey(privkey).then((sk) => {
       this.masterpubkey = utility.toHexString(sk.get_g1().serialize());
     });

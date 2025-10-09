@@ -166,7 +166,7 @@ export default class UtxoPanel extends Vue {
 
   get actList(): CoinRecord[] {
     const actList: CoinRecord[] = [];
-    for (let act of this.activities) {
+    for (const act of this.activities) {
       actList.push(act);
       if (act.spent) {
         // generate original receive record

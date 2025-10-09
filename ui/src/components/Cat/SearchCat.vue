@@ -80,7 +80,7 @@ export default class SearchCat extends Vue {
 
   get filteredData(): TailInfo[] {
     if (!this.searchInput.length) return this.tails;
-    let res: TailInfo[] = [];
+    const res: TailInfo[] = [];
     const hash = unprefix0x(this.searchInput.toLowerCase());
     const code = this.searchInput.toUpperCase();
     this.tails.map((t) => {

@@ -99,7 +99,7 @@ export default class Add extends Vue {
       return;
     }
     const unknownWords: string[] = [];
-    for (let word of this.seedMnemonicList) {
+    for (const word of this.seedMnemonicList) {
       if (!word) continue;
       const idx = wordlists["english"].findIndex((w) => w == word);
       if (idx == -1) unknownWords.push(word);

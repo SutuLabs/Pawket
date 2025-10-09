@@ -133,7 +133,7 @@ export default class AddressBook extends Vue {
   }
 
   get isNotEmpty(): boolean {
-    for (let c of this.contacts) {
+    for (const c of this.contacts) {
       if (c.network === this.network) return true;
     }
     return false;
@@ -168,8 +168,8 @@ export default class AddressBook extends Vue {
       return;
     }
     this.contacts = [];
-    let contacts = JSON.parse(contactsJson);
-    for (let c of contacts) {
+    const contacts = JSON.parse(contactsJson);
+    for (const c of contacts) {
       this.contacts.push({ name: c.name, address: c.address, network: convertToChainId(c.network) });
     }
   }

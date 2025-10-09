@@ -170,7 +170,7 @@ export default class ManageCats extends Vue {
   }
 
   isExisted(name: string, id: string): boolean {
-    for (let t of this.allCats) {
+    for (const t of this.allCats) {
       if (t.id === id || t.name.toUpperCase() === name.toUpperCase()) {
         return true;
       }

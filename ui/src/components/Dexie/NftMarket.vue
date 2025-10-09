@@ -89,7 +89,7 @@ export default class NftMarket extends Vue {
     localStorage.setItem("NFT_MARKET", JSON.stringify(this.nftMarkets));
     const resp = await fetch("https://ad.pawket.app/ad.json");
     const res = (await resp.json()) as Ad;
-    for (let ad of res.nft) {
+    for (const ad of res.nft) {
       const item = this.nftMarkets.xch.find((item) => item.id == ad.id);
       if (item) this.ad.push(item);
     }

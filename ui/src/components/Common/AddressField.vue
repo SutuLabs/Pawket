@@ -182,11 +182,11 @@ export default class AddressField extends Vue {
   }
 
   get contactName(): string {
-    for (let c of this.contacts) {
+    for (const c of this.contacts) {
       if (c.address === this.address) return c.name;
     }
 
-    for (let ia of this.innerAccs) {
+    for (const ia of this.innerAccs) {
       if (ia.address === this.address) return ia.name;
     }
 
@@ -200,8 +200,8 @@ export default class AddressField extends Vue {
     if (contactsJson == null) {
       return;
     }
-    let contacts = JSON.parse(contactsJson);
-    for (let c of contacts) {
+    const contacts = JSON.parse(contactsJson);
+    for (const c of contacts) {
       this.contacts.push({ name: c.name, address: c.address, network: convertToChainId(c.network) });
     }
   }
@@ -270,7 +270,7 @@ export default class AddressField extends Vue {
       this.cnsResolve = null;
       if (this.address.startsWith(xchPrefix())) {
         this.isResolving = true;
-        var res = await getCnsName([puzzle.getPuzzleHashFromAddress(this.address)]);
+        const res = await getCnsName([puzzle.getPuzzleHashFromAddress(this.address)]);
         if (res.length) this.cnsResolve = res[0];
         this.isResolving = false;
       }

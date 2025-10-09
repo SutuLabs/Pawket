@@ -201,8 +201,8 @@ export default class Send extends Vue {
     if (contactsJson == null) {
       return;
     }
-    let contacts = JSON.parse(contactsJson);
-    for (let c of contacts) {
+    const contacts = JSON.parse(contactsJson);
+    for (const c of contacts) {
       this.contacts.push({ name: c.name, address: c.address, network: convertToChainId(c.network) });
     }
   }

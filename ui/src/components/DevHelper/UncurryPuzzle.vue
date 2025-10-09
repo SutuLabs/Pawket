@@ -119,7 +119,7 @@ export default class UncurryPuzzle extends Vue {
     const origin = assemble(this.puzzle);
     const all = await simplifyPuzzle(origin, this.puzzle);
     let output = "";
-    var recOutput = async function (level: number, puz: SimplePuzzle | CannotParsePuzzle, paramName: string) {
+    const recOutput = async function (level: number, puz: SimplePuzzle | CannotParsePuzzle, paramName: string) {
       const indent = " ".repeat(level * 2);
       const pnhint = paramName ? `\`${paramName}\`: ` : "";
       if ("raw" in puz) {

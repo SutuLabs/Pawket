@@ -433,7 +433,7 @@ export default class AddAccount extends Vue {
         case "serial":
           await store.dispatch("createAccountBySerial", this.name);
           break;
-        case "password":
+        case "password": {
           if (!this.password) {
             this.passwordError = this.$tc("addByPassword.ui.message.passwordRequired");
             return;
@@ -442,8 +442,8 @@ export default class AddAccount extends Vue {
             this.passwordError = this.$tc("addByPassword.ui.message.invalidPassword");
             return;
           }
-          var passwordAcc = await account.getAccount(store.state.vault.seedMnemonic, this.password);
-          var duplicatePassword = store.state.account.accounts.find((a) => a.key.fingerprint === passwordAcc.fingerprint);
+          const passwordAcc = await account.getAccount(store.state.vault.seedMnemonic, this.password);
+          const duplicatePassword = store.state.account.accounts.find((a) => a.key.fingerprint === passwordAcc.fingerprint);
           if (duplicatePassword) {
             this.$buefy.dialog.alert(
               this.$tc("addByPassword.message.error.accountPasswordExists", undefined, { accName: duplicatePassword.name })
@@ -452,7 +452,8 @@ export default class AddAccount extends Vue {
           }
           await store.dispatch("createAccountByPassword", { name: this.name, password: this.password });
           break;
-        case "address":
+        }
+        case "address": {
           if (!this.address) {
             this.addressError = this.$tc("addByAddress.ui.message.addressRequired");
             return;
@@ -469,9 +470,10 @@ export default class AddAccount extends Vue {
               return;
             }
           }
-          var puzzleHash = puzzle.getPuzzleHashFromAddress(this.address);
+          const puzzleHash = puzzle.getPuzzleHashFromAddress(this.address);
           await store.dispatch("createAccountByAddress", { name: this.name, puzzleHash });
           break;
+        }
         case "publicKey":
           if (!this.publicKey) {
             this.publicKeyError = this.$tc("addByPublicKey.ui.message.publicKeyRequired");
@@ -487,7 +489,7 @@ export default class AddAccount extends Vue {
           break;
         case "mpcKeys":
           if (!this.mpcPublicKeys.some((key) => key === "")) {
-            let publicKeys = this.mpcPublicKeys.map((key, index) => {
+            const publicKeys = this.mpcPublicKeys.map((key, index) => {
               if (this.resolvedMpcPublicKeys[index]) return this.resolvedMpcPublicKeys[index];
               return prefix0x(key);
             });
@@ -510,13 +512,13 @@ export default class AddAccount extends Vue {
           }
           break;
         case "legacy":
-        case "mnemonic":
+        case "mnemonic": {
           if (!this.mnemonic) {
             this.mnemonicError = this.$tc("addByMnemonic.ui.message.mnemonicRequired");
             return;
           }
           this.mnemonic = this.mnemonic.replace(/\s+/g, " ").trim();
-          var mnemonicAcc = await account.getAccount("", null, this.mnemonic);
+          const mnemonicAcc = await account.getAccount("", null, this.mnemonic);
           if (store.state.account.accounts.find((a) => a.key.fingerprint === mnemonicAcc.fingerprint)) {
             this.$buefy.dialog.alert(this.$tc("addByMnemonic.message.error.accountMnemonicExists"));
             return;
@@ -526,6 +528,7 @@ export default class AddAccount extends Vue {
             legacyMnemonic: this.mnemonic,
           });
           break;
+        }
       }
       this.close();
     } catch (error) {

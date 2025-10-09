@@ -300,7 +300,7 @@ export default class Connect extends Vue {
 
   setNetwork(networkId: string): boolean {
     if (!networkId) return false;
-    for (let key in this.networks) {
+    for (const key in this.networks) {
       if (this.networks[key].chainId == networkId) {
         const network = this.networks[key];
         store.dispatch("switchNetwork", network.name);

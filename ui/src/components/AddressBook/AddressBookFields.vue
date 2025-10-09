@@ -86,7 +86,7 @@ export default class AddressBookField extends Vue {
       }
     } else if (this.address.startsWith(xchPrefix())) {
       this.isResolving = true;
-      var res = await getCnsName([puzzle.getPuzzleHashFromAddress(this.address)]);
+      const res = await getCnsName([puzzle.getPuzzleHashFromAddress(this.address)]);
       if (res.length) this.cnsResolve = res[0];
       this.cnsName = this.cnsResolve?.cns ?? "";
       this.isResolving = false;

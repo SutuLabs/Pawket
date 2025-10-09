@@ -129,7 +129,7 @@ export default class AddByMpcKeys extends Vue {
       return;
     }
 
-    let publicKeys = this.publicKeys.map((key, index) => {
+    const publicKeys = this.publicKeys.map((key, index) => {
       if (this.resolvedPublicKeys[index]) return this.resolvedPublicKeys[index];
       return prefix0x(key);
     });

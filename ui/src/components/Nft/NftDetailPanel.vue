@@ -478,7 +478,7 @@ export default class NftDetailPanel extends Vue {
     if (img.src == "@/assets/nft-no-image.png") return;
     let fallBackIndex = Number(img.getAttribute("data-fallback"));
     const imageUrls = this.getImageUrls(nft);
-    let totalFallback = this.fallBackList.length + imageUrls.length;
+    const totalFallback = this.fallBackList.length + imageUrls.length;
     fallBackIndex++;
     img.dataset.fallback = fallBackIndex.toString();
     if (fallBackIndex > totalFallback) {

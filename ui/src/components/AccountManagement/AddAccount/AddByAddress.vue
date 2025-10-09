@@ -97,7 +97,7 @@ export default class AddByAddress extends Vue {
       }
     }
     this.submitting = true;
-    var puzzleHash = puzzle.getPuzzleHashFromAddress(this.address);
+    const puzzleHash = puzzle.getPuzzleHashFromAddress(this.address);
 
     await store.dispatch("createAccountByAddress", { name: this.name, puzzleHash });
     this.close();

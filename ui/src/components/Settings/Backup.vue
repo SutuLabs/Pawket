@@ -220,7 +220,7 @@ export default class Backup extends Vue {
     let contacts: Contact[] = [];
     let didNames: DidName[] = [];
     let customNetwork: NetworkDetail[] = [];
-    let settings: Setting = {
+    const settings: Setting = {
       debugMode: false,
       theme: "light-theme",
       language: "en",

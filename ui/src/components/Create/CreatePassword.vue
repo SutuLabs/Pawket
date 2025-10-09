@@ -100,14 +100,14 @@ export default class CreatePassword extends Vue {
   }
 
   hasSpecialCharacter(s: string): boolean {
-    for (var i = 0; i < s.length; i++) {
+    for (let i = 0; i < s.length; i++) {
       if ((s[i] < "a" || s[i] > "z") && (s[i] < "A" || s[i] > "Z") && (s[i] < "0" || s[i] > "9")) return true;
     }
     return false;
   }
 
   hasCapital(s: string): boolean {
-    for (var i = 0; i < s.length; i++) {
+    for (let i = 0; i < s.length; i++) {
       if (s[i] >= "A" && s[i] <= "Z") {
         return true;
       }
@@ -116,7 +116,7 @@ export default class CreatePassword extends Vue {
   }
 
   hasLower(s: string): boolean {
-    for (var i = 0; i < s.length; i++) {
+    for (let i = 0; i < s.length; i++) {
       if (s[i] >= "a" && s[i] <= "z") {
         return true;
       }

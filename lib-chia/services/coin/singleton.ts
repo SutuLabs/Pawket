@@ -126,7 +126,7 @@ export async function getNextSingletonCoins(
       const nextcoin_puzhash = prefix0x(getFirstLevelArgMsg(coinCond.args.at(0)) ?? "()");
       const amount = getNumber(getFirstLevelArgMsg(coinCond.args.at(1)) ?? "0");
       let hint: Hex0x = "0x0000000000000000000000000000000000000000000000000000000000000000";
-      if (coinCond.args.at(2)){
+      if (coinCond.args.at(2)) {
         hint = prefix0x(Bytes.from((coinCond.args.at(2) as ConditionArgs[]).at(0) as Uint8Array).hex());
       }
       coins.push({ hint, parent_coin_info: thisCoinName, amount, puzzle_hash: nextcoin_puzhash });

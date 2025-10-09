@@ -434,9 +434,9 @@ export default class TakeOffer extends Vue {
   get totalPayment(): string {
     let xchAmount = BigInt(this.fee);
     let nftAmount = 0;
-    let catAmount: string[] = [];
+    const catAmount: string[] = [];
     if (!this.summary) return demojo(this.fee);
-    for (let req of this.summary.requested) {
+    for (const req of this.summary.requested) {
       if (req.type == "nft") {
         nftAmount++;
       } else if (req.type == "cat") {
@@ -447,7 +447,7 @@ export default class TakeOffer extends Vue {
       }
     }
     if (this.royaltyAmount > 0) xchAmount += this.royaltyAmount;
-    let res: string[] = [];
+    const res: string[] = [];
     if (xchAmount > 0) res.push(demojo(xchAmount));
     if (catAmount.length > 0) res.push(catAmount.join("+"));
     if (nftAmount > 0) res.push(`${nftAmount} NFT(s)`);
@@ -722,7 +722,7 @@ export default class TakeOffer extends Vue {
           // };
           const getNftByCns = (analysis: CnsCoinAnalysisResult | NftCoinAnalysisResult) => {
             if (!("cnsName" in analysis)) return null;
-            for (let nft of this.account.nfts ?? []) {
+            for (const nft of this.account.nfts ?? []) {
               if ("cnsName" in nft.analysis && nft.analysis.cnsName == analysis.cnsName) {
                 return nft;
               }

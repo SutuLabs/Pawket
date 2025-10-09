@@ -619,7 +619,7 @@ export default class BundlePanel extends Vue {
 
   public async check(): Promise<void> {
     if (!this.bundle) return;
-    var result = await checkSpendBundle(this.bundle, chainId());
+    const result = await checkSpendBundle(this.bundle, chainId());
     if (!result) return;
     Vue.set(this, "puzzleAnnoCreates", result.puzzleAnnoCreates);
     Vue.set(this, "puzzleAnnoAsserted", result.puzzleAnnoAsserted);

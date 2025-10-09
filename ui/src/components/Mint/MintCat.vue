@@ -142,7 +142,7 @@ export default class MintCat extends Vue {
   }
 
   get isLegalSymbol(): boolean {
-    for (let t of this.tokenList) {
+    for (const t of this.tokenList) {
       if (t.name.toUpperCase() === this.symbol.toUpperCase()) {
         return false;
       }
