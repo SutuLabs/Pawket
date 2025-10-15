@@ -108,12 +108,9 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import store from "./store";
 import { NetworkInfo } from "./store/modules/network";
-import VerifyPassword from "@/components/Login/VerifyPassword.vue";
-import MobileNav from "./components/Navigation/MobileNav.vue";
-import NavBar from "./components/Navigation/Navbar.vue";
 import { tc } from "./i18n/i18n";
 
-@Component({ components: { VerifyPassword, MobileNav, NavBar } })
+@Component({})
 export default class MixchApp extends Vue {
   @Watch("path")
   scrollTop(): void {
