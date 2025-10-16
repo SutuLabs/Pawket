@@ -29,7 +29,8 @@
   "workspaces": [
     "ui",
     "lib-chia",
-    "cli"
+    "cli",
+    "chia-utility"
   ],
   "resolutions": {
     "**/@achrinza/node-ipc": "npm:node-ipc@^10.1.0"
