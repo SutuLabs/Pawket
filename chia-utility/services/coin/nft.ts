@@ -50,8 +50,6 @@ import {
   NftUpdatableDataKey,
 } from "../../models/nft";
 import { CannotParsePuzzle, expectModArgs, sexpAssemble, UncurriedPuzzle, uncurryPuzzle } from "./analyzer";
-import { disassemble, sha256tree } from "clvm_tools";
-import { SExp } from "clvm";
 import { CnsCoinAnalysisResult, CnsMetadataKeys, CnsMetadataValues } from "../../models/nft";
 
 type MetadataValues = NftMetadataValues | CnsMetadataValues;
@@ -613,7 +611,7 @@ export async function getUpdateNftInnerSolution(
   return nftSolution;
 }
 
-async function getOwnerFromSolutionForSettlementInnerPuzzle(sol: SExp): Promise<{
+async function getOwnerFromSolutionForSettlementInnerPuzzle(sol: Program): Promise<{
   didOwner: string | undefined;
   p2Owner: string | undefined;
   updaterInSolution: boolean;
@@ -634,7 +632,7 @@ async function getOwnerFromSolutionForSettlementInnerPuzzle(sol: SExp): Promise<
   return { didOwner: undefined, p2Owner, updaterInSolution: false };
 }
 
-async function getOwnerFromSolutionForP2InnerPuzzle(sol: SExp): Promise<{
+async function getOwnerFromSolutionForP2InnerPuzzle(sol: Program): Promise<{
   didOwner: string | undefined;
   p2Owner: string | undefined;
   updaterInSolution: boolean;
@@ -671,13 +669,13 @@ async function getOwnerFromSolutionForP2InnerPuzzle(sol: SExp): Promise<{
   return { didOwner, p2Owner, updaterInSolution };
 }
 
-async function getCalculatedMetadata(currentMetadata: Hex0x, updaterPuzzleHash: string, sol: SExp): Promise<SExp> {
+async function getCalculatedMetadata(currentMetadata: Hex0x, updaterPuzzleHash: string, sol: Program): Promise<Program> {
   const updateSol = findByPath(sol, "rrfffrfrf");
   const magic = findByPath(updateSol, "f");
   if (magic.as_bigint() != -24n) return sexpAssemble(currentMetadata);
   const prog = findByPath(updateSol, "rf").as_bin().hex();
   const argument = findByPath(updateSol, "rrf");
-  const pars = SExp.to([sexpAssemble(currentMetadata), updaterPuzzleHash, argument])
+  const pars = Program.to([sexpAssemble(currentMetadata), updaterPuzzleHash, argument])
     .as_bin()
     .hex();
 

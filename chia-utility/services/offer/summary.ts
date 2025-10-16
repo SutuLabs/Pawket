@@ -1,10 +1,8 @@
 import { CoinSpend, OriginCoin, SpendBundle, UnsignedSpendBundle } from "../spendbundle";
-import { Bytes, SExp, Tuple } from "clvm";
 import { getFirstLevelArgMsg, getNumber, Hex0x, prefix0x, unprefix0x } from "../coin/condition";
-import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
+import { assemble, disassemble, uncurry } from "../crypto/clvm";
 import puzzle from "../crypto/puzzle";
 import { modsdict, modshash, modshashdict, modsprog } from "../coin/mods";
-import { uncurry } from "clvm_tools/clvm_tools/curry";
 import { ConditionOpcode } from "../coin/opcode";
 import { TokenSpendPlan } from "../transfer/transfer";
 import bigDecimal from "js-big-decimal";
@@ -185,9 +183,9 @@ export async function getOfferSummary(
 
 export async function internalUncurry(puz: string): Promise<UncurriedPuzzle> {
   const curried = assemble(puz);
-  const [mod, args] = uncurry(curried) as Tuple<SExp, SExp>;
+  const [mod, args] = uncurry(curried) as Tuple<Program, Program>;
   const mods = disassemble(mod);
-  const argarr = Array.from(args.as_iter()).map((_) => disassemble(_ as SExp));
+  const argarr = Array.from(args.as_iter()).map((_) => disassemble(_ as Program));
   return { module: mods, args: argarr };
 }
 

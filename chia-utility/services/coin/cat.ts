@@ -1,7 +1,6 @@
 import { skipFirstByte0x } from "./condition";
-import { sha256tree } from "clvm_tools";
-import { disassemble } from "clvm_tools/clvm_tools/binutils";
 import { CannotParsePuzzle, expectModArgs, sexpAssemble, UncurriedPuzzle, uncurryPuzzle } from "./analyzer";
+import { disassemble, sha256tree } from "../crypto/clvm";
 
 export interface CatCoinAnalysisResult {
   modHash: string;
@@ -27,7 +26,7 @@ export async function analyzeCatCoin(puz: string | (UncurriedPuzzle | CannotPars
   const tailProgramHash = skipFirstByte0x(tail_program_hash_parsed.raw);
   const innerPuzzleSexp = sexpAssemble("raw" in inner_puzzle_parsed ? inner_puzzle_parsed.raw : inner_puzzle_parsed.hex);
   const innerPuzzle = disassemble(innerPuzzleSexp);
-  const hintPuzzle = sha256tree(innerPuzzleSexp).hex();
+  const hintPuzzle = sha256tree(innerPuzzleSexp);
 
   if (!modHash || !tailProgramHash || !innerPuzzle || !hintPuzzle) return null;
 

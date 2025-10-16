@@ -1,17 +1,15 @@
 import "dotenv/config";
-import { disassemble } from "clvm_tools/clvm_tools/binutils";
-import { SExp, Tuple, to_sexp_f, sexp_from_stream, Stream, Bytes } from "clvm";
-import { uncurry } from "clvm_tools/clvm_tools/curry";
+import { Program } from "chia-wallet-sdk-bundle";
 import { ModName, modshex, modshexdict } from "./mods";
 import { getCoinName0x } from "./coinUtility";
 import { Hex0x, prefix0x, unprefix0x } from "./condition";
-import { sha256tree } from "clvm_tools";
 import puzzle, { ConditionEntity } from "../crypto/puzzle";
 import { analyzeCatCoin } from "./cat";
 import { analyzeDidCoin } from "./did";
 import { analyzeNftCoin } from "./nft";
 import { analyzeP2Coin } from "./p2";
 import { OriginCoin } from "../spendbundle";
+import { disassemble } from "services/crypto/clvm";
 
 export interface SimplePuzzle {
   mod: ModName;
@@ -29,7 +27,7 @@ export interface CannotParsePuzzle {
 export interface UncurriedPuzzle {
   mod: ModName;
   hex: string;
-  sexp: SExp;
+  sexp: Program;
   args: (CannotUncurryArgument | UncurriedPuzzle)[];
 }
 
@@ -54,7 +52,7 @@ export interface CoinInfo extends BasicCoinInfo {
 }
 
 export async function simplifyPuzzle(
-  origin: SExp,
+  origin: Program,
   puz_hex: string | undefined = undefined
 ): Promise<SimplePuzzle | CannotParsePuzzle> {
   return convertUncurriedPuzzle(await uncurryPuzzle(origin, puz_hex));
@@ -65,7 +63,7 @@ export function convertUncurriedPuzzle(origin: UncurriedPuzzle | CannotParsePuzz
 }
 
 export async function uncurryPuzzle(
-  origin: SExp,
+  origin: Program,
   puz_hex: string | undefined = undefined
 ): Promise<UncurriedPuzzle | CannotParsePuzzle> {
   try {
@@ -74,8 +72,8 @@ export async function uncurryPuzzle(
     const puremodname = modshexdict[puz_hex];
     if (puremodname) return { mod: puremodname, args: [], hex: puz_hex, sexp: origin };
 
-    const [mod, args] = uncurry(origin) as Tuple<SExp, SExp>;
-    const argarr: SExp[] = !args ? [] : Array.from(args.as_iter());
+    const [mod, args] = uncurry(origin) as Tuple<Program, Program>;
+    const argarr: Program[] = !args ? [] : Array.from(args.as_iter());
     const simpargs = (await Promise.all(argarr.map((_) => uncurryPuzzle(_)))).map((_: UncurriedPuzzle | CannotParsePuzzle) =>
       "raw" in _ ? { raw: _.raw } : _
     );
@@ -89,7 +87,7 @@ export async function uncurryPuzzle(
   }
 }
 
-export async function parseCoinWithConds(all: SExp): Promise<CoinInfoWithConds> {
+export async function parseCoinWithConds(all: Program): Promise<CoinInfoWithConds> {
   const parent = prefix0x(disassemble(all.first()));
   let next = all.rest();
   const puz = next.first();
@@ -117,7 +115,7 @@ export async function parseCoinWithConds(all: SExp): Promise<CoinInfoWithConds> 
   };
 }
 
-export async function parseCoin(all: SExp): Promise<CoinInfo> {
+export async function parseCoin(all: Program): Promise<CoinInfo> {
   const parent = prefix0x(disassemble(all.first()));
   let next = all.rest();
   const puz = next.first();
@@ -175,8 +173,8 @@ export async function analyzeCoin(
 }
 
 export async function parseBlock(generator_hex: string, ref_hex_list: string[] | undefined): Promise<string> {
-  const getArgs = function (ref_list: string[]): SExp {
-    return SExp.to([sexpAssemble(generator_hex), [ref_list.map((_) => Bytes.from(unprefix0x(_), "hex"))]]);
+  const getArgs = function (ref_list: string[]): Program {
+    return Program.to([sexpAssemble(generator_hex), [ref_list.map((_) => Bytes.from(unprefix0x(_), "hex"))]]);
   };
 
   const bg =
@@ -232,7 +230,7 @@ function getKeyParam(parsed_puzzle: SimplePuzzle | CannotParsePuzzle): string | 
   return undefined;
 }
 
-export const sexpAssemble = function (hexString: string): SExp {
+export const sexpAssemble = function (hexString: string): Program {
   const bts = Bytes.from(unprefix0x(hexString), "hex");
   const input_sexp = sexp_from_stream(new Stream(bts as Bytes), to_sexp_f);
   return input_sexp;

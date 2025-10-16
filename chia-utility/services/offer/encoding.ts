@@ -2,9 +2,8 @@ import { CoinSpend, OriginCoin, SpendBundle, SpendBundleDecoded } from "../spend
 import { bech32m } from "@scure/base";
 import zlib from "zlib";
 import { Buffer } from "buffer";
-import { Bytes, sexp_buffer_from_stream, Stream, sexp_from_stream, SExp } from "clvm";
 import { prefix0x } from "../coin/condition";
-import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
+import { assemble, disassemble, uncurry } from "../crypto/clvm";
 import puzzle from "../crypto/puzzle";
 import { modshex } from "../coin/mods";
 
@@ -60,7 +59,7 @@ export async function decodeOffer(offerText: string, includeMetadata = false): P
       const r = sexp_buffer_from_stream(new Stream(Bytes.from(new Uint8Array(buff))));
       const n = r.raw().length;
       pos += n;
-      return disassemble(sexp_from_stream(new Stream(r), SExp.to));
+      return disassemble(sexp_from_stream(new Stream(r), Program.to));
     };
 
     const puzzle_reveal = readSexpBuffer();

@@ -1,4 +1,3 @@
-import { Bytes } from "clvm";
 import { Hex0x, prefix0x } from "../coin/condition";
 
 export interface HintOriginCoin extends OriginCoin {

@@ -1,5 +1,4 @@
 import { SecretKey, PublicKey, Signature, ModuleInstance } from "chia-wallet-sdk-bundle";
-import { Bytes } from "clvm";
 import { CoinSpend, PartialSpendBundle, SpendBundle, UnsignedSpendBundle } from ".";
 import { DEFAULT_HIDDEN_PUZZLE_HASH } from "../coin/consts";
 import { Hex, Hex0x, prefix0x, unprefix0x } from "../coin/condition";

@@ -3,8 +3,7 @@ import { TokenPuzzleObserver } from "../crypto/receive";
 import { curryMod } from "../offer/bundler";
 import { getFirstLevelArgMsg, getNumber, Hex0x, prefix0x } from "./condition";
 import { modshash, modsprog } from "./mods";
-import { Bytes, SExp, Tuple } from "clvm";
-import { assemble } from "clvm_tools/clvm_tools/binutils";
+import { assemble } from "../crypto/clvm";
 import { ConditionOpcode } from "./opcode";
 import { getCoinName0x } from "./coinUtility";
 import { HintOriginCoin } from "../spendbundle";
@@ -48,7 +47,7 @@ export function getPuzzleDetail(tgt_hex: string, requests: TokenPuzzleObserver[]
   return inner_p2_puzzle;
 }
 
-export function parseMetadata(rawmeta: string | SExp): ParsedMetadata {
+export function parseMetadata(rawmeta: string | Program): ParsedMetadata {
   const metaprog = typeof rawmeta === "string" ? assemble(rawmeta) : rawmeta;
   const metalist = (metaprog.as_javascript() as (Bytes[] | [Bytes, Bytes[]] | [Bytes, Tuple<Bytes, Bytes>])[])
     .map((_) => Array.from(_))

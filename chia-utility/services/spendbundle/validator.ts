@@ -1,5 +1,4 @@
 import { CoinSpend, SpendBundle } from "./defs";
-import { Bytes } from "clvm";
 import puzzle, { ConditionArgs, ConditionEntity, ExecuteResult } from "../crypto/puzzle";
 import { sha256 } from "../offer/bundler";
 import { uncurryPuzzle, sexpAssemble, convertUncurriedPuzzle, getModsPath } from "../coin/analyzer";
@@ -7,7 +6,6 @@ import { getCoinName0x } from "../coin/coinUtility";
 import { getFirstLevelArg, getFirstLevelArgMsg, getNumber, Hex, Hex0x, unprefix0x } from "../coin/condition";
 import { modshex } from "../coin/mods";
 import { ConditionOpcode } from "../coin/opcode";
-import { sha256tree } from "clvm_tools";
 
 export interface AnnouncementCoin {
   coinIndex: number;

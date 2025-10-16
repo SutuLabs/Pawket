@@ -1,13 +1,10 @@
-import * as clvm_tools from "clvm_tools";
 import { bech32m } from "@scure/base";
-import { Bytes } from "clvm";
-import { SecretKey, PublicKey } from "chia-wallet-sdk-bundle";
+import { SecretKey, PublicKey, Program, Clvm, fromHex, toHex } from "chia-wallet-sdk-bundle";
 import utility from "./utility";
-import { assemble } from "clvm_tools/clvm_tools/binutils";
 import { modsdict } from "../coin/mods";
 import { Hex, Hex0x, prefix0x, unprefix0x } from "../coin/condition";
-import { SExp, TToJavascript } from "clvm";
 import { sexpAssemble } from "../coin/analyzer";
+import { assemble, disassemble } from "./clvm";
 
 export interface ExecuteResultCondition {
   op: number;
@@ -17,7 +14,7 @@ export interface ExecuteResultCondition {
 export interface ExecuteResult {
   raw: string;
   conditions: ConditionEntity[];
-  sexp: SExp;
+  sexp: Program;
 }
 
 export type PlaintextPuzzle = string;
@@ -62,16 +59,12 @@ class PuzzleMaker {
   }
 
   public async getSyntheticKey(pubkey: Hex | Hex0x): Promise<Hex0x> {
-    if (!pubkey.startsWith("0x")) pubkey = "0x" + pubkey;
-    const hidden_puzzle_hash = "0x711d6c4e32c92e53179b199484cf8c897542bc57f2b22582799f9d657eec4699";
+    pubkey = unprefix0x(pubkey);
+    const hidden_puzzle_hash = fromHex("711d6c4e32c92e53179b199484cf8c897542bc57f2b22582799f9d657eec4699");
 
-    let output: string[] = [];
-    clvm_tools.setPrintFunction((...args) => (output = args));
+    const synPubkey = PublicKey.fromBytes(fromHex(pubkey)).deriveSyntheticHidden(hidden_puzzle_hash);
 
-    clvm_tools.go("brun", "(point_add 2 (pubkey_for_exp (sha256 2 5)))", `(${pubkey} ${hidden_puzzle_hash})`);
-    const synPubkey = output[0];
-
-    return prefix0x(synPubkey);
+    return prefix0x(toHex(synPubkey.toBytes()));
   }
 
   public async getPuzzleHash(pubkey: string): Promise<string> {
@@ -86,32 +79,19 @@ class PuzzleMaker {
   }
 
   public async getPuzzleHashFromPuzzle(puzzle: string): Promise<string> {
-    let output: string[] = [];
-    clvm_tools.setPrintFunction((...args) => (output = args));
-
-    clvm_tools.go("opc", "-H", puzzle);
-    const puzzleHash = output[0];
-
-    return puzzleHash;
+    const puzzleHash = assemble(puzzle).treeHash();
+    return prefix0x(toHex(puzzleHash));
   }
 
   public async encodePuzzle(puzzle: string): Promise<string> {
-    let output: string[] = [];
-    clvm_tools.setPrintFunction((...args) => (output = args));
-
-    clvm_tools.go("opc", puzzle);
-    const encodedPuzzle = output[0];
-
-    return encodedPuzzle;
+    const encodedPuzzle = assemble(puzzle).serialize();
+    return prefix0x(toHex(encodedPuzzle));
   }
 
   public async disassemblePuzzle(puzzle_hex: string): Promise<string> {
+    // opd
     puzzle_hex = unprefix0x(puzzle_hex);
-    let output: string[] = [];
-    clvm_tools.setPrintFunction((...args) => (output = args));
-
-    clvm_tools.go("opd", puzzle_hex);
-    const puzzle = output[0];
+    const puzzle = Program(fromHex(puzzle_hex));
 
     return puzzle;
   }
@@ -160,7 +140,7 @@ class PuzzleMaker {
   }
 
   public getPuzzleHashFromAddress(address: string): string {
-    const hex = Bytes.from(bech32m.decodeToBytes(address).bytes).hex();
+    const hex = utility.toHexString(bech32m.decodeToBytes(address).bytes);
     if (hex.length == 66 && hex[0] == "0" && hex[1] == "0") return hex.substr(2);
     return hex;
   }
@@ -364,61 +344,69 @@ class PuzzleMaker {
     return (await this.getCatPuzzleDetails(privateKey, assetId, prefix, startIndex, endIndex, catModName)).map((_) => _.hash);
   }
 
-  public async calcPuzzleResult(puzzle_reveal: string, solution: string, ...args: string[]): Promise<string> {
-    let output: string[] = [];
-    clvm_tools.setPrintFunction((...args) => (output = args));
+  public async calcPuzzleResult(puzzle_reveal: string, solution: string): Promise<string> {
+    const prog = assemble(puzzle_reveal);
+    const sol = assemble(solution);
+    const output = prog.run(sol, BigInt(Number.MAX_SAFE_INTEGER), true);
+    const result = disassemble(output.value);
 
-    try {
-      clvm_tools.go("brun", puzzle_reveal, solution, "--experiment-backend", "rust", ...args);
-    } catch (err) {
-      const modname = modsdict[puzzle_reveal];
-      throw new Error(
-        `Error when executing brun [${modname ? `M'${modname}` : puzzle_reveal.slice(0, 200)}] from solution [${solution.slice(
-          0,
-          200
-        )}]`
-      );
-    }
-    const result = output[0];
-
-    if (result.startsWith("FAIL")) {
-      const modname = modsdict[puzzle_reveal];
-      throw new Error(
-        `Error calculating puzzle [${modname ? `M'${modname}` : puzzle_reveal.slice(0, 200)}] from solution [${solution.slice(
-          0,
-          200
-        )}]: ${result.slice(0, 200)}`
-      );
-    }
-
-    // FIXME: when using rust experiment backend, there exist scenario when result=69 but no exception raised while brun command line thrown exception
-    if (result == "69" || result == "45") {
-      const modname = modsdict[puzzle_reveal];
-      throw new Error(
-        `Suspected error calculating puzzle [${
-          modname ? `M'${modname}` : puzzle_reveal.slice(0, 200)
-        }] from solution [${solution.slice(0, 200)}]: ${result.slice(0, 200)}`
-      );
-    }
+    output.free();
+    prog.free();
+    sol.free();
     return result;
+
+    // prog.run(assemble(solution));
+    // let output: string[] = [];
+    // clvm_tools.setPrintFunction((...args) => (output = args));
+
+    // try {
+    //   clvm_tools.go("brun", puzzle_reveal, solution, "--experiment-backend", "rust", ...args);
+    // } catch (err) {
+    //   const modname = modsdict[puzzle_reveal];
+    //   throw new Error(
+    //     `Error when executing brun [${modname ? `M'${modname}` : puzzle_reveal.slice(0, 200)}] from solution [${solution.slice(
+    //       0,
+    //       200
+    //     )}]`
+    //   );
+    // }
+    // const result = output[0];
+
+    // if (result.startsWith("FAIL")) {
+    //   const modname = modsdict[puzzle_reveal];
+    //   throw new Error(
+    //     `Error calculating puzzle [${modname ? `M'${modname}` : puzzle_reveal.slice(0, 200)}] from solution [${solution.slice(
+    //       0,
+    //       200
+    //     )}]: ${result.slice(0, 200)}`
+    //   );
+    // }
+
+    // // FIXME: when using rust experiment backend, there exist scenario when result=69 but no exception raised while brun command line thrown exception
+    // if (result == "69" || result == "45") {
+    //   const modname = modsdict[puzzle_reveal];
+    //   throw new Error(
+    //     `Suspected error calculating puzzle [${
+    //       modname ? `M'${modname}` : puzzle_reveal.slice(0, 200)
+    //     }] from solution [${solution.slice(0, 200)}]: ${result.slice(0, 200)}`
+    //   );
+    // }
+    // return result;
   }
 
   public async compileRun(puzzle_source: string): Promise<string> {
-    let output: string[] = [];
-    clvm_tools.setPrintFunction((...args) => (output = args));
-
-    clvm_tools.go("run", puzzle_source);
-    const result = output[0];
-
-    if (result.startsWith("FAIL")) throw new Error(result);
-
+    const prog = assemble(puzzle_source);
+    const output = prog.compile();
+    const result = disassemble(output.value);
+    prog.free();
+    output.free();
     return result;
   }
 
-  public parseConditions(conditon: string | SExp): ConditionEntity[] {
+  public parseConditions(conditon: string | Program): ConditionEntity[] {
     try {
       const program = typeof conditon === "string" ? assemble(conditon) : conditon;
-      const prog = program.as_javascript();
+      const prog = program.to_javascript();
       if (!Array.isArray(prog)) return [];
       const conds = prog.map<ConditionEntity>((cond: TToJavascript) => ({
         code: !Array.isArray(cond)

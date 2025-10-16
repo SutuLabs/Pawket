@@ -1,5 +1,5 @@
 import {
-  SExp,
+  Program,
   Tuple,
   CLVMType,
   TOperatorDict,
@@ -19,15 +19,14 @@ import {
   isAtom,
   EvalError,
   OPERATOR_LOOKUP,
-} from "clvm";
-import { assemble } from "clvm_tools/clvm_tools/binutils";
+import { assemble } from "chia-wallet-sdk-bundle/binutils";
 import { cons, first, rest } from "./sexpExt";
 
 export type ValStackType = idSExp[];
 export type OpStackType = idOpType[];
 export type opType = (op_stack: OpStackType, value_stack: ValStackType) => number;
 export type OpType = "apply" | "cons" | "swap" | "eval";
-export type idSExp = { sexp: SExp; id: number };
+export type idSExp = { sexp: Program; id: number };
 export type idOpType = { op: OpType; id: number };
 
 export interface StepType {
@@ -37,7 +36,7 @@ export interface StepType {
   result: CLVMType | None;
 }
 
-export interface SExpWithId extends SExp {
+export interface SExpWithId extends Program {
   id: number;
   breakpoint?: boolean;
 }
@@ -50,8 +49,8 @@ export default class OpVm {
 
   steps: StepType[] = [];
 
-  program: SExp | None = None;
-  solution: SExp | None = None;
+  program: Program | None = None;
+  solution: Program | None = None;
 
   pre_eval_f: TPreEvalF | None = None;
   operator_lookup: TOperatorDict = OPERATOR_LOOKUP;
@@ -76,15 +75,15 @@ export default class OpVm {
     this.program = assemble(this.puzzlecl);
     this.program = this.assignIdRecursive(this.program);
 
-    this.solution = this.solutioncl ? assemble(this.solutioncl) : SExp.null();
+    this.solution = this.solutioncl ? assemble(this.solutioncl) : Program.null();
     this.solution = this.assignIdRecursive(this.solution);
 
     // const [cost, result] = this.start_program(program, env);
     this.start_program(this.program, this.solution);
   }
 
-  start_program(program: SExp, args: CLVMType): void {
-    this.program = SExp.to(program);
+  start_program(program: Program, args: CLVMType): void {
+    this.program = Program.to(program);
     const firstStackValue = this.assignIdRecursive(program.cons(args));
     this.op_stack = [{ op: "eval", id: this.getuid() }];
     this.value_stack = [{ sexp: firstStackValue, id: this.getuid() }];
@@ -93,7 +92,7 @@ export default class OpVm {
     this.steps = [];
   }
 
-  assignIdRecursive(se: SExp): SExpWithId {
+  assignIdRecursive(se: Program): SExpWithId {
     if (!se) return se;
     const sexp = se as SExpWithId;
     if (!sexp.id) {
@@ -161,16 +160,16 @@ export default class OpVm {
     const bop = op.bind(this);
     this.cost += bop(this.op_stack, this.value_stack);
     if (this.max_cost && this.cost > this.max_cost) {
-      throw new EvalError("cost exceeded", SExp.to(this.max_cost));
+      throw new EvalError("cost exceeded", Program.to(this.max_cost));
     }
     this.result = this.value_stack[this.value_stack.length - 1]?.sexp;
   }
 
-  traverse_path(sexp: SExp, env: SExp): Tuple<number, SExp> {
+  traverse_path(sexp: Program, env: Program): Tuple<number, Program> {
     let cost = PATH_LOOKUP_BASE_COST;
     cost += PATH_LOOKUP_COST_PER_LEG;
     if (sexp.nullp()) {
-      return t(cost, SExp.null());
+      return t(cost, Program.null());
     }
 
     const b = sexp.atom as Bytes;
@@ -182,7 +181,7 @@ export default class OpVm {
 
     cost += end_byte_cursor * PATH_LOOKUP_COST_PER_ZERO_BYTE;
     if (end_byte_cursor === b.length) {
-      return t(cost, SExp.null());
+      return t(cost, Program.null());
     }
 
     // create a bitmask for the most significant *set* bit
@@ -226,7 +225,7 @@ export default class OpVm {
   }
 
   eval_op(op_stack: OpStackType, value_stack: ValStackType): number {
-    // const pre_eval_op = this.pre_eval_f ? to_pre_eval_op(this.pre_eval_f, SExp.to) : None;
+    // const pre_eval_op = this.pre_eval_f ? to_pre_eval_op(this.pre_eval_f, Program.to) : None;
     // if (pre_eval_op) {
     //   pre_eval_op(op_stack, value_stack);
     // }
@@ -236,7 +235,7 @@ export default class OpVm {
     const sexp = first(pair);
     const args = rest(pair);
 
-    const value_stackpush = (sexp: SExp): void => {
+    const value_stackpush = (sexp: Program): void => {
       value_stack.push({ id: this.getuid(), sexp: this.assignIdRecursive(sexp) });
     };
 
@@ -247,14 +246,14 @@ export default class OpVm {
     // put a bunch of ops on op_stack
     if (!isCons(sexp)) {
       // sexp is an atom
-      const [cost, r] = this.traverse_path(sexp, args) as [number, SExp];
+      const [cost, r] = this.traverse_path(sexp, args) as [number, Program];
       value_stackpush(r);
       return cost;
     }
 
     const operator = first(sexp);
     if (isCons(operator)) {
-      const pair = operator.pair as Tuple<SExp, SExp>;
+      const pair = operator.pair as Tuple<Program, Program>;
       const [new_operator, must_be_nil] = pair;
       if (new_operator.pair || !Bytes.NULL.equal_to(must_be_nil.atom)) {
         throw new EvalError("in ((X)...) syntax X must be lone atom", sexp);
@@ -283,12 +282,12 @@ export default class OpVm {
       op_stackpush("swap");
       operand_list = rest(operand_list);
     }
-    value_stackpush(SExp.null());
+    value_stackpush(Program.null());
     return 1;
   }
 
   apply_op(op_stack: OpStackType, value_stack: ValStackType): number {
-    const value_stackpush = (sexp: SExp): void => {
+    const value_stackpush = (sexp: Program): void => {
       value_stack.push({ id: this.getuid(), sexp: this.assignIdRecursive(sexp) });
     };
 
@@ -320,7 +319,7 @@ export default class OpVm {
     }
 
     const [additional_cost, r] = this.operator_lookup(op, operand_list) as [number, CLVMType];
-    value_stackpush(r as SExp);
+    value_stackpush(r as Program);
     return additional_cost;
   }
 }

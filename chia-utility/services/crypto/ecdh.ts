@@ -1,6 +1,5 @@
 import { AccountEntity } from "../../models/account";
 import { PointG1, utils } from "@noble/bls12-381";
-import { Bytes, bigint_from_bytes } from "clvm";
 import { sexpAssemble } from "../coin/analyzer";
 import { Hex0x, prefix0x } from "../coin/condition";
 import { DEFAULT_HIDDEN_PUZZLE_HASH, GROUP_ORDER } from "../coin/consts";

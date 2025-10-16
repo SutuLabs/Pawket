@@ -1,7 +1,5 @@
 import { CoinSpend, OriginCoin } from "../spendbundle";
-import { assemble, disassemble } from "clvm_tools/clvm_tools/binutils";
-import { uncurry } from "clvm_tools";
-import { SExp, Tuple } from "clvm";
+import { assemble, disassemble, uncurry } from "../crypto/clvm";
 import { ConditionType, formatAmount, prefix0x, toNumberString } from "../coin/condition";
 import puzzle, { PuzzleObserver } from "../crypto/puzzle";
 import transfer, { GetPuzzleApiCallback, TokenSpendPlan } from "./transfer";
@@ -84,7 +82,7 @@ class CatBundle {
     puzzleReveal = puzzleReveal.startsWith("0x") ? puzzleReveal.substring(2) : puzzleReveal;
     const curriedPuzzle = await puzzle.disassemblePuzzle(puzzleReveal);
     const curried = assemble(curriedPuzzle);
-    const [, args] = uncurry(curried) as Tuple<SExp, SExp>;
+    const [, args] = uncurry(curried) as Tuple<Program, Program>;
     let effectiveArg = args;
     for (let i = 0; i < argnum_of_inner_puzzle - 1; i++) {
       effectiveArg = effectiveArg.rest();

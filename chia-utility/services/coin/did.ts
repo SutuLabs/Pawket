@@ -1,11 +1,10 @@
 import { CoinSpend, combineSpendBundle, OriginCoin, SpendBundle, UnsignedSpendBundle } from "../spendbundle";
-import { disassemble } from "clvm_tools/clvm_tools/binutils";
+import { disassemble, sha256tree } from "../crypto/clvm";
 import puzzle from "../crypto/puzzle";
 import { TokenPuzzleObserver } from "../crypto/receive";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
 import { prefix0x } from "./condition";
 import { modshash, modshex, modsprog } from "./mods";
-import { bytesToHex0x } from "../crypto/utility";
 import { getCoinName0x, NetworkContext } from "./coinUtility";
 import {
   constructSingletonTopLayerPuzzle,
@@ -17,7 +16,6 @@ import {
 } from "./singleton";
 import { curryMod } from "../offer/bundler";
 import { CannotParsePuzzle, expectModArgs, sexpAssemble, UncurriedPuzzle, uncurryPuzzle } from "./analyzer";
-import { sha256tree } from "clvm_tools";
 
 export interface MintDidInfo {
   spendBundle: SpendBundle;

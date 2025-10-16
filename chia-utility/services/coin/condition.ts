@@ -1,8 +1,7 @@
-import { Bytes, bigint_to_bytes } from "clvm";
 import { ConditionOpcode } from "./opcode";
-import { SExp } from "clvm";
-import { disassemble } from "clvm_tools";
 import { ConditionArgs } from "../crypto/puzzle";
+import { Program, fromHex, toHex } from "chia-wallet-sdk-bundle";
+import { assemble, disassemble } from "services/crypto/clvm";
 
 export interface ConditionInfo {
   name: string;
@@ -58,7 +57,7 @@ export function skipFirstByte0x(str: string): Hex0x {
 }
 
 export function formatAmount(amount: bigint): Hex0x {
-  return prefix0x(Bytes.from(bigint_to_bytes(amount, { signed: true })).hex());
+  return prefix0x(fromHex(bigint_to_bytes(amount, { signed: true })));
 }
 
 export function getNumber(str: string): bigint {
@@ -66,7 +65,7 @@ export function getNumber(str: string): bigint {
     if (str == "()") return 0n;
     if (str == "0x") return 0n;
     if (str == "") return 0n;
-    if (str.startsWith("0x")) return BigInt(prefix0x(Bytes.from(str, "hex").hex()));
+    if (str.startsWith("0x")) return BigInt(prefix0x(toHex(fromHex(str))));
     else return BigInt(str);
   } catch {
     return -1n;
@@ -75,7 +74,7 @@ export function getNumber(str: string): bigint {
 
 export function toNumberString(number: bigint): string {
   if (!number) return "()";
-  return disassemble(SExp.to(number));
+  return disassemble(assemble(number.toString()));
 }
 
 export function getFirstLevelArg(args: ConditionArgs): Uint8Array {
@@ -85,7 +84,7 @@ export function getFirstLevelArg(args: ConditionArgs): Uint8Array {
 }
 
 export function getFirstLevelArgMsg(args: ConditionArgs): Hex0x {
-  return prefix0x(Bytes.from(getFirstLevelArg(args)).hex());
+  return prefix0x(toHex(getFirstLevelArg(args)));
 }
 
 export function getArgMsg(arg: ConditionArgs): string {
@@ -93,7 +92,7 @@ export function getArgMsg(arg: ConditionArgs): string {
   if (Array.isArray(arg)) {
     return `(${arg.map((_) => getArgMsg(_)).join(" ")})`;
   }
-  return prefix0x(Bytes.from(arg).hex());
+  return prefix0x(toHex(arg));
 }
 
 export function conditionsToTextList(conditions: ConditionType[]): string {

@@ -2,8 +2,6 @@ import { SecretKey, PublicKey, ModuleInstance } from "chia-wallet-sdk-bundle";
 import utility from "./utility";
 import { DEFAULT_HIDDEN_PUZZLE_HASH, GROUP_ORDER } from "../coin/consts";
 import { prefix0x } from "../coin/condition";
-import { SExp, Bytes, bigint_fromBytes, bigint_to_bytes } from "clvm";
-import { sha256tree } from "clvm_tools";
 
 export function signMessage(
   privateKey: SecretKey,
@@ -36,7 +34,7 @@ export function verifySignature(
 }
 
 export async function getSignMessage(message: string): Promise<Uint8Array> {
-  const left = SExp.to("Chia Signed Message");
+  const left = Program.to("Chia Signed Message");
   const program = left.cons(message);
   const hash = sha256tree(program).raw();
   return hash;

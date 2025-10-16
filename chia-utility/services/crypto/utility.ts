@@ -1,6 +1,5 @@
 import { SecretKey, PublicKey } from "chia-wallet-sdk-bundle";
-import { prefix0x, unprefix0x } from "../coin/condition";
-import { Bytes } from "clvm";
+import { unprefix0x } from "services/coin/condition";
 import crypto from "./isoCrypto";
 
 type deriveCallback = (path: number[]) => SecretKey;
@@ -89,6 +88,26 @@ class Utility {
 
 export default new Utility();
 
-export function bytesToHex0x(bytes: Bytes): string {
-  return prefix0x(bytes.hex());
+export function bigint_from_bytes(bytes: Uint8Array): bigint {
+  let result = 0n;
+  for (const byte of bytes) {
+    result = (result << 8n) | BigInt(byte);
+  }
+  return result;
+}
+
+export function bigint_to_bytes(value: bigint): Uint8Array {
+  if (value < 0n) throw new Error("Only non-negative bigints supported");
+
+  // special case: 0 -> [0]
+  if (value === 0n) return new Uint8Array([0]);
+
+  const bytes: number[] = [];
+  while (value > 0n) {
+    bytes.push(Number(value & 0xffn));
+    value >>= 8n;
+  }
+
+  // bytes is in little-endian order (low byte first), which is often reversed to big-endian order
+  return new Uint8Array(bytes.reverse());
 }

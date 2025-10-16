@@ -1,5 +1,3 @@
-import { SExp } from "clvm";
-
 export function beautifyLisp(lisp: string): string {
   let output = "";
   let indent = 0;
@@ -52,7 +50,7 @@ export function beautifyLisp(lisp: string): string {
   return output;
 }
 
-export function findByPath(program: SExp, path: string): SExp {
+export function findByPath(program: Program, path: string): Program {
   let cursor = program;
   try {
     for (let i = 0; i < path.length; i++) {
@@ -67,6 +65,6 @@ export function findByPath(program: SExp, path: string): SExp {
     }
     return cursor;
   } catch (err) {
-    return SExp.null();
+    return Program.null();
   }
 }
