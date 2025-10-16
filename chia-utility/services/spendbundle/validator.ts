@@ -320,9 +320,9 @@ export function verifySig(bundle: SpendBundle, aggSigMessages: AggSigMessage[], 
           ])
         : getUint8ArrayFromHexString(_.message)
     );
-    const pks = aggSigMessages.map((_) => BLS.G1Element.from_bytes(getUint8ArrayFromHexString(_.publicKey)));
-    const aggsig = BLS.G2Element.from_bytes(getUint8ArrayFromHexString(bundle.aggregated_signature));
-    const sigVerified: SignatureVerificationResult = BLS.AugSchemeMPL.aggregate_verify(pks, msgs, aggsig) ? "Verified" : "Failed";
+    const pks = aggSigMessages.map((_) => PublicKey.fromBytes(getUint8ArrayFromHexString(_.publicKey)));
+    const aggsig = Signature.fromBytes(getUint8ArrayFromHexString(bundle.aggregated_signature));
+    const sigVerified: SignatureVerificationResult = AugSchemeMPL.aggregate_verify(pks, msgs, aggsig) ? "Verified" : "Failed";
     return sigVerified;
   } catch (err) {
     throw new Error("cannot verify sig: " + err);

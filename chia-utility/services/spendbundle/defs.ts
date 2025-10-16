@@ -69,10 +69,10 @@ export function combineSpendBundle(
   const sigs = spendbundles
     .map((_) => _ && "aggregated_signature" in _ && _.aggregated_signature)
     .filter((_): _ is Hex0x => !!_)
-    .map((_) => BLS.G2Element.from_bytes(Bytes.from(_, "hex").raw()));
+    .map((_) => Signature.fromBytes(Bytes.from(_, "hex").raw()));
   if (sigs.length > 0) {
-    const agg_sig = BLS.AugSchemeMPL.aggregate(sigs);
-    const sig = Bytes.from(agg_sig.serialize()).hex();
+    const agg_sig = AugSchemeMPL.aggregate(sigs);
+    const sig = Bytes.from(agg_sig.toBytes()).hex();
     return {
       aggregated_signature: prefix0x(sig),
       coin_spends,

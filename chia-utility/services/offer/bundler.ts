@@ -256,9 +256,9 @@ export async function combineOfferSpendBundle(
   const settlement_tgt = prefix0x(modshash[settlementModName]);
   const BLS = Instance.BLS;
   if (!BLS) throw new Error("BLS not initialized");
-  const sigs = spendbundles.map((_) => BLS.G2Element.from_bytes(Bytes.from(_.aggregated_signature, "hex").raw()));
-  const agg_sig = BLS.AugSchemeMPL.aggregate(sigs);
-  const sig = Bytes.from(agg_sig.serialize()).hex();
+  const sigs = spendbundles.map((_) => Signature.fromBytes(Bytes.from(_.aggregated_signature, "hex").raw()));
+  const agg_sig = AugSchemeMPL.aggregate(sigs);
+  const sig = Bytes.from(agg_sig.toBytes()).hex();
   const spendbundlesCopy = spendbundles.map(
     (sp) =>
       <SpendBundle>{

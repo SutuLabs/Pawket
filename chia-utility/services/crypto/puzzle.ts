@@ -1,7 +1,7 @@
 import * as clvm_tools from "clvm_tools";
 import { bech32m } from "@scure/base";
 import { Bytes } from "clvm";
-import { PrivateKey, G1Element } from "chia-wallet-sdk-bundle";
+import { SecretKey, PublicKey } from "chia-wallet-sdk-bundle";
 import utility from "./utility";
 import { assemble } from "clvm_tools/clvm_tools/binutils";
 import { modsdict } from "../coin/mods";
@@ -25,12 +25,12 @@ export type PlaintextPuzzle = string;
 export type AddressType = "Observed" | "Hardened" | "MPC" | "Unknown";
 
 export interface PuzzlePrivateKey extends PuzzleAddress {
-  privateKey: PrivateKey;
+  privateKey: SecretKey;
   synPubKey: Hex0x;
 }
 
 export interface PuzzleDetail extends PuzzleObserver {
-  privateKey: PrivateKey;
+  privateKey: SecretKey;
 }
 
 export interface PuzzleObserver extends PuzzleAddress {
@@ -218,8 +218,8 @@ class PuzzleMaker {
     const derive = await utility.derive(privateKey, true);
     const deriveUnhardened = await utility.derive(privateKey, false);
     const details: PuzzleDetail[] = [];
-    const add = async (privkey: PrivateKey, hardened: boolean) => {
-      const pubkey = utility.toHexString(privkey.get_g1().serialize());
+    const add = async (privkey: SecretKey, hardened: boolean) => {
+      const pubkey = utility.toHexString(privkey.publicKey().toBytes());
       const synpubkey = await this.getSyntheticKey(pubkey);
       const puzzle = await getPuzzle(synpubkey);
       const hash = await this.getPuzzleHashFromPuzzle(puzzle);
@@ -281,8 +281,8 @@ class PuzzleMaker {
   ): Promise<PuzzleObserver[]> {
     const derive = await utility.derivePk(publicKey);
     const details: PuzzleObserver[] = [];
-    const add = async (pk: G1Element) => {
-      const pubkey = utility.toHexString(pk.serialize());
+    const add = async (pk: PublicKey) => {
+      const pubkey = utility.toHexString(pk.toBytes());
       const synpubkey = await this.getSyntheticKey(pubkey);
       const puzzle = await getPuzzle(synpubkey);
       const hash = await this.getPuzzleHashFromPuzzle(puzzle);
@@ -347,11 +347,9 @@ class PuzzleMaker {
     return details;
   }
 
-  public getPrivateKeyFromHex(sk_hex: string): PrivateKey {
+  public getPrivateKeyFromHex(sk_hex: string): SecretKey {
     const privateKey = utility.fromHexString(sk_hex);
-    const BLS = Instance.BLS;
-    if (!BLS) throw new Error("BLS not initialized");
-    const sk = BLS.PrivateKey.from_bytes(privateKey, false);
+    const sk = SecretKey.fromBytes(privateKey);
     return sk;
   }
 
@@ -452,10 +450,8 @@ class PuzzleMaker {
     }
   }
 
-  public getEmptyPrivateKey(): PrivateKey {
-    const BLS = Instance.BLS;
-    if (!BLS) throw new Error("BLS not initialized");
-    return BLS.PrivateKey.from_bytes(new Uint8Array(32), false);
+  public getEmptyPrivateKey(): SecretKey {
+    return SecretKey.fromBytes(new Uint8Array(32));
   }
 
   async executePuzzle(puz: string, solution: string): Promise<ExecuteResult> {

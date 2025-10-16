@@ -51,7 +51,7 @@ export class EcdhHelper {
     const found = all.filter((_) => prefix0x(_.hash) == puzzleHash).at(0);
     if (!found)
       throw new Error(`Cannot find the address [${puzzleHash}] from [${all.map((_) => _.hash).join(", ")}] to generate synsk`);
-    const sk = found.privateKey.serialize();
+    const sk = found.privateKey.toBytes();
     return this.calculate_synthetic_secret_key(sk, DEFAULT_HIDDEN_PUZZLE_HASH.raw());
   }
 

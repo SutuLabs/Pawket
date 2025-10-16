@@ -11,7 +11,7 @@ export interface ConditionInfo {
   desc: string;
   arguments: {
     name: string;
-    type: "Bytes32" | "Unsigned Int" | "G1Element" | "Bytes" | "Any" | "Binary";
+    type: "Bytes32" | "Unsigned Int" | "PublicKey" | "Bytes" | "Any" | "Binary";
   }[];
 }
 
@@ -115,7 +115,7 @@ export const conditionInfos: ConditionInfo[] = [
     id: 43,
     args: "(43 public_key message)",
     arguments: [
-      { name: "public_key", type: "G1Element" },
+      { name: "public_key", type: "PublicKey" },
       { name: "message", type: "Bytes" },
     ],
     desc: "(CHIP-0011) Verifies a signature for a given message which is concatenated with the parent coin id and domain string sha256(genesis_id + 43).",
@@ -125,7 +125,7 @@ export const conditionInfos: ConditionInfo[] = [
     id: 44,
     args: "(44 public_key message)",
     arguments: [
-      { name: "public_key", type: "G1Element" },
+      { name: "public_key", type: "PublicKey" },
       { name: "message", type: "Bytes" },
     ],
     desc: "(CHIP-0011) Verifies a signature for a given message which is concatenated with the puzzle hash and domain string sha256(genesis_id + 44).",
@@ -135,7 +135,7 @@ export const conditionInfos: ConditionInfo[] = [
     id: 45,
     args: "(45 public_key message)",
     arguments: [
-      { name: "public_key", type: "G1Element" },
+      { name: "public_key", type: "PublicKey" },
       { name: "message", type: "Bytes" },
     ],
     desc: "(CHIP-0011) Verifies a signature for a given message which is concatenated with the amount and domain string sha256(genesis_id + 45).",
@@ -145,7 +145,7 @@ export const conditionInfos: ConditionInfo[] = [
     id: 46,
     args: "(46 public_key message)",
     arguments: [
-      { name: "public_key", type: "G1Element" },
+      { name: "public_key", type: "PublicKey" },
       { name: "message", type: "Bytes" },
     ],
     desc: "(CHIP-0011) Verifies a signature for a given message which is concatenated with the puzzle hash, amount and domain string sha256(genesis_id + 46).",
@@ -155,7 +155,7 @@ export const conditionInfos: ConditionInfo[] = [
     id: 47,
     args: "(47 public_key message)",
     arguments: [
-      { name: "public_key", type: "G1Element" },
+      { name: "public_key", type: "PublicKey" },
       { name: "message", type: "Bytes" },
     ],
     desc: "(CHIP-0011) Verifies a signature for a given message which is concatenated with the parent coin id, amount and domain string sha256(genesis_id + 47).",
@@ -165,7 +165,7 @@ export const conditionInfos: ConditionInfo[] = [
     id: 48,
     args: "(48 public_key message)",
     arguments: [
-      { name: "public_key", type: "G1Element" },
+      { name: "public_key", type: "PublicKey" },
       { name: "message", type: "Bytes" },
     ],
     desc: "(CHIP-0011) Verifies a signature for a given message which is concatenated with the parent coin id, puzzle hash and domain string sha256(genesis_id + 48).",
@@ -175,7 +175,7 @@ export const conditionInfos: ConditionInfo[] = [
     id: 49,
     args: "(49 public_key message)",
     arguments: [
-      { name: "public_key", type: "G1Element" },
+      { name: "public_key", type: "PublicKey" },
       { name: "message", type: "Bytes" },
     ],
     desc: "Verifies a signature for a given message. For security reasons, domain strings are not permitted at the end of AGG_SIG_UNSAFE messages.",
@@ -185,7 +185,7 @@ export const conditionInfos: ConditionInfo[] = [
     id: 50,
     args: "(50 public_key message)",
     arguments: [
-      { name: "public_key", type: "G1Element" },
+      { name: "public_key", type: "PublicKey" },
       { name: "message", type: "Bytes" },
     ],
     desc: "Verifies a signature for a given message which is concatenated with the coin id and domain string genesis_id. Recommended for requiring signatures as it prevents signature reuse.",

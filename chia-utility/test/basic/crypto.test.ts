@@ -6,7 +6,7 @@ import { analyzeDidCoin } from "../../services/coin/did";
 import { prefix0x } from "../../services/coin/condition";
 import { analyzeNftCoin } from "../../services/coin/nft";
 import { calculate_synthetic_secret_key, getSignMessage, signMessage, verifySignature } from "../../services/crypto/sign";
-import { G2Element, PrivateKey } from "chia-wallet-sdk-bundle";
+import { Signature, SecretKey } from "chia-wallet-sdk-bundle";
 
 import didcoin2 from "../cases/didcoin2.json";
 import nftcoin6 from "../cases/nftcoin6.json";
@@ -25,20 +25,20 @@ test("Basic Cryptography", async () => {
 
   const privkey = utility.fromHexString("67b3dcf5ba985f77b7bb78b3edfd7e501f4669a3530b74f2247256e38b0529e2");
   const sk = await utility.getPrivateKey(privkey);
-  const masterprikey = utility.toHexString(sk.serialize());
-  const masterpubkey = utility.toHexString(sk.get_g1().serialize());
+  const masterprikey = utility.toHexString(sk.toBytes());
+  const masterpubkey = utility.toHexString(sk.publicKey().toBytes());
   expect(masterprikey).toMatchSnapshot("masterprikey");
   expect(masterpubkey).toMatchSnapshot("masterpubkey");
-  expect(sk.get_g1().get_fingerprint().toString()).toMatchSnapshot("fingerprint");
+  expect(sk.publicKey().fingerprint().toString()).toMatchSnapshot("fingerprint");
 
   const derive = await utility.derive(privkey, true);
-  const farmerpubkey = utility.toHexString(derive([12381, 8444, 0, 0]).get_g1().serialize());
+  const farmerpubkey = utility.toHexString(derive([12381, 8444, 0, 0]).publicKey().toBytes());
   expect(farmerpubkey).toMatchSnapshot("farmerpubkey");
-  const poolpubkey = utility.toHexString(derive([12381, 8444, 1, 0]).get_g1().serialize());
+  const poolpubkey = utility.toHexString(derive([12381, 8444, 1, 0]).publicKey().toBytes());
   expect(poolpubkey).toMatchSnapshot("poolpubkey");
-  const walletprikey = utility.toHexString(derive([12381, 8444, 2, 0]).serialize());
+  const walletprikey = utility.toHexString(derive([12381, 8444, 2, 0]).toBytes());
   expect(walletprikey).toMatchSnapshot("walletprikey");
-  const walletpubkey = utility.toHexString(derive([12381, 8444, 2, 0]).get_g1().serialize());
+  const walletpubkey = utility.toHexString(derive([12381, 8444, 2, 0]).publicKey().toBytes());
   expect(walletpubkey).toMatchSnapshot("walletpubkey");
 
   const adr = await puzzle.getAddress(walletpubkey, "xch");
@@ -126,8 +126,8 @@ test("Sign Message By NFT", async () => {
   await signMessageTest(sk, "747769", analysis.p2Owner);
 });
 
-async function signMessageTest(sk: PrivateKey, message: string, expectPuzzleHash: string): Promise<void> {
-  const pk = utility.toHexString(sk.get_g1().serialize());
+async function signMessageTest(sk: SecretKey, message: string, expectPuzzleHash: string): Promise<void> {
+  const pk = utility.toHexString(sk.publicKey().toBytes());
 
   const msg = await getSignMessage(message);
   expect(utility.toHexString(msg)).toMatchSnapshot("msg");
@@ -185,24 +185,21 @@ async function testEncryption(plaintext: string): Promise<void> {
 }
 
 test("BLS Aggregation", async () => {
-  const BLS = Instance.BLS;
-  if (!BLS) throw new Error("BLS not initialized");
-
   const sigs = [
     "c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
     "ac217e250273a881566563ffa4e296f7ed24ff6c44289b732875b67a0306766fd0e0675ec22cef94e5a7d349aba39ee103b33249be47c33a37698a5000fdda59b0bb39df89f74e6a457002ab5da32cafe24f7987e7722331736a9e2622c179d5",
-  ].map((_) => BLS.G2Element.from_bytes(utility.fromHexString(_)));
+  ].map((_) => Signature.fromBytes(utility.fromHexString(_)));
 
-  const serialize = (sig: G2Element | undefined): string => {
+  const serialize = (sig: Signature | undefined): string => {
     if (!sig) return "";
-    return utility.toHexString(sig.serialize());
+    return utility.toHexString(sig.toBytes());
   };
-  const a1 = BLS.AugSchemeMPL.aggregate(sigs.slice(0, 1));
-  const a2 = BLS.AugSchemeMPL.aggregate(sigs.slice(0, 2));
-  const a3 = BLS.AugSchemeMPL.aggregate(sigs.slice(1, 2));
-  const a4 = BLS.AugSchemeMPL.aggregate([a1, a3]);
-  const a5 = BLS.AugSchemeMPL.aggregate([a1, a2]);
-  const a8 = BLS.AugSchemeMPL.aggregate([a3]);
+  const a1 = Signature.aggregate(sigs.slice(0, 1));
+  const a2 = Signature.aggregate(sigs.slice(0, 2));
+  const a3 = Signature.aggregate(sigs.slice(1, 2));
+  const a4 = Signature.aggregate([a1, a3]);
+  const a5 = Signature.aggregate([a1, a2]);
+  const a8 = Signature.aggregate([a3]);
   expect(serialize(a1)).toBe(serialize(sigs.at(0)));
   expect(serialize(a2)).toBe(serialize(sigs.at(1)));
   expect(serialize(a3)).toBe(serialize(a2));
@@ -210,8 +207,8 @@ test("BLS Aggregation", async () => {
   expect(serialize(a5)).toBe(serialize(a2));
   expect(serialize(a8)).toBe(serialize(a2));
 
-  const a6 = BLS.AugSchemeMPL.aggregate([a3, a2]);
-  const a7 = BLS.AugSchemeMPL.aggregate([a2, a3]);
+  const a6 = Signature.aggregate([a3, a2]);
+  const a7 = Signature.aggregate([a2, a3]);
 
   expect(serialize(a6)).not.toBe(serialize(a2));
   expect(serialize(a6)).toMatchSnapshot();
@@ -222,15 +219,11 @@ test("BLS calculate_synthetic_secret_key", async () => {
   const ecdh = new EcdhHelper();
   const sk = "55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f";
 
-  const BLS = Instance.BLS;
-  if (!BLS) throw new Error("BLS not initialized");
-
   const synsk_noble_bls = ecdh.calculate_synthetic_secret_key(utility.fromHexString(sk), DEFAULT_HIDDEN_PUZZLE_HASH.raw());
   const synsk_clvm_bls = calculate_synthetic_secret_key(
-    BLS,
-    BLS.PrivateKey.from_bytes(utility.fromHexString(sk), true),
+    SecretKey.fromBytes(utility.fromHexString(sk)),
     DEFAULT_HIDDEN_PUZZLE_HASH.raw()
-  ).serialize();
+  ).toBytes();
 
   expect(utility.toHexString(synsk_noble_bls)).toBe(utility.toHexString(synsk_clvm_bls));
 });
@@ -273,7 +266,7 @@ async function testBlsEcdh(plaintext: string): Promise<void> {
   expect(dec).toBe(plaintext);
 }
 
-function mockFetch(url: RequestInfo, args: RequestInit): Promise<Response> {
+function mockFetch(url: RequestInit, args: RequestInit): Promise<Response> {
   return Promise.resolve(<never>{
     ok: true,
     status: 200,

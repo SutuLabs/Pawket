@@ -1,37 +1,37 @@
-import { PrivateKey, G1Element, ModuleInstance } from "chia-wallet-sdk-bundle";
+import { SecretKey, PublicKey, ModuleInstance } from "chia-wallet-sdk-bundle";
 import utility from "./utility";
 import { DEFAULT_HIDDEN_PUZZLE_HASH, GROUP_ORDER } from "../coin/consts";
 import { prefix0x } from "../coin/condition";
-import { SExp, Bytes, bigint_from_bytes, bigint_to_bytes } from "clvm";
+import { SExp, Bytes, bigint_fromBytes, bigint_to_bytes } from "clvm";
 import { sha256tree } from "clvm_tools";
 
 export function signMessage(
-  privateKey: PrivateKey,
+  privateKey: SecretKey,
   message: string | Uint8Array
 ): { signature: string; syntheticPublicKey: string } {
   const BLS = Instance.BLS;
   if (!BLS) throw new Error("BLS not initialized");
   message = decodeMessage(message);
   const ssk = calculate_synthetic_secret_key(BLS, privateKey, DEFAULT_HIDDEN_PUZZLE_HASH.raw());
-  const spk = prefix0x(utility.toHexString(ssk.get_g1().serialize()));
-  const sig = BLS.AugSchemeMPL.sign(ssk, message);
-  const s = prefix0x(utility.toHexString(sig.serialize()));
+  const spk = prefix0x(utility.toHexString(ssk.publicKey().toBytes()));
+  const sig = AugSchemeMPL.sign(ssk, message);
+  const s = prefix0x(utility.toHexString(sig.toBytes()));
   return { signature: s, syntheticPublicKey: spk };
 }
 
 export function verifySignature(
-  pubKey: string | G1Element,
+  pubKey: string | PublicKey,
   message: string | Uint8Array,
   signature: string | Uint8Array
 ): boolean {
   const BLS = Instance.BLS;
   if (!BLS) throw new Error("BLS not initialized");
   message = decodeMessage(message);
-  if (typeof pubKey == "string") pubKey = BLS.G1Element.from_bytes(utility.fromHexString(pubKey));
+  if (typeof pubKey == "string") pubKey = PublicKey.fromBytes(utility.fromHexString(pubKey));
   if (typeof signature == "string") signature = utility.fromHexString(signature);
 
   const spk = calculate_synthetic_public_key(BLS, pubKey, DEFAULT_HIDDEN_PUZZLE_HASH.raw());
-  const v = BLS.AugSchemeMPL.verify(spk, message, BLS.G2Element.from_bytes(signature));
+  const v = AugSchemeMPL.verify(spk, message, Signature.fromBytes(signature));
   return v;
 }
 
@@ -42,17 +42,13 @@ export async function getSignMessage(message: string): Promise<Uint8Array> {
   return hash;
 }
 
-export function calculate_synthetic_secret_key(
-  BLS: ModuleInstance,
-  secret_key: PrivateKey,
-  hidden_puzzle_hash: Uint8Array
-): PrivateKey {
+export function calculate_synthetic_secret_key(secret_key: SecretKey, hidden_puzzle_hash: Uint8Array): SecretKey {
   try {
-    const secret_exponent = bigint_from_bytes(Bytes.from(secret_key.serialize()), { signed: true });
-    const public_key = secret_key.get_g1();
-    const synthetic_offset = calculate_synthetic_offset(public_key.serialize(), hidden_puzzle_hash);
+    const secret_exponent = bigint_fromBytes(Bytes.from(secret_key.toBytes()), { signed: true });
+    const public_key = secret_key.publicKey();
+    const synthetic_offset = calculate_synthetic_offset(public_key.toBytes(), hidden_puzzle_hash);
     const synthetic_secret_exponent = (secret_exponent + synthetic_offset) % GROUP_ORDER;
-    const synthetic_secret_key = BLS.PrivateKey.from_bytes(bigint_to_uint8array_padding(synthetic_secret_exponent), true);
+    const synthetic_secret_key = SecretKey.fromBytes(bigint_to_uint8array_padding(synthetic_secret_exponent));
     return synthetic_secret_key;
   } catch (error) {
     throw new Error("failed to calculate synthetic secret key, due to " + error);
@@ -61,15 +57,15 @@ export function calculate_synthetic_secret_key(
 
 export function calculate_synthetic_public_key(
   BLS: ModuleInstance,
-  public_key: G1Element,
+  public_key: PublicKey,
   hidden_puzzle_hash: Uint8Array
-): G1Element {
-  const synthetic_offset = BLS.PrivateKey.from_bytes(
-    bigint_to_uint8array_padding(calculate_synthetic_offset(public_key.serialize(), hidden_puzzle_hash)),
+): PublicKey {
+  const synthetic_offset = SecretKey.fromBytes(
+    bigint_to_uint8array_padding(calculate_synthetic_offset(public_key.toBytes(), hidden_puzzle_hash)),
     true
   );
 
-  return public_key.add(synthetic_offset.get_g1());
+  return public_key.add(synthetic_offset.publicKey());
 }
 
 export function bigint_to_uint8array_padding(v: bigint, expectLength = 32): Uint8Array {
@@ -90,7 +86,7 @@ function decodeMessage(message: string | Uint8Array): Uint8Array {
 
 export function calculate_synthetic_offset(public_key: Uint8Array, hidden_puzzle_hash: Uint8Array): bigint {
   const blob = Bytes.SHA256(new Uint8Array([...public_key, ...hidden_puzzle_hash]));
-  let offset = bigint_from_bytes(blob, { signed: true });
+  let offset = bigint_fromBytes(blob, { signed: true });
   while (offset < 0) offset += GROUP_ORDER;
   offset %= GROUP_ORDER;
   return offset;

@@ -33,22 +33,22 @@ class AccountHelper {
     const key = await pbkdf2Hmac(compatibleMnemonic, "mnemonic", 2048, 64, "SHA-512");
 
     // console.log(key);
-    const sk = BLS.AugSchemeMPL.key_gen(new Uint8Array(key));
-    const pk = sk.get_g1();
+    const sk = AugSchemeMPL.key_gen(new Uint8Array(key));
+    const pk = sk.publicKey();
 
     // var d = this.derive_path(BLS, sk, [12381, 8444, 0, 0]);
     // var e = this.derive_path(BLS, sk, [12381, 8444, 2, 0]);
     // console.log(
     //   pk.get_fingerprint(),
-    //   this.toHexString(e.serialize()),
-    //   this.toHexString(d.get_g1().serialize()),
-    //   this.toHexString(pk.serialize())
+    //   this.toHexString(e.toBytes()),
+    //   this.toHexString(d.publicKey().toBytes()),
+    //   this.toHexString(pk.toBytes())
     // );
     return {
       compatibleMnemonic: compatibleMnemonic,
       mnemonic12: mnemonic12,
       fingerprint: pk.get_fingerprint(),
-      privateKey: utility.toHexString(sk.serialize()),
+      privateKey: utility.toHexString(sk.toBytes()),
     };
   }
 
@@ -56,7 +56,7 @@ class AccountHelper {
     const BLS = Instance.BLS;
     if (!BLS) throw new Error("BLS not initialized");
 
-    const pk = BLS.G1Element.from_bytes(utility.fromHexString(pubkey));
+    const pk = PublicKey.fromBytes(utility.fromHexString(pubkey));
     return pk.get_fingerprint();
   }
 }

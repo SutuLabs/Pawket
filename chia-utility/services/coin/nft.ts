@@ -264,7 +264,7 @@ export async function getBootstrapSpendBundle(
     const BLS = Instance.BLS;
     if (!BLS) throw new Error("BLS not initialized");
 
-    const sk = privateKey ? privateKey : utility.toHexString(BLS.AugSchemeMPL.key_gen(utility.getRandom(64)).serialize());
+    const sk = privateKey ? privateKey : utility.toHexString(AugSchemeMPL.key_gen(utility.getRandom(64)).toBytes());
     const puzzles = await receive.getAssetsRequestDetail(sk, 0, count, [], {}, "any", baseSymbol, "cat_v2");
     const ps = puzzles.filter((_) => _.symbol == baseSymbol)[0].puzzles;
 

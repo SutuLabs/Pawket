@@ -85,13 +85,13 @@ async function testTransfer(fee = 0n): Promise<void> {
     utility.fromHexString("0x0000000000000000000000000000000000000000000000000000000000000002")
   );
 
-  const pk1 = sk1.get_g1();
-  const pk2 = sk2.get_g1();
+  const pk1 = sk1.publicKey();
+  const pk2 = sk2.publicKey();
 
   const aggpk = pk1.add(pk2);
-  console.log("aggpk", utility.toHexString(aggpk.serialize()));
+  console.log("aggpk", utility.toHexString(aggpk.toBytes()));
 
-  // const account = await getObserverTestAccountWithPuzzles(prefix0x(utility.toHexString(aggpk.serialize())));
+  // const account = await getObserverTestAccountWithPuzzles(prefix0x(utility.toHexString(aggpk.toBytes())));
   // const tokenPuzzles = account.observePuzzles;
   // if (!tokenPuzzles) assert.fail("didn't get the observer puzzles");
   // const p2Puzzle = account.observePuzzles?.at(0)?.puzzles.at(0)?.puzzle;
@@ -99,7 +99,7 @@ async function testTransfer(fee = 0n): Promise<void> {
   // const aggpk1 = account.observePuzzles?.at(0)?.puzzles.at(0)?.pubKey;
   // if (!aggpk1) assert.fail("cannot get first aggpk");
 
-  const synpk = await puzzle.getSyntheticKey(utility.toHexString(aggpk.serialize()));
+  const synpk = await puzzle.getSyntheticKey(utility.toHexString(aggpk.toBytes()));
   console.log("synpk", synpk);
   const p2Puzzle = puzzle.getPuzzle(synpk);
 
@@ -124,7 +124,7 @@ async function testTransfer(fee = 0n): Promise<void> {
       puzzles: [
         {
           puzzle: p2Puzzle,
-          pubKey: prefix0x(utility.toHexString(aggpk.serialize())),
+          pubKey: prefix0x(utility.toHexString(aggpk.toBytes())),
           synPubKey: prefix0x(synpk),
           hash: await puzzle.getPuzzleHashFromPuzzle(p2Puzzle),
           address: "",
@@ -158,20 +158,20 @@ test("BLS signature aggregation case 1: naive aggregate", async () => {
   );
   const msg = utility.fromHexString("0xe3b0c44298fc1c149afbf4c8996fb92400000000000000000000000000000001");
 
-  const pk1 = sk1.get_g1();
-  const pk2 = sk2.get_g1();
+  const pk1 = sk1.publicKey();
+  const pk2 = sk2.publicKey();
 
   const aggpk = pk1.add(pk2);
 
   //sign
-  const sig1 = BLS.AugSchemeMPL.sign_prepend(sk1, msg, aggpk);
-  const sig2 = BLS.AugSchemeMPL.sign_prepend(sk2, msg, aggpk);
+  const sig1 = AugSchemeMPL.sign_prepend(sk1, msg, aggpk);
+  const sig2 = AugSchemeMPL.sign_prepend(sk2, msg, aggpk);
 
   //aggregate
-  const aggsig = BLS.AugSchemeMPL.aggregate([sig1, sig2]);
+  const aggsig = AugSchemeMPL.aggregate([sig1, sig2]);
 
   //verify
-  const v = BLS.AugSchemeMPL.aggregate_verify([aggpk], [msg], aggsig);
+  const v = AugSchemeMPL.aggregate_verify([aggpk], [msg], aggsig);
   expect(v).toBeTruthy();
 });
 
@@ -186,18 +186,18 @@ test("BLS signature aggregation case 2: multi condition", async () => {
   );
   const msg = utility.fromHexString("0xe3b0c44298fc1c149afbf4c8996fb92400000000000000000000000000000001");
 
-  const pk1 = sk1.get_g1();
-  const pk2 = sk2.get_g1();
+  const pk1 = sk1.publicKey();
+  const pk2 = sk2.publicKey();
 
   //sign
-  const sig1 = BLS.AugSchemeMPL.sign(sk1, msg);
-  const sig2 = BLS.AugSchemeMPL.sign(sk2, msg);
+  const sig1 = AugSchemeMPL.sign(sk1, msg);
+  const sig2 = AugSchemeMPL.sign(sk2, msg);
 
   //aggregate
-  const aggsig = BLS.AugSchemeMPL.aggregate([sig1, sig2]);
+  const aggsig = AugSchemeMPL.aggregate([sig1, sig2]);
 
   //verify
-  const v = BLS.AugSchemeMPL.aggregate_verify([pk1, pk2], [msg, msg], aggsig);
+  const v = AugSchemeMPL.aggregate_verify([pk1, pk2], [msg, msg], aggsig);
   expect(v).toBeTruthy();
 });
 
@@ -212,44 +212,44 @@ test("BLS signature aggregation case 3: synthetic key aggregate", async () => {
   );
   const msg = utility.fromHexString("0x4c6e38eb1ebd7128f3a26e76167dbc700dced469dbda7332b235f64907fec834");
 
-  const pk1 = sk1.get_g1();
-  const pk2 = sk2.get_g1();
+  const pk1 = sk1.publicKey();
+  const pk2 = sk2.publicKey();
 
   const aggpk = pk1.add(pk2);
 
-  // const derive = await utility.derivePk(aggpk.serialize());
+  // const derive = await utility.derivePk(aggpk.toBytes());
   // const daggpk = derive([12381, 8444, 2, 0]);
 
-  // const derivesk1 = await utility.derive(sk1.serialize());
+  // const derivesk1 = await utility.derive(sk1.toBytes());
   // const dsk1 = derivesk1([12381, 8444, 2, 0]);
 
-  // const derivesk2 = await utility.derive(sk2.serialize());
+  // const derivesk2 = await utility.derive(sk2.toBytes());
   // const dsk2 = derivesk2([12381, 8444, 2, 0]);
 
   // only the synpk is exposed in the blockchain
   const synpk = await utility.getPublicKey(
-    utility.fromHexString(await puzzle.getSyntheticKey(utility.toHexString(aggpk.serialize())))
+    utility.fromHexString(await puzzle.getSyntheticKey(utility.toHexString(aggpk.toBytes())))
   );
 
   // sign
-  const synsk = BLS.PrivateKey.from_bytes(
-    bigint_to_uint8array_padding(calculate_synthetic_offset(aggpk.serialize(), DEFAULT_HIDDEN_PUZZLE_HASH.raw())),
+  const synsk = SecretKey.fromBytes(
+    bigint_to_uint8array_padding(calculate_synthetic_offset(aggpk.toBytes(), DEFAULT_HIDDEN_PUZZLE_HASH.raw())),
     true
   );
 
-  const synsig = BLS.AugSchemeMPL.sign_prepend(synsk, msg, synpk);
-  const sig1 = BLS.AugSchemeMPL.sign_prepend(sk1, msg, synpk);
-  const sig2 = BLS.AugSchemeMPL.sign_prepend(sk2, msg, synpk);
+  const synsig = AugSchemeMPL.sign_prepend(synsk, msg, synpk);
+  const sig1 = AugSchemeMPL.sign_prepend(sk1, msg, synpk);
+  const sig2 = AugSchemeMPL.sign_prepend(sk2, msg, synpk);
 
   // aggregate
-  // const aggsig = BLS.AugSchemeMPL.aggregate([synsig, sig1, sig2]);
-  const aggsig = BLS.AugSchemeMPL.aggregate([BLS.AugSchemeMPL.aggregate([synsig, sig1]), sig2]);
+  // const aggsig = AugSchemeMPL.aggregate([synsig, sig1, sig2]);
+  const aggsig = AugSchemeMPL.aggregate([AugSchemeMPL.aggregate([synsig, sig1]), sig2]);
 
   // verify
-  const v = BLS.AugSchemeMPL.aggregate_verify([synpk], [msg], aggsig);
+  const v = AugSchemeMPL.aggregate_verify([synpk], [msg], aggsig);
   expect(v).toBeTruthy();
 
   // false case
-  const aggsig2 = BLS.AugSchemeMPL.aggregate([sig1, sig2]);
-  expect(BLS.AugSchemeMPL.aggregate_verify([synpk], [msg], aggsig2)).toBeFalsy();
+  const aggsig2 = AugSchemeMPL.aggregate([sig1, sig2]);
+  expect(AugSchemeMPL.aggregate_verify([synpk], [msg], aggsig2)).toBeFalsy();
 });

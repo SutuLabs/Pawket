@@ -1,4 +1,4 @@
-import { PrivateKey, G1Element, G2Element, ModuleInstance } from "chia-wallet-sdk-bundle";
+import { SecretKey, PublicKey, Signature, ModuleInstance } from "chia-wallet-sdk-bundle";
 import { Bytes } from "clvm";
 import { CoinSpend, PartialSpendBundle, SpendBundle, UnsignedSpendBundle } from ".";
 import { DEFAULT_HIDDEN_PUZZLE_HASH } from "../coin/consts";
@@ -29,11 +29,11 @@ export async function signSpendBundle(
     (bundle as SpendBundle).aggregated_signature &&
     (bundle as SpendBundle).aggregated_signature.startsWith("0x")
   )
-    agg_sig = BLS.AugSchemeMPL.aggregate([
+    agg_sig = AugSchemeMPL.aggregate([
       agg_sig,
-      BLS.G2Element.from_bytes(Bytes.from(unprefix0x((bundle as SpendBundle).aggregated_signature), "hex").raw()),
+      Signature.fromBytes(Bytes.from(unprefix0x((bundle as SpendBundle).aggregated_signature), "hex").raw()),
     ]);
-  const sig = Bytes.from(agg_sig.serialize()).hex();
+  const sig = Bytes.from(agg_sig.toBytes()).hex();
   return {
     aggregated_signature: prefix0x(sig),
     coin_spends: bundle.coin_spends,
@@ -45,7 +45,7 @@ async function getSignaturesFromSpendBundle(
   puzzles: TokenPuzzlePrivateKey[],
   chainId: Hex,
   allSignCheck = false
-): Promise<G2Element> {
+): Promise<Signature> {
   const BLS = Instance.BLS;
   if (!BLS) throw new Error("BLS not initialized");
   const puzzleDict: { [key: string]: PuzzlePrivateKey } = Object.assign(
@@ -57,7 +57,7 @@ async function getSignaturesFromSpendBundle(
   };
 
   const css = ubundle.coin_spends;
-  const sigs: G2Element[] = [];
+  const sigs: Signature[] = [];
   for (let i = 0; i < css.length; i++) {
     const coin_spend = css[i];
     if (coin_spend.coin.parent_coin_info == "0x0000000000000000000000000000000000000000000000000000000000000000") continue;
@@ -77,20 +77,20 @@ async function getSignaturesFromSpendBundle(
     sigs.push(signature);
   }
 
-  const agg_sig = BLS.AugSchemeMPL.aggregate(sigs);
+  const agg_sig = AugSchemeMPL.aggregate(sigs);
   return agg_sig;
 }
 
 async function signSolution(
   BLS: ModuleInstance,
   conds: ConditionEntity[],
-  synthetic_sk: PrivateKey | undefined,
+  synthetic_sk: SecretKey | undefined,
   coinname: Bytes,
   chainId: Hex,
   allSignCheck = false
-): Promise<G2Element> {
+): Promise<Signature> {
   const AGG_SIG_ME_ADDITIONAL_DATA = Bytes.from(chainId, "hex");
-  const sigs: G2Element[] = [];
+  const sigs: Signature[] = [];
 
   for (let i = 0; i < conds.length; i++) {
     const cond = conds[i];
@@ -104,14 +104,14 @@ async function signSolution(
       if (!synthetic_sk && allSignCheck) throw new Error("synthetic_sk is required. maybe puzzle is not find.");
       if (!synthetic_sk) continue;
 
-      const synthetic_pk_hex = Bytes.from(synthetic_sk.get_g1().serialize()).hex();
+      const synthetic_pk_hex = Bytes.from(synthetic_sk.publicKey().toBytes()).hex();
       if (pk_hex != synthetic_pk_hex) throw new Error("wrong args due to pk != synthetic_pk");
-      const sig = BLS.AugSchemeMPL.sign(synthetic_sk, msg);
+      const sig = AugSchemeMPL.sign(synthetic_sk, msg);
       sigs.push(sig);
     }
   }
 
-  const agg_sig = BLS.AugSchemeMPL.aggregate(sigs);
+  const agg_sig = AugSchemeMPL.aggregate(sigs);
   return agg_sig;
 }
 
@@ -124,21 +124,21 @@ export async function combineSpendBundleSignature(
 
   const bundle: UnsignedSpendBundle | SpendBundle = Array.isArray(ubundle) ? new UnsignedSpendBundle(ubundle) : ubundle;
 
-  const sigsToAggregate: G2Element[] = [];
+  const sigsToAggregate: Signature[] = [];
   if (Array.isArray(signatures)) {
     for (const sig of signatures) {
-      sigsToAggregate.push(BLS.G2Element.from_bytes(utility.fromHexString(sig)));
+      sigsToAggregate.push(Signature.fromBytes(utility.fromHexString(sig)));
     }
   } else {
-    sigsToAggregate.push(BLS.G2Element.from_bytes(utility.fromHexString(signatures)));
+    sigsToAggregate.push(Signature.fromBytes(utility.fromHexString(signatures)));
   }
-  let agg_sig = BLS.AugSchemeMPL.aggregate(sigsToAggregate);
+  let agg_sig = AugSchemeMPL.aggregate(sigsToAggregate);
   if ("aggregated_signature" in bundle && (bundle as SpendBundle).aggregated_signature)
-    agg_sig = BLS.AugSchemeMPL.aggregate([
+    agg_sig = AugSchemeMPL.aggregate([
       agg_sig,
-      BLS.G2Element.from_bytes(Bytes.from(unprefix0x((bundle as SpendBundle).aggregated_signature), "hex").raw()),
+      Signature.fromBytes(Bytes.from(unprefix0x((bundle as SpendBundle).aggregated_signature), "hex").raw()),
     ]);
-  const sig = Bytes.from(agg_sig.serialize()).hex();
+  const sig = Bytes.from(agg_sig.toBytes()).hex();
   return {
     aggregated_signature: prefix0x(sig),
     coin_spends: bundle.coin_spends,
@@ -148,8 +148,8 @@ export async function combineSpendBundleSignature(
 export async function signMessagesWithKeys(
   messagesToSign: MessagesToSign,
   puzzles?: TokenPuzzlePrivateKey[],
-  aggPk?: Hex0x | G1Element,
-  sk?: Hex0x | PrivateKey,
+  aggPk?: Hex0x | PublicKey,
+  sk?: Hex0x | SecretKey,
   isSignSyntheticKey = false
 ): Promise<Hex0x> {
   if (aggPk && sk) {
@@ -163,9 +163,9 @@ export async function signMessagesWithKeys(
 
 export async function signMessagesForAggregateKey(
   { messages, chainId }: MessagesToSign,
-  aggPk: Hex0x | G1Element,
+  aggPk: Hex0x | PublicKey,
   // puzzles: TokenPuzzlePrivateKey[],
-  sk: Hex0x | PrivateKey,
+  sk: Hex0x | SecretKey,
   isSignSyntheticKey = false
 ): Promise<Hex0x> {
   const BLS = Instance.BLS;
@@ -182,15 +182,15 @@ export async function signMessagesForAggregateKey(
   // const getPuzDetail = (synPubKey: Hex): PuzzlePrivateKey | undefined => {
   //   return puzzleDict[synPubKey];
   // };
-  const sigs: G2Element[] = [];
+  const sigs: Signature[] = [];
 
   const synpk = await utility.getPublicKey(
-    utility.fromHexString(await puzzle.getSyntheticKey(utility.toHexString(aggPk.serialize())))
+    utility.fromHexString(await puzzle.getSyntheticKey(utility.toHexString(aggPk.toBytes())))
   );
 
   // sign
-  const synsk = BLS.PrivateKey.from_bytes(
-    bigint_to_uint8array_padding(calculate_synthetic_offset(aggPk.serialize(), DEFAULT_HIDDEN_PUZZLE_HASH.raw())),
+  const synsk = SecretKey.fromBytes(
+    bigint_to_uint8array_padding(calculate_synthetic_offset(aggPk.toBytes(), DEFAULT_HIDDEN_PUZZLE_HASH.raw())),
     true
   );
 
@@ -205,24 +205,24 @@ export async function signMessagesForAggregateKey(
     // if (!puz) throw new Error(`cannot find puzzle by synthetic public key ${pk_hex}`);
 
     console.log("pk_hex", pk_hex);
-    console.log("synthetic_pk_hex", Bytes.from(synpk.serialize()).hex());
-    const synthetic_pk_hex = Bytes.from(synpk.serialize()).hex();
+    console.log("synthetic_pk_hex", Bytes.from(synpk.toBytes()).hex());
+    const synthetic_pk_hex = Bytes.from(synpk.toBytes()).hex();
     if (pk_hex != synthetic_pk_hex) throw new Error("wrong args due to pk != synthetic_pk");
 
     console.log("signing msg", utility.toHexString(msg));
     if (isSignSyntheticKey) {
-      console.log("sign with synthetic key", utility.toHexString(synsk.serialize()));
-      const sig = BLS.AugSchemeMPL.sign_prepend(synsk, msg, synpk);
+      console.log("sign with synthetic key", utility.toHexString(synsk.toBytes()));
+      const sig = AugSchemeMPL.sign_prepend(synsk, msg, synpk);
       sigs.push(sig);
     }
 
-    console.log("sign with secret key", utility.toHexString(sk.serialize()));
-    const sig = BLS.AugSchemeMPL.sign_prepend(sk, msg, synpk);
+    console.log("sign with secret key", utility.toHexString(sk.toBytes()));
+    const sig = AugSchemeMPL.sign_prepend(sk, msg, synpk);
     sigs.push(sig);
   }
 
-  const agg_sig = BLS.AugSchemeMPL.aggregate(sigs);
-  return prefix0x(utility.toHexString(agg_sig.serialize()));
+  const agg_sig = AugSchemeMPL.aggregate(sigs);
+  return prefix0x(utility.toHexString(agg_sig.toBytes()));
 }
 
 export async function signMessages({ messages, chainId }: MessagesToSign, puzzles: TokenPuzzlePrivateKey[]): Promise<Hex0x> {
@@ -237,7 +237,7 @@ export async function signMessages({ messages, chainId }: MessagesToSign, puzzle
   };
 
   const AGG_SIG_ME_ADDITIONAL_DATA = utility.fromHexString(chainId);
-  const sigs: G2Element[] = [];
+  const sigs: Signature[] = [];
 
   for (let i = 0; i < messages.length; i++) {
     const message = messages[i];
@@ -252,14 +252,14 @@ export async function signMessages({ messages, chainId }: MessagesToSign, puzzle
 
     if (!synthetic_sk) continue;
 
-    const synthetic_pk_hex = Bytes.from(synthetic_sk.get_g1().serialize()).hex();
+    const synthetic_pk_hex = Bytes.from(synthetic_sk.publicKey().toBytes()).hex();
     if (pk_hex != synthetic_pk_hex) throw new Error("wrong args due to pk != synthetic_pk");
-    const sig = BLS.AugSchemeMPL.sign(synthetic_sk, msg);
+    const sig = AugSchemeMPL.sign(synthetic_sk, msg);
     sigs.push(sig);
   }
 
-  const agg_sig = BLS.AugSchemeMPL.aggregate(sigs);
-  return prefix0x(utility.toHexString(agg_sig.serialize()));
+  const agg_sig = AugSchemeMPL.aggregate(sigs);
+  return prefix0x(utility.toHexString(agg_sig.toBytes()));
 }
 
 export interface MessagesToSign {
