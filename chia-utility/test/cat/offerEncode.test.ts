@@ -1,10 +1,5 @@
 import { decodeOffer, encodeOffer } from "../../services/offer/encoding";
 import { getOfferSummary } from "../../services/offer/summary";
-import { Instance } from "../../services/util/instance";
-
-beforeAll(async () => {
-  await Instance.init();
-});
 
 test("Offer Encoding", async () => {
   const offerText =

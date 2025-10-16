@@ -1,10 +1,5 @@
-import { Instance } from "../../services/util/instance";
 import { didAnalysis } from "./nft.test.data";
 import { testTransferNft } from "./functions";
-
-beforeAll(async () => {
-  await Instance.init();
-});
 
 test("Transfer Nft", async () => {
   await testTransferNft(0n);

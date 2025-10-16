@@ -1,5 +1,4 @@
 import { analyzeNftCoin } from "../../services/coin/nft";
-import { Instance } from "../../services/util/instance";
 
 import nftcoin1 from "../cases/nftcoin1.json";
 import nftcoin2 from "../cases/nftcoin2.json";
@@ -12,10 +11,6 @@ import nftcoin10 from "../cases/nftcoin10.json";
 import nftcoin11 from "../cases/nftcoin11.json";
 
 import cnscoin1 from "../cases/cnscoin1.json";
-
-beforeAll(async () => {
-  await Instance.init();
-});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function testAnalyzeNftCoin(coin: any, hintPuzzle: string): Promise<void> {

@@ -12,7 +12,6 @@ import { GetParentPuzzleResponse } from "../../models/api";
 import { assemble, curry, disassemble } from "clvm_tools";
 import { modshash, modshex0x, modsprog } from "../coin/mods";
 import { getCoinName0x, NetworkContext } from "../coin/coinUtility";
-import { Instance } from "../util/instance";
 import { generateTransferNftBundle, getTransferNftPuzzle, getTransferNftSolution } from "../coin/nft";
 import crypto from "../crypto/isoCrypto";
 import { NftCoinAnalysisResult } from "../../models/nft";

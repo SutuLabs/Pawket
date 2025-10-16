@@ -3,7 +3,6 @@ import { createFakeCatCoin, createFakeXchCoin, getTestAccount } from "../utility
 import { encodeOffer } from "../../services/offer/encoding";
 import { getOfferEntities, OfferEntity, OfferPlan } from "../../services/offer/summary";
 import { generateOffer, generateOfferPlan } from "../../services/offer/bundler";
-import { Instance } from "../../services/util/instance";
 import { getAccountAddressDetails } from "../../services/util/account";
 import { NetworkContext } from "../../services/coin/coinUtility";
 import { assertSpendbundle, signSpendBundle } from "../../services/spendbundle";
@@ -59,7 +58,6 @@ const nonce = "741f8564b6637aee92dd68548cfe7df8ec35b20029235565244944febd68bf8d"
 let tokenPuzzles: TokenPuzzleDetail[];
 
 beforeAll(async () => {
-  await Instance.init();
   tokenPuzzles = await getAccountAddressDetails(account, [], tokenInfo(), net.prefix, net.symbol, undefined, "cat_v2");
   const p2Puzzle = tokenPuzzles.at(0)?.puzzles.at(0)?.puzzle;
   if (!p2Puzzle) assert.fail();

@@ -4,7 +4,6 @@ import { decodeOffer } from "../../services/offer/encoding";
 import { getOfferSummary } from "../../services/offer/summary";
 import { combineOfferSpendBundle, generateOffer, generateOfferPlan, getReversePlan } from "../../services/offer/bundler";
 import { SymbolCoins } from "../../services/transfer/transfer";
-import { Instance } from "../../services/util/instance";
 import { getAccountAddressDetails } from "../../services/util/account";
 import { AccountEntity, PersistentCustomCat, TokenInfo } from "../../models/account";
 import { prefix0x } from "../../services/coin/condition";
@@ -35,10 +34,6 @@ const net: NetworkContext = {
   chainId: "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb",
   api: localPuzzleApiCall,
 };
-
-beforeAll(async () => {
-  await Instance.init();
-});
 
 const knownCoins = [
   {

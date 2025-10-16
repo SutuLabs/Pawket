@@ -1,5 +1,4 @@
 import { PrivateKey, G1Element, ModuleInstance } from "chia-wallet-sdk-bundle";
-import { Instance } from "../util/instance";
 import utility from "./utility";
 import { DEFAULT_HIDDEN_PUZZLE_HASH, GROUP_ORDER } from "../coin/consts";
 import { prefix0x } from "../coin/condition";

@@ -4,7 +4,6 @@ import { Bytes } from "clvm";
 import { PrivateKey, G1Element } from "chia-wallet-sdk-bundle";
 import utility from "./utility";
 import { assemble } from "clvm_tools/clvm_tools/binutils";
-import { Instance } from "../util/instance";
 import { modsdict } from "../coin/mods";
 import { Hex, Hex0x, prefix0x, unprefix0x } from "../coin/condition";
 import { SExp, TToJavascript } from "clvm";

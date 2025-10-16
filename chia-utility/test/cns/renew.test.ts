@@ -3,7 +3,6 @@ import { SymbolCoins } from "../../services/transfer/transfer";
 import { analyzeNftCoin, generateMintNftBundle } from "../../services/coin/nft";
 import puzzle from "../../services/crypto/puzzle";
 import { GetParentPuzzleResponse } from "../../models/api";
-import { Instance } from "../../services/util/instance";
 import { getAccountAddressDetails } from "../../services/util/account";
 
 import { CnsMetadataValues } from "../../models/nft";
@@ -31,10 +30,6 @@ function xchPrefix() {
 function xchSymbol() {
   return "XCH";
 }
-
-beforeAll(async () => {
-  await Instance.init();
-});
 
 test("Renew CNS Offer And Accept: standard", async () => {
   const md = Object.assign({}, cnsMetadata);

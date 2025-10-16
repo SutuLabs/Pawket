@@ -8,7 +8,6 @@ import {
   OfferPlanForRoyalty,
   RequestType,
 } from "../../services/offer/summary";
-import { Instance } from "../../services/util/instance";
 import { getAccountAddressDetails } from "../../services/util/account";
 import { combineOfferSpendBundle, generateNftOffer, generateOfferPlan, getReversePlan } from "../../services/offer/bundler";
 import { SymbolCoins } from "../../services/transfer/transfer";
@@ -31,10 +30,6 @@ const net: NetworkContext = {
   chainId: "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb",
   api: localPuzzleApiCall,
 };
-
-beforeAll(async () => {
-  await Instance.init();
-});
 
 test("create and accept nft offer for xch", async () => {
   const change_hex = "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155";

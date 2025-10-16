@@ -1,7 +1,6 @@
 import { getTestAccount, getTestAccountWithPuzzles } from "../utility";
 import transfer, { SymbolCoins, TransferTarget } from "../../services/transfer/transfer";
 import { GetParentPuzzleResponse } from "../../models/api";
-import { Instance } from "../../services/util/instance";
 import { getAccountAddressDetails } from "../../services/util/account";
 import { NetworkContext } from "../../services/coin/coinUtility";
 import { assertSpendbundle } from "../../services/spendbundle/validator";
@@ -39,10 +38,6 @@ const target_hex: Hex0x = "0xb5a2ec2aa0138555d55007acb0eed8a1ddd2baabb4d2e4a9241
 const change_hex: Hex0x = "0x0eb720d9195ffe59684b62b12d54791be7ad3bb6207f5eb92e0e1b40ecbc1155";
 const service_hex: Hex0x = "0xd19c05a54dacbf2b40ff4843534c47976de90246c3fc42ac1f42ea81b434b8ea";
 const tick = "TODO";
-
-beforeAll(async () => {
-  await Instance.init();
-});
 
 const deployInscription = `{'p':'xchs','op':'deploy','tick':'${tick}','max':'21000000','lim':'1000'}`;
 const mintInscription = `{'p':'xchs','op':'mint','tick':'${tick}','amt':'1000'}`;

@@ -26,5 +26,6 @@
   "files.associations": {
     "*.clvm": "lisp",
     "**/test/**/*.test.data.ts": "plaintext",
-  }
+  },
+  "editor.formatOnSave": true,
 }

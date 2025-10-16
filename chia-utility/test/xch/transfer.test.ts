@@ -5,7 +5,6 @@ import { assertSpendbundle } from "../../services/spendbundle/validator";
 import puzzle from "../../services/crypto/puzzle";
 import utility from "../../services/crypto/utility";
 import transfer, { TransferTarget } from "../../services/transfer/transfer";
-import { Instance } from "../../services/util/instance";
 import { createFakeXchCoin, getTestAccount } from "../utility";
 import { getAccountAddressDetails } from "../../services/util/account";
 
@@ -20,10 +19,6 @@ function xchPrefix() {
 function xchSymbol() {
   return net.symbol;
 }
-
-beforeAll(async () => {
-  await Instance.init();
-});
 
 test("Standard Transfer", async () => {
   const coin: OriginCoin = {

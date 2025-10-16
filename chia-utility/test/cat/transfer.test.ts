@@ -6,7 +6,6 @@ import { assertSpendbundle } from "../../services/spendbundle/validator";
 import puzzle from "../../services/crypto/puzzle";
 import utility from "../../services/crypto/utility";
 import transfer, { SymbolCoins } from "../../services/transfer/transfer";
-import { Instance } from "../../services/util/instance";
 import { knownCoins } from "./transfer.test.data";
 
 const net: NetworkContext = {
@@ -18,10 +17,6 @@ const net: NetworkContext = {
 function xchPrefix() {
   return net.prefix;
 }
-
-beforeAll(async () => {
-  await Instance.init();
-});
 
 test("Cat Transfer", async () => {
   const coin: OriginCoin = {

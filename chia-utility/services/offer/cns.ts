@@ -10,7 +10,6 @@ import { prefix0x } from "../coin/condition";
 import { GetParentPuzzleResponse } from "../../models/api";
 import { OfferEntity, RequestType } from "./summary";
 import utility from "../crypto/utility";
-import { Instance } from "../util/instance";
 
 export async function generateMintCnsOffer(
   targetAddress: string,

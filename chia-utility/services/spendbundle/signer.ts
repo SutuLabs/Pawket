@@ -7,7 +7,6 @@ import puzzle, { ConditionEntity, PuzzleObserver, PuzzlePrivateKey } from "../cr
 import { TokenPuzzleObserver, TokenPuzzlePrivateKey } from "../crypto/receive";
 import { ConditionOpcode } from "../coin/opcode";
 import { getCoinNameHex, NetworkContext } from "../coin/coinUtility";
-import { Instance } from "../util/instance";
 import { calculate_synthetic_secret_key, bigint_to_uint8array_padding, calculate_synthetic_offset } from "../crypto/sign";
 import utility from "../crypto/utility";
 

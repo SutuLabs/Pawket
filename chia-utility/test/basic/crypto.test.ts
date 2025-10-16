@@ -2,7 +2,6 @@ import puzzle from "../../services/crypto/puzzle";
 import utility from "../../services/crypto/utility";
 import transfer from "../../services/transfer/transfer";
 import { convertToOriginCoin, getCoinName } from "../../services/coin/coinUtility";
-import { Instance } from "../../services/util/instance";
 import { analyzeDidCoin } from "../../services/coin/did";
 import { prefix0x } from "../../services/coin/condition";
 import { analyzeNftCoin } from "../../services/coin/nft";
@@ -15,10 +14,6 @@ import { ByteBase, CryptographyService, EcPrivateKey, EcPublicKey } from "../../
 import { EcdhHelper } from "../../services/crypto/ecdh";
 import { getTestAccountWithPuzzles } from "../utility";
 import { DEFAULT_HIDDEN_PUZZLE_HASH } from "../../services/coin/consts";
-
-beforeAll(async () => {
-  await Instance.init();
-});
 
 vi.setConfig({
   testTimeout: 30000,

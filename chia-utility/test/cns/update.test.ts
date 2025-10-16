@@ -3,7 +3,6 @@ import { SymbolCoins } from "../../services/transfer/transfer";
 import { analyzeNftCoin, generateUpdatedNftBundle } from "../../services/coin/nft";
 import puzzle from "../../services/crypto/puzzle";
 import { GetParentPuzzleResponse } from "../../models/api";
-import { Instance } from "../../services/util/instance";
 import { getAccountAddressDetails } from "../../services/util/account";
 
 import { cnsMetadata, knownCoins } from "./cns.test.data";
@@ -31,10 +30,6 @@ const availcoins: SymbolCoins = {
     },
   ],
 };
-
-beforeAll(async () => {
-  await Instance.init();
-});
 
 export async function initCnsCoin(
   fee: bigint,

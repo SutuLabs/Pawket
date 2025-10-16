@@ -2,7 +2,6 @@ import { entropyToMnemonic, mnemonicToSeedSync } from "bip39";
 
 import pbkdf2Hmac from "pbkdf2-hmac";
 import { Hex, Hex0x } from "../coin/condition";
-import { Instance } from "../util/instance";
 import utility from "./utility";
 
 export interface AccountKey {

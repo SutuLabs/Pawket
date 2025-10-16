@@ -1,4 +1,3 @@
-import { Instance } from "../../services/util/instance";
 import { getTestAccount } from "../utility";
 import { SymbolCoins } from "../../services/transfer/transfer";
 import puzzle from "../../services/crypto/puzzle";
@@ -21,10 +20,6 @@ const net: NetworkContext = {
   chainId: "ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb",
   api: localPuzzleApiCall,
 };
-
-beforeAll(async () => {
-  await Instance.init();
-});
 
 async function testMintDid(fee: bigint): Promise<void> {
   const xchSymbol = "XCH";

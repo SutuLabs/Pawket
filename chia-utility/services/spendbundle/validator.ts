@@ -2,7 +2,6 @@ import { CoinSpend, SpendBundle } from "./defs";
 import { Bytes } from "clvm";
 import puzzle, { ConditionArgs, ConditionEntity, ExecuteResult } from "../crypto/puzzle";
 import { sha256 } from "../offer/bundler";
-import { Instance } from "../util/instance";
 import { uncurryPuzzle, sexpAssemble, convertUncurriedPuzzle, getModsPath } from "../coin/analyzer";
 import { getCoinName0x } from "../coin/coinUtility";
 import { getFirstLevelArg, getFirstLevelArgMsg, getNumber, Hex, Hex0x, unprefix0x } from "../coin/condition";

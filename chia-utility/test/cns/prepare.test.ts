@@ -2,7 +2,6 @@ import { getTestAccount } from "../utility";
 import { SymbolCoins } from "../../services/transfer/transfer";
 import { getBootstrapSpendBundle } from "../../services/coin/nft";
 import { GetParentPuzzleResponse } from "../../models/api";
-import { Instance } from "../../services/util/instance";
 import { getAccountAddressDetails } from "../../services/util/account";
 
 import { knownCoins } from "./cns.test.data";
@@ -29,10 +28,6 @@ function _chainId() {
 function tokenInfo() {
   return {};
 }
-
-beforeAll(async () => {
-  await Instance.init();
-});
 
 test("Prepare CNS bootstrap coins", async () => {
   const fee = 0n;

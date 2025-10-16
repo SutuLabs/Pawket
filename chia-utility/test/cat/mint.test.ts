@@ -6,7 +6,6 @@ import { assertSpendbundle } from "../../services/spendbundle/validator";
 import puzzle, { PuzzlePrivateKey } from "../../services/crypto/puzzle";
 import utility from "../../services/crypto/utility";
 import { generateMintCatBundle } from "../../services/mint/cat";
-import { Instance } from "../../services/util/instance";
 
 const net: NetworkContextWithOptionalApi = {
   prefix: "xch",
@@ -16,10 +15,6 @@ const net: NetworkContextWithOptionalApi = {
 function xchSymbol() {
   return net.symbol;
 }
-
-beforeAll(async () => {
-  await Instance.init();
-});
 
 test("Mint Cat", async () => {
   const coin: OriginCoin = {
