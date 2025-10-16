@@ -1,0 +1,7 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Chia Wallet SDK Bundle > Address > should match address encoding snapshot 1`] = `"xch14jjfp60na090502ngtf50ke8qwe3q223rad5psg5gxh3e9slvkzslcw6vv"`;
+
+exports[`Chia Wallet SDK Bundle > CLVM > should match serialization snapshot 1`] = `"ff01ff02ff03ff8474657374ff0180"`;
+
+exports[`Chia Wallet SDK Bundle > Coin > should match coin ID snapshot 1`] = `"fd3e669c27be9d634fe79f1f7d7d8aaacc3597b855cffea1d708f4642f1d542a"`;
