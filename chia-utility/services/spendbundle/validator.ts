@@ -1,11 +1,12 @@
 import { CoinSpend, SpendBundle } from "./defs";
 import puzzle, { ConditionArgs, ConditionEntity, ExecuteResult } from "../crypto/puzzle";
 import { sha256 } from "../offer/bundler";
-import { uncurryPuzzle, sexpAssemble, convertUncurriedPuzzle, getModsPath } from "../coin/analyzer";
+import { uncurryPuzzle, convertUncurriedPuzzle, getModsPath } from "../coin/analyzer";
 import { getCoinName0x } from "../coin/coinUtility";
 import { getFirstLevelArg, getFirstLevelArgMsg, getNumber, Hex, Hex0x, unprefix0x } from "../coin/condition";
 import { modshex } from "../coin/mods";
 import { ConditionOpcode } from "../coin/opcode";
+import { sexpAssemble, sha256tree } from "services/crypto/clvm";
 
 export interface AnnouncementCoin {
   coinIndex: number;

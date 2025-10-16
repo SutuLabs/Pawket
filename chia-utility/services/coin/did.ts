@@ -1,5 +1,5 @@
 import { CoinSpend, combineSpendBundle, OriginCoin, SpendBundle, UnsignedSpendBundle } from "../spendbundle";
-import { disassemble, sha256tree } from "../crypto/clvm";
+import { disassemble, sexpAssemble, sha256tree } from "../crypto/clvm";
 import puzzle from "../crypto/puzzle";
 import { TokenPuzzleObserver } from "../crypto/receive";
 import transfer, { SymbolCoins, TransferTarget } from "../transfer/transfer";
@@ -15,7 +15,7 @@ import {
   SingletonStructList,
 } from "./singleton";
 import { curryMod } from "../offer/bundler";
-import { CannotParsePuzzle, expectModArgs, sexpAssemble, UncurriedPuzzle, uncurryPuzzle } from "./analyzer";
+import { CannotParsePuzzle, expectModArgs, UncurriedPuzzle, uncurryPuzzle } from "./analyzer";
 
 export interface MintDidInfo {
   spendBundle: SpendBundle;

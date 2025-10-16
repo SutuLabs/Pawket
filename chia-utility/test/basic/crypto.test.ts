@@ -6,7 +6,7 @@ import { analyzeDidCoin } from "../../services/coin/did";
 import { prefix0x } from "../../services/coin/condition";
 import { analyzeNftCoin } from "../../services/coin/nft";
 import { calculate_synthetic_secret_key, getSignMessage, signMessage, verifySignature } from "../../services/crypto/sign";
-import { Signature, SecretKey } from "chia-wallet-sdk-bundle";
+import { Signature, SecretKey, fromHex } from "chia-wallet-sdk-bundle";
 
 import didcoin2 from "../cases/didcoin2.json";
 import nftcoin6 from "../cases/nftcoin6.json";
@@ -219,10 +219,10 @@ test("BLS calculate_synthetic_secret_key", async () => {
   const ecdh = new EcdhHelper();
   const sk = "55c335b84240f5a8c93b963e7ca5b868e0308974e09f751c7e5668964478008f";
 
-  const synsk_noble_bls = ecdh.calculate_synthetic_secret_key(utility.fromHexString(sk), DEFAULT_HIDDEN_PUZZLE_HASH.raw());
+  const synsk_noble_bls = ecdh.calculate_synthetic_secret_key(utility.fromHexString(sk), fromHex(DEFAULT_HIDDEN_PUZZLE_HASH));
   const synsk_clvm_bls = calculate_synthetic_secret_key(
     SecretKey.fromBytes(utility.fromHexString(sk)),
-    DEFAULT_HIDDEN_PUZZLE_HASH.raw()
+    fromHex(DEFAULT_HIDDEN_PUZZLE_HASH)
   ).toBytes();
 
   expect(utility.toHexString(synsk_noble_bls)).toBe(utility.toHexString(synsk_clvm_bls));

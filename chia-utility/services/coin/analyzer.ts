@@ -9,7 +9,7 @@ import { analyzeDidCoin } from "./did";
 import { analyzeNftCoin } from "./nft";
 import { analyzeP2Coin } from "./p2";
 import { OriginCoin } from "../spendbundle";
-import { disassemble } from "services/crypto/clvm";
+import { disassemble, sexpAssemble } from "services/crypto/clvm";
 
 export interface SimplePuzzle {
   mod: ModName;
@@ -229,12 +229,6 @@ function getKeyParam(parsed_puzzle: SimplePuzzle | CannotParsePuzzle): string | 
 
   return undefined;
 }
-
-export const sexpAssemble = function (hexString: string): Program {
-  const bts = Bytes.from(unprefix0x(hexString), "hex");
-  const input_sexp = sexp_from_stream(new Stream(bts as Bytes), to_sexp_f);
-  return input_sexp;
-};
 
 export const expectModArgs = function (puz: SimplePuzzle, mods: ModName | ModName[], argLength: number): boolean {
   if (!Array.isArray(mods)) mods = [mods];

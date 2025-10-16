@@ -1,4 +1,5 @@
-import { Clvm, Program, CurriedProgram, toHex } from "chia-wallet-sdk-bundle";
+import { Clvm, Program, CurriedProgram, toHex, fromHex } from "chia-wallet-sdk-bundle";
+import { unprefix0x } from "services/coin/condition";
 
 export function assemble(s: string): Program {
   const clvm = new Clvm();
@@ -20,6 +21,13 @@ export function uncurry(p: Program): CurriedProgram | undefined {
 export function sha256tree(p: Program): string {
   return toHex(p.treeHash());
 }
+
+export const sexpAssemble = function (hexString: string): Program {
+  const clvm = new Clvm();
+  const bts = fromHex(unprefix0x(hexString));
+  const program = clvm.deserialize(bts);
+  return program;
+};
 
 /*
 | from\to | clvm        | hex             | hash                | sexp         |

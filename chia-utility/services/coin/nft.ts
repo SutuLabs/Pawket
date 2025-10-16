@@ -49,8 +49,9 @@ import {
   NftMetadataValues,
   NftUpdatableDataKey,
 } from "../../models/nft";
-import { CannotParsePuzzle, expectModArgs, sexpAssemble, UncurriedPuzzle, uncurryPuzzle } from "./analyzer";
+import { CannotParsePuzzle, expectModArgs, UncurriedPuzzle, uncurryPuzzle } from "./analyzer";
 import { CnsCoinAnalysisResult, CnsMetadataKeys, CnsMetadataValues } from "../../models/nft";
+import { sexpAssemble } from "services/crypto/clvm";
 
 type MetadataValues = NftMetadataValues | CnsMetadataValues;
 

@@ -1,13 +1,15 @@
 import { AccountEntity } from "../../models/account";
 import { PointG1, utils } from "@noble/bls12-381";
-import { sexpAssemble } from "../coin/analyzer";
-import { Hex0x, prefix0x } from "../coin/condition";
+import { Hex0x, prefix0x, unprefix0x } from "../coin/condition";
 import { DEFAULT_HIDDEN_PUZZLE_HASH, GROUP_ORDER } from "../coin/consts";
 import { findByPath } from "../coin/lisp";
 import encryption from "./encryption";
 import { PuzzleDetail } from "./puzzle";
 import receive from "./receive";
 import { bigint_to_uint8array_padding, calculate_synthetic_offset } from "./sign";
+import { sexpAssemble } from "./clvm";
+import { bigint_from_bytes } from "./utility";
+import { fromHex } from "chia-wallet-sdk-bundle";
 
 export class EcdhHelper {
   public async encrypt(
@@ -40,8 +42,9 @@ export class EcdhHelper {
     const puz = await receive.getSpentCoinPuzzle(puzzleHash, rpcUrl);
     if (!puz) throw new Error("cannot get puzzle from coin");
     const prog = sexpAssemble(puz);
-    const synpk = findByPath(prog, "rrfrfr").as_bin().hex().slice(2);
-    return PointG1.fromHex(synpk);
+    const synpk = findByPath(prog, "rrfrfr")?.unparse();
+    if (!synpk) throw new Error("cannot get synpk from puzzle");
+    return PointG1.fromHex(unprefix0x(synpk));
   }
 
   // address(puzzle hash) -> sk -> synsk
@@ -51,7 +54,7 @@ export class EcdhHelper {
     if (!found)
       throw new Error(`Cannot find the address [${puzzleHash}] from [${all.map((_) => _.hash).join(", ")}] to generate synsk`);
     const sk = found.privateKey.toBytes();
-    return this.calculate_synthetic_secret_key(sk, DEFAULT_HIDDEN_PUZZLE_HASH.raw());
+    return this.calculate_synthetic_secret_key(sk, fromHex(DEFAULT_HIDDEN_PUZZLE_HASH));
   }
 
   private bytesToNumberBE(bytes: Uint8Array): bigint {
@@ -59,7 +62,7 @@ export class EcdhHelper {
   }
 
   calculate_synthetic_secret_key(secret_key: Uint8Array, hidden_puzzle_hash: Uint8Array): Uint8Array {
-    const secret_exponent = bigint_from_bytes(Bytes.from(secret_key), { signed: true });
+    const secret_exponent = bigint_from_bytes(secret_key);
     const public_key = PointG1.fromPrivateKey(secret_key);
     const synthetic_offset = calculate_synthetic_offset(public_key.toRawBytes(true), hidden_puzzle_hash);
     const synthetic_secret_exponent = (secret_exponent + synthetic_offset) % GROUP_ORDER;

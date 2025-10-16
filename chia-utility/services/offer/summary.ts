@@ -6,7 +6,7 @@ import { modsdict, modshash, modshashdict, modsprog } from "../coin/mods";
 import { ConditionOpcode } from "../coin/opcode";
 import { TokenSpendPlan } from "../transfer/transfer";
 import bigDecimal from "js-big-decimal";
-import { CannotParsePuzzle, getModsPath, sexpAssemble, SimplePuzzle, simplifyPuzzle } from "../coin/analyzer";
+import { CannotParsePuzzle, getModsPath, SimplePuzzle, simplifyPuzzle } from "../coin/analyzer";
 import { parseMetadata } from "../coin/singleton";
 import { analyzeNftCoin, getNftMetadataInfo, getScalarString } from "../coin/nft";
 import { CnsCoinAnalysisResult, NftCoinAnalysisResult } from "../../models/nft";
@@ -396,4 +396,7 @@ export interface OfferSummary {
 export interface OfferTokenAmount {
   token: string;
   amount: string;
+}
+function sexpAssemble(rawmeta: string): any {
+  throw new Error("Function not implemented.");
 }

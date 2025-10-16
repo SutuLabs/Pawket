@@ -1,6 +1,6 @@
 import { skipFirstByte0x } from "./condition";
-import { CannotParsePuzzle, expectModArgs, sexpAssemble, UncurriedPuzzle, uncurryPuzzle } from "./analyzer";
-import { disassemble, sha256tree } from "../crypto/clvm";
+import { CannotParsePuzzle, expectModArgs, UncurriedPuzzle, uncurryPuzzle } from "./analyzer";
+import { disassemble, sexpAssemble, sha256tree } from "../crypto/clvm";
 
 export interface CatCoinAnalysisResult {
   modHash: string;

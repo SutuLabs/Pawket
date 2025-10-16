@@ -1,3 +1,5 @@
+import { Program } from "chia-wallet-sdk-bundle";
+
 export function beautifyLisp(lisp: string): string {
   let output = "";
   let indent = 0;
@@ -50,7 +52,7 @@ export function beautifyLisp(lisp: string): string {
   return output;
 }
 
-export function findByPath(program: Program, path: string): Program {
+export function findByPath(program: Program, path: string): Program | undefined {
   let cursor = program;
   try {
     for (let i = 0; i < path.length; i++) {
@@ -65,6 +67,6 @@ export function findByPath(program: Program, path: string): Program {
     }
     return cursor;
   } catch (err) {
-    return Program.null();
+    return undefined;
   }
 }

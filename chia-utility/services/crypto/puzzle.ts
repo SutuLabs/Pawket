@@ -3,8 +3,7 @@ import { SecretKey, PublicKey, Program, Clvm, fromHex, toHex } from "chia-wallet
 import utility from "./utility";
 import { modsdict } from "../coin/mods";
 import { Hex, Hex0x, prefix0x, unprefix0x } from "../coin/condition";
-import { sexpAssemble } from "../coin/analyzer";
-import { assemble, disassemble } from "./clvm";
+import { assemble, disassemble, sexpAssemble } from "./clvm";
 
 export interface ExecuteResultCondition {
   op: number;
@@ -90,8 +89,8 @@ class PuzzleMaker {
 
   public async disassemblePuzzle(puzzle_hex: string): Promise<string> {
     // opd
-    puzzle_hex = unprefix0x(puzzle_hex);
-    const puzzle = Program(fromHex(puzzle_hex));
+    const program = sexpAssemble(puzzle_hex);
+    const puzzle = disassemble(program);
 
     return puzzle;
   }
