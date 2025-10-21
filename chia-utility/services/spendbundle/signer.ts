@@ -1,4 +1,4 @@
-import { SecretKey, PublicKey, Signature, ModuleInstance } from "chia-wallet-sdk-bundle";
+import { SecretKey, PublicKey, Signature, fromHex, toHex } from "chia-wallet-sdk-bundle";
 import { CoinSpend, PartialSpendBundle, SpendBundle, UnsignedSpendBundle } from ".";
 import { DEFAULT_HIDDEN_PUZZLE_HASH } from "../coin/consts";
 import { Hex, Hex0x, prefix0x, unprefix0x } from "../coin/condition";
@@ -15,9 +15,6 @@ export async function signSpendBundle(
   chainId: string | NetworkContext,
   allSignCheck = false
 ): Promise<SpendBundle> {
-  const BLS = Instance.BLS;
-  if (!BLS) throw new Error("BLS not initialized");
-
   chainId = typeof chainId === "string" ? chainId : chainId.chainId;
 
   const bundle: UnsignedSpendBundle | SpendBundle = Array.isArray(ubundle) ? new UnsignedSpendBundle(ubundle) : ubundle;
@@ -28,11 +25,8 @@ export async function signSpendBundle(
     (bundle as SpendBundle).aggregated_signature &&
     (bundle as SpendBundle).aggregated_signature.startsWith("0x")
   )
-    agg_sig = AugSchemeMPL.aggregate([
-      agg_sig,
-      Signature.fromBytes(Bytes.from(unprefix0x((bundle as SpendBundle).aggregated_signature), "hex").raw()),
-    ]);
-  const sig = Bytes.from(agg_sig.toBytes()).hex();
+    agg_sig = Signature.aggregate([agg_sig, Signature.fromBytes(fromHex((bundle as SpendBundle).aggregated_signature))]);
+  const sig = toHex(agg_sig.toBytes());
   return {
     aggregated_signature: prefix0x(sig),
     coin_spends: bundle.coin_spends,
@@ -45,8 +39,6 @@ async function getSignaturesFromSpendBundle(
   chainId: Hex,
   allSignCheck = false
 ): Promise<Signature> {
-  const BLS = Instance.BLS;
-  if (!BLS) throw new Error("BLS not initialized");
   const puzzleDict: { [key: string]: PuzzlePrivateKey } = Object.assign(
     {},
     ...puzzles.flatMap((_) => _.puzzles).map((x) => ({ [unprefix0x(x.synPubKey)]: x }))
@@ -64,24 +56,23 @@ async function getSignaturesFromSpendBundle(
     // TODO: if one coin spend contain more than one AGG_SIG_ME, not consider here
     const synPubKeyArgs = result.conditions.filter((_) => _.code == ConditionOpcode.AGG_SIG_ME)[0]?.args[0];
     const synPubKeyUint8 = Array.isArray(synPubKeyArgs) ? undefined : synPubKeyArgs;
-    const synPubKey = !synPubKeyUint8 ? undefined : Bytes.from(synPubKeyUint8).hex();
+    const synPubKey = !synPubKeyUint8 ? undefined : toHex(synPubKeyUint8);
 
     const puz = !synPubKey ? undefined : getPuzDetail(synPubKey);
     if (!puz && allSignCheck) throw new Error(`cannot find puzzle by synthetic public key ${synPubKey}`);
 
-    const synthetic_sk = puz ? calculate_synthetic_secret_key(BLS, puz.privateKey, DEFAULT_HIDDEN_PUZZLE_HASH.raw()) : undefined;
+    const synthetic_sk = puz ? calculate_synthetic_secret_key(puz.privateKey, fromHex(DEFAULT_HIDDEN_PUZZLE_HASH)) : undefined;
 
     const coinname = getCoinNameHex(coin_spend.coin);
-    const signature = await signSolution(BLS, result.conditions, synthetic_sk, coinname, chainId, allSignCheck);
+    const signature = await signSolution(result.conditions, synthetic_sk, coinname, chainId, allSignCheck);
     sigs.push(signature);
   }
 
-  const agg_sig = AugSchemeMPL.aggregate(sigs);
+  const agg_sig = Signature.aggregate(sigs);
   return agg_sig;
 }
 
 async function signSolution(
-  BLS: ModuleInstance,
   conds: ConditionEntity[],
   synthetic_sk: SecretKey | undefined,
   coinname: Bytes,

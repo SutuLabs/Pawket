@@ -1,4 +1,5 @@
 import { Hex0x, prefix0x } from "../coin/condition";
+import { fromHex, Signature, toHex } from "chia-wallet-sdk-bundle";
 
 export interface HintOriginCoin extends OriginCoin {
   hint: Hex0x;
@@ -59,19 +60,16 @@ export function combineSpendBundle(
 export function combineSpendBundle(
   ...spendbundles: (SpendBundle | PartialSpendBundle | UnsignedSpendBundle | CoinSpend[] | undefined)[]
 ): UnsignedSpendBundle | PartialSpendBundle | SpendBundle {
-  const BLS = Instance.BLS;
-  if (!BLS) throw new Error("BLS not initialized");
-
   const coin_spends = spendbundles
     .filter((_): _ is UnsignedSpendBundle | CoinSpend[] => !!_)
     .flatMap((_) => (Array.isArray(_) ? _ : _.coin_spends));
   const sigs = spendbundles
     .map((_) => _ && "aggregated_signature" in _ && _.aggregated_signature)
     .filter((_): _ is Hex0x => !!_)
-    .map((_) => Signature.fromBytes(Bytes.from(_, "hex").raw()));
+    .map((_) => Signature.fromBytes(fromHex(_)));
   if (sigs.length > 0) {
-    const agg_sig = AugSchemeMPL.aggregate(sigs);
-    const sig = Bytes.from(agg_sig.toBytes()).hex();
+    const agg_sig = Signature.aggregate(sigs);
+    const sig = toHex(agg_sig.toBytes());
     return {
       aggregated_signature: prefix0x(sig),
       coin_spends,

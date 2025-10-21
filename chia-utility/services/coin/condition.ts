@@ -1,7 +1,8 @@
 import { ConditionOpcode } from "./opcode";
 import { ConditionArgs } from "../crypto/puzzle";
-import { Program, fromHex, toHex } from "chia-wallet-sdk-bundle";
+import { fromHex, toHex } from "chia-wallet-sdk-bundle";
 import { assemble, disassemble } from "services/crypto/clvm";
+import { bigint_to_bytes } from "services/crypto/utility";
 
 export interface ConditionInfo {
   name: string;
@@ -57,7 +58,7 @@ export function skipFirstByte0x(str: string): Hex0x {
 }
 
 export function formatAmount(amount: bigint): Hex0x {
-  return prefix0x(fromHex(bigint_to_bytes(amount, { signed: true })));
+  return prefix0x(toHex(bigint_to_bytes(amount)));
 }
 
 export function getNumber(str: string): bigint {

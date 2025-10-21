@@ -7,6 +7,7 @@ import { getFirstLevelArg, getFirstLevelArgMsg, getNumber, Hex, Hex0x, unprefix0
 import { modshex } from "../coin/mods";
 import { ConditionOpcode } from "../coin/opcode";
 import { sexpAssemble, sha256tree } from "services/crypto/clvm";
+import { Signature, PublicKey, fromHex } from "chia-wallet-sdk-bundle";
 
 export interface AnnouncementCoin {
   coinIndex: number;
@@ -234,7 +235,7 @@ export async function checkSpendBundle(
         coinIndex: i,
         coinName: ca.coinName,
         puzzleHash: unprefix0x(cs.coin.puzzle_hash),
-        puzzleRevealHash: sha256tree(sexpAssemble(cs.puzzle_reveal)).hex(),
+        puzzleRevealHash: sha256tree(sexpAssemble(cs.puzzle_reveal)),
       });
     }
 
@@ -306,8 +307,6 @@ export async function checkSpendBundle(
 
 export function verifySig(bundle: SpendBundle, aggSigMessages: AggSigMessage[], chainId: string): SignatureVerificationResult {
   if (!bundle || !bundle.aggregated_signature) return "Empty";
-  const BLS = Instance.BLS;
-  if (!BLS) throw new Error("BLS not initialized");
   try {
     const AGG_SIG_ME_ADDITIONAL_DATA = getUint8ArrayFromHexString(chainId);
     const msgs = aggSigMessages.map((_) =>
@@ -321,7 +320,7 @@ export function verifySig(bundle: SpendBundle, aggSigMessages: AggSigMessage[], 
     );
     const pks = aggSigMessages.map((_) => PublicKey.fromBytes(getUint8ArrayFromHexString(_.publicKey)));
     const aggsig = Signature.fromBytes(getUint8ArrayFromHexString(bundle.aggregated_signature));
-    const sigVerified: SignatureVerificationResult = AugSchemeMPL.aggregate_verify(pks, msgs, aggsig) ? "Verified" : "Failed";
+    const sigVerified: SignatureVerificationResult = PublicKey.aggregateVerify(pks, msgs, aggsig) ? "Verified" : "Failed";
     return sigVerified;
   } catch (err) {
     throw new Error("cannot verify sig: " + err);
@@ -329,7 +328,7 @@ export function verifySig(bundle: SpendBundle, aggSigMessages: AggSigMessage[], 
 }
 
 export function getUint8ArrayFromHexString(hex: string): Uint8Array {
-  return Bytes.from(unprefix0x(hex), "hex").raw();
+  return fromHex(unprefix0x(hex));
 }
 
 export async function assertSpendbundle(
