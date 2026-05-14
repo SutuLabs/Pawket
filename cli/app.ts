@@ -14,9 +14,7 @@ import { getInscribeMintFunc } from "./route/inscription";
 };
 global.fetch = fetch;
 const app: express.Express = express();
-const bodySizeLimit = process.env.BODY_SIZE_LIMIT || "10mb";
-console.log(`Body size limit: ${bodySizeLimit}`);
-app.use(express.json({ limit: bodySizeLimit }));
+app.use(express.json({ limit: process.env.BODY_SIZE_LIMIT || "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 const defaultRpcUrl = "https://walletapi.chiabee.net/";
 

@@ -10,6 +10,7 @@ maxThreads = maxThreads == 0 ? Number.MAX_SAFE_INTEGER : maxThreads;
 const numCPUs = Math.min(os.cpus().length, maxThreads);
 
 const port = Number(process.env.SERVER_PORT ?? 3030);
+console.log(`Body size limit: ${process.env.BODY_SIZE_LIMIT || "undefined"}`);
 
 // For Master process
 if (cluster.isPrimary && numCPUs > 1) {
