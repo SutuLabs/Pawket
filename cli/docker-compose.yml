@@ -10,3 +10,4 @@ services:
       - SHOW_LOG=true
       - PORT=3030
       - MAX_THREAD=0
+      - BODY_SIZE_LIMIT=10mb
