@@ -51,7 +51,10 @@ export function getPuzzleDetail(tgt_hex: string, requests: TokenPuzzleObserver[]
 export function parseMetadata(rawmeta: string | SExp): ParsedMetadata {
   const metaprog = typeof rawmeta === "string" ? assemble(rawmeta) : rawmeta;
   const metadata = metaprog.as_javascript();
-  if (!Array.isArray(metadata)) return {};
+  // CLVM nil (`()`) is encoded as an empty atom, so clvm returns Bytes rather than [].
+  if (metadata instanceof Bytes && metadata.length === 0) return {};
+  if (metadata instanceof Bytes) throw new Error(`Invalid metadata atom: 0x${metadata.hex()}`);
+  if (!Array.isArray(metadata)) throw new Error("Invalid metadata: expected a list");
 
   const metalist = (metadata as (Bytes[] | [Bytes, Bytes[]] | [Bytes, Tuple<Bytes, Bytes>])[])
     .map((_) => Array.from(_))
