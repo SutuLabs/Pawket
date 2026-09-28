@@ -372,3 +372,35 @@ Object {
   "tradePricePercentage": 1000,
 }
 `;
+
+exports[`Analyze Nft 12: nft analysis result 1`] = `
+Object {
+  "coin": Object {
+    "amount": 1,
+    "parent_coin_info": "0xca1cff91122538693ff7badc79048db02824417e926e63422102175cd6239f3e",
+    "puzzle_hash": "0x2e70f0c3dabb97ec6b08aa398a156af252d270f684f23c293120f40dcae7cb43",
+  },
+  "didOwner": "()",
+  "hintPuzzle": "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "launcherId": "0xca1cff91122538693ff7badc79048db02824417e926e63422102175cd6239f3e",
+  "launcherPuzzleHash": "0xeff07522495060c066f66f32acc2a77e3a3e737aca8baea4d1a64ea4cdc13da9",
+  "metadata": Object {
+    "imageUri": "",
+    "licenseHash": "",
+    "licenseUri": "",
+    "metadataHash": "",
+    "metadataUri": "",
+  },
+  "metadataUpdaterPuzzleHash": "0x9f28d55242a3bd2b3661c38ba8647392c26bb86594050ea6d33aad1725ca3eea",
+  "nextCoinName": "0x14461b62bc76d90e61ccb6261b0e24cce81260e3c5dc898791dd5f4406f1f833",
+  "nftOwnershipModHash": "0xc5abea79afaa001b5427dfa0c8cf42ca6f38f5841b78f9b3c252733eb2de2726",
+  "nftStateModHash": "0xa04d9f57764f54a43e4030befb4d80026e870519aaa66334aef8304f5d0393c2",
+  "p2InnerPuzzle": "(a (q 2 (q 2 (i 11 (q 2 (i (= 5 (point_add 11 (pubkey_for_exp (sha256 11 (a 6 (c 2 (c 23 ()))))))) (q 2 23 47) (q 8)) 1) (q 4 (c 4 (c 5 (c (a 6 (c 2 (c 23 ()))) ()))) (a 23 47))) 1) (c (q 50 2 (i (l 5) (q 11 (q . 2) (a 6 (c 2 (c 9 ()))) (a 6 (c 2 (c 13 ())))) (q 11 (q . 1) 5)) 1) 1)) (c (q . 0xb91c3aa933b052ab5677aa08a950c46ad8dbba3bba2142ecdc711df9bacacf109188b1d6b5445dcc5c76f832901d74c9) 1))",
+  "p2Owner": "",
+  "previousOwner": "()",
+  "rawMetadata": "()",
+  "royaltyAddress": "0x36da8c738011bfdd51d457397543c8f710a28598f6cbecc0199529a359cebc81",
+  "singletonModHash": "0x7faa3253bfddd1e0decb0906b2dc6247bbc4cf608f58345d173adb63e8b47c9f",
+  "tradePricePercentage": 500,
+}
+`;

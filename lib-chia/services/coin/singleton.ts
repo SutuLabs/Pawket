@@ -50,7 +50,10 @@ export function getPuzzleDetail(tgt_hex: string, requests: TokenPuzzleObserver[]
 
 export function parseMetadata(rawmeta: string | SExp): ParsedMetadata {
   const metaprog = typeof rawmeta === "string" ? assemble(rawmeta) : rawmeta;
-  const metalist = (metaprog.as_javascript() as (Bytes[] | [Bytes, Bytes[]] | [Bytes, Tuple<Bytes, Bytes>])[])
+  const metadata = metaprog.as_javascript();
+  if (!Array.isArray(metadata)) return {};
+
+  const metalist = (metadata as (Bytes[] | [Bytes, Bytes[]] | [Bytes, Tuple<Bytes, Bytes>])[])
     .map((_) => Array.from(_))
     .map((_) =>
       _.flatMap((it) =>
